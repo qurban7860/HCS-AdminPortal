@@ -19,7 +19,7 @@
 - npm i OR npm i --legacy-peer-deps
 - npm start
 
-## FOR NEXT.JS(NOT BEING USED CURRENTLY)**** :
+## FOR NEXT.JS	****(NOT BEING USED CURRENTLY)****
 
 **Using Yarn (Recommend)**
 

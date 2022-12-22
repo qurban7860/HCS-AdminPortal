@@ -1,13 +1,15 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -21,6 +23,13 @@ import FormProvider, {
   RHFRadioGroup,
   RHFAutocomplete,
 } from '../../../components/hook-form';
+
+
+import { LocationForm } from './Location';
+
+
+
+// import { GridRow } from '@mui/x-data-grid';
 
 // ----------------------------------------------------------------------
 
@@ -62,16 +71,16 @@ const TAGS_OPTION = [
 
 AssetNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
-  currentProduct: PropTypes.object,
+  currentAsset: PropTypes.object,
 };
 
-export default function AssetNewEditForm({ isEdit, currentProduct }) {
+export default function AssetNewEditForm({ isEdit, currentAsset }) {
   
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const NewProductSchema = Yup.object().shape({
+  const NewAssetSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
     images: Yup.array().min(1, 'Images is required'),
     tags: Yup.array().min(2, 'Must have at least 2 tags'),
@@ -87,25 +96,25 @@ export default function AssetNewEditForm({ isEdit, currentProduct }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentProduct?.name || '',
-      description: currentProduct?.description || '',
-      images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
-      sku: currentProduct?.sku || '',
-      price: currentProduct?.price || 0,
-      priceSale: currentProduct?.priceSale || 0,
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
-      inStock: true,
-      taxes: true,
-      gender: currentProduct?.gender || GENDER_OPTION[2].value,
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1],
+      name: currentAsset?.name || '',
+      description: currentAsset?.description || '',
+      images: currentAsset?.images || [],
+      tags: currentAsset?.tags || '',
+      price: currentAsset?.price || '',
+      model: currentAsset?.model || '',
+      status: currentAsset?.status || '',
+      // tags: currentAsset?.tags || [TAGS_OPTION[0]],
+      department: currentAsset?.department || '',
+      location: currentAsset?.location || '',
+      supplier: currentAsset?.supplier || '',
+      notes: currentAsset?.notes || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentProduct]
+    [currentAsset]
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewProductSchema),
+    resolver: yupResolver(NewAssetSchema),
     defaultValues,
   });
 
@@ -120,21 +129,22 @@ export default function AssetNewEditForm({ isEdit, currentProduct }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentProduct) {
+    if (isEdit && currentAsset) {
       reset(defaultValues);
     }
     if (!isEdit) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentProduct]);
+  }, [isEdit, currentAsset]);
+
 
   const onSubmit = async (data) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.eCommerce.list);
+      navigate(PATH_DASHBOARD.asset.list);
       console.log('DATA', data);
     } catch (error) {
       console.error(error);
@@ -168,7 +178,7 @@ export default function AssetNewEditForm({ isEdit, currentProduct }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={7} md={7}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <RHFTextField name="name" label="Asset Name" />
@@ -194,7 +204,7 @@ export default function AssetNewEditForm({ isEdit, currentProduct }) {
                   ))}
                 </RHFSelect>
 
-                <RHFSelect native name="status" label="Status">
+                <RHFSelect xs={3} md={4} native name="status" label="Status">
                 <option value="" disabled/>
                   {STATUS_OPTION.map((option) => (
                     <option key={option.id} value={option.value}>
@@ -204,15 +214,24 @@ export default function AssetNewEditForm({ isEdit, currentProduct }) {
                 </RHFSelect>
 
                 <RHFTextField name="serial" label="Serials" />
-
-                <RHFSelect native name="department" label="Department">
-                <option value="" disabled/>
-                  {/* {STATUS_OPTION.map((option) => (
-                    <option key={option.id} value={option.value}>
-                      {option.value}
-                    </option>
-                  ))} */}
-                </RHFSelect>
+                
+                <Grid container spacing={1}>
+                  <Grid item xs={8}>
+                    <RHFSelect native name="department" label="Department">
+                    <option value="" disabled/>
+                      {/* {STATUS_OPTION.map((option) => (
+                        <option key={option.id} value={option.value}>
+                          {option.value}
+                        </option>
+                      ))} */}
+                    </RHFSelect>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <LoadingButton variant="contained" size="large" loading={isSubmitting}>
+                      {!isEdit ? 'New' : 'Save Changes'}
+                    </LoadingButton>
+                  </Grid>
+                </Grid>
 
                 <RHFSelect native name="location" label="Location">
                 <option value="" disabled/>
@@ -256,6 +275,17 @@ export default function AssetNewEditForm({ isEdit, currentProduct }) {
             </LoadingButton>
           </Card>
         </Grid>
+
+        {/* <Dialog fullWidth maxWidth="xs" open={true} onClose={false}> 
+          <DialogTitle>Add Location</DialogTitle>
+
+          <LocationForm
+            event={selectedEvent}
+            onCancel={handleCloseModal}
+            onCreateUpdateEvent={handleCreateUpdateEvent}
+            onDeleteEvent={handleDeleteEvent}         
+           />
+      </Dialog>  */}
 {/* 
         <Grid item xs={12} md={4}>
           <Stack spacing={3}>
@@ -263,9 +293,9 @@ export default function AssetNewEditForm({ isEdit, currentProduct }) {
               <RHFSwitch name="inStock" label="In stock" />
 
               <Stack spacing={3} mt={2}>
-                <RHFTextField name="code" label="Product Code" />
+                <RHFTextField name="code" label="Asset Code" />
 
-                <RHFTextField name="sku" label="Product SKU" />
+                <RHFTextField name="sku" label="Asset SKU" />
 
                 <Stack spacing={1}>
                   <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>

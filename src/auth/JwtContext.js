@@ -75,15 +75,15 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        const response = await axios.get('/api/account/my-account');
+        // const response = await axios.get('/api/account/my-account');
 
-        const { user } = response.data;
+        // const { user } = localStorage.getItem('activeUser');
 
         dispatch({
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
-            user,
+            // user,
           },
         });
       } else {
@@ -118,6 +118,8 @@ export function AuthProvider({ children }) {
       password,
     });
     const { accessToken, user } = response.data;
+
+    localStorage.setItem('activeUser', user);
 
     setSession(accessToken);
 
