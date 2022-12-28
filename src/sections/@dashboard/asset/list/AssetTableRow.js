@@ -41,7 +41,7 @@ export default function AssetTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, cover, createdAt, inventoryType, price } = row;
+  const { name, status, department, location, price } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -72,13 +72,13 @@ export default function AssetTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Image
+            {/* <Image
               disabledEffect
               visibleByDefault
               alt={name}
-              src={cover}
+              // src={cover}
               sx={{ borderRadius: 1.5, width: 48, height: 48 }}
-            />
+            /> */}
 
             <Link
               noWrap
@@ -92,9 +92,18 @@ export default function AssetTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{fDate(createdAt)}</TableCell>
+        <TableCell>{status}</TableCell>
 
-        <TableCell align="center">
+        <TableCell>{department}</TableCell>
+
+        <TableCell>{location}</TableCell>
+
+
+        {/* <TableCell>{fDate(createdAt)}</TableCell> */}
+
+        
+
+        {/* <TableCell align="center">
           <Label
             variant="soft"
             color={
@@ -106,7 +115,7 @@ export default function AssetTableRow({
           >
             {inventoryType ? sentenceCase(inventoryType) : ''}
           </Label>
-        </TableCell>
+        </TableCell> */}
 
         <TableCell align="right">{fCurrency(price)}</TableCell>
 
@@ -114,8 +123,8 @@ export default function AssetTableRow({
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
-      </TableRow>
+        </TableCell>  
+      </TableRow> 
 
       <MenuPopover
         open={openPopover}

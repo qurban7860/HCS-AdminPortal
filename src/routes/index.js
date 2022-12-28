@@ -41,6 +41,7 @@ import {
   // Dashboard: Asset
   AssetListPage,
   AssetCreatePage,
+  AssetEditPage,
   // Dashboard: Invoice
   InvoiceListPage,
   InvoiceDetailsPage,
@@ -201,6 +202,7 @@ export default function Router() {
           children: [
             { path: 'list', element: <AssetListPage /> },
             { path: 'new', element: <AssetCreatePage /> },
+            { path: ':id/edit', element: <AssetEditPage />}
           ],
         },
         {

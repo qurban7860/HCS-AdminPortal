@@ -69,6 +69,9 @@ export const AssetListPage = Loadable(
 export const AssetCreatePage = Loadable(
   lazy(() => import('../pages/dashboard/AssetCreatePage'))
 );
+export const AssetEditPage = Loadable(
+  lazy(() => import('../pages/dashboard/AssetEditPage'))
+);
 // export const AssetProductEditPage = Loadable(
 //   lazy(() => import('../pages/dashboard/AssetProductEditPage'))
 // );

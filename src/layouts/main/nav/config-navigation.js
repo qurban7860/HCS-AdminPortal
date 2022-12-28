@@ -11,7 +11,7 @@ const navConfig = [
   {
     title: 'Home',
     icon: <Iconify icon="eva:home-fill" />,
-    path: PATH_AUTH.loginUnprotected,
+    path: '/',
   },
   {
     title: 'Components',

@@ -10,6 +10,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+// slice
+import { saveAsset, updateAsset } from '../../../redux/slices/asset';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -33,11 +35,18 @@ import { LocationForm } from './Location';
 
 // ----------------------------------------------------------------------
 
-const GENDER_OPTION = [
-  { label: 'Men', value: 'Men' },
-  { label: 'Women', value: 'Women' },
-  { label: 'Kids', value: 'Kids' },
+const COUNTRIES = [
+  { id: '1', value: 'Pakistan' },
+  { id: '2', value: 'Canada' },
+  { id: '3', value: 'Portugal' },
 ];
+
+const DEPARTMENT = [
+  { id: '1', value: 'HR' },
+  { id: '2', value: 'F & A' },
+  { id: '3', value: 'IS' },
+];
+
 
 const STATUS_OPTION = [
   { id: '1', value: 'Ready To Deploy' },
@@ -51,22 +60,6 @@ const CATEGORY_OPTION = [
   { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
 ];
 
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots',
-];
-
 // ----------------------------------------------------------------------
 
 AssetNewEditForm.propTypes = {
@@ -75,6 +68,11 @@ AssetNewEditForm.propTypes = {
 };
 
 export default function AssetNewEditForm({ isEdit, currentAsset }) {
+  console.log('isedit', isEdit);
+
+  const { assets, isLoading, error } = useSelector((state) => state.asset);
+  
+  const dispatch = useDispatch();
   
   const navigate = useNavigate();
 
@@ -82,32 +80,30 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
 
   const NewAssetSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
-    images: Yup.array().min(1, 'Images is required'),
-    tags: Yup.array().min(2, 'Must have at least 2 tags'),
-    price: Yup.number().moreThan(0, 'Price should not be $0.00'),
-    model: Yup.string().required('model is required'),
-    status: Yup.string().required('status is required'),
-    serial: Yup.string().required('serial is required'),
-    department: Yup.string().required('department is required'),
-    location: Yup.string().required('location is required'),
-    supplier: Yup.string().required('supplier is required'),
-    notes: Yup.string().required('notes is required'),
-  });
+    status: Yup.string().required('Status is required'),
+    tag: Yup.string().required('Asset Tag is required'),
+    model: Yup.string().required('Model is required'),
+    serial: Yup.string().required('Serial is required'),
+    location: Yup.string().required('Location is required'),
+    department: Yup.string().required('Department is required'),
+    notes: Yup.string(),
+    image: Yup.mixed().nullable(true),  });
 
   const defaultValues = useMemo(
     () => ({
+      id: currentAsset?._id || '',
       name: currentAsset?.name || '',
-      description: currentAsset?.description || '',
-      images: currentAsset?.images || [],
-      tags: currentAsset?.tags || '',
-      price: currentAsset?.price || '',
-      model: currentAsset?.model || '',
       status: currentAsset?.status || '',
-      // tags: currentAsset?.tags || [TAGS_OPTION[0]],
-      department: currentAsset?.department || '',
+      tag: currentAsset?.assetTag || '',
+      model: currentAsset?.assetModel || '',
+      serial: currentAsset?.serial || '',
       location: currentAsset?.location || '',
-      supplier: currentAsset?.supplier || '',
+      department: currentAsset?.department || '',
       notes: currentAsset?.notes || '',
+      image: null,
+      imagePath: currentAsset?.image || null,
+      replaceImage: false,
+      editAsset: isEdit
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentAsset]
@@ -140,39 +136,41 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
 
 
   const onSubmit = async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.asset.list);
-      console.log('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
+    console.log(data);
+      try{
+        dispatch(updateAsset(data));
+        reset();
+        enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+        navigate(PATH_DASHBOARD.asset.list);
+      } catch(err){
+        enqueueSnackbar('Saving failed!');
+        console.error(error);
+      }
   };
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      const files = values.images || [];
+      const file = acceptedFiles[0];
 
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      );
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
 
-      setValue('images', [...files, ...newFiles], { shouldValidate: true });
+      if (file) {
+        setValue('image', newFile, { shouldValidate: true });
+        if(isEdit){
+          setValue('replaceImage', true);
+        }
+      }
     },
-    [setValue, values.images]
+    [setValue, isEdit]
   );
 
-  const handleRemoveFile = (inputFile) => {
-    const filtered = values.images && values.images?.filter((file) => file !== inputFile);
-    setValue('images', filtered);
-  };
-
-  const handleRemoveAllFiles = () => {
-    setValue('images', []);
+  const handleRemoveFile = () => {
+    setValue('image', null);
+    if(isEdit){
+      setValue('replaceImage', false);
+    }
   };
 
   return (
@@ -183,13 +181,7 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
             <Stack spacing={3}>
               <RHFTextField name="name" label="Asset Name" />
 
-              <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Description
-                </Typography>
-
-                <RHFEditor simple name="description" />
-              </Stack> 
+              <RHFTextField name="tag" label="Asset Tag" />
 
               <RHFSelect native name="model" label="Model">
                   <option value="" />
@@ -207,66 +199,62 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
                 <RHFSelect xs={3} md={4} native name="status" label="Status">
                 <option value="" disabled/>
                   {STATUS_OPTION.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.value}
+                    </option>
+                  ))}
+                </RHFSelect>
+
+                <RHFTextField name="serial" label="Serial" />
+
+                <RHFSelect native name="location" label="Location">
+                <option value="" disabled/>
+                {COUNTRIES.map((option) => (
                     <option key={option.id} value={option.value}>
                       {option.value}
                     </option>
                   ))}
                 </RHFSelect>
 
-                <RHFTextField name="serial" label="Serials" />
-                
                 <Grid container spacing={1}>
                   <Grid item xs={8}>
                     <RHFSelect native name="department" label="Department">
                     <option value="" disabled/>
-                      {/* {STATUS_OPTION.map((option) => (
-                        <option key={option.id} value={option.value}>
-                          {option.value}
-                        </option>
-                      ))} */}
+                    {DEPARTMENT.map((option) => (
+                    <option key={option.id} value={option.value}>
+                      {option.value}
+                    </option>
+                  ))}
                     </RHFSelect>
                   </Grid>
                   <Grid item xs={4}>
                     <LoadingButton variant="contained" size="large" loading={isSubmitting}>
-                      {!isEdit ? 'New' : 'Save Changes'}
+                      New
                     </LoadingButton>
                   </Grid>
                 </Grid>
 
-                <RHFSelect native name="location" label="Location">
-                <option value="" disabled/>
-                  {/* {STATUS_OPTION.map((option) => (
-                    <option key={option.id} value={option.value}>
-                      {option.value}
-                    </option>
-                  ))} */}
-                </RHFSelect>
-
-                <RHFSelect native name="supplier" label="Supplier">
-                <option value="" disabled/>
-                  {/* {STATUS_OPTION.map((option) => (
-                    <option key={option.id} value={option.value}>
-                      {option.value}
-                    </option>
-                  ))} */}
-                </RHFSelect>
-
- 
 
               <Stack spacing={1}>
                 <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Images
+                  Notes
+                </Typography>
+
+                <RHFEditor simple name="notes" />
+              </Stack> 
+
+
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                  Image
                 </Typography>
 
                 <RHFUpload
-                  multiple
-                  thumbnail
-                  name="images"
+                  name="image"
                   maxSize={3145728}
                   onDrop={handleDrop}
-                  onRemove={handleRemoveFile}
-                  onRemoveAll={handleRemoveAllFiles}
-                  onUpload={() => console.log('ON UPLOAD')}
+                  onDelete={handleRemoveFile}
+                  // onUpload={() => console.log('ON UPLOAD')}
                 />
               </Stack>
             </Stack>
@@ -275,107 +263,6 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
             </LoadingButton>
           </Card>
         </Grid>
-
-        {/* <Dialog fullWidth maxWidth="xs" open={true} onClose={false}> 
-          <DialogTitle>Add Location</DialogTitle>
-
-          <LocationForm
-            event={selectedEvent}
-            onCancel={handleCloseModal}
-            onCreateUpdateEvent={handleCreateUpdateEvent}
-            onDeleteEvent={handleDeleteEvent}         
-           />
-      </Dialog>  */}
-{/* 
-        <Grid item xs={12} md={4}>
-          <Stack spacing={3}>
-            <Card sx={{ p: 3 }}>
-              <RHFSwitch name="inStock" label="In stock" />
-
-              <Stack spacing={3} mt={2}>
-                <RHFTextField name="code" label="Asset Code" />
-
-                <RHFTextField name="sku" label="Asset SKU" />
-
-                <Stack spacing={1}>
-                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                    Gender
-                  </Typography>
-
-                  <RHFRadioGroup row spacing={4} name="gender" options={GENDER_OPTION} />
-                </Stack>
-
-                <RHFSelect native name="category" label="Category">
-                  <option value="" />
-                  {CATEGORY_OPTION.map((category) => (
-                    <optgroup key={category.group} label={category.group}>
-                      {category.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </RHFSelect>
-
-                <RHFAutocomplete
-                  name="tags"
-                  label="Tags"
-                  multiple
-                  freeSolo
-                  options={TAGS_OPTION.map((option) => option)}
-                  ChipProps={{ size: 'small' }}
-                />
-              </Stack>
-            </Card>
-
-            <Card sx={{ p: 3 }}>
-              <Stack spacing={3} mb={2}>
-                <RHFTextField
-                  name="price"
-                  label="Regular Price"
-                  placeholder="0.00"
-                  onChange={(event) =>
-                    setValue('price', Number(event.target.value), { shouldValidate: true })
-                  }
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                          $
-                        </Box>
-                      </InputAdornment>
-                    ),
-                    type: 'number',
-                  }}
-                />
-
-                <RHFTextField
-                  name="priceSale"
-                  label="Sale Price"
-                  placeholder="0.00"
-                  onChange={(event) => setValue('priceSale', Number(event.target.value))}
-                  InputLabelProps={{ shrink: true }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Box component="span" sx={{ color: 'text.disabled' }}>
-                          $
-                        </Box>
-                      </InputAdornment>
-                    ),
-                    type: 'number',
-                  }}
-                />
-              </Stack>
-
-              <RHFSwitch name="taxes" label="Price includes taxes" />
-            </Card>
-
-            
-          </Stack>
-        </Grid>  */}
       </Grid>
     </FormProvider>
   );

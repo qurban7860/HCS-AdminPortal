@@ -19,6 +19,7 @@ import { getProducts } from '../../redux/slices/product';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
+import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 import {
   useTable,
@@ -36,22 +37,25 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import { ProductTableRow, ProductTableToolbar } from '../../sections/@dashboard/e-commerce/list';
+import { AssetTableRow, AssetTableToolbar } from '../../sections/@dashboard/asset/list';
+import { getAssets, deleteAsset } from '../../redux/slices/asset';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Product', align: 'left' },
-  { id: 'createdAt', label: 'Create at', align: 'left' },
-  { id: 'inventoryType', label: 'Status', align: 'center', width: 180 },
-  { id: 'price', label: 'Price', align: 'right' },
-  { id: '' },
+  { id: 'name', label: 'Asset', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'department', label: 'Department', align: 'left', width: 180 },
+  { id: 'location', label: 'Location', align: 'left' },
+  { id: 'created_at', label: 'Created At', align: 'left'  },
 ];
 
 const STATUS_OPTIONS = [
-  { value: 'in_stock', label: 'In stock' },
-  { value: 'low_stock', label: 'Low stock' },
-  { value: 'out_of_stock', label: 'Out of stock' },
+  { value: 'all_assets', label: 'All Assets' },
+  { value: 'deployable', label: 'All Deployable' },
+  { value: 'pending', label: 'All Pending' },
+  { value: 'archived', label: 'All Archived' },
+  { value: 'undeployable', label: 'All Undeployable' }
 ];
 
 // ----------------------------------------------------------------------
@@ -80,31 +84,32 @@ export default function AssetListPage() {
 
   const { themeStretch } = useSettingsContext();
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
-  const { products, isLoading } = useSelector((state) => state.product);
-
-  // const { assets } = useSelector((state) => state.asset);
-
-  const [tableData, setTableData] = useState([]);
+  const { assets, isLoading } = useSelector((state) => state.asset);
 
   const [filterName, setFilterName] = useState('');
+
+  const [tableData, setTableData] = useState([]);
 
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
   useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getAssets());
   }, [dispatch]);
 
   useEffect(() => {
-    if (products.length) {
-      setTableData(products);
+    if (assets) {
+      console.log(assets);
+      setTableData(assets);
     }
-  }, [products]);
+  }, [assets]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -139,20 +144,26 @@ export default function AssetListPage() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+  const  handleDeleteRow = (id) => {
+    try{
+      console.log(id);
+      dispatch(deleteAsset(id));
+      enqueueSnackbar('Asset Deleted successfully!');
+      dispatch(getAssets());
+      setSelected([]);
 
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
+      if (page > 0) {
+        if (dataInPage.length < 2) {
+          setPage(page - 1);
+        }
       }
+    }catch(error){
+      console.log(error);
     }
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row.id));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -169,11 +180,12 @@ export default function AssetListPage() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.edit(paramCase(id)));
+    console.log(id);
+    navigate(PATH_DASHBOARD.asset.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.eCommerce.view(paramCase(id)));
+    // navigate(PATH_DASHBOARD.asset.view(id));
   };
 
   const handleResetFilter = () => {
@@ -211,7 +223,7 @@ export default function AssetListPage() {
         />
 
         <Card>
-          <ProductTableToolbar
+          <AssetTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -229,7 +241,7 @@ export default function AssetListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData.map((row) => row._id)
                 )
               }
               action={
@@ -253,7 +265,7 @@ export default function AssetListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                 />
@@ -263,14 +275,14 @@ export default function AssetListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <ProductTableRow
-                          key={row.id}
+                        <AssetTableRow
+                          key={row._id}
                           row={row}
-                          selected={selected.includes(row.id)}
-                          onSelectRow={() => onSelectRow(row.id)}
-                          onDeleteRow={() => handleDeleteRow(row.id)}
-                          onEditRow={() => handleEditRow(row.name)}
-                          onViewRow={() => handleViewRow(row.name)}
+                          selected={selected.includes(row._id)}
+                          onSelectRow={() => onSelectRow(row._id)}
+                          onDeleteRow={() => handleDeleteRow(row._id)}
+                          onEditRow={() => handleEditRow(row._id)}
+                          onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

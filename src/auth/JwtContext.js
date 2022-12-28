@@ -78,12 +78,16 @@ export function AuthProvider({ children }) {
         // const response = await axios.get('/api/account/my-account');
 
         // const { user } = localStorage.getItem('activeUser');
+        const user = {
+            email: localStorage.getItem('activeUser'),
+            displayName: localStorage.getItem('name'),
+        };
 
         dispatch({
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
-            // user,
+            user,
           },
         });
       } else {
@@ -119,7 +123,9 @@ export function AuthProvider({ children }) {
     });
     const { accessToken, user } = response.data;
 
-    localStorage.setItem('activeUser', user);
+    localStorage.setItem('email', user.email);
+    localStorage.setItem('name', user.displayName);
+
 
     setSession(accessToken);
 
