@@ -185,7 +185,7 @@ export default function AssetListPage() {
   };
 
   const handleViewRow = (id) => {
-    // navigate(PATH_DASHBOARD.asset.view(id));
+    navigate(PATH_DASHBOARD.asset.view(id));
   };
 
   const handleResetFilter = () => {

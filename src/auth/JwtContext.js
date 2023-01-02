@@ -79,7 +79,7 @@ export function AuthProvider({ children }) {
 
         // const { user } = localStorage.getItem('activeUser');
         const user = {
-            email: localStorage.getItem('activeUser'),
+            email: localStorage.getItem('email'),
             displayName: localStorage.getItem('name'),
         };
 
@@ -117,7 +117,7 @@ export function AuthProvider({ children }) {
 
   // LOGIN
   const login = useCallback(async (email, password) => {
-    const response = await axios.post('http://localhost:5000/api/users/login', {
+    const response = await axios.post('http://localhost:5000/api/1.0.0/users/login', {
       email,
       password,
     });
@@ -139,7 +139,7 @@ export function AuthProvider({ children }) {
 
   // REGISTER
   const register = useCallback(async (firstName, lastName, email, password) => {
-    const response = await axios.post('http://localhost:5000/api/users/signup', {
+    const response = await axios.post('http://localhost:5000/api/1.0.0/users/signup', {
       firstName,
       lastName,
       email,

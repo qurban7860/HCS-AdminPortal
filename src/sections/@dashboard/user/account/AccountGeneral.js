@@ -139,7 +139,7 @@ export default function AccountGeneral() {
             >
               <RHFTextField name="displayName" label="Name" />
 
-              <RHFTextField name="email" label="Email Address" />
+              <RHFTextField readOnly name="email" label="Email Address" />
 
               <RHFTextField name="phoneNumber" label="Phone Number" />
 

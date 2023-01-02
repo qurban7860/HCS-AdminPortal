@@ -55,24 +55,9 @@ const slice = createSlice({
       state.asset = action.payload;
     },
 
-    // CHECKOUT
-    getCart(state, action) {
-      const cart = action.payload;
-
-      const totalItems = sum(cart.map((asset) => asset.quantity));
-      const subtotal = sum(cart.map((asset) => asset.price * asset.quantity));
-      state.checkout.cart = cart;
-      state.checkout.discount = state.checkout.discount || 0;
-      state.checkout.shipping = state.checkout.shipping || 0;
-      state.checkout.billing = state.checkout.billing || null;
-      state.checkout.subtotal = subtotal;
-      state.checkout.total = subtotal - state.checkout.discount;
-      state.checkout.totalItems = totalItems;
-    },
 
     async saveAsset(state, action){
       try {
-        console.log('id', action.payload.model);
         
         const formData = new FormData();
 
@@ -94,15 +79,15 @@ const slice = createSlice({
             formData.append('replaceImage', action.payload.replaceImage);
             formData.append('image', action.payload.image);
           }
-          const response = await axios.post('http://localhost:5000/api/assets/updateAsset', 
-          formData,
+          const response = await axios.patch('http://localhost:5000/api/1.0.0/assets',
+          action.payload.id 
           );
         }
         
         else{
           console.log('add');
           formData.append('image', action.payload.image);
-          const response = await axios.post('http://localhost:5000/api/assets/saveAsset', 
+          const response = await axios.post('http://localhost:5000/api/1.0.0/assets', 
           formData,
           );
         }
@@ -117,7 +102,7 @@ const slice = createSlice({
       try{
         const assetID = action.payload;
         console.log(action.payload)
-        const response = await axios.post('http://localhost:5000/api/assets/deleteAsset', {
+        const response = await axios.delete('http://localhost:5000/api/1.0.0/assets', {
           assetID
         });
         const { asset } = response.data;
@@ -125,23 +110,6 @@ const slice = createSlice({
         console.error(error);
         this.hasError(error.message);
       }
-    },
-
-    deleteCart(state, action) {
-      const updateCart = state.checkout.cart.filter((asset) => asset.id !== action.payload);
-
-      state.checkout.cart = updateCart;
-    },
-
-    resetCart(state) {
-      state.checkout.cart = [];
-      state.checkout.billing = null;
-      state.checkout.activeStep = 0;
-      state.checkout.total = 0;
-      state.checkout.subtotal = 0;
-      state.checkout.discount = 0;
-      state.checkout.shipping = 0;
-      state.checkout.totalItems = 0;
     },
 
     backStep(state) {
@@ -168,11 +136,7 @@ export const {
   gotoStep,
   backStep,
   nextStep,
-  createBilling,
-  applyShipping,
-  applyDiscount,
-  increaseQuantity,
-  decreaseQuantity,
+
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -181,7 +145,7 @@ export function getAssets() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:5000/api/assets/getAllAssets');
+      const response = await axios.get('http://localhost:5000/api/1.0.0/assets');
       console.log(response.data);
       dispatch(slice.actions.getAssetsSuccess(response.data.assets));
     } catch (error) {
@@ -204,5 +168,47 @@ export function getAsset(name) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
     }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getAssetLocations() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    // try {
+
+    // } catch (error) {
+    //   console.error(error);
+    //   dispatch(slice.actions.hasError(error));
+    // }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getAssetDepartments() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    // try {
+
+    // } catch (error) {
+    //   console.error(error);
+    //   dispatch(slice.actions.hasError(error));
+    // }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getAssetModels() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    // try {
+
+    // } catch (error) {
+    //   console.error(error);
+    //   dispatch(slice.actions.hasError(error));
+    // }
   };
 }

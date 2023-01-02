@@ -64,11 +64,11 @@ const CATEGORY_OPTION = [
 
 AssetNewEditForm.propTypes = {
   isEdit: PropTypes.bool,
+  readOnly: PropTypes.bool,
   currentAsset: PropTypes.object,
 };
 
-export default function AssetNewEditForm({ isEdit, currentAsset }) {
-  console.log('isedit', isEdit);
+export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
 
   const { assets, isLoading, error } = useSelector((state) => state.asset);
   
@@ -79,7 +79,7 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const NewAssetSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    name: Yup.string().required('Name is required').disabled  ,
     status: Yup.string().required('Status is required'),
     tag: Yup.string().required('Asset Tag is required'),
     model: Yup.string().required('Model is required'),
@@ -138,7 +138,7 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
   const onSubmit = async (data) => {
     console.log(data);
       try{
-        dispatch(updateAsset(data));
+        dispatch(saveAsset(data));
         reset();
         enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
         navigate(PATH_DASHBOARD.asset.list);
@@ -179,11 +179,11 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
         <Grid item xs={7} md={7}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <RHFTextField name="name" label="Asset Name" />
+              <RHFTextField readOnly name="name" label="Asset Name" />
 
-              <RHFTextField name="tag" label="Asset Tag" />
+              <RHFTextField readOnly name="tag" label="Asset Tag" />
 
-              <RHFSelect native name="model" label="Model">
+              <RHFSelect readOnly native name="model" label="Model">
                   <option value="" />
                   {CATEGORY_OPTION.map((model) => (
                     <optgroup key={model.group} label={model.group}>
@@ -196,7 +196,7 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
                   ))}
                 </RHFSelect>
 
-                <RHFSelect xs={3} md={4} native name="status" label="Status">
+                <RHFSelect readOnly xs={3} md={4} native name="status" label="Status">
                 <option value="" disabled/>
                   {STATUS_OPTION.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -205,9 +205,9 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
                   ))}
                 </RHFSelect>
 
-                <RHFTextField name="serial" label="Serial" />
+                <RHFTextField readOnly name="serial" label="Serial" />
 
-                <RHFSelect native name="location" label="Location">
+                <RHFSelect readOnly native name="location" label="Location">
                 <option value="" disabled/>
                 {COUNTRIES.map((option) => (
                     <option key={option.id} value={option.value}>
@@ -218,7 +218,7 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
 
                 <Grid container spacing={1}>
                   <Grid item xs={8}>
-                    <RHFSelect native name="department" label="Department">
+                    <RHFSelect readOnly native name="department" label="Department">
                     <option value="" disabled/>
                     {DEPARTMENT.map((option) => (
                     <option key={option.id} value={option.value}>
@@ -240,7 +240,7 @@ export default function AssetNewEditForm({ isEdit, currentAsset }) {
                   Notes
                 </Typography>
 
-                <RHFEditor simple name="notes" />
+                <RHFEditor readOnly simple name="notes" />
               </Stack> 
 
 
