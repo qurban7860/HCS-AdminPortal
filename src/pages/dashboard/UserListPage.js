@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -16,6 +16,8 @@ import {
   IconButton,
   TableContainer,
 } from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // _mock_
@@ -38,6 +40,7 @@ import {
 } from '../../components/table';
 // sections
 import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
+import { getUsers, deleteUser } from '../../redux/slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -87,6 +90,10 @@ export default function UserListPage() {
     onChangeRowsPerPage,
   } = useTable();
 
+  const dispatch = useDispatch();
+
+  const { users, isLoading } = useSelector((state) => state.user);
+
   const { themeStretch } = useSettingsContext();
 
   const navigate = useNavigate();
@@ -100,6 +107,17 @@ export default function UserListPage() {
   const [filterRole, setFilterRole] = useState('all');
 
   const [filterStatus, setFilterStatus] = useState('all');
+
+
+  // useEffect(() => {
+  //   dispatch(getUsers());
+  // }, [dispatch]);
+
+  // useEffect(() => {
+  //   if (users) {
+  //     setTableData(users);
+  //   }
+  // }, [users]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,

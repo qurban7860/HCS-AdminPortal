@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
@@ -23,6 +24,8 @@ import FormProvider, {
   RHFTextField,
   RHFUploadAvatar,
 } from '../../../components/hook-form';
+// slice
+import { saveUser } from '../../../redux/slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -32,12 +35,18 @@ UserNewEditForm.propTypes = {
 };
 
 export default function UserNewEditForm({ isEdit = false, currentUser }) {
+
+  const { error } = useSelector((state) => state.user);
+  
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required'),
+    firstName: Yup.string().required('First name is required'),
+    lastName: Yup.string().required('Last name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     phoneNumber: Yup.string().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
@@ -51,7 +60,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.name || '',
+      firstName: currentUser?.firstName || '',
+      lastName: currentUser?.lastName || '',
       email: currentUser?.email || '',
       phoneNumber: currentUser?.phoneNumber || '',
       address: currentUser?.address || '',
@@ -96,15 +106,16 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   }, [isEdit, currentUser]);
 
   const onSubmit = async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_DASHBOARD.user.list);
-      console.log('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
+     console.log(data);
+      try{
+        dispatch(saveUser(data));
+        reset();
+        enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+        navigate(PATH_DASHBOARD.user.list);
+      } catch(err){
+        enqueueSnackbar('Saving failed!');
+        console.error(error);
+      }
   };
 
   const handleDrop = useCallback(
@@ -220,7 +231,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Full Name" />
+              <RHFTextField name="firstName" label="First Name" />
+              <RHFTextField name="lastName" label="Last Name" />
               <RHFTextField name="email" label="Email Address" />
               <RHFTextField name="phoneNumber" label="Phone Number" />
 

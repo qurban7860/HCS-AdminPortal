@@ -60,12 +60,12 @@ const slice = createSlice({
 
     async saveUser(state, action){
       try {
-        // console.log('id', action.payload.model);
         
         const formData = new FormData();
 
         formData.append('id',action.payload.id);
-        formData.append('name', action.payload.displayName);
+        formData.append('firstName', action.payload.firstName);
+        formData.append('lastName', action.payload.lastName);
         formData.append('email', action.payload.email);
         formData.append('password', action.payload.password);
         formData.append('address', action.payload.address);

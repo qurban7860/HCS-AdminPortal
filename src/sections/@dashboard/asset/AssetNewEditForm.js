@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { saveAsset, updateAsset } from '../../../redux/slices/asset';
+import { saveAsset } from '../../../redux/slices/asset';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -179,7 +179,7 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
         <Grid item xs={7} md={7}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <RHFTextField readOnly name="name" label="Asset Name" />
+              <RHFTextField disabled={readOnly} name="name" label="Asset Name" />
 
               <RHFTextField readOnly name="tag" label="Asset Tag" />
 

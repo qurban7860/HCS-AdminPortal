@@ -8,6 +8,7 @@ import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import assetReducer from './slices/asset';
+import userReducer from './slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -25,9 +26,14 @@ export const productPersistConfig = {
   whitelist: ['sortBy', 'checkout'],
 };
 
-
 export const assetPersistConfig = {
   key: 'asset',
+  storage,
+  keyPrefix: 'redux-',
+};
+
+export const userPersistConfig = {
+  key: 'user',
   storage,
   keyPrefix: 'redux-',
 };
@@ -37,6 +43,7 @@ const rootReducer = combineReducers({
   calendar: calendarReducer,
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer),
+  user: persistReducer(userPersistConfig, userReducer),
   asset: persistReducer(assetPersistConfig, assetReducer),
 });
 
