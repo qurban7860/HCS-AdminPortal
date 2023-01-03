@@ -19,11 +19,6 @@ import {
   ResetPasswordPage,
   // Dashboard: General
   GeneralAppPage,
-  GeneralFilePage,
-  GeneralBankingPage,
-  GeneralBookingPage,
-  GeneralEcommercePage,
-  GeneralAnalyticsPage,
   // Dashboard: User
   UserListPage,
   UserEditPage,
@@ -57,8 +52,6 @@ import {
   // Dashboard: App
   ChatPage,
   MailPage,
-  CalendarPage,
-  KanbanPage,
   //
   BlankPage,
   PermissionDeniedPage,
@@ -181,11 +174,6 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
-        { path: 'ecommerce', element: <GeneralEcommercePage /> },
-        { path: 'analytics', element: <GeneralAnalyticsPage /> },
-        { path: 'banking', element: <GeneralBankingPage /> },
-        { path: 'booking', element: <GeneralBookingPage /> },
-        { path: 'file', element: <GeneralFilePage /> },
         {
           path: 'e-commerce',
           children: [
@@ -257,8 +245,6 @@ export default function Router() {
             { path: ':conversationKey', element: <ChatPage /> },
           ],
         },
-        { path: 'calendar', element: <CalendarPage /> },
-        { path: 'kanban', element: <KanbanPage /> },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],

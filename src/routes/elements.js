@@ -22,19 +22,6 @@ export const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/Reset
 
 // DASHBOARD: GENERAL
 export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/GeneralAppPage')));
-export const GeneralEcommercePage = Loadable(
-  lazy(() => import('../pages/dashboard/GeneralEcommercePage'))
-);
-export const GeneralAnalyticsPage = Loadable(
-  lazy(() => import('../pages/dashboard/GeneralAnalyticsPage'))
-);
-export const GeneralBankingPage = Loadable(
-  lazy(() => import('../pages/dashboard/GeneralBankingPage'))
-);
-export const GeneralBookingPage = Loadable(
-  lazy(() => import('../pages/dashboard/GeneralBookingPage'))
-);
-export const GeneralFilePage = Loadable(lazy(() => import('../pages/dashboard/GeneralFilePage')));
 
 // DASHBOARD: ECOMMERCE
 export const EcommerceShopPage = Loadable(
@@ -111,8 +98,6 @@ export const FileManagerPage = Loadable(lazy(() => import('../pages/dashboard/Fi
 // DASHBOARD: APP
 export const ChatPage = Loadable(lazy(() => import('../pages/dashboard/ChatPage')));
 export const MailPage = Loadable(lazy(() => import('../pages/dashboard/MailPage')));
-export const CalendarPage = Loadable(lazy(() => import('../pages/dashboard/CalendarPage')));
-export const KanbanPage = Loadable(lazy(() => import('../pages/dashboard/KanbanPage')));
 
 // TEST RENDER PAGE BY ROLE
 export const PermissionDeniedPage = Loadable(

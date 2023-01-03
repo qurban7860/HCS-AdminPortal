@@ -7,7 +7,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // utils
 import { fTimestamp } from '../../utils/formatTime';
 // _mock_
-import { _allFiles } from '../../_mock/arrays';
+// import { _allFiles } from '../../_mock/arrays';
 // components
 import Iconify from '../../components/iconify';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -69,7 +69,7 @@ export default function FileManagerPage() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [tableData, setTableData] = useState(_allFiles);
+  const [tableData, setTableData] = useState();
 
   const [filterType, setFilterType] = useState([]);
 

@@ -39,18 +39,17 @@ const ICONS = {
 const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
-  // {
-  //   subheader: 'general',
-  //   items: [
-  //     { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-  //     { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
-  //     // { title: 'asset', path: PATH_DASHBOARD.general.asset, icon: ICONS.ecommerce },
-  //     { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
-  //     { title: 'banking', path: PATH_DASHBOARD.general.banking, icon: ICONS.banking },
-  //     { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
-  //     { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
-  //   ],
-  // },
+  {
+    subheader: 'general',
+    items: [
+      { title: 'app', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      // deleted components
+      // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
+      // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
+      // { title: 'booking', path: PATH_DASHBOARD.general.booking, icon: ICONS.booking },
+      // { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
+    ],
+  },
 
   // MANAGEMENT
   // ----------------------------------------------------------------------
@@ -136,32 +135,22 @@ const navConfig = [
 
   // APP
   // ----------------------------------------------------------------------
-  // {
-  //   subheader: 'app',
-  //   items: [
-  //     {
-  //       title: 'mail',
-  //       path: PATH_DASHBOARD.mail.root,
-  //       icon: ICONS.mail,
-  //       info: <Label color="error">+32</Label>,
-  //     },
-  //     {
-  //       title: 'chat',
-  //       path: PATH_DASHBOARD.chat.root,
-  //       icon: ICONS.chat,
-  //     },
-  //     {
-  //       title: 'calendar',
-  //       path: PATH_DASHBOARD.calendar,
-  //       icon: ICONS.calendar,
-  //     },
-  //     {
-  //       title: 'kanban',
-  //       path: PATH_DASHBOARD.kanban,
-  //       icon: ICONS.kanban,
-  //     },
-  //   ],
-  // },
+  {
+    subheader: 'app',
+    items: [
+      {
+        title: 'mail',
+        path: PATH_DASHBOARD.mail.root,
+        icon: ICONS.mail,
+        info: <Label color="error">+32</Label>,
+      },
+      {
+        title: 'chat',
+        path: PATH_DASHBOARD.chat.root,
+        icon: ICONS.chat,
+      },
+    ],
+  },
 
   // DEMO MENU STATES
   // {
