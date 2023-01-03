@@ -24,9 +24,8 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
 import {
-  ProfileCover,
-
-} from '../../sections/@dashboard/user/profile';
+  AssetCover
+} from '../../sections/@dashboard/asset/util';
 
 import AssetNewEditForm from '../../sections/@dashboard/asset/AssetNewEditForm'
 // ----------------------------------------------------------------------
@@ -103,7 +102,7 @@ export default function AssetViewPage() {
             position: 'relative',
           }}
         >
-          <ProfileCover name={currentAsset?.name} role={currentAsset.department} />
+          <AssetCover name={currentAsset?.name} role={currentAsset.department} />
 
           <Tabs
             value={currentTab}
