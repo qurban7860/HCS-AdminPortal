@@ -4,8 +4,6 @@ import { Helmet } from 'react-helmet-async';
 // @mui
 import { Container, Typography, Stack, Link, Box, Divider } from '@mui/material';
 // sections
-import { ComponentHero, ComponentCard } from '../../sections/_examples';
-import { foundation, mui, extra } from '../../sections/_examples/config-navigation';
 
 // ----------------------------------------------------------------------
 
@@ -16,7 +14,7 @@ export default function ComponentsOverviewPage() {
         <title> Components Overview | Machine ERP</title>
       </Helmet>
 
-      <ComponentHero />
+      {/* <ComponentHero /> */}
 
       <Container sx={{ pt: 10, pb: 15 }}>
         <Stack spacing={3}>
@@ -28,11 +26,7 @@ export default function ComponentsOverviewPage() {
             </Typography>
           </Stack>
 
-          <Grid>
-            {foundation.map((item) => (
-              <ComponentCard key={item.name} item={item} />
-            ))}
-          </Grid>
+        
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed', my: 8 }} />
@@ -67,29 +61,15 @@ export default function ComponentsOverviewPage() {
           </Stack>
 
           <Grid>
-            {orderBy(mui, ['name'], ['asc']).map((item) => (
-              <ComponentCard key={item.name} item={item} />
-            ))}
+            {/* {orderBy(mui, ['name'], ['asc']).map((item) => ( */}
+              {/* // <ComponentCard key={item.name} item={item} /> */}
+            {/* ))} */}
           </Grid>
         </Stack>
 
         <Divider sx={{ borderStyle: 'dashed', my: 8 }} />
 
-        <Stack spacing={3}>
-          <Stack spacing={1}>
-            <Typography variant="h5">Extra Components</Typography>
-
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              Some custom components / use 3rd party dependencies (chart, map, editor…).
-            </Typography>
-          </Stack>
-
-          <Grid>
-            {extra.map((item) => (
-              <ComponentCard key={item.name} item={item} />
-            ))}
-          </Grid>
-        </Stack>
+      
       </Container>
     </>
   );

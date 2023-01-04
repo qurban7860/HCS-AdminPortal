@@ -13,7 +13,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import AssetNewEditForm from '../../sections/@dashboard/asset/AssetNewEditForm';
+import AssetEditForm from '../../sections/@dashboard/asset/AssetEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -55,8 +55,7 @@ export default function AssetEditPage() {
           ]}
         />
 
-        <AssetNewEditForm 
-          isEdit
+        <AssetEditForm 
           currentAsset={currentAsset} 
         />
       </Container>
