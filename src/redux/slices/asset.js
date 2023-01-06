@@ -71,26 +71,14 @@ const slice = createSlice({
         formData.append('notes', action.payload.notes);
         formData.append('location', action.payload.location);
         formData.append('email', action.payload.email);
+        formData.append('image', action.payload.image);
+
         console.log('formdata', formData);
 
-        if(action.payload.editAsset){
-          console.log('update');
-          if(action.payload.replaceImage){
-            formData.append('replaceImage', action.payload.replaceImage);
-            formData.append('image', action.payload.image);
-          }
-          const response = await axios.patch('http://localhost:5000/api/1.0.0/assets',
-          action.payload.id 
-          );
-        }
-        
-        else{
-          console.log('add');
-          formData.append('image', action.payload.image);
           const response = await axios.post('http://localhost:5000/api/1.0.0/assets', 
           formData,
           );
-        }
+        
         
       } catch (error) {
         console.error(error);
@@ -98,6 +86,39 @@ const slice = createSlice({
       }
       
     },
+
+    async updateAsset(state, action){
+      try {
+        
+        const formData = new FormData();
+
+        formData.append('id',action.payload.id);
+        formData.append('name', action.payload.name);
+        formData.append('assetTag', action.payload.tag);
+        formData.append('assetModel', action.payload.model);
+        formData.append('department', action.payload.department);
+        formData.append('status', action.payload.status);
+        formData.append('serial', action.payload.serial);
+        formData.append('notes', action.payload.notes);
+        formData.append('location', action.payload.location);
+        formData.append('email', action.payload.email);
+        console.log('formdata', formData);
+        console.log('update');
+        if(action.payload.replaceImage){
+          formData.append('replaceImage', action.payload.replaceImage);
+          formData.append('image', action.payload.image);
+        }
+          const response = await axios.put('http://localhost:5000/api/1.0.0/assets',
+          action.payload.id 
+          );
+        
+      } catch (error) {
+        console.error(error);
+        this.hasError(error.message);
+      }
+      
+    },
+
     async deleteAsset(state, action){
       try{
         const assetID = action.payload;

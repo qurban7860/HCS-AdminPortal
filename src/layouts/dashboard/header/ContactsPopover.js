@@ -48,7 +48,7 @@ export default function ContactsPopover() {
 
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 320 }}>
         <Typography variant="h6" sx={{ p: 1.5 }}>
-          Contacts <Typography component="span">({_contacts.length})</Typography>
+          Users <Typography component="span">({_contacts.length})</Typography>
         </Typography>
 
         <Scrollbar sx={{ height: ITEM_HEIGHT * 6 }}>

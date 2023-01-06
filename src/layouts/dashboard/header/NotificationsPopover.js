@@ -33,9 +33,9 @@ import { IconButtonAnimate } from '../../../components/animate';
 export default function NotificationsPopover() {
   const [openPopover, setOpenPopover] = useState(null);
 
-  const [notifications, setNotifications] = useState(_notifications);
+  const [notifications, setNotifications] = useState(null);
 
-  const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
+  // const totalUnRead = notifications.filter((item) => item.isUnRead === true).length;
 
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
@@ -47,10 +47,10 @@ export default function NotificationsPopover() {
 
   const handleMarkAllAsRead = () => {
     setNotifications(
-      notifications.map((notification) => ({
-        ...notification,
-        isUnRead: false,
-      }))
+      // notifications.map((notification) => ({
+      //   ...notification,
+      //   isUnRead: false,
+      // }))
     );
   };
 
@@ -61,7 +61,9 @@ export default function NotificationsPopover() {
         onClick={handleOpenPopover}
         sx={{ width: 40, height: 40 }}
       >
-        <Badge badgeContent={totalUnRead} color="error">
+        <Badge badgeContent={null}
+        // {totalUnRead}
+         color="error">
           <Iconify icon="eva:bell-fill" />
         </Badge>
       </IconButtonAnimate>
@@ -72,17 +74,17 @@ export default function NotificationsPopover() {
             <Typography variant="subtitle1">Notifications</Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              You have {totalUnRead} unread messages
+              {/* You have {totalUnRead} unread messages */}
             </Typography>
           </Box>
 
-          {totalUnRead > 0 && (
+          {/* {totalUnRead > 0 && (
             <Tooltip title=" Mark all as read">
               <IconButton color="primary" onClick={handleMarkAllAsRead}>
                 <Iconify icon="eva:done-all-fill" />
               </IconButton>
             </Tooltip>
-          )}
+          )} */}
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -96,9 +98,9 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(0, 2).map((notification) => (
+            {/* {notifications.slice(0, 2).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
-            ))}
+            ))} */}
           </List>
 
           <List
@@ -109,9 +111,9 @@ export default function NotificationsPopover() {
               </ListSubheader>
             }
           >
-            {notifications.slice(2, 5).map((notification) => (
+            {/* {notifications.slice(2, 5).map((notification) => (
               <NotificationItem key={notification.id} notification={notification} />
-            ))}
+            ))} */}
           </List>
         </Scrollbar>
 
