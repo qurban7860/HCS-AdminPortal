@@ -28,8 +28,8 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
+    email: 'naveed@terminustech.co.nz',
+    password: 'qwer1234',
   };
 
   const methods = useForm({

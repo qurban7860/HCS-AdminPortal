@@ -11,15 +11,16 @@ import LoginLayout from '../../layouts/login';
 import AuthLoginForm from './AuthLoginForm';
 import AuthWithSocial from './AuthWithSocial';
 
+import { CONFIG } from '../../config-global';
 // ----------------------------------------------------------------------
 
 export default function Login() {
   const { method } = useAuthContext();
 
   return (
-    <LoginLayout>
+    <LoginLayout title={CONFIG.MESSAGE_LOGIN_USER}>
       <Stack spacing={2} sx={{ mb: 5, position: 'relative' }}>
-        <Typography variant="h4">Sign in to Machine ERP</Typography>
+        <Typography variant="h4">Sign In | {CONFIG.APP_TITLE}</Typography>
 
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2">New user?</Typography>
@@ -40,7 +41,7 @@ export default function Login() {
       </Stack>
 
       {/* <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>demo@minimals.cc</strong> / password :<strong> demo1234</strong>
+        Use email : <strong>naveed@terminustech.co.nz</strong> / password :<strong> qwer1234</strong>
       </Alert> */}
 
       <AuthLoginForm />

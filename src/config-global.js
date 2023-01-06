@@ -1,19 +1,33 @@
 // routes
 import { PATH_DASHBOARD } from './routes/paths';
 
+
 // API
 // ----------------------------------------------------------------------
-
+/*
 export const ROOT_CONFIG = {
   SSL_Enabled_domain: false,
   APP_DOMAIN_NAME: 'localhost',
   APP_PORT: 5000 ,
   API_ROOT: '/api/1.0.0'
 };
+*/
+// const sslStatus = ((ROOT_CONFIG.SSL_Enabled_domain === true ? 'https':'http'));
+// export const serverURL = `${sslStatus}://${ROOT_CONFIG.APP_DOMAIN_NAME}:${ROOT_CONFIG.APP_PORT}${ROOT_CONFIG.API_ROOT}/`;
 
-const sslStatus = ((ROOT_CONFIG.SSL_Enabled_domain === true ? 'https':'http'));
-export const serverURL = `${sslStatus}://${ROOT_CONFIG.APP_DOMAIN_NAME}:${ROOT_CONFIG.APP_PORT}${ROOT_CONFIG.API_ROOT}/`;
 
+export const CONFIG = {
+  APP_CODE: 'hcs-adminportal',
+  APP_TITLE: 'Howick Cloud Services',
+  APP_NAME: 'Howick Cloud Services Administration Portal',
+  ENV: 'dev',
+  APP_DOMAIN_NAME: 'localhost',
+  APP_PORT: '3000',
+  SSL_Enabled_domain:'' ,
+  SERVER_URL: 'http://localhost:3001/api/1.0.0/',
+  MESSAGE_REGISTER_USER: 'Welcome to Howick Cloud Services',
+  MESSAGE_LOGIN_USER: 'Hi, Welcome to Howick Cloud Services'
+}
 
 export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
 
