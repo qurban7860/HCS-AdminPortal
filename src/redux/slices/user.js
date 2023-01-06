@@ -4,6 +4,7 @@ import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
+import { serverURL } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
@@ -83,14 +84,14 @@ const slice = createSlice({
             formData.append('replaceImage', action.payload.replaceImage);
             formData.append('image', action.payload.image);
           }
-          const response = await axios.patch('http://localhost:5000/api/1.0.0/users',
+          const response = await axios.patch(`${serverURL}users`,
           action.payload.id 
           );
         }
         
         else{
           formData.append('image', action.payload.image);
-          const response = await axios.post('http://localhost:5000/api/1.0.0/users', 
+          const response = await axios.post(`${serverURL}users`, 
           formData,
           );
         }
@@ -105,7 +106,7 @@ const slice = createSlice({
       try{
         const userID = action.payload;
         console.log(action.payload)
-        const response = await axios.delete('http://localhost:5000/api/1.0.0/users', {
+        const response = await axios.delete(`${serverURL}users`, {
           userID
         });
       } catch (error) {
@@ -144,7 +145,7 @@ export function getUsers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:5000/api/1.0.0/users');
+      const response = await axios.get(`${serverURL}users`);
       console.log(response.data);
       dispatch(slice.actions.getUsersSuccess(response.data.users));
     } catch (error) {
@@ -159,7 +160,7 @@ export function getUser(name) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:5000/api/users/user', {
+      const response = await axios.get(`${serverURL}users`, {
         params: { name },
       });
       dispatch(slice.actions.getUsersuccess(response.data.user));

@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
+// import { ROOT_CONFIG } from 'src/config-global';
+import { serverURL } from '../config-global';
+
 // utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
-
 // ----------------------------------------------------------------------
 
 // NOTE:
@@ -116,8 +118,9 @@ export function AuthProvider({ children }) {
   }, [initialize]);
 
   // LOGIN
+
   const login = useCallback(async (email, password) => {
-    const response = await axios.post('http://localhost:5000/api/1.0.0/users/login', {
+    const response = await axios.post(`${serverURL}users/login`, {
       email,
       password,
     });
@@ -139,7 +142,7 @@ export function AuthProvider({ children }) {
 
   // REGISTER
   const register = useCallback(async (firstName, lastName, email, password) => {
-    const response = await axios.post('http://localhost:5000/api/1.0.0/users/signup', {
+    const response = await axios.post(`${serverURL}users/signup`, {
       firstName,
       lastName,
       email,

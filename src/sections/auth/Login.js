@@ -45,7 +45,7 @@ export default function Login() {
 
       <AuthLoginForm />
 
-      <AuthWithSocial />
+      {/* <AuthWithSocial /> */}
     </LoginLayout>
   );
 }

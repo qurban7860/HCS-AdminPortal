@@ -4,6 +4,17 @@ import { PATH_DASHBOARD } from './routes/paths';
 // API
 // ----------------------------------------------------------------------
 
+export const ROOT_CONFIG = {
+  SSL_Enabled_domain: false,
+  APP_DOMAIN_NAME: 'localhost',
+  APP_PORT: 5000 ,
+  API_ROOT: '/api/1.0.0'
+};
+
+const sslStatus = ((ROOT_CONFIG.SSL_Enabled_domain === true ? 'https':'http'));
+export const serverURL = `${sslStatus}://${ROOT_CONFIG.APP_DOMAIN_NAME}:${ROOT_CONFIG.APP_PORT}${ROOT_CONFIG.API_ROOT}/`;
+
+
 export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
 
 export const FIREBASE_API = {

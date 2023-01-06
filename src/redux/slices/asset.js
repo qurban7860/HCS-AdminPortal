@@ -4,6 +4,7 @@ import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
+import { serverURL } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
@@ -75,7 +76,7 @@ const slice = createSlice({
 
         console.log('formdata', formData);
 
-          const response = await axios.post('http://localhost:5000/api/1.0.0/assets', 
+          const response = await axios.post(`${serverURL}assets`, 
           formData,
           );
         
@@ -108,7 +109,7 @@ const slice = createSlice({
           formData.append('replaceImage', action.payload.replaceImage);
           formData.append('image', action.payload.image);
         }
-          const response = await axios.put('http://localhost:5000/api/1.0.0/assets',
+          const response = await axios.put(`${serverURL}assets`,
           action.payload.id 
           );
         
@@ -123,7 +124,7 @@ const slice = createSlice({
       try{
         const assetID = action.payload;
         console.log(action.payload)
-        const response = await axios.delete('http://localhost:5000/api/1.0.0/assets', {
+        const response = await axios.delete(`${serverURL}assets`, {
           assetID
         });
         const { asset } = response.data;
@@ -166,7 +167,7 @@ export function getAssets() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('http://localhost:5000/api/1.0.0/assets');
+      const response = await axios.get(`${serverURL}assets`);
       console.log(response.data);
       dispatch(slice.actions.getAssetsSuccess(response.data.assets));
     } catch (error) {
