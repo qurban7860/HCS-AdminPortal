@@ -1,12 +1,12 @@
 APP_CODE=hcs-adminportal
 APP_NAME=Howick Cloud Services Administration Portal
 ENV=dev
-APP_DOMAIN_NAME=localhost
-APP_PORT=3000
+HOST_NAME=localhost
+PORT=3000
 SSL_Enabled_domain=
 
 #back-end server configuration
-SERVER_URL=http://localhost:3000/api/1.0.0/
+SERVER_URL=http://localhost:3001/api/1.0.0/
 
 
 LOG_TO_CONSOLE=true
