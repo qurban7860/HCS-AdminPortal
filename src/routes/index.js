@@ -125,10 +125,9 @@ export default function Router() {
 
     // Main Routes
     {
-      element: <MainLayout />,
+      element: <LoginPage />,
       children: [
         { element: <HomePage />, index: true },
-        // Demo Components
       ],
     },
     {
