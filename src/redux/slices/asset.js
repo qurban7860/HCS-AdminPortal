@@ -103,14 +103,16 @@ const slice = createSlice({
         formData.append('notes', action.payload.notes);
         formData.append('location', action.payload.location);
         formData.append('email', action.payload.email);
-        console.log('formdata', formData);
-        console.log('update');
         if(action.payload.replaceImage){
-          formData.append('replaceImage', action.payload.replaceImage);
-          formData.append('image', action.payload.image);
+          console.log('update_iamge');
+          formData.append('replaceImage', true);
+          formData.append('image', action.payload.newImage);
+        }else{
+          formData.append('replaceImage', false);
+          formData.append('imagePath', action.payload.image)
         }
-          const response = await axios.put(`${CONFIG.SERVER_URL}assets`,
-          action.payload.id 
+          const response = await axios.put(`${CONFIG.SERVER_URL}assets/${action.payload.id}`, 
+            formData
           );
         
       } catch (error) {

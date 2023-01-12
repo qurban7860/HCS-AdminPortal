@@ -132,7 +132,7 @@ export default function AssetEditForm({ currentAsset }) {
   const onSubmit = async (data) => {
     console.log(data);
       try{
-        dispatch(saveAsset(data));
+        dispatch(updateAsset(data));
         reset();
         enqueueSnackbar('Update success!');
         navigate(PATH_DASHBOARD.asset.list);
