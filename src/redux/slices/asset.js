@@ -44,6 +44,7 @@ const slice = createSlice({
 
     // GET ASSETS
     getAssetsSuccess(state, action) {
+      state.error = null;
       state.isLoading = false;
       state.success = true;
       state.assets = action.payload;
@@ -74,8 +75,6 @@ const slice = createSlice({
         formData.append('email', action.payload.email);
         formData.append('image', action.payload.image);
 
-        console.log('formdata', formData);
-
           const response = await axios.post(`${CONFIG.SERVER_URL}assets`, 
           formData,
           );
@@ -102,14 +101,10 @@ const slice = createSlice({
         formData.append('serial', action.payload.serial);
         formData.append('notes', action.payload.notes);
         formData.append('location', action.payload.location);
-        formData.append('email', action.payload.email);
         if(action.payload.replaceImage){
-          console.log('update_iamge');
-          formData.append('replaceImage', true);
-          formData.append('image', action.payload.newImage);
+          formData.append('image', action.payload.image);
         }else{
-          formData.append('replaceImage', false);
-          formData.append('imagePath', action.payload.image)
+          formData.append('imagePath', action.payload.imagePath)
         }
           const response = await axios.put(`${CONFIG.SERVER_URL}assets/${action.payload.id}`, 
             formData
@@ -126,9 +121,7 @@ const slice = createSlice({
       try{
         const assetID = action.payload;
         console.log(action.payload)
-        const response = await axios.delete(`${CONFIG.SERVER_URL}assets`, {
-          assetID
-        });
+        const response = await axios.delete(`${CONFIG.SERVER_URL}assets/${assetID}`);
         const { asset } = response.data;
       } catch (error) {
         console.error(error);
@@ -173,6 +166,7 @@ export function getAssets() {
       console.log(response.data);
       dispatch(slice.actions.getAssetsSuccess(response.data));
     } catch (error) {
+      console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };

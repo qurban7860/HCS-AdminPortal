@@ -42,7 +42,7 @@ import { getAssets, deleteAsset } from '../../redux/slices/asset';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Asset', align: 'left' },
+  { id: 'name', label: 'Asset', align: 'left', maxwidth: 150},
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'department', label: 'Department', align: 'left', width: 180 },
   { id: 'location', label: 'Location', align: 'left' },
@@ -89,7 +89,7 @@ export default function AssetListPage() {
 
   const dispatch = useDispatch();
 
-  const { assets, isLoading } = useSelector((state) => state.asset);
+  const { assets, isLoading, error } = useSelector((state) => state.asset);
 
   const [filterName, setFilterName] = useState('');
 
@@ -104,11 +104,15 @@ export default function AssetListPage() {
   }, [dispatch]);
 
   useEffect(() => {
-    if (assets) {
-      console.log(assets);
+    if (assets && !error) {
+      console.log('working');
       setTableData(assets);
+      enqueueSnackbar('list loaded');
+    }else{
+      console.log('not working');
+      enqueueSnackbar(error, { variant: `error` });
     }
-  }, [assets]);
+  }, [assets, error, enqueueSnackbar]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -156,8 +160,8 @@ export default function AssetListPage() {
           setPage(page - 1);
         }
       }
-    }catch(error){
-      console.log(error);
+    }catch(err){
+      console.log(err);
     }
   };
 
