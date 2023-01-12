@@ -187,7 +187,7 @@ export function getAsset(name) {
       const response = await axios.get('/api/assets/asset', {
         params: { name },
       });
-      dispatch(slice.actions.getAssetSuccess(response.data.asset));
+      dispatch(slice.actions.getAssetSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
