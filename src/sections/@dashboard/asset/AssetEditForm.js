@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { saveAsset } from '../../../redux/slices/asset';
+import { saveAsset, updateAsset } from '../../../redux/slices/asset';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
