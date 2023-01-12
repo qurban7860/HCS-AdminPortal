@@ -171,7 +171,7 @@ export function getAssets() {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}assets`);
       console.log(response.data);
-      dispatch(slice.actions.getAssetsSuccess(response.data.assets));
+      dispatch(slice.actions.getAssetsSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
