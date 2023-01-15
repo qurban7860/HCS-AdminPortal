@@ -165,9 +165,9 @@ export default function AssetEditForm({ currentAsset }) {
             <Stack spacing={3}>
               <RHFTextField name="name" label="Asset Name" />
 
-              <RHFTextField readOnly name="tag" label="Asset Tag" />
+              <RHFTextField name="tag" label="Asset Tag" />
 
-              <RHFSelect readOnly native name="model" label="Model">
+              <RHFSelect native name="model" label="Model">
                   <option value="" />
                   {CATEGORY_OPTION.map((model) => (
                     <optgroup key={model.group} label={model.group}>
@@ -180,7 +180,7 @@ export default function AssetEditForm({ currentAsset }) {
                   ))}
                 </RHFSelect>
 
-                <RHFSelect readOnly xs={3} md={4} native name="status" label="Status">
+                <RHFSelect xs={3} md={4} native name="status" label="Status">
                 <option value="" disabled/>
                   {STATUS_OPTION.map((option) => (
                     <option key={option.id} value={option.id}>
@@ -189,9 +189,9 @@ export default function AssetEditForm({ currentAsset }) {
                   ))}
                 </RHFSelect>
 
-                <RHFTextField readOnly name="serial" label="Serial" />
+                <RHFTextField name="serial" label="Serial" />
 
-                <RHFSelect readOnly native name="location" label="Location">
+                <RHFSelect native name="location" label="Location">
                 <option value="" disabled/>
                 {COUNTRIES.map((option) => (
                     <option key={option.id} value={option.value}>
@@ -202,7 +202,7 @@ export default function AssetEditForm({ currentAsset }) {
 
                 <Grid container spacing={1}>
                   <Grid item xs={8}>
-                    <RHFSelect readOnly native name="department" label="Department">
+                    <RHFSelect native name="department" label="Department">
                     <option value="" disabled/>
                     {departments.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -224,7 +224,7 @@ export default function AssetEditForm({ currentAsset }) {
                   Notes
                 </Typography>
 
-                <RHFEditor readOnly simple name="notes" />
+                <RHFEditor simple name="notes" />
               </Stack> 
 
 

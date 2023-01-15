@@ -120,7 +120,7 @@ const slice = createSlice({
         } else {
           formData.append('imagePath', action.payload.imagePath)
         }
-        const response = await axios.put(`${CONFIG.SERVER_URL}assets/${action.payload.id}`,
+        const response = await axios.patch(`${CONFIG.SERVER_URL}assets/${action.payload.id}`,
           formData
         );
 
