@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -11,11 +11,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
+import { getDepartments } from '../../../redux/slices/department';
+
 import { saveAsset } from '../../../redux/slices/asset';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+
+import { useAuthContext } from '../../../auth/useAuthContext';
+
 import FormProvider, {
   RHFSwitch,
   RHFSelect,
@@ -41,11 +46,6 @@ const COUNTRIES = [
   { id: '3', value: 'Portugal' },
 ];
 
-const DEPARTMENT = [
-  { id: '1', value: 'HR' },
-  { id: '2', value: 'F & A' },
-  { id: '3', value: 'IS' },
-];
 
 
 const STATUS_OPTION = [
@@ -70,8 +70,15 @@ AssetNewEditForm.propTypes = {
 
 export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
 
-  const { assets, isLoading, error } = useSelector((state) => state.asset);
+  const { error } = useSelector((state) => state.asset);
+
+  const { departments } = useSelector((state) => state.department);
   
+  const { userId } = useAuthContext();
+
+  // console.log(user);
+
+
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
@@ -91,19 +98,17 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentAsset?._id || '',
-      name: currentAsset?.name || '',
-      status: currentAsset?.status || '',
-      tag: currentAsset?.assetTag || '',
-      model: currentAsset?.assetModel || '',
-      serial: currentAsset?.serial || '',
-      location: currentAsset?.location || '',
-      department: currentAsset?.department || '',
-      notes: currentAsset?.notes || '',
+      id: '',
+      name: '',
+      status: '',
+      tag: '',
+      model: '',
+      serial: '',
+      location: '',
+      department_id: '',
+      notes: '',
       image: null,
-      imagePath: currentAsset?.image || null,
-      replaceImage: false,
-      editAsset: isEdit
+      addedBy: userId,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentAsset]
@@ -124,15 +129,14 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
 
   const values = watch();
 
+  useLayoutEffect(() => {
+    dispatch(getDepartments());
+  }, [dispatch]);
+
   useEffect(() => {
-    if (isEdit && currentAsset) {
       reset(defaultValues);
-    }
-    if (!isEdit) {
-      reset(defaultValues);
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentAsset]);
+  },[]);
 
 
   const onSubmit = async (data) => {
@@ -140,7 +144,7 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
       try{
         dispatch(saveAsset(data));
         reset();
-        enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
+        enqueueSnackbar('Create success!');
         navigate(PATH_DASHBOARD.asset.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
@@ -158,19 +162,13 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
 
       if (file) {
         setValue('image', newFile, { shouldValidate: true });
-        if(isEdit){
-          setValue('replaceImage', true);
-        }
       }
     },
-    [setValue, isEdit]
+    [setValue]
   );
 
   const handleRemoveFile = () => {
     setValue('image', null);
-    if(isEdit){
-      setValue('replaceImage', false);
-    }
   };
 
   return (
@@ -220,9 +218,9 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
                   <Grid item xs={8}>
                     <RHFSelect readOnly native name="department" label="Department">
                     <option value="" disabled/>
-                    {DEPARTMENT.map((option) => (
-                    <option key={option.id} value={option.value}>
-                      {option.value}
+                    {departments.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.name}
                     </option>
                   ))}
                     </RHFSelect>
@@ -257,11 +255,14 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
                   // onUpload={() => console.log('ON UPLOAD')}
                 />
               </Stack>
-            </Stack>
-            <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+
+              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
               {!isEdit ? 'Save Asset' : 'Save Changes'}
             </LoadingButton>
+            </Stack>
+            
           </Card>
+          
         </Grid>
       </Grid>
     </FormProvider>

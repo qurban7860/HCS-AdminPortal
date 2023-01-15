@@ -9,12 +9,14 @@ import { CONFIG } from '../../config-global';
 // ----------------------------------------------------------------------
 
 const initialState = {
+  intial: false,
+  responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
   assets: [],
   asset: null,
-  values: {
+  assetParams: {
     name: 0,
     status: [],
     tag: 0,
@@ -40,94 +42,95 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+      state.initial = true;
     },
 
     // GET ASSETS
     getAssetsSuccess(state, action) {
-      state.error = null;
       state.isLoading = false;
       state.success = true;
       state.assets = action.payload;
+      state.initial = true;
     },
 
-    // GET ASSETS
+    // GET ASSET
     getAssetSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.asset = action.payload;
+      state.initial = true;
     },
 
 
-    async saveAsset(state, action){
-      try {
-        
-        const formData = new FormData();
+    setResponseMessage(state, action) {
+      state.responseMessage = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
 
-        formData.append('id',action.payload.id);
+
+    async saveAsset(state, action) {
+      try {
+
+        const formData = new FormData();
+        console.log(action.payload.department);
+        formData.append('id', action.payload.id);
         formData.append('name', action.payload.name);
         formData.append('assetTag', action.payload.tag);
         formData.append('assetModel', action.payload.model);
-        formData.append('department', action.payload.department);
+        formData.append('department_id', action.payload.department);
         formData.append('status', action.payload.status);
         formData.append('serial', action.payload.serial);
         formData.append('notes', action.payload.notes);
         formData.append('location', action.payload.location);
         formData.append('email', action.payload.email);
+        formData.append('added_by', action.payload.addedBy);
         formData.append('image', action.payload.image);
 
-          const response = await axios.post(`${CONFIG.SERVER_URL}assets`, 
+
+        const response = await axios.post(`${CONFIG.SERVER_URL}assets`,
           formData,
-          );
-        
-        
+        );
+
+
       } catch (error) {
         console.error(error);
         this.hasError(error.message);
       }
-      
+
     },
 
-    async updateAsset(state, action){
+    async updateAsset(state, action) {
       try {
-        
+
         const formData = new FormData();
 
-        formData.append('id',action.payload.id);
+        formData.append('id', action.payload.id);
         formData.append('name', action.payload.name);
         formData.append('assetTag', action.payload.tag);
         formData.append('assetModel', action.payload.model);
-        formData.append('department', action.payload.department);
+        formData.append('department_id', action.payload.department);
         formData.append('status', action.payload.status);
         formData.append('serial', action.payload.serial);
         formData.append('notes', action.payload.notes);
         formData.append('location', action.payload.location);
-        if(action.payload.replaceImage){
+        if (action.payload.replaceImage) {
           formData.append('image', action.payload.image);
-        }else{
+        } else {
           formData.append('imagePath', action.payload.imagePath)
         }
-          const response = await axios.put(`${CONFIG.SERVER_URL}assets/${action.payload.id}`, 
-            formData
-          );
-        
+        const response = await axios.put(`${CONFIG.SERVER_URL}assets/${action.payload.id}`,
+          formData
+        );
+
       } catch (error) {
         console.error(error);
         this.hasError(error.message);
       }
-      
+
     },
 
-    async deleteAsset(state, action){
-      try{
-        const assetID = action.payload;
-        console.log(action.payload)
-        const response = await axios.delete(`${CONFIG.SERVER_URL}assets/${assetID}`);
-        const { asset } = response.data;
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-    },
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -146,10 +149,9 @@ export default slice.reducer;
 export const {
   saveAsset,
   updateAsset,
-  deleteAsset,
   getCart,
   addToCart,
-  resetCart,
+  setResponseMessage,
   gotoStep,
   backStep,
   nextStep,
@@ -163,8 +165,11 @@ export function getAssets() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}assets`);
+      console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getAssetsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Assets loaded successfully'));
+
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error));
@@ -182,6 +187,7 @@ export function getAsset(name) {
         params: { name },
       });
       dispatch(slice.actions.getAssetSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Assets Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -191,42 +197,20 @@ export function getAsset(name) {
 
 // ----------------------------------------------------------------------
 
-export function getAssetLocations() {
+export function deleteAsset(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    // try {
-
-    // } catch (error) {
-    //   console.error(error);
-    //   dispatch(slice.actions.hasError(error));
-    // }
+    try {
+      console.log(id);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}assets/${id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+      console.log(response.data);
+      // state.responseMessage = response.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
   };
 }
 
-// ----------------------------------------------------------------------
 
-export function getAssetDepartments() {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    // try {
-
-    // } catch (error) {
-    //   console.error(error);
-    //   dispatch(slice.actions.hasError(error));
-    // }
-  };
-}
-
-// ----------------------------------------------------------------------
-
-export function getAssetModels() {
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    // try {
-
-    // } catch (error) {
-    //   console.error(error);
-    //   dispatch(slice.actions.hasError(error));
-    // }
-  };
-}

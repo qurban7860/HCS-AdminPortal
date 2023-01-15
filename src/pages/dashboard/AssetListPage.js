@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -38,15 +38,19 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import { AssetTableRow, AssetTableToolbar } from '../../sections/@dashboard/asset/list';
 import { getAssets, deleteAsset } from '../../redux/slices/asset';
+import { getDepartments } from '../../redux/slices/department';
+
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Asset', align: 'left', maxwidth: 150},
+  { id: 'name', label: 'Asset', align: 'left', maxwidth: 150 },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'department', label: 'Department', align: 'left', width: 180 },
   { id: 'location', label: 'Location', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left'  },
+  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'action', label: 'Actions', align: 'left' },
+
 ];
 
 const STATUS_OPTIONS = [
@@ -81,15 +85,13 @@ export default function AssetListPage() {
     defaultOrderBy: 'createdAt',
   });
 
+  const dispatch = useDispatch();
+
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-
-  const { assets, isLoading, error } = useSelector((state) => state.asset);
 
   const [filterName, setFilterName] = useState('');
 
@@ -99,20 +101,23 @@ export default function AssetListPage() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  useEffect(() => {
+  const { assets, isLoading, error, initial, responseMessage } = useSelector((state) => state.asset);
+
+  useLayoutEffect(() => {
     dispatch(getAssets());
+    dispatch(getDepartments());
   }, [dispatch]);
 
   useEffect(() => {
-    if (assets && !error) {
-      console.log('working');
+    if (initial) {
+      if (assets && !error) {
+        enqueueSnackbar(responseMessage);
+      } else {
+        enqueueSnackbar(error, { variant: `error` });
+      }
       setTableData(assets);
-      enqueueSnackbar('list loaded');
-    }else{
-      console.log('not working');
-      enqueueSnackbar(error, { variant: `error` });
     }
-  }, [assets, error, enqueueSnackbar]);
+  }, [assets, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -147,11 +152,10 @@ export default function AssetListPage() {
     setFilterStatus(event.target.value);
   };
 
-  const  handleDeleteRow = (id) => {
-    try{
+  const handleDeleteRow = async (id) => {
+    try {
       console.log(id);
       dispatch(deleteAsset(id));
-      enqueueSnackbar('Asset Deleted successfully!');
       dispatch(getAssets());
       setSelected([]);
 
@@ -160,7 +164,7 @@ export default function AssetListPage() {
           setPage(page - 1);
         }
       }
-    }catch(err){
+    } catch (err) {
       console.log(err);
     }
   };

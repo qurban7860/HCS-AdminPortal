@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { saveAsset, updateAsset } from '../../../redux/slices/asset';
+import { updateAsset } from '../../../redux/slices/asset';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -41,13 +41,6 @@ const COUNTRIES = [
   { id: '3', value: 'Portugal' },
 ];
 
-const DEPARTMENT = [
-  { id: '1', value: 'HR' },
-  { id: '2', value: 'F & A' },
-  { id: '3', value: 'IS' },
-];
-
-
 const STATUS_OPTION = [
   { id: '1', value: 'Ready To Deploy' },
   { id: '2', value: 'Pending' },
@@ -69,6 +62,8 @@ AssetEditForm.propTypes = {
 export default function AssetEditForm({ currentAsset }) {
 
   const { assets, isLoading, error } = useSelector((state) => state.asset);
+
+  const { departments } = useSelector((state) => state.department);
   
   const dispatch = useDispatch();
   
@@ -96,7 +91,7 @@ export default function AssetEditForm({ currentAsset }) {
       model: currentAsset?.assetModel || '',
       serial: currentAsset?.serial || '',
       location: currentAsset?.location || '',
-      department: currentAsset?.department || '',
+      department: currentAsset?.department_id || '',
       notes: currentAsset?.notes || '',
       image: null,
       imagePath: currentAsset?.image || null,
@@ -209,9 +204,9 @@ export default function AssetEditForm({ currentAsset }) {
                   <Grid item xs={8}>
                     <RHFSelect readOnly native name="department" label="Department">
                     <option value="" disabled/>
-                    {DEPARTMENT.map((option) => (
-                    <option key={option.id} value={option.value}>
-                      {option.value}
+                    {departments.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.name}
                     </option>
                   ))}
                     </RHFSelect>
@@ -246,10 +241,11 @@ export default function AssetEditForm({ currentAsset }) {
                   // onUpload={() => console.log('ON UPLOAD')}
                 />
               </Stack>
-            </Stack>
-            <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
               Save Changes
             </LoadingButton>
+            </Stack>
+            {/* <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicon/favicon-32x32.png"> */}
           </Card>
         </Grid>
       </Grid>

@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 // slices
 import assetReducer from './slices/asset';
 import userReducer from './slices/user';
+import departmentReducer from './slices/department';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,14 @@ export const assetPersistConfig = {
   key: 'asset',
   storage,
   keyPrefix: 'redux-',
+  blacklist: ['assets', 'error', 'initial', 'responseMessage']
+};
+
+export const departmentPersistConfig = {
+  key: 'department',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: []
 };
 
 export const userPersistConfig = {
@@ -28,6 +37,7 @@ export const userPersistConfig = {
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   asset: persistReducer(assetPersistConfig, assetReducer),
+  department: persistReducer(departmentPersistConfig, departmentReducer),
 });
 
 export default rootReducer;

@@ -13,7 +13,7 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { fDate } from '../../../../utils/formatTime';
+import { fDate, fDateTime, fTimestamp, fToNow } from '../../../../utils/formatTime';
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
 import Label from '../../../../components/label';
@@ -21,6 +21,8 @@ import Image from '../../../../components/image';
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
+import { useSelector } from '../../../../redux/store';
+
 
 // ----------------------------------------------------------------------
 
@@ -41,11 +43,17 @@ export default function AssetTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, status, department, location, price } = row;
+  const { name, status, department_id, location, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
+
+  const { departments } = useSelector((state) => state.department);
+
+  const department = departments.find(o => o._id === department_id);
+
+  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -94,9 +102,12 @@ export default function AssetTableRow({
 
         <TableCell>{status}</TableCell>
 
-        <TableCell>{department}</TableCell>
+        <TableCell>{department.name}</TableCell>
 
         <TableCell>{location}</TableCell>
+
+        <TableCell>{fDate(createdAt)}</TableCell>
+
 
 
         {/* <TableCell>{fDate(createdAt)}</TableCell> */}
@@ -117,7 +128,7 @@ export default function AssetTableRow({
           </Label>
         </TableCell> */}
 
-        <TableCell align="right">{fCurrency(price)}</TableCell>
+        {/* <TableCell align="right">{fCurrency(price)}</TableCell> */}
 
         <TableCell align="right">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>

@@ -35,6 +35,7 @@ const reducer = (state, action) => {
       ...state,
       isAuthenticated: true,
       user: action.payload.user,
+      userId: action.payload.userId,
     };
   }
   if (action.type === 'REGISTER') {
@@ -124,7 +125,7 @@ export function AuthProvider({ children }) {
       email,
       password,
     });
-    const { accessToken, user } = response.data;
+    const { accessToken, user, userId } = response.data;
 
     localStorage.setItem('email', user.email);
     localStorage.setItem('name', user.displayName);
@@ -136,6 +137,7 @@ export function AuthProvider({ children }) {
       type: 'LOGIN',
       payload: {
         user,
+        userId
       },
     });
   }, []);
