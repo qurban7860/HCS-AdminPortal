@@ -125,9 +125,9 @@ export default function Router() {
 
     // Main Routes
     {
-      element: <LoginPage />,
+      element: <DashboardLayout />,
       children: [
-        { element: <HomePage />, index: true },
+        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
       ],
     },
     {

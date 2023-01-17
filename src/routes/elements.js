@@ -25,16 +25,16 @@ export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/Gen
 
 // ASSET
 export const AssetListPage = Loadable(
-  lazy(() => import('../pages/dashboard/AssetListPage'))
+  lazy(() => import('../pages/asset/AssetListPage'))
 );
 export const AssetCreatePage = Loadable(
-  lazy(() => import('../pages/dashboard/AssetCreatePage'))
+  lazy(() => import('../pages/asset/AssetCreatePage'))
 );
 export const AssetEditPage = Loadable(
-  lazy(() => import('../pages/dashboard/AssetEditPage'))
+  lazy(() => import('../pages/asset/AssetEditPage'))
 );
 export const AssetViewPage = Loadable(
-  lazy(() => import('../pages/dashboard/AssetViewPage'))
+  lazy(() => import('../pages/asset/AssetViewPage'))
 );
 
 // DASHBOARD: USER
