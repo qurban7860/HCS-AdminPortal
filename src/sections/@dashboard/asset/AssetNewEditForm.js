@@ -41,23 +41,24 @@ import { LocationForm } from './Location';
 // ----------------------------------------------------------------------
 
 const COUNTRIES = [
-  { id: '1', value: 'Pakistan' },
+  { id: '1', value: 'New Zealand' },
   { id: '2', value: 'Canada' },
-  { id: '3', value: 'Portugal' },
+  { id: '3', value: 'USA' },
+  { id: '4', value: 'Portugal' },
 ];
-
-
 
 const STATUS_OPTION = [
-  { id: '1', value: 'Ready To Deploy' },
-  { id: '2', value: 'Pending' },
-  { id: '3', value: 'Archived' },
-  { id: '4', value: 'Undeployable' },
+  { id: '1', value: 'Order Received' },
+  { id: '2', value: 'In Progress' },
+  { id: '3', value: 'Ready For Transport' },
+  { id: '4', value: 'In Freight' },
+  { id: '5', value: 'Deployed' },
+  { id: '6', value: 'Archived' },
 ];
 const CATEGORY_OPTION = [
-  { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
-  { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
-  { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] },
+  { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
+  { group: 'Decoiler', classify: ['0.5T Decoiler', '1.0T Decoiler', '1.5T Decoiler', '3.0T Decoiler', '5.0T Decoiler', '6.0T Decoiler'] },
+  { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
 ];
 
 // ----------------------------------------------------------------------
@@ -73,6 +74,15 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
   const { error } = useSelector((state) => state.asset);
 
   const { departments } = useSelector((state) => state.department);
+  
+  // console.log("departments.length: "+ departments.length);
+  // console.log("departments: "+ departments);
+  
+  /*
+  if (departments === undefined){
+    departments = [];
+  }
+  */
   
   const { userId } = useAuthContext();
 
@@ -217,8 +227,9 @@ export default function AssetNewEditForm({ isEdit, readOnly, currentAsset }) {
                 <Grid container spacing={1}>
                   <Grid item xs={8}>
                     <RHFSelect native name="department" label="Department">
-                    <option value="" disabled/>
-                    {departments.map((option) => (
+                    <option value="" selected/>
+                    { 
+                    departments.length > 0 && departments.map((option) => (
                     <option key={option._id} value={option._id}>
                       {option.name}
                     </option>

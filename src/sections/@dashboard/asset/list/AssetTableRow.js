@@ -51,7 +51,11 @@ export default function AssetTableRow({
 
   const { departments } = useSelector((state) => state.department);
 
-  const department = departments.find(o => o._id === department_id);
+  let department = "";
+  if (department_id !== undefined && departments !== undefined){
+    department = departments.find(o => o._id === department_id);
+  }
+  
 
   // console.log('dep', departmentName);
 
