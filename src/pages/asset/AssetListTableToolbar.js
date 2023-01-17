@@ -14,11 +14,11 @@ import {
   InputAdornment,
 } from '@mui/material';
 // components
-import Iconify from '../../../components/iconify';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-AssetTableToolbar.propTypes = {
+AssetListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -28,7 +28,7 @@ AssetTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function AssetTableToolbar({
+export default function AssetListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

@@ -19,24 +19,19 @@ import {
   ResetPasswordPage,
   // Dashboard: General
   GeneralAppPage,
-  // Dashboard: User
+  // User
   UserListPage,
   UserEditPage,
   UserCardsPage,
   UserCreatePage,
   UserProfilePage,
   UserAccountPage,
-  // Dashboard: Ecommerce
-  // Dashboard: Asset
-  AssetListPage,
-  AssetCreatePage,
-  AssetEditPage,
-  AssetViewPage,
-  // Dashboard: Invoice
-  // Dashboard: Blog
-  // Dashboard: FileManager
-  // Dashboard: App
-  //
+  // Asset
+  AssetList,
+  AssetAdd,
+  AssetEdit,
+  AssetView,
+  // 
   BlankPage,
   PermissionDeniedPage,
   //
@@ -100,10 +95,10 @@ export default function Router() {
         {
           path: 'asset',
           children: [
-            { path: 'list', element: <AssetListPage /> },
-            { path: 'new', element: <AssetCreatePage /> },
-            { path: ':id/edit', element: <AssetEditPage />},
-            { path: ':id/view', element: <AssetViewPage />}
+            { path: 'list', element: <AssetList /> },
+            { path: 'new', element: <AssetAdd /> },
+            { path: ':id/edit', element: <AssetEdit />},
+            { path: ':id/view', element: <AssetView />}
           ],
         },
         {

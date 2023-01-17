@@ -1,49 +1,43 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+// global
+import { CONFIG } from '../../config-global';
 // slice
-import { getDepartments } from '../../../redux/slices/department';
-
-import { saveAsset } from '../../../redux/slices/asset';
+import { updateAsset } from '../../redux/slices/asset';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-
-import { useAuthContext } from '../../../auth/useAuthContext';
+import { useSnackbar } from '../../components/snackbar';
+import Iconify from '../../components/iconify';
 
 import FormProvider, {
-  RHFSwitch,
   RHFSelect,
   RHFEditor,
   RHFUpload,
   RHFTextField,
-  RHFRadioGroup,
-  RHFAutocomplete,
-} from '../../../components/hook-form';
+
+} from '../../components/hook-form';
 
 
-import { LocationForm } from '../location';
-
-
-
-// import { GridRow } from '@mui/x-data-grid';
 
 // ----------------------------------------------------------------------
 
 const COUNTRIES = [
-  { id: '1', value: 'Pakistan' },
+  { id: '1', value: 'New Zealand' },
   { id: '2', value: 'Canada' },
-  { id: '3', value: 'Portugal' },
+  { id: '3', value: 'USA' },
+  { id: '4', value: 'Portugal' },
 ];
 
 const STATUS_OPTION = [
@@ -54,7 +48,6 @@ const STATUS_OPTION = [
   { id: '5', value: 'Deployed' },
   { id: '6', value: 'Archived' },
 ];
-
 const CATEGORY_OPTION = [
   { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
   { group: 'Decoiler', classify: ['0.5T Decoiler', '1.0T Decoiler', '1.5T Decoiler', '3.0T Decoiler', '5.0T Decoiler', '6.0T Decoiler'] },
@@ -63,60 +56,55 @@ const CATEGORY_OPTION = [
 
 // ----------------------------------------------------------------------
 
-AssetNewForm.propTypes = {
-  isEdit: PropTypes.bool,
-  readOnly: PropTypes.bool,
+AssetEditForm.propTypes = {
   currentAsset: PropTypes.object,
 };
 
-export default function AssetNewForm({ isEdit, readOnly, currentAsset }) {
+export default function AssetEditForm({ currentAsset }) {
 
-  const { error } = useSelector((state) => state.asset);
+  const { isLoading, error } = useSelector((state) => state.asset);
 
   const { departments } = useSelector((state) => state.department);
   
-  const { userId } = useAuthContext();
-
-  // console.log(user);
-
-
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const NewAssetSchema = Yup.object().shape({
+  const EditAssetSchema = Yup.object().shape({
     name: Yup.string().required('Name is required').disabled  ,
-    status: Yup.string().required('Status is required'),
-    tag: Yup.string().required('Asset Tag is required'),
-    model: Yup.string().required('Model is required'),
+    status: Yup.string(),
+    tag: Yup.string(),
+    model: Yup.string(),
     serial: Yup.string().required('Serial is required'),
-    location: Yup.string().required('Location is required'),
-    department: Yup.string().required('Department is required'),
+    location: Yup.string(),
+    department: Yup.string(),
     notes: Yup.string(),
     image: Yup.mixed().nullable(true),  });
 
+
   const defaultValues = useMemo(
     () => ({
-      id: '',
-      name: '',
-      status: '',
-      tag: '',
-      model: '',
-      serial: '',
-      location: '',
-      department_id: '',
-      notes: '',
+      id: currentAsset?._id || '',
+      name: currentAsset?.name || '',
+      status: currentAsset?.status || '',
+      tag: currentAsset?.assetTag || '',
+      model: currentAsset?.assetModel || '',
+      serial: currentAsset?.serial || '',
+      location: currentAsset?.location || '',
+      department: currentAsset?.department_id || '',
+      notes: currentAsset?.notes || '',
       image: null,
-      addedBy: userId,
+      imagePath: currentAsset?.image || null,
+      replaceImage: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentAsset]
   );
 
   const methods = useForm({
-    resolver: yupResolver(NewAssetSchema),
+    resolver: yupResolver(EditAssetSchema),
     defaultValues,
   });
 
@@ -130,22 +118,20 @@ export default function AssetNewForm({ isEdit, readOnly, currentAsset }) {
 
   const values = watch();
 
-  useLayoutEffect(() => {
-    dispatch(getDepartments());
-  }, [dispatch]);
-
   useEffect(() => {
+    if (currentAsset) {
       reset(defaultValues);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  }, [currentAsset]);
 
 
   const onSubmit = async (data) => {
     console.log(data);
       try{
-        dispatch(saveAsset(data));
+        dispatch(updateAsset(data));
         reset();
-        enqueueSnackbar('Create success!');
+        enqueueSnackbar('Update success!');
         navigate(PATH_DASHBOARD.asset.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
@@ -163,6 +149,7 @@ export default function AssetNewForm({ isEdit, readOnly, currentAsset }) {
 
       if (file) {
         setValue('image', newFile, { shouldValidate: true });
+        setValue('replaceImage', true);
       }
     },
     [setValue]
@@ -172,6 +159,10 @@ export default function AssetNewForm({ isEdit, readOnly, currentAsset }) {
     setValue('image', null);
   };
 
+  const onDownload = () => {
+
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -179,8 +170,8 @@ export default function AssetNewForm({ isEdit, readOnly, currentAsset }) {
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <RHFTextField name="name" label="Asset Name" />
-
-              <RHFTextField name="tag" label="Asset Tag" />
+              
+              <RHFTextField name="serial" label="Serial" />
 
               <RHFSelect native name="model" label="Model">
                   <option value="" />
@@ -204,7 +195,7 @@ export default function AssetNewForm({ isEdit, readOnly, currentAsset }) {
                   ))}
                 </RHFSelect>
 
-                <RHFTextField name="serial" label="Serial" />
+                <RHFTextField name="tag" label="Asset Tag" />
 
                 <RHFSelect native name="location" label="Location">
                 <option value="" disabled/>
@@ -242,28 +233,55 @@ export default function AssetNewForm({ isEdit, readOnly, currentAsset }) {
                 <RHFEditor simple name="notes" />
               </Stack> 
 
+              <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <Stack spacing={1}>
+                  <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                    Image
+                  </Typography>
 
-              <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Image
-                </Typography>
+                  <RHFUpload
+                    name="image"
+                    maxSize={3145728}
+                    onDrop={handleDrop}
+                    onDelete={handleRemoveFile}
+                  />
 
-                <RHFUpload
-                  name="image"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onDelete={handleRemoveFile}
-                  // onUpload={() => console.log('ON UPLOAD')}
-                />
-              </Stack>
+                  </Stack>
+
+                  </Grid>
+
+                <Grid item xs={8}>
+
+                
+                <Link
+                  href = {currentAsset.image === undefined ? '' : `${CONFIG.APP_DOMAIN_NAME}:${CONFIG.APP_PORT}/${currentAsset.image}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button 
+                  size ="small" 
+                  color ="secondary" 
+                  variant ="contained" 
+                  // href = {currentAsset.image === undefined ? '' : `localhost:5000/${currentAsset.image}`}
+                  startIcon={<Iconify icon="ic:baseline-download" />}
+                  >
+                    View Attachment
+                  </Button>
+                </Link>
+
+                </Grid>
+
+              </Grid>
+
+
 
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-              {!isEdit ? 'Save Asset' : 'Save Changes'}
+                Save Changes
             </LoadingButton>
             </Stack>
-            
+
           </Card>
-          
         </Grid>
       </Grid>
     </FormProvider>

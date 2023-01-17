@@ -27,7 +27,7 @@ import {
   AssetCover
 } from './util';
 
-import AssetEditForm from './forms/AssetEditForm'
+import AssetEditForm from './AssetEditForm'
 // ----------------------------------------------------------------------
 
 export default function AssetViewPage() {

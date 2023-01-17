@@ -12,11 +12,11 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import AssetEditForm from './forms/AssetEditForm';
+import AssetEditForm from './AssetEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function AssetEditPage() {
+export default function AssetEdit() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();

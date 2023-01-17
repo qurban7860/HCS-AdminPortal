@@ -13,20 +13,18 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { fDate, fDateTime, fTimestamp, fToNow } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
+import { fDate } from '../../utils/formatTime';
+import { fCurrency } from '../../utils/formatNumber';
 // components
-import Label from '../../../components/label';
-import Image from '../../../components/image';
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import { useSelector } from '../../../redux/store';
+import Iconify from '../../components/iconify';
+import MenuPopover from '../../components/menu-popover';
+import ConfirmDialog from '../../components/confirm-dialog';
+import { useSelector } from '../../redux/store';
 
 
 // ----------------------------------------------------------------------
 
-AssetTableRow.propTypes = {
+AssetListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -35,7 +33,7 @@ AssetTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function AssetTableRow({
+export default function AssetListTableRow({
   row,
   selected,
   onSelectRow,
@@ -51,7 +49,10 @@ export default function AssetTableRow({
 
   const { departments } = useSelector((state) => state.department);
 
-  const department = departments.find(o => o._id === department_id);
+  let department = "";
+  if (department_id !== undefined && departments !== undefined){
+    department = departments.find(o => o._id === department_id);
+  }
 
   // console.log('dep', departmentName);
 
@@ -80,13 +81,6 @@ export default function AssetTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            {/* <Image
-              disabledEffect
-              visibleByDefault
-              alt={name}
-              // src={cover}
-              sx={{ borderRadius: 1.5, width: 48, height: 48 }}
-            /> */}
 
             <Link
               noWrap
@@ -107,28 +101,6 @@ export default function AssetTableRow({
         <TableCell>{location}</TableCell>
 
         <TableCell>{fDate(createdAt)}</TableCell>
-
-
-
-        {/* <TableCell>{fDate(createdAt)}</TableCell> */}
-
-        
-
-        {/* <TableCell align="center">
-          <Label
-            variant="soft"
-            color={
-              (inventoryType === 'out_of_stock' && 'error') ||
-              (inventoryType === 'low_stock' && 'warning') ||
-              'success'
-            }
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {inventoryType ? sentenceCase(inventoryType) : ''}
-          </Label>
-        </TableCell> */}
-
-        {/* <TableCell align="right">{fCurrency(price)}</TableCell> */}
 
         <TableCell align="right">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>

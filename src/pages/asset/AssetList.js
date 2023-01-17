@@ -36,7 +36,8 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import { AssetTableRow, AssetTableToolbar } from './list';
+import AssetListTableRow from './AssetListTableRow';
+import AssetListTableToolbar from './AssetListTableToolbar';
 import { getAssets, deleteAsset } from '../../redux/slices/asset';
 import { getDepartments } from '../../redux/slices/department';
 
@@ -63,7 +64,7 @@ const STATUS_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function AssetListPage() {
+export default function AssetList() {
   const {
     dense,
     page,
@@ -230,7 +231,7 @@ export default function AssetListPage() {
         />
 
         <Card>
-          <AssetTableToolbar
+          <AssetListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -282,7 +283,7 @@ export default function AssetListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <AssetTableRow
+                        <AssetListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}

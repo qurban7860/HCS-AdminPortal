@@ -24,17 +24,17 @@ export const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/Reset
 export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/GeneralAppPage')));
 
 // ASSET
-export const AssetListPage = Loadable(
-  lazy(() => import('../pages/asset/AssetListPage'))
+export const AssetList= Loadable(
+  lazy(() => import('../pages/asset/AssetList'))
 );
-export const AssetCreatePage = Loadable(
-  lazy(() => import('../pages/asset/AssetCreatePage'))
+export const AssetAdd = Loadable(
+  lazy(() => import('../pages/asset/AssetAdd'))
 );
-export const AssetEditPage = Loadable(
-  lazy(() => import('../pages/asset/AssetEditPage'))
+export const AssetEdit = Loadable(
+  lazy(() => import('../pages/asset/AssetEdit'))
 );
-export const AssetViewPage = Loadable(
-  lazy(() => import('../pages/asset/AssetViewPage'))
+export const AssetView = Loadable(
+  lazy(() => import('../pages/asset/AssetView'))
 );
 
 // DASHBOARD: USER

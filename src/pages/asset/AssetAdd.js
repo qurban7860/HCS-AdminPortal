@@ -7,11 +7,11 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-import AssetNewForm from './forms/AssetNewForm';
+import AssetAddForm from './AssetAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function AssetCreatePage() {
+export default function AssetAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -32,7 +32,7 @@ export default function AssetCreatePage() {
             { name: 'New Asset' },
           ]}
         />
-        <AssetNewForm />
+        <AssetAddForm />
       </Container>
     </>
   );
