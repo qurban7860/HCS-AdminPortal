@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Card, Tabs, Container, Box } from '@mui/material';
@@ -8,6 +8,8 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getAssets } from '../../redux/slices/asset';
+import { getDepartments } from '../../redux/slices/department';
+
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -27,23 +29,22 @@ import {
   AssetCover
 } from './util';
 
-import AssetEditForm from './AssetEditForm'
+import AssetViewForm from './AssetViewForm'
 // ----------------------------------------------------------------------
 
 export default function AssetViewPage() {
 
   const dispatch = useDispatch();
 
+  useLayoutEffect(() => {
+    dispatch(getAssets());
+  }, [dispatch]);
+
   const { id } = useParams(); 
 
   const currentAsset = useSelector((state) =>
   state.asset.assets.find((asset) => asset._id === id)
   );
-
-  useEffect(() => {
-    dispatch(getAssets());
-  }, [dispatch]);
-
 
   const { themeStretch } = useSettingsContext();
 
@@ -54,9 +55,7 @@ export default function AssetViewPage() {
       value: 'asset-edit',
       label: 'Basic Info',
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <AssetEditForm 
-        isEdit
-        readOnly
+      component: <AssetViewForm 
         currentAsset={currentAsset} 
       />,
     },
@@ -102,7 +101,7 @@ export default function AssetViewPage() {
             position: 'relative',
           }}
         >
-          <AssetCover name={currentAsset?.name} role={currentAsset.department} />
+          <AssetCover name={currentAsset?.name}  />
 
           <Tabs
             value={currentTab}

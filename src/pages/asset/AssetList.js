@@ -45,7 +45,7 @@ import { getDepartments } from '../../redux/slices/department';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Asset', align: 'left', maxwidth: 150 },
+  { id: 'name', label: 'Asset', align: 'left', width: 5 },
   { id: 'status', label: 'Status', align: 'left' },
   { id: 'location', label: 'Location', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
@@ -213,7 +213,7 @@ export default function AssetList() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Asset',
-              href: PATH_DASHBOARD.asset.root,
+              href: PATH_DASHBOARD.asset.list,
             },
             { name: 'List' },
           ]}

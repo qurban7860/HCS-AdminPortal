@@ -57,8 +57,8 @@ export default function AssetCover({ name, role, cover }) {
       <StyledInfo>
         <CustomAvatar
           src={asset?.photoURL}
-          alt={asset?.displayName}
-          name={asset?.displayName}
+          alt={name}
+          name={name}
           sx={{
             mx: 'auto',
             borderWidth: 2,

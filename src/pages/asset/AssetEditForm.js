@@ -73,7 +73,7 @@ export default function AssetEditForm({ currentAsset }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const EditAssetSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required').disabled  ,
+    name: Yup.string().required('Name is required')  ,
     status: Yup.string(),
     tag: Yup.string(),
     model: Yup.string(),
@@ -187,7 +187,7 @@ export default function AssetEditForm({ currentAsset }) {
                 <RHFSelect xs={3} md={4} native name="status" label="Status">
                 <option value="" disabled/>
                   {STATUS_OPTION.map((option) => (
-                    <option key={option.id} value={option.id}>
+                    <option key={option.id} value={option.value}>
                       {option.value}
                     </option>
                   ))}
