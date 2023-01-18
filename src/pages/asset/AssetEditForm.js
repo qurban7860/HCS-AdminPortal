@@ -80,7 +80,6 @@ export default function AssetEditForm({ currentAsset }) {
     serial: Yup.string().required('Serial is required'),
     location: Yup.string(),
     department: Yup.string(),
-    notes: Yup.string(),
     image: Yup.mixed().nullable(true),  });
 
 
@@ -94,7 +93,6 @@ export default function AssetEditForm({ currentAsset }) {
       serial: currentAsset?.serial || '',
       location: currentAsset?.location || '',
       department: currentAsset?.department_id || '',
-      notes: currentAsset?.notes || '',
       image: null,
       imagePath: currentAsset?.image || null,
       replaceImage: false,
@@ -170,7 +168,7 @@ export default function AssetEditForm({ currentAsset }) {
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <RHFTextField name="name" label="Asset Name" />
-              
+
               <RHFTextField name="serial" label="Serial" />
 
               <RHFSelect native name="model" label="Model">
@@ -225,13 +223,6 @@ export default function AssetEditForm({ currentAsset }) {
                 </Grid>
 
 
-              <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Notes
-                </Typography>
-
-                <RHFEditor simple name="notes" />
-              </Stack> 
 
               <Grid container spacing={1}>
               <Grid item xs={12}>
@@ -254,7 +245,7 @@ export default function AssetEditForm({ currentAsset }) {
                 <Grid item xs={8}>
 
                 
-                <Link
+                {/* {currentAsset.image && <Link
                   href = {currentAsset.image === undefined ? '' : `${CONFIG.APP_DOMAIN_NAME}:${CONFIG.APP_PORT}/${currentAsset.image}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -268,7 +259,7 @@ export default function AssetEditForm({ currentAsset }) {
                   >
                     View Attachment
                   </Button>
-                </Link>
+                </Link>} */}
 
                 </Grid>
 

@@ -96,13 +96,11 @@ export default function AssetListTableRow({
 
         <TableCell>{status}</TableCell>
 
-        <TableCell>{department.name}</TableCell>
-
         <TableCell>{location}</TableCell>
 
         <TableCell>{fDate(createdAt)}</TableCell>
 
-        <TableCell align="right">
+        <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>

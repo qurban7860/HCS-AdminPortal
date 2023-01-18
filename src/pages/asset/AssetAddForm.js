@@ -91,7 +91,6 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
     serial: Yup.string().required('Serial is required'),
     location: Yup.string(),
     department: Yup.string(),
-    notes: Yup.string(),
     image: Yup.mixed().nullable(true),  });
 
   const defaultValues = useMemo(
@@ -103,8 +102,7 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
       model: '',
       serial: '',
       location: '',
-      department_id: '',
-      notes: '',
+      department: '',
       image: null,
       addedBy: userId,
     }),
@@ -230,15 +228,6 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
                     </LoadingButton>
                   </Grid>
                 </Grid>
-
-
-              <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Notes
-                </Typography>
-
-                <RHFEditor simple name="notes" />
-              </Stack> 
 
 
               <Stack spacing={1}>

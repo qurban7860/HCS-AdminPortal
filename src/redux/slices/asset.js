@@ -72,17 +72,17 @@ const slice = createSlice({
 
     async saveAsset(state, action) {
       try {
-
         const formData = new FormData();
         console.log(action.payload.department);
         formData.append('id', action.payload.id);
         formData.append('name', action.payload.name);
         formData.append('assetTag', action.payload.tag);
         formData.append('assetModel', action.payload.model);
-        formData.append('department_id', action.payload.department);
+        if(action.payload.department){
+          formData.append('department_id', action.payload.department);
+        }
         formData.append('status', action.payload.status);
         formData.append('serial', action.payload.serial);
-        formData.append('notes', action.payload.notes);
         formData.append('location', action.payload.location);
         formData.append('email', action.payload.email);
         formData.append('added_by', action.payload.addedBy);
@@ -110,10 +110,11 @@ const slice = createSlice({
         formData.append('name', action.payload.name);
         formData.append('assetTag', action.payload.tag);
         formData.append('assetModel', action.payload.model);
-        formData.append('department_id', action.payload.department);
+        if(action.payload.department){
+          formData.append('department_id', action.payload.department);
+        }
         formData.append('status', action.payload.status);
         formData.append('serial', action.payload.serial);
-        formData.append('notes', action.payload.notes);
         formData.append('location', action.payload.location);
         if (action.payload.replaceImage) {
           formData.append('image', action.payload.image);
