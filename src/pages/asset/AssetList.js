@@ -54,12 +54,21 @@ const TABLE_HEAD = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: 'all_assets', label: 'All Assets' },
-  { value: 'deployable', label: 'All Deployable' },
-  { value: 'pending', label: 'All Pending' },
-  { value: 'archived', label: 'All Archived' },
-  { value: 'undeployable', label: 'All Undeployable' }
+  { id: '1', value: 'Order Received' },
+  { id: '2', value: 'In Progress' },
+  { id: '3', value: 'Ready For Transport' },
+  { id: '4', value: 'In Freight' },
+  { id: '5', value: 'Deployed' },
+  { id: '6', value: 'Archived' },
 ];
+
+// const STATUS_OPTIONS = [
+//   { value: 'all_assets', label: 'All Assets' },
+//   { value: 'deployable', label: 'All Deployable' },
+//   { value: 'pending', label: 'All Pending' },
+//   { value: 'archived', label: 'All Archived' },
+//   { value: 'undeployable', label: 'All Undeployable' }
+// ];
 
 // ----------------------------------------------------------------------
 
@@ -361,12 +370,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (product) => product.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (asset) => asset.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((product) => filterStatus.includes(product.inventoryType));
+    inputData = inputData.filter((asset) => filterStatus.includes(asset.status));
   }
 
   return inputData;

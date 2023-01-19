@@ -52,6 +52,11 @@ export default function AssetViewForm({ currentAsset }) {
   const { isLoading, error } = useSelector((state) => state.asset);
 
   const { departments } = useSelector((state) => state.department);
+
+  console.log(departments);
+
+  console.log(currentAsset);
+
   
   const dispatch = useDispatch();
   
@@ -60,7 +65,8 @@ export default function AssetViewForm({ currentAsset }) {
   const { enqueueSnackbar } = useSnackbar();
 
   if (departments !== undefined){
-    const currentDept = departments.find(o => o._id === currentAsset.department);
+    const currentDept = departments.find(o => o._id === currentAsset.department_id);
+    console.log('currentDept', currentDept);
   }
 
   const defaultValues = useMemo(
@@ -72,31 +78,22 @@ export default function AssetViewForm({ currentAsset }) {
       model: currentAsset.assetModel === "" ? 'N/A' : currentAsset.assetModel,
       serial: currentAsset.serial === "" ? 'N/A' : currentAsset.serial,
       location: currentAsset.location === "" ? 'N/A' : currentAsset.location,
-      department: currentAsset.department === "" ? 'N/A' : currentAsset.department ,
-
+      department: currentAsset.department_id ? departments.find(o => o._id === currentAsset.department_id) : 'N/A',
       image: null,
       imagePath: currentAsset?.image || null,
-      replaceImage: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentAsset]
   );
 
+  console.log(defaultValues); 
 
-  // const {
-  //   reset,
-  //   watch,
-  //   setValue,
-  // } = methods;
 
 
 
   return (
        <Card sx={{ pt: 5, px: 5 }}>
         <Grid container>
-      {/* <Grid container spacing={0}>
-        <Grid item xs={7} md={7}>
-          <Card sx={{ p: 3 }}> */}
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
@@ -148,8 +145,8 @@ export default function AssetViewForm({ currentAsset }) {
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Department
             </Typography>
-
-            <Typography variant="body2">{defaultValues.department}</Typography>
+            
+            <Typography variant="body2">{defaultValues.department.name}</Typography>
             
           </Grid>
 

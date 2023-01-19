@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Card, Tabs, Container, Box } from '@mui/material';
@@ -35,10 +35,6 @@ import AssetViewForm from './AssetViewForm'
 export default function AssetViewPage() {
 
   const dispatch = useDispatch();
-
-  useLayoutEffect(() => {
-    dispatch(getAssets());
-  }, [dispatch]);
 
   const { id } = useParams(); 
 

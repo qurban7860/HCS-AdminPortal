@@ -19,14 +19,15 @@ export const assetPersistConfig = {
   key: 'asset',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['assets', 'error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage']
 };
 
 export const departmentPersistConfig = {
   key: 'department',
   storage,
   keyPrefix: 'redux-',
-  blacklist: []
+  whitelist: ['departments'],
+
 };
 
 export const userPersistConfig = {
