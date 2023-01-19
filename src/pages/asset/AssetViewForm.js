@@ -43,19 +43,19 @@ const CATEGORY_OPTION = [
 
 // ----------------------------------------------------------------------
 
-AssetViewForm.propTypes = {
-  currentAsset: PropTypes.object,
-};
+// AssetViewForm.propTypes = {
+//   currentAsset: PropTypes.object,
+// };
 
-export default function AssetViewForm({ currentAsset }) {
+export default function AssetViewForm() {
 
-  const { isLoading, error } = useSelector((state) => state.asset);
+  const { isLoading, error, asset } = useSelector((state) => state.asset);
 
   const { departments } = useSelector((state) => state.department);
 
   console.log(departments);
 
-  console.log(currentAsset);
+  // console.log('currentAsset', currentAsset);
 
   
   const dispatch = useDispatch();
@@ -65,25 +65,25 @@ export default function AssetViewForm({ currentAsset }) {
   const { enqueueSnackbar } = useSnackbar();
 
   if (departments !== undefined){
-    const currentDept = departments.find(o => o._id === currentAsset.department_id);
-    console.log('currentDept', currentDept);
+    // const currentDep/t = departments.find(o => o._id === currentAsset.department_id);
+    // console.log('currentDept', currentDept);
   }
 
   const defaultValues = useMemo(
     () => ({
-      id: currentAsset?._id || '',
-      name: currentAsset.name === "" ? 'N/A' : currentAsset.name,
-      status: currentAsset.status === "" ? 'N/A' : currentAsset.status,
-      tag: currentAsset.assetTag === "" ? 'N/A' : currentAsset.assetTag,
-      model: currentAsset.assetModel === "" ? 'N/A' : currentAsset.assetModel,
-      serial: currentAsset.serial === "" ? 'N/A' : currentAsset.serial,
-      location: currentAsset.location === "" ? 'N/A' : currentAsset.location,
-      department: currentAsset.department_id ? departments.find(o => o._id === currentAsset.department_id) : 'N/A',
+      id: asset?._id || '',
+      name: asset.name === "" ? 'N/A' : asset.name,
+      status: asset.status === "" ? 'N/A' : asset.status,
+      tag: asset.assetTag === "" ? 'N/A' : asset.assetTag,
+      model: asset.assetModel === "" ? 'N/A' : asset.assetModel,
+      serial: asset.serial === "" ? 'N/A' : asset.serial,
+      location: asset.location === "" ? 'N/A' : asset.location,
+      department: asset.department?.name || 'N/A',
       image: null,
-      imagePath: currentAsset?.image || null,
+      imagePath: asset?.image || null,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentAsset]
+    [asset]
   );
 
   console.log(defaultValues); 
@@ -146,7 +146,7 @@ export default function AssetViewForm({ currentAsset }) {
               Department
             </Typography>
             
-            <Typography variant="body2">{defaultValues.department.name}</Typography>
+            <Typography variant="body2">{defaultValues.department}</Typography>
             
           </Grid>
 

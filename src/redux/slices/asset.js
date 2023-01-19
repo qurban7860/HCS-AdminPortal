@@ -79,7 +79,8 @@ const slice = createSlice({
         formData.append('assetTag', action.payload.tag);
         formData.append('assetModel', action.payload.model);
         if(action.payload.department){
-          formData.append('department_id', action.payload.department);
+          console.log(action.payload.department);
+          formData.append('department', action.payload.department);
         }
         formData.append('status', action.payload.status);
         formData.append('serial', action.payload.serial);
@@ -111,7 +112,7 @@ const slice = createSlice({
         formData.append('assetTag', action.payload.tag);
         formData.append('assetModel', action.payload.model);
         if(action.payload.department){
-          formData.append('department_id', action.payload.department);
+          formData.append('department', action.payload.department);
         }
         formData.append('status', action.payload.status);
         formData.append('serial', action.payload.serial);
@@ -180,14 +181,14 @@ export function getAssets() {
 
 // ----------------------------------------------------------------------
 
-export function getAsset(name) {
+export function getAsset(id) {
+  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/api/assets/asset', {
-        params: { name },
-      });
+      const response = await axios.get(`${CONFIG.SERVER_URL}assets/${id}`);
       dispatch(slice.actions.getAssetSuccess(response.data));
+      console.log('requested asset', response.data);
       // dispatch(slice.actions.setResponseMessage('Assets Loaded Successfuly'));
     } catch (error) {
       console.error(error);
