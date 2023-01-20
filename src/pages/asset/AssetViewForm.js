@@ -21,41 +21,12 @@ import { getAssets, getAsset } from '../../redux/slices/asset';
 
 
 
-// ----------------------------------------------------------------------
-
-const COUNTRIES = [
-  { id: '1', value: 'New Zealand' },
-  { id: '2', value: 'Canada' },
-  { id: '3', value: 'USA' },
-  { id: '4', value: 'Portugal' },
-];
-
-const STATUS_OPTION = [
-  { id: '1', value: 'Order Received' },
-  { id: '2', value: 'In Progress' },
-  { id: '3', value: 'Ready For Transport' },
-  { id: '4', value: 'In Freight' },
-  { id: '5', value: 'Deployed' },
-  { id: '6', value: 'Archived' },
-];
-const CATEGORY_OPTION = [
-  { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
-  { group: 'Decoiler', classify: ['0.5T Decoiler', '1.0T Decoiler', '1.5T Decoiler', '3.0T Decoiler', '5.0T Decoiler', '6.0T Decoiler'] },
-  { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
-];
 
 // ----------------------------------------------------------------------
 
-AssetViewForm.propTypes = {
-  id: PropTypes.object,
-};
-
-export default function AssetViewForm({ id }) {
+export default function AssetViewForm() {
 
   const { asset } = useSelector((state) => state.asset);
-
-  const dispatch = useDispatch();
-
   
   const navigate = useNavigate();
 
@@ -65,13 +36,13 @@ export default function AssetViewForm({ id }) {
   const defaultValues = useMemo(
     () => ({
       id: asset?._id || '',
-      name: asset.name === "" ? 'N/A' : asset.name,
-      status: asset.status === "" ? 'N/A' : asset.status,
-      tag: asset.assetTag === "" ? 'N/A' : asset.assetTag,
-      model: asset.assetModel === "" ? 'N/A' : asset.assetModel,
-      serial: asset.serial === "" ? 'N/A' : asset.serial,
-      location: asset.location === "" ? 'N/A' : asset.location,
-      department: asset.department?.name || 'N/A',
+      name: asset?.name || 'N/A',
+      status: asset?.status || 'N/A',
+      tag: asset?.assetTag || 'N/A',
+      model: asset?.assetModel || 'N/A',
+      serial: asset?.serial || 'N/A',
+      location: asset?.location || 'N/A',
+      department: asset?.department?.name || 'N/A',
       image: null,
       imagePath: asset?.image || null,
     }),

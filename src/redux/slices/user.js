@@ -64,7 +64,6 @@ const slice = createSlice({
         
         const formData = new FormData();
 
-        formData.append('id',action.payload.id);
         formData.append('firstName', action.payload.firstName);
         formData.append('lastName', action.payload.lastName);
         formData.append('email', action.payload.email);
@@ -102,6 +101,35 @@ const slice = createSlice({
       }
       
     },
+
+    async updateAsset(state, action) {
+      try {
+
+        const formData = new FormData();
+        formData.append('id', action.payload.id);
+        formData.append('firstName', action.payload.firstName);
+        formData.append('lastName', action.payload.lastName);
+        formData.append('email', action.payload.email);
+        formData.append('password', action.payload.password);
+        formData.append('address', action.payload.address);
+        formData.append('country', action.payload.country);
+        formData.append('state', action.payload.state);
+        formData.append('city', action.payload.city);
+        formData.append('about', action.payload.email);
+        formData.append('addedBy', action.payload.email);
+        // formData.append('image', action.payload.photoURL);
+
+        const response = await axios.patch(`${CONFIG.SERVER_URL}users/${action.payload.id}`,
+          formData
+        );
+
+      } catch (error) {
+        console.error(error);
+        this.hasError(error.message);
+      }
+
+    },
+
     async deleteUser(state, action){
       try{
         const userID = action.payload;
@@ -114,7 +142,6 @@ const slice = createSlice({
         this.hasError(error.message);
       }
     },
-
 
     backStep(state) {
       state.checkout.activeStep -= 1;

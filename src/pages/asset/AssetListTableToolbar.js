@@ -58,12 +58,12 @@ export default function AssetListTableToolbar({
           value={filterStatus}
           onChange={onFilterStatus}
           input={<OutlinedInput label="Status" />}
-          renderValue={(selected) => selected.map((id) => sentenceCase(id)).join(', ')}
+          renderValue={(selected) => selected.map((value) => sentenceCase(value)).join(', ')}
         >
           {statusOptions.map((option) => (
             <MenuItem
-              key={option.id}
-              value={option.id}
+              key={option.value}
+              value={option.value}
               sx={{
                 p: 0,
                 mx: 1,
@@ -72,7 +72,7 @@ export default function AssetListTableToolbar({
                 textTransform: 'capitalize',
               }}
             >
-              <Checkbox disableRipple size="small" checked={filterStatus.includes(option.id)} />
+              <Checkbox disableRipple size="small" checked={filterStatus.includes(option.value)} />
               {option.value}
             </MenuItem>
           ))}

@@ -56,13 +56,13 @@ const CATEGORY_OPTION = [
 
 // ----------------------------------------------------------------------
 
-AssetEditForm.propTypes = {
-  currentAsset: PropTypes.object,
-};
+// AssetEditForm.propTypes = {
+//   currentAsset: PropTypes.object,
+// };
 
-export default function AssetEditForm({ currentAsset }) {
+export default function AssetEditForm() {
 
-  const { isLoading, error } = useSelector((state) => state.asset);
+  const { error, asset } = useSelector((state) => state.asset);
 
   const { departments } = useSelector((state) => state.department);
   
@@ -85,20 +85,20 @@ export default function AssetEditForm({ currentAsset }) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentAsset?._id || '',
-      name: currentAsset?.name || '',
-      status: currentAsset?.status || '',
-      tag: currentAsset?.assetTag || '',
-      model: currentAsset?.assetModel || '',
-      serial: currentAsset?.serial || '',
-      location: currentAsset?.location || '',
-      department: currentAsset?.department_id || '',
+      id: asset?._id || '',
+      name: asset?.name || '',
+      status: asset?.status || '',
+      tag: asset?.assetTag || '',
+      model: asset?.assetModel || '',
+      serial: asset?.serial || '',
+      location: asset?.location || '',
+      department: asset?.department?._id || '',
       image: null,
-      imagePath: currentAsset?.image || null,
+      imagePath: asset?.image || null,
       replaceImage: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentAsset]
+    [asset]
   );
 
   const methods = useForm({
@@ -117,11 +117,11 @@ export default function AssetEditForm({ currentAsset }) {
   const values = watch();
 
   useEffect(() => {
-    if (currentAsset) {
+    if (asset) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAsset]);
+  }, [asset]);
 
 
   const onSubmit = async (data) => {

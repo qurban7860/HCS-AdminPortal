@@ -1,11 +1,11 @@
 import { Helmet } from 'react-helmet-async';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getAssets } from '../../redux/slices/asset';
+import { getAsset } from '../../redux/slices/asset';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -25,15 +25,13 @@ export default function AssetEdit() {
   console.log(id);
 
 
-  const currentAsset = useSelector((state) =>
-  state.asset.assets.find((asset) => asset._id === id)
-  );
+  const { asset } = useSelector((state) => state.asset);
 
-  // console.log(assets);
+  useLayoutEffect(() => {
+    dispatch(getAsset(id));
+  }, [dispatch, id]);
 
-  useEffect(() => {
-    dispatch(getAssets());
-  }, [dispatch]);
+
 
   return (
     <>
@@ -50,13 +48,11 @@ export default function AssetEdit() {
               name: 'Asset',
               href: PATH_DASHBOARD.asset.root,
             },
-            { name: currentAsset?.name },
+            { name: asset?.name },
           ]}
         />
 
-        <AssetEditForm 
-          currentAsset={currentAsset} 
-        />
+        <AssetEditForm/>
       </Container>
     </>
   );

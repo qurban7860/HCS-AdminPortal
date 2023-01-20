@@ -38,7 +38,10 @@ export default function AssetViewPage() {
 
   const { id } = useParams(); 
 
-  // dispatch(getAsset(id));
+  useLayoutEffect(() => {
+    dispatch(getAsset(id));
+  }, [dispatch, id]);
+  // 
 
   const { asset } = useSelector((state) => state.asset);
 
@@ -51,8 +54,7 @@ export default function AssetViewPage() {
       value: 'asset-edit',
       label: 'Basic Info',
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <AssetViewForm
-      id={id}/>,
+      component: <AssetViewForm/>,
     },
     {
       value: 'configuration',

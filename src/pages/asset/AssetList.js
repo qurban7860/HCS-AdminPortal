@@ -201,7 +201,6 @@ export default function AssetList() {
   };
 
   const handleViewRow = (id) => {
-    dispatch(getAsset(id));
     navigate(PATH_DASHBOARD.asset.view(id));
   };
 
