@@ -38,7 +38,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import AssetListTableRow from './AssetListTableRow';
 import AssetListTableToolbar from './AssetListTableToolbar';
-import { getAssets, deleteAsset } from '../../redux/slices/asset';
+import { getAssets, deleteAsset, getAsset } from '../../redux/slices/asset';
 import { getDepartments } from '../../redux/slices/department';
 
 
@@ -201,6 +201,7 @@ export default function AssetList() {
   };
 
   const handleViewRow = (id) => {
+    dispatch(getAsset(id));
     navigate(PATH_DASHBOARD.asset.view(id));
   };
 

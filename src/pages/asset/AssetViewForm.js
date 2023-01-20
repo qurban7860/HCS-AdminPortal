@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,9 @@ import { CONFIG } from '../../config-global';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
+
+import { getAssets, getAsset } from '../../redux/slices/asset';
+
 
 
 
@@ -43,31 +46,21 @@ const CATEGORY_OPTION = [
 
 // ----------------------------------------------------------------------
 
-// AssetViewForm.propTypes = {
-//   currentAsset: PropTypes.object,
-// };
+AssetViewForm.propTypes = {
+  id: PropTypes.object,
+};
 
-export default function AssetViewForm() {
+export default function AssetViewForm({ id }) {
 
-  const { isLoading, error, asset } = useSelector((state) => state.asset);
+  const { asset } = useSelector((state) => state.asset);
 
-  const { departments } = useSelector((state) => state.department);
-
-  console.log(departments);
-
-  // console.log('currentAsset', currentAsset);
-
-  
   const dispatch = useDispatch();
+
   
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  if (departments !== undefined){
-    // const currentDep/t = departments.find(o => o._id === currentAsset.department_id);
-    // console.log('currentDept', currentDept);
-  }
 
   const defaultValues = useMemo(
     () => ({
@@ -149,74 +142,6 @@ export default function AssetViewForm() {
             <Typography variant="body2">{defaultValues.department}</Typography>
             
           </Grid>
-
-          {/* <LoadingButton variant="contained" size="large" loading={isSubmitting}>
-              Edit Asset
-          </LoadingButton> */}
-            {/* <Stack spacing={3}>
-              <RHFTextField style={{color: "red"}} disabled color="primary" name="name" label="Asset Name" />
-
-              <RHFTextField name="serial" label="Serial" />
-
-              <RHFSelect native name="model" label="Model">
-                  <option value="" />
-                  {CATEGORY_OPTION.map((model) => (
-                    <optgroup key={model.group} label={model.group}>
-                      {model.classify.map((classify) => (
-                        <option key={classify} value={classify}>
-                          {classify}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </RHFSelect>
-
-                <RHFSelect xs={3} md={4} native name="status" label="Status">
-                <option value="" disabled/>
-                  {STATUS_OPTION.map((option) => (
-                    <option key={option.id} value={option.id}>
-                      {option.value}
-                    </option>
-                  ))}
-                </RHFSelect>
-
-                <RHFTextField name="tag" label="Asset Tag" />
-
-                <RHFSelect native name="location" label="Location">
-                <option value="" disabled/>
-                {COUNTRIES.map((option) => (
-                    <option key={option.id} value={option.value}>
-                      {option.value}
-                    </option>
-                  ))}
-                </RHFSelect>
-
-                    <RHFSelect native name="department" label="Department">
-                    <option value="" disabled/>
-                    {departments.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-                    </RHFSelect>
-
-
-
-              {/* <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Notes
-                </Typography>
-
-                <RHFEditor simple name="notes" />
-              </Stack>  */}
-
-
-              {/* </Grid> */}
-
-
-
-              
-            {/* </Stack>  */}
 
             </Grid>
             </Card>
