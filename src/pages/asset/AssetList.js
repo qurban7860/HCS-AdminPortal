@@ -46,8 +46,8 @@ import { getDepartments } from '../../redux/slices/department';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Asset', align: 'left', width: 5 },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: 'location', label: 'Location', align: 'left' },
+  { id: 'status', label: 'Serial', align: 'left' },
+  { id: 'location', label: 'Status', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
 

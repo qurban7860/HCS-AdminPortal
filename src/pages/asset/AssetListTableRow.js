@@ -41,7 +41,7 @@ export default function AssetListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, status, department_id, location, createdAt } = row;
+  const { name, serial, department_id, status, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -94,9 +94,9 @@ export default function AssetListTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{status}</TableCell>
+        <TableCell>{serial}</TableCell>
 
-        <TableCell>{location}</TableCell>
+        <TableCell>{status}</TableCell>
 
         <TableCell>{fDate(createdAt)}</TableCell>
 

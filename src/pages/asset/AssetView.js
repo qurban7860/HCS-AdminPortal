@@ -86,7 +86,7 @@ export default function AssetViewPage() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Asset',
-              href: PATH_DASHBOARD.asset.root,
+              href: PATH_DASHBOARD.asset.list,
             },
             { name: 'View' },
           ]}
