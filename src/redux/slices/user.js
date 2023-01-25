@@ -9,6 +9,8 @@ import { CONFIG } from '../../config-global';
 // ----------------------------------------------------------------------
 
 const initialState = {
+  intial: false,
+  responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
@@ -43,6 +45,7 @@ const slice = createSlice({
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
+      state.initial = true;
     },
 
     // GET users
@@ -50,13 +53,24 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.users = action.payload;
+      state.initial = true;
     },
 
+
     // GET user
-    getUsersuccess(state, action) {
+    getUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.user = action.payload;
+      state.initial = true;
+    },
+
+    // SET RES MESSAGE
+    setResponseMessage(state, action) {
+      state.responseMessage = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
     },
 
     async saveUser(state, action){
@@ -69,37 +83,30 @@ const slice = createSlice({
         formData.append('email', action.payload.email);
         formData.append('password', action.payload.password);
         formData.append('address', action.payload.address);
+        formData.append('phoneNumber', action.payload.phoneNumber);
         formData.append('country', action.payload.country);
         formData.append('state', action.payload.state);
         formData.append('city', action.payload.city);
-        formData.append('about', action.payload.email);
-        formData.append('addedBy', action.payload.email);
-        formData.append('image', action.payload.photoURL);
+        formData.append('about', action.payload.about);
+        formData.append('addedBy', action.payload.addedBy);
+        formData.append('isVerified', action.payload.isVerified);
+        formData.append('role', action.payload.role);
+
+        
+        formData.append('image', action.payload.avatarUrl);
 
         console.log('formdata', formData);
 
-        if(action.payload.editUser){
-          if(action.payload.replaceImage){
-            formData.append('replaceImage', action.payload.replaceImage);
-            formData.append('image', action.payload.image);
-          }
-          const response = await axios.patch(`${CONFIG.SERVER_URL}users`,
-          action.payload.id 
-          );
-        }
-        
-        else{
-          formData.append('image', action.payload.image);
-          const response = await axios.post(`${CONFIG.SERVER_URL}users`, 
+        const response = await axios.post(`${CONFIG.SERVER_URL}users`,
           formData,
-          );
-        }
-        
+        );
+
+
       } catch (error) {
         console.error(error);
         this.hasError(error.message);
       }
-      
+
     },
 
     async updateAsset(state, action) {
@@ -130,19 +137,6 @@ const slice = createSlice({
 
     },
 
-    async deleteUser(state, action){
-      try{
-        const userID = action.payload;
-        console.log(action.payload)
-        const response = await axios.delete(`${CONFIG.SERVER_URL}users`, {
-          userID
-        });
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-    },
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -160,7 +154,6 @@ export default slice.reducer;
 export const {
   saveUser,
   updateUser,
-  deleteUser,
   gotoStep,
   backStep,
   nextStep,
@@ -172,25 +165,25 @@ export function getUsers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}/users`);
-      console.log(response.data);
-      dispatch(slice.actions.getUsersSuccess(response.data.users));
+      const response = await axios.get(`${CONFIG.SERVER_URL}users`);
+      dispatch(slice.actions.getUsersSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Users loaded successfully'));
+
     } catch (error) {
+      console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };
 }
-
 // ----------------------------------------------------------------------
 
-export function getUser(name) {
+export function getUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}users`, {
-        params: { name },
-      });
-      dispatch(slice.actions.getUsersuccess(response.data.user));
+      const response = await axios.get(`${CONFIG.SERVER_URL}users/${id}`);
+      dispatch(slice.actions.getUserSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -199,3 +192,18 @@ export function getUser(name) {
 }
 
 // ----------------------------------------------------------------------
+
+export function deleteUser(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}users/${id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+      console.log(response.data);
+      // state.responseMessage = response.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}

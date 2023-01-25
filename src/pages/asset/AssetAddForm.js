@@ -74,9 +74,6 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
   
   const { userId } = useAuthContext();
 
-  // console.log(user);
-
-
   const dispatch = useDispatch();
   
   const navigate = useNavigate();

@@ -33,11 +33,6 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 
 // ----------------------------------------------------------------------
 
-UserNewEditForm.propTypes = {
-  isEdit: PropTypes.bool,
-  currentUser: PropTypes.object,
-};
-
 const ROLES = [
   { id: '1', value: 'Administrator' },
   { id: '2', value: 'Normal User' },
@@ -45,14 +40,13 @@ const ROLES = [
   { id: '4', value: 'Restriced User' },
 ];
 
-export default function UserNewEditForm({ isEdit = false, currentUser }) {
+export default function UserEditForm() {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const { error } = useSelector((state) => state.user);
+  const { error, user } = useSelector((state) => state.user);
 
-  const { userId } = useAuthContext();
-  console.log('userId', userId);
+  const currentUser = user;
   
   const dispatch = useDispatch();
 
@@ -77,6 +71,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
   const defaultValues = useMemo(
     () => ({
+      id: currentUser?._id || '',
       firstName: currentUser?.firstName || '',
       lastName: currentUser?.lastName || '',
       email: currentUser?.email || '',
@@ -92,7 +87,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       status: currentUser?.status,
       company: currentUser?.company || '',
       role: currentUser?.role || '',
-      addedBy: userId,
+      addedBy: currentUser?.addedBy || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -115,14 +110,11 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const values = watch();
 
   useEffect(() => {
-    if (isEdit && currentUser) {
-      reset(defaultValues);
-    }
-    if (!isEdit) {
+    if (currentUser) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, currentUser]);
+  }, [currentUser]);
 
   
   const onSubmit = async (data) => {
@@ -158,14 +150,13 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>
-            {isEdit && (
               <Label
                 color={values.status === 'active' ? 'success' : 'error'}
                 sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
               >
                 {values.status}
               </Label>
-            )}
+
 
             <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
@@ -190,7 +181,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               />
             </Box>
 
-            {isEdit && (
               <FormControlLabel
                 labelPlacement="start"
                 control={
@@ -220,7 +210,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 }
                 sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
               />
-            )}
+
 
             <RHFSwitch
               name="isVerified"
@@ -296,7 +286,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
             <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                {!isEdit ? 'Create User' : 'Save Changes'}
+                Save Changes
               </LoadingButton>
             </Stack>
           </Card>

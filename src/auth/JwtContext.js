@@ -86,11 +86,14 @@ export function AuthProvider({ children }) {
             displayName: localStorage.getItem('name'),
         };
 
+        const userID = localStorage.getItem('userId');
+
         dispatch({
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
             user,
+            userID
           },
         });
       } else {
@@ -129,6 +132,7 @@ export function AuthProvider({ children }) {
 
     localStorage.setItem('email', user.email);
     localStorage.setItem('name', user.displayName);
+    localStorage.setItem('userId', user.userId);
 
 
     setSession(accessToken);
@@ -175,12 +179,13 @@ export function AuthProvider({ children }) {
       isInitialized: state.isInitialized,
       isAuthenticated: state.isAuthenticated,
       user: state.user,
+      userId: state.userId,
       method: 'jwt',
       login,
       register,
       logout,
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, login, logout, register]
+    [state.isAuthenticated, state.isInitialized, state.user, state.userId, login, logout, register]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

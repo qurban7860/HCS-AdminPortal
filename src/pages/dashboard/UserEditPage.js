@@ -1,26 +1,36 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useParams } from 'react-router-dom';
+import { useLayoutEffect } from 'react';
 // @mui
 import { Container } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// _mock_
-import { _userList } from '../../_mock/arrays';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
+import { getUser } from '../../redux/slices/user';
 // components
 import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-import UserNewEditForm from '../../sections/@dashboard/user/UserNewEditForm';
+import UserEditForm from '../../sections/@dashboard/user/UserEditForm';
 
 // ----------------------------------------------------------------------
 
 export default function UserEditPage() {
   const { themeStretch } = useSettingsContext();
 
-  const { name } = useParams();
+  const dispatch = useDispatch();
 
-  const currentUser = _userList.find((user) => paramCase(user.name) === name);
+  const { id } = useParams(); 
+  console.log(id);
+
+
+  const { user } = useSelector((state) => state.user);
+
+  useLayoutEffect(() => {
+    dispatch(getUser(id));
+  }, [dispatch, id]);
 
   return (
     <>
@@ -40,11 +50,11 @@ export default function UserEditPage() {
               name: 'User',
               href: PATH_DASHBOARD.user.list,
             },
-            { name: currentUser?.name },
+            { name: user?.firstName },
           ]}
         />
 
-        <UserNewEditForm isEdit currentUser={currentUser} />
+        <UserEditForm />
       </Container>
     </>
   );

@@ -29,7 +29,7 @@ UserTableRow.propTypes = {
 };
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { name, avatarUrl, company, role, isVerified, status } = row;
+  const { email, firstName, lastName, role, status, image } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -60,21 +60,21 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={avatarUrl} />
+            <Avatar alt={firstName + lastName} src={image} />
 
             <Typography variant="subtitle2" noWrap>
-              {name}
+              {`${firstName} ${lastName}`}
             </Typography>
-          </Stack>
+          </Stack>  
         </TableCell>
 
-        <TableCell align="left">{company}</TableCell>
+        <TableCell align="left">{email}</TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {role}
         </TableCell>
 
-        <TableCell align="center">
+        {/* <TableCell align="center">
           <Iconify
             icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
             sx={{
@@ -84,9 +84,9 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
               ...(!isVerified && { color: 'warning.main' }),
             }}
           />
-        </TableCell>
+        </TableCell> */}
 
-        <TableCell align="left">
+         <TableCell align="left">
           <Label
             variant="soft"
             color={(status === 'banned' && 'error') || 'success'}
@@ -94,7 +94,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           >
             {status}
           </Label>
-        </TableCell>
+        </TableCell> 
 
         <TableCell align="right">
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>

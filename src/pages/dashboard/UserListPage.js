@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -23,6 +23,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // _mock_
 import { _userList } from '../../_mock/arrays';
 // components
+import { useSnackbar } from '../../components/snackbar';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -47,23 +48,18 @@ import { getUsers, deleteUser } from '../../redux/slices/user';
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
 const ROLE_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
+  'All',
+  'Administrator',
+  'Normal User',
+  'Guest User',
+  'Restriced User',
 ];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
+  // { id: 'isVerified', label: 'Verified', align: 'center' },
   { id: 'status', label: 'Status', align: 'left' },
   { id: '' },
 ];
@@ -92,9 +88,11 @@ export default function UserListPage() {
 
   const dispatch = useDispatch();
 
-  const { users, isLoading } = useSelector((state) => state.user);
+  const { users, error, responseMessage, initial} = useSelector((state) => state.user);
 
   const { themeStretch } = useSettingsContext();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
@@ -109,15 +107,22 @@ export default function UserListPage() {
   const [filterStatus, setFilterStatus] = useState('all');
 
 
-  // useEffect(() => {
-  //   dispatch(getUsers());
-  // }, [dispatch]);
+  useLayoutEffect(() => {
+    dispatch(getUsers());
+    // dispatch(getDepartments());
+  }, [dispatch]);
 
-  // useEffect(() => {
-  //   if (users) {
-  //     setTableData(users);
-  //   }
-  // }, [users]);
+  useEffect(() => {
+    if (initial) {
+      if (users && !error) {
+        // enqueueSnackbar(responseMessage);
+      } else {
+        // enqueueSnackbar(error, { variant: `error` });
+      }
+      setTableData(users);
+    }
+  }, [users, error, enqueueSnackbar, responseMessage, initial]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -161,15 +166,19 @@ export default function UserListPage() {
     setFilterRole(event.target.value);
   };
 
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
+  const handleDeleteRow = async (id) => {
+    try {
+      dispatch(deleteUser(id));
+      dispatch(getUsers());
+      setSelected([]);
 
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
+      if (page > 0) {
+        if (dataInPage.length < 2) {
+          setPage(page - 1);
+        }
       }
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -191,7 +200,9 @@ export default function UserListPage() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    console.log('id', id);
+    console.log('edit');
+    navigate(PATH_DASHBOARD.user.edit(id));
   };
 
   const handleResetFilter = () => {
@@ -260,7 +271,7 @@ export default function UserListPage() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row.id)
+                  tableData.map((row) => row._id)
                 )
               }
               action={
@@ -284,7 +295,7 @@ export default function UserListPage() {
                   onSelectAllRows={(checked) =>
                     onSelectAllRows(
                       checked,
-                      tableData.map((row) => row.id)
+                      tableData.map((row) => row._id)
                     )
                   }
                 />
@@ -294,12 +305,12 @@ export default function UserListPage() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <UserTableRow
-                        key={row.id}
+                        key={row._id}
                         row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.name)}
+                        selected={selected.includes(row._id)}
+                        onSelectRow={() => onSelectRow(row._id)}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        onEditRow={() => handleEditRow(row._id)}
                       />
                     ))}
 

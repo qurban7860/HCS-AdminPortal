@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
@@ -98,7 +98,10 @@ export default function AssetViewPage() {
             position: 'relative',
           }}
         >
-          <AssetCover name={asset?.name}  />
+          <AssetCover name={asset?.name}/>
+
+          
+           
 
           <Tabs
             value={currentTab}
@@ -122,13 +125,23 @@ export default function AssetViewPage() {
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
           </Tabs>
+          
         </Card>
 
+        <Button 
+                  size ="medium" 
+                  color ="secondary" 
+                  variant ="contained" 
+                  // href = {currentAsset.image === undefined ? '' : `localhost:5000/${currentAsset.image}`}
+                  >
+                    Edit Asset
+          </Button> 
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
           } </Box>
         )}
+        
       </Container>
     </>
   );

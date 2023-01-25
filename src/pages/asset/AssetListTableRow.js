@@ -47,13 +47,6 @@ export default function AssetListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  const { departments } = useSelector((state) => state.department);
-
-  let department = "";
-  if (department_id !== undefined && departments !== undefined){
-    department = departments.find(o => o._id === department_id);
-  }
-
   // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
