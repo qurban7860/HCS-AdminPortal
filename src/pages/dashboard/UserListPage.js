@@ -48,7 +48,6 @@ import { getUsers, deleteUser } from '../../redux/slices/user';
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
 const ROLE_OPTIONS = [
-  'All',
   'Administrator',
   'Normal User',
   'Guest User',
@@ -115,9 +114,9 @@ export default function UserListPage() {
   useEffect(() => {
     if (initial) {
       if (users && !error) {
-        // enqueueSnackbar(responseMessage);
+        enqueueSnackbar(responseMessage);
       } else {
-        // enqueueSnackbar(error, { variant: `error` });
+        enqueueSnackbar(error, { variant: `error` });
       }
       setTableData(users);
     }
@@ -168,15 +167,22 @@ export default function UserListPage() {
 
   const handleDeleteRow = async (id) => {
     try {
-      dispatch(deleteUser(id));
-      dispatch(getUsers());
-      setSelected([]);
-
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
+      try {
+        console.log(id);
+        dispatch(deleteUser(id));
+        dispatch(getUsers());
+        setSelected([]);
+  
+        if (page > 0) {
+          if (dataInPage.length < 2) {
+            setPage(page - 1);
+          }
         }
+      } catch (err) {
+        console.log(err);
       }
+
+      
     } catch (err) {
       console.log(err);
     }
