@@ -164,7 +164,7 @@ export default function AssetList() {
   const handleDeleteRow = async (id) => {
     try {
       console.log(id);
-      dispatch(deleteAsset(id));
+      await dispatch(deleteAsset(id));
       dispatch(getAssets());
       setSelected([]);
 

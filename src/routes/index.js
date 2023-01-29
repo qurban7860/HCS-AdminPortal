@@ -31,6 +31,16 @@ import {
   AssetAdd,
   AssetEdit,
   AssetView,
+  // Customer
+  CustomerList,
+  CustomerAdd,
+  CustomerEdit,
+  CustomerView,
+  // Site
+  SiteList,
+  SiteAdd,
+  SiteEdit,
+  SiteView,
   // 
   BlankPage,
   PermissionDeniedPage,
@@ -111,6 +121,24 @@ export default function Router() {
             { path: 'new', element: <UserCreatePage /> },
             { path: ':id/edit', element: <UserEditPage /> },
             { path: 'account', element: <UserAccountPage /> },
+          ],
+        },
+        {
+          path: 'customer',
+          children: [
+            { path: 'list', element: <CustomerList /> },
+            { path: 'new', element: <CustomerAdd /> },
+            { path: ':id/edit', element: <CustomerEdit />},
+            { path: ':id/view', element: <CustomerView />}
+          ],
+        },
+        {
+          path: 'site',
+          children: [
+            { path: 'list', element: <SiteList /> },
+            { path: 'new', element: <SiteAdd /> },
+            { path: ':id/edit', element: <SiteEdit />},
+            { path: ':id/view', element: <SiteView />}
           ],
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },

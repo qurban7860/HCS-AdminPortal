@@ -88,6 +88,32 @@ const navConfig = [
         ],
       },
 
+      // CUSTOMER
+      {
+        title: 'customer',
+        path: PATH_DASHBOARD.customer.root,
+        icon: ICONS.cart,
+        children: [
+
+          { title: 'list', path: PATH_DASHBOARD.customer.list },
+          { title: 'create', path: PATH_DASHBOARD.customer.new },
+
+        ],
+      },
+
+      // SITE
+      {
+        title: 'site',
+        path: PATH_DASHBOARD.site.root,
+        icon: ICONS.cart,
+        children: [
+
+          { title: 'list', path: PATH_DASHBOARD.site.list },
+          { title: 'create', path: PATH_DASHBOARD.site.new },
+
+        ],
+      },
+
       // INVOICE
 
       // BLOG

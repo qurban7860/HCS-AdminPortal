@@ -64,14 +64,14 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.number().required('Password is required').min(6),
-    phoneNumber: Yup.string().required('Phone number is required'),
+    password: Yup.string().required('Password is required').min(6),
+    phoneNumber: Yup.number().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
     country: Yup.string().required('Country is required'),
-    company: Yup.string().required('Company is required'),
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
     role: Yup.string().required('Role is required'),
+    zipCode: Yup.string(),
     avatarUrl: Yup.string().nullable(true),
   });
 
@@ -90,7 +90,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       avatarUrl: currentUser?.avatarUrl || null,
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
-      company: currentUser?.company || '',
       role: currentUser?.role || '',
       addedBy: userId,
     }),
@@ -283,7 +282,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               <RHFTextField name="city" label="City" />
               <RHFTextField name="address" label="Address" />
               <RHFTextField name="zipCode" label="Zip/Code" />
-              <RHFTextField name="company" label="Company" />
               <RHFSelect native name="role" label="Roles">
                 <option value="" disabled/>
                 {ROLES.map((option) => (

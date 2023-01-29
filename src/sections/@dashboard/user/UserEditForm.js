@@ -27,7 +27,7 @@ import FormProvider, {
   RHFUploadAvatar,
 } from '../../../components/hook-form';
 // slice
-import { saveUser } from '../../../redux/slices/user';
+import { updateUser } from '../../../redux/slices/user';
 // current user
 import { useAuthContext } from '../../../auth/useAuthContext';
 
@@ -58,14 +58,14 @@ export default function UserEditForm() {
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.number().required('Password is required').min(6),
-    phoneNumber: Yup.string().required('Phone number is required'),
+    password: Yup.string().required('Password is required').min(6),
+    phoneNumber: Yup.number().required('Phone number is required'),
     address: Yup.string().required('Address is required'),
     country: Yup.string().required('Country is required'),
-    company: Yup.string().required('Company is required'),
     state: Yup.string().required('State is required'),
     city: Yup.string().required('City is required'),
     role: Yup.string().required('Role is required'),
+    zipCode: Yup.string(),
     avatarUrl: Yup.string().nullable(true),
   });
 
@@ -75,17 +75,16 @@ export default function UserEditForm() {
       firstName: currentUser?.firstName || '',
       lastName: currentUser?.lastName || '',
       email: currentUser?.email || '',
-      password: currentUser?.password || '',
+      password: currentUser?.passwordText || '',
       phoneNumber: currentUser?.phoneNumber || '',
       address: currentUser?.address || '',
       country: currentUser?.country || '',
       state: currentUser?.state || '',
       city: currentUser?.city || '',
       zipCode: currentUser?.zipCode || '',
-      avatarUrl: currentUser?.avatarUrl || null,
+      avatarUrl: currentUser?.image || null,
       isVerified: currentUser?.isVerified || true,
       status: currentUser?.status,
-      company: currentUser?.company || '',
       role: currentUser?.role || '',
       addedBy: currentUser?.addedBy || '',
     }),
@@ -120,9 +119,9 @@ export default function UserEditForm() {
   const onSubmit = async (data) => {
      console.log(data);
       try{
-        dispatch(saveUser(data));
+        dispatch(updateUser(data));
         reset();
-        enqueueSnackbar('Create success!');
+        enqueueSnackbar('Update success!');
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
@@ -192,7 +191,7 @@ export default function UserEditForm() {
                         {...field}
                         checked={field.value !== 'active'}
                         onChange={(event) =>
-                          field.onChange(event.target.checked ? 'banned' : 'active')
+                          field.onChange(event.target.checked ? 'Banned' : 'active')
                         }
                       />
                     )}
@@ -273,7 +272,6 @@ export default function UserEditForm() {
               <RHFTextField name="city" label="City" />
               <RHFTextField name="address" label="Address" />
               <RHFTextField name="zipCode" label="Zip/Code" />
-              <RHFTextField name="company" label="Company" />
               <RHFSelect native name="role" label="Roles">
                 <option value="" disabled/>
                 {ROLES.map((option) => (

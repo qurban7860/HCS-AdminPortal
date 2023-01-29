@@ -24,18 +24,22 @@ export const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/Reset
 export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/GeneralAppPage')));
 
 // ASSET
-export const AssetList= Loadable(
-  lazy(() => import('../pages/asset/AssetList'))
-);
-export const AssetAdd = Loadable(
-  lazy(() => import('../pages/asset/AssetAdd'))
-);
-export const AssetEdit = Loadable(
-  lazy(() => import('../pages/asset/AssetEdit'))
-);
-export const AssetView = Loadable(
-  lazy(() => import('../pages/asset/AssetView'))
-);
+export const AssetList= Loadable(  lazy(() => import('../pages/asset/AssetList')));
+export const AssetAdd = Loadable(  lazy(() => import('../pages/asset/AssetAdd')));
+export const AssetEdit = Loadable(  lazy(() => import('../pages/asset/AssetEdit')));
+export const AssetView = Loadable(  lazy(() => import('../pages/asset/AssetView')));
+
+// CUSTOMER
+export const CustomerList= Loadable(  lazy(() => import('../pages/customer/CustomerList')));
+export const CustomerAdd = Loadable(  lazy(() => import('../pages/customer/CustomerAdd')));
+export const CustomerEdit = Loadable(  lazy(() => import('../pages/customer/CustomerEdit')));
+export const CustomerView = Loadable(  lazy(() => import('../pages/customer/CustomerView')));
+
+// SITE
+export const SiteList= Loadable(  lazy(() => import('../pages/site/SiteList')));
+export const SiteAdd = Loadable(  lazy(() => import('../pages/site/SiteAdd')));
+export const SiteEdit = Loadable(  lazy(() => import('../pages/site/SiteEdit')));
+export const SiteView = Loadable(  lazy(() => import('../pages/site/SiteView')));
 
 // DASHBOARD: USER
 export const UserProfilePage = Loadable(lazy(() => import('../pages/dashboard/UserProfilePage')));

@@ -128,14 +128,14 @@ export default function AssetViewPage() {
           
         </Card>
 
-        <Button 
+        {/* <Button 
                   size ="medium" 
                   color ="secondary" 
                   variant ="contained" 
                   // href = {currentAsset.image === undefined ? '' : `localhost:5000/${currentAsset.image}`}
                   >
                     Edit Asset
-          </Button> 
+          </Button>  */}
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />

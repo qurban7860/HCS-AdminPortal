@@ -87,7 +87,7 @@ const slice = createSlice({
         formData.append('country', action.payload.country);
         formData.append('state', action.payload.state);
         formData.append('city', action.payload.city);
-        formData.append('about', action.payload.about);
+        formData.append('zip', action.payload.zipCode);
         formData.append('addedBy', action.payload.addedBy);
         formData.append('isVerified', action.payload.isVerified);
         formData.append('role', action.payload.role);
@@ -109,7 +109,7 @@ const slice = createSlice({
 
     },
 
-    async updateAsset(state, action) {
+    async updateUser(state, action) {
       try {
 
         const formData = new FormData();
@@ -119,12 +119,17 @@ const slice = createSlice({
         formData.append('email', action.payload.email);
         formData.append('password', action.payload.password);
         formData.append('address', action.payload.address);
+        formData.append('phoneNumber', action.payload.phoneNumber);
         formData.append('country', action.payload.country);
         formData.append('state', action.payload.state);
         formData.append('city', action.payload.city);
-        formData.append('about', action.payload.email);
+        formData.append('zip', action.payload.zipCode);
         formData.append('addedBy', action.payload.email);
-        // formData.append('image', action.payload.photoURL);
+        formData.append('isVerified', action.payload.isVerified);
+        formData.append('role', action.payload.role);
+        if(action.payload.avatarUrl){
+          formData.append('image', action.payload.avatarUrl);
+        }
 
         const response = await axios.patch(`${CONFIG.SERVER_URL}users/${action.payload.id}`,
           formData
