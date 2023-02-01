@@ -5,23 +5,18 @@ import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-// slices
-import { getCustomer } from '../../redux/slices/customer';
-import { getUsers } from '../../redux/slices/user';
-import { getSites } from '../../redux/slices/site';
-import { getContacts } from '../../redux/slices/contact';
-
+import { getContact } from '../../redux/slices/contact';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import CustomerEditForm from './CustomerEditForm';
+import ContactEditForm from './ContactEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerEdit() {
+export default function ContactEdit() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
@@ -30,13 +25,10 @@ export default function CustomerEdit() {
   console.log(id);
 
 
-  const { customer } = useSelector((state) => state.customer);
+  const { contact } = useSelector((state) => state.contact);
 
   useLayoutEffect(() => {
-    dispatch(getCustomer(id));
-    dispatch(getUsers());
-    dispatch(getSites());
-    dispatch(getContacts());
+    dispatch(getContact(id));
   }, [dispatch, id]);
 
 
@@ -44,23 +36,23 @@ export default function CustomerEdit() {
   return (
     <>
       <Helmet>
-        <title> Customer: Edit Page | Machine ERP</title>
+        <title> Contact: Edit Page | Machine ERP</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Edit Customer"
+          heading="Edit Contact"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
+              name: 'Contact',
+              href: PATH_DASHBOARD.contact.list,
             },
-            { name: customer?.name },
+            { name: contact?.name },
           ]}
         />
 
-        <CustomerEditForm/>
+        <ContactEditForm/>
       </Container>
     </>
   );

@@ -14,15 +14,15 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  sites: [],
-  site: null,
-  siteParams: {
+  contacts: [],
+  contact: null,
+  contactParams: {
 
   }
 };
 
 const slice = createSlice({
-  name: 'site',
+  name: 'contact',
   initialState,
   reducers: {
     // START LOADING
@@ -37,19 +37,19 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET SiteS
-    getSitesSuccess(state, action) {
+    // GET Contacts
+    getContactsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.sites = action.payload;
+      state.contacts = action.payload;
       state.initial = true;
     },
 
-    // GET Site
-    getSiteSuccess(state, action) {
+    // GET Contact
+    getContactSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.site = action.payload;
+      state.contact = action.payload;
       state.initial = true;
     },
 
@@ -62,27 +62,23 @@ const slice = createSlice({
     },
 
 
-    async saveSite(state, action) {
+    async saveContact(state, action) {
       try {
         const formData = new FormData();
-
-        formData.append('name', action.payload.name);
         if(action.payload.customer){
-          formData.append('customer', action.payload.customer);
+          formData.append('customerId', action.payload.customer);
         }
+        formData.append('firstName', action.payload.firstName);
+        formData.append('lastName', action.payload.lastName);
+        formData.append('title', action.payload.title);
+        formData.append('contactTypes', action.payload.contactTypes);
         formData.append('phone', action.payload.phone);
         formData.append('email', action.payload.email);
-        formData.append('fax', action.payload.fax);
-        formData.append('website', action.payload.website);
-        formData.append('street', action.payload.street);
-        formData.append('suburb', action.payload.suburb);
-        formData.append('city', action.payload.city);
-        formData.append('region', action.payload.region);
-        formData.append('country', action.payload.country);
+        formData.append('isPrimary', action.payload.isPrimary);
   
 
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}sites`,
+        const response = await axios.post(`${CONFIG.SERVER_URL}contacts`,
           formData,
         );
 
@@ -94,26 +90,24 @@ const slice = createSlice({
 
     },
 
-    async updateSite(state, action) {
+    async updateContact(state, action) {
       try {
 
         const formData = new FormData();
 
         formData.append('id', action.payload.id);
-        formData.append('name', action.payload.name);
         if(action.payload.customer){
-          formData.append('customer', action.payload.customer);
-        }        formData.append('phone', action.payload.phone);
+          formData.append('customerId', action.payload.customer);
+        }
+        formData.append('customerId', action.payload.customer);
+        formData.append('firstName', action.payload.firstName);
+        formData.append('lastName', action.payload.lastName);
+        formData.append('title', action.payload.title);
+        formData.append('contactTypes', action.payload.contactTypes);
+        formData.append('phone', action.payload.phone);
         formData.append('email', action.payload.email);
-        formData.append('fax', action.payload.fax);
-        formData.append('website', action.payload.website);
-        formData.append('street', action.payload.street);
-        formData.append('suburb', action.payload.suburb);
-        formData.append('city', action.payload.city);
-        formData.append('region', action.payload.region);
-        formData.append('country', action.payload.country);
 
-        const response = await axios.patch(`${CONFIG.SERVER_URL}sites/${action.payload.id}`,
+        const response = await axios.patch(`${CONFIG.SERVER_URL}contacts/${action.payload.id}`,
           formData
         );
 
@@ -140,8 +134,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  saveSite,
-  updateSite,
+  saveContact,
+  updateContact,
   getCart,
   addToCart,
   setResponseMessage,
@@ -153,15 +147,15 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getSites() {
+export function getContacts() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}sites`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}contacts`);
       console.log(response);
       console.log(response.data);
-      dispatch(slice.actions.getSitesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
+      dispatch(slice.actions.getContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
 
     } catch (error) {
       console.log(error);
@@ -172,15 +166,15 @@ export function getSites() {
 
 // ----------------------------------------------------------------------
 
-export function getSite(id) {
+export function getContact(id) {
   console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}sites/${id}`);
-      dispatch(slice.actions.getSiteSuccess(response.data));
-      console.log('requested site', response.data);
-      // dispatch(slice.actions.setResponseMessage('Sites Loaded Successfuly'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}contacts/${id}`);
+      dispatch(slice.actions.getContactSuccess(response.data));
+      console.log('requested contact', response.data);
+      // dispatch(slice.actions.setResponseMessage('Contacts Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -190,12 +184,12 @@ export function getSite(id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteSite(id) {
+export function deleteContact(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}sites/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}contacts/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;

@@ -6,7 +6,7 @@ import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // slices
-import { getCustomer } from '../../redux/slices/customer';
+import { getNote } from '../../redux/slices/note';
 import { getUsers } from '../../redux/slices/user';
 import { getSites } from '../../redux/slices/site';
 import { getContacts } from '../../redux/slices/contact';
@@ -17,11 +17,11 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import CustomerEditForm from './CustomerEditForm';
+import NoteEditForm from './NoteEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function CustomerEdit() {
+export default function NoteEdit() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
@@ -30,10 +30,10 @@ export default function CustomerEdit() {
   console.log(id);
 
 
-  const { customer } = useSelector((state) => state.customer);
+  const { note } = useSelector((state) => state.note);
 
   useLayoutEffect(() => {
-    dispatch(getCustomer(id));
+    dispatch(getNote(id));
     dispatch(getUsers());
     dispatch(getSites());
     dispatch(getContacts());
@@ -44,23 +44,23 @@ export default function CustomerEdit() {
   return (
     <>
       <Helmet>
-        <title> Customer: Edit Page | Machine ERP</title>
+        <title> Note: Edit Page | Machine ERP</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Edit Customer"
+          heading="Edit Note"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
+              name: 'Note',
+              href: PATH_DASHBOARD.note.list,
             },
-            { name: customer?.name },
+            { name: note?.name },
           ]}
         />
 
-        <CustomerEditForm/>
+        <NoteEditForm/>
       </Container>
     </>
   );

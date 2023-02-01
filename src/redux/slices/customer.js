@@ -64,14 +64,30 @@ const slice = createSlice({
 
     async saveCustomer(state, action) {
       try {
+        console.log('sites', action.payload.sites);
+
         const formData = new FormData();
         console.log(action.payload.department);
         formData.append('name', action.payload.name);
         formData.append('tradingName', action.payload.tradingName);
-        formData.append('accountManager', action.payload.accountManager);
-        formData.append('projectManager', action.payload.projectManager);
-        formData.append('supportManager', action.payload.supportManager);
-
+        if(action.payload.mainSite){
+          formData.append('mainSite', action.payload.mainSite);
+        }
+        if(action.payload.sites){
+          formData.append('sites', action.payload.sites);
+        }
+        if(action.payload.contacts){
+          formData.append('contacts', action.payload.contacts);
+        }
+        if(action.payload.accountManager){
+          formData.append('accountManager', action.payload.accountManager);
+        }
+        if(action.payload.projectManager){
+          formData.append('projectManager', action.payload.projectManager);
+        }
+        if(action.payload.supportManager){
+          formData.append('supportManager', action.payload.supportManager);
+        }
 
         const response = await axios.post(`${CONFIG.SERVER_URL}customers`,
           formData,
@@ -93,9 +109,24 @@ const slice = createSlice({
         formData.append('id', action.payload.id);
         formData.append('name', action.payload.name);
         formData.append('tradingName', action.payload.tradingName);
-        formData.append('accountManager', action.payload.accountManager);
-        formData.append('projectManager', action.payload.projectManager);
-        formData.append('supportManager', action.payload.supportManager);
+        if(action.payload.mainSite){
+          formData.append('mainSite', action.payload.mainSite);
+        }
+        if(action.payload.sites){
+          formData.append('sites', action.payload.sites);
+        }
+        if(action.payload.contacts){
+          formData.append('contacts', action.payload.contacts);
+        }
+        if(action.payload.accountManager){
+          formData.append('accountManager', action.payload.accountManager);
+        }
+        if(action.payload.projectManager){
+          formData.append('projectManager', action.payload.projectManager);
+        }
+        if(action.payload.supportManager){
+          formData.append('supportManager', action.payload.supportManager);
+        }
         
         const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${action.payload.id}`,
           formData

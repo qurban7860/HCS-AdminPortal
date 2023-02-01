@@ -14,7 +14,8 @@ import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment
 import { getUsers } from '../../redux/slices/user';
 import { getSites } from '../../redux/slices/site';
 import { getContacts } from '../../redux/slices/contact';
-import { saveCustomer } from '../../redux/slices/customer';
+import { getCustomers } from '../../redux/slices/customer';
+import { saveNote } from '../../redux/slices/note';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -24,22 +25,20 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 import FormProvider, {
   RHFSelect,
-  RHFMultiSelect,
+  RHFEditor,
   RHFTextField,
   RHFSwitch
 } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
-CustomerAddForm.propTypes = {
+NoteAddForm.propTypes = {
   isEdit: PropTypes.bool,
   readOnly: PropTypes.bool,
-  currentCustomer: PropTypes.object,
+  currentNote: PropTypes.object,
 };
 
-export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
-
-  const { customer } = useSelector((state) => state.customer);
+export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const { users } = useSelector((state) => state.user);
 
@@ -47,7 +46,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { contacts } = useSelector((state) => state.contact);
 
-  const { userId } = useAuthContext();
+  const { customers } = useSelector((state) => state.customer);
 
   const dispatch = useDispatch();
   
@@ -55,35 +54,30 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const AddCustomerSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required')  ,
-    tradingName: Yup.string().min(5).max(40).required('Trading Name is required')  ,
-    mainSite: Yup.string(),
-    sites: Yup.array(),
-    contacts: Yup.array(),
-    accountManager: Yup.string(),
-    projectManager: Yup.string(),
-    supportManager: Yup.string(),
+ // a note can be archived. An archived 
+
+  const AddNoteSchema = Yup.object().shape({
+    note: Yup.string(),
+    user: Yup.string(),
+    customer: Yup.string(),
+    site: Yup.string(),
+    contact: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: '',
-      mainSite: '',
-      sites: [],
-      contacts: [],
-      tradingName: '',
-      accountManager: '',
-      projectManager: '',
-      supportManager: '',
-      isArchived: true
+      note: '',
+      user: '',
+      customer: '',
+      site: '',
+      contact: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentCustomer]
+    [currentNote]
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddCustomerSchema),
+    resolver: yupResolver(AddNoteSchema),
     defaultValues,
   });
 
@@ -113,10 +107,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const onSubmit = async (data) => {
     console.log(data);
       try{
-        dispatch(saveCustomer(data));
+        dispatch(saveNote(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_DASHBOARD.customer.list);
+        navigate(PATH_DASHBOARD.note.list);
       } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);
@@ -126,24 +120,39 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
-        <Grid item xs={18} md={12}>
+      <Grid container spacing={3}>
+        <Grid item xs={7} md={7}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFTextField name="name" label="Customer Name" />
+              <Stack spacing={1}>
+                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                  Notes
+                </Typography>
 
-              <RHFTextField name="tradingName" label="Trading Name" />
+                <RHFEditor simple name="note" />
+              </Stack>
 
-              <RHFSelect native name="mainSite" label="Main Site">
+              <RHFSelect native name="user" label="User">
+                    <option value="" selected/>
+                    { 
+                    users.length > 0 && users.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+
+              <RHFSelect native name="customer" label="Customer">
+                    <option value="" selected/>
+                    { 
+                    customers.length > 0 && customers.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.name}
+                    </option>
+                  ))}
+              </RHFSelect>
+
+              <RHFSelect native name="site" label="Site">
                     <option value="" selected/>
                     { 
                     sites.length > 0 && sites.map((option) => (
@@ -153,50 +162,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   ))}
               </RHFSelect>
 
-              <RHFMultiSelect
-                  customObject
-                  customName="name"
-                  chip
-                  checkbox
-                  name="sites"
-                  label="Sites"
-                  options={sites}
-                />
-
-              <RHFMultiSelect
-                  customObject
-                  customName="firstName"
-                  chip
-                  checkbox
-                  name="contacts"
-                  label="Contacts"
-                  options={contacts}
-                />
-
-              <RHFSelect native name="accountManager" label="Account Manager">
+              <RHFSelect native name="contact" label="Contact">
                     <option value="" selected/>
                     { 
-                    users.length > 0 && users.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="projectManager" label="Project Manager">
-                    <option value="" selected/>
-                    { 
-                    users.length > 0 && users.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="supportManager" label="Support Manager">
-                    <option value="" selected/>
-                    { 
-                    users.length > 0 && users.map((option) => (
+                    contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>
                       {option.firstName} {option.lastName}
                     </option>
@@ -215,20 +184,18 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               }
               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
             /> */}
-              </Box>
-
-              </Stack>
+            </Stack>  
 
               <Stack alignItems="flex-start" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Customer
+                Save Note
             </LoadingButton>
             </Stack>
             
-            </Card>
+          </Card>
           
-          </Grid>
         </Grid>
+      </Grid>
     </FormProvider>
   );
 }

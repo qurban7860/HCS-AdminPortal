@@ -6,7 +6,10 @@ import assetReducer from './slices/asset';
 import userReducer from './slices/user';
 import departmentReducer from './slices/department';
 import customerReducer from './slices/customer';
-import siteReducer from './slices/site'
+import siteReducer from './slices/site';
+import contactReducer from './slices/contact';
+import noteReducer from './slices/note';
+
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -45,8 +48,22 @@ export const customerPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 };
 
+export const contactPersistConfig = {
+  key: 'contact',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
 export const sitePersistConfig = {
   key: 'site',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
+export const notePersistConfig = {
+  key: 'note',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -58,6 +75,9 @@ const rootReducer = combineReducers({
   department: persistReducer(departmentPersistConfig, departmentReducer),
   customer: persistReducer(customerPersistConfig, customerReducer),
   site: persistReducer(sitePersistConfig, siteReducer),
+  contact: persistReducer(contactPersistConfig, contactReducer),
+  note: persistReducer(notePersistConfig, noteReducer),
+
 
 });
 

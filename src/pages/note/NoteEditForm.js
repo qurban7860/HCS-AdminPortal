@@ -14,7 +14,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../config-global';
 // slice
-import { updateCustomer } from '../../redux/slices/customer';
+import { updateNote } from '../../redux/slices/note';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -33,9 +33,9 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 
-export default function CustomerEditForm() {
+export default function NoteEditForm() {
 
-  const { error, customer } = useSelector((state) => state.customer);
+  const { error, note } = useSelector((state) => state.note);
 
   const { users } = useSelector((state) => state.user);
 
@@ -49,7 +49,7 @@ export default function CustomerEditForm() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const EditCustomerSchema = Yup.object().shape({
+  const EditNoteSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     tradingName: Yup.string().min(5).max(40).required('Trading Name is required'),
     mainSite: Yup.string(),
@@ -63,22 +63,22 @@ export default function CustomerEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id: customer?._id || '',
-      name: customer?.name || '',
-      tradingName: customer?.tradingName || '',
-      mainSite: customer?.mainSite || '',
-      sites: customer?.sites || [],
-      contacts: customer?.contacts || [],
-      accountManager: customer?.accountManager || '',
-      projectManager: customer?.projectManager || '',
-      supportManager: customer?.supportManager || '',
+      id: note?._id || '',
+      name: note?.name || '',
+      tradingName: note?.tradingName || '',
+      mainSite: note?.mainSite || '',
+      sites: note?.sites || [],
+      contacts: note?.contacts || [],
+      accountManager: note?.accountManager || '',
+      projectManager: note?.projectManager || '',
+      supportManager: note?.supportManager || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customer]
+    [note]
   );
 
   const methods = useForm({
-    resolver: yupResolver(EditCustomerSchema),
+    resolver: yupResolver(EditNoteSchema),
     defaultValues,
   });
 
@@ -93,20 +93,20 @@ export default function CustomerEditForm() {
   const values = watch();
 
   useEffect(() => {
-    if (customer) {
+    if (note) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer]);
+  }, [note]);
 
 
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      dispatch(updateCustomer(data));
+      dispatch(updateNote(data));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_DASHBOARD.customer.list);
+      navigate(PATH_DASHBOARD.note.list);
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -129,7 +129,7 @@ export default function CustomerEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="name" label="Customer Name" />
+                <RHFTextField name="name" label="Note Name" />
 
                 <RHFTextField name="tradingName" label="Trading Name" />
 

@@ -41,6 +41,18 @@ export const SiteAdd = Loadable(  lazy(() => import('../pages/site/SiteAdd')));
 export const SiteEdit = Loadable(  lazy(() => import('../pages/site/SiteEdit')));
 export const SiteView = Loadable(  lazy(() => import('../pages/site/SiteView')));
 
+// CONTACT
+export const ContactList= Loadable(  lazy(() => import('../pages/contact/ContactList')));
+export const ContactAdd = Loadable(  lazy(() => import('../pages/contact/ContactAdd')));
+export const ContactEdit = Loadable(  lazy(() => import('../pages/contact/ContactEdit')));
+export const ContactView = Loadable(  lazy(() => import('../pages/contact/ContactView')));
+
+// NOTE
+export const NoteList= Loadable(  lazy(() => import('../pages/note/NoteList')));
+export const NoteAdd = Loadable(  lazy(() => import('../pages/note/NoteAdd')));
+export const NoteEdit = Loadable(  lazy(() => import('../pages/note/NoteEdit')));
+export const NoteView = Loadable(  lazy(() => import('../pages/note/NoteView')));
+
 // DASHBOARD: USER
 export const UserProfilePage = Loadable(lazy(() => import('../pages/dashboard/UserProfilePage')));
 export const UserCardsPage = Loadable(lazy(() => import('../pages/dashboard/UserCardsPage')));

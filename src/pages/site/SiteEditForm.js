@@ -23,28 +23,19 @@
 
   import FormProvider, {
     RHFSelect,
-    RHFEditor,
-    RHFUpload,
     RHFTextField,
 
   } from '../../components/hook-form';
 
   import { countries } from '../../assets/data';
 
-
-
-
   // ----------------------------------------------------------------------
-
-  // SiteEditForm.propTypes = {
-  //   currentSite: PropTypes.object,
-  // };
 
   export default function SiteEditForm() {
 
     const { error, site } = useSelector((state) => state.site);
 
-    const { users } = useSelector((state) => state.user);
+    const { customers } = useSelector((state) => state.customer);
 
     const dispatch = useDispatch();
 
@@ -109,8 +100,7 @@
       if (site) {
         reset(defaultValues);
       }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [site]);
+    }, [site, reset, defaultValues]);
 
 
     const onSubmit = async (data) => {
@@ -144,14 +134,12 @@
             >
               <RHFTextField name="name" label="Name" />
 
-              {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
-
               <RHFSelect native name="customer" label="Customer">
                     <option value="" selected/>
                     { 
-                    users.length > 0 && users.map((option) => (
+                    customers.length > 0 && customers.map((option) => (
                     <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
+                      {option.name}
                     </option>
                   ))}
               </RHFSelect>

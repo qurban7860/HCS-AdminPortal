@@ -14,15 +14,15 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  sites: [],
-  site: null,
-  siteParams: {
+  notes: [],
+  note: null,
+  noteParams: {
 
   }
 };
 
 const slice = createSlice({
-  name: 'site',
+  name: 'note',
   initialState,
   reducers: {
     // START LOADING
@@ -37,19 +37,19 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET SiteS
-    getSitesSuccess(state, action) {
+    // GET Notes
+    getNotesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.sites = action.payload;
+      state.notes = action.payload;
       state.initial = true;
     },
 
-    // GET Site
-    getSiteSuccess(state, action) {
+    // GET Note
+    getNoteSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.site = action.payload;
+      state.note = action.payload;
       state.initial = true;
     },
 
@@ -62,27 +62,23 @@ const slice = createSlice({
     },
 
 
-    async saveSite(state, action) {
+    async saveNote(state, action) {
       try {
+        console.log('sites', action.payload.sites);
+
         const formData = new FormData();
-
+        console.log(action.payload.department);
         formData.append('name', action.payload.name);
-        if(action.payload.customer){
-          formData.append('customer', action.payload.customer);
-        }
-        formData.append('phone', action.payload.phone);
-        formData.append('email', action.payload.email);
-        formData.append('fax', action.payload.fax);
-        formData.append('website', action.payload.website);
-        formData.append('street', action.payload.street);
-        formData.append('suburb', action.payload.suburb);
-        formData.append('city', action.payload.city);
-        formData.append('region', action.payload.region);
-        formData.append('country', action.payload.country);
-  
+        formData.append('tradingName', action.payload.tradingName);
+        formData.append('mainSite', action.payload.mainSite);
+        formData.append('sites', action.payload.sites);
+        formData.append('contacts', action.payload.contacts);
+        formData.append('accountManager', action.payload.accountManager);
+        formData.append('projectManager', action.payload.projectManager);
+        formData.append('supportManager', action.payload.supportManager);
 
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}sites`,
+        const response = await axios.post(`${CONFIG.SERVER_URL}notes`,
           formData,
         );
 
@@ -94,26 +90,22 @@ const slice = createSlice({
 
     },
 
-    async updateSite(state, action) {
+    async updateNote(state, action) {
       try {
 
         const formData = new FormData();
 
         formData.append('id', action.payload.id);
         formData.append('name', action.payload.name);
-        if(action.payload.customer){
-          formData.append('customer', action.payload.customer);
-        }        formData.append('phone', action.payload.phone);
-        formData.append('email', action.payload.email);
-        formData.append('fax', action.payload.fax);
-        formData.append('website', action.payload.website);
-        formData.append('street', action.payload.street);
-        formData.append('suburb', action.payload.suburb);
-        formData.append('city', action.payload.city);
-        formData.append('region', action.payload.region);
-        formData.append('country', action.payload.country);
-
-        const response = await axios.patch(`${CONFIG.SERVER_URL}sites/${action.payload.id}`,
+        formData.append('tradingName', action.payload.tradingName);
+        formData.append('mainSite', action.payload.mainSite);
+        formData.append('sites', action.payload.sites);
+        formData.append('contacts', action.payload.contacts);
+        formData.append('accountManager', action.payload.accountManager);
+        formData.append('projectManager', action.payload.projectManager);
+        formData.append('supportManager', action.payload.supportManager);
+        
+        const response = await axios.patch(`${CONFIG.SERVER_URL}notes/${action.payload.id}`,
           formData
         );
 
@@ -140,8 +132,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  saveSite,
-  updateSite,
+  saveNote,
+  updateNote,
   getCart,
   addToCart,
   setResponseMessage,
@@ -153,15 +145,15 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getSites() {
+export function getNotes() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}sites`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}notes`);
       console.log(response);
       console.log(response.data);
-      dispatch(slice.actions.getSitesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
+      dispatch(slice.actions.getNotesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
     } catch (error) {
       console.log(error);
@@ -172,15 +164,15 @@ export function getSites() {
 
 // ----------------------------------------------------------------------
 
-export function getSite(id) {
+export function getNote(id) {
   console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}sites/${id}`);
-      dispatch(slice.actions.getSiteSuccess(response.data));
-      console.log('requested site', response.data);
-      // dispatch(slice.actions.setResponseMessage('Sites Loaded Successfuly'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}notes/${id}`);
+      dispatch(slice.actions.getNoteSuccess(response.data));
+      console.log('requested note', response.data);
+      // dispatch(slice.actions.setResponseMessage('Notes Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -190,12 +182,12 @@ export function getSite(id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteSite(id) {
+export function deleteNote(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}sites/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}notes/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;

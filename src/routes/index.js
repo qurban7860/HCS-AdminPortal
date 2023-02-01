@@ -41,6 +41,16 @@ import {
   SiteAdd,
   SiteEdit,
   SiteView,
+  // Contact
+  ContactList,
+  ContactAdd,
+  ContactEdit,
+  ContactView,
+  // Note
+  NoteList,
+  NoteAdd,
+  NoteEdit,
+  NoteView,
   // 
   BlankPage,
   PermissionDeniedPage,
@@ -139,6 +149,24 @@ export default function Router() {
             { path: 'new', element: <SiteAdd /> },
             { path: ':id/edit', element: <SiteEdit />},
             { path: ':id/view', element: <SiteView />}
+          ],
+        },
+        {
+          path: 'contact',
+          children: [
+            { path: 'list', element: <ContactList /> },
+            { path: 'new', element: <ContactAdd /> },
+            { path: ':id/edit', element: <ContactEdit />},
+            { path: ':id/view', element: <ContactView />}
+          ],
+        },
+        {
+          path: 'note',
+          children: [
+            { path: 'list', element: <NoteList /> },
+            { path: 'new', element: <NoteAdd /> },
+            { path: ':id/edit', element: <NoteEdit />},
+            { path: ':id/view', element: <NoteView />}
           ],
         },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },

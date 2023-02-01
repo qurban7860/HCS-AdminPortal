@@ -36,15 +36,15 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import CustomerListTableRow from './CustomerListTableRow';
-import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
+import NoteListTableRow from './NoteListTableRow';
+import NoteListTableToolbar from './NoteListTableToolbar';
+import { getNotes, deleteNote, getNote } from '../../redux/slices/note';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Customer', align: 'left' },
+  { id: 'name', label: 'Note', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
   { id: 'projectManager', label: 'Project Manager', align: 'left' },
   { id: 'isverified', label: 'Disabled', align: 'left' },
@@ -63,7 +63,7 @@ const STATUS_OPTIONS = [
 ];
 
 // const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
+//   { value: 'all_notes', label: 'All Note' },
 //   { value: 'deployable', label: 'All Deployable' },
 //   { value: 'pending', label: 'All Pending' },
 //   { value: 'archived', label: 'All Archived' },
@@ -72,7 +72,7 @@ const STATUS_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function CustomerList() {
+export default function NoteList() {
   const {
     dense,
     page,
@@ -110,22 +110,22 @@ export default function CustomerList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
+  const { notes, isLoading, error, initial, responseMessage } = useSelector((state) => state.note);
 
   useLayoutEffect(() => {
-    dispatch(getCustomers());
+    dispatch(getNotes());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (customers && !error) {
+      if (notes && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(customers);
+      setTableData(notes);
     }
-  }, [customers, error, responseMessage, enqueueSnackbar, initial]);
+  }, [notes, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -163,8 +163,8 @@ export default function CustomerList() {
   const handleDeleteRow = async (id) => {
     try {
       console.log(id);
-      await dispatch(deleteCustomer(id));
-      dispatch(getCustomers());
+      await dispatch(deleteNote(id));
+      dispatch(getNote());
       setSelected([]);
 
       if (page > 0) {
@@ -196,11 +196,11 @@ export default function CustomerList() {
 
   const handleEditRow = (id) => {
     console.log(id);
-    navigate(PATH_DASHBOARD.customer.edit(id));
+    navigate(PATH_DASHBOARD.note.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
+    navigate(PATH_DASHBOARD.note.view(id));
   };
 
   const handleResetFilter = () => {
@@ -211,34 +211,34 @@ export default function CustomerList() {
   return (
     <>
       <Helmet>
-        <title> Customer: List | Machine ERP </title>
+        <title> Note: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Customer List"
+          heading="Note List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
+              name: 'Note',
+              href: PATH_DASHBOARD.note.list,
             },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              to={PATH_DASHBOARD.customer.new}
+              to={PATH_DASHBOARD.note.new}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New Customer
+              New Note
             </Button>
           }
         />
 
         <Card>
-          <CustomerListTableToolbar
+          <NoteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -290,7 +290,7 @@ export default function CustomerList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <CustomerListTableRow
+                        <NoteListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
@@ -369,12 +369,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (note) => note.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((note) => filterStatus.includes(note.status));
   }
 
   return inputData;

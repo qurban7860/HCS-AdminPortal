@@ -118,9 +118,9 @@ export default function SiteAddForm({ isEdit, readOnly, currentSite }) {
     console.log(data);
       try{
         await dispatch(saveSite(data));
-        // reset();
+        reset();
         enqueueSnackbar('Create success!');
-        // navigate(PATH_DASHBOARD.site.list);
+        navigate(PATH_DASHBOARD.site.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
         console.error(err);

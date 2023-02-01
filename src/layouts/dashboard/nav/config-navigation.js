@@ -34,6 +34,7 @@ const ICONS = {
   asset: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
+  map: icon('ic_location'),
 };
 
 const navConfig = [
@@ -77,7 +78,7 @@ const navConfig = [
       {
         title: 'asset',
         path: PATH_DASHBOARD.asset.root,
-        icon: ICONS.cart,
+        icon: ICONS.analytics,
         children: [
           // { title: 'shop', path: PATH_DASHBOARD.asset.shop },
           // { title: 'product', path: PATH_DASHBOARD.asset.demoView },
@@ -92,7 +93,7 @@ const navConfig = [
       {
         title: 'customer',
         path: PATH_DASHBOARD.customer.root,
-        icon: ICONS.cart,
+        icon: ICONS.banking,
         children: [
 
           { title: 'list', path: PATH_DASHBOARD.customer.list },
@@ -105,11 +106,37 @@ const navConfig = [
       {
         title: 'site',
         path: PATH_DASHBOARD.site.root,
-        icon: ICONS.cart,
+        icon: ICONS.analytics,
         children: [
 
           { title: 'list', path: PATH_DASHBOARD.site.list },
           { title: 'create', path: PATH_DASHBOARD.site.new },
+
+        ],
+      },
+
+      // CONTACT
+      {
+        title: 'contact',
+        path: PATH_DASHBOARD.contact.root,
+        icon: ICONS.analytics,
+        children: [
+
+          { title: 'list', path: PATH_DASHBOARD.contact.list },
+          { title: 'create', path: PATH_DASHBOARD.contact.new },
+
+        ],
+      },
+
+      // NOTE
+      {
+        title: 'note',
+        path: PATH_DASHBOARD.note.root,
+        icon: ICONS.analytics,
+        children: [
+
+          { title: 'list', path: PATH_DASHBOARD.note.list },
+          { title: 'create', path: PATH_DASHBOARD.note.new },
 
         ],
       },

@@ -71,6 +71,8 @@ export function RHFSelect({ name, native, children, helperText, maxHeight = 220,
 // ----------------------------------------------------------------------
 
 RHFMultiSelect.propTypes = {
+  customObject: PropTypes.bool,
+  customName: PropTypes.string,
   name: PropTypes.string,
   chip: PropTypes.bool,
   label: PropTypes.string,
@@ -82,6 +84,8 @@ RHFMultiSelect.propTypes = {
 };
 
 export function RHFMultiSelect({
+  customObject,
+  customName,
   name,
   chip,
   label,
@@ -95,7 +99,7 @@ export function RHFMultiSelect({
   const { control } = useFormContext();
 
   const renderValues = (selectedIds) => {
-    const selectedItems = options.filter((item) => selectedIds.includes(item.value));
+    const selectedItems = options.filter((item) => selectedIds.includes(customObject ? item._id : item.value));
 
     if (!selectedItems.length && placeholder) {
       return (
@@ -109,13 +113,13 @@ export function RHFMultiSelect({
       return (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
           {selectedItems.map((item) => (
-            <Chip key={item.value} size="small" label={item.label} />
+            <Chip key={customObject ? item._id : item.value} size="small" label={customObject ? item[customName] : item.label} />
           ))}
         </Box>
       );
     }
 
-    return selectedItems.map((item) => item.label).join(', ');
+    return selectedItems.map((item) => customObject ? item[customName] : item.label).join(', ');
   };
 
   return (
@@ -131,7 +135,7 @@ export function RHFMultiSelect({
             multiple
             displayEmpty={!!placeholder}
             labelId={name}
-            input={<OutlinedInput fullWidth label={label} error={!!error} />}
+            input={<OutlinedInput fullWidth label={customObject ? customName : label} error={!!error} />}
             renderValue={renderValues}
             MenuProps={{
               PaperProps: {
@@ -156,12 +160,12 @@ export function RHFMultiSelect({
             )}
 
             {options.map((option) => {
-              const selected = field.value.includes(option.value);
+              const selected =  field.value.includes(customObject ? option._id : option.value);
 
               return (
                 <MenuItem
-                  key={option.value}
-                  value={option.value}
+                  key={customObject ? option._id : option.value}
+                  value={customObject ? option._id : option.value}
                   sx={{
                     py: 1,
                     px: 2,
@@ -177,7 +181,7 @@ export function RHFMultiSelect({
                 >
                   {checkbox && <Checkbox disableRipple size="small" checked={selected} />}
 
-                  {option.label}
+                  {customObject ? option[customName] : option.label}
                 </MenuItem>
               );
             })}
