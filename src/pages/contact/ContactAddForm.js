@@ -45,7 +45,7 @@ const CONTACT_TYPES = [
 
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
-  const { error } = useSelector((state) => state.contact);
+  const { isLoading } = useSelector((state) => state.contact);
 
   const { customers } = useSelector((state) => state.customer);
   
@@ -109,11 +109,10 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const onSubmit = async (data) => {
     console.log(data);
       try{
-        dispatch(saveContact(data));
+        await dispatch(saveContact(data));
         reset();
-        enqueueSnackbar('Create success!');
         navigate(PATH_DASHBOARD.contact.list);
-      } catch(err){
+      } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);
       }

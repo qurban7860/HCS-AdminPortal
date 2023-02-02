@@ -28,6 +28,8 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.error = null;
+
     },
 
     // HAS ERROR
@@ -62,61 +64,6 @@ const slice = createSlice({
     },
 
 
-    async saveNote(state, action) {
-      try {
-        console.log('sites', action.payload.sites);
-
-        const formData = new FormData();
-        console.log(action.payload.department);
-        formData.append('name', action.payload.name);
-        formData.append('tradingName', action.payload.tradingName);
-        formData.append('mainSite', action.payload.mainSite);
-        formData.append('sites', action.payload.sites);
-        formData.append('contacts', action.payload.contacts);
-        formData.append('accountManager', action.payload.accountManager);
-        formData.append('projectManager', action.payload.projectManager);
-        formData.append('supportManager', action.payload.supportManager);
-
-
-        const response = await axios.post(`${CONFIG.SERVER_URL}notes`,
-          formData,
-        );
-
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
-    },
-
-    async updateNote(state, action) {
-      try {
-
-        const formData = new FormData();
-
-        formData.append('id', action.payload.id);
-        formData.append('name', action.payload.name);
-        formData.append('tradingName', action.payload.tradingName);
-        formData.append('mainSite', action.payload.mainSite);
-        formData.append('sites', action.payload.sites);
-        formData.append('contacts', action.payload.contacts);
-        formData.append('accountManager', action.payload.accountManager);
-        formData.append('projectManager', action.payload.projectManager);
-        formData.append('supportManager', action.payload.supportManager);
-        
-        const response = await axios.patch(`${CONFIG.SERVER_URL}notes/${action.payload.id}`,
-          formData
-        );
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
-    },
-
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -132,8 +79,6 @@ export default slice.reducer;
 
 // Actions
 export const {
-  saveNote,
-  updateNote,
   getCart,
   addToCart,
   setResponseMessage,
@@ -142,6 +87,73 @@ export const {
   nextStep,
 
 } = slice.actions;
+
+// ----------------------------------------------------------------------
+
+export function saveNote(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const formData = new FormData();
+      formData.append('note', params.noteTypes);
+      if(params.customer){
+        formData.append('customer', params.customer);
+      }
+      if(params.site){
+        formData.append('site', params.site);
+      }
+      if(params.contact){
+        formData.append('contact', params.contact);
+      }
+      if(params.user){
+        formData.append('user', params.user);
+      }
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}notes`,
+        formData,
+      );
+      dispatch(slice.actions.setResponseMessage('Note saved successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function updateNote(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const formData = new FormData();
+
+      formData.append('id', params.id);
+      formData.append('note', params.note);
+      if(params.customer){
+        formData.append('customer', params.customer);
+      }
+      if(params.site){
+        formData.append('site', params.site);
+      }
+      if(params.contact){
+        formData.append('contact', params.contact);
+      }
+      if(params.user){
+        formData.append('user', params.user);
+      }
+      const response = await axios.patch(`${CONFIG.SERVER_URL}notes/${params.id}`,
+        formData
+      );
+      dispatch(slice.actions.setResponseMessage('Note updated successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 

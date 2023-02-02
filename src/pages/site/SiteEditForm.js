@@ -108,7 +108,6 @@
       try {
         await dispatch(updateSite(data));
         reset();
-        enqueueSnackbar('Update success!');
         navigate(PATH_DASHBOARD.site.list);
       } catch (err) {
         enqueueSnackbar('Saving failed!');

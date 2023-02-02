@@ -119,7 +119,6 @@ export default function SiteAddForm({ isEdit, readOnly, currentSite }) {
       try{
         await dispatch(saveSite(data));
         reset();
-        enqueueSnackbar('Create success!');
         navigate(PATH_DASHBOARD.site.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');

@@ -19,6 +19,8 @@ import { fCurrency } from '../../utils/formatNumber';
 import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
+import Label from '../../components/label';
+
 import { useSelector } from '../../redux/store';
 
 
@@ -93,17 +95,15 @@ export default function SiteListTableRow({
 
         <TableCell>{website}</TableCell>
 
-        <TableCell align="center">
-          <Iconify
-            icon={isDisabled ? 'eva:checkmark-circle-fill' : 'eva:close-circle-fill'}
-            sx={{
-              width: 20,
-              height: 20,
-              color: 'success.main',
-              ...(!isDisabled && { color: 'warning.main' }),
-            }}
-          />
-        </TableCell>
+        <TableCell align="false">
+          <Label
+            variant="soft"
+            color={(isDisabled === true && 'error') || 'success'}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {isDisabled === false ? 'false' : true}
+          </Label>
+        </TableCell> 
 
         <TableCell>{fDate(createdAt)}</TableCell>
 

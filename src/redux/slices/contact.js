@@ -28,6 +28,8 @@ const slice = createSlice({
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
+      state.error = null;
+
     },
 
     // HAS ERROR
@@ -62,63 +64,6 @@ const slice = createSlice({
     },
 
 
-    async saveContact(state, action) {
-      try {
-        const formData = new FormData();
-        if(action.payload.customer){
-          formData.append('customerId', action.payload.customer);
-        }
-        formData.append('firstName', action.payload.firstName);
-        formData.append('lastName', action.payload.lastName);
-        formData.append('title', action.payload.title);
-        formData.append('contactTypes', action.payload.contactTypes);
-        formData.append('phone', action.payload.phone);
-        formData.append('email', action.payload.email);
-        formData.append('isPrimary', action.payload.isPrimary);
-  
-
-
-        const response = await axios.post(`${CONFIG.SERVER_URL}contacts`,
-          formData,
-        );
-
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
-    },
-
-    async updateContact(state, action) {
-      try {
-
-        const formData = new FormData();
-
-        formData.append('id', action.payload.id);
-        if(action.payload.customer){
-          formData.append('customerId', action.payload.customer);
-        }
-        formData.append('customerId', action.payload.customer);
-        formData.append('firstName', action.payload.firstName);
-        formData.append('lastName', action.payload.lastName);
-        formData.append('title', action.payload.title);
-        formData.append('contactTypes', action.payload.contactTypes);
-        formData.append('phone', action.payload.phone);
-        formData.append('email', action.payload.email);
-
-        const response = await axios.patch(`${CONFIG.SERVER_URL}contacts/${action.payload.id}`,
-          formData
-        );
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
-    },
-
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -134,8 +79,6 @@ export default slice.reducer;
 
 // Actions
 export const {
-  saveContact,
-  updateContact,
   getCart,
   addToCart,
   setResponseMessage,
@@ -144,6 +87,69 @@ export const {
   nextStep,
 
 } = slice.actions;
+
+// ----------------------------------------------------------------------
+
+export function saveContact(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const formData = new FormData();
+      if(params.customer){
+        formData.append('customerId', params.customer);
+      }
+      formData.append('firstName', params.firstName);
+      formData.append('lastName', params.lastName);
+      formData.append('title', params.title);
+      formData.append('contactTypes', params.contactTypes);
+      formData.append('phone', params.phone);
+      formData.append('email', params.email);
+      formData.append('isPrimary', params.isPrimary);
+
+
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}contacts`,
+        formData,
+      );
+      dispatch(slice.actions.setResponseMessage('Contacts saved successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function updateContact(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const formData = new FormData();
+
+      formData.append('id', params.id);
+      if(params.customer){
+        formData.append('customerId', params.customer);
+      }
+      formData.append('firstName', params.firstName);
+      formData.append('lastName', params.lastName);
+      formData.append('title', params.title);
+      formData.append('contactTypes', params.contactTypes);
+      formData.append('phone', params.phone);
+      formData.append('email', params.email);
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}contacts/${params.id}`,
+        formData
+      );
+      dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 

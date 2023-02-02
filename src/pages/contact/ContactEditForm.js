@@ -41,7 +41,7 @@
 
   export default function ContactEditForm() {
 
-    const { contact, error } = useSelector((state) => state.contact);
+    const { contact, isLoading, error } = useSelector((state) => state.contact);
 
     const { customers } = useSelector((state) => state.customer);
 
@@ -103,9 +103,8 @@
     const onSubmit = async (data) => {
       console.log(data);
       try {
-        dispatch(updateContact(data));
+        await dispatch(updateContact(data));
         reset();
-        enqueueSnackbar('Update success!');
         navigate(PATH_DASHBOARD.contact.list);
       } catch (err) {
         enqueueSnackbar('Saving failed!');
@@ -151,7 +150,7 @@
 
 
 
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+                <LoadingButton type="submit" variant="contained" size="large" loading={isLoading}>
                   Save Changes
                 </LoadingButton>
               </Stack>

@@ -27,6 +27,7 @@ const slice = createSlice({
   reducers: {
     // START LOADING
     startLoading(state) {
+      state.error = null;
       state.isLoading = true;
     },
 
@@ -61,70 +62,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    async saveSite(state, action) {
-      try {
-        const formData = new FormData();
-
-        formData.append('name', action.payload.name);
-        if(action.payload.customer){
-          formData.append('customer', action.payload.customer);
-        }
-        formData.append('phone', action.payload.phone);
-        formData.append('email', action.payload.email);
-        formData.append('fax', action.payload.fax);
-        formData.append('website', action.payload.website);
-        formData.append('street', action.payload.street);
-        formData.append('suburb', action.payload.suburb);
-        formData.append('city', action.payload.city);
-        formData.append('region', action.payload.region);
-        formData.append('country', action.payload.country);
-  
-
-
-        const response = await axios.post(`${CONFIG.SERVER_URL}sites`,
-          formData,
-        );
-
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
-    },
-
-    async updateSite(state, action) {
-      try {
-
-        const formData = new FormData();
-
-        formData.append('id', action.payload.id);
-        formData.append('name', action.payload.name);
-        if(action.payload.customer){
-          formData.append('customer', action.payload.customer);
-        }        formData.append('phone', action.payload.phone);
-        formData.append('email', action.payload.email);
-        formData.append('fax', action.payload.fax);
-        formData.append('website', action.payload.website);
-        formData.append('street', action.payload.street);
-        formData.append('suburb', action.payload.suburb);
-        formData.append('city', action.payload.city);
-        formData.append('region', action.payload.region);
-        formData.append('country', action.payload.country);
-
-        const response = await axios.patch(`${CONFIG.SERVER_URL}sites/${action.payload.id}`,
-          formData
-        );
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
-    },
-
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -140,8 +77,6 @@ export default slice.reducer;
 
 // Actions
 export const {
-  saveSite,
-  updateSite,
   getCart,
   addToCart,
   setResponseMessage,
@@ -150,6 +85,76 @@ export const {
   nextStep,
 
 } = slice.actions;
+
+// ----------------------------------------------------------------------
+
+export function saveSite(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+      try {
+        const formData = new FormData();
+
+        formData.append('name', params.name);
+        if(params.customer){
+          formData.append('customer', params.customer);
+        }
+        formData.append('phone', params.phone);
+        formData.append('email', params.email);
+        formData.append('fax', params.fax);
+        formData.append('website', params.website);
+        formData.append('street', params.street);
+        formData.append('suburb', params.suburb);
+        formData.append('city', params.city);
+        formData.append('region', params.region);
+        formData.append('country', params.country);
+  
+
+
+        dispatch(slice.actions.setResponseMessage('Site saved successfully'));
+
+
+      } catch (error) {
+        console.error(error);
+        dispatch(slice.actions.hasError(error));
+      }
+
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function updateSite(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+      try {
+        const formData = new FormData();
+
+        formData.append('id', params.id);
+        formData.append('name', params.name);
+        if(params.customer){
+          formData.append('customer', params.customer);
+        }        formData.append('phone', params.phone);
+        formData.append('email', params.email);
+        formData.append('fax', params.fax);
+        formData.append('website', params.website);
+        formData.append('street', params.street);
+        formData.append('suburb', params.suburb);
+        formData.append('city', params.city);
+        formData.append('region', params.region);
+        formData.append('country', params.country);
+
+        const response = await axios.patch(`${CONFIG.SERVER_URL}sites/${params.id}`,
+          formData
+        );
+
+
+      } catch (error) {
+        console.error(error);
+        dispatch(slice.actions.hasError(error));
+      }
+
+  };
+}
 
 // ----------------------------------------------------------------------
 

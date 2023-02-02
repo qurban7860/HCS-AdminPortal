@@ -44,10 +44,8 @@ import { getNotes, deleteNote, getNote } from '../../redux/slices/note';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Note', align: 'left' },
-  { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  { id: 'projectManager', label: 'Project Manager', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
+  { id: 'note', label: 'Note', align: 'left' },
+  { id: 'isDisabled', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
 

@@ -107,9 +107,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const onSubmit = async (data) => {
     console.log(data);
       try{
-        dispatch(saveNote(data));
+        await dispatch(saveNote(data));
         reset();
-        enqueueSnackbar('Create success!');
         navigate(PATH_DASHBOARD.note.list);
       } catch(error){
         enqueueSnackbar('Saving failed!');
