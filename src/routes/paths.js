@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_CUSTOMER = '/customer';
 
 // ----------------------------------------------------------------------
 
@@ -59,10 +60,10 @@ export const PATH_DASHBOARD = {
     demoView: path(ROOTS_DASHBOARD, '/asset/product/nike-air-force-1-ndestrukt'),
   },
   customer: {
-    root: path(ROOTS_DASHBOARD, '/customer'),
+    dashboard: path(ROOTS_DASHBOARD, '/customer/dashboard'),
     list: path(ROOTS_DASHBOARD, '/customer/list'),
     new: path(ROOTS_DASHBOARD, '/customer/new'),
-    view: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/view`),
+    view: path(ROOTS_DASHBOARD, `/customer/view`),
     edit: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/edit`),
   },
   site: {
@@ -85,6 +86,43 @@ export const PATH_DASHBOARD = {
     new: path(ROOTS_DASHBOARD, '/note/new'),
     view: (id) => path(ROOTS_DASHBOARD, `/note/${id}/view`),
     edit: (id) => path(ROOTS_DASHBOARD, `/note/${id}/edit`),
+  },
+};
+
+
+export const PATH_CUSTOMER = {
+  root: ROOTS_CUSTOMER,
+  permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
+  general: {
+    app: path(ROOTS_CUSTOMER, '/app'),
+  },
+  customer: {
+    dashboard: path(ROOTS_CUSTOMER, '/customer/dashboard'),
+    list: path(ROOTS_CUSTOMER, '/customer/list'),
+    new: path(ROOTS_CUSTOMER, '/customer/new'),
+    view: path(ROOTS_CUSTOMER, `/customer/view`),
+    edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
+  },
+  site: {
+    root: path(ROOTS_CUSTOMER, '/site'),
+    list: path(ROOTS_CUSTOMER, '/site/list'),
+    new: path(ROOTS_CUSTOMER, '/site/new'),
+    view: (id) => path(ROOTS_CUSTOMER, `/site/${id}/view`),
+    edit: (id) => path(ROOTS_CUSTOMER, `/site/${id}/edit`),
+  },
+  contact: {
+    root: path(ROOTS_CUSTOMER, '/contact'),
+    list: path(ROOTS_CUSTOMER, '/contact/list'),
+    new: path(ROOTS_CUSTOMER, '/contact/new'),
+    view: (id) => path(ROOTS_CUSTOMER, `/contact/${id}/view`),
+    edit: (id) => path(ROOTS_CUSTOMER, `/contact/${id}/edit`),
+  },
+  note: {
+    root: path(ROOTS_CUSTOMER, '/note'),
+    list: path(ROOTS_CUSTOMER, '/note/list'),
+    new: path(ROOTS_CUSTOMER, '/note/new'),
+    view: (id) => path(ROOTS_CUSTOMER, `/note/${id}/view`),
+    edit: (id) => path(ROOTS_CUSTOMER, `/note/${id}/edit`),
   },
 };
 

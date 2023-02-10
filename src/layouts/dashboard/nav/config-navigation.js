@@ -1,5 +1,5 @@
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
@@ -44,6 +44,7 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
+      { title: 'Customer', path: PATH_CUSTOMER.general.app, icon: ICONS.analytics },
       // deleted components
       // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
       // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
@@ -92,10 +93,10 @@ const navConfig = [
       // CUSTOMER
       {
         title: 'customer',
-        path: PATH_DASHBOARD.customer.root,
+        path: PATH_CUSTOMER.general.app,
         icon: ICONS.banking,
         children: [
-
+          { title: 'dashboard', path: PATH_CUSTOMER.general.app},
           { title: 'list', path: PATH_DASHBOARD.customer.list },
           { title: 'create', path: PATH_DASHBOARD.customer.new },
 

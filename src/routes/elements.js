@@ -30,6 +30,8 @@ export const AssetEdit = Loadable(  lazy(() => import('../pages/asset/AssetEdit'
 export const AssetView = Loadable(  lazy(() => import('../pages/asset/AssetView')));
 
 // CUSTOMER
+export const CustomerDashboard = Loadable(  lazy(() => import('../pages/customer/CustomerDashboardPage')));
+
 export const CustomerList= Loadable(  lazy(() => import('../pages/customer/CustomerList')));
 export const CustomerAdd = Loadable(  lazy(() => import('../pages/customer/CustomerAdd')));
 export const CustomerEdit = Loadable(  lazy(() => import('../pages/customer/CustomerEdit')));

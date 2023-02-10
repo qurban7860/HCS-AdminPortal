@@ -77,9 +77,9 @@ function ApplicationItem({ app }) {
             {system}
           </Typography>
 
-          <Label variant="soft" color={price === 0 ? 'success' : 'error'}>
+          {/* <Label variant="soft" color={price === 0 ? 'success' : 'error'}>
             {price === 0 ? 'Free' : fCurrency(price)}
-          </Label>
+          </Label> */}
         </Stack>
       </Box>
 

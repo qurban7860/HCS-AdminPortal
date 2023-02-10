@@ -1,8 +1,9 @@
 import { Helmet } from 'react-helmet-async';
+import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
@@ -29,44 +30,88 @@ import {
   CustomerCover
 } from './util';
 
-import CustomerViewForm from './CustomerViewForm'
+import CustomerAddForm from './CustomerAddForm'
+import SiteAddForm from '../site/SiteAddForm';
+import SiteList from '../site/SiteList';
+import ContactAddForm from '../contact/ContactAddForm';
+import CustomerStepper from './CustomerStepper';
+/* eslint-disable */
+
+import CustomerViewForm from './CustomerViewForm';
+/* eslint-enable */
+
+import CustomerEditForm from './CustomerEditForm';
+import CustomerSiteList from './CustomerSiteList';
+
 // ----------------------------------------------------------------------
 
-export default function CustomerViewPage() {
+/* eslint-disable */
+CustomerViewPage.propTypes = {
+  editPage: PropTypes.bool,
+};
+/* eslint-enable */
 
-  const dispatch = useDispatch();
 
-  const { id } = useParams(); 
-
-  useLayoutEffect(() => {
-    dispatch(getCustomer(id));
-  }, [dispatch, id]);
-  // 
+export default function CustomerViewPage({editPage}) {
 
   const { customer } = useSelector((state) => state.customer);
+
+  console.log('customer', customer);
 
   const { themeStretch } = useSettingsContext();
 
   const [currentTab, setCurrentTab] = useState('customer-edit');
+
+  const [currentComponent, setCurrentComponent] = useState(<CustomerAddForm/>);
+
+  const [customerFlag, setCustomerFlag] = useState(true);
+
+  useEffect(() => {
+    console.log(editPage);
+    if(editPage){
+      console.log('edit');
+      setCurrentComponent(<CustomerEditForm/>);
+    }else{
+      if(customer){
+        console.log('view');
+        setCustomerFlag(false);
+        setCurrentComponent(<CustomerViewForm/>);        
+      }else{
+        console.log('addd');
+        setCurrentComponent(<CustomerAddForm/>);
+      }
+      console.log("abc");
+    }
+
+  }, [editPage, customer]);
+
+  console.log('currentcomponent', currentComponent); 
 
   const TABS = [
     {
       value: 'customer-edit',
       label: 'Basic Info',
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <CustomerViewForm/>,
+      component: currentComponent
     },
     {
-      value: 'configuration',
-      label: 'Configuration',
+      disabled: customerFlag,
+      value: 'sites',
+      label: 'Sites',
       icon: <Iconify icon="eva:settings-2-outline" />,
+      component: <CustomerSiteList/>,
+
     },
     {
-      value: 'service-history',
-      label: 'Service History',
+      disabled: customerFlag,
+      value: 'contacts',
+      label: 'Contacts',
       icon: <Iconify icon="eva:clock-outline" />,
+      component: <ContactAddForm/>,
+
     },
     {
+      disabled: customerFlag,
       value: 'repair-history',
       label: 'Repair History',
       icon: <Iconify icon="eva:archive-outline" />,
@@ -83,22 +128,22 @@ export default function CustomerViewPage() {
         <CustomBreadcrumbs
           heading="Customer View"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
-            },
+            { name: 'Customer', href: PATH_DASHBOARD.customer.dashboard },
+            // {
+            //   name: 'Customer',
+            //   href: PATH_DASHBOARD.customer.list,
+            // },
             { name: 'View' },
           ]}
         />
         <Card
           sx={{
             mb: 3,
-            height: 280,
+            height: 160,
             position: 'relative',
           }}
         >
-          <CustomerCover name={customer?.name}/>
+          <CustomerCover name={customer ? customer.name : 'New Customer'}/>
 
           
            
@@ -107,6 +152,7 @@ export default function CustomerViewPage() {
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
             sx={{
+  
               width: 1,
               bottom: 0,
               zIndex: 9,
@@ -122,11 +168,53 @@ export default function CustomerViewPage() {
             }}
           >
             {TABS.map((tab) => (
-              <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
           </Tabs>
           
         </Card>
+        {currentComponent.type.name === "CustomerViewForm" && currentTab === 'customer-edit' &&
+         <Grid container
+          sx={{
+            paddingBottom: 2
+          }}>
+
+          <Box
+            rowGap={4}
+            columnGap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(4, 1fr)',
+              sm: 'repeat(4, 1fr)',
+            }}
+          >
+            <Stack>
+              <Button
+                // component={RouterLink}
+                onClick={() => setCurrentComponent(<CustomerEditForm/>)}
+                variant="contained"
+                startIcon={<Iconify icon="eva:edit-fill" />}
+              >
+                Edit Customer
+              </Button>
+      
+      
+            </Stack>
+            <Stack>
+              <Button
+                onClick={() => setCurrentComponent(<CustomerAddForm/>)}
+                variant="contained"
+                startIcon={<Iconify icon="eva:plus-fill" />}
+              >
+                Add Customer
+              </Button>
+      
+      
+            </Stack>
+
+          </Box>    
+        </Grid>}
+
 
         {/* <Button 
                   size ="medium" 

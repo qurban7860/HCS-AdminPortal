@@ -12,6 +12,8 @@ import {
   Container,
   IconButton,
   TableContainer,
+  DialogTitle,
+  Dialog 
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -36,18 +38,18 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import CustomerListTableRow from './CustomerListTableRow';
-import CustomerListTableToolbar from './CustomerListTableToolbar';
-import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
+import SiteListTableRow from '../site/SiteListTableRow';
+import SiteListTableToolbar from '../site/SiteListTableToolbar';
+import { getSites, deleteSite, getSite } from '../../redux/slices/site';
+import SiteAddForm from '../site/SiteAddForm';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Customer', align: 'left' },
-  { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  { id: 'projectManager', label: 'Project Manager', align: 'left' },
+  { id: 'name', label: 'Site', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'website', label: 'Website', align: 'left' },
   { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
@@ -64,7 +66,7 @@ const STATUS_OPTIONS = [
 ];
 
 // const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
+//   { value: 'all_sites', label: 'All Sites' },
 //   { value: 'deployable', label: 'All Deployable' },
 //   { value: 'pending', label: 'All Pending' },
 //   { value: 'archived', label: 'All Archived' },
@@ -73,7 +75,7 @@ const STATUS_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function CustomerList() {
+export default function CustomerSiteList() {
   const {
     dense,
     page,
@@ -111,22 +113,32 @@ export default function CustomerList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
+  const [openModal, setModalState] = useState(false);
+
+  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+
+  const { customer } = useSelector((state) => state.customer);
+
+  console.log(customer);
 
   useLayoutEffect(() => {
-    dispatch(getCustomers());
+    dispatch(getSites());
+
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (customers && !error) {
+      if (sites && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(customers);
+      const filteredSites = sites.filter((site) => site.customer_id === customer._id);
+
+      
+      // setTableData(filteredSites);
     }
-  }, [customers, error, responseMessage, enqueueSnackbar, initial]);
+  }, [sites, customer, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -151,6 +163,14 @@ export default function CustomerList() {
     setOpenConfirm(false);
   };
 
+  const handleOpenModal = () => {
+    setModalState(true);
+  };
+
+  const handleCloseModal = () => {
+    dispatch(false);
+  };
+
   const handleFilterName = (event) => {
     setPage(0);
     setFilterName(event.target.value);
@@ -164,8 +184,8 @@ export default function CustomerList() {
   const handleDeleteRow = async (id) => {
     try {
       console.log(id);
-      await dispatch(deleteCustomer(id));
-      dispatch(getCustomers());
+      await dispatch(deleteSite(id));
+      dispatch(getSites());
       setSelected([]);
 
       if (page > 0) {
@@ -197,11 +217,11 @@ export default function CustomerList() {
 
   const handleEditRow = (id) => {
     console.log(id);
-    navigate(PATH_DASHBOARD.customer.edit(id));
+    navigate(PATH_DASHBOARD.site.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
+    // navigate(PATH_DASHBOARD.site.view(id));
   };
 
   const handleResetFilter = () => {
@@ -212,34 +232,41 @@ export default function CustomerList() {
   return (
     <>
       <Helmet>
-        <title> Customer: List | Machine ERP </title>
+        <title> Site: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Customer List"
+          heading="Site List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
+              name: 'Site',
+              href: PATH_DASHBOARD.site.list,
             },
             { name: 'List' },
           ]}
           action={
             <Button
-              component={RouterLink}
-              to={PATH_DASHBOARD.customer.new}
+              onClick={handleOpenModal}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New Customer
+              New Site
             </Button>
           }
         />
 
         <Card>
-          <CustomerListTableToolbar
+        <Dialog fullWidth maxWidth="xs" open={openModal} onClose={handleCloseModal}>
+          <DialogTitle>Add Site</DialogTitle>
+
+          <SiteAddForm
+          />
+        </Dialog>
+
+
+          <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -291,7 +318,7 @@ export default function CustomerList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <CustomerListTableRow
+                        <SiteListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
@@ -370,12 +397,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((site) => filterStatus.includes(site.status));
   }
 
   return inputData;

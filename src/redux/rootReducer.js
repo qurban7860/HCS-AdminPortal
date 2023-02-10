@@ -45,7 +45,7 @@ export const customerPersistConfig = {
   key: 'customer',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'customer']
 };
 
 export const contactPersistConfig = {

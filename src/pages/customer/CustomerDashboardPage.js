@@ -1,8 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Stack, Button } from '@mui/material';
+import { Link, Container, Grid, Stack, Button } from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -12,6 +14,7 @@ import {
   _appInstalled,
   _appRelated,
   _appInvoices,
+  _appManagers,
 } from '../../_mock/arrays';
 // components
 import { useSettingsContext } from '../../components/settings';
@@ -34,11 +37,20 @@ import { SeoIllustration } from '../../assets/illustrations';
 import { useDispatch, useSelector } from '../../redux/store';
 
 import { getSites } from '../../redux/slices/site';
+import CustomerWidget from './util/CustomerWidget';
+import Iconify from '../../components/iconify';
+
+import { PATH_DASHBOARD } from '../../routes/paths';
+
+
+
+import CustomerView from './CustomerAddForm';
+
 
 
 // ----------------------------------------------------------------------
 
-export default function GeneralAppPage() {
+export default function CustomerDashboardPage() {
 
   const dispatch = useDispatch();
 
@@ -54,13 +66,29 @@ export default function GeneralAppPage() {
 
   const theme = useTheme();
 
+  const navigate = useNavigate();
+
   const { themeStretch } = useSettingsContext();
 
   useLayoutEffect(() => {
     dispatch(getSites());
   }, [dispatch]);
 
-  console.log('sites', sites)
+  const handleAddCustomer = () => {
+    navigate(PATH_DASHBOARD.customer.view);
+  };
+
+  const handleSearchCustomer = () => {
+    navigate(PATH_DASHBOARD.customer.list);
+  };
+
+  const handleSearchSite = () => {
+    navigate(PATH_DASHBOARD.site.list);
+  };
+
+  const handleSearchContact = () => {
+    navigate(PATH_DASHBOARD.contact.list);
+  };
 
   return (
     <>
@@ -70,25 +98,45 @@ export default function GeneralAppPage() {
 
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
-            <AppWelcome
-              title={`Welcome back! \n ${user?.displayName}`}
-              description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
-              img={
-                <SeoIllustration
-                  sx={{
-                    p: 3,
-                    width: 360,
-                    margin: { xs: 'auto', md: 'inherit' },
-                  }}
-                />
-              }
-              action={<Button variant="contained">Go Now</Button>}
-            />
-          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+              <CustomerWidget
+                title="Add Customer"
+                color="primary"
+                icon="eva:plus-fill"
+                onClick={handleAddCustomer}
+                sx={{ '&:hover': { opacity: 0.72 } }}
 
-          <Grid item xs={12} md={4}>
-            <AppFeatured list={_appFeatured} />
+              />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+              <CustomerWidget
+                title="Search Customer"
+                color="primary"
+                icon="eva:search-fill"
+                onClick={handleSearchCustomer}
+                sx={{ '&:hover': { opacity: 0.72 } }}
+
+              />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+              <CustomerWidget
+                title="Search Sites"
+                color="info"
+                icon="eva:search-fill"
+                onClick={handleSearchSite}
+                sx={{ '&:hover': { opacity: 0.72 } }}
+
+              />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
+              <CustomerWidget
+                title="Search Contacts"
+                color="success"
+                icon="eva:search-fill"
+                onClick={handleSearchContact}
+                sx={{ '&:hover': { opacity: 0.72 } }}
+
+              />
           </Grid>
 
           <Grid item xs={12} md={4}>
@@ -187,7 +235,7 @@ export default function GeneralAppPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated title="Top Related Applications" list={_appRelated} />
+            <AppTopRelated title="Top Managers" list={_appManagers} />
           </Grid>
 
           {/* <Grid item xs={12} md={6} lg={4}>

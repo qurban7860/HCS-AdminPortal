@@ -47,8 +47,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { contacts } = useSelector((state) => state.contact);
 
-  const { userId } = useAuthContext();
-
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
@@ -99,13 +97,13 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   useLayoutEffect(() => {
     dispatch(getUsers());
-    dispatch(getSites());
-    dispatch(getContacts());
+    // dispatch(getSites());
+    // dispatch(getContacts());
 
   }, [dispatch]);
 
   useEffect(() => {
-      reset(defaultValues);
+      // reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[]);
 
@@ -116,7 +114,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         dispatch(saveCustomer(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_DASHBOARD.customer.list);
+        // navigate(PATH_DASHBOARD.customer.list);
       } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);
@@ -143,7 +141,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="tradingName" label="Trading Name" />
 
-              <RHFSelect native name="mainSite" label="Main Site">
+              {/* <RHFSelect native name="mainSite" label="Main Site">
                     <option value="" selected/>
                     { 
                     sites.length > 0 && sites.map((option) => (
@@ -171,7 +169,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   name="contacts"
                   label="Contacts"
                   options={contacts}
-                />
+                /> */}
 
               <RHFSelect native name="accountManager" label="Account Manager">
                     <option value="" selected/>
@@ -224,7 +222,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 Save Customer
             </LoadingButton>
             </Stack>
-            
+                        
             </Card>
           
           </Grid>

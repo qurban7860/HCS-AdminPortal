@@ -42,6 +42,19 @@ export const _appAuthors = [...Array(3)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
+export const _appManagers = [...Array(3)].map((_, index) => ({
+  id: _mock.id(index),
+  name: _mock.name.fullName(index),
+  system: (index === 2 && 'Windows') || (index === 4 && 'Windows') || 'Mac',
+  // price: index === 0 || index === 2 || index === 4 ? 0 : _mock.number.price(index),
+  shortcut: _mock.image.avatar(index),
+  favourite: randomNumberRange(9999, 19999),
+  rating: _mock.number.rating(index),
+  review: randomNumberRange(999, 99999),
+}));
+
+// ----------------------------------------------------------------------
+
 export const _appInvoices = [...Array(5)].map((_, index) => ({
   id: `${Date.now() + index}`,
   price: _mock.number.price(index),

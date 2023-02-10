@@ -32,6 +32,7 @@ import {
   AssetEdit,
   AssetView,
   // Customer
+  CustomerDashboard,
   CustomerList,
   CustomerAdd,
   CustomerEdit,
@@ -118,7 +119,7 @@ export default function Router() {
             { path: 'list', element: <AssetList /> },
             { path: 'new', element: <AssetAdd /> },
             { path: ':id/edit', element: <AssetEdit />},
-            { path: ':id/view', element: <AssetView />}
+            { path: 'view', element: <AssetView />}
           ],
         },
         {
@@ -136,12 +137,59 @@ export default function Router() {
         {
           path: 'customer',
           children: [
+            { path: 'dashboard', element: <CustomerDashboard /> },
             { path: 'list', element: <CustomerList /> },
             { path: 'new', element: <CustomerAdd /> },
             { path: ':id/edit', element: <CustomerEdit />},
-            { path: ':id/view', element: <CustomerView />}
+            { path: 'view', element: <CustomerView />}
           ],
         },
+        {
+          path: 'site',
+          children: [
+            { path: 'list', element: <SiteList /> },
+            { path: 'new', element: <SiteAdd /> },
+            { path: ':id/edit', element: <SiteEdit />},
+            { path: ':id/view', element: <SiteView />}
+          ],
+        },
+        {
+          path: 'contact',
+          children: [
+            { path: 'list', element: <ContactList /> },
+            { path: 'new', element: <ContactAdd /> },
+            { path: ':id/edit', element: <ContactEdit />},
+            { path: ':id/view', element: <ContactView />}
+          ],
+        },
+        {
+          path: 'note',
+          children: [
+            { path: 'list', element: <NoteList /> },
+            { path: 'new', element: <NoteAdd /> },
+            { path: ':id/edit', element: <NoteEdit />},
+            { path: ':id/view', element: <NoteView />}
+          ],
+        },
+        { path: 'permission-denied', element: <PermissionDeniedPage /> },
+        { path: 'blank', element: <BlankPage /> },
+      ],
+    },
+    {
+      path: 'customer',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: 'app', element: <CustomerDashboard /> },
+        { path: 'list', element: <CustomerList /> },
+        { path: 'new', element: <CustomerAdd /> },
+        { path: ':id/edit', element: <CustomerEdit />},
+        { path: 'view', element: <CustomerView />},
+        
         {
           path: 'site',
           children: [
