@@ -75,7 +75,7 @@ export default function CustomerDashboardPage() {
   }, [dispatch]);
 
   const handleAddCustomer = () => {
-    navigate(PATH_DASHBOARD.customer.view);
+    navigate(PATH_DASHBOARD.customer.new);
   };
 
   const handleSearchCustomer = () => {

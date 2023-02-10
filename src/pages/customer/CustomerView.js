@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+
 // @mui
 import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
 // routes
@@ -10,6 +11,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCustomers, getCustomer } from '../../redux/slices/customer';
 import { getDepartments } from '../../redux/slices/department';
+
 
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -55,6 +57,14 @@ CustomerViewPage.propTypes = {
 export default function CustomerViewPage({editPage}) {
 
   const { customer } = useSelector((state) => state.customer);
+
+  const { id } = useParams(); 
+
+  const dispatch = useDispatch();
+
+  useLayoutEffect(() => {
+    dispatch(getCustomer(id));
+  }, [dispatch, id]);
 
   console.log('customer', customer);
 
@@ -134,7 +144,20 @@ export default function CustomerViewPage({editPage}) {
             //   href: PATH_DASHBOARD.customer.list,
             // },
             { name: 'View' },
+            
           ]}
+          action={
+            currentTab === 'customer-edit' &&
+            <Button
+                onClick={() => setCurrentComponent(<CustomerEditForm/>)}
+                variant="contained"
+                startIcon={<Iconify icon="eva:edit-fill" />}
+              >
+                Edit Customer
+              </Button>
+            }
+          
+
         />
         <Card
           sx={{
@@ -173,7 +196,7 @@ export default function CustomerViewPage({editPage}) {
           </Tabs>
           
         </Card>
-        {currentComponent.type.name === "CustomerViewForm" && currentTab === 'customer-edit' &&
+        {/* {currentComponent.type.name === "CustomerViewForm" && currentTab === 'customer-edit' &&
          <Grid container
           sx={{
             paddingBottom: 2
@@ -213,17 +236,8 @@ export default function CustomerViewPage({editPage}) {
             </Stack>
 
           </Box>    
-        </Grid>}
+        </Grid>} */}
 
-
-        {/* <Button 
-                  size ="medium" 
-                  color ="secondary" 
-                  variant ="contained" 
-                  // href = {currentCustomer.image === undefined ? '' : `localhost:5000/${currentCustomer.image}`}
-                  >
-                    Edit Customer
-          </Button>  */}
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />

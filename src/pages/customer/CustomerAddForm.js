@@ -14,7 +14,7 @@ import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment
 import { getUsers } from '../../redux/slices/user';
 import { getSites } from '../../redux/slices/site';
 import { getContacts } from '../../redux/slices/contact';
-import { saveCustomer } from '../../redux/slices/customer';
+import { saveCustomer, resetCustomer } from '../../redux/slices/customer';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -102,19 +102,16 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   }, [dispatch]);
 
-  useEffect(() => {
-      // reset(defaultValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
-
 
   const onSubmit = async (data) => {
     console.log(data);
       try{
-        dispatch(saveCustomer(data));
+        await dispatch(saveCustomer(data));
+        
         reset();
         enqueueSnackbar('Create success!');
-        // navigate(PATH_DASHBOARD.customer.list);
+        console.log('customer', customer);
+        // navigate(PATH_DASHBOARD.customer.view(customer._id));
       } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);

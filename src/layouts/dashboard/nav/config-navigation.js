@@ -96,7 +96,7 @@ const navConfig = [
         path: PATH_CUSTOMER.general.app,
         icon: ICONS.banking,
         children: [
-          { title: 'dashboard', path: PATH_CUSTOMER.general.app},
+          // { title: 'dashboard', path: PATH_CUSTOMER.general.app},
           { title: 'list', path: PATH_DASHBOARD.customer.list },
           { title: 'create', path: PATH_DASHBOARD.customer.new },
 

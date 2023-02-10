@@ -13,7 +13,9 @@ import {
   IconButton,
   TableContainer,
   DialogTitle,
-  Dialog 
+  Dialog, 
+  Typography,
+  Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -42,6 +44,9 @@ import SiteListTableRow from '../site/SiteListTableRow';
 import SiteListTableToolbar from '../site/SiteListTableToolbar';
 import { getSites, deleteSite, getSite } from '../../redux/slices/site';
 import SiteAddForm from '../site/SiteAddForm';
+import { Block } from '../../sections/_examples/Block';
+import _mock from '../../_mock';
+import SiteViewForm from '../site/SiteViewForm';
 
 
 // ----------------------------------------------------------------------
@@ -73,6 +78,14 @@ const STATUS_OPTIONS = [
 //   { value: 'undeployable', label: 'All Undeployable' }
 // ];
 
+const _accordions = [...Array(8)].map((_, index) => ({
+  id: _mock.id(index),
+  value: `panel${index + 1}`,
+  heading: `Site ${index + 1}`,
+  subHeading: _mock.text.title(index),
+  detail: _mock.text.description(index),
+}));
+
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList() {
@@ -97,6 +110,12 @@ export default function CustomerSiteList() {
     defaultOrderBy: 'createdAt',
   });
 
+
+  const [controlled, setControlled] = useState(false);
+
+  const handleChangeControlled = (panel) => (event, isExpanded) => {
+    setControlled(isExpanded ? panel : false);
+  };
   const dispatch = useDispatch();
 
   const { themeStretch } = useSettingsContext();
@@ -133,10 +152,10 @@ export default function CustomerSiteList() {
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      const filteredSites = sites.filter((site) => site.customer_id === customer._id);
+      // const filteredSites = sites.filter((site) => site.customer_id === customer._id);
 
       
-      // setTableData(filteredSites);
+      setTableData(sites);
     }
   }, [sites, customer, error, responseMessage, enqueueSnackbar, initial]);
 
@@ -265,8 +284,43 @@ export default function CustomerSiteList() {
           />
         </Dialog>
 
+        {/* <Block title=""> */}
+            {sites.map((site, index) => (
+              <Accordion key={site._id} disabled={index === 3}>
+                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                  <Typography variant="subtitle1">{site.name}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <SiteViewForm
+                  currentSite={site}
+                  />
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          {/* </Block> */}
+          {/* <Block title="Controlled">
+            {_accordions.map((item, index) => (
+              <Accordion
+                key={item.value}
+                disabled={index === 3}
+                expanded={controlled === item.value}
+                onChange={handleChangeControlled(item.value)}
+              >
+                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                  <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
+                    {item.heading}
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{item.subHeading}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>{item.detail}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Block> */}
 
-          <SiteListTableToolbar
+
+          {/* <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -352,11 +406,11 @@ export default function CustomerSiteList() {
             //
             dense={dense}
             onChangeDense={onChangeDense}
-          />
+          /> */}
         </Card>
       </Container>
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -377,7 +431,7 @@ export default function CustomerSiteList() {
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }

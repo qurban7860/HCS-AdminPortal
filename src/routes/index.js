@@ -141,7 +141,7 @@ export default function Router() {
             { path: 'list', element: <CustomerList /> },
             { path: 'new', element: <CustomerAdd /> },
             { path: ':id/edit', element: <CustomerEdit />},
-            { path: 'view', element: <CustomerView />}
+            { path: ':id/view', element: <CustomerView />}
           ],
         },
         {

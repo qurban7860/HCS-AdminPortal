@@ -200,7 +200,7 @@ export default function SiteList() {
   };
 
   const handleViewRow = (id) => {
-    // navigate(PATH_DASHBOARD.site.view(id));
+    navigate(PATH_DASHBOARD.site.view(id));
   };
 
   const handleResetFilter = () => {

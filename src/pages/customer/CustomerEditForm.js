@@ -52,9 +52,9 @@ export default function CustomerEditForm() {
   const EditCustomerSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     tradingName: Yup.string().min(5).max(40).required('Trading Name is required'),
-    mainSite: Yup.string(),
-    sites: Yup.array(),
-    contacts: Yup.array(),
+    // mainSite: Yup.string(),
+    // sites: Yup.array(),
+    // contacts: Yup.array(),
     accountManager: Yup.string(),
     projectManager: Yup.string(),
     supportManager: Yup.string(),
@@ -66,9 +66,9 @@ export default function CustomerEditForm() {
       id: customer?._id || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
-      mainSite: customer?.mainSite || '',
-      sites: customer?.sites || [],
-      contacts: customer?.contacts || [],
+      // mainSite: customer?.mainSite || '',
+      // sites: customer?.sites || [],
+      // contacts: customer?.contacts || [],
       accountManager: customer?.accountManager || '',
       projectManager: customer?.projectManager || '',
       supportManager: customer?.supportManager || '',
@@ -106,7 +106,7 @@ export default function CustomerEditForm() {
       dispatch(updateCustomer(data));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_DASHBOARD.customer.list);
+      navigate(PATH_DASHBOARD.customer.view(customer._id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -133,7 +133,7 @@ export default function CustomerEditForm() {
 
                 <RHFTextField name="tradingName" label="Trading Name" />
 
-                <RHFSelect native name="mainSite" label="Main Site">
+                {/* <RHFSelect native name="mainSite" label="Main Site">
                   <option value="" selected />
                   {
                     sites.length > 0 && sites.map((option) => (
@@ -161,7 +161,7 @@ export default function CustomerEditForm() {
                   name="contacts"
                   label="Contacts"
                   options={contacts}
-                />
+                /> */}
 
                 <RHFSelect native name="accountManager" label="Account Manager">
                   <option value="" selected />

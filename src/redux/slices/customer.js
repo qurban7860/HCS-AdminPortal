@@ -15,7 +15,7 @@ const initialState = {
   isLoading: false,
   error: null,
   customers: [],
-  customer: null,
+  customer: {},
   customerParams: {
 
   }
@@ -29,7 +29,22 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+    
+    // RESET CUSTOMER
+    resetCustomer(state){
+      state.customer = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
 
+    },
+    
+    updateCustomerSuccess(){
+
+
+    },
+
+    
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -47,11 +62,12 @@ const slice = createSlice({
 
     // GET Customer
     getCustomerSuccess(state, action) {
-      console.log(action.payload);
+      
       state.isLoading = false;
       state.success = true;
       state.customer = action.payload;
       state.initial = true;
+      console.log('customersuccessslice', state.customer);
     },
 
 
@@ -60,46 +76,6 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.initial = true;
-    },
-
-
-    async updateCustomer(state, action) {
-      try {
-
-        const formData = new FormData();
-
-        formData.append('id', action.payload.id);
-        formData.append('name', action.payload.name);
-        formData.append('tradingName', action.payload.tradingName);
-        if(action.payload.mainSite){
-          formData.append('mainSite', action.payload.mainSite);
-        }
-        if(action.payload.sites){
-          formData.append('sites', action.payload.sites);
-        }
-        if(action.payload.contacts){
-          formData.append('contacts', action.payload.contacts);
-        }
-        if(action.payload.accountManager){
-          formData.append('accountManager', action.payload.accountManager);
-        }
-        if(action.payload.projectManager){
-          formData.append('projectManager', action.payload.projectManager);
-        }
-        if(action.payload.supportManager){
-          formData.append('supportManager', action.payload.supportManager);
-        }
-        
-        const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${action.payload.id}`,
-          formData
-        );
-        // this.getCustomerSuccess(response);
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
     },
 
 
@@ -118,8 +94,7 @@ export default slice.reducer;
 
 // Actions
 export const {
-  // saveCustomer,
-  updateCustomer,
+  resetCustomer,
   getCart,
   addToCart,
   setResponseMessage,
@@ -188,6 +163,7 @@ export function deleteCustomer(id) {
 
 export function saveCustomer(params) {
     return async (dispatch) => {
+      // dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
         const formData = new FormData();
@@ -217,12 +193,56 @@ export function saveCustomer(params) {
         );
 
         console.log('response', response.data.customer);
-        // const customer = response.data.customer;
         dispatch(slice.actions.getCustomerSuccess(response.data.customer));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error));
       }
     };
+
+}
+
+// --------------------------------------------------------------------------
+
+export function updateCustomer(params) {
+  console.log('update, working')
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+
+      const formData = new FormData();
+
+      formData.append('id', params.id);
+      formData.append('name', params.name);
+      formData.append('tradingName', params.tradingName);
+      if(params.mainSite){
+        formData.append('mainSite', params.mainSite);
+      }
+        // if(params.sites.length > 0){
+        //   formData.append('sites', params.sites);
+        // }
+        // if(params.contacts.length > 0){
+        //   formData.append('contacts', params.contacts);
+        // }
+      if(params.accountManager){
+        formData.append('accountManager', params.accountManager);
+      }
+      if(params.projectManager){
+        formData.append('projectManager', params.projectManager);
+      }
+      if(params.supportManager){
+        formData.append('supportManager', params.supportManager);
+      }
+      
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${params.id}`,
+        formData
+      );
+      this.updateCustomerSuccess(response);
+
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
 
 }

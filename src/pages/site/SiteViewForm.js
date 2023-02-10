@@ -18,13 +18,16 @@ import { useSnackbar } from '../../components/snackbar';
 import { getSites, getSite } from '../../redux/slices/site';
 
 
+// ----------------------------------------------------------------------
 
 
-
+SiteViewForm.propTypes = {
+  currentSite: PropTypes.object,
+};
 
 // ----------------------------------------------------------------------
 
-export default function SiteViewForm() {
+export default function SiteViewForm({currentSite = null}) {
 
   const { site } = useSelector((state) => state.site);
   
@@ -34,13 +37,22 @@ export default function SiteViewForm() {
 
 
   const defaultValues = useMemo(
-    () => ({
-      id: site?._id || 'N/A',
-      name: site?.name || 'N/A',
-      status: site?.tradingName || 'N/A',
-      accountManager: site?.accountManager || 'N/A',
-      projectManager: site?.projectManager || 'N/A',
-      supportManager: site?.supportManager || 'N/A',
+    () => (
+      {
+      id: currentSite ? currentSite._id : site?._id || 'N/A',
+      name: currentSite ? currentSite.name : site?.name || 'N/A',
+      customer: currentSite ? currentSite.name : site?.tradingName || 'N/A',
+      billingSite: currentSite ? currentSite._id : site?.accountManager || 'N/A',
+      phone: currentSite ? currentSite.phone : site?.phone || 'N/A',
+      email: currentSite ? currentSite.email : site?.email || 'N/A',
+      fax: currentSite ? currentSite.fax : site?.fax || 'N/A',
+      website: currentSite ? currentSite.website : site?.website || 'N/A',
+
+      street: currentSite ? currentSite.address.street : site?.address.street || 'N/A',
+      suburb: currentSite ? currentSite.address.suburb  : site?.address.suburb || 'N/A',
+      city: currentSite ? currentSite.address.city  : site?.address.city || 'N/A',
+      region: currentSite ? currentSite.address.region : site?.address.region || 'N/A',
+      country: currentSite ? currentSite.address.country : site?.address.country || 'N/A',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
@@ -67,37 +79,82 @@ export default function SiteViewForm() {
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Trading Name
+              Phone
             </Typography>
 
-            <Typography variant="body2">{defaultValues.tradingName}</Typography>
+            <Typography variant="body2">{defaultValues.phone}</Typography>
             
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Account Manager
+              Email
             </Typography>
 
-            <Typography variant="body2">{defaultValues.status}</Typography>
+            <Typography variant="body2">{defaultValues.email}</Typography>
             
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Project Manager
+              Fax
             </Typography>
 
-            <Typography variant="body2">{defaultValues.tag}</Typography>
+            <Typography variant="body2">{defaultValues.fax}</Typography>
             
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Suppport Manager
+             Website
             </Typography>
 
-            <Typography variant="body2">{defaultValues.location}</Typography>
+            <Typography variant="body2">{defaultValues.website}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Street
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.street}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Suburb
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.suburb}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             City
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.city}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Region
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.region}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Country
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.country}</Typography>
             
           </Grid>
 

@@ -63,7 +63,7 @@ export const PATH_DASHBOARD = {
     dashboard: path(ROOTS_DASHBOARD, '/customer/dashboard'),
     list: path(ROOTS_DASHBOARD, '/customer/list'),
     new: path(ROOTS_DASHBOARD, '/customer/new'),
-    view: path(ROOTS_DASHBOARD, `/customer/view`),
+    view: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/view`),
     edit: (id) => path(ROOTS_DASHBOARD, `/customer/${id}/edit`),
   },
   site: {
