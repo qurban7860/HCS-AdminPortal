@@ -10,6 +10,8 @@ import { CONFIG } from '../../config-global';
 
 const initialState = {
   intial: false,
+  formVisibility: false,
+  siteEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -31,6 +33,18 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // SET TOGGLE
+    setFormVisibility(state, action){
+      console.log('toggle', action.payload);
+      state.formVisibility = action.payload;
+    },
+
+    // SET TOGGLE
+    setEditFormVisibility(state, action){
+      console.log('setEditFormVisibility', action.payload);
+      state.siteEditFormVisibility = action.payload;
+    },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -38,7 +52,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET SiteS
+    // GET Sites
     getSitesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -77,8 +91,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  getCart,
-  addToCart,
+  setFormVisibility,
+  setEditFormVisibility,
   setResponseMessage,
   gotoStep,
   backStep,
@@ -90,26 +104,31 @@ export const {
 
 export function saveSite(params) {
   return async (dispatch) => {
+    console.log('siteparams', params); 
     dispatch(slice.actions.startLoading());
       try {
-        const formData = new FormData();
+        /* eslint-disable */
+        let data = {
+          name: params.name,
+          customer: params.customer,
+          phone: params.phone,
+          email: params.email,
+          fax: params.fax,
+          website: params.website,
+          address: {
+            street: params.street,
+            suburb: params.suburb,
+            city: params.city,
+            region: params.region,
+            country: params.country
+          }
+        };
 
-        formData.append('name', params.name);
-        if(params.customer){
-          formData.append('customer', params.customer);
-        }
-        formData.append('phone', params.phone);
-        formData.append('email', params.email);
-        formData.append('fax', params.fax);
-        formData.append('website', params.website);
-        formData.append('street', params.street);
-        formData.append('suburb', params.suburb);
-        formData.append('city', params.city);
-        formData.append('region', params.region);
-        formData.append('country', params.country);
-  
+        /* eslint-enable */
+        
+        await axios.post(`${CONFIG.SERVER_URL}customers/sites`, data);
 
-
+        dispatch(slice.actions.setFormVisibility(false));
         dispatch(slice.actions.setResponseMessage('Site saved successfully'));
 
 
@@ -124,28 +143,34 @@ export function saveSite(params) {
 // ----------------------------------------------------------------------
 
 export function updateSite(params) {
+  
   return async (dispatch) => {
+    dispatch(slice.actions.setEditFormVisibility(false));
+
     dispatch(slice.actions.startLoading());
       try {
-        const formData = new FormData();
+        /* eslint-disable */
+        let data = {
+          name: params.name,
+          customer: params.customer,
+          phone: params.phone,
+          email: params.email,
+          fax: params.fax,
+          website: params.website,
+          address: {
+            street: params.street,
+            suburb: params.suburb,
+            city: params.city,
+            region: params.region,
+            country: params.country
+          }
+        };
 
-        formData.append('id', params.id);
-        formData.append('name', params.name);
-        if(params.customer){
-          formData.append('customer', params.customer);
-        }        formData.append('phone', params.phone);
-        formData.append('email', params.email);
-        formData.append('fax', params.fax);
-        formData.append('website', params.website);
-        formData.append('street', params.street);
-        formData.append('suburb', params.suburb);
-        formData.append('city', params.city);
-        formData.append('region', params.region);
-        formData.append('country', params.country);
+        /* eslint-enable */
 
-        const response = await axios.patch(`${CONFIG.SERVER_URL}sites/${params.id}`,
-          formData
-        );
+        const response = await axios.patch(`${CONFIG.SERVER_URL}customers/sites/${params.id}`
+         , data);
+
 
 
       } catch (error) {
@@ -158,11 +183,21 @@ export function updateSite(params) {
 
 // ----------------------------------------------------------------------
 
-export function getSites() {
+export function getSites(params = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}sites`);
+
+      // , {
+      //   params: {
+      //     product: this.product
+      //   }
+      // }
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/sites` , {
+        params: {
+          customer: 'abc'
+        }
+      });
       console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getSitesSuccess(response.data));
@@ -182,7 +217,7 @@ export function getSite(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}sites/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/sites/${id}`);
       dispatch(slice.actions.getSiteSuccess(response.data));
       console.log('requested site', response.data);
       // dispatch(slice.actions.setResponseMessage('Sites Loaded Successfuly'));
@@ -200,7 +235,7 @@ export function deleteSite(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}sites/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}customers/sites/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;

@@ -45,8 +45,6 @@ export default function SiteListTableRow({
 }) {
   const { name, email, website, isDisabled, createdAt } = row;
 
-  console.log('ID', isDisabled);
-
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -103,7 +101,7 @@ export default function SiteListTableRow({
           >
             {isDisabled === false ? 'false' : true}
           </Label>
-        </TableCell> 
+        </TableCell>
 
         <TableCell>{fDate(createdAt)}</TableCell>
 
@@ -111,8 +109,8 @@ export default function SiteListTableRow({
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>  
-      </TableRow> 
+        </TableCell>
+      </TableRow>
 
       <MenuPopover
         open={openPopover}

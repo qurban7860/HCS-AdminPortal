@@ -1,9 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
+  Grid,
   Card,
   Table,
   Button,
@@ -33,12 +33,12 @@ import {
 } from '../../components/table';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './SiteListTableRow';
 import SiteListTableToolbar from './SiteListTableToolbar';
-import { getSites, deleteSite, getSite } from '../../redux/slices/site';
+import { getSites, deleteSite } from '../../redux/slices/site';
+import CustomerDashboardNavbar from '../customer/util/CustomerDashboardNavbar';
 
 
 // ----------------------------------------------------------------------
@@ -61,14 +61,6 @@ const STATUS_OPTIONS = [
   // { id: '5', value: 'Deployed' },
   // { id: '6', value: 'Archived' },
 ];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_sites', label: 'All Sites' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
 
 // ----------------------------------------------------------------------
 
@@ -215,28 +207,11 @@ export default function SiteList() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Site List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Site',
-              href: PATH_DASHBOARD.site.list,
-            },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              component={RouterLink}
-              to={PATH_DASHBOARD.site.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Site
-            </Button>
-          }
-        />
+        
 
+        <Grid container spacing={3}>
+          <CustomerDashboardNavbar/>
+          </Grid>
         <Card>
           <SiteListTableToolbar
             filterName={filterName}
