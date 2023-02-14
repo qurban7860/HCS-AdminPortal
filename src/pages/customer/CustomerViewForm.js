@@ -172,7 +172,7 @@ export default function CustomerViewForm() {
               Account Manager
             </Typography>
 
-            <Typography variant="body2">{defaultValues.status}</Typography>
+            <Typography variant="body2">{defaultValues.accountManager.firstName} {defaultValues.accountManager.lastName}</Typography>
             
           </Grid>
 
@@ -181,7 +181,7 @@ export default function CustomerViewForm() {
               Project Manager
             </Typography>
 
-            <Typography variant="body2">{defaultValues.tag}</Typography>
+            <Typography variant="body2">{defaultValues.projectManager.firstName} {defaultValues.projectManager.lastName}</Typography>
             
           </Grid>
 
@@ -190,7 +190,7 @@ export default function CustomerViewForm() {
              Suppport Manager
             </Typography>
 
-            <Typography variant="body2">{defaultValues.location}</Typography>
+            <Typography variant="body2">{defaultValues.supportManager.firstName} {defaultValues.supportManager.lastName}</Typography>
             
           </Grid>
 

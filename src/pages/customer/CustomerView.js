@@ -9,8 +9,9 @@ import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/mater
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomers, getCustomer } from '../../redux/slices/customer';
+import { getCustomers, getCustomer, setEditFormVisibility } from '../../redux/slices/customer';
 import { getDepartments } from '../../redux/slices/department';
+import { setFormVisibility } from '../../redux/slices/site';
 
 
 // auth
@@ -56,46 +57,44 @@ CustomerViewPage.propTypes = {
 
 export default function CustomerViewPage({editPage}) {
 
-  const { customer } = useSelector((state) => state.customer);
-
   const { id } = useParams(); 
 
   const dispatch = useDispatch();
 
-  useLayoutEffect(() => {
-    dispatch(getCustomer(id));
-  }, [dispatch, id]);
-
-  console.log('customer', customer);
-
   const { themeStretch } = useSettingsContext();
+
+  const { customer, editFormVisibility } = useSelector((state) => state.customer);
+
+  const { site } = useSelector((state) => state.site);
+
+  useLayoutEffect(() => {
+    if(id != null){
+      dispatch(getCustomer(id));
+    }
+  }, [dispatch, id]);
 
   const [currentTab, setCurrentTab] = useState('customer-edit');
 
-  const [currentComponent, setCurrentComponent] = useState(<CustomerAddForm/>);
+  const [editFlag, setEditFlag] = useState(false);
+  const toggleEditFlag = () => setEditFlag(value => !value);
+
+  const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
 
   const [customerFlag, setCustomerFlag] = useState(true);
 
+  useLayoutEffect(() => {
+    dispatch(setEditFormVisibility(editFlag));
+  }, [dispatch, editFlag]);
+
   useEffect(() => {
-    console.log(editPage);
-    if(editPage){
-      console.log('edit');
+    if(editFlag){
       setCurrentComponent(<CustomerEditForm/>);
     }else{
-      if(customer){
-        console.log('view');
-        setCustomerFlag(false);
-        setCurrentComponent(<CustomerViewForm/>);        
-      }else{
-        console.log('addd');
-        setCurrentComponent(<CustomerAddForm/>);
-      }
-      console.log("abc");
+      setCustomerFlag(false);
+      setCurrentComponent(<CustomerViewForm/>);        
     }
+  }, [editPage, site, editFlag, customer]);
 
-  }, [editPage, customer]);
-
-  console.log('currentcomponent', currentComponent); 
 
   const TABS = [
     {
@@ -139,17 +138,17 @@ export default function CustomerViewPage({editPage}) {
           heading="Customer View"
           links={[
             { name: 'Customer', href: PATH_DASHBOARD.customer.dashboard },
-            // {
-            //   name: 'Customer',
-            //   href: PATH_DASHBOARD.customer.list,
-            // },
+
             { name: 'View' },
             
           ]}
           action={
             currentTab === 'customer-edit' &&
             <Button
-                onClick={() => setCurrentComponent(<CustomerEditForm/>)}
+                onClick={() => { 
+                  toggleEditFlag(); 
+                  // setCurrentComponent(<CustomerEditForm/>);
+              }}
                 variant="contained"
                 startIcon={<Iconify icon="eva:edit-fill" />}
               >
@@ -196,48 +195,7 @@ export default function CustomerViewPage({editPage}) {
           </Tabs>
           
         </Card>
-        {/* {currentComponent.type.name === "CustomerViewForm" && currentTab === 'customer-edit' &&
-         <Grid container
-          sx={{
-            paddingBottom: 2
-          }}>
-
-          <Box
-            rowGap={4}
-            columnGap={2}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(4, 1fr)',
-              sm: 'repeat(4, 1fr)',
-            }}
-          >
-            <Stack>
-              <Button
-                // component={RouterLink}
-                onClick={() => setCurrentComponent(<CustomerEditForm/>)}
-                variant="contained"
-                startIcon={<Iconify icon="eva:edit-fill" />}
-              >
-                Edit Customer
-              </Button>
-      
-      
-            </Stack>
-            <Stack>
-              <Button
-                onClick={() => setCurrentComponent(<CustomerAddForm/>)}
-                variant="contained"
-                startIcon={<Iconify icon="eva:plus-fill" />}
-              >
-                Add Customer
-              </Button>
-      
-      
-            </Stack>
-
-          </Box>    
-        </Grid>} */}
-
+        
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />

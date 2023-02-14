@@ -105,7 +105,7 @@ export default function CustomerListTableRow({
             color={(isDisabled === true && 'error') || 'success'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled === false ? 'false' : true}
+            {isDisabled === false ? 'Yes' : 'No'}
           </Label>
         </TableCell> 
 

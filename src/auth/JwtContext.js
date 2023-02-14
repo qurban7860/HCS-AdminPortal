@@ -132,7 +132,7 @@ export function AuthProvider({ children }) {
 
     localStorage.setItem('email', user.email);
     localStorage.setItem('name', user.displayName);
-    localStorage.setItem('userId', user.userId);
+    localStorage.setItem('userId', userId);
 
 
     setSession(accessToken);

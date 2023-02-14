@@ -21,7 +21,7 @@ export default function SiteEdit() {
 
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
   console.log(id);
 
 
@@ -52,7 +52,7 @@ export default function SiteEdit() {
           ]}
         />
 
-        <SiteEditForm/>
+        <SiteEditForm />
       </Container>
     </>
   );

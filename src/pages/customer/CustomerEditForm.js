@@ -69,9 +69,9 @@ export default function CustomerEditForm() {
       // mainSite: customer?.mainSite || '',
       // sites: customer?.sites || [],
       // contacts: customer?.contacts || [],
-      accountManager: customer?.accountManager || '',
-      projectManager: customer?.projectManager || '',
-      supportManager: customer?.supportManager || '',
+      accountManager: customer?.accountManager._id || '',
+      projectManager: customer?.projectManager._id || '',
+      supportManager: customer?.supportManager._id || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]

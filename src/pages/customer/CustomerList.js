@@ -4,6 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
+  Grid,
   Card,
   Table,
   Button,
@@ -40,6 +41,8 @@ import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
 import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
+import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
+
 
 
 // ----------------------------------------------------------------------
@@ -47,8 +50,8 @@ import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/cu
 const TABLE_HEAD = [
   { id: 'name', label: 'Customer', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  { id: 'projectManager', label: 'Project Manager', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
+  { id: 'mainSiteAddress', label: 'Address', align: 'left' },
+  { id: 'active', label: 'Active', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
 
@@ -216,7 +219,10 @@ export default function CustomerList() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+      <Grid container spacing={3}>
+          <CustomerDashboardNavbar/>
+          </Grid>
+        {/* <CustomBreadcrumbs
           heading="Customer List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
@@ -236,8 +242,7 @@ export default function CustomerList() {
               New Customer
             </Button>
           }
-        />
-
+        /> */}
         <Card>
           <CustomerListTableToolbar
             filterName={filterName}

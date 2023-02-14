@@ -10,6 +10,7 @@ import { CONFIG } from '../../config-global';
 
 const initialState = {
   intial: false,
+  editFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -29,6 +30,12 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
+
+    // SET TOGGLE
+    setEditFormVisibility(state, action){
+      console.log('toggle', action.payload);
+      state.formVisibility = action.payload;
+    },
     
     // RESET CUSTOMER
     resetCustomer(state){
@@ -38,13 +45,7 @@ const slice = createSlice({
       state.isLoading = false;
 
     },
-    
-    updateCustomerSuccess(){
 
-
-    },
-
-    
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -52,7 +53,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET CustomerS
+    // GET Customers
     getCustomersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -94,6 +95,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setEditFormVisibility,
   resetCustomer,
   getCart,
   addToCart,
@@ -110,7 +112,7 @@ export function getCustomers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/customers`);
       console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getCustomersSuccess(response.data));
@@ -130,7 +132,7 @@ export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/customers/${id}`);
       dispatch(slice.actions.getCustomerSuccess(response.data));
       console.log('requested customer', response.data);
       // dispatch(slice.actions.setResponseMessage('Customers Loaded Successfuly'));
@@ -163,37 +165,44 @@ export function deleteCustomer(id) {
 
 export function saveCustomer(params) {
     return async (dispatch) => {
-      // dispatch(slice.actions.resetCustomer());
+      console.log('params', params);
+      dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
         const formData = new FormData();
         formData.append('name', params.name);
         formData.append('tradingName', params.tradingName);
+
+        /* eslint-disable */
+        let data = {
+          name: params.name,
+          tradingName: params.tradingName
+        };
+        /* eslint-enable */
+
         if(params.mainSite){
-          formData.append('mainSite', params.mainSite);
+          data.mainSite = params.mainSite;
         }
         if(params.sites.length > 0){
-          formData.append('sites', params.sites);
+          data.sites = params.sites;
         }
         if(params.contacts.length > 0){
           formData.append('contacts', params.contacts);
         }
         if(params.accountManager){
-          formData.append('accountManager', params.accountManager);
+          data.accountManager = params.accountManager;        
         }
         if(params.projectManager){
-          formData.append('projectManager', params.projectManager);
+          data.projectManager = params.projectManager;        
         }
         if(params.supportManager){
-          formData.append('supportManager', params.supportManager);
+          data.supportManager = params.supportManager;        
         }
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}customers`,
-          formData,
-        );
+        const response = await axios.post(`${CONFIG.SERVER_URL}customers/customers`, data);
 
-        console.log('response', response.data.customer);
-        dispatch(slice.actions.getCustomerSuccess(response.data.customer));
+        console.log('response', response.data.Customer);
+        dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error));
@@ -211,33 +220,35 @@ export function updateCustomer(params) {
     try {
 
       const formData = new FormData();
+      /* eslint-disable */
+      let data = {
+        id: params.id,
+        name: params.name,
+        tradingName: params.tradingName
+      };
+     /* eslint-enable */
 
-      formData.append('id', params.id);
-      formData.append('name', params.name);
-      formData.append('tradingName', params.tradingName);
       if(params.mainSite){
-        formData.append('mainSite', params.mainSite);
+        data.mainSite = params.mainSite;
       }
-        // if(params.sites.length > 0){
-        //   formData.append('sites', params.sites);
-        // }
-        // if(params.contacts.length > 0){
-        //   formData.append('contacts', params.contacts);
-        // }
       if(params.accountManager){
-        formData.append('accountManager', params.accountManager);
+        data.accountManager = params.accountManager;
       }
       if(params.projectManager){
-        formData.append('projectManager', params.projectManager);
+        data.projectManager = params.projectManager;
       }
       if(params.supportManager){
-        formData.append('supportManager', params.supportManager);
+        data.supportManager = params.supportManager;
       }
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${params.id}`,
-        formData
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/customers/${params.id}`,
+        data
       );
-      this.updateCustomerSuccess(response);
+
+      dispatch(getCustomer(params.id));
+      dispatch(slice.actions.setEditFormVisibility(false));
+
+      // this.updateCustomerSuccess(response);
 
     } catch (error) {
       console.error(error);

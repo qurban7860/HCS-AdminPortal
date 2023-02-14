@@ -78,7 +78,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       isPrimary: true
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentContact]
+    []
   );
 
   const methods = useForm({

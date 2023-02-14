@@ -4,6 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
+  Stack,
   Card,
   Table,
   Button,
@@ -42,9 +43,10 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import SiteListTableRow from '../site/SiteListTableRow';
 import SiteListTableToolbar from '../site/SiteListTableToolbar';
-import { getSites, deleteSite, getSite } from '../../redux/slices/site';
+import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/site';
 import SiteAddForm from '../site/SiteAddForm';
-import { Block } from '../../sections/_examples/Block';
+import SiteEditForm from '../site/SiteEditForm';
+
 import _mock from '../../_mock';
 import SiteViewForm from '../site/SiteViewForm';
 
@@ -118,6 +120,9 @@ export default function CustomerSiteList() {
   };
   const dispatch = useDispatch();
 
+  const [checked, setChecked] = useState(false);
+  const toggleChecked = () => setChecked(value => !value);
+
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -130,23 +135,23 @@ export default function CustomerSiteList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openModal, setModalState] = useState(false);
-
-  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, formVisibility } = useSelector((state) => state.site);
 
   const { customer } = useSelector((state) => state.customer);
 
   console.log(customer);
+  console.log('formVisibility', formVisibility);
 
   useLayoutEffect(() => {
-    dispatch(getSites());
-
-  }, [dispatch]);
+    dispatch(setFormVisibility(checked));
+  }, [dispatch, checked]);
 
   useEffect(() => {
     if (initial) {
+      if(!checked){
+        // console.log('checked', checked);
+        // dispatch(getSites());
+      }
       if (sites && !error) {
         enqueueSnackbar(responseMessage);
       } else {
@@ -157,7 +162,7 @@ export default function CustomerSiteList() {
       
       setTableData(sites);
     }
-  }, [sites, customer, error, responseMessage, enqueueSnackbar, initial]);
+  }, [sites, dispatch, checked, customer, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -174,80 +179,6 @@ export default function CustomerSiteList() {
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenModal = () => {
-    setModalState(true);
-  };
-
-  const handleCloseModal = () => {
-    dispatch(false);
-  };
-
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
-
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
-
-  const handleDeleteRow = async (id) => {
-    try {
-      console.log(id);
-      await dispatch(deleteSite(id));
-      dispatch(getSites());
-      setSelected([]);
-
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-  const handleEditRow = (id) => {
-    console.log(id);
-    navigate(PATH_DASHBOARD.site.edit(id));
-  };
-
-  const handleViewRow = (id) => {
-    // navigate(PATH_DASHBOARD.site.view(id));
-  };
-
-  const handleResetFilter = () => {
-    setFilterName('');
-    setFilterStatus([]);
-  };
-
   return (
     <>
       <Helmet>
@@ -255,38 +186,28 @@ export default function CustomerSiteList() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Site List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Site',
-              href: PATH_DASHBOARD.site.list,
-            },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              onClick={handleOpenModal}
+
+        {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+          <Button
+              // alignItems 
+              onClick={toggleChecked}
+
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
               New Site
             </Button>
-          }
-        />
 
+        </Stack>}
+        
         <Card>
-        <Dialog fullWidth maxWidth="xs" open={openModal} onClose={handleCloseModal}>
-          <DialogTitle>Add Site</DialogTitle>
 
-          <SiteAddForm
-          />
-        </Dialog>
+          {siteEditFormVisibility && <SiteEditForm/>}
 
-        {/* <Block title=""> */}
-            {sites.map((site, index) => (
-              <Accordion key={site._id} disabled={index === 3}>
+          {formVisibility && !siteEditFormVisibility && <SiteAddForm/>}
+
+            {!formVisibility && !siteEditFormVisibility && sites.map((site, index) => (
+              <Accordion key={site._id}>
                 <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
                   <Typography variant="subtitle1">{site.name}</Typography>
                 </AccordionSummary>

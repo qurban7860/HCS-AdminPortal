@@ -1,25 +1,13 @@
 import { Helmet } from 'react-helmet-async';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getSites, getSite } from '../../redux/slices/site';
-import { getDepartments } from '../../redux/slices/department';
-
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
-// _mock_
-import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from '../../_mock/arrays';
+import { getSite } from '../../redux/slices/site';
 // components
 import Iconify from '../../components/iconify';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
@@ -100,9 +88,6 @@ export default function SiteViewPage() {
         >
           <SiteCover name={site?.name}/>
 
-          
-           
-
           <Tabs
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
@@ -127,15 +112,7 @@ export default function SiteViewPage() {
           </Tabs>
           
         </Card>
-
-        {/* <Button 
-                  size ="medium" 
-                  color ="secondary" 
-                  variant ="contained" 
-                  // href = {currentSite.image === undefined ? '' : `localhost:5000/${currentSite.image}`}
-                  >
-                    Edit Site
-          </Button>  */}
+        
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />

@@ -19,6 +19,7 @@ import { saveCustomer, resetCustomer } from '../../redux/slices/customer';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
+import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 
 import { useAuthContext } from '../../auth/useAuthContext';
 
@@ -38,6 +39,9 @@ CustomerAddForm.propTypes = {
 };
 
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
+
+  const { userId, user } = useAuthContext();
+  console.log('user', userId);
 
   const { customer } = useSelector((state) => state.customer);
 
@@ -74,7 +78,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       accountManager: '',
       projectManager: '',
       supportManager: '',
-      isArchived: true
+      loginUser: {
+        userId,
+        email: user.email,
+      }
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCustomer]
@@ -111,7 +118,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         reset();
         enqueueSnackbar('Create success!');
         console.log('customer', customer);
-        // navigate(PATH_DASHBOARD.customer.view(customer._id));
+        navigate(PATH_DASHBOARD.customer.view(null));
       } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);

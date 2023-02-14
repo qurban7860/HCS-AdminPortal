@@ -4,6 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
+  Grid, 
   Card,
   Table,
   Button,
@@ -39,6 +40,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import ContactListTableRow from './ContactListTableRow';
 import ContactListTableToolbar from './ContactListTableToolbar';
 import { getContacts, deleteContact, getContact } from '../../redux/slices/contact';
+import CustomerDashboardNavbar from '../customer/util/CustomerDashboardNavbar';
 
 
 // ----------------------------------------------------------------------
@@ -207,7 +209,7 @@ export default function ContactList() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+        {/* <CustomBreadcrumbs
           heading="Contact List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
@@ -227,8 +229,11 @@ export default function ContactList() {
               New Contact
             </Button>
           }
-        />
+        /> */}
 
+        <Grid container spacing={3}>
+          <CustomerDashboardNavbar/>
+          </Grid>
         <Card>
           <ContactListTableToolbar
             filterName={filterName}
