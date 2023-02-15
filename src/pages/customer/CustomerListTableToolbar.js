@@ -47,7 +47,7 @@ export default function CustomerListTableToolbar({
       }}
       sx={{ px: 2.5, py: 3 }}
     >
-      <FormControl
+      {/* <FormControl
         sx={{
           width: { xs: 1, md: 240 },
         }}
@@ -77,7 +77,7 @@ export default function CustomerListTableToolbar({
             </MenuItem>
           ))}
         </Select>
-      </FormControl>
+      </FormControl> */}
 
       <TextField
         fullWidth

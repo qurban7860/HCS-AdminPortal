@@ -10,6 +10,8 @@ import { CONFIG } from '../../config-global';
 
 const initialState = {
   intial: false,
+  formVisibility: false,
+  contactEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -38,6 +40,18 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = action.payload;
       state.initial = true;
+    },
+
+    // SET TOGGLE
+    setFormVisibility(state, action){
+      console.log('toggle', action.payload);
+      state.formVisibility = action.payload;
+    },
+
+    // SET TOGGLE
+    setEditFormVisibility(state, action){
+      console.log('setEditFormVisibility', action.payload);
+      state.contactEditFormVisibility = action.payload;
     },
 
     // GET Contacts
@@ -88,6 +102,8 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setFormVisibility,
+  setEditFormVisibility,
   getCart,
   addToCart,
   setResponseMessage,
@@ -107,20 +123,27 @@ export function saveContact(params) {
       if(params.customer){
         formData.append('customerId', params.customer);
       }
-      formData.append('firstName', params.firstName);
-      formData.append('lastName', params.lastName);
-      formData.append('title', params.title);
-      formData.append('contactTypes', params.contactTypes);
-      formData.append('phone', params.phone);
-      formData.append('email', params.email);
-      formData.append('isPrimary', params.isPrimary);
 
+      /* eslint-disable */
+      let data = {
+        customer: params.customer,
+        firstName: params.firstName,
+        lastName: params.lastName,
+        customer: params.customer,
+        title: params.title,
+        contactTypes: params.contactTypes,
+        phone: params.phone,
+        email: params.email,
+      };
 
+      /* eslint-enable */
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}contacts`,
-        formData,
+      const response = await axios.post(`${CONFIG.SERVER_URL}customers/contacts`,
+        data,
       );
-      dispatch(slice.actions.setResponseMessage('Contacts saved successfully'));
+
+      dispatch(slice.actions.setFormVisibility(false));
+      dispatch(slice.actions.setResponseMessage('Site saved successfully'));
 
     } catch (error) {
       console.log(error);
@@ -134,22 +157,27 @@ export function saveContact(params) {
 export function updateContact(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    dispatch(slice.actions.setEditFormVisibility(false));
+
     try {
       const formData = new FormData();
 
-      formData.append('id', params.id);
-      if(params.customer){
-        formData.append('customerId', params.customer);
-      }
-      formData.append('firstName', params.firstName);
-      formData.append('lastName', params.lastName);
-      formData.append('title', params.title);
-      formData.append('contactTypes', params.contactTypes);
-      formData.append('phone', params.phone);
-      formData.append('email', params.email);
+      /* eslint-disable */
+      let data = {
+        customer: params.customer,
+        firstName: params.firstName,
+        lastName: params.lastName,
+        customer: params.customer,
+        title: params.title,
+        contactTypes: params.contactTypes,
+        phone: params.phone,
+        email: params.email,
+      };
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}contacts/${params.id}`,
-        formData
+      /* eslint-enable */
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/contacts/${params.id}`,
+        data
       );
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
 
@@ -181,15 +209,23 @@ export function getSPContacts() {
 
 // ----------------------------------------------------------------------
 
-export function getContacts(customerId = null) {
+export function getContacts(params = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const customerFilter  =  
-      {params: {
-          customer: customerId
-      }};
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts`, customerFilter);
+      let response = null;
+      if(params){
+        response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts` , 
+        {
+          params: {
+            customer: params
+          }
+        }
+        );
+      }else{
+        response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts`);
+      }
+      
       console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getContactsSuccess(response.data));
@@ -209,7 +245,7 @@ export function getContact(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}contacts/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts/${id}`);
       dispatch(slice.actions.getContactSuccess(response.data));
       console.log('requested contact', response.data);
       // dispatch(slice.actions.setResponseMessage('Contacts Loaded Successfuly'));

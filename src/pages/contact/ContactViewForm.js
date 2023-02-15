@@ -15,33 +15,38 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 
-import { getContacts, getContact } from '../../redux/slices/contact';
-
-
-
-
-
+import { getContacts, getContact, setEditFormVisibility } from '../../redux/slices/contact';
+// Iconify
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function ContactViewForm() {
+ContactViewForm.propTypes = {
+  currentContact: PropTypes.object,
+};
+export default function ContactViewForm({ currentContact = null }) {
 
   const { contact } = useSelector((state) => state.contact);
+
+  const dispatch = useDispatch();
   
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const  handleEdit = async () => {
+    await dispatch(getContact(currentContact._id));
+    dispatch(setEditFormVisibility(true));
+  };
 
   const defaultValues = useMemo(
     () => ({
-      customer: contact?.customer || 'N/A',
-      firstName: contact?.firstName || 'N/A',
-      lastName: contact?.lastName || 'N/A',
-      title: contact?.title || 'N/A',
-      contactTypes: contact?.contactTypes || 'N/A',
-      phone: contact?.phone || 'N/A',
-      email: contact?.email || 'N/A',
+      firstName: currentContact ? currentContact.firstName : contact?.firstName || 'N/A',
+      lastName: currentContact ? currentContact.lastName : contact?.lastName || 'N/A',
+      title: currentContact ? currentContact.title : contact?.title || 'N/A',
+      contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
+      phone: currentContact ? currentContact.phone : contact?.phone || 'N/A',
+      email: currentContact ? currentContact.email : contact?.email || 'N/A',
 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,6 +60,17 @@ export default function ContactViewForm() {
 
   return (
        <Card sx={{ pt: 5, px: 5 }}>
+        {/* <Stack alignItems="flex-end" sx={{ mt: 2 }}>
+        <Button
+          onClick={() => handleEdit()}
+          variant="outlined"
+          startIcon={<Iconify icon="eva:edit-fill" />}
+        >
+          Edit
+        </Button>
+
+      </Stack> */}
+
         <Grid container>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -76,14 +92,14 @@ export default function ContactViewForm() {
             
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Account Manager
+
             </Typography>
 
             <Typography variant="body2">{defaultValues.status}</Typography>
             
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>

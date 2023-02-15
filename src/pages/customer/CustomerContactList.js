@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Grid,
+  Stack,
   Card,
   Table,
   Button,
@@ -13,6 +13,10 @@ import {
   Container,
   IconButton,
   TableContainer,
+  DialogTitle,
+  Dialog, 
+  Typography,
+  Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -37,21 +41,27 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import CustomerListTableRow from './CustomerListTableRow';
-import CustomerListTableToolbar from './CustomerListTableToolbar';
-import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
-import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
+import SiteListTableRow from '../site/SiteListTableRow';
+import SiteListTableToolbar from '../site/SiteListTableToolbar';
+import { getContacts, setFormVisibility } from '../../redux/slices/contact';
+import ContactAddForm from '../contact/ContactAddForm';
+import ContactEditForm from '../contact/ContactEditForm';
+import ContactViewForm from '../contact/ContactViewForm';
+
+
+import _mock from '../../_mock';
+import EmptyContent from '../../components/empty-content';
+import { Block } from '../../sections/_examples/Block';
 
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Customer', align: 'left' },
-  { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  // { id: 'mainSiteAddress', label: 'Address', align: 'left' },
-  { id: 'active', label: 'Active', align: 'left' },
+  { id: 'name', label: 'Site', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'website', label: 'Website', align: 'left' },
+  { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
 
@@ -67,16 +77,24 @@ const STATUS_OPTIONS = [
 ];
 
 // const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
+//   { value: 'all_sites', label: 'All Sites' },
 //   { value: 'deployable', label: 'All Deployable' },
 //   { value: 'pending', label: 'All Pending' },
 //   { value: 'archived', label: 'All Archived' },
 //   { value: 'undeployable', label: 'All Undeployable' }
 // ];
 
+const _accordions = [...Array(8)].map((_, index) => ({
+  id: _mock.id(index),
+  value: `panel${index + 1}`,
+  heading: `Site ${index + 1}`,
+  subHeading: _mock.text.title(index),
+  detail: _mock.text.description(index),
+}));
+
 // ----------------------------------------------------------------------
 
-export default function CustomerList() {
+export default function CustomerContactList() {
   const {
     dense,
     page,
@@ -98,7 +116,26 @@ export default function CustomerList() {
     defaultOrderBy: 'createdAt',
   });
 
+
+  const [controlled, setControlled] = useState(false);
+
+  const handleChangeControlled = (panel) => (event, isExpanded) => {
+    setControlled(isExpanded ? panel : false);
+  };
   const dispatch = useDispatch();
+
+  const { contacts, isLoading, error, initial, responseMessage, contactEditFormVisibility, formVisibility } = useSelector((state) => state.contact);
+
+  const { customer } = useSelector((state) => state.customer);
+
+  const [checked, setChecked] = useState(false);
+
+  const toggleChecked = () => 
+    {
+      setChecked(value => !value);
+      dispatch(setFormVisibility(!formVisibility));
+    
+    };
 
   const { themeStretch } = useSettingsContext();
 
@@ -112,24 +149,30 @@ export default function CustomerList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
+  console.log(customer);
+  console.log('formVisibility', formVisibility);
+  console.log('editformvibis', contactEditFormVisibility);
+  console.log('checked', checked);
 
   useLayoutEffect(() => {
-    dispatch(getCustomers());
-  }, [dispatch]);
+    // dispatch(setFormVisibility(checked));
+    if(!formVisibility && !contactEditFormVisibility){
+      dispatch(getContacts(customer._id));
+    }
+  }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility]);
 
   useEffect(() => {
     if (initial) {
-      if (customers && !error) {
+      if (contacts && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
-      }
-      setTableData(customers);
+      }   
+      setTableData(contacts);
     }
-  }, [customers, error, responseMessage, enqueueSnackbar, initial]);
+  }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
+
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -144,107 +187,88 @@ export default function CustomerList() {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
-
-  const handleFilterStatus = (event) => {
-    setPage(0);
-    setFilterStatus(event.target.value);
-  };
-
-  const handleDeleteRow = async (id) => {
-    try {
-      console.log(id);
-      await dispatch(deleteCustomer(id));
-      dispatch(getCustomers());
-      setSelected([]);
-
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-  const handleEditRow = (id) => {
-    console.log(id);
-    navigate(PATH_DASHBOARD.customer.edit(id));
-  };
-
-  const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
-  };
-
-  const handleResetFilter = () => {
-    setFilterName('');
-    setFilterStatus([]);
-  };
+  const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
 
   return (
     <>
       <Helmet>
-        <title> Customer: List | Machine ERP </title>
+        <title> Site: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <Grid container spacing={3}>
-          <CustomerDashboardNavbar/>
-          </Grid>
-        {/* <CustomBreadcrumbs
-          heading="Customer List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
-            },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              component={RouterLink}
-              to={PATH_DASHBOARD.customer.new}
+
+        {!contactEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+          <Button
+              // alignItems 
+              onClick={toggleChecked}
+
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New Customer
+              New Contact
             </Button>
-          }
-        /> */}
+
+        </Stack>}
+        
         <Card>
-          <CustomerListTableToolbar
+
+          {contactEditFormVisibility && <ContactEditForm/>}
+
+          {formVisibility && !contactEditFormVisibility && <ContactAddForm/>}
+
+          {/* {!formVisibility && !contactEditFormVisibility && <Block title="Available Sites"> */}
+          {!formVisibility && !contactEditFormVisibility && contacts.map((contact, index) => (
+          
+  
+            <Accordion key={contact._id}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
+                  {contact.firstName} {contact.lastName} 
+                </Typography>
+                {contact.address && <Typography sx={{ color: 'text.secondary' }}>
+                  {contact.address.suburb}, 
+                  {contact.address.city}, 
+                  {contact.address.region}, 
+                  {contact.address.country}
+                  </Typography>
+                }
+              </AccordionSummary>
+              <AccordionDetails>
+                <ContactViewForm
+                currentContact={contact}
+                />
+              </AccordionDetails>
+            </Accordion>
+            
+          ))} 
+          {/* </Block>} */}
+
+          {isNotFound && <EmptyContent title="No Data"/>}
+            
+          {/* </Block> */}
+          {/* <Block title="Controlled">
+            {_accordions.map((item, index) => (
+              <Accordion
+                key={item.value}
+                disabled={index === 3}
+                expanded={controlled === item.value}
+                onChange={handleChangeControlled(item.value)}
+              >
+                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                  <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
+                    {item.heading}
+                  </Typography>
+                  <Typography sx={{ color: 'text.secondary' }}>{item.subHeading}</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>{item.detail}</Typography>
+                </AccordionDetails>
+              </Accordion>
+            ))}
+          </Block> */}
+
+
+           {/* <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -296,13 +320,13 @@ export default function CustomerList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <CustomerListTableRow
+                        <SiteListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
+                          onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -330,11 +354,11 @@ export default function CustomerList() {
             //
             dense={dense}
             onChangeDense={onChangeDense}
-          />
+          /> */}
         </Card>
       </Container>
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -355,7 +379,7 @@ export default function CustomerList() {
             Delete
           </Button>
         }
-      />
+      /> */}
     </>
   );
 }
@@ -375,12 +399,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (contact) => contact.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((contact) => filterStatus.includes(contact.status));
   }
 
   return inputData;

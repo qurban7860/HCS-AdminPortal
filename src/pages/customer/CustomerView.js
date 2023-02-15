@@ -45,6 +45,7 @@ import CustomerViewForm from './CustomerViewForm';
 
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
+import CustomerContactList from './CustomerContactList';
 
 // ----------------------------------------------------------------------
 
@@ -116,7 +117,7 @@ export default function CustomerViewPage({editPage}) {
       value: 'contacts',
       label: 'Contacts',
       icon: <Iconify icon="eva:clock-outline" />,
-      component: <ContactAddForm/>,
+      component: <CustomerContactList/>,
 
     },
     {

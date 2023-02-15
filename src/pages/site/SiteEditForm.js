@@ -35,11 +35,7 @@ export default function SiteEditForm() {
 
   const { error, site } = useSelector((state) => state.site);
 
-  const { customers } = useSelector((state) => state.customer);
-
   const dispatch = useDispatch();
-
-  const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 

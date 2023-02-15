@@ -132,7 +132,7 @@ export default function CustomerSiteList() {
   const toggleChecked = () => 
     {
       setChecked(value => !value);
-      dispatch(setFormVisibility(!checked));
+      dispatch(setFormVisibility(!formVisibility));
     
     };
 

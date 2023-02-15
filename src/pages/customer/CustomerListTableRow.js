@@ -96,10 +96,10 @@ export default function CustomerListTableRow({
 
         <TableCell>{tradingName}</TableCell>
 
-        <TableCell>{tradingName}</TableCell>
+        {/* <TableCell>{tradingName}</TableCell> */}
 
 
-        <TableCell align="center">
+        <TableCell align="left">
           <Label
             variant="soft"
             color={(isDisabled === true && 'error') || 'success'}

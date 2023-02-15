@@ -105,7 +105,7 @@
       try {
         await dispatch(updateContact(data));
         reset();
-        navigate(PATH_DASHBOARD.contact.list);
+        // navigate(PATH_DASHBOARD.contact.list);
       } catch (err) {
         enqueueSnackbar('Saving failed!');
         console.error(error);

@@ -13,7 +13,7 @@ import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment
 // slice
 import { getCustomers } from '../../redux/slices/customer';
 
-import { saveContact } from '../../redux/slices/contact';
+import { saveContact, setFormVisibility } from '../../redux/slices/contact';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -45,10 +45,12 @@ const CONTACT_TYPES = [
 
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
-  const { isLoading } = useSelector((state) => state.contact);
+  const { formVisibility } = useSelector((state) => state.contact);
 
-  const { customers } = useSelector((state) => state.customer);
-  
+  const { customer } = useSelector((state) => state.customer);
+
+  const { userId, user } = useAuthContext();
+
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
@@ -68,14 +70,18 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const defaultValues = useMemo(
     () => ({
-      customer: '',
+      customer: customer._id,
       firstName: '',
       lastName: '',
       title: '',
       contactTypes: [],
       phone: '',
       email: '',
-      isPrimary: true
+      loginUser: {
+        userId,
+        email: user.email,
+      }
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -96,14 +102,13 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const values = watch();
 
-  useLayoutEffect(() => {
-    dispatch(getCustomers());
-  }, [dispatch]);
-
   useEffect(() => {
-      reset(defaultValues);
+    reset(defaultValues);
+    if (!formVisibility) {
+      dispatch(setFormVisibility(true));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  }, [dispatch]);
 
 
   const onSubmit = async (data) => {
@@ -111,7 +116,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       try{
         await dispatch(saveContact(data));
         reset();
-        navigate(PATH_DASHBOARD.contact.list);
       } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);
@@ -121,20 +125,18 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={7} md={7}>
+      <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-
-            <RHFSelect native name="customer" label="Customer">
-                    <option value="" selected/>
-                    { 
-                    customers.length > 0 && customers.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect>
+            <Stack spacing={6}>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
 
               <RHFTextField name="firstName" label="First Name" />
 
@@ -153,16 +155,18 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               <RHFTextField name="phone" label="Phone" />
 
               <RHFTextField name="email" label="Email" />
+              
+              </Box>
 
+              <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+                  Save Contact
+                </LoadingButton>
+              </Stack>
 
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Contact
-            </LoadingButton>
             </Stack>
             
           </Card>
-          
-        </Grid>
       </Grid>
     </FormProvider>
   );
