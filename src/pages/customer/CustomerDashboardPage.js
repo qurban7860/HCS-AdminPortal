@@ -1,12 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Link, Container, Grid, Stack, Button } from '@mui/material';
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
+import { Container, Grid } from '@mui/material';
 // _mock_
 import {
   _appFeatured,
@@ -20,21 +16,15 @@ import {
 import { useSettingsContext } from '../../components/settings';
 // sections
 import {
-  AppWidget,
-  AppWelcome,
-  AppFeatured,
   AppNewInvoice,
-  AppTopAuthors,
   AppTopRelated,
   AppAreaInstalled,
-  AppWidgetSummary,
   AppCurrentDownload,
-  AppTopInstalledCountries,
 } from '../../sections/@dashboard/general/app';
 // assets
 import { SeoIllustration } from '../../assets/illustrations';
 
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch } from '../../redux/store';
 
 import { getSites } from '../../redux/slices/site';
 import CustomerWidget from './util/CustomerWidget';
@@ -54,41 +44,19 @@ export default function CustomerDashboardPage() {
 
   const dispatch = useDispatch();
 
-  const { user } = useAuthContext();
-
   const MACHINES = [
     { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
     { group: 'Decoiler', classify: ['0.5T Decoiler', '1.0T Decoiler', '1.5T Decoiler', '3.0T Decoiler', '5.0T Decoiler', '6.0T Decoiler'] },
     { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
   ];
 
-  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
-
   const theme = useTheme();
-
-  const navigate = useNavigate();
 
   const { themeStretch } = useSettingsContext();
 
   useLayoutEffect(() => {
     dispatch(getSites());
   }, [dispatch]);
-
-  const handleAddCustomer = () => {
-    navigate(PATH_DASHBOARD.customer.new);
-  };
-
-  const handleSearchCustomer = () => {
-    navigate(PATH_DASHBOARD.customer.list);
-  };
-
-  const handleSearchSite = () => {
-    navigate(PATH_DASHBOARD.site.list);
-  };
-
-  const handleSearchContact = () => {
-    navigate(PATH_DASHBOARD.contact.list);
-  };
 
   return (
     <>
@@ -100,7 +68,7 @@ export default function CustomerDashboardPage() {
         <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
 
-          <Grid item xs={12} md={4}>
+          {/* <Grid item xs={12} md={4}>
             <AppWidgetSummary
               title="Total Active Users"
               percent={2.6}
@@ -134,7 +102,7 @@ export default function CustomerDashboardPage() {
                 series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
               }}
             />
-          </Grid>
+          </Grid> */}
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentDownload
@@ -198,37 +166,6 @@ export default function CustomerDashboardPage() {
           <Grid item xs={12} md={6} lg={4}>
             <AppTopRelated title="Top Managers" list={_appManagers} />
           </Grid>
-
-          {/* <Grid item xs={12} md={6} lg={4}>
-            <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopAuthors title="Top Authors" list={_appAuthors} />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <Stack spacing={3}>
-              <AppWidget
-                title="Conversion"
-                total={38566}
-                icon="eva:person-fill"
-                chart={{
-                  series: 48,
-                }}
-              />
-
-              <AppWidget
-                title="Applications"
-                total={55566}
-                icon="eva:email-fill"
-                color="info"
-                chart={{
-                  series: 75,
-                }}
-              />
-            </Stack>
-          </Grid> */}
         </Grid>
       </Container>
     </>

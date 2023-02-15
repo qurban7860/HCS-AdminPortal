@@ -91,56 +91,56 @@ const navConfig = [
       },
 
       // CUSTOMER
-      {
-        title: 'customer',
-        path: PATH_CUSTOMER.general.app,
-        icon: ICONS.banking,
-        children: [
-          // { title: 'dashboard', path: PATH_CUSTOMER.general.app},
-          { title: 'list', path: PATH_DASHBOARD.customer.list },
-          { title: 'create', path: PATH_DASHBOARD.customer.new },
+      // {
+      //   title: 'customer',
+      //   path: PATH_CUSTOMER.general.app,
+      //   icon: ICONS.banking,
+      //   children: [
+      //     // { title: 'dashboard', path: PATH_CUSTOMER.general.app},
+      //     { title: 'list', path: PATH_DASHBOARD.customer.list },
+      //     { title: 'create', path: PATH_DASHBOARD.customer.new },
 
-        ],
-      },
+      //   ],
+      // },
 
-      // SITE
-      {
-        title: 'site',
-        path: PATH_DASHBOARD.site.root,
-        icon: ICONS.analytics,
-        children: [
+      // // SITE
+      // {
+      //   title: 'site',
+      //   path: PATH_DASHBOARD.site.root,
+      //   icon: ICONS.analytics,
+      //   children: [
 
-          { title: 'list', path: PATH_DASHBOARD.site.list },
-          { title: 'create', path: PATH_DASHBOARD.site.new },
+      //     { title: 'list', path: PATH_DASHBOARD.site.list },
+      //     { title: 'create', path: PATH_DASHBOARD.site.new },
 
-        ],
-      },
+      //   ],
+      // },
 
-      // CONTACT
-      {
-        title: 'contact',
-        path: PATH_DASHBOARD.contact.root,
-        icon: ICONS.analytics,
-        children: [
+      // // CONTACT
+      // {
+      //   title: 'contact',
+      //   path: PATH_DASHBOARD.contact.root,
+      //   icon: ICONS.analytics,
+      //   children: [
 
-          { title: 'list', path: PATH_DASHBOARD.contact.list },
-          { title: 'create', path: PATH_DASHBOARD.contact.new },
+      //     { title: 'list', path: PATH_DASHBOARD.contact.list },
+      //     { title: 'create', path: PATH_DASHBOARD.contact.new },
 
-        ],
-      },
+      //   ],
+      // },
 
-      // NOTE
-      {
-        title: 'note',
-        path: PATH_DASHBOARD.note.root,
-        icon: ICONS.analytics,
-        children: [
+      // // NOTE
+      // {
+      //   title: 'note',
+      //   path: PATH_DASHBOARD.note.root,
+      //   icon: ICONS.analytics,
+      //   children: [
 
-          { title: 'list', path: PATH_DASHBOARD.note.list },
-          { title: 'create', path: PATH_DASHBOARD.note.new },
+      //     { title: 'list', path: PATH_DASHBOARD.note.list },
+      //     { title: 'create', path: PATH_DASHBOARD.note.new },
 
-        ],
-      },
+      //   ],
+      // },
 
       // INVOICE
 

@@ -75,8 +75,8 @@ export default function CustomerEditForm() {
       accountManager: customer?.accountManager?._id || '',
       projectManager: customer?.projectManager?._id || '',
       supportManager: customer?.supportManager?._id || '',
-      primaryBillingContact: '',
-      primaryTechnicalContact: '',
+      primaryBillingContact: customer?.primaryBillingContact?._id || '',
+      primaryTechnicalContact: customer?.primaryTechnicalContact || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -175,6 +175,17 @@ export default function CustomerEditForm() {
                   options={contacts}
                 /> */}
 
+              </Box>  
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+
 
               <RHFSelect native name="primaryBillingContact" label="Primary Billing Contact">
                     <option value="" selected/>
@@ -195,6 +206,19 @@ export default function CustomerEditForm() {
                     </option>
                   ))}
               </RHFSelect>
+
+
+              </Box>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
 
                 <RHFSelect native name="accountManager" label="Account Manager">
                   <option value="" selected />

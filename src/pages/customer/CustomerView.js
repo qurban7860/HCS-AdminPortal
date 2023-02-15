@@ -104,7 +104,7 @@ export default function CustomerViewPage({editPage}) {
       component: currentComponent
     },
     {
-      disabled: customerFlag,
+      disabled: customerEditFormFlag,
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="eva:settings-2-outline" />,
@@ -112,7 +112,7 @@ export default function CustomerViewPage({editPage}) {
 
     },
     {
-      disabled: customerFlag,
+      disabled: customerEditFormFlag,
       value: 'contacts',
       label: 'Contacts',
       icon: <Iconify icon="eva:clock-outline" />,
@@ -120,13 +120,13 @@ export default function CustomerViewPage({editPage}) {
 
     },
     {
-      disabled: customerFlag,
+      disabled: customerEditFormFlag,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="eva:archive-outline" />,
     },
     {
-      disabled: customerFlag,
+      disabled: customerEditFormFlag,
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="eva:archive-outline" />,
@@ -152,6 +152,7 @@ export default function CustomerViewPage({editPage}) {
         >
           <CustomerCover name={customer ? customer.name : 'New Customer'}/>
 
+          
           
            
 
@@ -181,11 +182,14 @@ export default function CustomerViewPage({editPage}) {
           
         </Card>
         
+        
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
           } </Box>
         )}
+        
+
         
       </Container>
     </>

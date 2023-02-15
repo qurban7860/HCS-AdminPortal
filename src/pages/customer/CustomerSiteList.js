@@ -49,6 +49,9 @@ import SiteEditForm from '../site/SiteEditForm';
 
 import _mock from '../../_mock';
 import SiteViewForm from '../site/SiteViewForm';
+import EmptyContent from '../../components/empty-content';
+import { Block } from '../../sections/_examples/Block';
+
 
 
 // ----------------------------------------------------------------------
@@ -144,26 +147,23 @@ export default function CustomerSiteList() {
 
   useLayoutEffect(() => {
     dispatch(setFormVisibility(checked));
-    dispatch(getSites(customer._id));
-  }, [dispatch, checked, customer]);
+    if(!formVisibility && !siteEditFormVisibility){
+      dispatch(getSites(customer._id));
+    }
+  }, [dispatch, checked, customer, formVisibility, siteEditFormVisibility]);
 
   useEffect(() => {
     if (initial) {
-      if(!checked){
-        // console.log('checked', checked);
-        // dispatch(getSites());
-      }
       if (sites && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
-      }
-      // const filteredSites = sites.filter((site) => site.customer_id === customer._id);
-
-      
+      }   
       setTableData(sites);
     }
-  }, [sites, dispatch, checked, customer, error, responseMessage, enqueueSnackbar, initial]);
+  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
+
+  
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -178,7 +178,7 @@ export default function CustomerSiteList() {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = !sites.length && !formVisibility && !siteEditFormVisibility;
 
   return (
     <>
@@ -207,18 +207,32 @@ export default function CustomerSiteList() {
 
           {formVisibility && !siteEditFormVisibility && <SiteAddForm/>}
 
-            {!formVisibility && !siteEditFormVisibility && sites.map((site, index) => (
-              <Accordion key={site._id}>
-                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                  <Typography variant="subtitle1">{site.name}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <SiteViewForm
-                  currentSite={site}
-                  />
-                </AccordionDetails>
-              </Accordion>
-            ))}
+          {/* {!formVisibility && !siteEditFormVisibility && <Block title="Available Sites"> */}
+          {!formVisibility && !siteEditFormVisibility && sites.map((site, index) => (
+          
+  
+            <Accordion key={site._id}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+                <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
+                  {site.name}
+                </Typography>
+                {site.address && <Typography sx={{ color: 'text.secondary' }}>
+                  {site.address.street}, {site.address.suburb}, {site.address.city}, {site.address.region}, {site.address.country}
+                  </Typography>
+                }
+              </AccordionSummary>
+              <AccordionDetails>
+                <SiteViewForm
+                currentSite={site}
+                />
+              </AccordionDetails>
+            </Accordion>
+            
+          ))} 
+          {/* </Block>} */}
+
+          {isNotFound && <EmptyContent title="No Data"/>}
+            
           {/* </Block> */}
           {/* <Block title="Controlled">
             {_accordions.map((item, index) => (
@@ -242,7 +256,7 @@ export default function CustomerSiteList() {
           </Block> */}
 
 
-          {/* <SiteListTableToolbar
+           {/* <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -11,24 +11,25 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getUsers } from '../../redux/slices/user';
-import { getSites } from '../../redux/slices/site';
-import { getContacts, getSPContacts } from '../../redux/slices/contact';
-import { saveCustomer, resetCustomer } from '../../redux/slices/customer';
+import { getSPContacts } from '../../redux/slices/contact';
+import { saveCustomer } from '../../redux/slices/customer';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
-
-import { useAuthContext } from '../../auth/useAuthContext';
-
 import FormProvider, {
   RHFSelect,
-  RHFMultiSelect,
+  RHFAutocomplete,
   RHFTextField,
-  RHFSwitch
+  RHFMultiSelect
 } from '../../components/hook-form';
+// auth
+import { useAuthContext } from '../../auth/useAuthContext';
+// asset
+import { countries } from '../../assets/data';
+// util
+import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
+
 
 // ----------------------------------------------------------------------
 
@@ -38,16 +39,15 @@ CustomerAddForm.propTypes = {
   currentCustomer: PropTypes.object,
 };
 
+const CONTACT_TYPES = [
+  { value: 'technical', label: 'Technical' },
+  { value: 'financial', label: 'Financial' },
+  { value: 'support', label: 'Support' },
+];
+
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { userId, user } = useAuthContext();
-  console.log('user', userId);
-
-  const { customer } = useSelector((state) => state.customer);
-
-  const { users } = useSelector((state) => state.user);
-
-  const { sites } = useSelector((state) => state.site);
 
   const { spContacts } = useSelector((state) => state.contact);
 
@@ -66,6 +66,26 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     accountManager: Yup.string(),
     projectManager: Yup.string(),
     supportManager: Yup.string(),
+
+    // site details
+    billingSite: Yup.string(),
+    phone: Yup.string().required('Phone is required') ,
+    email: Yup.string().email('Email must be a valid email address').required('Email is required') ,
+    fax: Yup.string().required('Fax Name is required') ,
+    website: Yup.string(),
+    street: Yup.string(),
+    suburb: Yup.string(),
+    city: Yup.string(),
+    region: Yup.string(),
+    country: Yup.string(),
+
+    // contact details
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last Name is required'),
+    title: Yup.string(),
+    contactTypes: Yup.array(),
+    contactPhone: Yup.string(),
+    contactEmail: Yup.string().email('Email must be a valid email address'),
   });
 
   const defaultValues = useMemo(
@@ -103,9 +123,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const values = watch();
 
   useLayoutEffect(() => {
-    // dispatch(getSites());
     dispatch(getSPContacts());
-
   }, [dispatch]);
 
 
@@ -113,10 +131,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     console.log(data);
       try{
         await dispatch(saveCustomer(data));
-        
         reset();
         enqueueSnackbar('Create success!');
-        console.log('customer', customer);
         navigate(PATH_DASHBOARD.customer.view(null));
       } catch(error){
         enqueueSnackbar('Saving failed!');
@@ -127,10 +143,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
+      <Grid container spacing={3}>
+      <CustomerDashboardNavbar/>
+
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
+            <Stack spacing={6}>
             <Box
               rowGap={3}
               columnGap={2}
@@ -175,28 +193,81 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   ))}
               </RHFSelect>
 
-              
+              </Box>
 
-              {/* <RHFSwitch
-              name="isArchived"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    isArchived
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-            /> */}
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+
+                <RHFTextField name="phone" label="Phone" />
+
+                <RHFTextField name="email" label="Email" />
+
+                <RHFTextField name="fax" label="Fax" />
+
+                <RHFTextField name="webiste" label="Website" />
+
+                <RHFTextField name="street" label="Street" />
+
+                <RHFTextField name="suburb" label="Suburb" />
+
+                <RHFTextField name="city" label="City" />
+
+                <RHFTextField name="region" label="Region" />
+{/* 
+                <RHFAutocomplete
+                  name="tags"
+                  label="Tags"
+                  multiple
+                  freeSolo
+                  options={countries.map((country) => country)}
+                  ChipProps={{ size: 'small' }}
+                /> */}
+                <RHFSelect native name="country" label="Country" placeholder="Country">
+                  <option value="" />
+                  {countries.map((country) => (
+                    <option key={country.code} value={country.label}>
+                      {country.label}
+                    </option>
+                  ))}
+                </RHFSelect>
+
+              </Box>
+
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+              <RHFTextField name="firstName" label="First Name" />
+
+              <RHFTextField name="lastName" label="Last Name" />
+
+              <RHFTextField name="title" label="Title" />
+
+              <RHFTextField name="contactPhone" label="Contact Phone" />
+
+              <RHFTextField name="contactEmail" label="Contact Email" />
+
               </Box>
 
               </Stack>
 
-              <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
                 Save Customer
-            </LoadingButton>
+              </LoadingButton>
             </Stack>
                         
             </Card>

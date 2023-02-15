@@ -54,11 +54,11 @@ export default function SiteViewForm({ currentSite = null }) {
         fax: currentSite ? currentSite.fax : site?.fax || 'N/A',
         website: currentSite ? currentSite.website : site?.website || 'N/A',
 
-        street: currentSite ? currentSite.address.street : site?.address.street || 'N/A',
-        suburb: currentSite ? currentSite.address.suburb : site?.address.suburb || 'N/A',
-        city: currentSite ? currentSite.address.city : site?.address.city || 'N/A',
-        region: currentSite ? currentSite.address.region : site?.address.region || 'N/A',
-        country: currentSite ? currentSite.address.country : site?.address.country || 'N/A',
+        street: currentSite ? currentSite.address?.street : site?.address.street || 'N/A',
+        suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || 'N/A',
+        city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
+        region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
+        country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]

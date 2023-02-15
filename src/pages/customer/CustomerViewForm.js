@@ -20,6 +20,8 @@ import Iconify from '../../components/iconify';
 // slices
 import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
 
+import { fDate } from '../../utils/formatTime';
+
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +30,7 @@ export default function CustomerViewForm() {
   const dispatch = useDispatch();
 
   const { customer } = useSelector((state) => state.customer);
+  console.log(customer);
   
   const [editFlag, setEditFlag] = useState(false);
   console.log('editflag', editFlag);
@@ -49,7 +52,9 @@ export default function CustomerViewForm() {
       accountManager: customer?.accountManager || 'N/A',
       projectManager: customer?.projectManager || 'N/A',
       supportManager: customer?.supportManager || 'N/A',
-      mainSite: customer?.mainSite || null
+      mainSite: customer?.mainSite || null,
+      createdAt: customer?.createdAt || '',
+      updatedAt: customer?.updatedAt || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -74,7 +79,7 @@ export default function CustomerViewForm() {
                   toggleEdit(); 
               }}
                 variant="contained"
-                size="small"
+                size="medium"
                 startIcon={<Iconify icon="eva:edit-fill" />}
               >
                 Edit Customer
@@ -119,7 +124,7 @@ export default function CustomerViewForm() {
             
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
              Suppport Manager
             </Typography>
@@ -128,14 +133,34 @@ export default function CustomerViewForm() {
             
           </Grid>
 
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Created At
+            </Typography>
+
+            <Typography variant="body2">{fDate(defaultValues.createdAt)}</Typography>
+            
           </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Updated At
+            </Typography>
+
+            <Typography variant="body2">{fDate(defaultValues.updatedAt)}</Typography>
+            
+          </Grid>
+
+          </Grid>
+          
+          {/* {fDate(createdAt)} */}
 
           {defaultValues.mainSite && <Grid container>
 
 
           <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
             <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-                Main Site Details
+               Site Details: {defaultValues.mainSite.name}
             </Typography>
           </Grid>
 
@@ -144,7 +169,7 @@ export default function CustomerViewForm() {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.phone}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.phone}</Typography>
 
         </Grid>
 
@@ -153,7 +178,7 @@ export default function CustomerViewForm() {
             Email
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.email}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.email}</Typography>
 
         </Grid>
 
@@ -162,7 +187,7 @@ export default function CustomerViewForm() {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.address.street}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.street}</Typography>
 
         </Grid>
 
@@ -171,7 +196,7 @@ export default function CustomerViewForm() {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.address.suburb}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.suburb}</Typography>
 
         </Grid>
 
@@ -180,7 +205,7 @@ export default function CustomerViewForm() {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.address.city}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.city}</Typography>
 
         </Grid>
 
@@ -189,7 +214,7 @@ export default function CustomerViewForm() {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.address.region}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.region}</Typography>
 
         </Grid>
 
@@ -198,7 +223,7 @@ export default function CustomerViewForm() {
             Country
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.address.country}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.country}</Typography>
 
         </Grid>
 
@@ -212,7 +237,8 @@ export default function CustomerViewForm() {
             
           </Grid> */}
 
-            </Grid>}
+            </Grid>
+            }
             </Card>
   );
 }

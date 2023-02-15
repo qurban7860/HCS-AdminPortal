@@ -113,11 +113,8 @@ export function getCustomers() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}customers/customers`);
-      console.log(response);
-      console.log(response.data);
       dispatch(slice.actions.getCustomersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error));
@@ -135,7 +132,6 @@ export function getCustomer(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}customers/customers/${id}`);
       dispatch(slice.actions.getCustomerSuccess(response.data));
       console.log('requested customer', response.data);
-      // dispatch(slice.actions.setResponseMessage('Customers Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -169,26 +165,19 @@ export function saveCustomer(params) {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
-        const formData = new FormData();
-        formData.append('name', params.name);
-        formData.append('tradingName', params.tradingName);
-
         /* eslint-disable */
         let data = {
           name: params.name,
-          tradingName: params.tradingName
+          tradingName: params.tradingName,
+          site: {
+            name: params.name,
+            address: {},
+          },
+          technicalContact: {},
+          billingContact: {},
         };
         /* eslint-enable */
 
-        if(params.mainSite){
-          data.mainSite = params.mainSite;
-        }
-        if(params.sites.length > 0){
-          data.sites = params.sites;
-        }
-        if(params.contacts.length > 0){
-          formData.append('contacts', params.contacts);
-        }
         if(params.accountManager){
           data.accountManager = params.accountManager;        
         }
@@ -204,7 +193,63 @@ export function saveCustomer(params) {
         if(params.primaryTechnicalContact){
           data.primaryTechnicalContact = params.primaryTechnicalContact;        
         }
+        if(params.phone){
+          data.site.phone = params.phone;        
+        }
+        if(params.email){
+          data.site.email = params.email;        
+        }
+        if(params.fax){
+          data.site.fax = params.fax;        
+        }
+        if(params.website){
+          data.site.website = params.website;        
+        }
+        if(params.street){
+          console.log('street', params.street);
+          data.site.address.street = params.street;        
+        }
+        if(params.suburb){
+          data.site.address.suburb = params.suburb;        
+        }
+        if(params.city){
+          data.site.address.city = params.city;        
+        }
+        if(params.region){
+          data.site.address.region = params.region;        
+        }
+        if(params.country){
+          data.site.address.country = params.country;        
+        }
 
+        if(params.firstName){
+          data.billingContact.firstName = params.firstName;
+          data.technicalContact.firstName = params.firstName;
+        }
+
+        if(params.lastName){
+          data.billingContact.lastName = params.lastName;
+          data.technicalContact.lastName = params.lastName;        
+
+        }
+
+        if(params.title){
+          data.billingContact.title = params.title;
+          data.technicalContact.title = params.title;
+
+        }
+
+        if(params.contactPhone){
+          data.billingContact.title = params.title;
+          data.technicalContact.title = params.title;        
+
+        }
+
+        if(params.contactEmail){
+          data.billingContact.contactEmail = params.contactEmail;
+          data.technicalContact.contactEmail = params.contactEmail;        
+
+        }
 
         const response = await axios.post(`${CONFIG.SERVER_URL}customers/customers`, data);
 
