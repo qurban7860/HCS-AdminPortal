@@ -160,7 +160,7 @@ export default function CustomerViewForm() {
 
           <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
             <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-               Site Details: {defaultValues.mainSite.name}
+               Site Details
             </Typography>
           </Grid>
 

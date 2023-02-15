@@ -123,8 +123,18 @@ export default function CustomerSiteList() {
   };
   const dispatch = useDispatch();
 
+  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, formVisibility } = useSelector((state) => state.site);
+
+  const { customer } = useSelector((state) => state.customer);
+
   const [checked, setChecked] = useState(false);
-  const toggleChecked = () => setChecked(value => !value);
+
+  const toggleChecked = () => 
+    {
+      setChecked(value => !value);
+      dispatch(setFormVisibility(!checked));
+    
+    };
 
   const { themeStretch } = useSettingsContext();
 
@@ -138,15 +148,13 @@ export default function CustomerSiteList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, formVisibility } = useSelector((state) => state.site);
-
-  const { customer } = useSelector((state) => state.customer);
-
   console.log(customer);
   console.log('formVisibility', formVisibility);
+  console.log('editformvibis', siteEditFormVisibility);
+  console.log('checked', checked);
 
   useLayoutEffect(() => {
-    dispatch(setFormVisibility(checked));
+    // dispatch(setFormVisibility(checked));
     if(!formVisibility && !siteEditFormVisibility){
       dispatch(getSites(customer._id));
     }
@@ -163,7 +171,7 @@ export default function CustomerSiteList() {
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
 
-  
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -217,7 +225,10 @@ export default function CustomerSiteList() {
                   {site.name}
                 </Typography>
                 {site.address && <Typography sx={{ color: 'text.secondary' }}>
-                  {site.address.street}, {site.address.suburb}, {site.address.city}, {site.address.region}, {site.address.country}
+                  {site.address.suburb}, 
+                  {site.address.city}, 
+                  {site.address.region}, 
+                  {site.address.country}
                   </Typography>
                 }
               </AccordionSummary>
