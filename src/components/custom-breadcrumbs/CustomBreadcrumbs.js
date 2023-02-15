@@ -16,7 +16,7 @@ CustomBreadcrumbs.propTypes = {
 };
 
 export default function CustomBreadcrumbs({
-  links,
+  links = [],
   action,
   heading,
   moreLink,
@@ -24,7 +24,10 @@ export default function CustomBreadcrumbs({
   sx,
   ...other
 }) {
-  const lastLink = links[links.length - 1].name;
+  let lastLink = null;
+  if(links.length > 0){
+    lastLink = links[links.length - 1].name;
+  }
 
   return (
     <Box sx={{ mb: 5, ...sx }}>
@@ -38,7 +41,7 @@ export default function CustomBreadcrumbs({
           )}
 
           {/* BREADCRUMBS */}
-          {!!links.length && (
+          {!!links.length && links.length > 0 && (
             <Breadcrumbs separator={<Separator />} {...other}>
               {links.map((link) => (
                 <LinkItem

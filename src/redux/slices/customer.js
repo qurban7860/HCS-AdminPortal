@@ -10,7 +10,7 @@ import { CONFIG } from '../../config-global';
 
 const initialState = {
   intial: false,
-  editFormVisibility: false,
+  customerEditFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -32,9 +32,9 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setEditFormVisibility(state, action){
+    setCustomerEditFormVisibility(state, action){
       console.log('toggle', action.payload);
-      state.formVisibility = action.payload;
+      state.customerEditFormFlag = action.payload;
     },
     
     // RESET CUSTOMER
@@ -95,7 +95,7 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setEditFormVisibility,
+  setCustomerEditFormVisibility,
   resetCustomer,
   getCart,
   addToCart,
@@ -198,6 +198,13 @@ export function saveCustomer(params) {
         if(params.supportManager){
           data.supportManager = params.supportManager;        
         }
+        if(params.primaryBillingContact){
+          data.primaryBillingContact = params.primaryBillingContact;        
+        }
+        if(params.primaryTechnicalContact){
+          data.primaryTechnicalContact = params.primaryTechnicalContact;        
+        }
+
 
         const response = await axios.post(`${CONFIG.SERVER_URL}customers/customers`, data);
 
@@ -240,13 +247,19 @@ export function updateCustomer(params) {
       if(params.supportManager){
         data.supportManager = params.supportManager;
       }
+      if(params.primaryBillingContact){
+        data.primaryBillingContact = params.primaryBillingContact;        
+      }
+      if(params.primaryTechnicalContact){
+        data.primaryTechnicalContact = params.primaryTechnicalContact;        
+      }
       
       const response = await axios.patch(`${CONFIG.SERVER_URL}customers/customers/${params.id}`,
         data
       );
 
       dispatch(getCustomer(params.id));
-      dispatch(slice.actions.setEditFormVisibility(false));
+      dispatch(slice.actions.setCustomerEditFormVisibility(false));
 
       // this.updateCustomerSuccess(response);
 

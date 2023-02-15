@@ -13,7 +13,7 @@ import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment
 // slice
 import { getUsers } from '../../redux/slices/user';
 import { getSites } from '../../redux/slices/site';
-import { getContacts } from '../../redux/slices/contact';
+import { getContacts, getSPContacts } from '../../redux/slices/contact';
 import { saveCustomer, resetCustomer } from '../../redux/slices/customer';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -49,7 +49,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { sites } = useSelector((state) => state.site);
 
-  const { contacts } = useSelector((state) => state.contact);
+  const { spContacts } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
   
@@ -84,7 +84,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       }
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentCustomer]
+    []
   );
 
   const methods = useForm({
@@ -103,9 +103,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getUsers());
     // dispatch(getSites());
-    // dispatch(getContacts());
+    dispatch(getSPContacts());
 
   }, [dispatch]);
 
@@ -145,40 +144,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="tradingName" label="Trading Name" />
 
-              {/* <RHFSelect native name="mainSite" label="Main Site">
-                    <option value="" selected/>
-                    { 
-                    sites.length > 0 && sites.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFMultiSelect
-                  customObject
-                  customName="name"
-                  chip
-                  checkbox
-                  name="sites"
-                  label="Sites"
-                  options={sites}
-                />
-
-              <RHFMultiSelect
-                  customObject
-                  customName="firstName"
-                  chip
-                  checkbox
-                  name="contacts"
-                  label="Contacts"
-                  options={contacts}
-                /> */}
 
               <RHFSelect native name="accountManager" label="Account Manager">
                     <option value="" selected/>
                     { 
-                    users.length > 0 && users.map((option) => (
+                    spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
                       {option.firstName} {option.lastName}
                     </option>
@@ -188,7 +158,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFSelect native name="projectManager" label="Project Manager">
                     <option value="" selected/>
                     { 
-                    users.length > 0 && users.map((option) => (
+                    spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
                       {option.firstName} {option.lastName}
                     </option>
@@ -198,12 +168,14 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFSelect native name="supportManager" label="Support Manager">
                     <option value="" selected/>
                     { 
-                    users.length > 0 && users.map((option) => (
+                    spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
                       {option.firstName} {option.lastName}
                     </option>
                   ))}
               </RHFSelect>
+
+              
 
               {/* <RHFSwitch
               name="isArchived"

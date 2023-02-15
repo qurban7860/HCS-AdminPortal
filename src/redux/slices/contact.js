@@ -15,6 +15,7 @@ const initialState = {
   isLoading: false,
   error: null,
   contacts: [],
+  spContacts: [],
   contact: null,
   contactParams: {
 
@@ -44,6 +45,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.contacts = action.payload;
+      state.initial = true;
+    },
+
+    // GET SP Contacts
+    getSPContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.spContacts = action.payload;
       state.initial = true;
     },
 
@@ -153,11 +162,34 @@ export function updateContact(params) {
 
 // ----------------------------------------------------------------------
 
-export function getContacts() {
+export function getSPContacts() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}contacts`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts/sp/data`);
+      console.log(response);
+      console.log(response.data);
+      dispatch(slice.actions.getSPContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getContacts(customerId = null) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const customerFilter  =  
+      {params: {
+          customer: customerId
+      }};
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts`, customerFilter);
       console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getContactsSuccess(response.data));

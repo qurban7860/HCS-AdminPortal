@@ -144,7 +144,8 @@ export default function CustomerSiteList() {
 
   useLayoutEffect(() => {
     dispatch(setFormVisibility(checked));
-  }, [dispatch, checked]);
+    dispatch(getSites(customer._id));
+  }, [dispatch, checked, customer]);
 
   useEffect(() => {
     if (initial) {

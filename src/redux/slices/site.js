@@ -193,11 +193,20 @@ export function getSites(params = null) {
       //     product: this.product
       //   }
       // }
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/sites` , {
-        params: {
-          customer: 'abc'
+      // const customer_iid = 63e9dd63c2d169a9701d0;
+      let response = null;
+      if(params){
+        response = await axios.get(`${CONFIG.SERVER_URL}customers/sites` , 
+        {
+          params: {
+            customer: params
+          }
         }
-      });
+        );
+      }else{
+        response = await axios.get(`${CONFIG.SERVER_URL}customers/sites`);
+      }
+      
       console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getSitesSuccess(response.data));

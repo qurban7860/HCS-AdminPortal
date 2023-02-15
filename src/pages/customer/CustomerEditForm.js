@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -15,6 +15,10 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 import { CONFIG } from '../../config-global';
 // slice
 import { updateCustomer } from '../../redux/slices/customer';
+import { getContacts, getSPContacts } from '../../redux/slices/contact';
+import { getSites } from '../../redux/slices/site';
+
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -29,7 +33,6 @@ import FormProvider, {
 } from '../../components/hook-form';
 
 
-
 // ----------------------------------------------------------------------
 
 
@@ -41,7 +44,7 @@ export default function CustomerEditForm() {
 
   const { sites } = useSelector((state) => state.site);
 
-  const { contacts } = useSelector((state) => state.contact);
+  const { contacts, spContacts } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
 
@@ -52,12 +55,14 @@ export default function CustomerEditForm() {
   const EditCustomerSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     tradingName: Yup.string().min(5).max(40).required('Trading Name is required'),
-    // mainSite: Yup.string(),
+    mainSite: Yup.string(),
     // sites: Yup.array(),
     // contacts: Yup.array(),
     accountManager: Yup.string(),
     projectManager: Yup.string(),
     supportManager: Yup.string(),
+    primaryBillingContact: Yup.string(),
+    primaryTechnicalContact: Yup.string(),
   });
 
 
@@ -66,12 +71,12 @@ export default function CustomerEditForm() {
       id: customer?._id || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
-      // mainSite: customer?.mainSite || '',
-      // sites: customer?.sites || [],
-      // contacts: customer?.contacts || [],
-      accountManager: customer?.accountManager._id || '',
-      projectManager: customer?.projectManager._id || '',
-      supportManager: customer?.supportManager._id || '',
+      mainSite: customer?.mainSite?._id || '',
+      accountManager: customer?.accountManager?._id || '',
+      projectManager: customer?.projectManager?._id || '',
+      supportManager: customer?.supportManager?._id || '',
+      primaryBillingContact: '',
+      primaryTechnicalContact: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -91,6 +96,13 @@ export default function CustomerEditForm() {
   } = methods;
 
   const values = watch();
+
+  useLayoutEffect(() => {
+    dispatch(getContacts(customer._id));
+    dispatch(getSites(customer._id));
+    // dispatch(getSPContacts());
+
+  }, [dispatch, customer]);
 
   useEffect(() => {
     if (customer) {
@@ -133,7 +145,7 @@ export default function CustomerEditForm() {
 
                 <RHFTextField name="tradingName" label="Trading Name" />
 
-                {/* <RHFSelect native name="mainSite" label="Main Site">
+                <RHFSelect native name="mainSite" label="Main Site">
                   <option value="" selected />
                   {
                     sites.length > 0 && sites.map((option) => (
@@ -143,7 +155,7 @@ export default function CustomerEditForm() {
                     ))}
                 </RHFSelect>
 
-                <RHFMultiSelect
+                {/* <RHFMultiSelect
                   customObject
                   customName="name"
                   chip
@@ -163,10 +175,31 @@ export default function CustomerEditForm() {
                   options={contacts}
                 /> */}
 
+
+              <RHFSelect native name="primaryBillingContact" label="Primary Billing Contact">
+                    <option value="" selected/>
+                    { 
+                    contacts.length > 0 && contacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+
+              <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
+                    <option value="" selected/>
+                    { 
+                    contacts.length > 0 && contacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+
                 <RHFSelect native name="accountManager" label="Account Manager">
                   <option value="" selected />
                   {
-                    users.length > 0 && users.map((option) => (
+                    spContacts.length > 0 && spContacts.map((option) => (
                       <option key={option._id} value={option._id}>
                         {option.firstName} {option.lastName}
                       </option>
@@ -176,7 +209,7 @@ export default function CustomerEditForm() {
                 <RHFSelect native name="projectManager" label="Project Manager">
                   <option value="" selected />
                   {
-                    users.length > 0 && users.map((option) => (
+                    spContacts.length > 0 && spContacts.map((option) => (
                       <option key={option._id} value={option._id}>
                         {option.firstName} {option.lastName}
                       </option>
@@ -186,7 +219,7 @@ export default function CustomerEditForm() {
                 <RHFSelect native name="supportManager" label="Support Manager">
                   <option value="" selected />
                   {
-                    users.length > 0 && users.map((option) => (
+                    spContacts.length > 0 && spContacts.map((option) => (
                       <option key={option._id} value={option._id}>
                         {option.firstName} {option.lastName}
                       </option>

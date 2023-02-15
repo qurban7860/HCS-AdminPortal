@@ -9,7 +9,7 @@ import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/mater
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomers, getCustomer, setEditFormVisibility } from '../../redux/slices/customer';
+import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
 import { getDepartments } from '../../redux/slices/department';
 import { setFormVisibility } from '../../redux/slices/site';
 
@@ -63,7 +63,7 @@ export default function CustomerViewPage({editPage}) {
 
   const { themeStretch } = useSettingsContext();
 
-  const { customer, editFormVisibility } = useSelector((state) => state.customer);
+  const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
 
   const { site } = useSelector((state) => state.site);
 
@@ -83,17 +83,17 @@ export default function CustomerViewPage({editPage}) {
   const [customerFlag, setCustomerFlag] = useState(true);
 
   useLayoutEffect(() => {
-    dispatch(setEditFormVisibility(editFlag));
+    dispatch(setCustomerEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
 
   useEffect(() => {
-    if(editFlag){
+    if(customerEditFormFlag){
       setCurrentComponent(<CustomerEditForm/>);
     }else{
       setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm/>);        
     }
-  }, [editPage, site, editFlag, customer]);
+  }, [editPage, site, customerEditFormFlag, customer]);
 
 
   const TABS = [
@@ -121,8 +121,14 @@ export default function CustomerViewPage({editPage}) {
     },
     {
       disabled: customerFlag,
-      value: 'repair-history',
-      label: 'Repair History',
+      value: 'notes',
+      label: 'Notes',
+      icon: <Iconify icon="eva:archive-outline" />,
+    },
+    {
+      disabled: customerFlag,
+      value: 'documents',
+      label: 'Documents',
       icon: <Iconify icon="eva:archive-outline" />,
     },
   ];
@@ -136,27 +142,6 @@ export default function CustomerViewPage({editPage}) {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Customer View"
-          links={[
-            { name: 'Customer', href: PATH_DASHBOARD.customer.dashboard },
-
-            { name: 'View' },
-            
-          ]}
-          action={
-            currentTab === 'customer-edit' &&
-            <Button
-                onClick={() => { 
-                  toggleEditFlag(); 
-                  // setCurrentComponent(<CustomerEditForm/>);
-              }}
-                variant="contained"
-                startIcon={<Iconify icon="eva:edit-fill" />}
-              >
-                Edit Customer
-              </Button>
-            }
-          
-
         />
         <Card
           sx={{

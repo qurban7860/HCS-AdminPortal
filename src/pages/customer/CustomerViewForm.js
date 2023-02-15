@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -18,20 +18,23 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 
 // slices
-import { getCustomers, getCustomer } from '../../redux/slices/customer';
-
-
-
-
-
-
+import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
 
 
 // ----------------------------------------------------------------------
 
 export default function CustomerViewForm() {
 
+  const dispatch = useDispatch();
+
   const { customer } = useSelector((state) => state.customer);
+  
+  const [editFlag, setEditFlag] = useState(false);
+  console.log('editflag', editFlag);
+
+  const toggleEdit = () => {
+    dispatch(setCustomerEditFormVisibility(true));
+  }
   
   const navigate = useNavigate();
 
@@ -46,6 +49,7 @@ export default function CustomerViewForm() {
       accountManager: customer?.accountManager || 'N/A',
       projectManager: customer?.projectManager || 'N/A',
       supportManager: customer?.supportManager || 'N/A',
+      mainSite: customer?.mainSite || null
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -57,96 +61,26 @@ export default function CustomerViewForm() {
 
 
   return (
-   
-    //   <CustomBreadcrumbs
-    //     heading="Customer List"
-    //     links={[
-    //       // { name: 'Dashboard', href: PATH_DASHBOARD.root },
-    //       // {
-    //       //   name: 'Customer',
-    //       //   href: PATH_DASHBOARD.customer.list,
-    //       // },
-    //       // { name: 'List' },
-    //     ]}
-    //     action={
-    //       <Button
-    //         component={RouterLink}
-    //         to={PATH_DASHBOARD.customer.new}
-    //         variant="contained"
-    //         // startIcon={<Iconify icon="eva:plus-fill" />}
-    //       >
-    //         New Customer
-    //       </Button>
-    //     }
-    //   />
-    // </>
 
       <Card sx={{ pt: 5, px: 5 }}>
-        {/* <Grid container
-          sx={{
-            paddingBottom: 2
-          }}>
+    
+        <Grid container>
 
-          <Box
-            rowGap={4}
-            columnGap={2}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(4, 1fr)',
-              sm: 'repeat(4, 1fr)',
-            }}
-          >
-            <Stack>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+
+        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <Button
-                component={RouterLink}
-                to={PATH_DASHBOARD.customer.edit()}
+                onClick={() => { 
+                  toggleEdit(); 
+              }}
                 variant="contained"
+                size="small"
                 startIcon={<Iconify icon="eva:edit-fill" />}
               >
                 Edit Customer
               </Button>
-      
-      
-            </Stack>
-            <Stack>
-              <Button
-                component={<CustomerViewPage editPage/>}
-                to={<CustomerViewPage editPage/>}
-                variant="contained"
-                startIcon={<Iconify icon="eva:plus-fill" />}
-              >
-                Add Customer
-              </Button>
-      
-      
-            </Stack>
-
-          </Box>    
-        </Grid> */}
-
-        {/* <CustomBreadcrumbs */}
-        {/* // heading="Customer List"
-        // links={[
-        //   { name: 'Dashboard', href: PATH_DASHBOARD.root },
-        //   {
-        //     name: 'Customer',
-        //     href: PATH_DASHBOARD.customer.list,
-        //   },
-        //   { name: 'List' },
-        // ]}
-        // action={ */}
-           {/* <Button
-            component={RouterLink}
-            to={PATH_DASHBOARD.customer.new}
-            variant="contained"
-            // startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            New Customer
-          </Button> */} 
-        {/* }/ */}
-      {/* /> */}
-    
-        <Grid container>
+        </Stack>
+        </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
@@ -194,16 +128,91 @@ export default function CustomerViewForm() {
             
           </Grid>
 
+          </Grid>
+
+          {defaultValues.mainSite && <Grid container>
+
+
+          <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
+            <Typography variant="subtitle2" sx={{ color: '#131414' }}>
+                Main Site Details
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Phone
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite?.phone}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Email
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite?.email}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Street
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite?.address.street}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Suburb
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite?.address.suburb}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            City
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite?.address.city}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Region
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite?.address.region}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Country
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite?.address.country}</Typography>
+
+        </Grid>
+
+
           {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Department
             </Typography>
             
-            <Typography variant="body2">{defaultValues.department}</Typography>
+            <Typography variant="body2">{customer.mainSite.department}</Typography>
             
           </Grid> */}
 
-            </Grid>
+            </Grid>}
             </Card>
   );
 }
