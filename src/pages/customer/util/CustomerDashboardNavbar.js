@@ -5,11 +5,16 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import CustomerWidget from './CustomerWidget';
 
 import { PATH_DASHBOARD } from '../../../routes/paths';
+import { useSnackbar } from '../../../components/snackbar';
+
 // ----------------------------------------------------------------------
 
 export default function CustomerDashboardNavbar() {
 
   const navigate = useNavigate();
+
+  const { enqueueSnackbar } = useSnackbar();
+
 
 
   const handleAddCustomer = () => {
@@ -21,7 +26,8 @@ export default function CustomerDashboardNavbar() {
   };
 
   const handleSearchSite = () => {
-    navigate(PATH_DASHBOARD.site.list);
+    enqueueSnackbar('Under Construction');
+    // navigate(PATH_DASHBOARD.site.list);
   };
 
   const handleSearchContact = () => {

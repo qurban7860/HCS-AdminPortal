@@ -44,7 +44,7 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'Customer', path: PATH_CUSTOMER.general.app, icon: ICONS.analytics },
+      { title: 'Customer', path: PATH_CUSTOMER.general.app, icon: ICONS.ecommerce },
       // deleted components
       // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
       // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },
@@ -64,9 +64,9 @@ const navConfig = [
         path: PATH_DASHBOARD.user.root,
         icon: ICONS.user,
         children: [
-          { title: 'profile', path: PATH_DASHBOARD.user.profile },
-          { title: 'cards', path: PATH_DASHBOARD.user.cards },
-          { title: 'list', path: PATH_DASHBOARD.user.list },
+          // { title: 'profile', path: PATH_DASHBOARD.user.profile },
+          // { title: 'cards', path: PATH_DASHBOARD.user.cards },
+          // { title: 'list', path: PATH_DASHBOARD.user.list },
           { title: 'create', path: PATH_DASHBOARD.user.new },
           { title: 'edit', path: PATH_DASHBOARD.user.demoEdit },
           { title: 'account', path: PATH_DASHBOARD.user.account },
