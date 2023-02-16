@@ -50,10 +50,9 @@ import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 const TABLE_HEAD = [
   { id: 'name', label: 'Customer', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  // { id: 'mainSiteAddress', label: 'Address', align: 'left' },
+  { id: 'mainSiteAddress', label: 'Address', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
 
 ];
 

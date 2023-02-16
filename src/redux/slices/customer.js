@@ -175,6 +175,7 @@ export function saveCustomer(params) {
           },
           technicalContact: {},
           billingContact: {},
+          type: params.type
         };
         /* eslint-enable */
 

@@ -98,6 +98,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       accountManager: '',
       projectManager: '',
       supportManager: '',
+      type: 'Customer',
       loginUser: {
         userId,
         email: user.email,
