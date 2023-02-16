@@ -240,14 +240,14 @@ export function saveCustomer(params) {
         }
 
         if(params.contactPhone){
-          data.billingContact.title = params.title;
-          data.technicalContact.title = params.title;        
+          data.billingContact.phone = params.contactPhone;
+          data.technicalContact.phone = params.contactPhone;        
 
         }
 
         if(params.contactEmail){
-          data.billingContact.contactEmail = params.contactEmail;
-          data.technicalContact.contactEmail = params.contactEmail;        
+          data.billingContact.email = params.contactEmail;
+          data.technicalContact.email = params.contactEmail;        
 
         }
 
