@@ -166,6 +166,15 @@ export default function CustomerViewForm() {
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Name
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite.name}</Typography>
+
+        </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Phone
           </Typography>
 

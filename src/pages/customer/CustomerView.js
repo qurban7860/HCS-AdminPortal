@@ -108,7 +108,7 @@ export default function CustomerViewPage({editPage}) {
       disabled: customerEditFormFlag,
       value: 'sites',
       label: 'Sites',
-      icon: <Iconify icon="eva:settings-2-outline" />,
+      icon: <Iconify icon="eva:navigation-2-outline" />,
       component: <CustomerSiteList/>,
 
     },
@@ -116,7 +116,7 @@ export default function CustomerViewPage({editPage}) {
       disabled: customerEditFormFlag,
       value: 'contacts',
       label: 'Contacts',
-      icon: <Iconify icon="eva:clock-outline" />,
+      icon: <Iconify icon="eva:people-outline" />,
       component: <CustomerContactList/>,
 
     },
@@ -130,7 +130,7 @@ export default function CustomerViewPage({editPage}) {
       disabled: customerEditFormFlag,
       value: 'documents',
       label: 'Documents',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="eva:book-fill" />,
     },
   ];
 

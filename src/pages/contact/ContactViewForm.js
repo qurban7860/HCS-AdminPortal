@@ -26,6 +26,8 @@ ContactViewForm.propTypes = {
 };
 export default function ContactViewForm({ currentContact = null }) {
 
+  console.log('current contact', currentContact);
+
   const { contact } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
@@ -50,7 +52,7 @@ export default function ContactViewForm({ currentContact = null }) {
 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [contact]
+    [currentContact, contact]
   );
 
   console.log(defaultValues); 
@@ -59,8 +61,8 @@ export default function ContactViewForm({ currentContact = null }) {
 
 
   return (
-       <Card sx={{ pt: 5, px: 5 }}>
-        {/* <Stack alignItems="flex-end" sx={{ mt: 2 }}>
+      <Card sx={{ pt: 5, px: 5 }}>
+      <Stack alignItems="flex-end" sx={{ mt: 2 }}>
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
@@ -69,7 +71,7 @@ export default function ContactViewForm({ currentContact = null }) {
           Edit
         </Button>
 
-      </Stack> */}
+      </Stack>
 
         <Grid container>
 
@@ -107,6 +109,15 @@ export default function ContactViewForm({ currentContact = null }) {
             </Typography>
 
             <Typography variant="body2">{defaultValues.title}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+              Contact Types
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.contactTypes.toString()}</Typography>
             
           </Grid>
 

@@ -61,7 +61,7 @@ export default function SiteViewForm({ currentSite = null }) {
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [site]
+    [currentSite, site]
   );
 
   console.log(defaultValues);

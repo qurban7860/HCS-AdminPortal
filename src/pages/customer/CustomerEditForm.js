@@ -14,7 +14,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../config-global';
 // slice
-import { updateCustomer } from '../../redux/slices/customer';
+import { updateCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
 import { getContacts, getSPContacts } from '../../redux/slices/contact';
 import { getSites } from '../../redux/slices/site';
 
@@ -111,6 +111,10 @@ export default function CustomerEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer]);
 
+  const toggleCancel = () => 
+    {
+      dispatch(setCustomerEditFormVisibility(false));
+    };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -154,26 +158,6 @@ export default function CustomerEditForm() {
                       </option>
                     ))}
                 </RHFSelect>
-
-                {/* <RHFMultiSelect
-                  customObject
-                  customName="name"
-                  chip
-                  checkbox
-                  name="sites"
-                  label="Sites"
-                  options={sites}
-                />
-
-                <RHFMultiSelect
-                  customObject
-                  customName="firstName"
-                  chip
-                  checkbox
-                  name="contacts"
-                  label="Contacts"
-                  options={contacts}
-                /> */}
 
               </Box>  
               <Box
@@ -252,14 +236,37 @@ export default function CustomerEditForm() {
 
               </Box>
 
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(5, 1fr)',
+                }}
+              > 
+
+                <LoadingButton 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  loading={isSubmitting}>
+                    Save Changes
+                </LoadingButton>
+
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+            </Box>
+
             </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Changes
-              </LoadingButton>
-            </Stack>
-
+            
+            
           </Card>
 
         </Grid>
