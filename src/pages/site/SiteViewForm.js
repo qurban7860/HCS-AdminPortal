@@ -70,8 +70,8 @@ export default function SiteViewForm({ currentSite = null }) {
 
 
   return (
-    <Card sx={{ pt: 5, px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2 }}>
+    <Card sx={{ px: 5 }}>
+      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
@@ -84,7 +84,7 @@ export default function SiteViewForm({ currentSite = null }) {
       <Grid container>
 
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
@@ -105,6 +105,16 @@ export default function SiteViewForm({ currentSite = null }) {
 
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Fax
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.fax}</Typography>
+
+        </Grid>
+
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Email
           </Typography>
 
@@ -112,14 +122,6 @@ export default function SiteViewForm({ currentSite = null }) {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Fax
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.fax}</Typography>
-
-        </Grid>
 
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>

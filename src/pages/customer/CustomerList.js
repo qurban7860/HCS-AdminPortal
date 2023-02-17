@@ -220,7 +220,7 @@ export default function CustomerList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
       <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
-          </Grid>
+      </Grid>
         {/* <CustomBreadcrumbs
           heading="Customer List"
           links={[

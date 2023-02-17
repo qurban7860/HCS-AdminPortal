@@ -68,7 +68,7 @@
         firstName: contact?.firstName || '',
         lastName: contact?.lastName || '',
         title: contact?.title || '',
-        contactTypes: contact?.contactTypes[0].split(',') || [],
+        contactTypes: contact?.contactTypes[0]?.split(',') || [],
         phone: contact?.phone || '',
         email: contact?.email || '',
       }),
@@ -135,6 +135,8 @@
 
               <RHFTextField name="lastName" label="Last Name" />
 
+              <RHFTextField name="title" label="Title" />
+
               <RHFMultiSelect
                 chip
                 checkbox
@@ -142,8 +144,6 @@
                 label="Contact Types"
                 options={CONTACT_TYPES}
               />
-
-              <RHFTextField name="title" label="Title" />
 
               <RHFTextField name="phone" label="Phone" />
 

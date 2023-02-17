@@ -225,11 +225,8 @@ export default function CustomerContactList() {
                 <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
                   {contact.firstName} {contact.lastName} 
                 </Typography>
-                {contact.address && <Typography sx={{ color: 'text.secondary' }}>
-                  {contact.address.suburb}, 
-                  {contact.address.city}, 
-                  {contact.address.region}, 
-                  {contact.address.country}
+                {contact.email && <Typography sx={{ color: 'text.secondary' }}>
+                  {contact.email}
                   </Typography>
                 }
               </AccordionSummary>

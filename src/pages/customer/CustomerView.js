@@ -100,7 +100,7 @@ export default function CustomerViewPage({editPage}) {
   const TABS = [
     {
       value: 'customer-edit',
-      label: 'Basic Info',
+      label: 'Customer Info',
       icon: <Iconify icon="ic:round-account-box" />,
       component: currentComponent
     },
@@ -132,6 +132,13 @@ export default function CustomerViewPage({editPage}) {
       label: 'Documents',
       icon: <Iconify icon="eva:book-fill" />,
     },
+    {
+      disabled: customerEditFormFlag,
+      value: 'machines',
+      label: 'Machines',
+      icon: <Iconify icon="eva:settings-2-outline" />,
+    }
+
   ];
 
   return (
@@ -141,9 +148,9 @@ export default function CustomerViewPage({editPage}) {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+        {/* <CustomBreadcrumbs
           heading="Customer View"
-        />
+        /> */}
         <Card
           sx={{
             mb: 3,

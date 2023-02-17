@@ -45,6 +45,12 @@ const CONTACT_TYPES = [
   { value: 'support', label: 'Support' },
 ];
 
+const types = [
+  { value: 'technical', label: 'Technical' },
+  { value: 'financial', label: 'Financial' },
+  { value: 'support', label: 'Support' },
+];
+
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { userId, user } = useAuthContext();
@@ -148,8 +154,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       <CustomerDashboardNavbar/>
 
         <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={6}>
+          <Card sx={{ p: 3, mb: 3 }}>
+            <Stack spacing={3}>
             <Box
               rowGap={3}
               columnGap={2}
@@ -162,7 +168,111 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFTextField name="name" label="Customer Name" />
 
               <RHFTextField name="tradingName" label="Trading Name" />
+              
+              <RHFTextField name="phone" label="Phone" />
 
+              <RHFTextField name="fax" label="Fax" />
+
+              <RHFTextField name="email" label="Email" />
+
+              <RHFTextField name="webiste" label="Website" />
+
+              </Box>
+              </Stack>
+              </Card>
+              
+              <Card sx={{ p: 3, mb: 3 }}>
+            <Stack spacing={3}>
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Address Information
+              </Typography>
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+
+                <RHFTextField name="street" label="Street" />
+
+                <RHFTextField name="suburb" label="Suburb" />
+
+                <RHFTextField name="city" label="City" />
+
+                <RHFTextField name="region" label="Region" />
+{/* 
+                <RHFAutocomplete
+                  name="tags"
+                  label="Tags"
+                  multiple
+                  freeSolo
+                  options={countries.map((country) => country)}
+                  ChipProps={{ size: 'small' }}
+                /> */}
+                <RHFSelect native name="country" label="Country" placeholder="Country">
+                  <option value="" />
+                  {countries.map((country) => (
+                    <option key={country.code} value={country.label}>
+                      {country.label}
+                    </option>
+                  ))}
+                </RHFSelect>
+
+              </Box>
+              </Stack>
+              </Card>
+
+              <Card sx={{ p: 3, mb: 3 }}>
+            <Stack spacing={3}>
+
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Contact Information
+              </Typography>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+              <RHFTextField name="firstName" label="First Name" />
+
+              <RHFTextField name="lastName" label="Last Name" />
+
+              <RHFTextField name="title" label="Title" />
+
+              <RHFTextField name="contactPhone" label="Contact Phone" />
+
+              <RHFTextField name="contactEmail" label="Contact Email" />
+
+              </Box>
+
+              </Stack>
+
+              </Card>
+
+              <Card sx={{ p: 3 }}>
+            <Stack spacing={3}>
+
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Howick Resources
+              </Typography>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
 
               <RHFSelect native name="accountManager" label="Account Manager">
                     <option value="" selected/>
@@ -193,73 +303,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-
-              </Box>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-
-                <RHFTextField name="phone" label="Phone" />
-
-                <RHFTextField name="email" label="Email" />
-
-                <RHFTextField name="fax" label="Fax" />
-
-                <RHFTextField name="webiste" label="Website" />
-
-                <RHFTextField name="street" label="Street" />
-
-                <RHFTextField name="suburb" label="Suburb" />
-
-                <RHFTextField name="city" label="City" />
-
-                <RHFTextField name="region" label="Region" />
-{/* 
-                <RHFAutocomplete
-                  name="tags"
-                  label="Tags"
-                  multiple
-                  freeSolo
-                  options={countries.map((country) => country)}
-                  ChipProps={{ size: 'small' }}
-                /> */}
-                <RHFSelect native name="country" label="Country" placeholder="Country">
-                  <option value="" />
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.label}>
-                      {country.label}
-                    </option>
-                  ))}
-                </RHFSelect>
-
-              </Box>
-
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-              <RHFTextField name="firstName" label="First Name" />
-
-              <RHFTextField name="lastName" label="Last Name" />
-
-              <RHFTextField name="title" label="Title" />
-
-              <RHFTextField name="contactPhone" label="Contact Phone" />
-
-              <RHFTextField name="contactEmail" label="Contact Email" />
 
               </Box>
 

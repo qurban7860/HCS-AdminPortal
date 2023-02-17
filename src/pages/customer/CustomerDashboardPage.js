@@ -64,7 +64,7 @@ export default function CustomerDashboardPage() {
         <title> General: App | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
 

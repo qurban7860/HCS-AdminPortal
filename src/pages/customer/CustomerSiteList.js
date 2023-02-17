@@ -225,10 +225,11 @@ export default function CustomerSiteList() {
                   {site.name}
                 </Typography>
                 {site.address && <Typography sx={{ color: 'text.secondary' }}>
-                  {site.address.suburb}, 
-                  {site.address.city}, 
-                  {site.address.region}, 
-                  {site.address.country}
+                  {site.address?.street ? `${site.address.street}` : ''}
+                  {site.address?.suburb ? `, ${site.address.suburb}` : ''}
+                  {site.address?.city ? `, ${site.address.city}` : ''}
+                  {site.address?.region ? `, ${site.address.region}` : ''}
+                  {site.address?.country ? `, ${site.address.country}` : ''}
                   </Typography>
                 }
               </AccordionSummary>

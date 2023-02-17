@@ -29,7 +29,6 @@ export const PATH_PAGE = {
   page500: '/500',
   components: '/components',
 };
-
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),

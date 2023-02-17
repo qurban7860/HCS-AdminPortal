@@ -67,11 +67,9 @@ export default function CustomerViewForm() {
 
   return (
 
-      <Card sx={{ pt: 5, px: 5 }}>
+      <Card sx={{ px: 5 }}>
     
-        <Grid container>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+      <Grid item xs={12} sm={12} sx={{ mb: -4 }}>
 
         <Stack alignItems="flex-end" sx={{ mt: 3 }}>
               <Button
@@ -86,6 +84,8 @@ export default function CustomerViewForm() {
               </Button>
         </Stack>
         </Grid>
+
+        <Grid container>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
@@ -105,6 +105,24 @@ export default function CustomerViewForm() {
             <Typography variant="body2">{defaultValues.tradingName}</Typography>
             
           </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Phone
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite.phone}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Email
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite.email}</Typography>
+
+        </Grid>
 
           <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
@@ -173,21 +191,12 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Phone
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.phone}</Typography>
-
-        </Grid>
-
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Email
+            Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.email}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite?.fax}</Typography>
 
         </Grid>
 

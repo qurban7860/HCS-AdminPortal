@@ -77,8 +77,6 @@ const rootReducer = combineReducers({
   site: persistReducer(sitePersistConfig, siteReducer),
   contact: persistReducer(contactPersistConfig, contactReducer),
   note: persistReducer(notePersistConfig, noteReducer),
-
-
 });
 
 export default rootReducer;
