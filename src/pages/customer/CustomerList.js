@@ -217,7 +217,7 @@ export default function CustomerList() {
         <title> Customer: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
       <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
       </Grid>
@@ -242,7 +242,7 @@ export default function CustomerList() {
             </Button>
           }
         /> */}
-        <Card>
+        <Card sx={{mt: 3 }}>
           <CustomerListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}

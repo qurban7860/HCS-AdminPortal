@@ -89,7 +89,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
 
         </Grid>
 
@@ -99,7 +99,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.phone}</Typography>
+          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
 
         </Grid>
 
@@ -108,7 +108,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.fax}</Typography>
+          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : 'N/A'}</Typography>
 
         </Grid>
 
@@ -118,7 +118,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Email
           </Typography>
 
-          <Typography variant="body2">{defaultValues.email}</Typography>
+          <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
 
         </Grid>
 
@@ -128,7 +128,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Website
           </Typography>
 
-          <Typography variant="body2">{defaultValues.website}</Typography>
+          <Typography variant="body2">{defaultValues.website ? defaultValues.website : 'N/A'}</Typography>
 
         </Grid>
 
@@ -137,7 +137,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.street}</Typography>
+          <Typography variant="body2">{defaultValues.street ? defaultValues.street : 'N/A'}</Typography>
 
         </Grid>
 
@@ -146,7 +146,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.suburb}</Typography>
+          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : 'N/A'}</Typography>
 
         </Grid>
 
@@ -155,7 +155,7 @@ export default function SiteViewForm({ currentSite = null }) {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.city}</Typography>
+          <Typography variant="body2">{defaultValues.city ? defaultValues.city : 'N/A'}</Typography>
 
         </Grid>
 
@@ -164,7 +164,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.region}</Typography>
+          <Typography variant="body2">{defaultValues.region ? defaultValues.region : 'N/A'}</Typography>
 
         </Grid>
 
@@ -173,7 +173,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Country
           </Typography>
 
-          <Typography variant="body2">{defaultValues.country}</Typography>
+          <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
 
         </Grid>
 

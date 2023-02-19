@@ -151,24 +151,6 @@ export default function CustomerViewForm() {
             
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Created At
-            </Typography>
-
-            <Typography variant="body2">{fDate(defaultValues.createdAt)}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Updated At
-            </Typography>
-
-            <Typography variant="body2">{fDate(defaultValues.updatedAt)}</Typography>
-            
-          </Grid>
-
           </Grid>
           
           {/* {fDate(createdAt)} */}
@@ -187,7 +169,7 @@ export default function CustomerViewForm() {
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.name}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.name ? defaultValues.mainSite.name : 'N/A'}</Typography>
 
         </Grid>
 
@@ -196,7 +178,7 @@ export default function CustomerViewForm() {
             Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.fax}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.fax ? defaultValues.mainSite.fax : 'N/A'}</Typography>
 
         </Grid>
 
@@ -205,7 +187,7 @@ export default function CustomerViewForm() {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.street}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.street ? defaultValues.mainSite.address.street : 'N/A'}</Typography>
 
         </Grid>
 
@@ -214,7 +196,7 @@ export default function CustomerViewForm() {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.suburb}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.suburb ? defaultValues.mainSite.address.suburb : 'N/A'}</Typography>
 
         </Grid>
 
@@ -223,7 +205,7 @@ export default function CustomerViewForm() {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.city}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.city ? defaultValues.mainSite.address.city : 'N/A'}</Typography>
 
         </Grid>
 
@@ -232,7 +214,7 @@ export default function CustomerViewForm() {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.region}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.region  ? defaultValues.mainSite.address.region : 'N/A'}</Typography>
 
         </Grid>
 
@@ -241,8 +223,30 @@ export default function CustomerViewForm() {
             Country
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.country}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.country  ? defaultValues.mainSite.address.country : 'N/A'}</Typography>
 
+        </Grid>
+
+        </Grid>
+        }
+
+        <Grid container>
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Created At
+            </Typography>
+
+            <Typography variant="body2">{fDate(defaultValues.createdAt)}</Typography>
+            
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Updated At
+            </Typography>
+
+            <Typography variant="body2">{fDate(defaultValues.updatedAt)}</Typography>
+            
         </Grid>
 
 
@@ -256,7 +260,6 @@ export default function CustomerViewForm() {
           </Grid> */}
 
             </Grid>
-            }
             </Card>
   );
 }

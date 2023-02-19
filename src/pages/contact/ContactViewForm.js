@@ -62,7 +62,7 @@ export default function ContactViewForm({ currentContact = null }) {
 
   return (
       <Card sx={{ pt: 5, px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2 }}>
+      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
@@ -80,7 +80,7 @@ export default function ContactViewForm({ currentContact = null }) {
               First Name
             </Typography>
 
-            <Typography variant="body2">{defaultValues.firstName}</Typography>
+            <Typography variant="body2">{defaultValues.firstName ? defaultValues.firstName : 'N/A'}</Typography>
 
           </Grid>
 
@@ -90,7 +90,7 @@ export default function ContactViewForm({ currentContact = null }) {
               Last Name
             </Typography>
 
-            <Typography variant="body2">{defaultValues.lastName}</Typography>
+            <Typography variant="body2">{defaultValues.lastName  ? defaultValues.lastName : 'N/A'}</Typography>
             
           </Grid>
 
@@ -108,7 +108,7 @@ export default function ContactViewForm({ currentContact = null }) {
               Title
             </Typography>
 
-            <Typography variant="body2">{defaultValues.title}</Typography>
+            <Typography variant="body2">{defaultValues.title ? defaultValues.title : 'N/A'}</Typography>
             
           </Grid>
 
@@ -117,7 +117,7 @@ export default function ContactViewForm({ currentContact = null }) {
               Contact Types
             </Typography>
 
-            <Typography variant="body2">{defaultValues.contactTypes.toString()}</Typography>
+            <Typography variant="body2">{defaultValues.contactTypes ? defaultValues.contactTypes.toString() : 'N/A'}</Typography>
             
           </Grid>
 
@@ -126,7 +126,7 @@ export default function ContactViewForm({ currentContact = null }) {
              Phone
             </Typography>
 
-            <Typography variant="body2">{defaultValues.phone}</Typography>
+            <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
             
           </Grid>
           
@@ -135,7 +135,7 @@ export default function ContactViewForm({ currentContact = null }) {
              Email
             </Typography>
 
-            <Typography variant="body2">{defaultValues.email}</Typography>
+            <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
             
           </Grid>
           {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>

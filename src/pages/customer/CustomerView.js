@@ -147,7 +147,7 @@ export default function CustomerViewPage({editPage}) {
         <title> Customer: Information | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         {/* <CustomBreadcrumbs
           heading="Customer View"
         /> */}
