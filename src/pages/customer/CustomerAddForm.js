@@ -75,9 +75,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
     // site details
     billingSite: Yup.string(),
-    phone: Yup.string().required('Phone is required') ,
+    phone: Yup.string(),
     email: Yup.string().email('Email must be a valid email address').required('Email is required') ,
-    fax: Yup.string().required('Fax Name is required') ,
+    fax: Yup.string(),
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
@@ -86,8 +86,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     country: Yup.string(),
 
     // contact details
-    firstName: Yup.string().required('First Name is required'),
-    lastName: Yup.string().required('Last Name is required'),
+    firstName: Yup.string(),
+    lastName: Yup.string(),
     title: Yup.string(),
     contactTypes: Yup.array(),
     contactPhone: Yup.string(),
