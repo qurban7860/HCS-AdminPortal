@@ -57,6 +57,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { spContacts } = useSelector((state) => state.contact);
 
+  const { customer, customerSaveSuccess } = useSelector((state) => state.customer);
+
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
@@ -76,7 +78,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     // site details
     billingSite: Yup.string(),
     phone: Yup.string(),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required') ,
+    email: Yup.string().email('Email must be a valid email address'),
     fax: Yup.string(),
     website: Yup.string(),
     street: Yup.string(),
@@ -98,8 +100,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     () => ({
       name: '',
       mainSite: '',
-      sites: [],
-      contacts: [],
       tradingName: '',
       accountManager: '',
       projectManager: '',
@@ -111,7 +111,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       }
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [AddCustomerSchema]
   );
 
   const methods = useForm({
@@ -135,11 +135,13 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
       try{
-        await dispatch(saveCustomer(data));
+        dispatch(saveCustomer(data));
         reset();
         enqueueSnackbar('Create success!');
+        if(customerSaveSuccess){
+          console.log('customer', customer);
+        }
         navigate(PATH_DASHBOARD.customer.view(null));
       } catch(error){
         enqueueSnackbar('Saving failed!');
@@ -175,7 +177,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="email" label="Email" />
 
-              <RHFTextField name="webiste" label="Website" />
+              <RHFTextField name="website" label="Website" />
 
               </Box>
               </Stack>

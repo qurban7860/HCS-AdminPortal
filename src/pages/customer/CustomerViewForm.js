@@ -30,10 +30,8 @@ export default function CustomerViewForm() {
   const dispatch = useDispatch();
 
   const { customer } = useSelector((state) => state.customer);
-  console.log(customer);
-  
+
   const [editFlag, setEditFlag] = useState(false);
-  console.log('editflag', editFlag);
 
   const toggleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
@@ -59,10 +57,6 @@ export default function CustomerViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-
-  console.log(defaultValues); 
-
-
 
 
   return (
@@ -111,7 +105,7 @@ export default function CustomerViewForm() {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.phone ? defaultValues.mainSite.phone : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite?.phone ? defaultValues.mainSite.phone : 'N/A'}</Typography>
 
         </Grid>
 
@@ -120,7 +114,7 @@ export default function CustomerViewForm() {
             Email
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.email? defaultValues.mainSite.email : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite?.email? defaultValues.mainSite.email : 'N/A'}</Typography>
 
         </Grid>
 

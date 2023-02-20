@@ -68,13 +68,7 @@ export default function CustomerViewPage({editPage}) {
 
   const { site } = useSelector((state) => state.site);
 
-  useLayoutEffect(() => {
-    if(id != null){
-      dispatch(getCustomer(id));
-    }
-  }, [dispatch, id]);
-
-  const [currentTab, setCurrentTab] = useState('customer-edit');
+  const [currentTab, setCurrentTab] = useState('customer-info');
 
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
@@ -82,6 +76,12 @@ export default function CustomerViewPage({editPage}) {
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
 
   const [customerFlag, setCustomerFlag] = useState(true);
+
+  useLayoutEffect(() => {
+    if(id != null){
+      dispatch(getCustomer(id));
+    }
+  }, [dispatch, customer, id]);
 
   useLayoutEffect(() => {
     dispatch(setCustomerEditFormVisibility(editFlag));
@@ -94,12 +94,12 @@ export default function CustomerViewPage({editPage}) {
       setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm/>);        
     }
-  }, [editPage, site, customerEditFormFlag, customer]);
+  }, [dispatch, id, editPage, site, customerEditFormFlag, customer]);
 
 
   const TABS = [
     {
-      value: 'customer-edit',
+      value: 'customer-info',
       label: 'Customer Info',
       icon: <Iconify icon="ic:round-account-box" />,
       component: currentComponent

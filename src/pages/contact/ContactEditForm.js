@@ -156,8 +156,8 @@
                 columnGap={4}
                 display="grid"
                 gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(4, 1fr)',
                 }}
               > 
 
@@ -166,7 +166,7 @@
                 variant="contained"
                 size="large"
                 loading={isSubmitting}>
-                  Save Contact
+                  Save Changes
               </LoadingButton>
 
               <Button 

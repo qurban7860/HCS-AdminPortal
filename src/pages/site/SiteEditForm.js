@@ -138,7 +138,7 @@ export default function SiteEditForm() {
 
                 <RHFTextField name="fax" label="Fax" />
 
-                <RHFTextField name="webiste" label="Website" />
+                <RHFTextField name="website" label="Website" />
 
               </Box>
 
@@ -182,8 +182,8 @@ export default function SiteEditForm() {
                 columnGap={4}
                 display="grid"
                 gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(4, 1fr)',
                 }}
               > 
 
@@ -192,7 +192,7 @@ export default function SiteEditForm() {
                 variant="contained"
                 size="large"
                 loading={isSubmitting}>
-                  Save Site
+                  Save Changes
               </LoadingButton>
 
               <Button 

@@ -45,13 +45,9 @@ export default function CustomerListTableRow({
 }) {
   const { name, tradingName, mainSite, isDisabled, createdAt } = row;
 
-  console.log('ID', isDisabled);
-
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
-
-  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -68,9 +64,6 @@ export default function CustomerListTableRow({
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
-
-  console.log('isDisabled',isDisabled);
-
 
   return (
     <>

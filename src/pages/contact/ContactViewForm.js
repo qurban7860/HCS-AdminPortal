@@ -26,8 +26,6 @@ ContactViewForm.propTypes = {
 };
 export default function ContactViewForm({ currentContact = null }) {
 
-  console.log('current contact', currentContact);
-
   const { contact } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
@@ -54,11 +52,6 @@ export default function ContactViewForm({ currentContact = null }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentContact, contact]
   );
-
-  console.log(defaultValues); 
-
-
-
 
   return (
       <Card sx={{ pt: 5, px: 5 }}>
