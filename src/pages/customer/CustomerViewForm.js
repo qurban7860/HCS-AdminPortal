@@ -102,18 +102,9 @@ export default function CustomerViewForm() {
               Trading Name
             </Typography>
 
-            <Typography variant="body2">{defaultValues.tradingName}</Typography>
+            <Typography variant="body2">{defaultValues.tradingName ? defaultValues.tradingName : 'N/A'}</Typography>
             
           </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Phone
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.phone}</Typography>
-
-        </Grid>
 
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
