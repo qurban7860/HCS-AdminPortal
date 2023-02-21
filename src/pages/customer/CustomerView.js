@@ -94,7 +94,7 @@ export default function CustomerViewPage({editPage}) {
       setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm/>);        
     }
-  }, [dispatch, id, editPage, site, customerEditFormFlag, customer]);
+  }, [editPage, site, customerEditFormFlag, customer]);
 
 
   const TABS = [

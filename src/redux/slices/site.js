@@ -115,16 +115,24 @@ export function saveSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          address: {
-            street: params.street,
-            suburb: params.suburb,
-            city: params.city,
-            region: params.region,
-            country: params.country
-          }
+          address: {}
         };
-
         /* eslint-enable */
+        if(params.street){
+          data.address.street = params.street;        
+        }
+        if(params.suburb){
+          data.address.suburb = params.suburb;        
+        }
+        if(params.city){
+          data.address.city = params.city;        
+        }
+        if(params.region){
+          data.address.region = params.region;        
+        }
+        if(params.country){
+          data.address.country = params.country;        
+        }
         
         await axios.post(`${CONFIG.SERVER_URL}customers/sites`, data);
 
@@ -157,16 +165,24 @@ export function updateSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          address: {
-            street: params.street,
-            suburb: params.suburb,
-            city: params.city,
-            region: params.region,
-            country: params.country
-          }
+          address: {}
         };
-
         /* eslint-enable */
+        if(params.street){
+          data.address.street = params.street;        
+        }
+        if(params.suburb){
+          data.address.suburb = params.suburb;        
+        }
+        if(params.city){
+          data.address.city = params.city;        
+        }
+        if(params.region){
+          data.address.region = params.region;        
+        }
+        if(params.country){
+          data.address.country = params.country;        
+        }
 
         const response = await axios.patch(`${CONFIG.SERVER_URL}customers/sites/${params.id}`
          , data);

@@ -148,11 +148,6 @@ export default function CustomerSiteList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  console.log(customer);
-  console.log('formVisibility', formVisibility);
-  console.log('editformvibis', siteEditFormVisibility);
-  console.log('checked', checked);
-
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
     if(!formVisibility && !siteEditFormVisibility){
@@ -215,8 +210,9 @@ export default function CustomerSiteList() {
 
           {formVisibility && !siteEditFormVisibility && <SiteAddForm/>}
 
-          {/* {!formVisibility && !siteEditFormVisibility && <Block title="Available Sites"> */}
           {!formVisibility && !siteEditFormVisibility && sites.map((site, index) => (
+
+            
           
   
             <Accordion key={site._id}>
@@ -225,11 +221,7 @@ export default function CustomerSiteList() {
                   {site.name}
                 </Typography>
                 {site.address && <Typography sx={{ color: 'text.secondary' }}>
-                  {site.address?.street ? `${site.address.street}` : ''}
-                  {site.address?.suburb ? `, ${site.address.suburb}` : ''}
-                  {site.address?.city ? `, ${site.address.city}` : ''}
-                  {site.address?.region ? `, ${site.address.region}` : ''}
-                  {site.address?.country ? `, ${site.address.country}` : ''}
+                  {Object.values(site.address)?.join(", ")}
                   </Typography>
                 }
               </AccordionSummary>
@@ -241,7 +233,6 @@ export default function CustomerSiteList() {
             </Accordion>
             
           ))} 
-          {/* </Block>} */}
 
           {isNotFound && <EmptyContent title="No Data"/>}
             

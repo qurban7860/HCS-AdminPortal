@@ -64,11 +64,6 @@ export default function SiteViewForm({ currentSite = null }) {
     [currentSite, site]
   );
 
-  console.log(defaultValues);
-
-
-
-
   return (
     <Card sx={{ px: 5 }}>
       <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
