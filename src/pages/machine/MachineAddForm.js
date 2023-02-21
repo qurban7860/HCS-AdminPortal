@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo, useCallback  } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCallback } from 'react';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -83,7 +81,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     projectManager: Yup.string(),
     supportManager: Yup.string(),
     license: Yup.string(),
-    instalationSite: Yup.string(),
     image: Yup.mixed().nullable(true),
     tools: Yup.array(),
     itags: Yup.string(),
@@ -109,7 +106,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     projectManager: '',
     supportManager: '',
     license: '',
-    instalationSite: '',
     image: null,
     tools: [],
     itags: '',

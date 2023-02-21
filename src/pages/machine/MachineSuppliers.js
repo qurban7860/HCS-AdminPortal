@@ -1,21 +1,18 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
-import {Container} from '@mui/material';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import style from '../../style/style.css'
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+// import style from '../../style/style.css'
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/contact';
 import { createSuppliers } from '../../redux/slices/supplier';
@@ -24,8 +21,8 @@ import { PATH_DASHBOARD,PATH_MACHINE } from '../../routes/paths';
 
 import { useSettingsContext } from '../../components/settings';
 // components
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSnackbar } from '../../components/snackbar';
-import { Checkbox } from '@mui/material'
 import FormProvider, {
   RHFSelect,
   RHFAutocomplete,

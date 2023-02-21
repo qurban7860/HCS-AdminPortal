@@ -125,7 +125,7 @@ export const PATH_CUSTOMER = {
     edit: (id) => path(ROOTS_CUSTOMER, `/note/${id}/edit`),
   },
 };
-//Machine
+// Machine
 export const PATH_MACHINE = {
   root: ROOTS_MACHINE,
   permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),

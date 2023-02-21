@@ -37,7 +37,7 @@ import {
   CustomerAdd,
   CustomerEdit,
   CustomerView,
-  //Machine
+  // Machine
   MachinePage,
   MachineAdd,
   MachineSupplier,
@@ -227,7 +227,7 @@ export default function Router() {
         { path: 'blank', element: <BlankPage /> },
       ],
     },
-    //Machine
+    // Machine
     {
       path : 'machine',
       element: (
@@ -241,6 +241,7 @@ export default function Router() {
         { path: 'app', element: <MachinePage /> }, 
         { path: 'new', element: <MachineAdd /> }, 
         { path: 'supplier', element: <MachineSupplier /> },
+        // eslint-disable-next-line
         { path: 'detail', element: <S_Detail/>} 
       ]
     },
