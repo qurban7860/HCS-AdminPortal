@@ -6,9 +6,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from '../../utils/axios';
 import { CONFIG } from '../../config-global';
 
-const _ = require('lodash');
-
-// ---------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 const initialState = {
   intial: false,
@@ -65,6 +63,7 @@ const slice = createSlice({
 
     // GET Customer
     getCustomerSuccess(state, action) {
+      
       state.isLoading = false;
       state.success = true;
       state.customer = action.payload;
@@ -134,8 +133,8 @@ export function getCustomer(id) {
       dispatch(slice.actions.getCustomerSuccess(response.data));
       console.log('requested customer', response.data);
     } catch (error) {
-      // console.error(error);
-      // dispatch(slice.actions.hasError(error));
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
     }
   };
 }
@@ -162,6 +161,7 @@ export function deleteCustomer(id) {
 
 export function saveCustomer(params) {
     return async (dispatch) => {
+      console.log('params', params);
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
@@ -173,10 +173,9 @@ export function saveCustomer(params) {
             name: params.name,
             address: {},
           },
-          type: params.type
+          technicalContact: {},
+          billingContact: {},
         };
-
-        let billingContact = {};
         /* eslint-enable */
 
         if(params.accountManager){
@@ -207,6 +206,7 @@ export function saveCustomer(params) {
           data.site.website = params.website;        
         }
         if(params.street){
+          console.log('street', params.street);
           data.site.address.street = params.street;        
         }
         if(params.suburb){
@@ -223,41 +223,37 @@ export function saveCustomer(params) {
         }
 
         if(params.firstName){
-          billingContact.firstName = params.firstName;
-          // data.billingContact = billingContact;
-          // data.technicalContact.firstName = params.firstName;
+          data.billingContact.firstName = params.firstName;
+          data.technicalContact.firstName = params.firstName;
         }
 
         if(params.lastName){
-          billingContact.lastName = params.lastName;
-          // data.technicalContact.lastName = params.lastName;        
+          data.billingContact.lastName = params.lastName;
+          data.technicalContact.lastName = params.lastName;        
 
         }
 
         if(params.title){
-          billingContact.title = params.title;
-          // data.technicalContact.title = params.title;
+          data.billingContact.title = params.title;
+          data.technicalContact.title = params.title;
 
         }
 
         if(params.contactPhone){
-          billingContact.phone = params.contactPhone;
-          // data.technicalContact.phone = params.contactPhone;        
+          data.billingContact.title = params.title;
+          data.technicalContact.title = params.title;        
 
         }
 
         if(params.contactEmail){
-          billingContact.email = params.contactEmail;
-          // data.technicalContact.email = params.contactEmail;        
+          data.billingContact.contactEmail = params.contactEmail;
+          data.technicalContact.contactEmail = params.contactEmail;        
 
         }
-        if(!_.isEmpty(billingContact)){
-          data.billingContact = billingContact;
-        }
-
-        console.log('params', data);
 
         const response = await axios.post(`${CONFIG.SERVER_URL}customers/customers`, data);
+
+        console.log('response', response.data.Customer);
         dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);
