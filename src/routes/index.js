@@ -37,11 +37,6 @@ import {
   CustomerAdd,
   CustomerEdit,
   CustomerView,
-  //Machine
-  MachinePage,
-  MachineAdd,
-  MachineSupplier,
-  S_Detail,
   // Site
   SiteList,
   SiteAdd,
@@ -108,7 +103,6 @@ export default function Router() {
     },
 
     // Dashboard
-    
     {
       path: 'dashboard',
       element: (
@@ -226,23 +220,6 @@ export default function Router() {
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],
-    },
-    //Machine
-    {
-      path : 'machine',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-        
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <MachinePage /> }, 
-        { path: 'new', element: <MachineAdd /> }, 
-        { path: 'supplier', element: <MachineSupplier /> },
-        { path: 'detail', element: <S_Detail/>} 
-      ]
     },
 
     // Main Routes

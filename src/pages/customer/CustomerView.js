@@ -66,15 +66,11 @@ export default function CustomerViewPage({editPage}) {
 
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
 
-  const { site } = useSelector((state) => state.site);
+  const { site, siteEditFormVisibility } = useSelector((state) => state.site);
 
-  useLayoutEffect(() => {
-    if(id != null){
-      dispatch(getCustomer(id));
-    }
-  }, [dispatch, id]);
-
-  const [currentTab, setCurrentTab] = useState('customer-edit');
+  const { contactEditFormVisibility } = useSelector((state) => state.contact);
+  
+  const [currentTab, setCurrentTab] = useState('customer-info');
 
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
@@ -82,6 +78,12 @@ export default function CustomerViewPage({editPage}) {
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
 
   const [customerFlag, setCustomerFlag] = useState(true);
+
+  useLayoutEffect(() => {
+    if(id != null){
+      dispatch(getCustomer(id));
+    }
+  }, [dispatch, id]);
 
   useLayoutEffect(() => {
     dispatch(setCustomerEditFormVisibility(editFlag));
@@ -99,39 +101,47 @@ export default function CustomerViewPage({editPage}) {
 
   const TABS = [
     {
-      value: 'customer-edit',
-      label: 'Basic Info',
+      disabled: siteEditFormVisibility || contactEditFormVisibility,
+      value: 'customer-info',
+      label: 'Customer Info',
       icon: <Iconify icon="ic:round-account-box" />,
       component: currentComponent
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || contactEditFormVisibility,
       value: 'sites',
       label: 'Sites',
-      icon: <Iconify icon="eva:settings-2-outline" />,
+      icon: <Iconify icon="eva:navigation-2-outline" />,
       component: <CustomerSiteList/>,
 
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
-      icon: <Iconify icon="eva:clock-outline" />,
+      icon: <Iconify icon="eva:people-outline" />,
       component: <CustomerContactList/>,
 
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="eva:archive-outline" />,
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'documents',
       label: 'Documents',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="eva:book-fill" />,
     },
+    {
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
+      value: 'machines',
+      label: 'Machines',
+      icon: <Iconify icon="eva:settings-2-outline" />,
+    }
+
   ];
 
   return (
@@ -140,10 +150,10 @@ export default function CustomerViewPage({editPage}) {
         <title> Customer: Information | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+      <Container maxWidth={false}>
+        {/* <CustomBreadcrumbs
           heading="Customer View"
-        />
+        /> */}
         <Card
           sx={{
             mb: 3,

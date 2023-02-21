@@ -61,17 +61,12 @@ export default function SiteViewForm({ currentSite = null }) {
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [site]
+    [currentSite, site]
   );
 
-  console.log(defaultValues);
-
-
-
-
   return (
-    <Card sx={{ pt: 5, px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2 }}>
+    <Card sx={{ px: 5 }}>
+      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
@@ -84,12 +79,12 @@ export default function SiteViewForm({ currentSite = null }) {
       <Grid container>
 
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
 
         </Grid>
 
@@ -99,16 +94,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.phone}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Email
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.email}</Typography>
+          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
 
         </Grid>
 
@@ -117,16 +103,27 @@ export default function SiteViewForm({ currentSite = null }) {
             Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.fax}</Typography>
+          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : 'N/A'}</Typography>
 
         </Grid>
+
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Email
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
+
+        </Grid>
+
 
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Website
           </Typography>
 
-          <Typography variant="body2">{defaultValues.website}</Typography>
+          <Typography variant="body2">{defaultValues.website ? defaultValues.website : 'N/A'}</Typography>
 
         </Grid>
 
@@ -135,7 +132,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.street}</Typography>
+          <Typography variant="body2">{defaultValues.street ? defaultValues.street : 'N/A'}</Typography>
 
         </Grid>
 
@@ -144,7 +141,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.suburb}</Typography>
+          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : 'N/A'}</Typography>
 
         </Grid>
 
@@ -153,7 +150,7 @@ export default function SiteViewForm({ currentSite = null }) {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.city}</Typography>
+          <Typography variant="body2">{defaultValues.city ? defaultValues.city : 'N/A'}</Typography>
 
         </Grid>
 
@@ -162,7 +159,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.region}</Typography>
+          <Typography variant="body2">{defaultValues.region ? defaultValues.region : 'N/A'}</Typography>
 
         </Grid>
 
@@ -171,7 +168,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Country
           </Typography>
 
-          <Typography variant="body2">{defaultValues.country}</Typography>
+          <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
 
         </Grid>
 

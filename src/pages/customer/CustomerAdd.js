@@ -21,7 +21,7 @@ export default function CustomerAdd() {
       </Helmet>
       
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={themeStretch ? false : 'xl'}>
         <CustomerAddForm />
       </Container>
     </>

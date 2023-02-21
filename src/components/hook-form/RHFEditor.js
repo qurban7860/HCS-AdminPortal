@@ -14,7 +14,6 @@ RHFEditor.propTypes = {
   helperText: PropTypes.node,
 };
 
-
 export default function RHFEditor({ name, helperText, ...other }) {
   const {
     control,
@@ -38,7 +37,7 @@ export default function RHFEditor({ name, helperText, ...other }) {
       name={name}
       control={control}
       render={({ field, fieldState: { error } }) => (
-        <Editor 
+        <Editor
           id={name}
           value={field.value}
           onChange={field.onChange}
@@ -50,7 +49,6 @@ export default function RHFEditor({ name, helperText, ...other }) {
               </FormHelperText>
             )
           }
-          sx={{ minHeight: 10}}
           {...other}
         />
       )}

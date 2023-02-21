@@ -68,7 +68,7 @@ export default function GeneralAppPage() {
         <title> General: App | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
             <AppWelcome
@@ -177,7 +177,7 @@ export default function GeneralAppPage() {
               title="New Site"
               tableData={_appInvoices}
               tableLabels={[
-                { id: 'id', label: 'Invoice ID' },
+                { id: 'id', label: 'Site ID' },
                 { id: 'category', label: 'Category' },
                 { id: 'price', label: 'Price' },
                 { id: 'status', label: 'Status' },

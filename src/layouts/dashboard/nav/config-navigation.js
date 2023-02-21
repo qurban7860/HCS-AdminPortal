@@ -1,5 +1,5 @@
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
@@ -35,8 +35,6 @@ const ICONS = {
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
   map: icon('ic_location'),
-  icon: <Iconify icon="eva:settings-2-outline" />,
-
 };
 
 const navConfig = [
@@ -47,16 +45,6 @@ const navConfig = [
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Customer', path: PATH_CUSTOMER.general.app, icon: ICONS.ecommerce },
-      { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon,
-      children: [
-        { title: 'Dashboard', path: PATH_MACHINE.general.app },
-        { title: 'Suppliers', path: PATH_MACHINE.general.supplier },
-        { title: 'Statuses', path: PATH_DASHBOARD.user.demoEdit },
-        { title: 'Models', path: PATH_DASHBOARD.user.account },
-        { title: 'Licenses', path: PATH_DASHBOARD.user.account },
-        { title: 'Tools', path: PATH_DASHBOARD.user.account },
-        
-      ],},
       // deleted components
       // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
       // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },

@@ -9,8 +9,7 @@ import customerReducer from './slices/customer';
 import siteReducer from './slices/site';
 import contactReducer from './slices/contact';
 import noteReducer from './slices/note';
-import machineReducer from './slices/machine';
-import supplierReducer from './slices/supplier';
+
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -32,7 +31,6 @@ export const departmentPersistConfig = {
   storage,
   keyPrefix: 'redux-',
   whitelist: ['departments'],
-
 };
 
 export const userPersistConfig = {
@@ -70,19 +68,6 @@ export const notePersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 };
 
-export const machinePersistConfig = {
-  key: 'machine',
-  storage,
-  keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
-};
-export const suppplierPersistConfig = {
-  key: 'machine',
-  storage,
-  keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
-};
-
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   asset: persistReducer(assetPersistConfig, assetReducer),
@@ -91,8 +76,6 @@ const rootReducer = combineReducers({
   site: persistReducer(sitePersistConfig, siteReducer),
   contact: persistReducer(contactPersistConfig, contactReducer),
   note: persistReducer(notePersistConfig, noteReducer),
-  machine: persistReducer(machinePersistConfig, machineReducer),
-  supplier: persistReducer(suppplierPersistConfig,supplierReducer)
 });
 
 export default rootReducer;
