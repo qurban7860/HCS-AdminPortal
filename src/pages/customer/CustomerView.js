@@ -67,7 +67,7 @@ export default function CustomerViewPage({editPage}) {
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
 
   const { site } = useSelector((state) => state.site);
-
+  
   const [currentTab, setCurrentTab] = useState('customer-info');
 
   const [editFlag, setEditFlag] = useState(false);
@@ -81,7 +81,7 @@ export default function CustomerViewPage({editPage}) {
     if(id != null){
       dispatch(getCustomer(id));
     }
-  }, [dispatch, customer, id]);
+  }, [dispatch, id]);
 
   useLayoutEffect(() => {
     dispatch(setCustomerEditFormVisibility(editFlag));
