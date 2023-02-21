@@ -26,7 +26,6 @@ import { SeoIllustration } from '../../assets/illustrations';
 
 import { useDispatch } from '../../redux/store';
 
-import { getSites } from '../../redux/slices/site';
 import CustomerWidget from './util/CustomerWidget';
 import Iconify from '../../components/iconify';
 
@@ -53,10 +52,6 @@ export default function CustomerDashboardPage() {
   const theme = useTheme();
 
   const { themeStretch } = useSettingsContext();
-
-  useLayoutEffect(() => {
-    dispatch(getSites());
-  }, [dispatch]);
 
   return (
     <>

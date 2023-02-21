@@ -31,7 +31,6 @@ export const departmentPersistConfig = {
   storage,
   keyPrefix: 'redux-',
   whitelist: ['departments'],
-
 };
 
 export const userPersistConfig = {

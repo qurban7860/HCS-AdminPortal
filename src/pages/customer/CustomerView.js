@@ -66,7 +66,9 @@ export default function CustomerViewPage({editPage}) {
 
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
 
-  const { site } = useSelector((state) => state.site);
+  const { site, siteEditFormVisibility } = useSelector((state) => state.site);
+
+  const { contactEditFormVisibility } = useSelector((state) => state.contact);
   
   const [currentTab, setCurrentTab] = useState('customer-info');
 
@@ -99,13 +101,14 @@ export default function CustomerViewPage({editPage}) {
 
   const TABS = [
     {
+      disabled: siteEditFormVisibility || contactEditFormVisibility,
       value: 'customer-info',
       label: 'Customer Info',
       icon: <Iconify icon="ic:round-account-box" />,
       component: currentComponent
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || contactEditFormVisibility,
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="eva:navigation-2-outline" />,
@@ -113,7 +116,7 @@ export default function CustomerViewPage({editPage}) {
 
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
       icon: <Iconify icon="eva:people-outline" />,
@@ -121,19 +124,19 @@ export default function CustomerViewPage({editPage}) {
 
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="eva:archive-outline" />,
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="eva:book-fill" />,
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'machines',
       label: 'Machines',
       icon: <Iconify icon="eva:settings-2-outline" />,

@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/contact';
 import { saveCustomer } from '../../redux/slices/customer';
@@ -85,7 +85,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    country: Yup.string(),
+    country: Yup.string().nullable(true),
 
     // contact details
     firstName: Yup.string(),
@@ -205,23 +205,33 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 <RHFTextField name="city" label="City" />
 
                 <RHFTextField name="region" label="Region" />
-{/* 
+
                 <RHFAutocomplete
-                  name="tags"
-                  label="Tags"
-                  multiple
+                  name="country"
+                  label="Country"
                   freeSolo
-                  options={countries.map((country) => country)}
+                  options={countries.map((country) => country.label)}
+                  // getOptionLabel={(option) => option.title}
+                  
                   ChipProps={{ size: 'small' }}
+                /> 
+
+                {/* <Autocomplete
+                  fullWidth
+                  freeSolo
+                  options={countries.map((option) => option.label)}
+                  renderInput={(params) => <RHFTextField {...params} label="freeSolo" />}
+                  sx={{ mb: 2 }}
                 /> */}
-                <RHFSelect native name="country" label="Country" placeholder="Country">
+
+                {/* <RHFSelect native name="country" label="Country" placeholder="Country">
                   <option value="" />
                   {countries.map((country) => (
                     <option key={country.code} value={country.label}>
                       {country.label}
                     </option>
                   ))}
-                </RHFSelect>
+                </RHFSelect> */}
 
               </Box>
               </Stack>
@@ -277,7 +287,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               >
 
               <RHFSelect native name="accountManager" label="Account Manager">
-                    <option value="" selected/>
+                    <option value="" defaultValue/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -287,7 +297,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </RHFSelect>
 
               <RHFSelect native name="projectManager" label="Project Manager">
-                    <option value="" selected/>
+                    <option value="" defaultValue/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -297,7 +307,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </RHFSelect>
 
               <RHFSelect native name="supportManager" label="Support Manager">
-                    <option value="" selected/>
+                    <option value="" defaultValue/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>

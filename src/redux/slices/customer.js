@@ -134,8 +134,8 @@ export function getCustomer(id) {
       dispatch(slice.actions.getCustomerSuccess(response.data));
       console.log('requested customer', response.data);
     } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error));
+      // console.error(error);
+      // dispatch(slice.actions.hasError(error));
     }
   };
 }
