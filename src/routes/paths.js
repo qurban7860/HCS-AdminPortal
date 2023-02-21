@@ -7,7 +7,7 @@ function path(root, sublink) {
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_CUSTOMER = '/customer';
-
+const ROOTS_MACHINE = '/machine';
 // ----------------------------------------------------------------------
 
 export const PATH_AUTH = {
@@ -29,6 +29,7 @@ export const PATH_PAGE = {
   page500: '/500',
   components: '/components',
 };
+
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
   permissionDenied: path(ROOTS_DASHBOARD, '/permission-denied'),
@@ -124,6 +125,23 @@ export const PATH_CUSTOMER = {
     edit: (id) => path(ROOTS_CUSTOMER, `/note/${id}/edit`),
   },
 };
+//Machine
+export const PATH_MACHINE = {
+  root: ROOTS_MACHINE,
+  permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),
+  general: {
+    app: path(ROOTS_MACHINE, '/app'),
+    supplier: (ROOTS_MACHINE, '/machine/supplier'),
+    detail: (ROOTS_MACHINE, '/machine/detail')
+  },
+  new: path(ROOTS_MACHINE, '/machine/new'),
+  machine:{
+    new: path(ROOTS_MACHINE, '/new'),
+    // //supplier: (ROOTS_MACHINE, '/supplier')
+    // edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
+  },
+  
+}
 
 export const PATH_DOCS = {
   root: 'https://docs.minimals.cc',

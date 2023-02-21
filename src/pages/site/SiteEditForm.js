@@ -14,7 +14,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../config-global';
 // slice
-import { updateSite, setEditFormVisibility } from '../../redux/slices/site';
+import { updateSite } from '../../redux/slices/site';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -97,10 +97,6 @@ export default function SiteEditForm() {
     }
   }, [site, reset, defaultValues]);
 
-  const toggleCancel = () => 
-  {
-    dispatch(setEditFormVisibility(false));
-  };
 
   const onSubmit = async (data) => {
     console.log(data);
@@ -138,7 +134,7 @@ export default function SiteEditForm() {
 
                 <RHFTextField name="fax" label="Fax" />
 
-                <RHFTextField name="website" label="Website" />
+                <RHFTextField name="webiste" label="Website" />
 
               </Box>
 
@@ -176,35 +172,18 @@ export default function SiteEditForm() {
                 </RHFSelect>
 
               </Box>
-
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
-
-              <LoadingButton 
-                type="submit"
-                variant="contained"
-                size="large"
-                loading={isSubmitting}>
-                  Save Changes
-              </LoadingButton>
-
-              <Button 
-                onClick={toggleCancel}
-                variant="outlined" 
-                size="large">
-                  Cancel
-              </Button>
-
-            </Box>
-
             </Stack>
+
+
+
+            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+                Save Site
+              </LoadingButton>
+            </Stack>
+
+
+
 
           </Card>
 

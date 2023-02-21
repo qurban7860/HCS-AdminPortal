@@ -91,6 +91,7 @@ export default function SiteAddForm() {
 
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       await dispatch(saveSite(data));
       reset();
@@ -125,7 +126,7 @@ export default function SiteAddForm() {
 
                 <RHFTextField name="fax" label="Fax" />
 
-                <RHFTextField name="website" label="Website" />
+                <RHFTextField name="webiste" label="Website" />
 
               </Box>
 

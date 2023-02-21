@@ -26,7 +26,7 @@ export default function CustomerDashboardNavbar() {
   };
 
   const handleSearchSite = () => {
-    enqueueSnackbar('Development In Progress', { variant: `info` });
+    enqueueSnackbar('Under Construction');
     // navigate(PATH_DASHBOARD.site.list);
   };
 

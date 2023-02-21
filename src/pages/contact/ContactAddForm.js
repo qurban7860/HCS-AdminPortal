@@ -142,8 +142,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
               <RHFTextField name="lastName" label="Last Name" />
 
-              <RHFTextField name="title" label="Title" />
-
               <RHFMultiSelect
                 chip
                 checkbox
@@ -151,6 +149,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 label="Contact Types"
                 options={CONTACT_TYPES}
               />
+
+              <RHFTextField name="title" label="Title" />
 
               <RHFTextField name="phone" label="Phone" />
 

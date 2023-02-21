@@ -72,8 +72,9 @@ export default function UserAccountPage() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+        <CustomBreadcrumbs 
           heading="Account"
+          style={{paddingTop:'20px'}}
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'User', href: PATH_DASHBOARD.user.root },

@@ -50,9 +50,10 @@ import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 const TABLE_HEAD = [
   { id: 'name', label: 'Customer', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  { id: 'mainSiteAddress', label: 'Address', align: 'left' },
+  // { id: 'mainSiteAddress', label: 'Address', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'action', label: 'Actions', align: 'left' },
 
 ];
 
@@ -217,10 +218,10 @@ export default function CustomerList() {
         <title> Customer: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
       <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
-      </Grid>
+          </Grid>
         {/* <CustomBreadcrumbs
           heading="Customer List"
           links={[
@@ -242,7 +243,7 @@ export default function CustomerList() {
             </Button>
           }
         /> */}
-        <Card sx={{mt: 3 }}>
+        <Card>
           <CustomerListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}

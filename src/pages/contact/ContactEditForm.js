@@ -14,7 +14,7 @@
   // global
   import { CONFIG } from '../../config-global';
   // slice
-  import { updateContact, setEditFormVisibility } from '../../redux/slices/contact';
+  import { updateContact } from '../../redux/slices/contact';
   // routes
   import { PATH_DASHBOARD } from '../../routes/paths';
   // components
@@ -47,6 +47,8 @@
 
     const dispatch = useDispatch();
 
+    const navigate = useNavigate();
+
     const { enqueueSnackbar } = useSnackbar();
 
     const EditContactSchema = Yup.object().shape({
@@ -64,11 +66,11 @@
     const defaultValues = useMemo(
       () => ({
         id: contact?._id || '',
-        customer: contact?.customer || '',
+        customer: contact?.customerId || '',
         firstName: contact?.firstName || '',
         lastName: contact?.lastName || '',
         title: contact?.title || '',
-        contactTypes: contact?.contactTypes[0]?.split(',') || [],
+        contactTypes: contact?.contactTypes[0].split(',') || [],
         phone: contact?.phone || '',
         email: contact?.email || '',
       }),
@@ -110,78 +112,52 @@
       }
     };
 
-    const toggleCancel = () => 
-    {
-      dispatch(setEditFormVisibility(false));
-    };
-
 
     return (
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={6}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
+        <Grid container spacing={3}>
+          <Grid item xs={7} md={7}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+
+              <RHFSelect native name="customer" label="Customer">
+                    <option value="" selected/>
+                    { 
+                    customers.length > 0 && customers.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.name}
+                    </option>
+                  ))}
+              </RHFSelect>
 
               <RHFTextField name="firstName" label="First Name" />
 
               <RHFTextField name="lastName" label="Last Name" />
 
-              <RHFTextField name="title" label="Title" />
+                <RHFMultiSelect
+                  chip
+                  checkbox
+                  name="contactTypes"
+                  label="Contact Types"
+                  options={CONTACT_TYPES}
+                />
 
-              <RHFMultiSelect
-                chip
-                checkbox
-                name="contactTypes"
-                label="Contact Types"
-                options={CONTACT_TYPES}
-              />
+              <RHFTextField name="title" label="Title" />
 
               <RHFTextField name="phone" label="Phone" />
 
               <RHFTextField name="email" label="Email" />
-              
-              </Box>
 
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
 
-              <LoadingButton 
-                type="submit"
-                variant="contained"
-                size="large"
-                loading={isSubmitting}>
+
+                <LoadingButton type="submit" variant="contained" size="large" loading={isLoading}>
                   Save Changes
-              </LoadingButton>
+                </LoadingButton>
+              </Stack>
 
-              <Button 
-                onClick={toggleCancel}
-                variant="outlined" 
-                size="large">
-                  Cancel
-              </Button>
-
-            </Box>
-
-            </Stack>
-            
-          </Card>
-      </Grid>
-    </FormProvider>
+            </Card>
+          </Grid>
+        </Grid>
+      </FormProvider>
     );
   }

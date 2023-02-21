@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useCallback } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 // form
@@ -9,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/contact';
 import { saveCustomer } from '../../redux/slices/customer';
@@ -21,7 +22,9 @@ import FormProvider, {
   RHFSelect,
   RHFAutocomplete,
   RHFTextField,
-  RHFMultiSelect
+  RHFMultiSelect,
+  RHFEditor,
+  RHFUpload,
 } from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -45,19 +48,11 @@ const CONTACT_TYPES = [
   { value: 'support', label: 'Support' },
 ];
 
-const types = [
-  { value: 'technical', label: 'Technical' },
-  { value: 'financial', label: 'Financial' },
-  { value: 'support', label: 'Support' },
-];
-
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { userId, user } = useAuthContext();
 
   const { spContacts } = useSelector((state) => state.contact);
-
-  const { customer, customerSaveSuccess } = useSelector((state) => state.customer);
 
   const dispatch = useDispatch();
   
@@ -77,19 +72,19 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
     // site details
     billingSite: Yup.string(),
-    phone: Yup.string(),
-    email: Yup.string().email('Email must be a valid email address'),
-    fax: Yup.string(),
+    phone: Yup.string().required('Phone is required') ,
+    email: Yup.string().email('Email must be a valid email address').required('Email is required') ,
+    fax: Yup.string().required('Fax Name is required') ,
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    country: Yup.string().nullable(true),
+    country: Yup.string(),
 
     // contact details
-    firstName: Yup.string(),
-    lastName: Yup.string(),
+    firstName: Yup.string().required('First Name is required'),
+    lastName: Yup.string().required('Last Name is required'),
     title: Yup.string(),
     contactTypes: Yup.array(),
     contactPhone: Yup.string(),
@@ -100,18 +95,19 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     () => ({
       name: '',
       mainSite: '',
+      sites: [],
+      contacts: [],
       tradingName: '',
       accountManager: '',
       projectManager: '',
       supportManager: '',
-      type: 'Customer',
       loginUser: {
         userId,
         email: user.email,
       }
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [AddCustomerSchema]
+    []
   );
 
   const methods = useForm({
@@ -135,18 +131,34 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
 
   const onSubmit = async (data) => {
+    console.log(data);
       try{
-        dispatch(saveCustomer(data));
+        await dispatch(saveCustomer(data));
         reset();
         enqueueSnackbar('Create success!');
-        if(customerSaveSuccess){
-          console.log('customer', customer);
-        }
         navigate(PATH_DASHBOARD.customer.view(null));
       } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);
       }
+  };
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('image', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
+  const handleRemoveFile = () => {
+    setValue('image', null);
   };
 
 
@@ -156,39 +168,220 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       <CustomerDashboardNavbar/>
 
         <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3, mb: 3 }}>
-            <Stack spacing={3}>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={6}>
             <Box
               rowGap={3}
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
+              <RHFTextField name="name" label="Machine" />
+
+              <RHFEditor name="name" label="Description" />
+
+             </Box>
+             <Box
+             rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(2, 1fr)',
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Customer Name" />
+              <RHFTextField name="name" label="Serial No." />
 
-              <RHFTextField name="tradingName" label="Trading Name" />
-              
-              <RHFTextField name="phone" label="Phone" />
+              <RHFSelect native name="accountManager" label="Parent Machine">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
 
-              <RHFTextField name="fax" label="Fax" />
+              <RHFTextField name="name" label="Parent Serial No." />
 
-              <RHFTextField name="email" label="Email" />
-
-              <RHFTextField name="website" label="Website" />
-
+              <RHFSelect native name="accountManager" label="Status">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Supplier">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Model">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFTextField name="name" label="Work Order/ Purchase Order" />
+              <RHFSelect native name="accountManager" label="Customer">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Instalation Site">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Billing Site">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Operators">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Account Mananger">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Project Mananger">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="Support Mananger">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFSelect native name="accountManager" label="License">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
               </Box>
-              </Stack>
-              </Card>
-              
-              <Card sx={{ p: 3, mb: 3 }}>
-            <Stack spacing={3}>
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Address Information
-              </Typography>
               <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
+              <RHFUpload
+                  name="image"
+                  maxSize={3145728}
+                  onDrop={handleDrop}
+                  onDelete={handleRemoveFile}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                />
+                </Box>
+                <Box
+                rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(2, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <RHFSelect native name="accountManager" label="Tools">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+              <RHFTextField name="name" label="Internal tags" />
+              <RHFTextField name="name" label="Customer tags" />
+              </Box>
+              {/* <RHFTextField name="tradingName" label="Trading Name" />
+
+
+              <RHFSelect native name="accountManager" label="Account Manager">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+
+              <RHFSelect native name="projectManager" label="Project Manager">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+
+              <RHFSelect native name="supportManager" label="Support Manager">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect> */}
+
+              
+
+              {/* <Box
                 rowGap={3}
                 columnGap={2}
                 display="grid"
@@ -198,32 +391,30 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 }}
               >
 
+                <RHFTextField name="phone" label="Phone" />
+
+                <RHFTextField name="email" label="Email" />
+
+                <RHFTextField name="fax" label="Fax" />
+
+                <RHFTextField name="webiste" label="Website" />
+
                 <RHFTextField name="street" label="Street" />
 
                 <RHFTextField name="suburb" label="Suburb" />
 
                 <RHFTextField name="city" label="City" />
 
-                <RHFTextField name="region" label="Region" />
-
+                <RHFTextField name="region" label="Region" /> */}
+{/* 
                 <RHFAutocomplete
-                  name="country"
-                  label="Country"
+                  name="tags"
+                  label="Tags"
+                  multiple
                   freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-                  
+                  options={countries.map((country) => country)}
                   ChipProps={{ size: 'small' }}
-                /> 
-
-                {/* <Autocomplete
-                  fullWidth
-                  freeSolo
-                  options={countries.map((option) => option.label)}
-                  renderInput={(params) => <RHFTextField {...params} label="freeSolo" />}
-                  sx={{ mb: 2 }}
                 /> */}
-
                 {/* <RHFSelect native name="country" label="Country" placeholder="Country">
                   <option value="" />
                   {countries.map((country) => (
@@ -231,20 +422,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       {country.label}
                     </option>
                   ))}
-                </RHFSelect> */}
+                </RHFSelect>
 
-              </Box>
-              </Stack>
-              </Card>
+              </Box> */}
 
-              <Card sx={{ p: 3, mb: 3 }}>
-            <Stack spacing={3}>
 
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Contact Information
-              </Typography>
-
-              <Box
+              {/* <Box
                 rowGap={3}
                 columnGap={2}
                 display="grid"
@@ -263,66 +446,13 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="contactEmail" label="Contact Email" />
 
-              </Box>
-
-              </Stack>
-
-              </Card>
-
-              <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Howick Resources
-              </Typography>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-
-              <RHFSelect native name="accountManager" label="Account Manager">
-                    <option value="" defaultValue/>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="projectManager" label="Project Manager">
-                    <option value="" defaultValue/>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="supportManager" label="Support Manager">
-                    <option value="" defaultValue/>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              </Box>
+              </Box> */}
 
               </Stack>
 
             <Stack alignItems="flex-start" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Customer
+                Save
               </LoadingButton>
             </Stack>
                         

@@ -43,11 +43,15 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isDisabled, createdAt } = row;
+  const { name, tradingName, isDisabled, createdAt } = row;
+
+  console.log('ID', isDisabled);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
+
+  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -64,6 +68,9 @@ export default function CustomerListTableRow({
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
+
+  console.log('isDisabled',isDisabled);
+
 
   return (
     <>
@@ -89,7 +96,7 @@ export default function CustomerListTableRow({
 
         <TableCell>{tradingName}</TableCell>
 
-        <TableCell>{mainSite?.address?.city}{mainSite?.address?.country ? `, ${mainSite?.address?.country}` : ''}</TableCell>
+        {/* <TableCell>{tradingName}</TableCell> */}
 
 
         <TableCell align="left">
@@ -104,14 +111,14 @@ export default function CustomerListTableRow({
 
         <TableCell>{fDate(createdAt)}</TableCell>
 
-        {/* <TableCell align="center">
+        <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>   */}
+        </TableCell>  
       </TableRow> 
 
-      {/* <MenuPopover
+      <MenuPopover
         open={openPopover}
         onClose={handleClosePopover}
         arrow="right-top"
@@ -137,9 +144,9 @@ export default function CustomerListTableRow({
           <Iconify icon="eva:edit-fill" />
           Edit
         </MenuItem>
-      </MenuPopover> */}
+      </MenuPopover>
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -149,7 +156,7 @@ export default function CustomerListTableRow({
             Delete
           </Button>
         }
-      /> */}
+      />
     </>
   );
 }
