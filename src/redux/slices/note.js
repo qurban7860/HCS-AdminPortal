@@ -143,7 +143,7 @@ export function updateNote(params) {
       if(params.user){
         formData.append('user', params.user);
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}notes/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/notes/${params.id}`,
         formData
       );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
@@ -161,7 +161,7 @@ export function getNotes() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}notes`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/notes`);
       console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getNotesSuccess(response.data));
@@ -181,7 +181,7 @@ export function getNote(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}notes/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/notes/${id}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
       console.log('requested note', response.data);
       // dispatch(slice.actions.setResponseMessage('Notes Loaded Successfuly'));
@@ -199,7 +199,7 @@ export function deleteNote(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}notes/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;

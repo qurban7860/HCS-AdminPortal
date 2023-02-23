@@ -88,7 +88,8 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
     serial: Yup.string().max(40).required('Serial is required'),
     location: Yup.string(),
     department: Yup.string(),
-    image: Yup.mixed().nullable(true),  });
+    image: Yup.mixed().nullable(true)
+   });
 
   const defaultValues = useMemo(
     () => ({

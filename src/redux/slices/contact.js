@@ -218,7 +218,8 @@ export function getContacts(params = null) {
         response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts` , 
         {
           params: {
-            customer: params
+            customer: params,
+            isArchived: false
           }
         }
         );
@@ -263,7 +264,12 @@ export function deleteContact(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}contacts/${id}`);
+      const data = {
+        isArchived: true,
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/contacts/${id}`,
+        data
+      );
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Checkbox, FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/contact';
 import { saveCustomer } from '../../redux/slices/customer';
@@ -23,6 +23,19 @@ import FormProvider, {
   RHFTextField,
   RHFMultiSelect
 } from '../../components/hook-form';
+import {
+  varFade,
+  varZoom,
+  varFlip,
+  varSlide,
+  varScale,
+  varBgPan,
+  varBounce,
+  varRotate,
+  varBgColor,
+  varBgKenburns,
+} from '../../components/animate';
+
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset
@@ -59,6 +72,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { customer, customerSaveSuccess } = useSelector((state) => state.customer);
 
+  const [checked, setCheckboxFlag] = useState(false);
+
+  const toggleCheckboxFlag = () => setCheckboxFlag(value => !value);
+
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
@@ -87,13 +104,21 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     region: Yup.string(),
     country: Yup.string().nullable(true),
 
-    // contact details
-    firstName: Yup.string(),
-    lastName: Yup.string(),
-    title: Yup.string(),
-    contactTypes: Yup.array(),
-    contactPhone: Yup.string(),
-    contactEmail: Yup.string().email('Email must be a valid email address'),
+    // billing contact details
+    billingFirstName: Yup.string(),
+    billingLastName: Yup.string(),
+    billingTitle: Yup.string(),
+    billingContactTypes: Yup.array(),
+    billingContactPhone: Yup.string(),
+    billingContactEmail: Yup.string().email('Email must be a valid email address'),
+
+    // technical contact details
+    technicalFirstName: Yup.string(),
+    technicalLastName: Yup.string(),
+    technicalTitle: Yup.string(),
+    technicalContactTypes: Yup.array(),
+    technicalContactPhone: Yup.string(),
+    technicalContactEmail: Yup.string().email('Email must be a valid email address'),
   });
 
   const defaultValues = useMemo(
@@ -105,6 +130,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       projectManager: '',
       supportManager: '',
       type: 'Customer',
+      sameContactFlag: checked,
       loginUser: {
         userId,
         email: user.email,
@@ -237,11 +263,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </Stack>
               </Card>
 
-              <Card sx={{ p: 3, mb: 3 }}>
-            <Stack spacing={3}>
+            <Card sx={{ p: 3, mb: 3 }}>
+              <Stack spacing={3}>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Contact Information
+                Billing Contact Information
               </Typography>
 
               <Box
@@ -253,23 +279,61 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-              <RHFTextField name="firstName" label="First Name" />
+              <RHFTextField name="billingFirstName" label="First Name" />
 
-              <RHFTextField name="lastName" label="Last Name" />
+              <RHFTextField name="billingLastName" label="Last Name" />
 
-              <RHFTextField name="title" label="Title" />
+              <RHFTextField name="billingTitle" label="Title" />
 
-              <RHFTextField name="contactPhone" label="Contact Phone" />
+              <RHFTextField name="billingContactPhone" label="Contact Phone" />
 
-              <RHFTextField name="contactEmail" label="Contact Email" />
+              <RHFTextField name="billingContactEmail" label="Contact Email" />
 
               </Box>
 
               </Stack>
+            </Card>
 
-              </Card>
+            <Card sx={{ p: 3, mb: 3 }}>
+              <Stack spacing={3}>
 
-              <Card sx={{ p: 3 }}>
+              <Stack direction="row"
+                justifyContent="space-between"
+                alignItems="center"
+                spacing={3}>
+
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Technical Contact Information
+              </Typography>
+
+              <FormControlLabel label="Same as billing contact" control={<Checkbox checked={checked} onClick={toggleCheckboxFlag} />} sx={{mb: -10}} />
+               </Stack>
+
+               {!checked && <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+              <RHFTextField name="technicalFirstName" label="First Name" />
+
+              <RHFTextField name="technicalLastName" label="Last Name" />
+
+              <RHFTextField name="technicalTitle" label="Title" />
+
+              <RHFTextField name="technicalContactPhone" label="Contact Phone" />
+
+              <RHFTextField name="technicalContactEmail" label="Contact Email" />
+
+              </Box>}
+
+              </Stack>
+            </Card>
+
+            <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>

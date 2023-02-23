@@ -31,16 +31,11 @@ export default function CustomerViewForm() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const [editFlag, setEditFlag] = useState(false);
-
   const toggleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
   }
   
-  const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
 
   const defaultValues = useMemo(
     () => ({
@@ -128,33 +123,7 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Account Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.accountManager.firstName} {defaultValues.accountManager.lastName}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Project Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.projectManager.firstName} {defaultValues.projectManager.lastName}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Suppport Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.supportManager.firstName} {defaultValues.supportManager.lastName}</Typography>
-            
-          </Grid> */}
-
+          
           </Grid>
           
           {/* {fDate(createdAt)} */}
@@ -164,7 +133,7 @@ export default function CustomerViewForm() {
 
           <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
             <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-               Address Details
+              Address Details
             </Typography>
           </Grid>
 
@@ -226,11 +195,11 @@ export default function CustomerViewForm() {
         }
 
         {defaultValues.primaryBillingContact && <Grid container>
-        <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
+        {/* <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
             <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-               Contact Information
+              Contact Information
             </Typography>
-          </Grid>
+          </Grid> */}
 
           {defaultValues.primaryBillingContact && <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
@@ -238,14 +207,54 @@ export default function CustomerViewForm() {
           </Typography>
 
           <Typography variant="body2">
-            {defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : 'N/A'} 
-            {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : 'N/A'}
+            {defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} 
+             {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}
           </Typography>
 
         </Grid>}
 
 
         </Grid>}
+
+        <Grid container>
+
+
+          <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
+            <Typography variant="subtitle2" sx={{ color: '#131414' }}>
+               Howick Resources
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+              Account Manager
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.accountManager.firstName} {defaultValues.accountManager.lastName}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+              Project Manager
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.projectManager.firstName} {defaultValues.projectManager.lastName}</Typography>
+            
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+             Suppport Manager
+            </Typography>
+
+            <Typography variant="body2">{defaultValues.supportManager.firstName} {defaultValues.supportManager.lastName}</Typography>
+            
+          </Grid> 
+
+          </Grid>
+
+
 
         <Grid container>
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>

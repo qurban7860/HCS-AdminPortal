@@ -6,7 +6,9 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from '../../utils/axios';
 import { CONFIG } from '../../config-global';
 
-// ----------------------------------------------------------------------
+const _ = require('lodash');
+
+// ---------------------------------------------------------------------
 
 const initialState = {
   intial: false,
@@ -63,7 +65,6 @@ const slice = createSlice({
 
     // GET Customer
     getCustomerSuccess(state, action) {
-      
       state.isLoading = false;
       state.success = true;
       state.customer = action.payload;
@@ -133,8 +134,8 @@ export function getCustomer(id) {
       dispatch(slice.actions.getCustomerSuccess(response.data));
       console.log('requested customer', response.data);
     } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error));
+      // console.error(error);
+      // dispatch(slice.actions.hasError(error));
     }
   };
 }
@@ -160,8 +161,9 @@ export function deleteCustomer(id) {
 // --------------------------------------------------------------------------
 
 export function saveCustomer(params) {
+  console.log('params', params);
+
     return async (dispatch) => {
-      console.log('params', params);
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
@@ -173,87 +175,119 @@ export function saveCustomer(params) {
             name: params.name,
             address: {},
           },
-          technicalContact: {},
-          billingContact: {},
+          type: params.type
         };
+
+        let billingContact = {};
+        let technicalContact = {};
         /* eslint-enable */
+        // params.accountManager ? data.accountManager = params.accountManager : '';
 
         if(params.accountManager){
           data.accountManager = params.accountManager;        
         }
+
+        // params.projectManager ? data.projectManager = params.projectManager : '';
         if(params.projectManager){
           data.projectManager = params.projectManager;        
         }
+
+        // params.supportManager ? data.supportManager = params.supportManager : '';
         if(params.supportManager){
           data.supportManager = params.supportManager;        
         }
-        if(params.primaryBillingContact){
-          data.primaryBillingContact = params.primaryBillingContact;        
-        }
-        if(params.primaryTechnicalContact){
-          data.primaryTechnicalContact = params.primaryTechnicalContact;        
-        }
+
+        // params.phone ? data.phone = params.supportManager : '';
         if(params.phone){
           data.site.phone = params.phone;        
         }
+
+        // params.email ? data.email = params.email : '';
         if(params.email){
           data.site.email = params.email;        
         }
+
         if(params.fax){
           data.site.fax = params.fax;        
         }
+
         if(params.website){
           data.site.website = params.website;        
         }
+
         if(params.street){
-          console.log('street', params.street);
           data.site.address.street = params.street;        
         }
+
         if(params.suburb){
           data.site.address.suburb = params.suburb;        
         }
+
         if(params.city){
           data.site.address.city = params.city;        
         }
+
         if(params.region){
           data.site.address.region = params.region;        
         }
+
         if(params.country){
           data.site.address.country = params.country;        
+        }        
+
+        // Billing Contact Information Start
+        if(params.billingFirstName){
+          billingContact.firstName = params.firstName;
         }
 
-        if(params.firstName){
-          data.billingContact.firstName = params.firstName;
-          data.technicalContact.firstName = params.firstName;
+        if(params.billingLastName){
+          billingContact.lastName = params.lastName;
         }
 
-        if(params.lastName){
-          data.billingContact.lastName = params.lastName;
-          data.technicalContact.lastName = params.lastName;        
-
+        if(params.billingTitle){
+          billingContact.title = params.title;
         }
 
-        if(params.title){
-          data.billingContact.title = params.title;
-          data.technicalContact.title = params.title;
+        if(params.billingContactPhone){
+          billingContact.phone = params.contactPhone;
+        }
+        if(params.billingContactEmail){
+          billingContact.email = params.contactEmail;
+        }
+        // Billing Contact Information End
 
+        // Technical Contact Information Start
+        if(params.technicalFirstName){
+          technicalContact.firstName = params.firstName;
         }
 
-        if(params.contactPhone){
-          data.billingContact.title = params.title;
-          data.technicalContact.title = params.title;        
-
+        if(params.technicalLastName){
+          technicalContact.lastName = params.lastName;
         }
 
-        if(params.contactEmail){
-          data.billingContact.contactEmail = params.contactEmail;
-          data.technicalContact.contactEmail = params.contactEmail;        
+        if(params.technicalTitle){
+          technicalContact.title = params.title;
+        }
 
+        if(params.technicalContactPhone){
+          technicalContact.phone = params.contactPhone;
+        }
+        if(params.technicalContactEmail){
+          technicalContact.email = params.contactEmail;
+        }
+        // Technical Contact Information End
+        
+        if(!_.isEmpty(billingContact)){
+          data.billingContact = billingContact;
+        }
+        
+        if(params.sameContactFlag && data.billingContact){
+          data.technicalContact = billingContact;
+        }else{
+          data.technicalContact = technicalContact;
         }
 
         const response = await axios.post(`${CONFIG.SERVER_URL}customers/customers`, data);
-
-        console.log('response', response.data.Customer);
         dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);

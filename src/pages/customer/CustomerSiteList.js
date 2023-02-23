@@ -123,7 +123,7 @@ export default function CustomerSiteList() {
   };
   const dispatch = useDispatch();
 
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, formVisibility } = useSelector((state) => state.site);
+  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
 
   const { customer } = useSelector((state) => state.customer);
 
@@ -132,7 +132,7 @@ export default function CustomerSiteList() {
   const toggleChecked = () => 
     {
       setChecked(value => !value);
-      dispatch(setFormVisibility(!formVisibility));
+      dispatch(setFormVisibility(!siteAddFormVisibility));
     
     };
 
@@ -140,20 +140,17 @@ export default function CustomerSiteList() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
 
   const [tableData, setTableData] = useState([]);
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  useLayoutEffect(() => {
-    // dispatch(setFormVisibility(checked));
-    if(!formVisibility && !siteEditFormVisibility){
+  useEffect(() => {
+    if(!siteAddFormVisibility && !siteEditFormVisibility){
       dispatch(getSites(customer._id));
     }
-  }, [dispatch, checked, customer, formVisibility, siteEditFormVisibility]);
+  }, [dispatch, checked, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 
   useEffect(() => {
     if (initial) {
@@ -181,7 +178,7 @@ export default function CustomerSiteList() {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !sites.length && !formVisibility && !siteEditFormVisibility;
+  const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
 
   return (
     <>
@@ -208,9 +205,9 @@ export default function CustomerSiteList() {
 
           {siteEditFormVisibility && <SiteEditForm/>}
 
-          {formVisibility && !siteEditFormVisibility && <SiteAddForm/>}
+          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm/>}
 
-          {!formVisibility && !siteEditFormVisibility && sites.map((site, index) => (
+          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) => (
 
             
           

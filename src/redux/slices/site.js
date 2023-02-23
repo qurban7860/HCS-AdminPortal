@@ -10,7 +10,7 @@ import { CONFIG } from '../../config-global';
 
 const initialState = {
   intial: false,
-  formVisibility: false,
+  siteAddFormVisibility: false,
   siteEditFormVisibility: false,
   responseMessage: null,
   success: false,
@@ -36,7 +36,7 @@ const slice = createSlice({
     // SET TOGGLE
     setFormVisibility(state, action){
       console.log('toggle', action.payload);
-      state.formVisibility = action.payload;
+      state.siteAddFormVisibility = action.payload;
     },
 
     // SET TOGGLE
@@ -115,16 +115,31 @@ export function saveSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          address: {
-            street: params.street,
-            suburb: params.suburb,
-            city: params.city,
-            region: params.region,
-            country: params.country
-          }
+          address: {}
         };
 
         /* eslint-enable */
+        if(params.street){
+          data.address.street = params.street;        
+        }
+        if(params.suburb){
+          data.address.suburb = params.suburb;        
+        }
+        if(params.city){
+          data.address.city = params.city;        
+        }
+        if(params.region){
+          data.address.region = params.region;        
+        }
+        if(params.country){
+          data.address.country = params.country;        
+        }
+        if(params.primaryBillingContact){
+          data.primaryBillingContact = params.primaryBillingContact;        
+        }
+        if(params.primaryTechnicalContact){
+          data.primaryTechnicalContact = params.primaryTechnicalContact;        
+        }
         
         await axios.post(`${CONFIG.SERVER_URL}customers/sites`, data);
 
@@ -157,16 +172,30 @@ export function updateSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          address: {
-            street: params.street,
-            suburb: params.suburb,
-            city: params.city,
-            region: params.region,
-            country: params.country
-          }
+          address: {}
         };
-
         /* eslint-enable */
+        if(params.street){
+          data.address.street = params.street;        
+        }
+        if(params.suburb){
+          data.address.suburb = params.suburb;        
+        }
+        if(params.city){
+          data.address.city = params.city;        
+        }
+        if(params.region){
+          data.address.region = params.region;        
+        }
+        if(params.country){
+          data.address.country = params.country;        
+        }
+        if(params.primaryBillingContact){
+          data.primaryBillingContact = params.primaryBillingContact;        
+        }
+        if(params.primaryTechnicalContact){
+          data.primaryTechnicalContact = params.primaryTechnicalContact;        
+        }
 
         const response = await axios.patch(`${CONFIG.SERVER_URL}customers/sites/${params.id}`
          , data);
@@ -187,13 +216,6 @@ export function getSites(params = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
-      // , {
-      //   params: {
-      //     product: this.product
-      //   }
-      // }
-      // const customer_iid = 63e9dd63c2d169a9701d0;
       let response = null;
       if(params){
         response = await axios.get(`${CONFIG.SERVER_URL}customers/sites` , 

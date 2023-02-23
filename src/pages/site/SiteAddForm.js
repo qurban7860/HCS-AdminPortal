@@ -28,6 +28,8 @@ export default function SiteAddForm() {
 
   const { customer } = useSelector((state) => state.customer);
 
+  const { contacts } = useSelector((state) => state.contact);
+
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -46,6 +48,8 @@ export default function SiteAddForm() {
     city: Yup.string(),
     region: Yup.string(),
     country: Yup.string(),
+    primaryBillingContact: Yup.string(),
+    primaryTechnicalContact: Yup.string()
 
   });
 
@@ -92,6 +96,7 @@ export default function SiteAddForm() {
 
   const onSubmit = async (data) => {
     try {
+      console.log('params',data);
       await dispatch(saveSite(data));
       reset();
 
@@ -160,6 +165,40 @@ export default function SiteAddForm() {
                   ))}
                 </RHFSelect>
 
+              </Box>
+
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Contact Details
+              </Typography>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+              <RHFSelect native name="primaryBillingContact" label="Primary Billing Contact">
+                    <option value="" selected/>
+                    { 
+                    contacts.length > 0 && contacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+
+              <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
+                    <option value="" selected/>
+                    { 
+                    contacts.length > 0 && contacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
               </Box>
             </Stack>
 

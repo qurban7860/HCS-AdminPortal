@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -14,8 +14,9 @@ import { CONFIG } from '../../config-global';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
+import ConfirmDialog from '../../components/confirm-dialog';
 
-import { getContacts, getContact, setEditFormVisibility } from '../../redux/slices/contact';
+import { getContacts, getContact, setEditFormVisibility, deleteContact } from '../../redux/slices/contact';
 // Iconify
 import Iconify from '../../components/iconify';
 
@@ -28,15 +29,40 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const { contact } = useSelector((state) => state.contact);
 
+  const { customer } = useSelector((state) => state.customer);
+
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const  handleEdit = async () => {
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const [openPopover, setOpenPopover] = useState(null);
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleClosePopover = () => {
+    setOpenPopover(null);
+  };
+
+  const handleEdit = async () => {
     await dispatch(getContact(currentContact._id));
     dispatch(setEditFormVisibility(true));
+  };
+
+  const onDelete = async () => {
+    await dispatch(deleteContact(currentContact._id));
+    handleCloseConfirm();
+    dispatch(getContacts(customer._id));
+    // dispatch(getContacts());
   };
 
   const defaultValues = useMemo(
@@ -55,13 +81,26 @@ export default function ContactViewForm({ currentContact = null }) {
 
   return (
       <Card sx={{ pt: 5, px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
+      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+
+
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
           startIcon={<Iconify icon="eva:edit-fill" />}
         >
           Edit
+        </Button>
+        <Button
+          onClick={() => {
+            handleOpenConfirm();
+            handleClosePopover();
+          }}
+          variant="outlined"
+          color="error"
+          startIcon={<Iconify icon="eva:trash-2-fill" />}
+        >
+          Delete
         </Button>
 
       </Stack>
@@ -139,6 +178,17 @@ export default function ContactViewForm({ currentContact = null }) {
             <Typography variant="body2">{defaultValues.department}</Typography>
             
           </Grid> */}
+          <ConfirmDialog
+            open={openConfirm}
+            onClose={handleCloseConfirm}
+            title="Delete"
+            content="Are you sure want to delete?"
+            action={
+              <Button variant="contained" color="error" onClick={onDelete}>
+                Delete
+              </Button>
+            }
+          />
 
             </Grid>
             </Card>

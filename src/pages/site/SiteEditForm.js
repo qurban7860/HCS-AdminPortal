@@ -35,6 +35,8 @@ export default function SiteEditForm() {
 
   const { error, site } = useSelector((state) => state.site);
 
+  const { contacts } = useSelector((state) => state.contact);
+
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -51,6 +53,8 @@ export default function SiteEditForm() {
     city: Yup.string(),
     region: Yup.string(),
     country: Yup.string(),
+    primaryBillingContact: Yup.string(),
+    primaryTechnicalContact: Yup.string()
   });
 
 
@@ -107,7 +111,6 @@ export default function SiteEditForm() {
     try {
       await dispatch(updateSite(data));
       reset();
-      // navigate(PATH_DASHBOARD.site.list);
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -175,6 +178,39 @@ export default function SiteEditForm() {
                   ))}
                 </RHFSelect>
 
+              </Box>
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Contact Details
+            </Typography>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+              <RHFSelect native name="primaryBillingContact" label="Primary Billing Contact">
+                    <option value="" selected/>
+                    { 
+                    contacts.length > 0 && contacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
+
+              <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
+                    <option value="" selected/>
+                    { 
+                    contacts.length > 0 && contacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
               </Box>
 
               <Box

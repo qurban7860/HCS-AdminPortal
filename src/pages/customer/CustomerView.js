@@ -62,8 +62,6 @@ export default function CustomerViewPage({editPage}) {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
-
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
 
   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
@@ -79,13 +77,13 @@ export default function CustomerViewPage({editPage}) {
 
   const [customerFlag, setCustomerFlag] = useState(true);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if(id != null){
       dispatch(getCustomer(id));
     }
   }, [dispatch, id]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(setCustomerEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
 
@@ -128,6 +126,7 @@ export default function CustomerViewPage({editPage}) {
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="eva:archive-outline" />,
+      component: <></>
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,

@@ -149,11 +149,6 @@ export default function CustomerContactList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
-  console.log('contacts', contacts);
-  console.log('formVisibility', formVisibility);
-  console.log('editformvibis', contactEditFormVisibility);
-  console.log('checked', checked);
-
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
     if(!formVisibility && !contactEditFormVisibility){
