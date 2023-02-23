@@ -41,7 +41,10 @@ export const CustomerView = Loadable(  lazy(() => import('../pages/customer/Cust
 export const MachinePage = Loadable(lazy(()=> import('../pages/machine/Machine')))
 export const MachineAdd = Loadable(lazy(()=> import('../pages/machine/MachineAddForm')))
 export const MachineSupplier = Loadable(lazy(()=> import('../pages/machine/MachineSuppliers')))
-export const S_Detail = Loadable(lazy(()=> import('../pages/machine/SupplierDetail')))
+export const SupplierList = Loadable(lazy(()=> import('../pages/machine/SupplierList')))
+export const SupplierView = Loadable(lazy(()=> import('../pages/machine/SupplierView')))
+export const SupplierViewForm = Loadable(lazy(()=> import('../pages/machine/SupplierViewForm')))
+export const SupplierEditForm = Loadable(lazy(()=> import('../pages/machine/SupplierEditForm')))
 // SITE
 export const SiteList= Loadable(  lazy(() => import('../pages/site/SiteList')));
 export const SiteAdd = Loadable(  lazy(() => import('../pages/site/SiteAdd')));

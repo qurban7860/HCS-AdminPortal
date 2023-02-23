@@ -41,7 +41,10 @@ import {
   MachinePage,
   MachineAdd,
   MachineSupplier,
-  S_Detail,
+  SupplierList,
+  SupplierView,
+  SupplierViewForm,
+  SupplierEditForm,
   // Site
   SiteList,
   SiteAdd,
@@ -234,15 +237,21 @@ export default function Router() {
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
-        
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <MachinePage /> }, 
         { path: 'new', element: <MachineAdd /> }, 
-        { path: 'supplier', element: <MachineSupplier /> },
-        // eslint-disable-next-line
-        { path: 'detail', element: <S_Detail/>} 
+        {
+          path : 'supplier',
+          children:[
+            { path: 'supplier', element: <MachineSupplier /> },
+            { path: 'list', element: <SupplierList/>}, 
+            { path: ':id/view', element: <SupplierView/>},
+            { path: 'viewform', element: <SupplierViewForm/>}, 
+            { path: 'editform', element: <SupplierEditForm/>},
+          ]
+        }
       ]
     },
 

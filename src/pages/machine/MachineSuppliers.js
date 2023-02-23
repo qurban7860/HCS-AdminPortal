@@ -152,7 +152,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         await dispatch(createSuppliers(finalData));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.general.detail); 
+        navigate(PATH_MACHINE.supplier.list); 
+        // console.log(PATH_MACHINE.supplier.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
         enqueueSnackbar(error?.message)
@@ -186,9 +187,24 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={6}>
+            <Stack spacing={3}>
             <Box
-              rowGap={3}
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
+
+              <RHFTextField name="name" label="Name of Supplier" required />
+              </Box>
+              <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+                Contact Information
+              </Typography>
+              <Box
+              rowGap={2}
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
@@ -196,22 +212,33 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Name of Supplier" required 
-
-              />
+              {/* / //contact / */}
               <RHFTextField name="Contact_Name" label="Contact Name"/>
               <RHFTextField name="Contact_Title" label="Contact Title"/>
-              {/* / //contact / */}
               <RHFTextField name="phone" label="Phone"/>
               <RHFTextField name="email" label="Email"/>
               <RHFTextField name="fax" label="Fax"/>
               <RHFTextField name="website" label="Website"/>
+              </Box>
               {/* //address */}
+              <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
+                Address Information
+              </Typography>
+              <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(2, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+            
               <RHFTextField name="street" label="Street"/>
-              <RHFTextField name="suburb" label="suburb" />
-              <RHFTextField name="city" label="city" />
-              <RHFTextField name="region" label="region" />
-              <RHFTextField name="country" label="country" />
+              <RHFTextField name="suburb" label="Suburb" />
+              <RHFTextField name="city" label="City" />
+              <RHFTextField name="region" label="Region" />
+              <RHFTextField name="country" label="Country" />
 
 
               <RHFSwitch
@@ -229,8 +256,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               }
               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
             />
-              
-
              </Box>
              
               

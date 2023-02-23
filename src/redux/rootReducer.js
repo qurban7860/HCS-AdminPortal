@@ -77,7 +77,7 @@ export const machinePersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 };
 export const suppplierPersistConfig = {
-  key: 'machine',
+  key: 'supplier',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']

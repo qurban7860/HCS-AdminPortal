@@ -130,17 +130,18 @@ export const PATH_MACHINE = {
   root: ROOTS_MACHINE,
   permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),
   general: {
-    app: path(ROOTS_MACHINE, '/app'),
-    supplier: (ROOTS_MACHINE, '/machine/supplier'),
-    detail: (ROOTS_MACHINE, '/machine/detail')
+    app: path(ROOTS_MACHINE, '/app'), 
   },
   new: path(ROOTS_MACHINE, '/machine/new'),
   machine:{
     new: path(ROOTS_MACHINE, '/new'),
-    // // supplier: (ROOTS_MACHINE, '/supplier')
-    // edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
   },
-  
+  supplier:{
+    supplier: (ROOTS_MACHINE, '/machine/supplier/supplier'),
+    list: (ROOTS_MACHINE, '/machine/supplier/list'),
+    view: (id) => path(ROOTS_MACHINE, `/supplier/${id}/view`),
+    edit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/editform `),
+  }
 }
 
 export const PATH_DOCS = {

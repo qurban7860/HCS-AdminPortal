@@ -29,13 +29,13 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setMachineEditFormVisibility(state, action){
+    setSupplierEditFormVisibility(state, action){
       console.log('toggle', action.payload);
       state.supplierEditFormFlag = action.payload;
     },
     
     // RESET CUSTOMER
-    resetMachine(state){
+    resetSupplier(state){
       state.machine = {};
       state.responseMessage = null;
       state.success = false;
@@ -59,13 +59,13 @@ const slice = createSlice({
     },
 
     // GET Customer
-    getMachineSuccess(state, action) {
+    getSupplierSuccess(state, action) {
       
       state.isLoading = false;
       state.success = true;
-      state.machine = action.payload;
+      state.supplier = action.payload;
       state.initial = true;
-      console.log('machinesuccessslice', state.machine);
+      console.log('supplierSuccessSlice', state.supplier);
     },
 
 
@@ -92,8 +92,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setMachineEditFormVisibility,
-  resetMachine,
+  setSupplierEditFormVisibility,
+  resetSupplier,
   getCart,
   addToCart,
   setResponseMessage,
@@ -131,6 +131,7 @@ export function getSuppliers (){
       const response = await axios.get(`${CONFIG.SERVER_URL}machines/suppliers`);
 
       dispatch(slice.actions.getSuppliersSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
       // dispatch(slice.actions)
       console.log(response,"From supplyer data");
     } catch (error) {
@@ -138,4 +139,20 @@ export function getSuppliers (){
       dispatch(slice.actions.hasError(error))
     }
   }
+}
+// ----------------------------------------------------------------------
+
+export function getSupplier(id) {
+  console.log('slice working');
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}machines/suppliers/${id}`);
+      dispatch(slice.actions.getSuppliersSuccess(response.data));
+      console.log('requested customer', response.data);
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
 }

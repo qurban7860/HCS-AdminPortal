@@ -43,9 +43,7 @@ export default function SupplierListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, contactname, contactTitle, phone, email, fax, website} = row;
-
-//   console.log('ID', isDisabled);
+  const { name, contactName, contactTitle, address} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -68,8 +66,6 @@ export default function SupplierListTableRow({
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
-
-//   console.log('isDisabled',isDisabled);
 
 
   return (
@@ -94,33 +90,11 @@ export default function SupplierListTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell>{contactname}</TableCell>
+        <TableCell>{contactName}</TableCell>
         <TableCell>{contactTitle}</TableCell>
-        <TableCell>{phone}</TableCell>
-        <TableCell>{email}</TableCell>
-        <TableCell>{fax}</TableCell>
-        <TableCell>{website}</TableCell>
-        
-        {/* <TableCell>{tradingName}</TableCell> */}
-
-
-        {/* <TableCell align="left">
-          <Label
-            variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled === false ? 'Yes' : 'No'}
-          </Label>
-        </TableCell> 
-
-        <TableCell>{fDate(createdAt)}</TableCell>
-
-        <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>   */}
+        <TableCell>{address.city}</TableCell>
+        <TableCell>{address.country}</TableCell>
+       
       </TableRow> 
 
       <MenuPopover
