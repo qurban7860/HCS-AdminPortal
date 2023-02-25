@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getSite, setEditFormVisibility } from '../../redux/slices/site';
-import { getSuppliers } from '../../redux/slices/supplier';
+import { getSupplier, getSuppliers, setSupplierEditFormVisibility } from '../../redux/slices/supplier';
 // paths
 import { PATH_MACHINE } from '../../routes/paths';
 // components
@@ -31,17 +30,37 @@ SupplierViewForm.propTypes = {
 
 export default function SupplierViewForm({ currentSupplier = null }) {
 
-  const { suppliers } = useSelector((state) => state.supplier);
-  const { id } = useParams();
-  const supplier = suppliers.find((supp)=>supp._id === id);
+  // const { suppliers } = useSelector((state) => state.supplier);
+
+  const [editFlag, setEditFlag] = useState(false);
+
+  const toggleEdit = () => {
+    dispatch(setSupplierEditFormVisibility(true));
+    navigate(PATH_MACHINE.supplier.supplieredit(id));
+  }
+
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const  handleEdit = async () => {
-    await dispatch(getSuppliers(currentSupplier._id));
-    dispatch(setEditFormVisibility(true));
-  };
+  const { suppliers } = useSelector((state) => state.supplier);
+  const { id } = useParams();
+  const supplier = suppliers;
+
+  // const supplier = suppliers?.find((supp)=>supp?._id === id);
+  // console.log(suppliers, "muzna")
+  const dispatch = useDispatch()
+  useLayoutEffect(() => {
+    if(id != null){
+      dispatch(getSupplier(id));
+    }
+  }, [dispatch, id]);
+
+  // const  handleEdit = async () => {
+  //   await dispatch(getSuppliers(currentSupplier._id));
+  //   // dispatch(setEditFormVisibility(true));
+  //   console.log(currentSupplier) 
+  // };
 
   const defaultValues = useMemo(
     () => (
@@ -52,12 +71,11 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         phone: supplier?.phone || 'N/A',
         email: supplier?.email || 'N/A',
         website: supplier?.website || 'N/A',
-
         street: supplier?.address?.street || 'N/A',
-        suburb: supplier?.address.suburb || 'N/A',
-        city: supplier?.address.city || 'N/A',
-        region: supplier?.address.region || 'N/A',
-        country: supplier?.address.country || 'N/A',
+        suburb: supplier?.address?.suburb || 'N/A',
+        city: supplier?.address?.city || 'N/A',
+        region: supplier?.address?.region || 'N/A',
+        country: supplier?.address?.country || 'N/A',
         createdAt: supplier?.createdAt || '',
         updatedAt: supplier?.updatedAt || '',
         
@@ -66,13 +84,16 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     [currentSupplier, supplier]
     );
     
-    console.log(supplier,"Testing",defaultValues)
+    // console.log(supplier,"Testing",defaultValues)
 
   return (
     <Card sx={{ px: 5 }}>
       <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
         <Button
-          onClick={() => handleEdit()}
+          onClick={() => { 
+              toggleEdit(); 
+              
+          }}
           variant="outlined"
           startIcon={<Iconify icon="eva:edit-fill" />}
         >
@@ -81,7 +102,6 @@ export default function SupplierViewForm({ currentSupplier = null }) {
 
       </Stack>
       <Grid container>
-
 
         <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>

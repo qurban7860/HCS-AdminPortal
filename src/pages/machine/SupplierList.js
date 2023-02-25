@@ -40,9 +40,8 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import SupplierListTableRow from './SupplierListTableRow';
 import SupplierListTableToolbar from './SupplierListTableToolbar';
 import SupplierStepper from './SupplierStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
-import { getSuppliers } from '../../redux/slices/supplier';
+import { getSuppliers, deleteSupplier } from '../../redux/slices/supplier';
 
 // ----------------------------------------------------------------------
 
@@ -170,10 +169,11 @@ export default function SupplierList() {
   };
 
   const handleDeleteRow = async (id) => {
+    await dispatch(deleteSupplier(id));
     try {
-      // console.log(id);
-      await dispatch(deleteCustomer(id));
-      dispatch(getCustomers());
+      console.log(id);
+      // await dispatch(deleteSupplier(id));
+      dispatch(getSuppliers());
       setSelected([]);
 
       if (page > 0) {
@@ -186,7 +186,8 @@ export default function SupplierList() {
     }
   };
 
-  const handleDeleteRows = (selectedRows) => {
+  const handleDeleteRows = async (selectedRows,handleClose) => {
+    console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -201,11 +202,16 @@ export default function SupplierList() {
         setPage(newPage);
       }
     }
+
+    // dispatch delete supplier
+    // await dispatch(deleteSuppliers(selectedRows));
+    // await dispatch(getSuppliers())
+    handleClose()
   };
 
   const handleEditRow = (id) => {
     console.log(id);
-    navigate(PATH_MACHINE.general.edit(id));
+    navigate(PATH_MACHINE.supplier.edit(id));
   };
 
   const handleViewRow = (id) => {
@@ -221,35 +227,19 @@ export default function SupplierList() {
   return (
     <>
       <Helmet>
-        <title> Machine: List | Machine ERP </title>
+        <title> Supplier: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <Grid container spacing={5} >
-          <MachineDashboardNavbar/>
-          </Grid>
-        {/* <CustomBreadcrumbs
-          heading="Customer List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
-            },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              component={RouterLink}
-              to={PATH_DASHBOARD.customer.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Customer
-            </Button>
-          }
-        /> */}
-        <Card>
+      <div style={{paddingBottom:'0px', }}>
+      <CustomBreadcrumbs 
+          heading="Supplier's List"
+          
+        />
+
+        </div>
+        <div style={{paddingTop:'0px'}}>
+        <Card sx={{ mt: -3 }}>
           <SupplierListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -308,7 +298,7 @@ export default function SupplierList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
+                          // onEditRow={() => handleEditRow(row._id)} 
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -338,6 +328,7 @@ export default function SupplierList() {
             onChangeDense={onChangeDense}
           />
         </Card>
+        </div>
       </Container>
 
       <ConfirmDialog
@@ -354,7 +345,7 @@ export default function SupplierList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              handleDeleteRow(selected);
               handleCloseConfirm();
             }}
           >
@@ -369,7 +360,7 @@ export default function SupplierList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);

@@ -149,10 +149,159 @@ export function getSupplier(id) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}machines/suppliers/${id}`);
       dispatch(slice.actions.getSuppliersSuccess(response.data));
-      console.log('requested customer', response.data);
+      console.log('requested supplier', response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };
+}
+
+export function deleteSupplier(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      console.log(id[0],'Delete Supplier id xyzzzzzzz');
+      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers/${id}`);
+      // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
+      dispatch(slice.actions.setResponseMessage(response.data));
+      // get again suppliers //search
+      
+      console.log(response);
+      // console.log(CONFIG.SERVER_URL[0])
+      // state.responseMessage = response.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// --------------------------------------------------------------------------
+
+export function saveSupplier(params) {
+    return async (dispatch) => {
+      console.log('params', params);
+      dispatch(slice.actions.resetSupplier());
+      dispatch(slice.actions.startLoading());
+      try {
+        /* eslint-disable */
+        let data = {
+          name: params.name,
+          // tradingName: params.tradingName,
+          // site: {
+          //   name: params.name,
+          //   address: {},
+          // },
+          // technicalContact: {},
+          // billingContact: {},
+        };
+        /* eslint-enable */
+
+        if(params.contactName){
+          data.contactName = params.contactName;
+        }
+        if(params.contactTitle){
+          data.contactTitle = params.contactTitle;
+        }
+        if(params.phone){
+          data.phone = params.phone;
+        }
+        if(params.email){
+          data.email = params.email;
+        }
+        if(params.website){
+          data.website = params.website;        
+        }
+        if(params.street){
+          data.street = params.street;        
+        }
+        if(params.suburb){
+          data.suburb = params.suburb;        
+        }
+        if(params.city){
+          data.city = params.city;        
+        }
+        if(params.region){
+          data.region = params.region;        
+        }
+        if(params.country){
+          data.country = params.country;        
+        }
+
+        const response = await axios.post(`${CONFIG.SERVER_URL}suppliers/suppliers`, data);
+
+        console.log('response', response.data.Supplier);
+        dispatch(slice.actions.getSupplierSuccess(response.data.Supplier));
+      } catch (error) {
+        console.error(error);
+        dispatch(slice.actions.hasError(error));
+      }
+    };
+
+}
+
+// --------------------------------------------------------------------------
+
+export function updateSupplier(params) {
+  console.log('update, working', params)
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+
+      const formData = new FormData();
+      /* eslint-disable */
+      let data = {
+        id: params.id,
+        name: params.name,
+        // tradingName: params.tradingName
+      };
+     /* eslint-enable */
+
+      if(params.contactName){
+        data.contactName = params.contactName;
+      }
+      if(params.contactTitle){
+        data.contactTitle = params.contactTitle;
+      }
+      if(params.phone){
+        data.phone = params.phone;
+      }
+      if(params.email){
+        data.email = params.email;
+      }
+      if(params.website){
+        data.website = params.website;        
+      }
+      if(params.street){
+        data.street = params.street;        
+      }
+      if(params.suburb){
+        data.suburb = params.suburb;        
+      }
+      if(params.city){
+        data.city = params.city;        
+      }
+      if(params.region){
+        data.region = params.region;        
+      }
+      if(params.country){
+        data.country = params.country;        
+      }
+      
+      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/suppliers/${params.id}`,
+        data
+      );
+
+      dispatch(getSupplier(params.id));
+      dispatch(slice.actions.setSupplierEditFormVisibility(false));
+
+      // this.updateCustomerSuccess(response);
+
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+
 }

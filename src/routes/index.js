@@ -44,6 +44,7 @@ import {
   SupplierList,
   SupplierView,
   SupplierViewForm,
+  SupplierEdit,
   SupplierEditForm,
   // Site
   SiteList,
@@ -248,7 +249,8 @@ export default function Router() {
             { path: 'supplier', element: <MachineSupplier /> },
             { path: 'list', element: <SupplierList/>}, 
             { path: ':id/view', element: <SupplierView/>},
-            { path: 'viewform', element: <SupplierViewForm/>}, 
+            { path: 'viewform', element: <SupplierViewForm/>},
+            { path: ':id/edit', element: <SupplierEdit/>}, 
             { path: 'editform', element: <SupplierEditForm/>},
           ]
         }

@@ -32,7 +32,6 @@ import { useSettingsContext } from '../../components/settings';
 import {
   CustomerCover
 } from './util';
-
 import CustomerAddForm from './CustomerAddForm'
 import SiteAddForm from '../site/SiteAddForm';
 import SiteList from '../site/SiteList';

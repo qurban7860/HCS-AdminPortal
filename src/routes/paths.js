@@ -140,7 +140,8 @@ export const PATH_MACHINE = {
     supplier: (ROOTS_MACHINE, '/machine/supplier/supplier'),
     list: (ROOTS_MACHINE, '/machine/supplier/list'),
     view: (id) => path(ROOTS_MACHINE, `/supplier/${id}/view`),
-    edit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/editform `),
+    supplieredit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/editform`),
   }
 }
 
