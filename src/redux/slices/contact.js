@@ -119,11 +119,6 @@ export function saveContact(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-      if(params.customer){
-        formData.append('customerId', params.customer);
-      }
-
       /* eslint-disable */
       let data = {
         customer: params.customer,

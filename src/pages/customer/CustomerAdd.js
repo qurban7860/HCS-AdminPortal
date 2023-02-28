@@ -17,7 +17,7 @@ export default function CustomerAdd() {
   return (
     <>
       <Helmet>
-        <title> Customer: Create a new Customer</title>
+        <title> Customer: Add Customer</title>
       </Helmet>
       
 

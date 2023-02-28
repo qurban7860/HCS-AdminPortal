@@ -207,8 +207,28 @@ export default function CustomerViewForm() {
           </Typography>
 
           <Typography variant="body2">
-            {defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} 
-             {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}
+            {defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}
+          </Typography>
+
+        </Grid>}
+
+
+        </Grid>}
+
+        {defaultValues.primaryTechnicalContact && <Grid container>
+        {/* <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
+            <Typography variant="subtitle2" sx={{ color: '#131414' }}>
+              Contact Information
+            </Typography>
+          </Grid> */}
+
+          {defaultValues.primaryTechnicalContact && <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Primary Technical Contact
+          </Typography>
+
+          <Typography variant="body2">
+            {defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''}  {defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}
           </Typography>
 
         </Grid>}

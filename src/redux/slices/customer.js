@@ -237,53 +237,54 @@ export function saveCustomer(params) {
 
         // Billing Contact Information Start
         if(params.billingFirstName){
-          billingContact.firstName = params.firstName;
+          billingContact.firstName = params.billingFirstName;
         }
 
         if(params.billingLastName){
-          billingContact.lastName = params.lastName;
+          billingContact.lastName = params.billingLastName;
         }
 
         if(params.billingTitle){
-          billingContact.title = params.title;
+          billingContact.title = params.billingTitle;
         }
 
         if(params.billingContactPhone){
-          billingContact.phone = params.contactPhone;
+          billingContact.phone = params.billingContactPhone;
         }
         if(params.billingContactEmail){
-          billingContact.email = params.contactEmail;
+          billingContact.email = params.billingContactEmail;
         }
         // Billing Contact Information End
 
         // Technical Contact Information Start
         if(params.technicalFirstName){
-          technicalContact.firstName = params.firstName;
+          technicalContact.firstName = params.technicalFirstName;
         }
 
         if(params.technicalLastName){
-          technicalContact.lastName = params.lastName;
+          technicalContact.lastName = params.technicalLastName;
         }
 
         if(params.technicalTitle){
-          technicalContact.title = params.title;
+          technicalContact.title = params.technicalTitle;
         }
 
         if(params.technicalContactPhone){
-          technicalContact.phone = params.contactPhone;
+          technicalContact.phone = params.technicalContactPhone;
         }
         if(params.technicalContactEmail){
-          technicalContact.email = params.contactEmail;
+          technicalContact.email = params.technicalContactEmail;
         }
         // Technical Contact Information End
         
         if(!_.isEmpty(billingContact)){
           data.billingContact = billingContact;
-        }
+          if(params.sameContactFlag){
+            data.technicalContact = billingContact;
+          }
+        }    
         
-        if(params.sameContactFlag && data.billingContact){
-          data.technicalContact = billingContact;
-        }else{
+        if(!params.sameContactFlag && !_.isEmpty(technicalContact)){
           data.technicalContact = technicalContact;
         }
 

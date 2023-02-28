@@ -76,6 +76,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const toggleCheckboxFlag = () => setCheckboxFlag(value => !value);
 
+  console.log('checked ------> ', checked);
+
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
@@ -84,7 +86,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const AddCustomerSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
-    tradingName: Yup.string().min(5).max(40),
+    tradingName: Yup.string(),
     mainSite: Yup.string(),
     sites: Yup.array(),
     contacts: Yup.array(),

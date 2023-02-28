@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Box, Step, Paper, Button, Stepper, StepLabel, Typography } from '@mui/material';
 import MachineAddForm from './MachineAddForm';
-import SiteAddForm from '../site/SiteAddForm';
+import SiteAddForm from '../customer/site/SiteAddForm';
 // ----------------------------------------------------------------------
 
 const steps = ['Enter Contact Details', 'Enter Site Details'];

@@ -46,35 +46,35 @@ export const customerPersistConfig = {
   key: 'customer',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'customers']
 };
 
 export const contactPersistConfig = {
   key: 'contact',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'contacts']
 };
 
 export const sitePersistConfig = {
   key: 'site',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'sites']
 };
 
 export const notePersistConfig = {
   key: 'note',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'notes']
 };
 
 export const machinePersistConfig = {
   key: 'machine',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'machines']
 };
 export const suppplierPersistConfig = {
   key: 'machine',

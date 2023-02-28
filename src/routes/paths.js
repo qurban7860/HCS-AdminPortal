@@ -93,15 +93,13 @@ export const PATH_DASHBOARD = {
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
   permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
+  dashboard: path(ROOTS_CUSTOMER, '/customer/dashboard'),
+  list: path(ROOTS_CUSTOMER, '/customer/list'),
+  new: path(ROOTS_CUSTOMER, '/customer/new'),
+  view: path(ROOTS_CUSTOMER, `/customer/view`),
+  edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
   general: {
     app: path(ROOTS_CUSTOMER, '/app'),
-  },
-  customer: {
-    dashboard: path(ROOTS_CUSTOMER, '/customer/dashboard'),
-    list: path(ROOTS_CUSTOMER, '/customer/list'),
-    new: path(ROOTS_CUSTOMER, '/customer/new'),
-    view: path(ROOTS_CUSTOMER, `/customer/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
   },
   site: {
     root: path(ROOTS_CUSTOMER, '/site'),

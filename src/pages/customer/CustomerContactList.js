@@ -41,12 +41,12 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import SiteListTableRow from '../site/SiteListTableRow';
-import SiteListTableToolbar from '../site/SiteListTableToolbar';
+import SiteListTableRow from './site/SiteListTableRow';
+import SiteListTableToolbar from './site/SiteListTableToolbar';
 import { getContacts, setFormVisibility } from '../../redux/slices/contact';
-import ContactAddForm from '../contact/ContactAddForm';
-import ContactEditForm from '../contact/ContactEditForm';
-import ContactViewForm from '../contact/ContactViewForm';
+import ContactAddForm from './contact/ContactAddForm';
+import ContactEditForm from './contact/ContactEditForm';
+import ContactViewForm from './contact/ContactViewForm';
 
 
 import _mock from '../../_mock';
@@ -198,7 +198,7 @@ export default function CustomerContactList() {
               onClick={toggleChecked}
 
               variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
+              startIcon={!checked ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
             >
               New Contact
             </Button>
@@ -216,7 +216,7 @@ export default function CustomerContactList() {
           
   
             <Accordion key={contact._id}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+              <AccordionSummary sx={{bgcolor: '#f2f3f5'}} expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
                 <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
                   {contact.firstName} {contact.lastName} 
                 </Typography>
@@ -225,7 +225,7 @@ export default function CustomerContactList() {
                   </Typography>
                 }
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails sx={{p: 0}}>
                 <ContactViewForm
                 currentContact={contact}
                 />

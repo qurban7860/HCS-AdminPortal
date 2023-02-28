@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Grid,
+  Grid, 
   Card,
   Table,
   Button,
@@ -15,12 +15,12 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
+import { useSnackbar } from '../../../components/snackbar';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -31,28 +31,26 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../components/table';
-import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import CustomerListTableRow from './CustomerListTableRow';
-import CustomerListTableToolbar from './CustomerListTableToolbar';
-import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
-import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
-
-
+import ContactListTableRow from './ContactListTableRow';
+import ContactListTableToolbar from './ContactListTableToolbar';
+import { getContacts, deleteContact, getContact } from '../../../redux/slices/contact';
+import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
+import CustomerViewPage from '../CustomerView';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Customer', align: 'left' },
-  { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  { id: 'mainSiteAddress', label: 'Address', align: 'left' },
-  { id: 'active', label: 'Active', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'action', label: 'Actions', align: 'left' },
 
 ];
 
@@ -65,17 +63,10 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-// const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
 
 // ----------------------------------------------------------------------
 
-export default function CustomerList() {
+export default function ContactList() {
   const {
     dense,
     page,
@@ -113,22 +104,22 @@ export default function CustomerList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
+  const { contacts, isLoading, error, initial, responseMessage } = useSelector((state) => state.contact);
 
   useLayoutEffect(() => {
-    dispatch(getCustomers());
+    dispatch(getContacts());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (customers && !error) {
+      if (contacts && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(customers);
+      setTableData(contacts);
     }
-  }, [customers, error, responseMessage, enqueueSnackbar, initial]);
+  }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -166,8 +157,8 @@ export default function CustomerList() {
   const handleDeleteRow = async (id) => {
     try {
       console.log(id);
-      await dispatch(deleteCustomer(id));
-      dispatch(getCustomers());
+      await dispatch(deleteContact(id));
+      dispatch(getContacts());
       setSelected([]);
 
       if (page > 0) {
@@ -197,13 +188,12 @@ export default function CustomerList() {
     }
   };
 
-  const handleEditRow = (id) => {
-    console.log(id);
-    navigate(PATH_DASHBOARD.customer.edit(id));
+  const handleEditRow = (customerID, contactID) => {
+    console.log(customerID);
+    navigate(PATH_DASHBOARD.customer.view(customerID, contactID));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
   };
 
   const handleResetFilter = () => {
@@ -214,7 +204,7 @@ export default function CustomerList() {
   return (
     <>
       <Helmet>
-        <title> Customer: List | Machine ERP </title>
+        <title> Contact: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={false}>
@@ -222,16 +212,16 @@ export default function CustomerList() {
           <CustomerDashboardNavbar/>
       </Grid>
         <CustomBreadcrumbs
-          heading="Customer List"
+          heading="Contact List"
           sx={{ mb: -3, mt: 3 }}
         />
         <Card sx={{mt: 3 }}>
-          <CustomerListTableToolbar
+          <ContactListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
+            statusOpdtions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
@@ -278,13 +268,13 @@ export default function CustomerList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <CustomerListTableRow
+                        <ContactListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
+                          onEditRow={() => handleEditRow(row.customer, row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -357,12 +347,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (contact) => contact.firstName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((contact) => filterStatus.includes(contact.status));
   }
 
   return inputData;

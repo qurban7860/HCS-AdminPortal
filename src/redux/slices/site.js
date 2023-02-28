@@ -104,6 +104,8 @@ export const {
 
 export function saveSite(params) {
   return async (dispatch) => {
+    dispatch(slice.actions.setFormVisibility(false));
+
     console.log('siteparams', params); 
     dispatch(slice.actions.startLoading());
       try {
@@ -142,10 +144,8 @@ export function saveSite(params) {
         }
         
         await axios.post(`${CONFIG.SERVER_URL}customers/sites`, data);
-
-        dispatch(slice.actions.setFormVisibility(false));
         dispatch(slice.actions.setResponseMessage('Site saved successfully'));
-
+        dispatch(slice.actions.setFormVisibility(false));
 
       } catch (error) {
         console.error(error);

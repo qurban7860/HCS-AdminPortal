@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
 import { getDepartments } from '../../redux/slices/department';
 import { setFormVisibility } from '../../redux/slices/site';
+import { getContact } from '../../redux/slices/contact';
 
 
 // auth
@@ -34,9 +35,9 @@ import {
 } from './util';
 
 import CustomerAddForm from './CustomerAddForm'
-import SiteAddForm from '../site/SiteAddForm';
-import SiteList from '../site/SiteList';
-import ContactAddForm from '../contact/ContactAddForm';
+import SiteAddForm from './site/SiteAddForm';
+import SiteList from './site/SiteList';
+import ContactAddForm from './contact/ContactAddForm';
 import CustomerStepper from './CustomerStepper';
 /* eslint-disable */
 
@@ -78,23 +79,21 @@ export default function CustomerViewPage({editPage}) {
   const [customerFlag, setCustomerFlag] = useState(true);
 
   useEffect(() => {
-    if(id != null){
+    if(id !== 'null'){
       dispatch(getCustomer(id));
     }
   }, [dispatch, id]);
 
   useEffect(() => {
-    dispatch(setCustomerEditFormVisibility(editFlag));
-  }, [dispatch, editFlag]);
-
-  useEffect(() => {
+    /* eslint-disable */
     if(customerEditFormFlag){
       setCurrentComponent(<CustomerEditForm/>);
     }else{
       setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm/>);        
     }
-  }, [editPage, site, customerEditFormFlag, customer]);
+    /* eslint-enable */
+  }, [dispatch, customerEditFormFlag, customer]);
 
 
   const TABS = [
@@ -111,7 +110,6 @@ export default function CustomerViewPage({editPage}) {
       label: 'Sites',
       icon: <Iconify icon="eva:navigation-2-outline" />,
       component: <CustomerSiteList/>,
-
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility,
@@ -119,7 +117,6 @@ export default function CustomerViewPage({editPage}) {
       label: 'Contacts',
       icon: <Iconify icon="eva:people-outline" />,
       component: <CustomerContactList/>,
-
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,

@@ -41,16 +41,15 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import SiteListTableRow from '../site/SiteListTableRow';
-import SiteListTableToolbar from '../site/SiteListTableToolbar';
+import SiteListTableRow from './site/SiteListTableRow';
+import SiteListTableToolbar from './site/SiteListTableToolbar';
 import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/site';
-import SiteAddForm from '../site/SiteAddForm';
-import SiteEditForm from '../site/SiteEditForm';
+import SiteAddForm from './site/SiteAddForm';
+import SiteEditForm from './site/SiteEditForm';
 
 import _mock from '../../_mock';
-import SiteViewForm from '../site/SiteViewForm';
+import SiteViewForm from './site/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
-import { Block } from '../../sections/_examples/Block';
 
 
 
@@ -127,12 +126,17 @@ export default function CustomerSiteList() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const [checked, setChecked] = useState(false);
+  const [checked, setChecked] = useState(siteAddFormVisibility);
 
-  const toggleChecked = () => 
+  console.log('checked', checked);
+
+  const toggleChecked = async () => 
     {
       setChecked(value => !value);
+      console.log('check inside---->', checked);
       dispatch(setFormVisibility(!siteAddFormVisibility));
+
+      // dispatch(setFormVisibility(checked));
     
     };
 
@@ -150,7 +154,7 @@ export default function CustomerSiteList() {
     if(!siteAddFormVisibility && !siteEditFormVisibility){
       dispatch(getSites(customer._id));
     }
-  }, [dispatch, checked, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
+  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 
   useEffect(() => {
     if (initial) {
@@ -194,7 +198,7 @@ export default function CustomerSiteList() {
               onClick={toggleChecked}
 
               variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
+              startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
             >
               New Site
             </Button>

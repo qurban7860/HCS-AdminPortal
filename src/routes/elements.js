@@ -43,22 +43,22 @@ export const MachineAdd = Loadable(lazy(()=> import('../pages/machine/MachineAdd
 export const MachineSupplier = Loadable(lazy(()=> import('../pages/machine/MachineSuppliers')))
 export const S_Detail = Loadable(lazy(()=> import('../pages/machine/SupplierDetail')))
 // SITE
-export const SiteList= Loadable(  lazy(() => import('../pages/site/SiteList')));
-export const SiteAdd = Loadable(  lazy(() => import('../pages/site/SiteAdd')));
-export const SiteEdit = Loadable(  lazy(() => import('../pages/site/SiteEdit')));
-export const SiteView = Loadable(  lazy(() => import('../pages/site/SiteView')));
+export const SiteList= Loadable(  lazy(() => import('../pages/customer/site/SiteList')));
+export const SiteAdd = Loadable(  lazy(() => import('../pages/customer/site/SiteAdd')));
+export const SiteEdit = Loadable(  lazy(() => import('../pages/customer/site/SiteEdit')));
+export const SiteView = Loadable(  lazy(() => import('../pages/customer/site/SiteView')));
 
 // CONTACT
-export const ContactList= Loadable(  lazy(() => import('../pages/contact/ContactList')));
-export const ContactAdd = Loadable(  lazy(() => import('../pages/contact/ContactAdd')));
-export const ContactEdit = Loadable(  lazy(() => import('../pages/contact/ContactEdit')));
-export const ContactView = Loadable(  lazy(() => import('../pages/contact/ContactView')));
+export const ContactList= Loadable(  lazy(() => import('../pages/customer/contact/ContactList')));
+export const ContactAdd = Loadable(  lazy(() => import('../pages/customer/contact/ContactAdd')));
+export const ContactEdit = Loadable(  lazy(() => import('../pages/customer/contact/ContactEdit')));
+export const ContactView = Loadable(  lazy(() => import('../pages/customer/contact/ContactView')));
 
 // NOTE
-export const NoteList= Loadable(  lazy(() => import('../pages/note/NoteList')));
-export const NoteAdd = Loadable(  lazy(() => import('../pages/note/NoteAdd')));
-export const NoteEdit = Loadable(  lazy(() => import('../pages/note/NoteEdit')));
-export const NoteView = Loadable(  lazy(() => import('../pages/note/NoteView')));
+export const NoteList= Loadable(  lazy(() => import('../pages/customer/note/NoteList')));
+export const NoteAdd = Loadable(  lazy(() => import('../pages/customer/note/NoteAdd')));
+export const NoteEdit = Loadable(  lazy(() => import('../pages/customer/note/NoteEdit')));
+export const NoteView = Loadable(  lazy(() => import('../pages/customer/note/NoteView')));
 
 // DASHBOARD: USER
 export const UserProfilePage = Loadable(lazy(() => import('../pages/dashboard/UserProfilePage')));

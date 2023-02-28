@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -15,12 +14,12 @@ import {
   TableContainer,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
+import { useSnackbar } from '../../../components/snackbar';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -31,28 +30,26 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../components/table';
-import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import CustomerListTableRow from './CustomerListTableRow';
-import CustomerListTableToolbar from './CustomerListTableToolbar';
-import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
-import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
-
+import SiteListTableRow from './SiteListTableRow';
+import SiteListTableToolbar from './SiteListTableToolbar';
+import { getSites, deleteSite } from '../../../redux/slices/site';
+import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Customer', align: 'left' },
-  { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  { id: 'mainSiteAddress', label: 'Address', align: 'left' },
-  { id: 'active', label: 'Active', align: 'left' },
+  { id: 'name', label: 'Site', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'website', label: 'Website', align: 'left' },
+  { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'action', label: 'Actions', align: 'left' },
 
 ];
 
@@ -65,17 +62,9 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-// const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
-
 // ----------------------------------------------------------------------
 
-export default function CustomerList() {
+export default function SiteList() {
   const {
     dense,
     page,
@@ -113,22 +102,22 @@ export default function CustomerList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
+  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
-    dispatch(getCustomers());
+    dispatch(getSites());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (customers && !error) {
+      if (sites && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(customers);
+      setTableData(sites);
     }
-  }, [customers, error, responseMessage, enqueueSnackbar, initial]);
+  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -166,8 +155,8 @@ export default function CustomerList() {
   const handleDeleteRow = async (id) => {
     try {
       console.log(id);
-      await dispatch(deleteCustomer(id));
-      dispatch(getCustomers());
+      await dispatch(deleteSite(id));
+      dispatch(getSites());
       setSelected([]);
 
       if (page > 0) {
@@ -199,11 +188,11 @@ export default function CustomerList() {
 
   const handleEditRow = (id) => {
     console.log(id);
-    navigate(PATH_DASHBOARD.customer.edit(id));
+    navigate(PATH_DASHBOARD.site.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
+    navigate(PATH_DASHBOARD.site.view(id));
   };
 
   const handleResetFilter = () => {
@@ -214,19 +203,17 @@ export default function CustomerList() {
   return (
     <>
       <Helmet>
-        <title> Customer: List | Machine ERP </title>
+        <title> Site: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false}>
-      <Grid container spacing={3}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        
+
+        <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
-      </Grid>
-        <CustomBreadcrumbs
-          heading="Customer List"
-          sx={{ mb: -3, mt: 3 }}
-        />
-        <Card sx={{mt: 3 }}>
-          <CustomerListTableToolbar
+          </Grid>
+        <Card>
+          <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -278,13 +265,13 @@ export default function CustomerList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <CustomerListTableRow
+                        <SiteListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
+                          onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -357,12 +344,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((site) => filterStatus.includes(site.status));
   }
 
   return inputData;
