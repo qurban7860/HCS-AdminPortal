@@ -47,6 +47,7 @@ export default function CustomerViewForm() {
       supportManager: customer?.supportManager || 'N/A',
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
+      primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       createdAt: customer?.createdAt || '',
       updatedAt: customer?.updatedAt || ''
     }),
@@ -194,12 +195,7 @@ export default function CustomerViewForm() {
         </Grid>
         }
 
-        {defaultValues.primaryBillingContact && <Grid container>
-        {/* <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
-            <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-              Contact Information
-            </Typography>
-          </Grid> */}
+        {(defaultValues.primaryBillingContact || defaultValues.primaryTechnicalContact)&& <Grid container>
 
           {defaultValues.primaryBillingContact && <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
@@ -212,17 +208,7 @@ export default function CustomerViewForm() {
 
         </Grid>}
 
-
-        </Grid>}
-
-        {defaultValues.primaryTechnicalContact && <Grid container>
-        {/* <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
-            <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-              Contact Information
-            </Typography>
-          </Grid> */}
-
-          {defaultValues.primaryTechnicalContact && <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        {defaultValues.primaryTechnicalContact && <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Primary Technical Contact
           </Typography>

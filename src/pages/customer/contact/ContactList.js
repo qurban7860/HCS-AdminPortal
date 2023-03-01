@@ -48,6 +48,7 @@ import CustomerViewPage from '../CustomerView';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
   { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },

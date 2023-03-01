@@ -171,7 +171,7 @@ export function saveCustomer(params) {
         let data = {
           name: params.name,
           tradingName: params.tradingName,
-          site: {
+          siteObj: {
             name: params.name,
             address: {},
           },
@@ -199,40 +199,40 @@ export function saveCustomer(params) {
 
         // params.phone ? data.phone = params.supportManager : '';
         if(params.phone){
-          data.site.phone = params.phone;        
+          data.siteObj.phone = params.phone;        
         }
 
         // params.email ? data.email = params.email : '';
         if(params.email){
-          data.site.email = params.email;        
+          data.siteObj.email = params.email;        
         }
 
         if(params.fax){
-          data.site.fax = params.fax;        
+          data.siteObj.fax = params.fax;        
         }
 
         if(params.website){
-          data.site.website = params.website;        
+          data.siteObj.website = params.website;        
         }
 
         if(params.street){
-          data.site.address.street = params.street;        
+          data.siteObj.address.street = params.street;        
         }
 
         if(params.suburb){
-          data.site.address.suburb = params.suburb;        
+          data.siteObj.address.suburb = params.suburb;        
         }
 
         if(params.city){
-          data.site.address.city = params.city;        
+          data.siteObj.address.city = params.city;        
         }
 
         if(params.region){
-          data.site.address.region = params.region;        
+          data.siteObj.address.region = params.region;        
         }
 
         if(params.country){
-          data.site.address.country = params.country;        
+          data.siteObj.address.country = params.country;        
         }        
 
         // Billing Contact Information Start

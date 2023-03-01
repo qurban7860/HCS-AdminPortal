@@ -72,11 +72,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { customer, customerSaveSuccess } = useSelector((state) => state.customer);
 
-  const [checked, setCheckboxFlag] = useState(false);
+  const [contactFlag, setCheckboxFlag] = useState(false);
 
   const toggleCheckboxFlag = () => setCheckboxFlag(value => !value);
 
-  console.log('checked ------> ', checked);
+  console.log('checked ------> ', contactFlag);
 
   const dispatch = useDispatch();
   
@@ -132,7 +132,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       projectManager: '',
       supportManager: '',
       type: 'Customer',
-      sameContactFlag: checked,
+      contactFlag,
       loginUser: {
         userId,
         email: user.email,
@@ -141,6 +141,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [AddCustomerSchema]
   );
+
+  console.log('samecheckboxflag', defaultValues.contactFlag);
 
   const methods = useForm({
     resolver: yupResolver(AddCustomerSchema),
@@ -308,10 +310,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 Technical Contact Information
               </Typography>
 
-              <FormControlLabel label="Same as billing contact" control={<Checkbox checked={checked} onClick={toggleCheckboxFlag} />} sx={{mb: -10}} />
+              <FormControlLabel label="Same as billing contact" control={<Checkbox checked={contactFlag} onClick={toggleCheckboxFlag} />} sx={{mb: -10}} />
                </Stack>
 
-               {!checked && <Box
+               {!contactFlag && <Box
                 rowGap={3}
                 columnGap={2}
                 display="grid"

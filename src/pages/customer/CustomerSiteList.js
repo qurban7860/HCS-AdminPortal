@@ -133,11 +133,7 @@ export default function CustomerSiteList() {
   const toggleChecked = async () => 
     {
       setChecked(value => !value);
-      console.log('check inside---->', checked);
-      dispatch(setFormVisibility(!siteAddFormVisibility));
-
-      // dispatch(setFormVisibility(checked));
-    
+      dispatch(setFormVisibility(!siteAddFormVisibility));    
     };
 
   const { themeStretch } = useSettingsContext();

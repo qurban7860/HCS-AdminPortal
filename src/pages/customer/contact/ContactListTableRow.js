@@ -41,7 +41,7 @@ export default function ContactListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { firstName, lastName, email, phone, createdAt } = row;
+  const { firstName, lastName, email, customer, phone, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -88,6 +88,8 @@ export default function ContactListTableRow({
         </TableCell>
 
         <TableCell>{email}</TableCell>
+
+        <TableCell>{customer?.name}</TableCell>
 
         <TableCell>{phone}</TableCell>
 
