@@ -142,7 +142,30 @@ export const PATH_MACHINE = {
     view: (id) => path(ROOTS_MACHINE, `/supplier/${id}/view`),
     supplieredit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/editform`),
-  }
+  },
+  license:{
+    license: (ROOTS_MACHINE, '/machine/license/license'),
+    list: (ROOTS_MACHINE, '/machine/license/list')
+  },
+  categories:{
+    categories: (ROOTS_MACHINE, '/machine/categories/categories'),
+    list: (ROOTS_MACHINE, '/machine/categories/list'),
+    view: (id) => path(ROOTS_MACHINE, `/categories/${id}/view`),
+    categoryedit: (id) => path(ROOTS_MACHINE, `/categories/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/categories/${id}/editform`),
+  },
+  tool:{
+    tool: (ROOTS_MACHINE, '/machine/tool/tool'),
+    list: (ROOTS_MACHINE, '/machine/tool/list'),
+    view: (id) => path(ROOTS_MACHINE, `/tool/${id}/view`),
+    tooledit: (id) => path(ROOTS_MACHINE, `/tool/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/tool/${id}/editform`),
+  },
+  techParam:{
+    techParam: (ROOTS_MACHINE, '/machine/machine-tech/params'),
+    list: (ROOTS_MACHINE, '/machine/machine-tech/list'),
+  },
+  
 }
 
 export const PATH_DOCS = {

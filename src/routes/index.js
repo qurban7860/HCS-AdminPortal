@@ -40,12 +40,33 @@ import {
   // Machine
   MachinePage,
   MachineAdd,
+  // Supplier
   MachineSupplier,
   SupplierList,
   SupplierView,
   SupplierViewForm,
   SupplierEdit,
   SupplierEditForm,
+  // License
+  MachineLicenses,
+  LicenseList,
+  // Categories
+  MachineCategories,
+  CategoryList,
+  CategoryView,
+  CategoryViewForm,
+  CategoryEditForm,
+  CategoryEdit,
+  // Tool
+  MachineTool,
+  ToolList,
+  ToolView,
+  ToolViewForm,
+  ToolEdit,
+  ToolEditForm,
+  // MachineTechParamCategory
+  MachineTechParam,
+  TechParamList,
   // Site
   SiteList,
   SiteAdd,
@@ -71,6 +92,8 @@ import {
   HomePage,
   ComingSoonPage,
   MaintenancePage,
+  
+
   //
 } from './elements';
 
@@ -253,7 +276,43 @@ export default function Router() {
             { path: ':id/edit', element: <SupplierEdit/>}, 
             { path: 'editform', element: <SupplierEditForm/>},
           ]
-        }
+        },
+        {
+          path: 'license',
+          children:[
+            {path: 'license', element: <MachineLicenses/>},
+            {path: 'list', element: <LicenseList/>}
+          ]
+        },
+        {
+          path: 'categories',
+          children:[
+            {path: 'categories', element: <MachineCategories/>},
+            {path: 'list', element: <CategoryList/>},
+            {path: ':id/view', element: <CategoryView/>},
+            {path: 'viewform', element: <CategoryViewForm/>},
+            {path: ':id/edit', element: <CategoryEdit/>}, 
+            {path: 'editform', element: <CategoryEditForm/>},
+          ]
+        },
+        {
+          path: 'tool',
+          children:[
+            {path: 'tool', element: <MachineTool/>},
+            {path: 'list', element: <ToolList/>},
+            {path: ':id/view', element: <ToolView/>},
+            {path: 'viewform', element: <ToolViewForm/>},
+            {path: ':id/edit', element: <ToolEdit/>}, 
+            {path: 'editform', element: <ToolEditForm/>},
+          ]
+        },
+        {
+          path: 'machine-tech',
+          children:[
+            {path: 'params', element: <MachineTechParam/>},
+            {path: 'list', element: <TechParamList/>},
+          ]
+        },
       ]
     },
 

@@ -11,6 +11,10 @@ import contactReducer from './slices/contact';
 import noteReducer from './slices/note';
 import machineReducer from './slices/machine';
 import supplierReducer from './slices/supplier';
+import licenseReducer from './slices/license';
+import categoryReducer from './slices/category';
+import toolReducer from './slices/tools';
+import techparamReducer from './slices/tech-param';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -82,6 +86,30 @@ export const suppplierPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const licensePersistConfig = {
+  key: 'license',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const categoryPersistConfig = {
+  key: 'category',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const toolPersistConfig = {
+  key: 'tool',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const techparamPersistConfig = {
+  key: 'techparam',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -92,7 +120,11 @@ const rootReducer = combineReducers({
   contact: persistReducer(contactPersistConfig, contactReducer),
   note: persistReducer(notePersistConfig, noteReducer),
   machine: persistReducer(machinePersistConfig, machineReducer),
-  supplier: persistReducer(suppplierPersistConfig,supplierReducer)
+  supplier: persistReducer(suppplierPersistConfig,supplierReducer),
+  license: persistReducer(licensePersistConfig,licenseReducer),
+  category: persistReducer(categoryPersistConfig,categoryReducer),
+  tool: persistReducer(toolPersistConfig,toolReducer),
+  techparam: persistReducer(techparamPersistConfig,techparamReducer),
 });
 
 export default rootReducer;

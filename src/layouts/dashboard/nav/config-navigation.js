@@ -50,12 +50,13 @@ const navConfig = [
       { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon,
       children: [
         { title: 'Dashboard', path: PATH_MACHINE.general.app },
+        { title: 'Categories', path: PATH_MACHINE.categories.categories},
         { title: 'Suppliers', path: PATH_MACHINE.supplier.supplier},
         { title: 'Statuses', path: PATH_DASHBOARD.user.demoEdit },
         { title: 'Models', path: PATH_DASHBOARD.user.account },
-        { title: 'Licenses', path: PATH_DASHBOARD.user.account },
-        { title: 'Tools', path: PATH_DASHBOARD.user.account },
-        
+        { title: 'Licenses', path: PATH_MACHINE.license.license},
+        { title: 'Tools', path: PATH_MACHINE.tool.tool },
+        { title: 'Tech Params Category', path: PATH_MACHINE.techParam.techParam },
       ],},
       // deleted components
       // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },

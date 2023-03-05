@@ -43,20 +43,20 @@ const StyledInfo = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-MachineCover.propTypes = {
+SupplierCover.propTypes = {
   cover: PropTypes.string,
   name: PropTypes.string,
   role: PropTypes.string,
 };
 
-export default function MachineCover({ name, role, cover }) {
-  const { customer } = useAuthContext();
+export default function SupplierCover({ name, role, cover }) {
+  const { supplier } = useAuthContext();
 
   return (
     <StyledRoot>
       <StyledInfo>
         <CustomAvatar
-          src={customer?.photoURL}
+          src={supplier?.photoURL}
           alt={name}
           name={name}
           sx={{
@@ -64,8 +64,11 @@ export default function MachineCover({ name, role, cover }) {
             borderWidth: 2,
             borderStyle: 'solid',
             borderColor: 'common.white',
-            width: { xs: 80, md: 128 },
-            height: { xs: 80, md: 128 },
+            bottom:28,
+            color:'#fff',
+            width: { xs: 50, md: 110 },
+            height: { xs: 50, md: 110 },
+            inset: 'unset'
           }}
         />
 
@@ -73,7 +76,7 @@ export default function MachineCover({ name, role, cover }) {
           sx={{
             ml: { md: 3 },
             mt: { xs: 1, md: 0 },
-            color: 'common.white',
+            color: '#fff',
             textAlign: { xs: 'center', md: 'left' },
           }}
         >
@@ -86,13 +89,7 @@ export default function MachineCover({ name, role, cover }) {
       <Image
         alt="cover"
         src={cover}
-        sx={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          position: 'absolute',
-        }}
+        
       />
     </StyledRoot>
   );
