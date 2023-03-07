@@ -6,6 +6,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Stack,
   Card,
+  Grid,
   Table,
   Button,
   Tooltip,
@@ -141,6 +142,21 @@ export default function CustomerSiteList() {
 
   const [filterStatus, setFilterStatus] = useState([]);
 
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [expanded, setExpanded] = useState(false);
+  const handleAccordianClick = (accordianIndex) => {
+   if(accordianIndex === activeIndex ){
+    setActiveIndex(null)
+   }else{
+    setActiveIndex(accordianIndex)
+   }
+  };
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+    console.log("Expended : ",expanded)
+  };
+
   useEffect(() => {
     if(!siteAddFormVisibility && !siteEditFormVisibility){
       dispatch(getSites(customer._id));
@@ -204,20 +220,24 @@ export default function CustomerSiteList() {
 
           {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) => (
 
-            
-          
-  
-            <Accordion key={site._id}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
-                  {site.name}
-                </Typography>
-                {site.address && <Typography sx={{ color: 'text.secondary' }}>
-                  {Object.values(site.address)?.join(", ")}
-                  </Typography>
-                }
+            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
+                { index !==  activeIndex ? 
+                <Grid container spacing={0}>
+                  <Grid item xs={12} sm={4} >
+                    <Typography variant="body2" >
+                    {site.name} 
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12} sm={8}>
+                    <Typography variant="body2" >
+                    {Object.values(site.address)?.join(", ")}
+                    </Typography>
+                  </Grid>
+                </Grid>
+                : null }
               </AccordionSummary>
-              <AccordionDetails sx={{p: 0}}>
+              <AccordionDetails sx={{mt:-5}}>
                 <SiteViewForm
                 currentSite={site}
                 />

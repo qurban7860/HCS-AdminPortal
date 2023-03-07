@@ -15,6 +15,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 
+import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 SiteViewForm.propTypes = {
@@ -77,15 +78,20 @@ export default function SiteViewForm({ currentSite = null }) {
         city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
         region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
+        createdAt: currentSite?.createdAt || "",
+        createdBy: currentSite?.createdBy || "",
+        createdIP: currentSite?.createdIP || "",
+        updatedAt: currentSite?.updatedAt || "",
+        updatedBy: currentSite?.updatedBy || "",
+        updatedIP: currentSite?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSite, site]
   );
 
   return (
-    <Card sx={{ pt: 5, px: 5 }}>
+    <Grid sx={{ p: 2 }}>
       <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
@@ -104,103 +110,132 @@ export default function SiteViewForm({ currentSite = null }) {
         >
           Delete
         </Button>
-
       </Stack>
       <Grid container>
 
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Name
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.name ? defaultValues.name : ''}
+            </Typography>
+          </Grid>
 
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Name
-          </Typography>
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Phone
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.phone ? defaultValues.phone : ''}
+            </Typography>
+          </Grid>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Fax
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.fax ? defaultValues.fax : ''}
+            </Typography>
+          </Grid>
 
-        </Grid>
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Email
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.email ? defaultValues.email : ''}
+            </Typography>
+          </Grid>
 
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Website
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.website ? defaultValues.website : ''}
+            </Typography>
+          </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Phone
-          </Typography>
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Street
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.street ? defaultValues.street : ''}
+            </Typography>
+          </Grid>
 
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Suburb
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.suburb ? defaultValues.suburb : ''}
+            </Typography>
+          </Grid>
 
-        </Grid>
+         <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              City
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.city ? defaultValues.city : ''}
+            </Typography>
+          </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Fax
-          </Typography>
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Region
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.region ? defaultValues.region : ''}
+            </Typography>
+          </Grid>
 
-          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : 'N/A'}</Typography>
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Country
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.country ? defaultValues.country : ''}
+            </Typography>
+          </Grid>
+        
 
-        </Grid>
-
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Email
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
-
-        </Grid>
-
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Website
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.website ? defaultValues.website : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Street
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.street ? defaultValues.street : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Suburb
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            City
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.city ? defaultValues.city : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Region
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.region ? defaultValues.region : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Country
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
-
-        </Grid>
+          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
+            <Grid item xs={12} sm={6} >
+              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
+                created by: {defaultValues.createdBy}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} >
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              updated by: {defaultValues.updatedBy}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+            </Typography>
+            </Grid>
+          </Grid>
         <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
@@ -214,6 +249,6 @@ export default function SiteViewForm({ currentSite = null }) {
           />
 
       </Grid>
-    </Card>
+    </Grid>
   );
 }

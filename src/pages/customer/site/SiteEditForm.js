@@ -52,9 +52,9 @@ export default function SiteEditForm() {
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    country: Yup.string(),
-    primaryBillingContact: Yup.string(),
-    primaryTechnicalContact: Yup.string()
+    // country: Yup.string(),
+    // primaryBillingContact: Yup.string(),
+    // primaryTechnicalContact: Yup.string()
   });
 
 
@@ -72,9 +72,9 @@ export default function SiteEditForm() {
       suburb: site?.address?.suburb || '',
       city: site?.address?.city || '',
       region: site?.address?.region || '',
-      country: site?.address?.country || '',
-      primaryBillingContact: site?.primaryBillingContact || '',
-      primaryTechnicalContact: site?.primaryTechnicalContact || '',
+      country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
+      primaryBillingContact: site.primaryBillingContact === null || site.primaryBillingContact === undefined  ? null : site.primaryBillingContact,
+      primaryTechnicalContact: site.primaryTechnicalContact === null || site.primaryTechnicalContact === undefined  ? null : site.primaryTechnicalContact,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
@@ -169,8 +169,8 @@ export default function SiteEditForm() {
 
                 <RHFTextField name="region" label="Region" />
 
-                <RHFSelect native name="country" label="Country" placeholder="Country">
-                  <option value="" />
+                <RHFSelect native name="country" label="Country" >
+                  <option defaultValue value="null" selected >No Country Selected                  </option>
                   {countries.map((country) => (
                     <option key={country.code} value={country.label}>
                       {country.label}
@@ -193,7 +193,7 @@ export default function SiteEditForm() {
                 }}
               >
               <RHFSelect native name="primaryBillingContact" label="Primary Billing Contact">
-                    <option value="" selected/>
+                    <option defaultValue value="null" selected >No Primary Billing Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -203,7 +203,7 @@ export default function SiteEditForm() {
               </RHFSelect>
 
               <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
-                    <option value="" selected/>
+                    <option defaultValue value="null" selected >No Primary Technical Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>

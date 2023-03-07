@@ -58,11 +58,11 @@ export default function CustomerEditForm() {
     mainSite: Yup.string(),
     // sites: Yup.array(),
     // contacts: Yup.array(),
-    accountManager: Yup.string(),
-    projectManager: Yup.string(),
-    supportManager: Yup.string(),
-    primaryBillingContact: Yup.string(),
-    primaryTechnicalContact: Yup.string(),
+    // accountManager: Yup.string(),
+    // projectManager: Yup.string(),
+    // supportManager: Yup.string(),
+    // primaryBillingContact: Yup.string(),
+    // primaryTechnicalContact: Yup.string(),
   });
 
 
@@ -72,16 +72,16 @@ export default function CustomerEditForm() {
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
       mainSite: customer?.mainSite?._id || '',
-      accountManager: customer?.accountManager?._id || '',
-      projectManager: customer?.projectManager?._id || '',
-      supportManager: customer?.supportManager?._id || '',
-      primaryBillingContact: customer?.primaryBillingContact?._id || '',
-      primaryTechnicalContact: customer?.primaryTechnicalContact || '',
+      accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
+      projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id, 
+      supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
+      primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
+      primaryTechnicalContact: customer?.primaryTechnicalContact === null || customer?.primaryTechnicalContact === undefined  ? null : customer.primaryTechnicalContact, 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-
+// customer. === null || customer. === undefined  ? null : customer.,
   const methods = useForm({
     resolver: yupResolver(EditCustomerSchema),
     defaultValues,
@@ -150,7 +150,7 @@ export default function CustomerEditForm() {
                 <RHFTextField name="tradingName" label="Trading Name" />
 
                 <RHFSelect native name="mainSite" label="Main Site">
-                  <option value="" selected />
+                  <option defaultValue value="null" selected >No Main Site Selected</option>
                   {
                     sites.length > 0 && sites.map((option) => (
                       <option key={option._id} value={option._id}>
@@ -172,7 +172,7 @@ export default function CustomerEditForm() {
 
 
               <RHFSelect native name="primaryBillingContact" label="Primary Billing Contact">
-                    <option value="" selected/>
+                    <option defaultValue value="null" selected >No Primary Billing Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -182,7 +182,7 @@ export default function CustomerEditForm() {
               </RHFSelect>
 
               <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
-                    <option value="" selected/>
+                    <option defaultValue value="null" selected >No Primary Technical Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -205,7 +205,7 @@ export default function CustomerEditForm() {
               >
 
                 <RHFSelect native name="accountManager" label="Account Manager">
-                  <option value="" selected />
+                  <option defaultValue value="null" selected >No Account Manager Selected</option>
                   {
                     spContacts.length > 0 && spContacts.map((option) => (
                       <option key={option._id} value={option._id}>
@@ -215,7 +215,7 @@ export default function CustomerEditForm() {
                 </RHFSelect>
 
                 <RHFSelect native name="projectManager" label="Project Manager">
-                  <option value="" selected />
+                  <option defaultValue value="null" selected >No Project Manager Selected</option>
                   {
                     spContacts.length > 0 && spContacts.map((option) => (
                       <option key={option._id} value={option._id}>
@@ -225,7 +225,7 @@ export default function CustomerEditForm() {
                 </RHFSelect>
 
                 <RHFSelect native name="supportManager" label="Support Manager">
-                  <option value="" selected />
+                  <option defaultValue value="null" selected >No Support Manager Selected</option>
                   {
                     spContacts.length > 0 && spContacts.map((option) => (
                       <option key={option._id} value={option._id}>

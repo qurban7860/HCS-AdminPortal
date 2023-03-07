@@ -47,9 +47,9 @@ export default function SiteAddForm() {
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    country: Yup.string(),
-    primaryBillingContact: Yup.string(),
-    primaryTechnicalContact: Yup.string()
+    // country: Yup.string(),
+    // primaryBillingContact: Yup.string(),
+    // primaryTechnicalContact: Yup.string()
 
   });
 
@@ -66,7 +66,7 @@ export default function SiteAddForm() {
       suburb: '',
       city: '',
       region: '',
-      country: '',
+      country: null,
       isArchived: false,
 
     }),
@@ -161,7 +161,7 @@ export default function SiteAddForm() {
                 <RHFTextField name="region" label="Region" />
 
                 <RHFSelect native name="country" label="Country" placeholder="Country">
-                  <option value="" />
+                  <option defaultValue value="null" selected >No Country Selected</option>
                   {countries.map((country) => (
                     <option key={country.code} value={country.label}>
                       {country.label}
@@ -185,7 +185,7 @@ export default function SiteAddForm() {
                 }}
               >
               <RHFSelect onChange={onChange} native name="primaryBillingContact" label="Primary Billing Contact">
-                    <option value="" selected/>
+                    <option defaultValue value="null" selected >No Primary Billing Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -195,7 +195,7 @@ export default function SiteAddForm() {
               </RHFSelect>
 
               <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
-                    <option value="" selected/>
+                    <option defaultValue value="null" selected >No Primary Technical Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>

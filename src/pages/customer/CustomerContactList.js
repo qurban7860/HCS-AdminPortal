@@ -6,6 +6,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Stack,
   Card,
+  Grid,
   Table,
   Button,
   Tooltip,
@@ -148,7 +149,21 @@ export default function CustomerContactList() {
   const [tableData, setTableData] = useState([]);
 
   const [filterStatus, setFilterStatus] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [expanded, setExpanded] = useState(false);
+  
+  const handleAccordianClick = (accordianIndex) => {
+   if(accordianIndex === activeIndex ){
+    setActiveIndex(null)
+   }else{
+    setActiveIndex(accordianIndex)
+   }
+  };
 
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+    console.log("Expended : ",expanded)
+  };
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
     if(!formVisibility && !contactEditFormVisibility){
@@ -215,17 +230,32 @@ export default function CustomerContactList() {
           {!formVisibility && !contactEditFormVisibility && contacts.map((contact, index) => (
           
   
-            <Accordion key={contact._id}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
+            <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} >
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
+                {/* <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
                   {contact.firstName} {contact.lastName} 
                 </Typography>
                 {contact.email && <Typography sx={{ color: 'text.secondary' }}>
                   {contact.email}
                   </Typography>
+                } */}
+                { index !==  activeIndex ? 
+              <Grid container spacing={0}>
+                <Grid item xs={12} sm={4} >
+                  <Typography variant="body2" >
+                  {contact.firstName} {contact.lastName} 
+                  </Typography>
+                </Grid>
+                <Grid item xs={12} sm={8}>
+                {contact.email && <Typography variant="body2" >
+                  {contact.email}
+                  </Typography>
                 }
+                </Grid>
+              </Grid>
+            : null }
               </AccordionSummary>
-              <AccordionDetails sx={{p: 0}}>
+              <AccordionDetails  sx={{ mt:-5 }}>
                 <ContactViewForm
                 currentContact={contact}
                 />

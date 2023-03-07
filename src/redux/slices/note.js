@@ -105,7 +105,7 @@ export const {
 
 // ----------------------------Save Note------------------------------------------
 
-export function saveNote(params) {
+export function saveNote(customerId,params) {
   // console.log(params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -125,7 +125,7 @@ export function saveNote(params) {
       if(params.user){
         data.user =    params.user;
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}customers/notes/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}customers/${customerId}/notes/`, data);
       // console.log(response)
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
@@ -152,18 +152,18 @@ export function updateNote(customerId,params) {
       if(params.customer){
         data.customer = params.customer;
       }
-      if(params.editSite){
+      if(params.editSite  !== "null"){
           data.site =params.editSite;
       }
       else{
         data.site =  null
       }
-      if(params.editContact){
-          data.contact = null
+      if(params.editContact !== "null"){
+          data.contact = params.editContact;
       }
-      else{
-        data.contact = null
-      }
+      // else{
+      //   data.contact = null
+      // }
       if(params.user){
         data.user = params.user;
       }
@@ -199,12 +199,13 @@ export function getNotes(id) {
           },
           populate:[
                   {path: 'contact', select: 'firstName lastName'},
-                  {path: 'site', select: 'name'}
+                  {path: 'site', select: 'name'},
+                  {path: 'user', select: 'firstName'}
                   ]
         }
       }
       );
-      console.log("Notes : ",response);
+      console.log("Notes Response : ",response);
       // console.log(response.data);
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));

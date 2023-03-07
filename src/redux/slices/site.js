@@ -187,14 +187,20 @@ export function updateSite(params) {
         if(params.region){
           data.address.region = params.region;        
         }
-        if(params.country){
+        if(params.country !== "null"){
           data.address.country = params.country;        
+        }else{
+          data.address.country = null;        
         }
-        if(params.primaryBillingContact){
+        if(params.primaryBillingContact !== "null"){
           data.primaryBillingContact = params.primaryBillingContact;        
+        }else{
+          data.primaryTechnicalContact = null;        
         }
-        if(params.primaryTechnicalContact){
+        if(params.primaryTechnicalContact !== "null"){
           data.primaryTechnicalContact = params.primaryTechnicalContact;        
+        }else{
+          data.primaryTechnicalContact = null;        
         }
 
         const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${params.customer}/sites/${params.id}`

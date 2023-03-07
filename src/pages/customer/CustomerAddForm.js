@@ -117,9 +117,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       name: '',
       mainSite: '',
       tradingName: '',
-      accountManager: '',
-      projectManager: '',
-      supportManager: '',
+      accountManager: null,
+      projectManager: null,
+      supportManager: null,
       type: 'Customer',
       contactFlag,
       loginUser: {
@@ -348,7 +348,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               >
 
               <RHFSelect native name="accountManager" label="Account Manager">
-                    <option value="" defaultValue/>
+                    <option defaultValue value="null" selected >No Account Manager Selected</option>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -358,7 +358,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </RHFSelect>
 
               <RHFSelect native name="projectManager" label="Project Manager">
-                    <option value="" defaultValue/>
+                    <option defaultValue value="null" selected >No Projec tManager Selected</option>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -368,7 +368,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </RHFSelect>
 
               <RHFSelect native name="supportManager" label="Support Manager">
-                    <option value="" defaultValue/>
+                    <option defaultValue value="null" selected >No Support Manager Selected</option>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>

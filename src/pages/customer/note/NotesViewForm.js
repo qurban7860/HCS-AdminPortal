@@ -26,8 +26,8 @@ NoteViewForm.propTypes = {
 };
 export default function NoteViewForm({currentNote = null}) {
   const { note } = useSelector((state) => state.note);
-  console.log("Note : ",note)
-  console.log("Current note : ",currentNote)
+  // console.log("Note : ",note)
+  // console.log("Current note : ",currentNote)
   // const navigate = useNavigate();
   // const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
@@ -88,7 +88,7 @@ export default function NoteViewForm({currentNote = null}) {
     [currentNote]
   );
   return (
-    <Grid sx={{ p: 2, mt:-4 }}>
+    <Grid sx={{ p: 2 }}>
              <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
             <Button
               onClick={() => handleEdit()}
@@ -129,11 +129,11 @@ export default function NoteViewForm({currentNote = null}) {
               </Typography>
             </Grid>
           <Grid item xs={18} sm={12} sx={{  pt:2}}>
-          <Grid item xs={12} sm={12} >
-            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-                Note
-            </Typography>
-          </Grid>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                  Note
+              </Typography>
+            </Grid>
             <Typography variant="string" sx={{ whiteSpace: 'pre-line'}}>
                 {defaultValues.note}
             </Typography>
@@ -142,12 +142,12 @@ export default function NoteViewForm({currentNote = null}) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: naveed, {fDateTime(defaultValues.createdAt)}, 192.168.10.101
+                created by: {defaultValues.createdBy}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: naveed, {fDateTime(defaultValues.updatedAt)}, 192.168.10.101
+              updated by: {defaultValues.updatedBy}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

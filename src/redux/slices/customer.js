@@ -314,24 +314,33 @@ export function updateCustomer(params) {
         tradingName: params.tradingName
       };
      /* eslint-enable */
-
       if(params.mainSite){
         data.mainSite = params.mainSite;
       }
-      if(params.accountManager){
-        data.accountManager = params.accountManager;
+      if(params.accountManager !== "null"){
+        data.accountManager = params.accountManager;       
+      }else{
+        data.primaryTechnicalContact = null;        
       }
-      if(params.projectManager){
+      if(params.projectManager !== "null"){
         data.projectManager = params.projectManager;
+      }else{
+        data.projectManager = null;
       }
-      if(params.supportManager){
+      if(params.supportManager !== "null"){
         data.supportManager = params.supportManager;
+      }else{
+        data.supportManager = null;
       }
-      if(params.primaryBillingContact){
+      if(params.primaryBillingContact !== "null"){
         data.primaryBillingContact = params.primaryBillingContact;        
+      }else{
+        data.primaryBillingContact = null;   
       }
-      if(params.primaryTechnicalContact){
+      if(params.primaryTechnicalContact !== "null"){
         data.primaryTechnicalContact = params.primaryTechnicalContact;        
+      }else{
+        data.primaryTechnicalContact = null;  
       }
       
       const response = await axios.patch(`${CONFIG.SERVER_URL}customers/customers/${params.id}`,

@@ -121,13 +121,14 @@ export default function NoteList() {
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
-  const [activeIndex, setActiveIndex] = useState(null);
   const [tableData, setTableData] = useState([]);
-  const [expanded, setExpanded] = useState(false);
   const [filterStatus, setFilterStatus] = useState([]);
-
+  
   const [openConfirm, setOpenConfirm] = useState(false);
-
+  
+  
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [expanded, setExpanded] = useState(false);
   
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
@@ -294,8 +295,8 @@ const toggleChecked = () =>
           {noteEditFormVisibility && <NoteEditForm/> }
           {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
           {!formVisibility && !noteEditFormVisibility && notes.map((note, index) => (
-            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  onClick={()=>handleAccordianClick(index)} >
-              <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} >
+            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  >
+              <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
             { index !==  activeIndex ? 
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={4} >
@@ -312,7 +313,7 @@ const toggleChecked = () =>
               </Grid>
             : null }
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails sx={{ mt:-5 }}>
                 <NotesViewForm currentNote={note} />
               </AccordionDetails>
             </Accordion>

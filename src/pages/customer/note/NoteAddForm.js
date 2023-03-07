@@ -61,16 +61,16 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const AddNoteSchema = Yup.object().shape({
     note: Yup.string().required("Note Field is required!"),
     // customer: Yup.string(),
-    site: Yup.string(),
+    // site: Yup.string(),
     // user: Yup.string(),
-    contact: Yup.string(),
+    // contact: Yup.string(),
   });
 
   const defaultValues = useMemo(
     () => ({
       note: '',
-      site: '',
-      contact: '',
+      site: null,
+      contact: null,
       customer: customer._id,
       // user: '',
     }),
@@ -109,7 +109,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const onSubmit = async (data) => {
     console.log("Form Submited",data);
       try{
-        await dispatch(saveNote(data));
+        await dispatch(saveNote(customer._id,data));
         reset();
       } catch(error){
         enqueueSnackbar('Saving failed!');
@@ -172,7 +172,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                   ))}
               </RHFSelect> */}
               <RHFSelect native name="site" label="Select Site" className="visible" >
-                    <option value="" defaultValue="Select Site"/>
+                    <option defaultValue value="null" selected >No Site Selected</option>
                     { 
                     sites.length > 0 && sites.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -181,7 +181,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                   ))}
               </RHFSelect>
               <RHFSelect native  name="contact" label="Select Contact" className="visible" >
-                    <option value="" defaultValue="Select Contact"/>
+                    <option defaultValue value="null" selected >No Contact Selected</option>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>

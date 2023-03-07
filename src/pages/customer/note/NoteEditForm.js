@@ -65,8 +65,8 @@ export default function NoteEditForm() {
       note: note?.note || '',
       user: note?.user || '',
       customer: note?.customer || '',
-      editSite: note === null || note.site === null || note.site === undefined ? "" : note.site._id,
-      editContact:   note.contact === null || note.contact === undefined  ? "" : note.site._id,
+      editSite:  note?.site === null || note?.site === undefined ? null : note.site._id,
+      editContact:   note?.contact === null || note?.contact === undefined  ? null : note.contact._id,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [note]

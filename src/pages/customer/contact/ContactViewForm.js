@@ -4,7 +4,6 @@ import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
@@ -19,6 +18,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { getContacts, getContact, setEditFormVisibility, deleteContact } from '../../../redux/slices/contact';
 // Iconify
 import Iconify from '../../../components/iconify';
+import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -74,14 +74,19 @@ export default function ContactViewForm({ currentContact = null }) {
       contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
       phone: currentContact ? currentContact.phone : contact?.phone || 'N/A',
       email: currentContact ? currentContact.email : contact?.email || 'N/A',
-
+      createdAt: currentContact?.createdAt || "",
+      createdBy: currentContact?.createdBy || "",
+      createdIP: currentContact?.createdIP || "",
+      updatedAt: currentContact?.updatedAt || "",
+      updatedBy: currentContact?.updatedBy || "",
+      updatedIP: currentContact?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentContact, contact]
   );
 
   return (
-      <Card sx={{ pt: 5, px: 5 }}>
+    <Grid sx={{ p: 2, mt:-4 }}>
       <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
 
 
@@ -107,78 +112,72 @@ export default function ContactViewForm({ currentContact = null }) {
       </Stack>
 
         <Grid container>
+            <Grid item xs={12} sm={6} sx={{pt:2}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+                First Name
+              </Typography>
+              <Typography variant="body2">
+              {defaultValues.firstName ? defaultValues.firstName : ''}
+              </Typography>
+            </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              First Name
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.firstName ? defaultValues.firstName : 'N/A'}</Typography>
-
-          </Grid>
-
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            <Grid item xs={12} sm={6} sx={{pt:2}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Last Name
-            </Typography>
+              </Typography>
+              <Typography variant="body2">
+              {defaultValues.lastName  ? defaultValues.lastName : ''}
+              </Typography>
+            </Grid>
 
-            <Typography variant="body2">{defaultValues.lastName  ? defaultValues.lastName : 'N/A'}</Typography>
-            
-          </Grid>
-
-          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.status}</Typography>
-            
-          </Grid> */}
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            <Grid item xs={12} sm={6} sx={{pt:2}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Title
-            </Typography>
+              </Typography>
+              <Typography variant="body2">
+              {defaultValues.title ? defaultValues.title : ''}
+              </Typography>
+            </Grid>
 
-            <Typography variant="body2">{defaultValues.title ? defaultValues.title : 'N/A'}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            <Grid item xs={12} sm={6} sx={{pt:2}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Contact Types
-            </Typography>
+              </Typography>
+              <Typography variant="body2">
+              {defaultValues.contactTypes ? defaultValues.contactTypes.toString() : ''}
+              </Typography>
+            </Grid>
 
-            <Typography variant="body2">{defaultValues.contactTypes ? defaultValues.contactTypes.toString() : 'N/A'}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Phone
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
-            
-          </Grid>
+          <Grid item xs={12} sm={6} sx={{pt:2}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Phone
+              </Typography>
+              <Typography variant="body2">
+              {defaultValues.phone ? defaultValues.phone : ''}
+              </Typography>
+            </Grid>
           
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Email
-            </Typography>
+            <Grid item xs={12} sm={6} sx={{pt:2}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Email
+              </Typography>
+              <Typography variant="body2">
+              {defaultValues.email ? defaultValues.email : ''}
+              </Typography>
+            </Grid>
 
-            <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
-            
-          </Grid>
-          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Department
+          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
+            <Grid item xs={12} sm={6} >
+              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
+                created by: {defaultValues.createdBy}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} >
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              updated by: {defaultValues.updatedBy}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
-            
-            <Typography variant="body2">{defaultValues.department}</Typography>
-            
-          </Grid> */}
+            </Grid>
+          </Grid>
           <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
@@ -192,6 +191,6 @@ export default function ContactViewForm({ currentContact = null }) {
           />
 
             </Grid>
-            </Card>
+            </Grid>
   );
 }
