@@ -126,13 +126,8 @@ export default function CustomerSiteList() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const [checked, setChecked] = useState(siteAddFormVisibility);
-
-  console.log('checked', checked);
-
   const toggleChecked = async () => 
     {
-      setChecked(value => !value);
       dispatch(setFormVisibility(!siteAddFormVisibility));    
     };
 
@@ -222,7 +217,7 @@ export default function CustomerSiteList() {
                   </Typography>
                 }
               </AccordionSummary>
-              <AccordionDetails>
+              <AccordionDetails sx={{p: 0}}>
                 <SiteViewForm
                 currentSite={site}
                 />

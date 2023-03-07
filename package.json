@@ -5,7 +5,7 @@
   "description": "Javascript Version",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3080 react-scripts start",
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.jsx .",

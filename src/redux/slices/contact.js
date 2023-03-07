@@ -133,7 +133,7 @@ export function saveContact(params) {
 
       /* eslint-enable */
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}customers/contacts`,
+      const response = await axios.post(`${CONFIG.SERVER_URL}customers/${params.customer}/contacts`,
         data,
       );
 
@@ -171,7 +171,7 @@ export function updateContact(params) {
 
       /* eslint-enable */
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/contacts/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${params.customer}/contacts/${params.id}`,
         data
       );
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
@@ -204,16 +204,15 @@ export function getSPContacts() {
 
 // ----------------------------------------------------------------------
 
-export function getContacts(params = null) {
+export function getContacts(customerID = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       let response = null;
-      if(params){
-        response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts` , 
+      if(customerID){
+        response = await axios.get(`${CONFIG.SERVER_URL}customers/${customerID}/contacts` , 
         {
           params: {
-            customer: params,
             isArchived: false
           }
         }
@@ -236,12 +235,12 @@ export function getContacts(params = null) {
 
 // ----------------------------------------------------------------------
 
-export function getContact(id) {
+export function getContact(customerID, id) {
   console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/${customerID}/contacts/${id}`);
       dispatch(slice.actions.getContactSuccess(response.data));
       console.log('requested contact', response.data);
       // dispatch(slice.actions.setResponseMessage('Contacts Loaded Successfuly'));
@@ -254,7 +253,7 @@ export function getContact(id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteContact(id) {
+export function deleteContact(customerID, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -262,12 +261,11 @@ export function deleteContact(id) {
       const data = {
         isArchived: true,
       };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/contacts/${id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${customerID}/contacts/${id}`,
         data
       );
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

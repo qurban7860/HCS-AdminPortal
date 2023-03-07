@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
+import { m } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -23,19 +24,7 @@ import FormProvider, {
   RHFTextField,
   RHFMultiSelect
 } from '../../components/hook-form';
-import {
-  varFade,
-  varZoom,
-  varFlip,
-  varSlide,
-  varScale,
-  varBgPan,
-  varBounce,
-  varRotate,
-  varBgColor,
-  varBgKenburns,
-} from '../../components/animate';
-
+import { MotionContainer, varBounce } from '../../components/animate';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset
@@ -298,7 +287,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </Stack>
             </Card>
 
-            <Card sx={{ p: 3, mb: 3 }}>
+
+            <Card component={MotionContainer} sx={{ p: 3, mb: 3 }}>
+            <m.div variants={varBounce().in}>
+
               <Stack spacing={3}>
 
               <Stack direction="row"
@@ -335,6 +327,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </Box>}
 
               </Stack>
+              </m.div>
             </Card>
 
             <Card sx={{ p: 3 }}>

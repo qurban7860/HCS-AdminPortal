@@ -143,7 +143,7 @@ export function saveSite(params) {
           data.primaryTechnicalContact = params.primaryTechnicalContact;        
         }
         
-        await axios.post(`${CONFIG.SERVER_URL}customers/sites`, data);
+        await axios.post(`${CONFIG.SERVER_URL}customers/${params.customer}/sites`, data);
         dispatch(slice.actions.setResponseMessage('Site saved successfully'));
         dispatch(slice.actions.setFormVisibility(false));
 
@@ -197,7 +197,7 @@ export function updateSite(params) {
           data.primaryTechnicalContact = params.primaryTechnicalContact;        
         }
 
-        const response = await axios.patch(`${CONFIG.SERVER_URL}customers/sites/${params.id}`
+        const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${params.customer}/sites/${params.id}`
          , data);
 
 
@@ -212,16 +212,16 @@ export function updateSite(params) {
 
 // ----------------------------------------------------------------------
 
-export function getSites(params = null) {
+export function getSites(customerID = null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       let response = null;
-      if(params){
-        response = await axios.get(`${CONFIG.SERVER_URL}customers/sites` , 
+      if(customerID){
+        response = await axios.get(`${CONFIG.SERVER_URL}customers/${customerID}/sites` , 
         {
           params: {
-            customer: params
+            isArchived: false
           }
         }
         );
@@ -243,12 +243,12 @@ export function getSites(params = null) {
 
 // ----------------------------------------------------------------------
 
-export function getSite(id) {
+export function getSite(customerID, id) {
   console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/sites/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/${customerID}/sites/${id}`);
       dispatch(slice.actions.getSiteSuccess(response.data));
       console.log('requested site', response.data);
       // dispatch(slice.actions.setResponseMessage('Sites Loaded Successfuly'));
@@ -261,15 +261,18 @@ export function getSite(id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteSite(id) {
+export function deleteSite(customerID, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}customers/sites/${id}`);
+      const data = {
+        isArchived: true,
+      };
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${customerID}/sites/${id}`,
+        data
+      );
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

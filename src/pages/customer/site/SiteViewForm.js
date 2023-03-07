@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -7,37 +7,55 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getSite, setEditFormVisibility } from '../../../redux/slices/site';
+import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../redux/slices/site';
 
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import SiteEditForm from './SiteEditForm';
-// Iconify
 import Iconify from '../../../components/iconify';
-
+import ConfirmDialog from '../../../components/confirm-dialog';
 
 
 // ----------------------------------------------------------------------
-
-
 SiteViewForm.propTypes = {
   currentSite: PropTypes.object,
 };
-
-// ----------------------------------------------------------------------
 
 export default function SiteViewForm({ currentSite = null }) {
 
   const { site } = useSelector((state) => state.site);
 
+  const { customer } = useSelector((state) => state.customer);
+
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch(); 
+  
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const [openPopover, setOpenPopover] = useState(null);
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleClosePopover = () => {
+    setOpenPopover(null);
+  };
+
+  const onDelete = async () => {
+    await dispatch(deleteSite(customer._id, currentSite._id));
+    handleCloseConfirm();
+    dispatch(getSites(customer._id));
+    // dispatch(getContacts());
+  };
 
   const  handleEdit = async () => {
-    await dispatch(getSite(currentSite._id));
+    await dispatch(getSite(customer._id, currentSite._id));
     dispatch(setEditFormVisibility(true));
   };
 
@@ -65,14 +83,26 @@ export default function SiteViewForm({ currentSite = null }) {
   );
 
   return (
-    <Card sx={{ px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
+    <Card sx={{ pt: 5, px: 5 }}>
+      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
           startIcon={<Iconify icon="eva:edit-fill" />}
         >
           Edit
+        </Button>
+        <Button
+          onClick={() => {
+            handleOpenConfirm();
+            handleClosePopover();
+          }}
+          variant="outlined"
+          color="error"
+          startIcon={<Iconify icon="eva:trash-2-fill" />}
+        >
+          Delete
         </Button>
 
       </Stack>
@@ -171,6 +201,17 @@ export default function SiteViewForm({ currentSite = null }) {
           <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
 
         </Grid>
+        <ConfirmDialog
+            open={openConfirm}
+            onClose={handleCloseConfirm}
+            title="Delete"
+            content="Are you sure want to delete?"
+            action={
+              <Button variant="contained" color="error" onClick={onDelete}>
+                Delete
+              </Button>
+            }
+          />
 
       </Grid>
     </Card>

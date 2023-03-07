@@ -216,7 +216,7 @@ export default function CustomerContactList() {
           
   
             <Accordion key={contact._id}>
-              <AccordionSummary sx={{bgcolor: '#f2f3f5'}} expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
                 <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
                   {contact.firstName} {contact.lastName} 
                 </Typography>

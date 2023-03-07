@@ -194,7 +194,8 @@ export default function ContactList() {
     navigate(PATH_DASHBOARD.customer.view(customerID, contactID));
   };
 
-  const handleViewRow = (id) => {
+  const handleViewRow = (customerID, contactID) => {
+    navigate(PATH_DASHBOARD.customer.view(customerID));
   };
 
   const handleResetFilter = () => {
@@ -276,7 +277,7 @@ export default function ContactList() {
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
                           onEditRow={() => handleEditRow(row.customer, row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
+                          onViewRow={() => handleViewRow(row.customer._id, row._id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

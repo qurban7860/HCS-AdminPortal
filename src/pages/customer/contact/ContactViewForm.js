@@ -25,6 +25,7 @@ import Iconify from '../../../components/iconify';
 ContactViewForm.propTypes = {
   currentContact: PropTypes.object,
 };
+
 export default function ContactViewForm({ currentContact = null }) {
 
   const { contact } = useSelector((state) => state.contact);
@@ -54,12 +55,12 @@ export default function ContactViewForm({ currentContact = null }) {
   };
 
   const handleEdit = async () => {
-    await dispatch(getContact(currentContact._id));
+    await dispatch(getContact(customer._id, currentContact._id));
     dispatch(setEditFormVisibility(true));
   };
 
   const onDelete = async () => {
-    await dispatch(deleteContact(currentContact._id));
+    await dispatch(deleteContact(customer._id, currentContact._id));
     handleCloseConfirm();
     dispatch(getContacts(customer._id));
     // dispatch(getContacts());
