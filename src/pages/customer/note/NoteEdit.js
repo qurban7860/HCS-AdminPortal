@@ -25,21 +25,21 @@ export default function NoteEdit() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
+  const { customer } = useSelector((state) => state.customer);
+
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
 
   const { note } = useSelector((state) => state.note);
 
   useLayoutEffect(() => {
     dispatch(getNote(id));
-    dispatch(getUsers());
-    dispatch(getSites());
-    dispatch(getContacts());
-  }, [dispatch, id]);
-
-
+    // dispatch(getUsers());
+    dispatch(getSites(customer._id));
+    dispatch(getContacts(customer._id));
+  }, [dispatch, id, customer._id]);
 
   return (
     <>
@@ -49,15 +49,15 @@ export default function NoteEdit() {
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Edit Note"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Note',
-              href: PATH_DASHBOARD.note.list,
-            },
-            { name: note?.name },
-          ]}
+          // heading="Edit Note"
+          // links={[
+          //   { name: 'Dashboard', href: PATH_DASHBOARD.root },
+          //   {
+          //     name: 'Note',
+          //     href: PATH_DASHBOARD.note.list,
+          //   },
+          //   { name: note?.name },
+          // ]}
         />
 
         <NoteEditForm/>

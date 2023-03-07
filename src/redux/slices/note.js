@@ -1,10 +1,13 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
+// import sum from 'lodash/sum';
+// import uniq from 'lodash/uniq';
+// import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
 import { CONFIG } from '../../config-global';
+
+
+
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +34,17 @@ const slice = createSlice({
       state.error = null;
 
     },
+    // SET TOGGLE
+    setNoteFormVisibility(state, action){
+      // console.log('toggle', action.payload);
+      state.formVisibility = action.payload;
+    },
 
+    // SET TOGGLE
+    setNoteEditFormVisibility(state, action){
+      // console.log('setEditFormVisibility', action.payload);
+      state.noteEditFormVisibility = action.payload;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -79,6 +92,8 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setNoteFormVisibility,
+  setNoteEditFormVisibility,
   getCart,
   addToCart,
   setResponseMessage,
@@ -88,30 +103,31 @@ export const {
 
 } = slice.actions;
 
-// ----------------------------------------------------------------------
+// ----------------------------Save Note------------------------------------------
 
 export function saveNote(params) {
+  // console.log(params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-      formData.append('note', params.noteTypes);
+      const data = {
+        note: params.note,
+      }
       if(params.customer){
-        formData.append('customer', params.customer);
+        data.customer =  params.customer;
       }
       if(params.site){
-        formData.append('site', params.site);
+        data.site =   params.site;
       }
       if(params.contact){
-        formData.append('contact', params.contact);
+        data.contact =   params.contact;
       }
       if(params.user){
-        formData.append('user', params.user);
+        data.user =    params.user;
       }
-
-      const response = await axios.post(`${CONFIG.SERVER_URL}notes`,
-        formData,
-      );
+      const response = await axios.post(`${CONFIG.SERVER_URL}customers/notes/`, data);
+      // console.log(response)
+      dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
 
     } catch (error) {
@@ -121,31 +137,39 @@ export function saveNote(params) {
   };
 }
 
-// ----------------------------------------------------------------------
+// ---------------------------------Update Note-------------------------------------
 
-export function updateNote(params) {
+export function updateNote(customerId,params) {
+  console.log("update note params : ", params);
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-
-      formData.append('id', params.id);
-      formData.append('note', params.note);
+      // const formData = new FormData();
+      const data = {
+        note: params.note,
+      }
+      data.note =  params.note;
       if(params.customer){
-        formData.append('customer', params.customer);
+        data.customer = params.customer;
       }
-      if(params.site){
-        formData.append('site', params.site);
+      if(params.editSite){
+          data.site =params.editSite;
       }
-      if(params.contact){
-        formData.append('contact', params.contact);
+      else{
+        data.site =  null
+      }
+      if(params.editContact){
+          data.contact = null
+      }
+      else{
+        data.contact = null
       }
       if(params.user){
-        formData.append('user', params.user);
+        data.user = params.user;
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/notes/${params.id}`,
-        formData
-      );
+      console.log("Update before post: ",data)
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${customerId}/notes/${params.id}`, data, );
+      // console.log(data)
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
     } catch (error) {
@@ -155,15 +179,33 @@ export function updateNote(params) {
   };
 }
 
-// ----------------------------------------------------------------------
+// -----------------------------------Get Notes-----------------------------------
 
-export function getNotes() {
+export function getNotes(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/notes`);
-      console.log(response);
-      console.log(response.data);
+      // const isArchived = { 
+      //   isArchived: false, 
+      //   customer: id 
+      // }
+      // console.log(id)
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/${id}/notes` , 
+      {
+        params: {
+          query: {
+            isArchived: false, 
+            customer: id,
+          },
+          populate:[
+                  {path: 'contact', select: 'firstName lastName'},
+                  {path: 'site', select: 'name'}
+                  ]
+        }
+      }
+      );
+      console.log("Notes : ",response);
+      // console.log(response.data);
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
@@ -174,16 +216,16 @@ export function getNotes() {
   };
 }
 
-// ----------------------------------------------------------------------
+// -------------------------------get Note---------------------------------------
 
-export function getNote(id) {
-  console.log('slice working');
+export function getNote(customerId,noteId) {
+  // console.log('Get Note Id');console.log(id)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/notes/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}customers/${customerId}/notes/${noteId}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
-      console.log('requested note', response.data);
+      // console.log('requested note', response.data);
       // dispatch(slice.actions.setResponseMessage('Notes Loaded Successfuly'));
     } catch (error) {
       console.error(error);
@@ -192,16 +234,20 @@ export function getNote(id) {
   };
 }
 
-// ----------------------------------------------------------------------
+// ---------------------------------archive Note-------------------------------------
 
-export function deleteNote(id) {
+export function deleteNote(customerId,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`);
+      // console.log(id);
+      // const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${customerId}/notes/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
+      // console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);

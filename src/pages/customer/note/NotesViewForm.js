@@ -1,116 +1,169 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo } from 'react';
+// import * as Yup from 'yup';
+import { useCallback, useLayoutEffect, useMemo ,useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
+// import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { fDate,fDateTime } from '../../../utils/formatTime';
+
 // global
-import { CONFIG } from '../../../config-global';
+// import { CONFIG } from '../../config-global';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+// import { PATH_DASHBOARD } from '../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
+// import { useSnackbar } from '../../components/snackbar';
+// import { getNotes, getNote } from '../../redux/slices/note';
+import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../../redux/slices/note';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import Iconify from '../../../components/iconify';
 
-import { getNotes, getNote } from '../../../redux/slices/note';
+NoteViewForm.propTypes = {
+  currentNote: PropTypes.object,
 
-
-
-
-
-
-// ----------------------------------------------------------------------
-
-export default function NoteViewForm() {
-
+};
+export default function NoteViewForm({currentNote = null}) {
   const { note } = useSelector((state) => state.note);
-  
-  const navigate = useNavigate();
+  console.log("Note : ",note)
+  console.log("Current note : ",currentNote)
+  // const navigate = useNavigate();
+  // const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch();
+  const { customer } = useSelector((state) => state.customer);
 
-  const { enqueueSnackbar } = useSnackbar();
+  const  handleEdit = async () => {
+    await dispatch(getNote(customer._id,currentNote._id));
+    dispatch(setNoteEditFormVisibility(true));
+  };
 
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const [openPopover, setOpenPopover] = useState(null);
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleClosePopover = () => {
+    setOpenPopover(null);
+  };
+
+  const onDelete = async () => {
+    await dispatch(deleteNote(customer._id,currentNote._id));
+    handleCloseConfirm();
+    dispatch(getNotes(customer._id));
+    // dispatch(getContacts());
+  };
+
+//   const dateFormat = async (date) => {
+//     const month = date.getMonth();
+//     const day = date.getDate();
+//     const monthString = month >= 10 ? month : `0${month}`;
+//     const dayString = day >= 10 ? day : `0${day}`;
+//     return `${date.getFullYear()}-${monthString}-${dayString}`;
+// }
 
   const defaultValues = useMemo(
     () => ({
-      id: note?._id || 'N/A',
-      name: note?.name || 'N/A',
-      status: note?.tradingName || 'N/A',
-      accountManager: note?.accountManager || 'N/A',
-      projectManager: note?.projectManager || 'N/A',
-      supportManager: note?.supportManager || 'N/A',
+      id: currentNote?._id || 'N/A',
+      site_name:  currentNote.site === null || currentNote.site === undefined ? "" : currentNote.site.name,
+      contact_firstName: currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.firstName,
+      contact_lastName:  currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.lastName,
+      note: currentNote?.note || "",
+      createdAt: currentNote?.createdAt || "",
+      createdBy: currentNote?.createdBy || "",
+      createdIP: currentNote?.createdIP || "",
+      updatedAt: currentNote?.updatedAt || "",
+      updatedBy: currentNote?.updatedBy || "",
+      updatedIP: currentNote?.updatedIP || "",
+
+      
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [note]
+    [currentNote]
   );
-
-  console.log(defaultValues); 
-
-
-
-
   return (
-       <Card sx={{ pt: 5, px: 5 }}>
+    <Grid sx={{ p: 2, mt:-4 }}>
+             <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+            <Button
+              onClick={() => handleEdit()}
+              variant="outlined"
+              startIcon={<Iconify icon="eva:edit-fill" />}
+            >
+              Edit
+            </Button>
+            <Button
+              onClick={() => {
+                handleOpenConfirm();
+                handleClosePopover();
+              }}
+              variant="outlined"
+              color="error"
+              startIcon={<Iconify icon="eva:trash-2-fill" />}
+            >
+              Delete
+            </Button>
+            
+            </Stack>
+
         <Grid container>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Name
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.name}</Typography>
-
-          </Grid>
-
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Trading Name
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.tradingName}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Account Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.status}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Project Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.tag}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Suppport Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.location}</Typography>
-            
-          </Grid>
-
-          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Department
-            </Typography>
-            
-            <Typography variant="body2">{defaultValues.department}</Typography>
-            
-          </Grid> */}
-
+            <Grid item xs={12} sm={6} >
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+                Site
+              </Typography>
+              <Typography variant="body2">
+                  {defaultValues.site_name}
+              </Typography>
             </Grid>
-            </Card>
+            <Grid item xs={12} sm={6} >
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+                  Contact
+              </Typography>
+              <Typography variant="body2">
+                  {defaultValues.contact_firstName} {defaultValues.contact_lastName !== 'N/A' ?defaultValues.contact_lastName:""}
+              </Typography>
+            </Grid>
+          <Grid item xs={18} sm={12} sx={{  pt:2}}>
+          <Grid item xs={12} sm={12} >
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+                Note
+            </Typography>
+          </Grid>
+            <Typography variant="string" sx={{ whiteSpace: 'pre-line'}}>
+                {defaultValues.note}
+            </Typography>
+            
+          </Grid>
+          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
+            <Grid item xs={12} sm={6} >
+              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
+                created by: naveed, {fDateTime(defaultValues.createdAt)}, 192.168.10.101
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} >
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              updated by: naveed, {fDateTime(defaultValues.updatedAt)}, 192.168.10.101
+            </Typography>
+            </Grid>
+          </Grid>
+
+          <ConfirmDialog
+            open={openConfirm}
+            onClose={handleCloseConfirm}
+            title="Delete"
+            content="Are you sure want to delete?"
+            action={
+              <Button variant="contained" color="error" onClick={onDelete}>
+                Delete
+              </Button>
+            }
+          />
+      </Grid>
+    </Grid>
   );
 }

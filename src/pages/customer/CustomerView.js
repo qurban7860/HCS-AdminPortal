@@ -39,6 +39,8 @@ import SiteAddForm from './site/SiteAddForm';
 import SiteList from './site/SiteList';
 import ContactAddForm from './contact/ContactAddForm';
 import CustomerStepper from './CustomerStepper';
+import CustomerNoteList from './CustomerNoteList';
+
 /* eslint-disable */
 
 import CustomerViewForm from './CustomerViewForm';
@@ -68,7 +70,7 @@ export default function CustomerViewPage({editPage}) {
   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
 
   const { contactEditFormVisibility } = useSelector((state) => state.contact);
-  
+  const { noteEditFormVisibility} = useSelector((state) => state.note);
   const [currentTab, setCurrentTab] = useState('customer-info');
 
   const [editFlag, setEditFlag] = useState(false);
@@ -98,21 +100,21 @@ export default function CustomerViewPage({editPage}) {
 
   const TABS = [
     {
-      disabled: siteEditFormVisibility || contactEditFormVisibility,
+      disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'customer-info',
       label: 'Customer Info',
       icon: <Iconify icon="ic:round-account-box" />,
       component: currentComponent
     },
     {
-      disabled: customerEditFormFlag || contactEditFormVisibility,
+      disabled: customerEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="eva:navigation-2-outline" />,
       component: <CustomerSiteList/>,
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility,
+      disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
       icon: <Iconify icon="eva:people-outline" />,
@@ -123,16 +125,16 @@ export default function CustomerViewPage({editPage}) {
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="eva:archive-outline" />,
-      component: <></>
+      component: <CustomerNoteList/>
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="eva:book-fill" />,
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'machines',
       label: 'Machines',
       icon: <Iconify icon="eva:settings-2-outline" />,

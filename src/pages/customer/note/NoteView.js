@@ -44,7 +44,7 @@ export default function NoteViewPage() {
   // 
 
   const { note } = useSelector((state) => state.note);
-
+console.log(note)
   const { themeStretch } = useSettingsContext();
 
   const [currentTab, setCurrentTab] = useState('note-edit');

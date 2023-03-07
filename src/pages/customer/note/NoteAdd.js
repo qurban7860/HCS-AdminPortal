@@ -21,7 +21,7 @@ export default function NoteAdd() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+        {/* <CustomBreadcrumbs
           heading="Create a new Note"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
@@ -31,7 +31,7 @@ export default function NoteAdd() {
             },
             { name: 'New Note' },
           ]}
-        />
+        /> */}
         <NoteAddForm />
       </Container>
     </>

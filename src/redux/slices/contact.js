@@ -221,8 +221,8 @@ export function getContacts(customerID = null) {
         response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts`);
       }
       
-      console.log(response);
-      console.log(response.data);
+      // console.log(response);
+      // console.log(response.data);
       dispatch(slice.actions.getContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
 

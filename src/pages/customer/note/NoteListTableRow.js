@@ -45,7 +45,7 @@ export default function NoteListTableRow({
 }) {
   const { note, isDisabled, createdAt } = row;
 
-  console.log('ID', isDisabled);
+  // console.log('ID', isDisabled);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 

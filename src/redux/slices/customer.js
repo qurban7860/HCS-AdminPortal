@@ -69,7 +69,7 @@ const slice = createSlice({
       state.success = true;
       state.customer = action.payload;
       state.initial = true;
-      console.log('customersuccessslice', state.customer);
+      // console.log('customersuccessslice', state.customer);
     },
 
 
@@ -126,13 +126,13 @@ export function getCustomers() {
 // ----------------------------------------------------------------------
 
 export function getCustomer(id) {
-  console.log('slice working');
+  // console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}customers/customers/${id}`);
       dispatch(slice.actions.getCustomerSuccess(response.data));
-      console.log('requested customer', response.data);
+      // console.log('requested customer', response.data);
     } catch (error) {
       // console.error(error);
       // dispatch(slice.actions.hasError(error));

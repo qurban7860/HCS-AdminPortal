@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment,TextField } from '@mui/material';
 // slice
 import { getUsers } from '../../../redux/slices/user';
 import { getSites } from '../../../redux/slices/site';
@@ -41,13 +41,14 @@ NoteAddForm.propTypes = {
 
 export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
-  const { users } = useSelector((state) => state.user);
+  // const { users } = useSelector((state) => state.user);
 
   const { sites } = useSelector((state) => state.site);
 
   const { contacts } = useSelector((state) => state.contact);
 
   const { customer } = useSelector((state) => state.customer);
+
 
   const dispatch = useDispatch();
   
@@ -59,10 +60,9 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const AddNoteSchema = Yup.object().shape({
     note: Yup.string().required("Note Field is required!"),
-    against:Yup.string().required("Note With Field is required!"),
-    customer: Yup.string(),
+    // customer: Yup.string(),
     site: Yup.string(),
-    user: Yup.string(),
+    // user: Yup.string(),
     contact: Yup.string(),
   });
 
@@ -71,8 +71,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
       note: '',
       site: '',
       contact: '',
-      customer: '',
-      user: '',
+      customer: customer._id,
+      // user: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentNote]
@@ -94,7 +94,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getUsers(customer._id));
+    // dispatch(getUsers(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getContacts(customer._id));
 
@@ -107,11 +107,10 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log("Form Submited",data);
       try{
         await dispatch(saveNote(data));
         reset();
-        navigate(PATH_DASHBOARD.note.list);
       } catch(error){
         enqueueSnackbar('Saving failed!');
         console.error(error);
@@ -119,15 +118,15 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
       
   };
 
-  const [visibilityAgainst, setVisibilityAgainst]= useState(0);
-  const handleChange = event => {
-    const { value } = event.target
-    console.log(value)
-    event.stopPropagation()
-    // document.querySelectorAll([".visible"])
-    // document.getElementsByClassName('visible')
-    setVisibilityAgainst(value)
-  }
+  // const [visibilityAgainst, setVisibilityAgainst]= useState(0);
+  // const handleChange = event => {
+  //   const { value } = event.target
+  //   console.log(value)
+  //   event.stopPropagation()
+  //   // document.querySelectorAll([".visible"])
+  //   // document.getElementsByClassName('visible')
+  //   setVisibilityAgainst(value)
+  // }
   // const visibilitydocument = document.getElementsByName('site').value
   // const visibilitydocument2 = document.getElementsByName('contact').value
 
@@ -141,8 +140,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
           <Card sx={{ p: 3 }} >
             <Stack spacing={3}>
               <Stack spacing={1}>
-                <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                  Notes
+                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
+                Create a new Note
                 </Typography>
 
               </Stack>
@@ -155,13 +154,13 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-              <RHFSelect native name="against" id="against" label="Please select Notes Against" onChange={handleChange} >
+              {/* <RHFSelect native name="against" id="against" label="Please select Notes Against" onChange={handleChange} >
                     <option value="" defaultValue="Please select Notes Against"/>
 
                     <option key={1} value='site'>Site</option>
                     <option key={2} value='contact'>Contact</option>
 
-              </RHFSelect>
+              </RHFSelect> */}
 
               {/* <RHFSelect native name="customer" label="Customer">
                     <option value="" defaultValue="please select option" />
@@ -172,9 +171,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                     </option>
                   ))}
               </RHFSelect> */}
-              {visibilityAgainst === "site" ? 
-              <RHFSelect native name="site" label="Site" className="visible" >
-                    <option value="" defaultValue="please select option"/>
+              <RHFSelect native name="site" label="Select Site" className="visible" >
+                    <option value="" defaultValue="Select Site"/>
                     { 
                     sites.length > 0 && sites.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -182,10 +180,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                     </option>
                   ))}
               </RHFSelect>
-              : null}
-              {visibilityAgainst === "contact" ? 
-              <RHFSelect native  name="contact" label="Contact" className="visible" >
-                    <option value="" defaultValue="please select option"/>
+              <RHFSelect native  name="contact" label="Select Contact" className="visible" >
+                    <option value="" defaultValue="Select Contact"/>
                     { 
                     contacts.length > 0 && contacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -193,9 +189,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                     </option>
                   ))}
               </RHFSelect>
-              : null}
 
-              <RHFSelect native name="user" label="User" >
+              {/* <RHFSelect native name="user" label="User" >
                     <option value="" defaultValue="please select option"/>
                     { 
                     users.length > 0 && users.map((option) => (
@@ -203,10 +198,12 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                       {option.firstName} {option.lastName}
                     </option>
                   ))}
-              </RHFSelect>
+              </RHFSelect> */}
 
               </Box>
-              <RHFEditor simple name="note"  />
+              {/* <RHFEditor simple name="note"  /> */}
+              <RHFTextField name="note" label="Note*" minRows={8} multiline />
+              {/* <TextField name="note" label="Note*" minRows={8} multiline /> */}
 
               {/* <RHFSwitch
               name="isArchived"

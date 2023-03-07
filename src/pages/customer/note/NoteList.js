@@ -44,10 +44,10 @@ import { getNotes, deleteNote, getNote } from '../../../redux/slices/note';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'note', label: 'Note', align: 'left' },
-  { id: 'isDisabled', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
+  { id: 'note', label: 'Note', align: "left"},
+  { id: 'isDisabled', label: 'Disabled', align: "left"},
+  { id: 'created_at', label: 'Created At', align: "left"},
+  { id: 'action', label: 'Actions', align: "left"},
 
 ];
 
@@ -109,10 +109,12 @@ export default function NoteList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { notes, isLoading, error, initial, responseMessage } = useSelector((state) => state.note);
+  const { customer } = useSelector((state) => state.customer);
+
 
   useLayoutEffect(() => {
-    dispatch(getNotes());
-  }, [dispatch]);
+    dispatch(getNotes(customer._id));
+  }, [dispatch,customer._id]);
 
   useEffect(() => {
     if (initial) {
@@ -160,9 +162,9 @@ export default function NoteList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteNote(id));
-      dispatch(getNote());
+      dispatch(getNotes());
       setSelected([]);
 
       if (page > 0) {
@@ -213,16 +215,17 @@ export default function NoteList() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
+
         <CustomBreadcrumbs
-          heading="Note List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Note',
-              href: PATH_DASHBOARD.note.list,
-            },
-            { name: 'List' },
-          ]}
+          // heading="Note List"
+          // links={[
+          //   { name: 'Dashboard', href: PATH_DASHBOARD.root },
+          //   {
+          //     name: 'Note',
+          //     href: PATH_DASHBOARD.note.list,
+          //   },
+          //   { name: 'List' },
+          // ]}
           action={
             <Button
               component={RouterLink}
