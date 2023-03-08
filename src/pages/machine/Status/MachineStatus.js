@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getMachinestatuses, createMachinestatuses } from '../../../redux/slices/statuses';
+import { getMachineStatus, createMachinestatuses } from '../../../redux/slices/statuses';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -52,7 +52,7 @@ export default function MachineStatus() {
 
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().min(5).max(25).required('Name is required') ,
-    description: Yup.string(),
+    description: Yup.string().min(5).max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
     displayOrderNo: Yup.number(),

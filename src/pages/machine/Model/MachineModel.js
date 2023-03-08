@@ -55,7 +55,7 @@ export default function MachineModel() {
 
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().min(5).max(25).required('Name is required') ,
-    description: Yup.string(),
+    description: Yup.string().min(5).max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
     category: Yup.string(),

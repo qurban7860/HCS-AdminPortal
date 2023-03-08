@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getMachinestatus, updateMachinestatus } from '../../../redux/slices/statuses';
+import { getMachineStatus, updateMachinestatus } from '../../../redux/slices/statuses';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -98,7 +98,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         </Grid>
 
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
@@ -106,7 +106,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
 
         </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Display Order No
           </Typography>
