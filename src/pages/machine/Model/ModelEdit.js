@@ -1,0 +1,62 @@
+import { Helmet } from 'react-helmet-async';
+import { useLayoutEffect } from 'react';
+import { useParams } from 'react-router-dom';
+// @mui
+import { useDispatch,useSelector } from 'react-redux';
+import { Container } from '@mui/material';
+import { getMachinemodels, getMachineModel} from '../../../redux/slices/model';
+import ModelEditForm from './ModelEditForm';
+// redux
+
+// routes
+import { PATH_MACHINE } from '../../../routes/paths';
+// components
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+import { useSettingsContext } from '../../../components/settings';
+// sections
+
+
+
+// ----------------------------------------------------------------------
+
+export default function ModelEdit() {
+  const { themeStretch } = useSettingsContext();
+
+  const dispatch = useDispatch();
+
+  const { id } = useParams(); 
+  console.log(id);
+
+  
+  const { machinemodel } = useSelector((state) => state.machinemodel);
+
+  useLayoutEffect(() => {
+     dispatch(getMachineModel(id));
+  }, [dispatch, id]);
+
+  
+  return (
+    <>
+      <Helmet>
+        <title> Machine Model: Edit Page | Machine ERP</title>
+      </Helmet>
+      
+
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs
+          heading="Edit Model"
+          links={[
+            { name: 'Dashboard', href: PATH_MACHINE.root },
+            {
+              name: 'Model',
+              href: PATH_MACHINE.techParam.list,
+            },
+            { name: machinemodel?.name },
+          ]}
+        />
+
+        <ModelEditForm/>
+      </Container>
+    </>
+  );
+}
