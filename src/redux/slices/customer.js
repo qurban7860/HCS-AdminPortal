@@ -301,7 +301,7 @@ export function saveCustomer(params) {
 // --------------------------------------------------------------------------
 
 export function updateCustomer(params) {
-  console.log('update, working')
+  console.log('update, working',params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -314,13 +314,15 @@ export function updateCustomer(params) {
         tradingName: params.tradingName
       };
      /* eslint-enable */
-      if(params.mainSite){
+      if(params.mainSite !== "null" && params.mainSite !== null){
         data.mainSite = params.mainSite;
+      }else{
+        data.mainSite = null;
       }
       if(params.accountManager !== "null" && params.accountManager !== null){
         data.accountManager = params.accountManager;       
       }else{
-        data.primaryTechnicalContact = null;        
+        data.accountManager = null;        
       }
       if(params.projectManager !== "null" && params.projectManager !== null){
         data.projectManager = params.projectManager;
@@ -342,7 +344,7 @@ export function updateCustomer(params) {
       }else{
         data.primaryTechnicalContact = null;  
       }
-      
+      console.log("Data : ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}customers/customers/${params.id}`,
         data
       );

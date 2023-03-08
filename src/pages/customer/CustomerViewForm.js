@@ -20,7 +20,7 @@ import Iconify from '../../components/iconify';
 // slices
 import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
 
-import { fDate } from '../../utils/formatTime';
+import { fDateTime } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
@@ -48,8 +48,12 @@ export default function CustomerViewForm() {
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
-      createdAt: customer?.createdAt || '',
-      updatedAt: customer?.updatedAt || ''
+      createdAt: customer?.createdAt || "",
+      createdBy: customer?.createdBy || "",
+      createdIP: customer?.createdIP || "",
+      updatedAt: customer?.updatedAt || "",
+      updatedBy: customer?.updatedBy || "",
+      updatedIP: customer?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -58,11 +62,10 @@ export default function CustomerViewForm() {
 
   return (
 
-      <Card sx={{ px: 5 }}>
+      <Card sx={{ p: 4 }}>
     
-      <Grid item xs={12} sm={12} sx={{ mb: -4 }}>
-
-        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
+      {/* <Grid item xs={12} sm={12} > */}
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4}}>
               <Button
                 onClick={() => { 
                   toggleEdit(); 
@@ -74,12 +77,12 @@ export default function CustomerViewForm() {
                 Edit Customer
               </Button>
         </Stack>
-        </Grid>
+      {/* </Grid> */}
 
         <Grid container>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Name
             </Typography>
 
@@ -88,8 +91,8 @@ export default function CustomerViewForm() {
           </Grid>
 
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Trading Name
             </Typography>
 
@@ -97,8 +100,8 @@ export default function CustomerViewForm() {
             
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Phone
           </Typography>
 
@@ -106,8 +109,8 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Fax
           </Typography>
 
@@ -115,8 +118,8 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Email
           </Typography>
 
@@ -132,14 +135,14 @@ export default function CustomerViewForm() {
           {defaultValues.mainSite && <Grid container>
 
 
-          <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
+          <Grid item xs={12} sm={12} sx={{ pt:2 }}>
             <Typography variant="subtitle2" sx={{ color: '#131414' }}>
               Address Details
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Site Name
           </Typography>
 
@@ -147,8 +150,8 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Street
           </Typography>
 
@@ -156,8 +159,8 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Suburb
           </Typography>
 
@@ -165,8 +168,8 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             City
           </Typography>
 
@@ -174,8 +177,8 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
             Region
           </Typography>
 
@@ -183,8 +186,8 @@ export default function CustomerViewForm() {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Country
           </Typography>
 
@@ -197,8 +200,8 @@ export default function CustomerViewForm() {
 
         {(defaultValues.primaryBillingContact || defaultValues.primaryTechnicalContact)&& <Grid container>
 
-          {defaultValues.primaryBillingContact && <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          {defaultValues.primaryBillingContact && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
             Primary Billing Contact
           </Typography>
 
@@ -208,8 +211,8 @@ export default function CustomerViewForm() {
 
         </Grid>}
 
-        {defaultValues.primaryTechnicalContact && <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+        {defaultValues.primaryTechnicalContact && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
             Primary Technical Contact
           </Typography>
 
@@ -225,14 +228,14 @@ export default function CustomerViewForm() {
         <Grid container>
 
 
-          <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
+          <Grid item xs={12} sm={12} sx={{ pt:2 }}>
             <Typography variant="subtitle2" sx={{ color: '#131414' }}>
                Howick Resources
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Account Manager
             </Typography>
 
@@ -240,8 +243,8 @@ export default function CustomerViewForm() {
             
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          <Grid item xs={12} sm={6} sx={{pt:2 }}>
+            <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Project Manager
             </Typography>
 
@@ -249,8 +252,8 @@ export default function CustomerViewForm() {
             
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
              Suppport Manager
             </Typography>
 
@@ -263,24 +266,18 @@ export default function CustomerViewForm() {
 
 
         <Grid container>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Created At
+        <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
+            <Grid item xs={12} sm={6} >
+              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
+                created by: {defaultValues.createdBy}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} >
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              updated by: {defaultValues.updatedBy}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
-
-            <Typography variant="body2">{fDate(defaultValues.createdAt)}</Typography>
-            
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Updated At
-            </Typography>
-
-            <Typography variant="body2">{fDate(defaultValues.updatedAt)}</Typography>
-            
-        </Grid>
-
+            </Grid>
+          </Grid>
 
           {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
