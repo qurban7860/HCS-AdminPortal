@@ -116,11 +116,15 @@ export function saveNote(customerId,params) {
       if(params.customer){
         data.customer =  params.customer;
       }
-      if(params.site){
+      if(params.site  !== "null" && params.site  !== null){
         data.site =   params.site;
+      }else{
+        data.site =   null;
       }
-      if(params.contact){
+      if(params.contact !== "null" && params.contact !== null){
         data.contact =   params.contact;
+      }else{
+        data.contact =   null;
       }
       if(params.user){
         data.user =    params.user;
@@ -152,18 +156,16 @@ export function updateNote(customerId,params) {
       if(params.customer){
         data.customer = params.customer;
       }
-      if(params.editSite  !== "null"){
+      if(params.editSite  !== "null" && params.editSite  !== null){
           data.site =params.editSite;
-      }
-      else{
+      }else{
         data.site =  null
       }
-      if(params.editContact !== "null"){
+      if(params.editContact !== "null" && params.editContact !== null){
           data.contact = params.editContact;
+      }else{
+        data.contact = null
       }
-      // else{
-      //   data.contact = null
-      // }
       if(params.user){
         data.user = params.user;
       }

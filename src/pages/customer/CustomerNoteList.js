@@ -318,7 +318,7 @@ const toggleChecked = () =>
               </AccordionDetails>
             </Accordion>
           ))} 
-          {isNotFound && !noteEditFormVisibility && <EmptyContent title="No Data"/>}
+          {isNotFound && !noteEditFormVisibility && !formVisibility && <EmptyContent title="No Data"/>}
         </Card>
       </Container>
         <ConfirmDialog

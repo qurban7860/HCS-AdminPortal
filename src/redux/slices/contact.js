@@ -149,17 +149,18 @@ export function saveContact(params) {
 
 // ----------------------------------------------------------------------
 
-export function updateContact(params) {
+export function updateContact(customerId,params) {
+  console.log(customerId)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(slice.actions.setEditFormVisibility(false));
 
     try {
       const formData = new FormData();
-
+console.log(formData);
       /* eslint-disable */
       let data = {
-        customer: params.customer,
+        customer: customerId,
         firstName: params.firstName,
         lastName: params.lastName,
         customer: params.customer,
@@ -171,7 +172,7 @@ export function updateContact(params) {
 
       /* eslint-enable */
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${params.customer}/contacts/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${customerId}/contacts/${params.id}`,
         data
       );
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));

@@ -49,21 +49,21 @@
 
     const { contact, isLoading, error } = useSelector((state) => state.contact);
 
-    const { customers } = useSelector((state) => state.customer);
+    const { customer } = useSelector((state) => state.customer);
 
     const dispatch = useDispatch();
 
     const { enqueueSnackbar } = useSnackbar();
 
     const EditContactSchema = Yup.object().shape({
-      customer: Yup.string(),
+      // customer: Yup.string(),
       firstName: Yup.string(),
       lastName: Yup.string(),
       title: Yup.string(),
       contactTypes: Yup.array(),
       phone: Yup.string(),
       email: Yup.string().email('Email must be a valid email address'),
-      isPrimary: Yup.boolean(),
+      // isPrimary: Yup.boolean(),
     });
 
 
@@ -74,7 +74,7 @@
         firstName: contact?.firstName || '',
         lastName: contact?.lastName || '',
         title: contact?.title || '',
-        contactTypes: contact?.contactTypes[0]?.split(',') || [],
+        contactTypes: contact?.contactTypes || [],
         phone: contact?.phone || '',
         email: contact?.email || '',
       }),
@@ -103,11 +103,10 @@
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [contact]);
 
-
     const onSubmit = async (data) => {
-      console.log(data);
+      // console.log(data);
       try {
-        await dispatch(updateContact(data));
+        await dispatch(updateContact(contact.customer._id, data));
         reset();
         // navigate(PATH_DASHBOARD.contact.list);
       } catch (err) {
@@ -167,14 +166,21 @@
                 }}
               > 
 
-              <LoadingButton 
+              {/* <LoadingButton 
                 type="submit"
                 variant="contained"
                 size="large"
                 loading={isSubmitting}>
                   Save Changes
+              </LoadingButton> */}
+              <LoadingButton 
+              type="submit" 
+              variant="contained" 
+              size="large" 
+              loading={isSubmitting}>
+                   Save Changes
               </LoadingButton>
-
+              
               <Button 
                 onClick={toggleCancel}
                 variant="outlined" 

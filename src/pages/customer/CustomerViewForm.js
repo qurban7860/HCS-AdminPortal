@@ -39,12 +39,12 @@ export default function CustomerViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id: customer?._id || 'N/A',
-      name: customer?.name || 'N/A',
-      tradingName: customer?.tradingName || 'N/A',
-      accountManager: customer?.accountManager || 'N/A',
-      projectManager: customer?.projectManager || 'N/A',
-      supportManager: customer?.supportManager || 'N/A',
+      id: customer?._id || "",
+      name: customer?.name || "",
+      tradingName: customer?.tradingName || "",
+      accountManager: customer?.accountManager || "",
+      projectManager: customer?.projectManager || "",
+      supportManager: customer?.supportManager || "",
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
@@ -93,7 +93,7 @@ export default function CustomerViewForm() {
               Trading Name
             </Typography>
 
-            <Typography variant="body2">{defaultValues.tradingName ? defaultValues.tradingName : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.tradingName ? defaultValues.tradingName : ''}</Typography>
             
           </Grid>
 
@@ -102,7 +102,7 @@ export default function CustomerViewForm() {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.phone ? defaultValues.mainSite.phone : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite?.phone ? defaultValues.mainSite.phone : ''}</Typography>
 
         </Grid>
 
@@ -111,7 +111,7 @@ export default function CustomerViewForm() {
             Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.fax? defaultValues.mainSite.fax : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite?.fax? defaultValues.mainSite.fax : ''}</Typography>
 
         </Grid>
 
@@ -120,7 +120,7 @@ export default function CustomerViewForm() {
             Email
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite?.email? defaultValues.mainSite.email : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite?.email? defaultValues.mainSite.email : ''}</Typography>
 
         </Grid>
 
@@ -143,7 +143,7 @@ export default function CustomerViewForm() {
             Site Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.name ? defaultValues.mainSite.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.name ? defaultValues.mainSite.name : ''}</Typography>
 
         </Grid>
 
@@ -152,7 +152,7 @@ export default function CustomerViewForm() {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.street ? defaultValues.mainSite.address.street : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.street ? defaultValues.mainSite.address.street : ''}</Typography>
 
         </Grid>
 
@@ -161,7 +161,7 @@ export default function CustomerViewForm() {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.suburb ? defaultValues.mainSite.address.suburb : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.suburb ? defaultValues.mainSite.address.suburb : ''}</Typography>
 
         </Grid>
 
@@ -170,7 +170,7 @@ export default function CustomerViewForm() {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.city ? defaultValues.mainSite.address.city : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.city ? defaultValues.mainSite.address.city : ''}</Typography>
 
         </Grid>
 
@@ -179,7 +179,7 @@ export default function CustomerViewForm() {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.region  ? defaultValues.mainSite.address.region : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.region  ? defaultValues.mainSite.address.region : ''}</Typography>
 
         </Grid>
 
@@ -188,7 +188,7 @@ export default function CustomerViewForm() {
             Country
           </Typography>
 
-          <Typography variant="body2">{defaultValues.mainSite.address?.country  ? defaultValues.mainSite.address.country : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.mainSite.address?.country  ? defaultValues.mainSite.address.country : ''}</Typography>
 
         </Grid>
 

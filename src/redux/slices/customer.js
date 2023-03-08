@@ -317,27 +317,27 @@ export function updateCustomer(params) {
       if(params.mainSite){
         data.mainSite = params.mainSite;
       }
-      if(params.accountManager !== "null"){
+      if(params.accountManager !== "null" && params.accountManager !== null){
         data.accountManager = params.accountManager;       
       }else{
         data.primaryTechnicalContact = null;        
       }
-      if(params.projectManager !== "null"){
+      if(params.projectManager !== "null" && params.projectManager !== null){
         data.projectManager = params.projectManager;
       }else{
         data.projectManager = null;
       }
-      if(params.supportManager !== "null"){
+      if(params.supportManager !== "null" && params.supportManager !== null){
         data.supportManager = params.supportManager;
       }else{
         data.supportManager = null;
       }
-      if(params.primaryBillingContact !== "null"){
+      if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null){
         data.primaryBillingContact = params.primaryBillingContact;        
       }else{
         data.primaryBillingContact = null;   
       }
-      if(params.primaryTechnicalContact !== "null"){
+      if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
         data.primaryTechnicalContact = params.primaryTechnicalContact;        
       }else{
         data.primaryTechnicalContact = null;  

@@ -133,14 +133,20 @@ export function saveSite(params) {
         if(params.region){
           data.address.region = params.region;        
         }
-        if(params.country){
+        if(params.country !== "null" && params.country !== null){
           data.address.country = params.country;        
+        }else{
+          data.address.country = null;
         }
-        if(params.primaryBillingContact){
+        if(params.primaryBillingContact  !== "null" && params.primaryBillingContact !== null){
           data.primaryBillingContact = params.primaryBillingContact;        
+        }else{
+          data.primaryBillingContact = null;
         }
-        if(params.primaryTechnicalContact){
+        if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
           data.primaryTechnicalContact = params.primaryTechnicalContact;        
+        }else{
+          data.primaryTechnicalContact = null;
         }
         
         await axios.post(`${CONFIG.SERVER_URL}customers/${params.customer}/sites`, data);
@@ -187,17 +193,17 @@ export function updateSite(params) {
         if(params.region){
           data.address.region = params.region;        
         }
-        if(params.country !== "null"){
+        if(params.country !== "null" && params.country !== null){
           data.address.country = params.country;        
         }else{
           data.address.country = null;        
         }
-        if(params.primaryBillingContact !== "null"){
+        if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null ){
           data.primaryBillingContact = params.primaryBillingContact;        
         }else{
-          data.primaryTechnicalContact = null;        
+          data.primaryBillingContact = null;        
         }
-        if(params.primaryTechnicalContact !== "null"){
+        if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
           data.primaryTechnicalContact = params.primaryTechnicalContact;        
         }else{
           data.primaryTechnicalContact = null;        
