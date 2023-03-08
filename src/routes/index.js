@@ -67,6 +67,26 @@ import {
   // MachineTechParamCategory
   MachineTechParam,
   TechParamList,
+  TechParamCategoryViewForm,
+  TechParamCategoryView,
+  TechParamCategoryEdit,
+  TechParamCategoryEditForm,
+  // Status
+  MachineStatus,
+  StatusViewForm,
+  StatusView,
+  StatusEdit,
+  StatusEditForm,
+  StatusList,
+  // Model
+  MachineModel,
+  ModelList,
+  ModelViewForm,
+  ModelView,
+  ModelEdit,
+  ModelEditForm,
+
+  
   // Site
   SiteList,
   SiteAdd,
@@ -92,6 +112,7 @@ import {
   HomePage,
   ComingSoonPage,
   MaintenancePage,
+  
   
 
   //
@@ -311,6 +332,32 @@ export default function Router() {
           children:[
             {path: 'params', element: <MachineTechParam/>},
             {path: 'list', element: <TechParamList/>},
+            {path: 'viewform', element: <TechParamCategoryViewForm/>},
+            {path: ':id/view', element: <TechParamCategoryView/>},
+            {path: ':id/edit', element: <TechParamCategoryEdit/>}, 
+            {path: 'editform', element: <TechParamCategoryEditForm/>},
+          ]
+        },
+        {
+          path: 'machine-status',
+          children:[
+            {path: 'status', element: <MachineStatus/>},
+            {path: 'list', element: <StatusList/>},
+            {path: 'viewform', element: <StatusViewForm/>},
+            {path: ':id/view', element: <StatusView/>},
+            {path: ':id/edit', element: <StatusEdit/>}, 
+            {path: 'editform', element: <StatusEditForm/>},
+          ]
+        },
+        {
+          path: 'machine-model',
+          children:[
+            {path: 'model', element: <MachineModel/>},
+            {path: 'list', element: <ModelList/>},
+            {path: 'viewform', element: <ModelViewForm/>},
+            {path: ':id/view', element: <ModelView/>},
+            {path: ':id/edit', element: <ModelEdit/>}, 
+            {path: 'editform', element: <ModelEditForm/>},
           ]
         },
       ]

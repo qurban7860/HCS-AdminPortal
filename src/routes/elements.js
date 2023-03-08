@@ -70,11 +70,31 @@ export const ToolEditForm = Loadable(lazy(()=> import('../pages/machine/Tool/Too
 // MachineTechParam
 export const MachineTechParam = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/MachineTechParam')));
 export const TechParamList = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamList')));
+export const TechParamCategoryViewForm = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryViewForm')));
+export const TechParamCategoryView = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryView')));
+export const TechParamCategoryEdit = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryEdit')));
+export const TechParamCategoryEditForm = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryEditForm')));
+
+// Machine Statuses
+export const MachineStatus = Loadable(lazy(()=> import('../pages/machine/Status/MachineStatus')));
+export const StatusList = Loadable(lazy(()=> import('../pages/machine/Status/StatusList')));
+export const StatusViewForm = Loadable(lazy(()=> import('../pages/machine/Status/StatusViewForm')));
+export const StatusView = Loadable(lazy(()=> import('../pages/machine/Status/StatusView')));
+export const StatusEditForm = Loadable(lazy(()=> import('../pages/machine/Status/StatusEditForm')));
+export const StatusEdit = Loadable(lazy(()=> import('../pages/machine/Status/StatusEdit')));
+
+// Machine Model
+export const MachineModel = Loadable(lazy(()=> import('../pages/machine/Model/MachineModel')));
+export const ModelList = Loadable(lazy(()=> import('../pages/machine/Model/ModelList')));
+export const ModelViewForm = Loadable(lazy(()=> import('../pages/machine/Model/ModelViewForm')));
+export const ModelView = Loadable(lazy(()=> import('../pages/machine/Model/ModelView')));
+export const ModelEditForm = Loadable(lazy(()=> import('../pages/machine/Model/ModelEditForm')));
+export const ModelEdit = Loadable(lazy(()=> import('../pages/machine/Model/ModelEdit')));
 // SITE
 export const SiteList= Loadable(  lazy(() => import('../pages/site/SiteList')));
 export const SiteAdd = Loadable(  lazy(() => import('../pages/site/SiteAdd')));
 export const SiteEdit = Loadable(  lazy(() => import('../pages/site/SiteEdit')));
-export const SiteView = Loadable(  lazy(() => import('../pages/site/SiteView')));
+export const SiteView = Loadable(  lazy(() => import('../pages/site/SiteView'))); 
 
 // CONTACT
 export const ContactList= Loadable(  lazy(() => import('../pages/contact/ContactList')));

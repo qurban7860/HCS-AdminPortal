@@ -15,6 +15,8 @@ import licenseReducer from './slices/license';
 import categoryReducer from './slices/category';
 import toolReducer from './slices/tools';
 import techparamReducer from './slices/tech-param';
+import machinestatusReducer from './slices/statuses';
+import machinemodelReducer from './slices/model';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -104,13 +106,24 @@ export const toolPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const techparamPersistConfig = {
-  key: 'techparam',
+export const techparamcategoryPersistConfig = {
+  key: 'techparamcategory',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-
+export const machinestatusPersistConfig = {
+  key: 'machinestatus',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const machinemodelPersistConfig = {
+  key: 'machinemodel',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   asset: persistReducer(assetPersistConfig, assetReducer),
@@ -124,7 +137,9 @@ const rootReducer = combineReducers({
   license: persistReducer(licensePersistConfig,licenseReducer),
   category: persistReducer(categoryPersistConfig,categoryReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
-  techparam: persistReducer(techparamPersistConfig,techparamReducer),
+  techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamReducer),
+  machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
+  machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
 });
 
 export default rootReducer;

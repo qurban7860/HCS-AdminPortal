@@ -164,6 +164,23 @@ export const PATH_MACHINE = {
   techParam:{
     techParam: (ROOTS_MACHINE, '/machine/machine-tech/params'),
     list: (ROOTS_MACHINE, '/machine/machine-tech/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/view`),
+    techparamcategoryedit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/editform`),
+  },
+  machineStatus:{
+    status: (ROOTS_MACHINE, '/machine/machine-status/status'),
+    list: (ROOTS_MACHINE, '/machine/machine-status/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/view`),
+    statusedit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/editform`),
+  },
+  machineModel:{
+    model: (ROOTS_MACHINE, '/machine/machine-model/model'),
+    list: (ROOTS_MACHINE, '/machine/machine-model/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/view`),
+    modeledit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/editform`),
   },
   
 }

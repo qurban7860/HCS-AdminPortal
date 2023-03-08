@@ -187,14 +187,9 @@ export function saveSupplier(params) {
       try {
         /* eslint-disable */
         let data = {
-          name: params.name,
-          // tradingName: params.tradingName,
-          // site: {
-          //   name: params.name,
-          //   address: {},
-          // },
-          // technicalContact: {},
-          // billingContact: {},
+        id: params.id,
+        name: params.name,
+        isDisabled: params?.isDisabled,
         };
         /* eslint-enable */
 
@@ -254,7 +249,7 @@ export function updateSupplier(params) {
       let data = {
         id: params.id,
         name: params.name,
-        // tradingName: params.tradingName
+        isDisabled: params?.isDisabled,
       };
      /* eslint-enable */
 
