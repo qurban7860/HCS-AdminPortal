@@ -33,7 +33,7 @@ import { SeoIllustration } from '../../assets/illustrations';
 
 import { useDispatch, useSelector } from '../../redux/store';
 
-import { getSites } from '../../redux/slices/site';
+import { getSites } from '../../redux/slices/customer/site';
 
 
 // ----------------------------------------------------------------------

@@ -26,7 +26,7 @@ import { SeoIllustration } from '../../assets/illustrations';
 
 import { useDispatch } from '../../redux/store';
 
-import { getSites } from '../../redux/slices/site';
+import { getSites } from '../../redux/slices/customer/site';
 import MachineWidget from './util/MachineWidget';
 import Iconify from '../../components/iconify';
 

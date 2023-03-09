@@ -11,9 +11,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getCustomers } from '../../../redux/slices/customer';
+import { getCustomers } from '../../../redux/slices/customer/customer';
 
-import { saveContact, setFormVisibility } from '../../../redux/slices/contact';
+import { saveContact, setFormVisibility } from '../../../redux/slices/customer/contact';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components

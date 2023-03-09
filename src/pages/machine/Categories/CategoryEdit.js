@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
-import { getCategories, getCategory } from '../../../redux/slices/category';
+import { getCategories, getCategory } from '../../../redux/slices/products/category';
 import CategoryEditForm from './CategoryEditForm';
 // redux
 

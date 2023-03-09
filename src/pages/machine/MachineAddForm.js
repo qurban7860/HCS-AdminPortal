@@ -10,8 +10,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getSPContacts } from '../../redux/slices/contact';
-import { saveMachine } from '../../redux/slices/machine';
+import { getSPContacts } from '../../redux/slices/customer/contact';
+import { saveMachine } from '../../redux/slices/products/machine';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components

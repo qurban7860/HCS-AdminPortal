@@ -130,7 +130,6 @@ export const PATH_MACHINE = {
   general: {
     app: path(ROOTS_MACHINE, '/app'), 
   },
-  new: path(ROOTS_MACHINE, '/machine/new'),
   machine:{
     new: path(ROOTS_MACHINE, '/new'),
   },

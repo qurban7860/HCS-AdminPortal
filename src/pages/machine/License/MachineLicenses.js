@@ -23,7 +23,7 @@ import FormProvider, {
   RHFUpload,
 } from '../../../components/hook-form';
 import { countries } from '../../../assets/data';
-import { createLicenses } from '../../../redux/slices/license';
+import { createLicenses } from '../../../redux/slices/products/license';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 

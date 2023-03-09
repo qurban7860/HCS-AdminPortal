@@ -44,7 +44,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './site/SiteListTableRow';
 import SiteListTableToolbar from './site/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/site';
+import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/customer/site';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 

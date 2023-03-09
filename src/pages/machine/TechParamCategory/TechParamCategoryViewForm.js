@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getTechparamcategory, updateTechparamcategory } from '../../../redux/slices/tech-param';
+import { getTechparamcategory, updateTechparamcategory } from '../../../redux/slices/products/tech-param';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components

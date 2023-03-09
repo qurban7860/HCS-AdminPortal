@@ -40,7 +40,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import LicenseListTableRow from './LicenseListTableRow';
 import LicenseListTableToolbar from './LicenseListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { getLicenses, deleteLicense } from '../../../redux/slices/license';
+import { getLicenses, deleteLicense } from '../../../redux/slices/products/license';
 
 // ----------------------------------------------------------------------
 

@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment
 // import { getSites } from '../../../redux/slices/site';
 // import { getContacts } from '../../../redux/slices/contact';
 // import { getCustomers } from '../../../redux/slices/customer';
-import { saveNote } from '../../../redux/slices/note';
+import { saveNote } from '../../../redux/slices/customer/note';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
