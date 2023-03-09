@@ -40,8 +40,53 @@ import {
   // Machine
   MachinePage,
   MachineAdd,
+  // Supplier
   MachineSupplier,
-  S_Detail,
+  SupplierList,
+  SupplierView,
+  SupplierViewForm,
+  SupplierEdit,
+  SupplierEditForm,
+  // License
+  MachineLicenses,
+  LicenseList,
+  // Categories
+  MachineCategories,
+  CategoryList,
+  CategoryView,
+  CategoryViewForm,
+  CategoryEditForm,
+  CategoryEdit,
+  // Tool
+  MachineTool,
+  ToolList,
+  ToolView,
+  ToolViewForm,
+  ToolEdit,
+  ToolEditForm,
+  // MachineTechParamCategory
+  MachineTechParam,
+  TechParamList,
+  TechParamCategoryViewForm,
+  TechParamCategoryView,
+  TechParamCategoryEdit,
+  TechParamCategoryEditForm,
+  // Status
+  MachineStatus,
+  StatusViewForm,
+  StatusView,
+  StatusEdit,
+  StatusEditForm,
+  StatusList,
+  // Model
+  MachineModel,
+  ModelList,
+  ModelViewForm,
+  ModelView,
+  ModelEdit,
+  ModelEditForm,
+
+  
   // Site
   SiteList,
   SiteAdd,
@@ -67,6 +112,9 @@ import {
   HomePage,
   ComingSoonPage,
   MaintenancePage,
+  
+  
+
   //
 } from './elements';
 
@@ -234,15 +282,84 @@ export default function Router() {
         <AuthGuard>
           <DashboardLayout />
         </AuthGuard>
-        
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <MachinePage /> }, 
         { path: 'new', element: <MachineAdd /> }, 
-        { path: 'supplier', element: <MachineSupplier /> },
-        // eslint-disable-next-line
-        { path: 'detail', element: <S_Detail/>} 
+        {
+          path : 'supplier',
+          children:[
+            { path: 'supplier', element: <MachineSupplier /> },
+            { path: 'list', element: <SupplierList/>}, 
+            { path: ':id/view', element: <SupplierView/>},
+            { path: 'viewform', element: <SupplierViewForm/>},
+            { path: ':id/edit', element: <SupplierEdit/>}, 
+            { path: 'editform', element: <SupplierEditForm/>},
+          ]
+        },
+        {
+          path: 'license',
+          children:[
+            {path: 'license', element: <MachineLicenses/>},
+            {path: 'list', element: <LicenseList/>}
+          ]
+        },
+        {
+          path: 'categories',
+          children:[
+            {path: 'categories', element: <MachineCategories/>},
+            {path: 'list', element: <CategoryList/>},
+            {path: ':id/view', element: <CategoryView/>},
+            {path: 'viewform', element: <CategoryViewForm/>},
+            {path: ':id/edit', element: <CategoryEdit/>}, 
+            {path: 'editform', element: <CategoryEditForm/>},
+          ]
+        },
+        {
+          path: 'tool',
+          children:[
+            {path: 'tool', element: <MachineTool/>},
+            {path: 'list', element: <ToolList/>},
+            {path: ':id/view', element: <ToolView/>},
+            {path: 'viewform', element: <ToolViewForm/>},
+            {path: ':id/edit', element: <ToolEdit/>}, 
+            {path: 'editform', element: <ToolEditForm/>},
+          ]
+        },
+        {
+          path: 'machine-tech',
+          children:[
+            {path: 'params', element: <MachineTechParam/>},
+            {path: 'list', element: <TechParamList/>},
+            {path: 'viewform', element: <TechParamCategoryViewForm/>},
+            {path: ':id/view', element: <TechParamCategoryView/>},
+            {path: ':id/edit', element: <TechParamCategoryEdit/>}, 
+            {path: 'editform', element: <TechParamCategoryEditForm/>},
+          ]
+        },
+        {
+          path: 'machine-status',
+          children:[
+            {path: 'status', element: <MachineStatus/>},
+            {path: 'list', element: <StatusList/>},
+            {path: 'viewform', element: <StatusViewForm/>},
+            {path: ':id/view', element: <StatusView/>},
+            {path: ':id/edit', element: <StatusEdit/>}, 
+            {path: 'editform', element: <StatusEditForm/>},
+          ]
+        },
+        {
+          path: 'machine-model',
+          children:[
+            {path: 'model', element: <MachineModel/>},
+            {path: 'list', element: <ModelList/>},
+            {path: 'viewform', element: <ModelViewForm/>},
+            {path: ':id/view', element: <ModelView/>},
+            {path: ':id/edit', element: <ModelEdit/>}, 
+            {path: 'editform', element: <ModelEditForm/>},
+          ]
+        },
       ]
     },
 

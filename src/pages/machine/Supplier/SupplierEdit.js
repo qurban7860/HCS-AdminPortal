@@ -1,0 +1,58 @@
+import { Helmet } from 'react-helmet-async';
+import { useLayoutEffect } from 'react';
+import { useParams } from 'react-router-dom';
+// @mui
+import { Container } from '@mui/material';
+import { useDispatch,useSelector } from 'react-redux';
+import { getSupplier } from '../../../redux/slices/supplier';
+
+import SupplierEditForm from './SupplierEditForm';
+// redux
+
+// routes
+import { PATH_MACHINE } from '../../../routes/paths';
+// components
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+import { useSettingsContext } from '../../../components/settings';
+// sections
+
+
+
+// ----------------------------------------------------------------------
+
+export default function SupplierEdit() {
+  const { themeStretch } = useSettingsContext();
+
+  const dispatch = useDispatch();
+
+  const { id } = useParams(); 
+  console.log(id);
+
+
+  const { supplier } = useSelector((state) => state.supplier);
+
+  useLayoutEffect(() => {
+    dispatch(getSupplier(id));
+  }, [dispatch, id]);
+
+  
+  return (
+    <>
+      <Helmet>
+        <title> Supplier: Edit Page | Machine ERP</title>
+      </Helmet>
+      
+
+      <Container maxWidth={themeStretch ? false : 'lg'}>
+        <CustomBreadcrumbs
+          heading="Edit Supplier"
+          links={[
+            { name: supplier?.name },
+          ]}
+        />
+
+        <SupplierEditForm/>
+      </Container>
+    </>
+  );
+}

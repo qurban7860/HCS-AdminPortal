@@ -50,11 +50,20 @@ const navConfig = [
       { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon,
       children: [
         { title: 'Dashboard', path: PATH_MACHINE.general.app },
-        { title: 'Suppliers', path: PATH_MACHINE.general.supplier },
-        { title: 'Statuses', path: PATH_DASHBOARD.user.demoEdit },
-        { title: 'Models', path: PATH_DASHBOARD.user.account },
-        { title: 'Licenses', path: PATH_DASHBOARD.user.account },
-        { title: 'Tools', path: PATH_DASHBOARD.user.account },
+        { title: 'Machine', path: PATH_MACHINE.general.app },
+        { title: 'Audit Log', path: PATH_MACHINE.general.app },
+        { title: 'Category', path: PATH_MACHINE.categories.categories},
+        { title: 'License', path: PATH_MACHINE.license.license},
+        { title: 'Model', path: PATH_MACHINE.machineModel.model },
+        { title: 'Note', path: PATH_DASHBOARD.user.account },
+        { title: 'Status', path: PATH_MACHINE.machineStatus.status },
+        { title: 'Supplier', path: PATH_MACHINE.supplier.supplier},
+        { title: 'Tech Param', path: PATH_MACHINE.supplier.supplier},
+        { title: 'Tech Param Category', path: PATH_MACHINE.techParam.techParam },
+        { title: 'Tech Param Value', path: PATH_MACHINE.techParam.techParam },
+        { title: 'Tool', path: PATH_MACHINE.tool.tool },
+        { title: 'Tool Installed', path: PATH_MACHINE.tool.tool },
+
         
       ],},
       // deleted components

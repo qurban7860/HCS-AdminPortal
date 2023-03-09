@@ -11,6 +11,12 @@ import contactReducer from './slices/contact';
 import noteReducer from './slices/note';
 import machineReducer from './slices/machine';
 import supplierReducer from './slices/supplier';
+import licenseReducer from './slices/license';
+import categoryReducer from './slices/category';
+import toolReducer from './slices/tools';
+import techparamReducer from './slices/tech-param';
+import machinestatusReducer from './slices/statuses';
+import machinemodelReducer from './slices/model';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -77,12 +83,47 @@ export const machinePersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage', 'machines']
 };
 export const suppplierPersistConfig = {
-  key: 'machine',
+  key: 'supplier',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-
+export const licensePersistConfig = {
+  key: 'license',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const categoryPersistConfig = {
+  key: 'category',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const toolPersistConfig = {
+  key: 'tool',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const techparamcategoryPersistConfig = {
+  key: 'techparamcategory',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const machinestatusPersistConfig = {
+  key: 'machinestatus',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const machinemodelPersistConfig = {
+  key: 'machinemodel',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   asset: persistReducer(assetPersistConfig, assetReducer),
@@ -92,7 +133,13 @@ const rootReducer = combineReducers({
   contact: persistReducer(contactPersistConfig, contactReducer),
   note: persistReducer(notePersistConfig, noteReducer),
   machine: persistReducer(machinePersistConfig, machineReducer),
-  supplier: persistReducer(suppplierPersistConfig,supplierReducer)
+  supplier: persistReducer(suppplierPersistConfig,supplierReducer),
+  license: persistReducer(licensePersistConfig,licenseReducer),
+  category: persistReducer(categoryPersistConfig,categoryReducer),
+  tool: persistReducer(toolPersistConfig,toolReducer),
+  techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamReducer),
+  machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
+  machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
 });
 
 export default rootReducer;

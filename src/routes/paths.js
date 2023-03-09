@@ -128,15 +128,57 @@ export const PATH_MACHINE = {
   root: ROOTS_MACHINE,
   permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),
   general: {
-    app: path(ROOTS_MACHINE, '/app'),
-    supplier: (ROOTS_MACHINE, '/machine/supplier'),
-    detail: (ROOTS_MACHINE, '/machine/detail')
+    app: path(ROOTS_MACHINE, '/app'), 
   },
   new: path(ROOTS_MACHINE, '/machine/new'),
   machine:{
     new: path(ROOTS_MACHINE, '/new'),
-    // // supplier: (ROOTS_MACHINE, '/supplier')
-    // edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
+  },
+  supplier:{
+    supplier: (ROOTS_MACHINE, '/machine/supplier/supplier'),
+    list: (ROOTS_MACHINE, '/machine/supplier/list'),
+    view: (id) => path(ROOTS_MACHINE, `/supplier/${id}/view`),
+    supplieredit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/editform`),
+  },
+  license:{
+    license: (ROOTS_MACHINE, '/machine/license/license'),
+    list: (ROOTS_MACHINE, '/machine/license/list')
+  },
+  categories:{
+    categories: (ROOTS_MACHINE, '/machine/categories/categories'),
+    list: (ROOTS_MACHINE, '/machine/categories/list'),
+    view: (id) => path(ROOTS_MACHINE, `/categories/${id}/view`),
+    categoryedit: (id) => path(ROOTS_MACHINE, `/categories/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/categories/${id}/editform`),
+  },
+  tool:{
+    tool: (ROOTS_MACHINE, '/machine/tool/tool'),
+    list: (ROOTS_MACHINE, '/machine/tool/list'),
+    view: (id) => path(ROOTS_MACHINE, `/tool/${id}/view`),
+    tooledit: (id) => path(ROOTS_MACHINE, `/tool/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/tool/${id}/editform`),
+  },
+  techParam:{
+    techParam: (ROOTS_MACHINE, '/machine/machine-tech/params'),
+    list: (ROOTS_MACHINE, '/machine/machine-tech/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/view`),
+    techparamcategoryedit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/editform`),
+  },
+  machineStatus:{
+    status: (ROOTS_MACHINE, '/machine/machine-status/status'),
+    list: (ROOTS_MACHINE, '/machine/machine-status/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/view`),
+    statusedit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/editform`),
+  },
+  machineModel:{
+    model: (ROOTS_MACHINE, '/machine/machine-model/model'),
+    list: (ROOTS_MACHINE, '/machine/machine-model/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/view`),
+    modeledit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/editform`),
   },
   
 }
