@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Checkbox, FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { saveCustomer } from '../../redux/slices/customer/customer';
@@ -25,6 +25,7 @@ import FormProvider, {
   RHFMultiSelect
 } from '../../components/hook-form';
 import { MotionContainer, varBounce } from '../../components/animate';
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset
@@ -171,10 +172,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    {/* <Container maxWidth={false}> */}
       <Grid container spacing={3}>
-      <CustomerDashboardNavbar/>
-
-        <Grid item xs={18} md={12}>
+        <CustomerDashboardNavbar/>
+      </Grid>
+      <CustomBreadcrumbs
+            heading=" New Customer "
+            sx={{ mb: -2, mt: 3 }}
+          />
+      <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3, mb: 3 }}>
             <Stack spacing={3}>
             <Box
@@ -358,7 +364,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </RHFSelect>
 
               <RHFSelect native name="projectManager" label="Project Manager">
-                    <option defaultValue value="null" selected >No Projec tManager Selected</option>
+                    <option defaultValue value="null" selected >No Project Manager Selected</option>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
                     <option key={option._id} value={option._id}>
@@ -390,7 +396,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             </Card>
           
           </Grid>
-        </Grid>
+      {/* </Container>  */}
     </FormProvider>
   );
 }

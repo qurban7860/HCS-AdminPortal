@@ -50,7 +50,7 @@ export default function MachineDashboardNavbar() {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
               <MachineWidget
-                title="Search Machine"
+                title="Machine"
                 color="primary"
                 icon="eva:search-fill"
                 onClick={handleSearchCustomer}
@@ -60,7 +60,7 @@ export default function MachineDashboardNavbar() {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
               <MachineWidget
-                title="Search Sites"
+                title="Sites"
                 color="info"
                 icon="eva:search-fill"
                 onClick={handleSearchSite}
@@ -70,7 +70,7 @@ export default function MachineDashboardNavbar() {
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
               <MachineWidget
-                title="Search Contacts"
+                title="Contacts"
                 color="success"
                 icon="eva:search-fill"
                 onClick={handleSearchContact}

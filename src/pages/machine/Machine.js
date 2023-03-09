@@ -68,43 +68,7 @@ export default function MachineDashboardPage() {
         <Grid container spacing={3}>
           <MachineDashboardNavbar/>
 
-          {/* <Grid item xs={12} md={4}>
-            <AppWidgetSummary
-              title="Total Active Users"
-              percent={2.6}
-              total={18765}
-              chart={{
-                colors: [theme.palette.primary.main],
-                series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppWidgetSummary
-              title="Total Machines"
-              percent={0.2}
-              total={20}
-              chart={{
-                colors: [theme.palette.info.main],
-                series: [10, 6, 4],
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppWidgetSummary
-              title="Total Customers"
-              percent={-0.1}
-              total={678}
-              chart={{
-                colors: [theme.palette.warning.main],
-                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-              }}
-            />
-          </Grid> */}
-
-          <Grid item xs={12} md={12} lg={12}>
+          <Grid item xs={12} md={6} lg={4}>
             <AppCurrentDownload
               title="Current Machines"
               chart={{
@@ -123,7 +87,7 @@ export default function MachineDashboardPage() {
             />
           </Grid>
 
-          {/* <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={6} lg={8}>
             <AppAreaInstalled
               title="Sites"
               subheader="(+43%) than last year"
@@ -165,7 +129,7 @@ export default function MachineDashboardPage() {
 
           <Grid item xs={12} md={6} lg={4}>
             <AppTopRelated title="Top Managers" list={_appManagers} />
-          </Grid> */}
+          </Grid>
         </Grid>
       </Container>
     </>
