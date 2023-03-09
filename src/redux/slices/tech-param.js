@@ -187,6 +187,7 @@ export function saveTechparamcategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+          isDisabled: params?.isDisabled,
           // tradingName: params.tradingName,
           // site: {
           //   name: params.name,
@@ -225,11 +226,15 @@ export function updateTechparamcategory(params) {
       let data = {
         id: params.id,
         name: params.name,
+        
         // tradingName: params.tradingName
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
+      }
+      if(params.isDisabled){
+        data.isDisabled = params.isDisabled;
       }
       
       

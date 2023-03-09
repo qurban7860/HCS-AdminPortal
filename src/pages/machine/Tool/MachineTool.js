@@ -62,7 +62,7 @@ export default function MachineSuppliers() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: false,
+      isDisabled: true,
       createdAt: '',
       
     }),
@@ -92,12 +92,9 @@ export default function MachineSuppliers() {
 
   const onSubmit = async (data) => {
 
-    const finalData = {
-      name:data.name,
-      description: data.description,
-    }
+    
       try{ 
-        await dispatch(createTools(finalData));
+        await dispatch(createTools(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.tool.list); 

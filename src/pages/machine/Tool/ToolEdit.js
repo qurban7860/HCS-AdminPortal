@@ -46,11 +46,6 @@ export default function ToolEdit() {
         <CustomBreadcrumbs
           heading="Edit Tool"
           links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            {
-              name: 'Tool',
-              href: PATH_MACHINE.tool.list,
-            },
             { name: tool?.name },
           ]}
         />

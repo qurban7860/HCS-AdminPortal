@@ -106,40 +106,21 @@ export default function MachineSuppliers() {
   //   dispatch(getSPContacts());
   // }, [dispatch]);
 
-
   const onSubmit = async (data) => {
-
-    const finalData = {
-      name:data.name,
-      contactName:data.Contact_Name,
-      contactTitle:data.contactTitle,
-      phone:data.phone,
-      email:data.email,
-      fax:data.fax,
-      website:data.website,
-      // country:data.country,
-      isDisabled:data.isDisabled,
-      address:{
-        street:data.street,
-        suburb:data.suburb,
-        city:data.city,
-        region:data.region,
-        country:data.country
-      }
+    try{ 
+      await dispatch(createSuppliers(data));
+      reset();
+      enqueueSnackbar('Create success!');
+      navigate(PATH_MACHINE.supplier.list); 
+      // console.log(PATH_MACHINE.tool.list)
+    } catch(error){
+      // enqueueSnackbar('Saving failed!');
+      enqueueSnackbar(error?.message)
+      console.error(error);
     }
-      try{ 
-        await dispatch(createSuppliers(finalData));
-        reset();
-        enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.supplier.list); 
-        // console.log(PATH_MACHINE.supplier.list)
-      } catch(error){
-        // enqueueSnackbar('Saving failed!');
-        enqueueSnackbar(error?.message)
-        console.error(error);
-      }
-  };
+};
 
+  
   
 
   const { themeStretch } = useSettingsContext();

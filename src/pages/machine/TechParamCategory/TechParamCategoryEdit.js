@@ -46,11 +46,6 @@ export default function TechParamCategoryEdit() {
         <CustomBreadcrumbs
           heading="Edit Tech Param Category"
           links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            {
-              name: 'Tech Param Category',
-              href: PATH_MACHINE.techParam.list,
-            },
             { name: techparamcategory?.name },
           ]}
         />

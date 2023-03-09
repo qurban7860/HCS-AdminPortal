@@ -225,7 +225,7 @@ export default function CategoryList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
       <div style={{paddingBottom:'0px', }}>
       <CustomBreadcrumbs 
-          heading="Category's List"
+          heading="Category List"
           
         />
 

@@ -253,7 +253,6 @@ export function updateSupplier(params) {
       let data = {
         id: params.id,
         name: params.name,
-        isDisabled: params?.isDisabled,
       };
      /* eslint-enable */
 
@@ -289,6 +288,9 @@ export function updateSupplier(params) {
       }
       if(params.country){
         data.address.country = params.country;        
+      }
+      if(params.isDisabled){
+        data.isDisabled = params.isDisabled;
       }
       
       const response = await axios.patch(`${CONFIG.SERVER_URL}machines/suppliers/${params.id}`,

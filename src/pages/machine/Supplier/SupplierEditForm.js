@@ -107,9 +107,6 @@ export default function SupplierEditForm() {
 
   useLayoutEffect(() => {
     dispatch(getSupplier(id));
-    // dispatch(getSites(customer._id));
-    // dispatch(getSPContacts());
-
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -131,7 +128,6 @@ export default function SupplierEditForm() {
       await dispatch(updateSupplier({...data,id}));
       reset(); 
       enqueueSnackbar('Update success!');
-      // console.log(PATH_MACHINE.categories.view(id))
       navigate(PATH_MACHINE.supplier.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');

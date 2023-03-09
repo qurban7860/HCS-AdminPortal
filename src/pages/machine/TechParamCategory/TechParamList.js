@@ -231,7 +231,7 @@ export default function TechParamList() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
       <div style={{paddingBottom:'0px', }}>
       <CustomBreadcrumbs 
-          heading="TechParam's List"
+          heading="TechParam List"
           
         />
 

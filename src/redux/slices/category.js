@@ -190,6 +190,7 @@ export function saveCategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+          isDisabled: params?.isDisabled,
         };
         /* eslint-enable */
         if(params.description){
@@ -225,6 +226,9 @@ export function updateCategory(params) {
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
+      }
+      if(params.isDisabled){
+        data.isDisabled = params.isDisabled;
       }
       
       

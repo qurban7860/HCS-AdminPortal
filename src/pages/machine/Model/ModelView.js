@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getMachinemodel, getMachinemodels, updateMachinemodel, setMachinemodelsEditFormVisibility } from '../../../redux/slices/model';
+import { getMachinemodels, updateMachinemodel, setMachinemodelsEditFormVisibility } from '../../../redux/slices/model';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -23,9 +23,6 @@ import ModelList from './ModelList';
 import ModelViewForm from './ModelViewForm';
 import { MachineCover } from '../util';
 import ModelEditForm from './ModelEditForm';
-
-
-
 
 ModelViewPage.propTypes = {
   editPage: PropTypes.bool,

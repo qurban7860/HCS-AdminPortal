@@ -63,7 +63,7 @@ export default function MachineSuppliers() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: false,
+      isDisabled: true,
       createdAt: '',
       
     }),
@@ -92,13 +92,8 @@ export default function MachineSuppliers() {
 
 
   const onSubmit = async (data) => {
-
-    const finalData = {
-      name:data.name,
-      description: data.description,
-    }
       try{ 
-        await dispatch(createCategorys(finalData));
+        await dispatch(createCategorys(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.categories.list); 

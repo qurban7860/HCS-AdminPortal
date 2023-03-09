@@ -91,13 +91,9 @@ export default function MachineTechParam() {
 
 
   const onSubmit = async (data) => {
-
-    const finalData = {
-      name:data.name,
-      description: data.description,
-    }
+    
       try{ 
-        await dispatch(createTechparamcategories(finalData));
+        await dispatch(createTechparamcategories(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.techParam.list); 
