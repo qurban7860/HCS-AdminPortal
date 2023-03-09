@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
 import { alpha, useTheme } from '@mui/material/styles';
-import { Card, Typography } from '@mui/material';
+import { Card, Typography,Grid } from '@mui/material';
 // utils
 import { bgGradient } from '../../../utils/cssStyles';
 import { fShortenNumber } from '../../../utils/formatNumber';
@@ -31,24 +31,42 @@ export default function MachineWidget({
   return (
     <Card
       sx={{
-        py: 5,
+        // py: 5,
         boxShadow: 0,
         textAlign: 'center',
         color: theme.palette[color].darker,
         bgcolor: theme.palette[color].lighter,
-        padding: theme.spacing(2.1),
+        padding: theme.spacing(1),
+        display: 'flex',
         ...sx,
       }}
       {...other}
     >
-      
+     {/* <Card
+      sx={{
+        // py: 5,
+        boxShadow: 0,
+        textAlign: 'center',
+        color: theme.palette[color].darker,
+        bgcolor: theme.palette[color].lighter,
+        padding: theme.spacing(1),
+        display: 'flex',
+        ...sx,
+      }}
+      {...other}
+    ></Card> */}
+    <Grid container>
+
+      <Grid item xs={12} sm={4} maxWidth={false}>
       <Iconify
         icon={icon}
         sx={{
-          mb: 3,
-          p: 2.5,
-          width: 64,
-          height: 64,
+          mt:0.25,
+          mb: -0.25,
+          // mb: 3,
+          p: 1.5,
+          width: 47,
+          height: 47,
           borderRadius: '50%',
           color: theme.palette[color].dark,
           ...bgGradient({
@@ -58,9 +76,15 @@ export default function MachineWidget({
           }),
         }}
       />
-      <Typography variant="subtitle2" >
-        {title}
-      </Typography>
+      </Grid>
+
+      
+      <Grid item xs={12} sm={8} sx={{mt:1.75}} >
+        <Typography variant="subtitle2" align='left' noWrap >
+          {title}
+        </Typography>
+      </Grid>
+    </Grid>
       </Card>
   );
 }

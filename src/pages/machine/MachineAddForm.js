@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid,Container, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import { getSPContacts } from '../../redux/slices/contact';
 import { saveMachine } from '../../redux/slices/machine';
@@ -30,6 +30,9 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { countries } from '../../assets/data';
 // util
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
+
+import { useSettingsContext } from '../../components/settings';
 
 
 // ----------------------------------------------------------------------
@@ -166,13 +169,20 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     setValue('image', null);
   };
 
+  const { themeStretch } = useSettingsContext();
 
   return (
+    <>
+     <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-      <MachineDashboardNavbar/>
-
-        <Grid item xs={18} md={12}>
+        <MachineDashboardNavbar/>
+      </Grid>
+      <CustomBreadcrumbs
+            heading=" New Machine "
+            sx={{ mb: -2, mt: 3 }}
+          />
+      <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={6}>
             <Box
@@ -184,9 +194,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Machine" required/>
-
-              <RHFEditor name="desc" label="Description" />
+              <RHFTextField name="name" label="Name" required/>
+              <RHFTextField name="desc" label="Description" minRows={8} multiline />
 
              </Box>
              <Box
@@ -230,7 +239,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-              <RHFSelect native name="model" label="Model">
+              <RHFSelect native name="model" label="Machine Model">
                     <option value="" selected/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
@@ -361,7 +370,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             </Card>
           
           </Grid>
-        </Grid>
+        {/* </Grid> */}
     </FormProvider>
+    </Container>
+    </>
   );
 }
