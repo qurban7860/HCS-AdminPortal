@@ -113,7 +113,7 @@ export function getCustomers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/customers`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`);
       dispatch(slice.actions.getCustomersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
@@ -130,7 +130,7 @@ export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/customers/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}`);
       dispatch(slice.actions.getCustomerSuccess(response.data));
       // console.log('requested customer', response.data);
     } catch (error) {
@@ -147,7 +147,7 @@ export function deleteCustomer(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}customers/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}crm/customers/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;
@@ -288,7 +288,7 @@ export function saveCustomer(params) {
           data.technicalContact = technicalContact;
         }
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}customers/customers`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}crm//customers`, data);
         dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);
@@ -345,7 +345,7 @@ export function updateCustomer(params) {
         data.primaryTechnicalContact = null;  
       }
       console.log("Data : ",data)
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/customers/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
         data
       );
 

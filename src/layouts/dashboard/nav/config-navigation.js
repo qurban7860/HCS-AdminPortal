@@ -50,8 +50,8 @@ const navConfig = [
       { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon,
       children: [
         { title: 'Dashboard', path: PATH_MACHINE.general.app },
-        { title: 'Machine', path: PATH_MACHINE.general.app },
-        { title: 'Audit Log', path: PATH_MACHINE.general.app },
+        // { title: 'Machine', path: PATH_MACHINE.machine.new },
+        // { title: 'Audit Log', path: PATH_MACHINE.general.app },
         { title: 'Category', path: PATH_MACHINE.categories.categories},
         { title: 'License', path: PATH_MACHINE.license.license},
         { title: 'Model', path: PATH_MACHINE.machineModel.model },

@@ -133,7 +133,7 @@ export function saveContact(params) {
 
       /* eslint-enable */
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}customers/${params.customer}/contacts`,
+      const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
         data,
       );
 
@@ -172,7 +172,7 @@ console.log(formData);
 
       /* eslint-enable */
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${customerId}/contacts/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,
         data
       );
       dispatch(slice.actions.setResponseMessage('Contact updated successfully'));
@@ -190,7 +190,7 @@ export function getSPContacts() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts/sp/data`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/contacts/sp/data`);
       console.log(response);
       console.log(response.data);
       dispatch(slice.actions.getSPContactsSuccess(response.data));
@@ -211,7 +211,7 @@ export function getContacts(customerID = null) {
     try {
       let response = null;
       if(customerID){
-        response = await axios.get(`${CONFIG.SERVER_URL}customers/${customerID}/contacts` , 
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
         {
           params: {
             isArchived: false
@@ -241,7 +241,7 @@ export function getContact(customerID, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}customers/${customerID}/contacts/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/${id}`);
       dispatch(slice.actions.getContactSuccess(response.data));
       console.log('requested contact', response.data);
       // dispatch(slice.actions.setResponseMessage('Contacts Loaded Successfuly'));
@@ -262,7 +262,7 @@ export function deleteContact(customerID, id) {
       const data = {
         isArchived: true,
       };
-      const response = await axios.patch(`${CONFIG.SERVER_URL}customers/${customerID}/contacts/${id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/${id}`,
         data
       );
       dispatch(slice.actions.setResponseMessage(response.data));
