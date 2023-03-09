@@ -222,7 +222,6 @@ export default function SiteViewForm({ currentSite = null }) {
             {defaultValues.country ? defaultValues.country : ''}
             </Typography>
           </Grid>
-        
 
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >

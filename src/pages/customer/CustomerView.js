@@ -10,10 +10,8 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
-import { getDepartments } from '../../redux/slices/department';
-import { setFormVisibility } from '../../redux/slices/site';
-import { getContact } from '../../redux/slices/contact';
-
+import { getSites } from '../../redux/slices/site';
+import { getContacts } from '../../redux/slices/contact';
 
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -30,9 +28,7 @@ import Iconify from '../../components/iconify';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import {
-  CustomerCover
-} from './util';
+import { CustomerCover } from './util/CustomerCover';
 
 import CustomerAddForm from './CustomerAddForm'
 import SiteAddForm from './site/SiteAddForm';
@@ -83,6 +79,8 @@ export default function CustomerViewPage({editPage}) {
   useEffect(() => {
     if(id !== 'null'){
       dispatch(getCustomer(id));
+      dispatch(getSites(id));
+      dispatch(getContacts(id));
     }
   }, [dispatch, id]);
 

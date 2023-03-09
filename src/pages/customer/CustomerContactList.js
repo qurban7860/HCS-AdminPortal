@@ -213,7 +213,7 @@ export default function CustomerContactList() {
               onClick={toggleChecked}
 
               variant="contained"
-              startIcon={!checked ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
+              startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
             >
               New Contact
             </Button>

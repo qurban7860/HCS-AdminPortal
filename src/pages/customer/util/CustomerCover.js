@@ -49,7 +49,7 @@ CustomerCover.propTypes = {
   role: PropTypes.string,
 };
 
-export default function CustomerCover({ name, role, cover }) {
+export function CustomerCover({ name, role, cover }) {
   const { customer } = useAuthContext();
 
   return (

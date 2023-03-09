@@ -11,10 +11,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment,TextField } from '@mui/material';
 // slice
-import { getUsers } from '../../../redux/slices/user';
-import { getSites } from '../../../redux/slices/site';
-import { getContacts } from '../../../redux/slices/contact';
-import { getCustomers } from '../../../redux/slices/customer';
+// import { getUsers } from '../../../redux/slices/user';
+// import { getSites } from '../../../redux/slices/site';
+// import { getContacts } from '../../../redux/slices/contact';
+// import { getCustomers } from '../../../redux/slices/customer';
 import { saveNote } from '../../../redux/slices/note';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -93,12 +93,12 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const values = watch();
 
-  useLayoutEffect(() => {
-    // dispatch(getUsers(customer._id));
-    dispatch(getSites(customer._id));
-    dispatch(getContacts(customer._id));
+  // useLayoutEffect(() => {
+  //   // dispatch(getUsers(customer._id));
+  //   dispatch(getSites(customer._id));
+  //   dispatch(getContacts(customer._id));
 
-  }, [dispatch,customer]);
+  // }, [dispatch,customer]);
 
   useEffect(() => {
       reset(defaultValues);
