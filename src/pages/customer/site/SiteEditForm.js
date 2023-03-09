@@ -14,7 +14,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { updateSite, setEditFormVisibility } from '../../../redux/slices/site';
+import { updateSite, setEditFormVisibility } from '../../../redux/slices/customer/site';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components

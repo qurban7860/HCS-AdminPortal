@@ -15,7 +15,7 @@ import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dia
 // global
 
 // slice
-import { updateMachinestatus, getMachineStatus, getMachinestatuses } from '../../../redux/slices/statuses';
+import { updateMachinestatus, getMachineStatus, getMachinestatuses } from '../../../redux/slices/products/statuses';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';

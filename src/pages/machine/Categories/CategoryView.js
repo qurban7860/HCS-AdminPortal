@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getCategory, getCategories, setCategoryEditFormVisibility } from '../../../redux/slices/category';
+import { getCategory, getCategories, setCategoryEditFormVisibility } from '../../../redux/slices/products/category';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components

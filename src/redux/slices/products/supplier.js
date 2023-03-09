@@ -111,7 +111,7 @@ export function createSuppliers (supplyData){
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}machines/suppliers`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`,supplyData);
       // dispatch(slice.actions)
       console.log(response,"From supplyer data");
     } catch (e) {
@@ -128,7 +128,7 @@ export function getSuppliers (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/suppliers`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`);
 
       dispatch(slice.actions.getSuppliersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
@@ -147,7 +147,7 @@ export function getSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/suppliers/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
       dispatch(slice.actions.getSuppliersSuccess(response.data));
       console.log('requested supplier', response.data);
     } catch (error) {
@@ -161,8 +161,7 @@ export function deleteSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete Supplier id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search
@@ -228,7 +227,7 @@ export function saveSupplier(params) {
         }
         
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}suppliers/suppliers`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`, data);
 
         console.log('response', response.data.Supplier);
         dispatch(slice.actions.getSupplierSuccess(response.data.Supplier));
@@ -293,7 +292,7 @@ export function updateSupplier(params) {
         data.isDisabled = params.isDisabled;
       }
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/suppliers/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${params.id}`,
         data
       );
 

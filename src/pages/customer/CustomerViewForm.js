@@ -18,7 +18,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 
 // slices
-import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
+import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 
 import { fDateTime } from '../../utils/formatTime';
 

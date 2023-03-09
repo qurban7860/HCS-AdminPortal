@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getMachine } from '../../../redux/slices/machine';
+import { getMachine } from '../../../redux/slices/products/machine';
 // routes
 import { getMachinemodels, getMachineModel, deleteMachinemodel } from '../../../redux/slices/model';
 import { PATH_MACHINE } from '../../../routes/paths';

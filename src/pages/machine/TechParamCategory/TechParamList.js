@@ -17,7 +17,7 @@ import {
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getTechparamcategories, getTechparamcategory, deleteTechparamcategory } from '../../../redux/slices/tech-param';
+import { getTechparamcategories, getTechparamcategory, deleteTechparamcategory } from '../../../redux/slices/products/tech-param';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';

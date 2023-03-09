@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getSite, setEditFormVisibility } from '../../redux/slices/site';
+import { getSite, setEditFormVisibility } from '../../redux/slices/customer/site';
 
 // paths
 import { PATH_DASHBOARD } from '../../routes/paths';

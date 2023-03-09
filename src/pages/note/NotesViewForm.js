@@ -15,7 +15,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 
-import { getNotes, getNote } from '../../redux/slices/note';
+import { getNotes, getNote } from '../../redux/slices/customer/note';
 
 
 

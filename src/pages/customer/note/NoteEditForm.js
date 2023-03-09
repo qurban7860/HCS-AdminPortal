@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { getNotes, deleteNote, getNote , updateNote ,setNoteEditFormVisibility} from '../../../redux/slices/note';
+import { getNotes, deleteNote, getNote , updateNote ,setNoteEditFormVisibility} from '../../../redux/slices/customer/note';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
