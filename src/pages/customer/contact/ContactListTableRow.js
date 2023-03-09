@@ -68,9 +68,9 @@ export default function ContactListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -95,11 +95,11 @@ export default function ContactListTableRow({
 
         <TableCell>{fDate(createdAt)}</TableCell>
 
-        <TableCell align="center">
+        {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>  
+        </TableCell>   */}
       </TableRow> 
 
       <MenuPopover

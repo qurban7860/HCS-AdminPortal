@@ -51,7 +51,7 @@ const TABLE_HEAD = [
   { id: 'customer', label: 'Customer', align: 'left' },
   { id: 'phone', label: 'Phone', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
+  // { id: 'action', label: 'Actions', align: 'left' },
 
 ];
 
@@ -257,12 +257,12 @@ export default function ContactList() {
                   rowCount={tableData.length}
                   numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
