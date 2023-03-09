@@ -74,6 +74,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         contactTitle: supplier?.contactTitle || 'N/A',
         phone: supplier?.phone || 'N/A',
         email: supplier?.email || 'N/A',
+        fax: supplier?.fax || 'N/A',
         website: supplier?.website || 'N/A',
         street: supplier?.address?.street || 'N/A',
         suburb: supplier?.address?.suburb || 'N/A',
@@ -104,6 +105,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         </Button>
 
       </Stack>
+      
       <Grid container>
 
         <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
@@ -114,14 +116,12 @@ export default function SupplierViewForm({ currentSupplier = null }) {
           <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
 
         </Grid>
-
-
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Contact Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.contactName ? defaultValues.contactName : 'N/A'}</Typography>
 
         </Grid>
 
@@ -130,7 +130,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Contact Title
           </Typography>
 
-          <Typography variant="body2">{defaultValues.fax ? defaultValues.contactTitle : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.contactTitle ? defaultValues.contactTitle : 'N/A'}</Typography>
 
         </Grid>
 
@@ -139,7 +139,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.email ? defaultValues.phone : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
 
         </Grid> 
 
@@ -149,6 +149,14 @@ export default function SupplierViewForm({ currentSupplier = null }) {
           </Typography>
 
           <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
+
+        </Grid>
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Fax
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : 'N/A'}</Typography>
 
         </Grid>
 

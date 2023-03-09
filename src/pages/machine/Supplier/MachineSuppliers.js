@@ -56,9 +56,9 @@ export default function MachineSuppliers() {
     isDisabled : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),
-    phone: Yup.string(),
+    phone: Yup.number(),
     email: Yup.string().email(),
-    fax: Yup.string(),
+    fax: Yup.number(),
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
@@ -112,10 +112,12 @@ export default function MachineSuppliers() {
     const finalData = {
       name:data.name,
       contactName:data.Contact_Name,
-      contactTitle:data.Contact_Title,
+      contactTitle:data.contactTitle,
       phone:data.phone,
       email:data.email,
+      fax:data.fax,
       website:data.website,
+      // country:data.country,
       isDisabled:data.isDisabled,
       address:{
         street:data.street,
@@ -197,10 +199,10 @@ export default function MachineSuppliers() {
             >
               {/* / //contact / */}
               <RHFTextField name="Contact_Name" label="Contact Name"/>
-              <RHFTextField name="Contact_Title" label="Contact Title"/>
-              <RHFTextField name="phone" label="Phone"/>
+              <RHFTextField name="contactTitle" label="Contact Title"/>
+              <RHFTextField name="phone" label="Phone" type='number'/>
               <RHFTextField name="email" label="Email"/>
-              <RHFTextField name="fax" label="Fax"/>
+              <RHFTextField name="fax" label="Fax" type='number'/>
               <RHFTextField name="website" label="Website"/>
               </Box>
               </Stack>
@@ -225,7 +227,15 @@ export default function MachineSuppliers() {
               <RHFTextField name="suburb" label="Suburb" />
               <RHFTextField name="city" label="City" />
               <RHFTextField name="region" label="Region" />
-              <RHFTextField name="country" label="Country" />
+              <RHFAutocomplete
+                  name="country"
+                  label="Country"
+                  freeSolo
+                  options={countries.map((country) => country.label)}
+                  // getOptionLabel={(option) => option.title}
+                  
+                  ChipProps={{ size: 'small' }}
+                /> 
 
 
               <RHFSwitch

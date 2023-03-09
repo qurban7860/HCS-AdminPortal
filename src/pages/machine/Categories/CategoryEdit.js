@@ -46,11 +46,6 @@ export default function CategoryEdit() {
         <CustomBreadcrumbs
           heading="Edit Category"
           links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            {
-              name: 'Category',
-              href: PATH_MACHINE.categories.list,
-            },
             { name: category?.name },
           ]}
         />

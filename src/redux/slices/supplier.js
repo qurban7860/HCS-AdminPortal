@@ -205,24 +205,28 @@ export function saveSupplier(params) {
         if(params.email){
           data.email = params.email;
         }
+        if(params.fax){
+          data.fax = params.fax;        
+        }
         if(params.website){
           data.website = params.website;        
         }
         if(params.street){
-          data.street = params.street;        
+          data.address.street = params.street;        
         }
         if(params.suburb){
-          data.suburb = params.suburb;        
+          data.address.suburb = params.suburb;        
         }
         if(params.city){
-          data.city = params.city;        
+          data.address.city = params.city;        
         }
         if(params.region){
-          data.region = params.region;        
+          data.address.region = params.region;        
         }
         if(params.country){
-          data.country = params.country;        
+          data.address.country = params.country;        
         }
+        
 
         const response = await axios.post(`${CONFIG.SERVER_URL}suppliers/suppliers`, data);
 
@@ -268,20 +272,23 @@ export function updateSupplier(params) {
       if(params.website){
         data.website = params.website;        
       }
+      if(params.fax){
+        data.fax = params.fax;        
+      }
       if(params.street){
-        data.street = params.street;        
+        data.address.street = params.street;        
       }
       if(params.suburb){
-        data.suburb = params.suburb;        
+        data.address.suburb = params.suburb;        
       }
       if(params.city){
-        data.city = params.city;        
+        data.address.city = params.city;        
       }
       if(params.region){
-        data.region = params.region;        
+        data.address.region = params.region;        
       }
       if(params.country){
-        data.country = params.country;        
+        data.address.country = params.country;        
       }
       
       const response = await axios.patch(`${CONFIG.SERVER_URL}machines/suppliers/${params.id}`,

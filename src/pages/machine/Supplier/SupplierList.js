@@ -48,8 +48,7 @@ import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'contactname', label: 'ContactName', align: 'left' },
-  { id: 'contacttitle', label: 'ContactTitle', align: 'left' },
+  { id: 'ContactName', label: 'ContactName', align: 'left' },
   { id: 'city', label: 'City', align: 'left' },
   { id: 'country', label: 'Country', align: 'left' },
   
@@ -64,15 +63,6 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-// const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
-
-// ----------------------------------------------------------------------
 
 
 

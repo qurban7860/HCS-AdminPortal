@@ -90,7 +90,6 @@ export default function SupplierListTableRow({
         </TableCell>
 
         <TableCell>{contactName}</TableCell>
-        <TableCell>{contactTitle}</TableCell>
         <TableCell>{address?.city}</TableCell>
         <TableCell>{address?.country}</TableCell>
        

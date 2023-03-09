@@ -32,7 +32,9 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar'
 import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+import { countries } from '../../../assets/data';
 
+// ----------------------------------------------------------------------
 
 // ----------------------------------------------------------------------
 
@@ -49,14 +51,14 @@ export default function SupplierEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  const EditSupplierSchema = Yup.object().shape({
+  const EditCategorySchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required')  ,
     isDisabled : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),
-    phone: Yup.string(),
+    phone: Yup.number(),
     email: Yup.string(),
-    fax: Yup.string(),
+    fax: Yup.number(),
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
@@ -68,19 +70,19 @@ export default function SupplierEditForm() {
   const defaultValues = useMemo(
     () => ({
       name:supplier?.name || 'N/A',
-        contactName:supplier?.contactName || 'N/A',
-        contactTitle: supplier?.contactTitle || 'N/A',
-        phone: supplier?.phone || 'N/A',
-        email: supplier?.email || 'N/A',
-        website: supplier?.website || 'N/A',
-
-        street: supplier?.address?.street || 'N/A',
-        suburb: supplier?.address?.suburb || 'N/A',
-        city: supplier?.address?.city || 'N/A',
-        region: supplier?.address?.region || 'N/A',
-        country: supplier?.address?.country || 'N/A',
-        createdAt: supplier?.createdAt || '',
-        updatedAt: supplier?.updatedAt || '',
+      contactName:supplier?.contactName || 'N/A',
+      contactTitle: supplier?.contactTitle || 'N/A',
+      phone: supplier?.phone || 'N/A',
+      email: supplier?.email || 'N/A',
+      website: supplier?.website || 'N/A',
+      fax: supplier?.fax || 'N/A',
+      street: supplier?.address?.street || 'N/A',
+      suburb: supplier?.address?.suburb || 'N/A',
+      city: supplier?.address?.city || 'N/A',
+      region: supplier?.address?.region || 'N/A',
+      country: supplier?.address?.country || 'N/A',
+      createdAt: supplier?.createdAt || '',
+      updatedAt: supplier?.updatedAt || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [supplier]
@@ -89,7 +91,7 @@ export default function SupplierEditForm() {
   const { themeStretch } = useSettingsContext();
   
   const methods = useForm({
-    resolver: yupResolver(EditSupplierSchema),
+    resolver: yupResolver(EditCategorySchema),
     defaultValues,
   });
 
@@ -126,9 +128,10 @@ export default function SupplierEditForm() {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      dispatch(updateSupplier({...data,id}));
-      reset();
+      await dispatch(updateSupplier({...data,id}));
+      reset(); 
       enqueueSnackbar('Update success!');
+      // console.log(PATH_MACHINE.categories.view(id))
       navigate(PATH_MACHINE.supplier.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
@@ -148,8 +151,8 @@ export default function SupplierEditForm() {
 
       
 
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3 }}>
+      <Grid item xs={18} md={12}>
+            <Card sx={{ p: 3, mb: 3, mt: -3 }}>
             <Stack spacing={3}>
             <Box
               rowGap={2}
@@ -163,6 +166,12 @@ export default function SupplierEditForm() {
 
               <RHFTextField name="name" label="Name of Supplier" required />
               </Box>
+              </Stack>
+              </Card>
+
+
+              <Card sx={{ p: 3, mb: 3 }}>
+              <Stack spacing={3}>
               <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
                 Contact Information
               </Typography>
@@ -177,13 +186,17 @@ export default function SupplierEditForm() {
             >
               {/* / //contact / */}
               <RHFTextField name="Contact_Name" label="Contact Name"/>
-              <RHFTextField name="Contact_Title" label="Contact Title"/>
-              <RHFTextField name="phone" label="Phone"/>
+              <RHFTextField name="contactTitle" label="Contact Title"/>
+              <RHFTextField name="phone" label="Phone" type='number'/>
               <RHFTextField name="email" label="Email"/>
-              <RHFTextField name="fax" label="Fax"/>
+              <RHFTextField name="fax" label="Fax" type='number'/>
               <RHFTextField name="website" label="Website"/>
               </Box>
+              </Stack>
+              </Card>
               {/* //address */}
+              <Card sx={{ p: 3, mb: 3 }}>
+              <Stack spacing={3}>
               <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
                 Address Information
               </Typography>
@@ -201,7 +214,15 @@ export default function SupplierEditForm() {
               <RHFTextField name="suburb" label="Suburb" />
               <RHFTextField name="city" label="City" />
               <RHFTextField name="region" label="Region" />
-              <RHFTextField name="country" label="Country" />
+              <RHFAutocomplete
+                  name="country"
+                  label="Country"
+                  freeSolo
+                  options={countries.map((country) => country.label)}
+                  // getOptionLabel={(option) => option.title}
+                  
+                  ChipProps={{ size: 'small' }}
+                /> 
 
 
               <RHFSwitch
@@ -215,19 +236,21 @@ export default function SupplierEditForm() {
                 </>
               } 
             />
-             </Box>
-             
-              
-             
-              </Stack>
-
             <Stack alignItems="flex-start" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
                 Save Suppliers
               </LoadingButton>
             </Stack>
+             </Box>
+             
+              
+             
+              </Stack>
+              </Card>
+
+            
                         
-            </Card>
+            
           
           </Grid>
         </Grid>
