@@ -3,15 +3,15 @@ import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
-import { getSupplier } from 'src/redux/slices/supplier';
-import SupplierEditForm from './SupplierEditForm';
-// redux
 import { useDispatch,useSelector } from 'react-redux';
+import { getSupplier } from '../../../redux/slices/supplier';
+// redux
 // routes
-import { PATH_MACHINE } from 'src/routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs';
-import { useSettingsContext } from 'src/components/settings';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
+import { useSettingsContext } from '../../../components/settings';
+import SupplierEditForm from './SupplierEditForm';
 // sections
 
 

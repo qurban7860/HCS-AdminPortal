@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getMachinemodel, updateMachinemodel } from '../../../redux/slices/model';
+import { updateMachinemodel } from '../../../redux/slices/model';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
