@@ -195,8 +195,6 @@ export function updateSite(params) {
         }
         if(params.country !== "null" && params.country !== null){
           data.address.country = params.country;        
-        }else{
-          data.address.country = null;        
         }
         if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null ){
           data.primaryBillingContact = params.primaryBillingContact;        
@@ -238,7 +236,7 @@ export function getSites(customerID = null) {
         }
         );
       }else{
-        response = await axios.get(`${CONFIG.SERVER_URL}customers/sites`);
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites`);
       }
       
       // console.log(response);
