@@ -40,6 +40,7 @@ import {
   // Machine
   MachinePage,
   MachineAdd,
+  MachineList,
   // Supplier
   MachineSupplier,
   SupplierList,
@@ -287,6 +288,7 @@ export default function Router() {
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <MachinePage /> }, 
         { path: 'new', element: <MachineAdd /> }, 
+        { path: 'list', element: <MachineList /> }, 
         {
           path : 'supplier',
           children:[

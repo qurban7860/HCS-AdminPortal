@@ -55,8 +55,8 @@ export default function NoteEditForm() {
     note: Yup.string(),
     user: Yup.string(),
     customer: Yup.string(),
-    editSite: Yup.string(),
-    editContact: Yup.string(),
+    editSite: Yup.string().nullable(),
+    editContact: Yup.string().nullable(),
   });
 
   const defaultValues = useMemo(

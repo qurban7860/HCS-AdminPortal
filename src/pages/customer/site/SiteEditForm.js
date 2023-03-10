@@ -52,9 +52,9 @@ export default function SiteEditForm() {
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    // country: Yup.string(),
-    // primaryBillingContact: Yup.string(),
-    // primaryTechnicalContact: Yup.string()
+    country: Yup.string().nullable(),
+    primaryBillingContact: Yup.string().nullable(),
+    primaryTechnicalContact: Yup.string().nullable(),
   });
 
 

@@ -185,31 +185,26 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={6}>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
-              <RHFTextField name="name" label="Name" required/>
-              <RHFTextField name="desc" label="Description" minRows={8} multiline />
-
-             </Box>
-             <Box
-             rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
+            <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="serialNo" label="Serial No." />
 
+              <RHFTextField name="name" label="Name" />
               <RHFSelect native name="parentMachine" label="Parent Machine">
+                <option value="" selected/>
+                      { 
+                      spContacts.length > 0 && spContacts.map((option) => (
+                      <option key={option._id} value={option._id}>
+                        {option.firstName} {option.lastName}
+                      </option>
+                    ))}
+              </RHFSelect>
+
+              <RHFTextField name="pserialNo" label="Parent Machine Serial No." />
+            {/* </Box>
+
+             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} > */}
+             
+             <RHFSelect native name="supplier" label="Supplier">
                     <option value="" selected/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
@@ -219,7 +214,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   ))}
               </RHFSelect>
 
-              <RHFTextField name="pseriolNo" label="Parent Serial No." />
+              <RHFSelect native name="model" label="Model">
+                    <option value="" selected/>
+                    { 
+                    spContacts.length > 0 && spContacts.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.firstName} {option.lastName}
+                    </option>
+                  ))}
+              </RHFSelect>
 
               <RHFSelect native name="status" label="Status">
                     <option value="" selected/>
@@ -230,34 +233,22 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-              <RHFSelect native name="supplier" label="Supplier">
-                    <option value="" selected/>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-              <RHFSelect native name="model" label="Machine Model">
-                    <option value="" selected/>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
+
               <RHFTextField name="workOrder" label="Work Order/ Purchase Order" />
-              <RHFSelect native name="accountManager" label="Customer">
-                    <option value="" selected/>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
+            </Box>
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
+                <RHFSelect native name="customer" label="Customer" sx={{ my:-3}}>
+                      <option value="" selected/>
+                      { 
+                      spContacts.length > 0 && spContacts.map((option) => (
+                      <option key={option._id} value={option._id}>
+                        {option.firstName} {option.lastName}
+                      </option>
+                    ))}
+                </RHFSelect>
+              </Box>
+            <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
+
               <RHFSelect native name="instalationSite" label="Instalation Site">
                     <option value="" selected/>
                     { 
@@ -267,6 +258,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
+
               <RHFSelect native name="billingSite" label="Billing Site">
                     <option value="" selected/>
                     { 
@@ -276,7 +268,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-              <RHFSelect native name="operators" label="Operators">
+
+              {/* <RHFSelect native name="operators" label="Operators">
                     <option value="" selected/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
@@ -284,7 +277,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       {option.firstName} {option.lastName}
                     </option>
                   ))}
-              </RHFSelect>
+              </RHFSelect> */}
+
               <RHFSelect native name="accountManager" label="Account Manager">
                     <option value="" selected/>
                     { 
@@ -294,6 +288,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
+
               <RHFSelect native name="projectManager" label="Project Manager">
                     <option value="" selected/>
                     { 
@@ -303,6 +298,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
+
               <RHFSelect native name="supportManager" label="Support Manager">
                     <option value="" selected/>
                     { 
@@ -312,7 +308,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-              <RHFSelect native name="license" label="License">
+
+              {/* <RHFSelect native name="license" label="License">
                     <option value="" selected/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
@@ -320,17 +317,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       {option.firstName} {option.lastName}
                     </option>
                   ))}
-              </RHFSelect>
-              </Box>
-              <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
+              </RHFSelect> */}
+
+              {/* <Box rowGap={3} columnGap={2}display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
               <RHFUpload
                   name="image"
                   maxSize={3145728}
@@ -338,27 +327,18 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   onDelete={handleRemoveFile}
                   // onUpload={() => console.log('ON UPLOAD')}
                 />
-                </Box>
-                <Box
-                rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-              <RHFMultiSelect
-                chip
-                checkbox
-                name="tools"
-                label="Tools"
-                options={MACHINE_TOOLS}
-              />
-              <RHFTextField name="itags" label="Internal tags" />
-              <RHFTextField name="ctags" label="Customer tags" />
+                </Box> */}
+
+              {/* <RHFMultiSelect chip checkbox name="tools" label="Tools" options={MACHINE_TOOLS} /> */}
+
+              <RHFTextField name="internalTags" label="tags" />
+
+              {/* <RHFTextField name="customerTags" label="Customer tags" /> */}
               </Box>
-             
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
+              <RHFTextField name="desc" label="Description" minRows={8} multiline sx={{ mt:-3}}/>
+             </Box>
+
               </Stack>
 
             <Stack alignItems="flex-start" sx={{ mt: 3 }}>
@@ -366,9 +346,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 Save Machine
               </LoadingButton>
             </Stack>
-                        
             </Card>
-          
           </Grid>
         {/* </Grid> */}
     </FormProvider>

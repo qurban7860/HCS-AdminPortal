@@ -55,14 +55,14 @@ export default function CustomerEditForm() {
   const EditCustomerSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     tradingName: Yup.string().min(5).max(40),
-    // mainSite: Yup.string(),
-    // sites: Yup.array(),
-    // contacts: Yup.array(),
-    // accountManager: Yup.string(),
-    // projectManager: Yup.string(),
-    // supportManager: Yup.string(),
-    // primaryBillingContact: Yup.string(),
-    // primaryTechnicalContact: Yup.string(),
+    mainSite: Yup.string().nullable(),
+    sites: Yup.array().nullable(),
+    contacts: Yup.array().nullable(),
+    accountManager: Yup.string().nullable(),
+    projectManager: Yup.string().nullable(),
+    supportManager: Yup.string().nullable(),
+    primaryBillingContact: Yup.string().nullable(),
+    primaryTechnicalContact: Yup.string().nullable(),
   });
 
 

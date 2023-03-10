@@ -60,10 +60,10 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const AddNoteSchema = Yup.object().shape({
     note: Yup.string().required("Note Field is required!"),
-    // customer: Yup.string(),
-    // site: Yup.string(),
+    // customer: Yup.string().nullable(),
+    site: Yup.string().nullable(),
     // user: Yup.string(),
-    // contact: Yup.string(),
+    contact: Yup.string().nullable(),
   });
 
   const defaultValues = useMemo(

@@ -21,8 +21,8 @@ export default function MachineDashboardNavbar() {
     navigate(PATH_MACHINE.machine.new);
   };
 
-  const handleSearchCustomer = () => {
-    navigate(PATH_DASHBOARD.customer.list);
+  const handleSearchMachine = () => {
+    navigate(PATH_MACHINE.machine.list);
   };
 
   const handleSearchSite = () => {
@@ -53,7 +53,7 @@ export default function MachineDashboardNavbar() {
                 title="Machine"
                 color="primary"
                 icon="eva:search-fill"
-                onClick={handleSearchCustomer}
+                onClick={handleSearchMachine}
                 sx={{ '&:hover': { opacity: 0.72 } }}
 
               />

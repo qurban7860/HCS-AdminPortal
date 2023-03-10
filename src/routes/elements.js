@@ -70,6 +70,8 @@ export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserE
 // Machine
 export const MachinePage = Loadable(lazy(()=> import('../pages/machine/Machine')));
 export const MachineAdd = Loadable(lazy(()=> import('../pages/machine/MachineAddForm')));
+export const MachineList = Loadable(lazy(()=> import('../pages/machine/MachineList')));
+
 // Supplier
 export const MachineSupplier = Loadable(lazy(()=> import('../pages/machine/Supplier/MachineSuppliers')));
 export const SupplierList = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierList')));

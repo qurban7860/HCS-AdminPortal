@@ -80,9 +80,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     mainSite: Yup.string(),
     sites: Yup.array(),
     contacts: Yup.array(),
-    accountManager: Yup.string(),
-    projectManager: Yup.string(),
-    supportManager: Yup.string(),
+    accountManager: Yup.string().nullable(),
+    projectManager: Yup.string().nullable(),
+    supportManager: Yup.string().nullable(),
 
     // site details
     billingSite: Yup.string(),
