@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getMachine } from '../../../redux/slices/machine';
+import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/statuses';
+import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/products/statuses';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';

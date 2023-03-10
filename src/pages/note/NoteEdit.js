@@ -6,10 +6,10 @@ import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // slices
-import { getNote } from '../../redux/slices/note';
+import { getNote } from '../../redux/slices/customer/note';
 import { getUsers } from '../../redux/slices/user';
-import { getSites } from '../../redux/slices/site';
-import { getContacts } from '../../redux/slices/contact';
+import { getSites } from '../../redux/slices/customer/site';
+import { getContacts } from '../../redux/slices/customer/contact';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';

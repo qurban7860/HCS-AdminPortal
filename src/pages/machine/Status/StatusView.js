@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getMachinestatuses, setMachinestatusesEditFormVisibility } from '../../../redux/slices/statuses';
+import { getMachinestatuses, setMachinestatusesEditFormVisibility } from '../../../redux/slices/products/statuses';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components

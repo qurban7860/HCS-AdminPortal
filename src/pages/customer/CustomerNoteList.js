@@ -55,9 +55,9 @@ import NoteAddForm from './note/NoteAddForm';
 
 
 
-import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/note';
-import { getSites } from '../../redux/slices/site';
-import { getContacts } from '../../redux/slices/contact';
+import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/customer/note';
+import { getSites } from '../../redux/slices/customer/site';
+import { getContacts } from '../../redux/slices/customer/contact';
 
 
 

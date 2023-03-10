@@ -15,7 +15,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 
-import { getContacts, getContact, setEditFormVisibility } from '../../redux/slices/contact';
+import { getContacts, getContact, setEditFormVisibility } from '../../redux/slices/customer/contact';
 // Iconify
 import Iconify from '../../components/iconify';
 

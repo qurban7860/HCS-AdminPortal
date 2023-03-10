@@ -14,7 +14,7 @@
   // global
   import { CONFIG } from '../../../config-global';
   // slice
-  import { updateContact, setEditFormVisibility } from '../../../redux/slices/contact';
+  import { updateContact, setEditFormVisibility } from '../../../redux/slices/customer/contact';
   // routes
   import { PATH_DASHBOARD } from '../../../routes/paths';
   // components

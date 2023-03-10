@@ -17,7 +17,7 @@ import {
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getCategories, getCategory, deleteCategories } from '../../../redux/slices/category';
+import { getCategories, getCategory, deleteCategories } from '../../../redux/slices/products/category';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';

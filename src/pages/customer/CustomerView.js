@@ -9,9 +9,9 @@ import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/mater
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
-import { getSites } from '../../redux/slices/site';
-import { getContacts } from '../../redux/slices/contact';
+import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getSites } from '../../redux/slices/customer/site';
+import { getContacts } from '../../redux/slices/customer/contact';
 
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';

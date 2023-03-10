@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getMachineStatus, updateMachinestatus } from '../../../redux/slices/statuses';
+import { getMachineStatus, updateMachinestatus } from '../../../redux/slices/products/statuses';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components

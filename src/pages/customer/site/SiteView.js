@@ -7,7 +7,7 @@ import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getSite } from '../../../redux/slices/site';
+import { getSite } from '../../../redux/slices/customer/site';
 // components
 import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';

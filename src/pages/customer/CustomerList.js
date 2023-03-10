@@ -40,7 +40,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
+import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer/customer';
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 
 
