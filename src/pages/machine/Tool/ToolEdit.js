@@ -45,9 +45,6 @@ export default function ToolEdit() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Tool"
-          links={[
-            { name: tool?.name },
-          ]}
         />
 
         <ToolEditForm/>

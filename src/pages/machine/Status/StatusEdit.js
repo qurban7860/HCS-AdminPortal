@@ -45,14 +45,6 @@ export default function StatusEdit() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Status"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            {
-              name: 'Status',
-              href: PATH_MACHINE.techParam.list,
-            },
-            { name: machinestatus?.name },
-          ]}
         />
 
         <StatusEditForm/>
