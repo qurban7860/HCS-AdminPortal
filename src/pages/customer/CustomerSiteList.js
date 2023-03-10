@@ -229,11 +229,11 @@ export default function CustomerSiteList() {
                     {site.name} 
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={8}>
+                  {site.address && <Grid item xs={12} sm={8}>
                     <Typography variant="body2" >
                     {Object.values(site.address)?.join(", ")}
                     </Typography>
-                  </Grid>
+                  </Grid>}
                 </Grid>
                 : null }
               </AccordionSummary>

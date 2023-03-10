@@ -222,16 +222,13 @@ export default function CategoryList() {
         <title> Category: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
+      <Container maxWidth={false}>
+      
       <CustomBreadcrumbs 
           heading="Category List"
-          
+          sx={{ mb: -3, mt: 3 }}
         />
-
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
+        <Card sx={{mt: 3 }}>
           <CategoryListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -320,7 +317,7 @@ export default function CategoryList() {
             onChangeDense={onChangeDense}
           />
         </Card>
-        </div>
+        
       </Container>
 
       <ConfirmDialog

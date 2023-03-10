@@ -12,8 +12,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getSPContacts } from '../../redux/slices/customer/contact';
-import { saveCustomer } from '../../redux/slices/customer/customer';
+// import { getSPContacts } from '../../redux/slices/contact';
+import { saveCustomer } from '../../redux/slices/customer';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -150,7 +150,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getSPContacts());
+    // dispatch(getSPContacts());
   }, [dispatch]);
 
 

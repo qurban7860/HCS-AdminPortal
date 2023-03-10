@@ -135,7 +135,7 @@ export const PATH_MACHINE = {
     list: path(ROOTS_MACHINE, '/list'),
   },
   supplier:{
-    supplier: (ROOTS_MACHINE, '/machine/supplier/supplier'),
+    supplier: (ROOTS_MACHINE, '/machine/supplier/app'),
     list: (ROOTS_MACHINE, '/machine/supplier/list'),
     view: (id) => path(ROOTS_MACHINE, `/supplier/${id}/view`),
     supplieredit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/edit`),

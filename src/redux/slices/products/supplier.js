@@ -161,6 +161,7 @@ export function deleteSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      console.log(id[0],'Delete Supplier id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));

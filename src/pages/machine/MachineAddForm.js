@@ -8,10 +8,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid,Container, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid,Container, Stack,TextField,Autocomplete, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getSPContacts } from '../../redux/slices/customer/contact';
-import { saveMachine } from '../../redux/slices/products/machine';
+// import { getSPContacts } from '../../redux/slices/contact';
+import { saveMachine } from '../../redux/slices/machine';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -26,9 +26,6 @@ import FormProvider, {
 } from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-// asset
-import { countries } from '../../assets/data';
-// util
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 
@@ -117,7 +114,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
+  const top100Films = [
+    { label: 'The Shawshank Redemption', year: 1994 },
+    { label: 'The Godfather', year: 1972 },
+    { label: 'The Godfather: Part II', year: 1974 },
+    { label: 'The Dark Knight', year: 2008 },
+    { label: '12 Angry Men', year: 1957 },
+    { label: "Schindler's List", year: 1993 },
+    { label: 'Pulp Fiction', year: 1994 }
+  ]
   const methods = useForm({
     resolver: yupResolver(AddMachineSchema),
     defaultValues,
@@ -134,7 +139,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getSPContacts());
+    // dispatch(getSPContacts());
   }, [dispatch]);
 
 
@@ -204,7 +209,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} > */}
              
-             <RHFSelect native name="supplier" label="Supplier">
+             {/* <RHFSelect native name="supplier" label="Supplier">
                     <option value="" selected/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
@@ -212,9 +217,20 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       {option.firstName} {option.lastName}
                     </option>
                   ))}
-              </RHFSelect>
-
-              <RHFSelect native name="model" label="Model">
+              </RHFSelect> */}
+              <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="supplier" label="Supplier" />}
+              />
+              <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="model" label="Model" />}
+              />
+              {/* <RHFSelect native name="model" label="Model">
                     <option value="" selected/>
                     { 
                     spContacts.length > 0 && spContacts.map((option) => (
@@ -222,8 +238,13 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       {option.firstName} {option.lastName}
                     </option>
                   ))}
-              </RHFSelect>
-
+              </RHFSelect> */}
+              <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="model" label="Model" />}
+              />
               <RHFSelect native name="status" label="Status">
                     <option value="" selected/>
                     { 
@@ -248,7 +269,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 </RHFSelect>
               </Box>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
-
+            <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="model" label="Model" />}
+              />
               <RHFSelect native name="instalationSite" label="Instalation Site">
                     <option value="" selected/>
                     { 
@@ -258,7 +284,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-
+              <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="model" label="Model" />}
+              />
               <RHFSelect native name="billingSite" label="Billing Site">
                     <option value="" selected/>
                     { 
@@ -278,7 +309,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect> */}
-
+              <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="model" label="Model" />}
+              />
               <RHFSelect native name="accountManager" label="Account Manager">
                     <option value="" selected/>
                     { 
@@ -288,7 +324,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-
+              <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="model" label="Model" />}
+              />
               <RHFSelect native name="projectManager" label="Project Manager">
                     <option value="" selected/>
                     { 
@@ -298,7 +339,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     </option>
                   ))}
               </RHFSelect>
-
+              <Autocomplete
+                 disablePortal
+                 id="combo-box-demo"
+                 options={top100Films}
+                 renderInput={(params) => <TextField {...params} name="model" label="Model" />}
+              />
               <RHFSelect native name="supportManager" label="Support Manager">
                     <option value="" selected/>
                     { 
