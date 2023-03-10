@@ -111,7 +111,7 @@ export function createMachinemodels (supplyData){
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}machines/models`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/models`,supplyData);
       // dispatch(slice.actions)
       console.log(response,"From model data");
     } catch (e) {
@@ -128,7 +128,7 @@ export function getMachinemodels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/models`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
 
       dispatch(slice.actions.getMachinemodelsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('model loaded successfully'));
@@ -146,7 +146,7 @@ export function getMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/models/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models/${id}`);
       console.log('slice working get model',response);
       dispatch(slice.actions.getMachinemodelSuccess(response.data));
       console.log('requested model', response.data);
@@ -162,7 +162,7 @@ export function deleteMachinemodel(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id[0],'Delete model id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/models/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/models/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       
       
@@ -197,7 +197,7 @@ export function saveMachinemodel(params) {
           if(params.categories){
             data.categories.name = params.categories;
           }
-        const response = await axios.post(`${CONFIG.SERVER_URL}machines/models`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
 
         console.log('response', response.data.Machinemodel);
         dispatch(slice.actions.getMachinemodelsSuccess(response.data.Machinemodel));
@@ -236,7 +236,7 @@ export function updateMachinemodel(params) {
       }
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/models/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${params.id}`,
         data
       );
       console.log(response,"From update success")
