@@ -40,14 +40,10 @@ export default function CategoryEdit() {
       <Helmet>
         <title> Category: Edit Page | Machine ERP</title>
       </Helmet>
-      
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Category"
-          links={[
-            { name: category?.name },
-          ]}
+          sx={{ mb: -2, mt: 3 }}
         />
 
         <CategoryEditForm/>

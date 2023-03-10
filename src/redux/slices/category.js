@@ -33,7 +33,7 @@ const slice = createSlice({
       console.log('toggle', action.payload);
       state.categoryEditFormFlag = action.payload;
     },
-    
+  
     // RESET CUSTOMER
     resetCategory(state){
       state.machine = {};

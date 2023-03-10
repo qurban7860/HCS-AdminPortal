@@ -109,28 +109,18 @@ export default function MachineSuppliers() {
 
   const { themeStretch } = useSettingsContext();
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-      <Helmet>
+    <>
+    <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Helmet>
         <title> Machine: Categories | Machine ERP</title>
       </Helmet>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <div style={{paddingTop:'20px'}}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <CustomBreadcrumbs 
           heading="Categories"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            { name: 'Category' },
-          ]}
+          sx={{ mb: -2, mt: 3 }}
         />
-
-        </div>
-    
-      </Container>
-
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3, mt:-6 }}>
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
+          <Card sx={{ p: 3}}>
             <Stack spacing={3}>
             <Box
               rowGap={2}
@@ -161,14 +151,16 @@ export default function MachineSuppliers() {
 
             <Stack alignItems="flex-start" sx={{ mt:1 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
+                Save Categories
               </LoadingButton>
             </Stack>
                         
             </Card>
           
           </Grid>
-        </Grid>
+        
     </FormProvider>
+    </Container>
+    </>
   );
 }

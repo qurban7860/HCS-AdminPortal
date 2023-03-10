@@ -88,9 +88,6 @@ export default function CategoryEditForm() {
 
   useLayoutEffect(() => {
     dispatch(getCategory(id));
-    // dispatch(getSites(customer._id));
-    // dispatch(getSPContacts());
-
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -104,6 +101,7 @@ export default function CategoryEditForm() {
   const toggleCancel = () => 
     {
       dispatch(setCategoryEditFormVisibility(false));
+      navigate(PATH_MACHINE.categories.view(id));
     };
 
   const onSubmit = async (data) => {
@@ -125,7 +123,7 @@ export default function CategoryEditForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
       <Helmet>
         <title> Machine: Category | Machine ERP</title>
       </Helmet>
@@ -164,11 +162,34 @@ export default function CategoryEditForm() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
-              </LoadingButton>
-            </Stack>
+            
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(5, 1fr)',
+                }}
+              > 
+
+                <LoadingButton 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  loading={isSubmitting}>
+                    Save Changes
+                </LoadingButton>
+
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+            </Box>
+            
                         
             </Card>
           
