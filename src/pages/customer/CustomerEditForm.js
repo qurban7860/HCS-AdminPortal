@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 import { CONFIG } from '../../config-global';
 // slice
 import { updateCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
-import { getContacts, getSPContacts } from '../../redux/slices/contact';
+import { getContacts } from '../../redux/slices/contact';
 import { getSites } from '../../redux/slices/site';
 
 
