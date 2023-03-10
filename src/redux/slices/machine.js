@@ -112,7 +112,7 @@ export function getMachines() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/machines`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`);
       dispatch(slice.actions.getMachinesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
@@ -129,7 +129,7 @@ export function getMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/machines/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/machines/${id}`);
       dispatch(slice.actions.getMachineSuccess(response.data));
       console.log('requested machine', response.data);
     } catch (error) {
@@ -146,7 +146,7 @@ export function deleteMachine(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;
@@ -279,7 +279,7 @@ export function saveMachine(params) {
 
         // }
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}machines/machines`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         console.log('response', response.data.Machine);
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));

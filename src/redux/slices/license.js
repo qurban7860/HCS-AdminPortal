@@ -106,12 +106,12 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createLicenses (supplyData){
+export function createLicenses (machineId=null, supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}machines/licenses`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
       // dispatch(slice.actions)
       console.log(response,"From license data");
     } catch (e) {
@@ -124,11 +124,11 @@ export function createLicenses (supplyData){
 // ----------------------------------------------------------------------
 
 
-export function getLicenses (){
+export function getLicenses (machineId=null){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/licenses`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`);
 
       dispatch(slice.actions.getLicensesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Licenses loaded successfully'));
@@ -142,12 +142,12 @@ export function getLicenses (){
 }
 // ----------------------------------------------------------------------
 
-export function getLicense(id) {
+export function getLicense(machineId=null, id) {
   console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/licenses/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`);
       dispatch(slice.actions.getLicensesSuccess(response.data));
       console.log('requested license', response.data);
     } catch (error) {
@@ -157,11 +157,11 @@ export function getLicense(id) {
   };
 }
 
-export function deleteLicense(id) {
+export function deleteLicense(machineId=null, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/licenses/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`);
      
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers 
@@ -177,7 +177,7 @@ export function deleteLicense(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveLicense(params) {
+export function saveLicense(machineId, params) {
     return async (dispatch) => {
       console.log('params', params);
       dispatch(slice.actions.resetLicense());
@@ -244,7 +244,7 @@ export function saveLicense(params) {
           data.country = params.country;        
         }
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}licenses/licenses`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`, data);
 
         console.log('response', response.data.License);
         dispatch(slice.actions.getLicenseSuccess(response.data.License));
@@ -253,70 +253,5 @@ export function saveLicense(params) {
         dispatch(slice.actions.hasError(error));
       }
     };
-
-}
-
-// --------------------------------------------------------------------------
-
-export function updateSupplier(params) {
-  console.log('update, working', params)
-  return async (dispatch) => {
-    dispatch(slice.actions.startLoading());
-    try {
-
-      const formData = new FormData();
-      /* eslint-disable */
-      let data = {
-        id: params.id,
-        name: params.name,
-        // tradingName: params.tradingName
-      };
-     /* eslint-enable */
-
-      if(params.contactName){
-        data.contactName = params.contactName;
-      }
-      if(params.contactTitle){
-        data.contactTitle = params.contactTitle;
-      }
-      if(params.phone){
-        data.phone = params.phone;
-      }
-      if(params.email){
-        data.email = params.email;
-      }
-      if(params.website){
-        data.website = params.website;        
-      }
-      if(params.street){
-        data.street = params.street;        
-      }
-      if(params.suburb){
-        data.suburb = params.suburb;        
-      }
-      if(params.city){
-        data.city = params.city;        
-      }
-      if(params.region){
-        data.region = params.region;        
-      }
-      if(params.country){
-        data.country = params.country;        
-      }
-      
-      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/suppliers/${params.id}`,
-        data
-      );
-
-      dispatch(getLicense(params.id));
-      dispatch(slice.actions.setLicenseEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
-
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error));
-    }
-  };
 
 }

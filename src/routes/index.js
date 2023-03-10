@@ -40,7 +40,7 @@ import {
   // Machine
   MachinePage,
   MachineAdd,
-  // MachineList,
+  MachineList,
   // Supplier
   MachineSupplier,
   SupplierList,

@@ -112,7 +112,7 @@ export function createTools (supplyData){
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}machines/tools`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`,supplyData);
       // dispatch(slice.actions)
       console.log(response,"From tool data");
     } catch (e) {
@@ -129,7 +129,7 @@ export function getTools (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/tools`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`);
 
       dispatch(slice.actions.getToolsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
@@ -147,7 +147,7 @@ export function getTool(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/tools/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools/${id}`);
       console.log('slice working get Tool',response);
       dispatch(slice.actions.getToolSuccess(response.data));
       console.log('requested tool', response.data);
@@ -163,7 +163,7 @@ export function deleteTool(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id[0],'Delete tool id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/tools/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/tools/${id}`);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search
@@ -198,7 +198,7 @@ export function saveTool(params) {
           }
 
         
-        const response = await axios.post(`${CONFIG.SERVER_URL}machines/tools`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`, data);
 
         console.log('response', response.data.Tool);
         dispatch(slice.actions.getToolsSuccess(response.data.Tool));
@@ -234,7 +234,7 @@ export function updateTool(params) {
       }
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/tools/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
         data
       );
       console.log(response,"From update success")

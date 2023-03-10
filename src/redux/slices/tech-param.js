@@ -110,7 +110,7 @@ export function createTechparamcategories (supplyData){
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}machines/techparamcategories`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`,supplyData);
       // dispatch(slice.actions)
       console.log(response,"From techparamcategories data");
     } catch (e) {
@@ -127,7 +127,7 @@ export function getTechparamcategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/techparamcategories`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories`);
       
       dispatch(slice.actions.getTechparamcategoriesSuccess(response.data));
       console.log('data', response.data);
@@ -146,7 +146,7 @@ export function getTechparamcategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/techparamcategories/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
       console.log('slice working',response);
       dispatch(slice.actions.getTechparamcategorySuccess(response.data));
       console.log('requested techparam', response.data);
@@ -162,7 +162,7 @@ export function deleteTechparamcategory(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id[0],'Delete techparam id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/techparamcategories/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search
@@ -201,7 +201,7 @@ export function saveTechparamcategory(params) {
             data.description = params.description;
           }
         
-        const response = await axios.post(`${CONFIG.SERVER_URL}machines/techparamcategories`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`, data);
 
         console.log('response', response.data.Techparam);
         dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
@@ -238,7 +238,7 @@ export function updateTechparamcategory(params) {
       }
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/techparamcategories/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${params.id}`,
         data
       );
       console.log(response,"From update success")

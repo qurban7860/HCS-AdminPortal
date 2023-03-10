@@ -111,7 +111,7 @@ export function createCategorys (supplyData){
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}machines/categories`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`,supplyData);
       // dispatch(slice.actions)
       console.log(response,"From category data");
     } catch (e) {
@@ -128,7 +128,7 @@ export function getCategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/categories`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`);
 
       dispatch(slice.actions.getCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
@@ -147,7 +147,7 @@ export function getCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/categories/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories/${id}`);
       console.log('Response',response.data)
       dispatch(slice.actions.getCategorySuccess(response.data));
       console.log('requested categories', response.data);
@@ -163,7 +163,7 @@ export function deleteCategories(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id[0],'Delete categories id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/categories/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/categories/${id}`);
      
       dispatch(slice.actions.setResponseMessage(response.data));
       
@@ -197,7 +197,7 @@ export function saveCategory(params) {
             data.description = params.description;
           }
         
-        const response = await axios.post(`${CONFIG.SERVER_URL}machines/categories`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`, data);
 
         console.log('response', response.data.Category);
         dispatch(slice.actions.getCategoriesSuccess(response.data.Category));
@@ -232,7 +232,7 @@ export function updateCategory(params) {
       }
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/categories/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${params.id}`,
         data
       );
 

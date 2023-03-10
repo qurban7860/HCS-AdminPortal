@@ -219,7 +219,7 @@ export function getContacts(customerID = null) {
         }
         );
       }else{
-        response = await axios.get(`${CONFIG.SERVER_URL}customers/contacts`);
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/contacts/search`);
       }
       
       // console.log(response);

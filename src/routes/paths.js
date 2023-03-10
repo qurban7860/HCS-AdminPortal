@@ -132,7 +132,7 @@ export const PATH_MACHINE = {
   },
   machine:{
     new: path(ROOTS_MACHINE, '/new'),
-    // list: path(ROOTS_MACHINE, '/list'),
+    list: path(ROOTS_MACHINE, '/list'),
   },
   supplier:{
     supplier: (ROOTS_MACHINE, '/machine/supplier/supplier'),

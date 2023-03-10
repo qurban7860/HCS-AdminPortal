@@ -111,7 +111,7 @@ export function createMachinestatuses (supplyData){
     dispatch(slice.actions.startLoading());
     console.log('param data', supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}machines/statuses`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`,supplyData);
       // dispatch(slice.actions)
       console.log(response,"From statuses data");
     } catch (e) {
@@ -128,7 +128,7 @@ export function getMachinestatuses (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/statuses`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`);
 
       dispatch(slice.actions.getMachinestatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
@@ -146,7 +146,7 @@ export function getMachineStatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/statuses/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses/${id}`);
       console.log('slice working get statuses',response);
       dispatch(slice.actions.getMachinestatusSuccess(response.data));
       console.log('requested statuses', response.data);
@@ -162,7 +162,7 @@ export function deleteMachinestatus(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id[0],'Delete statuses id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/statuses/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/statuses/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       
       
@@ -197,7 +197,7 @@ export function saveMachinestatus(params) {
             data.displayOrderNo = params.displayOrderNo;
           }
         
-        const response = await axios.post(`${CONFIG.SERVER_URL}machines/statuses`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
 
         console.log('response', response.data.Machinestatus);
         dispatch(slice.actions.getMachinestatusesSuccess(response.data.Machinestatus));
@@ -237,7 +237,7 @@ export function updateMachinestatus(params) {
       }
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}machines/statuses/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${params.id}`,
         data
       );
       console.log(response,"From update success")
