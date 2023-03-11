@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getTool, getTools, setToolEditFormVisibility } from '../../../redux/slices/tools';
+import { getTool, getTools, setToolEditFormVisibility } from '../../../redux/slices/products/tools';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components

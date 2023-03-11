@@ -15,7 +15,7 @@ import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dia
 // global
 
 // slice
-import { updateTool, setToolEditFormVisibility, getTool, getTools } from '../../../redux/slices/tools';
+import { updateTool, setToolEditFormVisibility, getTool, getTools } from '../../../redux/slices/products/tools';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';

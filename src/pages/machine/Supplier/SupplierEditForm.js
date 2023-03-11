@@ -23,7 +23,7 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import {CONFIG} from '../../../config-global'
 // slice
-import { updateSupplier, setSupplierEditFormVisibility, getSuppliers, getSupplier } from '../../../redux/slices/supplier';
+import { updateSupplier, setSupplierEditFormVisibility, getSuppliers, getSupplier } from '../../../redux/slices/products/supplier';
 
 import { useSettingsContext } from '../../../components/settings';
 // routes

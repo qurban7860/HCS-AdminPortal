@@ -11,7 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid,Container, Stack,TextField,Autocomplete, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
-import { saveMachine } from '../../redux/slices/machine';
+import { saveMachine } from '../../redux/slices/products/machine';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components

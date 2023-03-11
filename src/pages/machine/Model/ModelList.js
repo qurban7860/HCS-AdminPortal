@@ -18,7 +18,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getMachinemodels, getMachineModel, deleteMachinemodel } from '../../../redux/slices/model';
+import { getMachinemodels, getMachineModel, deleteMachinemodel } from '../../../redux/slices/products/model';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';

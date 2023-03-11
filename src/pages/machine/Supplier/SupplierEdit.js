@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 import { useDispatch,useSelector } from 'react-redux';
-import { getSupplier } from '../../../redux/slices/supplier';
+import { getSupplier } from '../../../redux/slices/products/supplier';
 
 import SupplierEditForm from './SupplierEditForm';
 // redux

@@ -15,7 +15,7 @@ import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dia
 // global
 
 // slice
-import { updateMachinemodel, getMachineModel, getMachinemodels } from '../../../redux/slices/model';
+import { updateMachinemodel, getMachineModel, getMachinemodels } from '../../../redux/slices/products/model';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';

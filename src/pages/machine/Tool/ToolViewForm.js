@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getTool, setToolEditFormVisibility } from '../../../redux/slices/tools';
+import { getTool, setToolEditFormVisibility } from '../../../redux/slices/products/tools';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components

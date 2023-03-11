@@ -17,7 +17,7 @@ import {
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getTools, getTool, deleteTool } from '../../../redux/slices/tools';
+import { getTools, getTool, deleteTool } from '../../../redux/slices/products/tools';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';

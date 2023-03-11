@@ -10,13 +10,13 @@ import siteReducer from './slices/customer/site';
 import contactReducer from './slices/customer/contact';
 import noteReducer from './slices/customer/note';
 import machineReducer from './slices/products/machine';
-import supplierReducer from './slices/supplier';
+import supplierReducer from './slices/products/supplier';
 import licenseReducer from './slices/products/license';
 import categoryReducer from './slices/products/category';
-import toolReducer from './slices/tools';
+import toolReducer from './slices/products/tools';
 import techparamReducer from './slices/products/tech-param';
 import machinestatusReducer from './slices/products/statuses';
-import machinemodelReducer from './slices/model';
+import machinemodelReducer from './slices/products/model';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
