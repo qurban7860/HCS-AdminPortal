@@ -64,6 +64,7 @@ export default function MachineSuppliers() {
     suburb: Yup.string(),
     region: Yup.string(),
     country: Yup.string(),
+    city: Yup.string(),
     
   });
 
@@ -80,6 +81,7 @@ export default function MachineSuppliers() {
       suburb: '',
       region: '',
       country: '',
+      city: '',
       isDisabled: true,
       
     }),
@@ -108,7 +110,23 @@ export default function MachineSuppliers() {
 
   const onSubmit = async (data) => {
     try{ 
-      await dispatch(createSuppliers(data));
+      const finaldata= {
+        name: data.name,
+        contactName:data.Contact_Name,
+        contactTitle:data.contactTitle ,
+        phone:data.phone ,
+        email:data.email ,
+        website:data.website ,
+        fax: data.fax,
+        address:{
+            street:data.street ,
+            suburb:data.suburb ,
+            city:data.city ,
+            region:data.region ,
+            country:data.country ,
+        }
+    }
+      await dispatch(createSuppliers(finaldata));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.supplier.list); 

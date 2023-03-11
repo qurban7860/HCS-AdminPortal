@@ -190,7 +190,7 @@ export function saveCategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params?.isDisabled,
+          isDisabled: !(params.isDisabled),
         };
         /* eslint-enable */
         if(params.description){
@@ -230,6 +230,7 @@ export function updateCategory(params) {
       if(params.isDisabled){
         data.isDisabled = params.isDisabled;
       }
+      
       
       
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${params.id}`,

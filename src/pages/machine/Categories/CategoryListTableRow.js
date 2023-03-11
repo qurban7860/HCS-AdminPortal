@@ -44,7 +44,7 @@ export default function CategoryListTableRow({
   onViewRow,
 }) {
   const { name, isDisabled, createdAt} = row;
-
+  
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -90,17 +90,18 @@ export default function CategoryListTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="left">
+        <TableCell align="center">
           <Label
             variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
+            // color={(isDisabled === true && 'error') || 'success'}
+            color={isDisabled? 'success': 'error'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled === false ? 'Yes' : 'No'}
+            {isDisabled  ? 'Yes' : 'No'}
           </Label>
         </TableCell> 
 
-        <TableCell>{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
         
        
       </TableRow> 

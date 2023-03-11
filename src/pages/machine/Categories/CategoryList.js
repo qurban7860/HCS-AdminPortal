@@ -48,8 +48,8 @@ import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description', label: 'Active', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  { id: 'description', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
   
 ];
 
@@ -354,8 +354,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
+    
     return a[1] - b[1];
   });
+  
 
   inputData = stabilizedThis.map((el) => el[0]);
 

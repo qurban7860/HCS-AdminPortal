@@ -46,9 +46,7 @@ export default function SupplierEdit() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Supplier"
-          links={[
-            { name: supplier?.name },
-          ]}
+          
         />
 
         <SupplierEditForm/>

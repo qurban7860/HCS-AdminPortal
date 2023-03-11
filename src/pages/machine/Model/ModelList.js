@@ -50,8 +50,8 @@ import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description', label: 'Active', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  { id: 'description', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
   
 ];
 

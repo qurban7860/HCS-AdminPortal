@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback } from 'react';
+import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
@@ -42,6 +42,8 @@ import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 
 export default function MachineSuppliers() {
 
+  
+
 
   const { userId, user } = useAuthContext();
 
@@ -63,13 +65,14 @@ export default function MachineSuppliers() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isDisabled: false,
       createdAt: '',
       
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+  
 
   const methods = useForm({
     resolver: yupResolver(AddMachineSchema),
