@@ -227,6 +227,9 @@ export function updateCategory(params) {
      if(params.description){
         data.description = params.description;
       }
+      if(params.isDisabled){
+        data.isDisabled = params.isDisabled;
+      }
       
       
       
