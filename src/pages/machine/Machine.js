@@ -32,7 +32,6 @@ import Iconify from '../../components/iconify';
 
 import { PATH_DASHBOARD } from '../../routes/paths';
 
-
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 // import MachineView from './MachineAddForm';
 

@@ -63,7 +63,7 @@ export default function MachineStatus() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isDisabled: false,
       createdAt: '',
       displayOrderNo: '',
       
@@ -116,10 +116,6 @@ export default function MachineStatus() {
         <div style={{paddingTop:'20px'}}>
       <CustomBreadcrumbs 
           heading="Status"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            { name: 'Machine Status' },
-          ]}
         />
 
         </div>
