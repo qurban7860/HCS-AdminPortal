@@ -228,16 +228,14 @@ export default function TechParamList() {
         <title> TechParamCategory: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
+      <Container maxWidth={false}>
+      
       <CustomBreadcrumbs 
           heading="TechParam List"
-          
+          sx={{ mb: -3, mt: 3 }}
         />
 
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
+        <Card sx={{mt: 3 }}>
           <TechParamListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -326,7 +324,7 @@ export default function TechParamList() {
             onChangeDense={onChangeDense}
           />
         </Card>
-        </div>
+        
       </Container>
 
       <ConfirmDialog

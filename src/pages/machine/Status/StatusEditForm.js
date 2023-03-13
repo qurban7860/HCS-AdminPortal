@@ -107,6 +107,7 @@ export default function StatusEditForm() {
   const toggleCancel = () => 
     {
       dispatch(updateMachinestatus(false));
+      navigate(PATH_MACHINE.machineStatus.view(id));
     };
 
   const onSubmit = async (data) => {
@@ -127,7 +128,7 @@ export default function StatusEditForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
       <Helmet>
         <title> Machine: Status | Machine ERP</title>
       </Helmet>
@@ -170,11 +171,32 @@ export default function StatusEditForm() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
-              </LoadingButton>
-            </Stack>
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(5, 1fr)',
+                }}
+              > 
+
+                <LoadingButton 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  loading={isSubmitting}>
+                    Save Changes
+                </LoadingButton>
+
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+            </Box>
                         
             </Card>
           

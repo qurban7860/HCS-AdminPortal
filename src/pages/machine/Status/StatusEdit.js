@@ -45,6 +45,7 @@ export default function StatusEdit() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Status"
+          sx={{ mb: -2, mt: 3 }}
         />
 
         <StatusEditForm/>

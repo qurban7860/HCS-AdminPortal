@@ -65,7 +65,7 @@ export default function MachineModel() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isDisabled: false,
       createdAt: '',
       category: '',
     }),

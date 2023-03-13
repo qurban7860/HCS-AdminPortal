@@ -76,11 +76,11 @@ export default function CategoryViewForm({ currentCategory = null }) {
           onClick={() => { 
               toggleEdit(); 
           }}
-          variant="contained"
-          size="medium"
+          variant="outlined"
+          
           startIcon={<Iconify icon="eva:edit-fill" />}
         >
-          Edit Category
+          Edit
         </Button>
 
       </Stack>

@@ -104,6 +104,7 @@ export default function TechParamCategoryEditForm() {
   const toggleCancel = () => 
     {
       dispatch(updateTechparamcategory(false));
+      navigate(PATH_MACHINE.techParam.view(id));
     };
 
   const onSubmit = async (data) => {
@@ -124,7 +125,7 @@ export default function TechParamCategoryEditForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
       <Helmet>
         <title> Machine: Tech Param Category | Machine ERP</title>
       </Helmet>
@@ -163,12 +164,32 @@ export default function TechParamCategoryEditForm() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
-              </LoadingButton>
-            </Stack>
-                        
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(5, 1fr)',
+                }}
+              > 
+
+                <LoadingButton 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  loading={isSubmitting}>
+                    Save Changes
+                </LoadingButton>
+
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+            </Box>  
             </Card>
           
           </Grid>

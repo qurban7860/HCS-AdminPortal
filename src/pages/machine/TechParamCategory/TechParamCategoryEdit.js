@@ -45,7 +45,7 @@ export default function TechParamCategoryEdit() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Tech Param Category"
-          
+          sx={{ mb: -2, mt: 3 }}
         />
 
         <TechParamCategoryEditForm/>

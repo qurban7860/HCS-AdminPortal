@@ -62,7 +62,7 @@ export default function MachineTechParam() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isDisabled: false,
       createdAt: '',
       
     }),
@@ -109,28 +109,22 @@ export default function MachineTechParam() {
 
   const { themeStretch } = useSettingsContext();
   return (
+    <>
+    <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
       <Helmet>
         <title> Machine: Tech Params | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <div style={{paddingTop:'20px'}}>
       <CustomBreadcrumbs 
           heading="Tech Param Category"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            { name: 'Tech Param Categories' },
-          ]}
+          sx={{ mb: -2, mt: 3 }}
         />
 
-        </div>
-    
-      </Container>
 
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3, mt:-6 }}>
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
+          <Card sx={{ p: 3}}>
             <Stack spacing={3}>
             <Box
               rowGap={2}
@@ -161,7 +155,7 @@ export default function MachineTechParam() {
 
             <Stack alignItems="flex-start" sx={{ mt:1 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
+                Save Tech Param Category
               </LoadingButton>
             </Stack>
                         
@@ -170,5 +164,7 @@ export default function MachineTechParam() {
           </Grid>
         </Grid>
     </FormProvider>
+    </Container>
+    </>
   );
 }

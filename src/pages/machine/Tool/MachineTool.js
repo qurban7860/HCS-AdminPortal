@@ -117,16 +117,13 @@ export default function MachineSuppliers() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <div style={{paddingTop:'20px'}}>
+        
       <CustomBreadcrumbs 
           heading="Tools"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            { name: 'Tools' },
-          ]}
+          
         />
 
-        </div>
+        
     
       </Container>
 

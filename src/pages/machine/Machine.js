@@ -1,8 +1,22 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
 // @mui
+import { useNavigate,useParams, Link } from 'react-router-dom';
+import ListSubheader from '@mui/material/ListSubheader';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid } from '@mui/material';
+import { Container, Grid, Card } from '@mui/material';
+import CategoryIcon from '@mui/icons-material/Category';
+import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
+import FlareIcon from '@mui/icons-material/Flare';
+import ClassIcon from '@mui/icons-material/Class';
+import BuildCircleIcon from '@mui/icons-material/BuildCircle';
+// import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // _mock_
 import {
   _appFeatured,
@@ -26,16 +40,13 @@ import { SeoIllustration } from '../../assets/illustrations';
 
 import { useDispatch } from '../../redux/store';
 
-// import { getSites } from '../../redux/slices/site';
+
 import MachineWidget from './util/MachineWidget';
 import Iconify from '../../components/iconify';
 
-import { PATH_DASHBOARD } from '../../routes/paths';
-
-
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
-// import MachineView from './MachineAddForm';
 
+import { PATH_MACHINE } from '../../routes/paths';
 
 
 // ----------------------------------------------------------------------
@@ -51,12 +62,49 @@ export default function MachineDashboardPage() {
   ];
 
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const { themeStretch } = useSettingsContext();
 
   useLayoutEffect(() => {
     // dispatch(getSites());
   }, [dispatch]);
+
+  const linkCategory = () => 
+    {
+      navigate(PATH_MACHINE.categories.categories);
+    };
+
+    const linkModel = () => 
+    {
+      navigate(PATH_MACHINE.machineModel.model);
+    };
+
+    const linkStatus = () => 
+    {
+      navigate(PATH_MACHINE.machineStatus.status);
+    };
+
+    const linkSupplier = () => 
+    {
+      navigate(PATH_MACHINE.supplier.supplier);
+    };
+
+    const linkTechParam = () => 
+    {
+      navigate(PATH_MACHINE.categories.categories);
+    };
+
+    const linktpCategory = () => 
+    {
+      navigate(PATH_MACHINE.techParam.techParam);
+    };
+
+    const linkTool = () => 
+    {
+      navigate(PATH_MACHINE.tool.tool);
+    };
+
 
   return (
     <>
@@ -88,7 +136,81 @@ export default function MachineDashboardPage() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled
+          <Card>
+          <List
+          sx={{fontSize: '0.7em'}}
+              // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+              component="nav"
+              aria-labelledby="nested-list-subheader"
+              // subheader={
+              //   <ListSubheader component="div" id="nested-list-subheader">
+              //     Machine Modules
+              //   </ListSubheader>
+              // }
+            >
+                <ListItemButton onClick={linkCategory}
+                sx={{color: 'text.disabled'}}>
+                  <ListItemIcon>
+                    <CategoryIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Category" />
+                </ListItemButton>
+
+
+
+                <ListItemButton sx={{color: 'text.disabled'}}
+                onClick={linkModel}>
+                  <ListItemIcon>
+                    <ModelTrainingIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Model" />
+                </ListItemButton>
+
+                <ListItemButton onClick={linkStatus}
+                sx={{color: 'text.disabled'}}>
+                  <ListItemIcon>
+                    <Diversity1Icon />
+                  </ListItemIcon>
+                  <ListItemText primary="Status" />
+                </ListItemButton>
+
+                <ListItemButton onClick={linkSupplier}
+                sx={{color: 'text.disabled'}}>
+                  <ListItemIcon>
+                  <InventoryIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Supplier" />
+                </ListItemButton>
+
+                <ListItemButton onClick={linkTechParam}
+                sx={{color: 'text.disabled'}}>
+                  <ListItemIcon>
+                    <FlareIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Tech Param" />
+                </ListItemButton>
+
+                <ListItemButton onClick={linktpCategory}
+                sx={{color: 'text.disabled'}}>
+                  <ListItemIcon>
+                    <ClassIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Tech Param Category" />
+                </ListItemButton>
+
+                <ListItemButton onClick={linkTool}
+                sx={{color: 'text.disabled'}}>
+                  <ListItemIcon>
+                    <BuildCircleIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Tool" />
+                </ListItemButton>
+      
+          </List>
+          </Card>
+          
+          
+            {/* <AppAreaInstalled
               title="Sites"
               subheader="(+43%) than last year"
               chart={{
@@ -110,26 +232,10 @@ export default function MachineDashboardPage() {
                   },
                 ],
               }}
-            />
+            /> */}
           </Grid>
 
-          <Grid item xs={12} lg={8}>
-            <AppNewInvoice
-              title="New Site"
-              tableData={_appInvoices}
-              tableLabels={[
-                { id: 'id', label: 'Invoice ID' },
-                { id: 'category', label: 'Category' },
-                { id: 'price', label: 'Price' },
-                { id: 'status', label: 'Status' },
-                { id: '' },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated title="Top Managers" list={_appManagers} />
-          </Grid>
+          
         </Grid>
       </Container>
     </>

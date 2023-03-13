@@ -80,9 +80,10 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
               toggleEdit(); 
           }}
           variant="outlined"
+          
           startIcon={<Iconify icon="eva:edit-fill" />}
         >
-          Edit
+          Edit 
         </Button>
 
       </Stack>
