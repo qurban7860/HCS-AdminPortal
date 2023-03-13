@@ -279,7 +279,7 @@ const toggleChecked = () =>
       <Helmet>
         <title> Note: List | Machine ERP </title>
       </Helmet>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         {!noteEditFormVisibility && 
             <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
                 <Button
