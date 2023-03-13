@@ -5,6 +5,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Grid,
+  Stack,
   Card,
   Table,
   Button,
@@ -216,18 +217,34 @@ export default function CategoryList() {
     setFilterStatus([]);
   };
 
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.categories.categories)
+    };
+
   return (
     <>
       <Helmet>
         <title> Category: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false}>
+      <Container maxWidth={themeStretch ? false : 'lg'}>
       
       <CustomBreadcrumbs 
           heading="Category List"
           sx={{ mb: -3, mt: 3 }}
         />
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+        <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Category
+            </Button>
+            </Stack>
         <Card sx={{mt: 3 }}>
           <CategoryListTableToolbar
             filterName={filterName}

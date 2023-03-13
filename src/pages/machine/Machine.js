@@ -72,7 +72,7 @@ export default function MachineDashboardPage() {
 
   const linkCategory = () => 
     {
-      navigate(PATH_MACHINE.categories.categories);
+      navigate(PATH_MACHINE.categories.list);
     };
 
     const linkModel = () => 
