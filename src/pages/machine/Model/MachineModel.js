@@ -58,7 +58,7 @@ export default function MachineModel() {
     description: Yup.string().min(5).max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
-    category: Yup.string(),
+    category: Yup.string().required('Category is required'),
   });
 
   const defaultValues = useMemo(
