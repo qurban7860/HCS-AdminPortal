@@ -205,7 +205,7 @@ export default function CustomerContactList() {
         <title> Site: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
 
         {!contactEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button

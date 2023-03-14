@@ -9,13 +9,13 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment,TextField } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment,TextField } from '@mui/material';
 // slice
 // import { getUsers } from '../../../redux/slices/user';
 // import { getSites } from '../../../redux/slices/site';
 // import { getContacts } from '../../../redux/slices/contact';
 // import { getCustomers } from '../../../redux/slices/customer';
-import { saveNote } from '../../../redux/slices/customer/note';
+import { saveNote, setNoteFormVisibility } from '../../../redux/slices/customer/note';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -118,6 +118,11 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
       
   };
 
+  const toggleCancel = () => 
+  {
+    dispatch(setNoteFormVisibility(false));
+  };
+
   // const [visibilityAgainst, setVisibilityAgainst]= useState(0);
   // const handleChange = event => {
   //   const { value } = event.target
@@ -217,13 +222,33 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
               }
               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
               /> */}
+
+            <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(4, 1fr)',
+                }}
+              > 
+              
+                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+                  Save Note
+                </LoadingButton>
+              
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+
+            </Box>
+
             </Stack>  
 
-              <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Note
-            </LoadingButton>
-            </Stack>
             
           </Card>
           

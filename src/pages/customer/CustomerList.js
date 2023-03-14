@@ -222,7 +222,7 @@ export default function CustomerList() {
           <CustomerDashboardNavbar/>
       </Grid>
         <CustomBreadcrumbs
-          heading="Customer List 123"
+          heading="Customer List"
           sx={{ mb: -3, mt: 3 }}
         />
         <Card sx={{mt: 3 }}>
