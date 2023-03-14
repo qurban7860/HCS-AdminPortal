@@ -45,14 +45,7 @@ export default function ModelEdit() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Model"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            {
-              name: 'Model',
-              href: PATH_MACHINE.techParam.list,
-            },
-            { name: machinemodel?.name },
-          ]}
+          sx={{ mb: -2, mt: 3 }}
         />
 
         <ModelEditForm/>

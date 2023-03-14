@@ -77,7 +77,7 @@ export default function MachineDashboardPage() {
 
     const linkModel = () => 
     {
-      navigate(PATH_MACHINE.machineModel.model);
+      navigate(PATH_MACHINE.machineModel.list);
     };
 
     const linkStatus = () => 

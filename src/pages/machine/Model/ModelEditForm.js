@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
+import Select from "react-select";
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
@@ -106,6 +106,7 @@ export default function StatusEditForm() {
   const toggleCancel = () => 
     {
       dispatch(updateMachinemodel(false));
+      navigate(PATH_MACHINE.machineModel.view(id))
     };
 
   const onSubmit = async (data) => {
@@ -148,7 +149,7 @@ export default function StatusEditForm() {
 
             <RHFTextField name="name" label="Machine Model" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSelect native name="category" label="Category">
+              {/* <RHFSelect native name="category" label="Category">
                     <option value="" defaultValue/>
                     { 
                     categories.length > 0 && categories.map((option) => (
@@ -156,7 +157,18 @@ export default function StatusEditForm() {
                       {option.name}
                     </option>
                   ))}
-              </RHFSelect>
+              </RHFSelect> */}
+              <Select
+                name="category"
+                label="Category"
+                options={categories.map((option) => ({
+                  value: option._id,
+                  label: option.name,
+                }))}
+                isClearable
+                defaultValue={null}
+                onChange={(option) => setValue("category", option?.value)}
+              />
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"
@@ -174,11 +186,32 @@ export default function StatusEditForm() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
-              </LoadingButton>
-            </Stack>
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(5, 1fr)',
+                }}
+              > 
+
+                <LoadingButton 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  loading={isSubmitting}>
+                    Save Changes
+                </LoadingButton>
+
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+            </Box>
                         
             </Card>
           
