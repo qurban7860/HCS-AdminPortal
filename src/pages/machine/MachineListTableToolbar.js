@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types';
 import { sentenceCase } from 'change-case';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 // @mui
 import { Stack, Button, Select, MenuItem, Checkbox, TextField, InputLabel, FormControl, OutlinedInput, InputAdornment, Grid, } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
+import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +29,11 @@ export default function CustomerListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
+  const navigate = useNavigate();
+  const handleMachineAdd = () => {
+    navigate(PATH_MACHINE.machine.new);
+  };
+
   return (
     <Stack
       spacing={2}
@@ -69,7 +77,7 @@ export default function CustomerListTableToolbar({
       </FormControl> */}
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
-        {/* <Grid item xs={12} sm={8}> */}
+        <Grid item xs={12} sm={8}>
 
           <TextField
           fullWidth
@@ -84,7 +92,7 @@ export default function CustomerListTableToolbar({
             ),
           }}
           />
-        {/* </Grid> */}
+        </Grid>
 
       {isFiltered && (
         <Button
@@ -101,6 +109,7 @@ export default function CustomerListTableToolbar({
           <Stack alignItems="flex-end" > 
             <Button sx={{p:2}}
                 variant="contained"
+                onClick={handleMachineAdd}
                 startIcon={ <Iconify icon="eva:plus-fill" /> }
                 >
                 Add Machine 

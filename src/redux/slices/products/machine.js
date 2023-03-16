@@ -187,7 +187,7 @@ export function saveMachine(params) {
           data.supplier = params.supplier;        
         }
         if(params.model){
-            data.model = params.model;        
+            data.machineModel = params.model;        
         }
         if(params.workOrder){
           data.workOrder = params.workOrder;        

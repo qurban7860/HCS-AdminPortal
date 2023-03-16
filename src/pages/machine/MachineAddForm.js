@@ -254,7 +254,7 @@ const handleKeyPress = (e) => {
             <Box  rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete
                 // freeSolo
-                value={supplierVal || null}
+                value={ machineVal !== undefined ? machineVal : supplierVal || null}
                 options={suppliers}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {

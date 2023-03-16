@@ -80,7 +80,7 @@ export default function MachineListTableRow({
               variant="subtitle2"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
-            >{name}</Link>
+            >{serialNo}</Link>
           </Stack>
         </TableCell>
 
@@ -98,7 +98,7 @@ export default function MachineListTableRow({
           </Label>
         </TableCell> 
 
-        <TableCell>{fDateTime(createdAt)}</TableCell>
+        <TableCell>{fDate(createdAt)}</TableCell>
 
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
