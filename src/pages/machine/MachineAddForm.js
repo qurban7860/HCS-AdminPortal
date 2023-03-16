@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useCallback,  useState  } from 'react';
+import { useLayoutEffect, useMemo, useCallback,  useState, useEffect  } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -11,112 +11,125 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, styled, Grid,Container, Stack,TextField,Autocomplete,Select, Chip, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
-import { saveMachine } from '../../redux/slices/products/machine';
+import { getCustomers} from '../../redux/slices/customer/customer';
+import { getSites } from '../../redux/slices/customer/site';
+import { saveMachine,   getMachines } from '../../redux/slices/products/machine';
+import { getMachinestatuses } from '../../redux/slices/products/statuses';
+import { getMachinemodels} from '../../redux/slices/products/model';
+import { getSuppliers } from '../../redux/slices/products/supplier';
+import { getContacts} from '../../redux/slices/customer/contact';
+
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../components/hook-form';
+import FormProvider, {RHFSelect,RHFAutocomplete,RHFTextField,RHFMultiSelect,RHFEditor,RHFUpload,} from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-
 import { useSettingsContext } from '../../components/settings';
-// import Select from 'src/theme/overrides/Select';
 
-
-// ----------------------------------------------------------------------
-
-CustomerAddForm.propTypes = {
+MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
   readOnly: PropTypes.bool,
   currentCustomer: PropTypes.object,
 };
 
-export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
-
+export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
-
-  const { spContacts } = useSelector((state) => state.contact);
-
   const dispatch = useDispatch();
-  
   const navigate = useNavigate();
+  
+  const { spContacts } = useSelector((state) => state.contact);
+  const { machines} = useSelector((state) => state.machine);
+  const { suppliers} = useSelector((state) => state.supplier);
+  const { machinemodels} = useSelector((state) => state.machinemodel);
+  const { machinestatuses } = useSelector((state) => state.machinestatus);
+  const { customers } = useSelector((state) => state.customer);
+  const { sites} = useSelector((state) => state.site);
 
   const { enqueueSnackbar } = useSnackbar();
+  const [machineVal, setMachineVal] = useState('');
+  const [machSerVal, setMachSerVal] = useState('');
+  const [supplierVal, setSupplierVal] = useState('');
+  const [statusVal, setStatusVal] = useState('');
+  const [modelVal, setModelVal] = useState('');
+  const [customerVal, setCustomerVal] = useState('');
+  const [installVal, setInstallVal] = useState('');
+  const [billingVal, setBillingVal] = useState('');
+  const [accoVal, setAccoManVal] = useState('');
+  const [projVal, setProjManVal] = useState('');
+  const [suppVal, setSuppManVal] = useState('');
   const [currTag, setCurrTag] = useState('');
-  const [value, setValues] = useState('');
-  const [chipData, setChipData] = useState([
-    'The Shawshank Redemption',
-'The Dark Knight', 
-'12 Angry Men',
- "Schindler's List" ,
-'Pulp Fiction',
-'The Shawshank Redemption' ,
-'The Dark Knight',
-'12 Angry Men' ,
-"Schindler's List" 
- ]);
+  const [chipData, setChipData] = useState([]);
+
+ useLayoutEffect(() => {
+  dispatch(getCustomers());
+  dispatch(getMachines());
+  dispatch(getMachinestatuses());
+  dispatch(getMachinemodels());
+  dispatch(getSuppliers());
+}, [dispatch]);
+
+useLayoutEffect(() => {
+  if(customerVal !== null && customerVal._id !== undefined){
+    dispatch(getSites(customerVal._id));
+  }
+  setInstallVal(null);
+  setBillingVal(null);
+}, [dispatch, customerVal]);
+
+// console.log(machineVal)
+
+// useEffect(()=>{
+//   setMachSerVal()
+//   setMachSerVal(machSerVal?.serialNo);
+// },[machineVal])
+
   const AddMachineSchema = Yup.object().shape({
-    serialNo: Yup.string(),
-    name: Yup.string().min(5).max(40).required('Name is required')  ,
+    serialNo: Yup.string().required('Serial Number is required'),
+    name: Yup.string().min(5).max(40),
     parentMachine: Yup.string(),
     pserialNo: Yup.string(),
     supplier: Yup.string(),
     model: Yup.string(),
     status: Yup.string(),
     workOrder: Yup.string(),
+    customere:Yup.string(),
     instalationSite: Yup.string(),
     billingSite: Yup.string(),
     accountManager: Yup.string(),
     projectManager: Yup.string(),
     supportManager: Yup.string(),
-    tags: Yup.array(),
+    customerTags: Yup.array(),
     desc: Yup.string(),
   });
-console.log(value)
+
   const defaultValues = useMemo(
     () => ({
       serialNo: '',
       name: ''  ,
-      parentMachine: '',
-      pserialNo: '',
-      supplier: '',
-      model: '',
-      status: '',
+      parentMachine: machineVal._id,
+      pserialNo: machineVal?.serialNo,
+      supplier: supplierVal?._id,
+      model: modelVal?._id,
+      status: statusVal?._id,
       workOrder: '',
-      customere:'',
-      instalationSite: '',
-      billingSite: '',
-      accountManager: '',
-      projectManager: '',
-      supportManager: '',
-      tags:'',
+      customere:customerVal._id,
+      instalationSite: installVal?._id,
+      billingSite: billingVal?._id,
+      accountManager: accoVal?._id,
+      projectManager: projVal?._id,
+      supportManager: suppVal?._id,
+      customerTags: chipData,
       desc: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const top100Films = [
-    { _id: 1,
-      customer: 'The Shawshank Redemption', year: 1994 },
-    { _id: 4,
-      customer: 'The Dark Knight', year: 2008 },
-    { _id: 5,
-      customer: '12 Angry Men', year: 1957 },
-    { _id: 6,
-      customer: "Schindler's List", year: 1993 },
-    { _id: 7,
-      customer: 'Pulp Fiction', year: 1994 }
-  ]
+
   const methods = useForm({
     resolver: yupResolver(AddMachineSchema),
     defaultValues,
@@ -130,51 +143,66 @@ console.log(value)
     formState: { isSubmitting },
   } = methods;
 
-  useLayoutEffect(() => {
-    // dispatch(getSPContacts());
-  }, [dispatch]);
-
   const ListItem = styled('li')(({ theme }) => ({
     margin: theme.spacing(0.5),
   }));
+const onSubmit = async (data) => {
+  data.parentMachine = machineVal?._id || null
+  data.pserialNo = machineVal?.serialNo || null
+  data.supplier = supplierVal?._id || null
+  data.model = modelVal?._id || null
+  data.status = statusVal?._id || null
+  data.customer =customerVal._id || null
+  data.instalationSite = installVal?._id || null
+  data.billingSite = billingVal?._id || null
+  data.accountManager = accoVal?._id || null
+  data.projectManager = projVal?._id || null
+  data.supportManager = suppVal?._id || null
+  data.customerTags = chipData
 
-  const onSubmit = async (data) => {
-    console.log(data);
-      try{
-        // await dispatch(saveMachine(data));
-        reset();
-        enqueueSnackbar('Create success!');
-        navigate(PATH_DASHBOARD.customer.view(null));
-      } catch(error){
-        enqueueSnackbar('Saving failed!');
-        console.error(error);
-      }
-  };
-  const handleDelete = (data,index) => {
-    const arr = [...chipData]
-    arr.splice(index,1)
-    console.log(data)
-    setChipData(arr)
-  };
-
-  const handleKeyPress = (e) => {
-    setCurrTag(currTag.trim())
-    if (e.keyCode === 13 || e.key === 'Enter') {
-      console.log("eenter presed!")
-      e.preventDefault();
-      if(currTag.trim().length > 4){
-        currTag.trim();
-        setChipData((oldState) => [...oldState, currTag.trim()]);
-        setCurrTag('')
-      }
-      // else{
-      //   const AddTag = Yup.object().shape({
-      //     tag: Yup.string().min(4).required('Tag is required')
-      //   })
-      //   yupResolver(AddTag)
-      // }
+  console.log(data);
+    try{
+      await dispatch(saveMachine(data));
+      setMachineVal('');
+      setSupplierVal('');
+      setModelVal('');
+      setStatusVal('');
+      setCustomerVal('');
+      setInstallVal('');
+      setBillingVal('');
+      setAccoManVal('');
+      setProjManVal('');
+      setSuppManVal('');
+      setChipData([]);
+      setCurrTag('');
+      reset();
+      enqueueSnackbar('Create success!');
+      // navigate(PATH_DASHBOARD.customer.view(null));
+    } catch(error){
+      enqueueSnackbar('Saving failed!');
+      console.error(error);
     }
-  };
+};
+
+const handleDelete = (data,index) => {
+  const arr = [...chipData]
+  arr.splice(index,1)
+  // console.log(data)
+  setChipData(arr)
+};
+
+const handleKeyPress = (e) => {
+  setCurrTag(currTag.trim())
+  if (e.keyCode === 13 || e.key === 'Enter') {
+    // console.log("Enter presed!") 
+    e.preventDefault();
+    if(currTag.trim().length > 0){
+      currTag.trim();
+      setChipData((oldState) => [...oldState, currTag.trim()]);
+      setCurrTag('')
+    }
+  }
+};
 
   const handleChange = (e) => {
 		setCurrTag(e.target.value);
@@ -197,126 +225,155 @@ console.log(value)
             <Stack spacing={6}>
             <Box sx={{mb:-3}} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="serialNo" label="Serial No." />
-
               <RHFTextField name="name" label="Name" />
-
-              <RHFSelect native name="parentMachine" label="Parent Machine">
-                      { 
-                      spContacts.length > 0 && spContacts.map((option) => (
-                      <option key={option._id} value={option._id}>
-                        {option.firstName} {option.lastName}
-                      </option>
-                    ))}
-              </RHFSelect>
-
-              <RHFTextField name="pserialNo" label="Parent Machine Serial No." />
+              <Autocomplete
+                // freeSolo
+                value={machineVal || null}
+                options={machines}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setMachineVal(newValue);
+                  
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Parent Machine" />}
+                ChipProps={{ size: 'small' }}
+              />
+              {/* <RHFTextField name="pserialNo" value={machineVal?.serialNo} label="Parent Machine Serial No." /> */}
+              <Autocomplete
+                // freeSolo
+                disabled
+                value={machineVal || null}
+                options={machineVal}
+                getOptionLabel={(option) => option.serialNo}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Parent Machine Serial No." />}
+                ChipProps={{ size: 'small' }}
+              />
             </Box>
-
-             <Box  rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
-             
-{/* ------------------------start Searchable dropdown----------------------------------- */}
-{/* <div>{`value: ${value !== null ? `'${value}'` : "null"}`}</div> */}
-
-<Autocomplete
-
-  // freeSolo
-  value={top100Films[value] || null}
-  options={top100Films}
-  getOptionLabel={(option) => option.customer}
-  onChange={(event, newValue) => {
-    setValues(newValue?._id);
-  }}
-  id="controllable-states-demo"
-  renderInput={(params) => <TextField {...params}  label="Supplier" />}
-  ChipProps={{ size: 'small' }}
-/>
-{/* -------------------------------end Searchable dropdown---------------------------------- */}
-
-
-              <RHFSelect native name="model" label="Model">
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
+            <Box  rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
+              <Autocomplete
+                // freeSolo
+                value={supplierVal || null}
+                options={suppliers}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setSupplierVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Supplier" />}
+                ChipProps={{ size: 'small' }}
+              />
               
-              <RHFSelect native name="status" label="Status">
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
+              <Autocomplete
+                // freeSolo
+                value={modelVal || null}
+                options={machinemodels}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setModelVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Model" />}
+                ChipProps={{ size: 'small' }}
+              />
+              
+              <Autocomplete
+                // freeSolo
+                value={statusVal || null}
+                options={machinestatuses}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setStatusVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Status" />}
+                ChipProps={{ size: 'small' }}
+              />
               <RHFTextField name="workOrder" label="Work Order/ Purchase Order" />
             </Box>
-
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
-              <RHFSelect native name="customer" label="Customer" sx={{ my:-3}}>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
+              <Autocomplete sx={{ my:-3}}
+                value={customerVal || null}
+                options={customers}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setCustomerVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Customer" />}
+                ChipProps={{ size: 'small' }}
+              />
             </Box>
-
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
             
-              <RHFSelect native name="instalationSite" label="Instalation Site">
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="billingSite" label="Billing Site">
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="accountManager" label="Account Manager">
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="projectManager" label="Project Manager">
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="supportManager" label="Support Manager">
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
+              <Autocomplete 
+                // freeSolo
+                value={installVal || null}
+                options={sites}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setInstallVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Instalation Site" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={billingVal || null}
+                options={sites}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setBillingVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Billing Site" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={accoVal || null}
+                options={spContacts}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setBillingVal(newValue?._id);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={projVal || null}
+                options={spContacts}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setBillingVal(newValue?._id);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={suppVal || null}
+                options={spContacts}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setBillingVal(newValue?._id);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+            
               </Box>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
                 <RHFTextField name="desc" label="Description" minRows={8} multiline sx={{ my:-3}}/>
               </Box>
 {/* -------------------------start add chips------------------------- */}
-<RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
+{/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
 
 <Card
       sx={{
@@ -342,10 +399,9 @@ console.log(value)
             />
           </ListItem>
        )}
-       {/* <TextField name="tag" sx={{borderColor:'light gray',
-        borderWidth:'1px',}}   variant="standard"  
+       <TextField name="tag" sx={{pt:1}}   variant="standard"  
         InputProps={{disableUnderline: true,}} 
-        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
+        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
     </Card>
 {/* -------------------------end add chips------------------------- */}
               </Stack>

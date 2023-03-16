@@ -168,27 +168,17 @@ export function saveMachine(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-        //   tradingName: params.tradingName,
-        //   site: {
-        //     name: params.name,
-        //     address: {},
-        //   },
-        //   technicalContact: {},
-        //   billingContact: {},
         };
         /* eslint-enable */
-
-        if(params.desc){
-          data.desc = params.desc;        
-        }
+        
         if(params.serialNo){
           data.serialNo = params.serialNo;        
         }
         if(params.parentMachine){
           data.parentMachine = params.parentMachine;        
         }
-        if(params. pseriolNo){
-          data. pseriolNo = params. pseriolNo;        
+        if(params.pserialNo){
+          data.parentSerialNo = params.pserialNo;        
         }
         if(params.status){
           data.status = params.status;        
@@ -202,83 +192,34 @@ export function saveMachine(params) {
         if(params.workOrder){
           data.workOrder = params.workOrder;        
         }
-        if(params.instalationSite){
-            data.instalationSite = params.instalationSite;        
+        if(params.customer){
+          data.customer = params.customer;        
         }
         if(params.billingSite){
           data.billingSite = params.billingSite;        
         }
-        if(params.operators){
-            data.operators = params.operators;        
+        if(params.instalationSite){
+          data.instalationSite = params.instalationSite;        
         }
+        // if(params.operators){
+        //     data.operators = params.operators;        
+        // }
         if(params.accountManager){
           data.accountManager = params.accountManager;        
         }
         if(params.projectManager){
             data.projectManager = params.projectManager;        
-          }
-          if(params.supportManager){
-              data.supportManager = params.supportManager;        
-          }
-          if(params.license){
-            data.license = params.license;        
-          }
-          if(params.instalationSite){
-              data.instalationSite = params.instalationSite;        
-          }
-          if(params.image){
-            data.image = params.image;        
-          }
-          if(params.tools){
-            data.tools = params.tools;        
-          }
-          if(params.itags){
-            data.itags = params.itags;        
-          }
-          if(params.ctags){
-            data.ctags = params.ctags;        
-          }
-
-
-
-
-
-
-
-
-
-        
-        
-
-        // if(params.firstName){
-        //   data.billingContact.firstName = params.firstName;
-        //   data.technicalContact.firstName = params.firstName;
-        // }
-
-        // if(params.lastName){
-        //   data.billingContact.lastName = params.lastName;
-        //   data.technicalContact.lastName = params.lastName;        
-
-        // }
-
-        // if(params.title){
-        //   data.billingContact.title = params.title;
-        //   data.technicalContact.title = params.title;
-
-        // }
-
-        // if(params.contactPhone){
-        //   data.billingContact.title = params.title;
-        //   data.technicalContact.title = params.title;        
-
-        // }
-
-        // if(params.contactEmail){
-        //   data.billingContact.contactEmail = params.contactEmail;
-        //   data.technicalContact.contactEmail = params.contactEmail;        
-
-        // }
-
+        }
+        if(params.supportManager){
+            data.supportManager = params.supportManager;        
+        }
+        if(params.desc){
+          data.description = params.desc;        
+        }
+        if(params.customerTags){
+          data.customerTags = params.customerTags;        
+        }
+console.log("Data for the subbmission:",data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         console.log('response', response.data.Machine);

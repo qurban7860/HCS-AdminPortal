@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useCallback  } from 'react';
+import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -8,26 +8,25 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid,Container, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid,Container, Stack, Typography, DialogTitle, Dialog, InputAdornment , Table, Button, Tooltip, TableBody, IconButton, TableContainer,} from '@mui/material';
+import {useTable,getComparator,emptyRows,TableNoData,TableSkeleton,TableEmptyRows,TableHeadCustom,TableSelectedAction,TablePaginationCustom} from '../../components/table';
+import Iconify from '../../components/iconify';
+import Scrollbar from '../../components/scrollbar';
+import ConfirmDialog from '../../components/confirm-dialog';
+import MachineListTableRow from './MachineListTableRow';
+import MachineListTableToolbar from './MachineListTableToolbar';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
-import { saveMachine } from '../../redux/slices/products/machine';
+import { getMachines, deleteMachine } from '../../redux/slices/products/machine';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset
-import { countries } from '../../assets/data';
 // util
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
@@ -36,155 +35,144 @@ import { useSettingsContext } from '../../components/settings';
 
 
 // ----------------------------------------------------------------------
-
-CustomerAddForm.propTypes = {
-  isEdit: PropTypes.bool,
-  readOnly: PropTypes.bool,
-  currentCustomer: PropTypes.object,
-};
-
-const CONTACT_TYPES = [
-  { value: 'technical', label: 'Technical' },
-  { value: 'financial', label: 'Financial' },
-  { value: 'support', label: 'Support' },
+const STATUS_OPTIONS = [
+  // { id: '1', value: 'Order Received' },
+  // { id: '2', value: 'In Progress' },
+  // { id: '3', value: 'Ready For Transport' },
+  // { id: '4', value: 'In Freight' },
+  // { id: '5', value: 'Deployed' },
+  // { id: '6', value: 'Archived' },
+];
+const TABLE_HEAD = [
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'serialNumber', label: 'Serial Number', align: 'left' },
+  { id: 'pareentMachine', label: 'Parent Machine', align: 'left' },
+  { id: 'model', label: 'Model', align: 'left' },
+  { id: 'status', label: 'Status', align: 'left' },
+  { id: 'active', label: 'Active', align: 'left' },
+  { id: 'created_at', label: 'Created At', align: 'left' },
 ];
 
-export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
-
-  const MACHINE_TOOLS = [
-    { value: 'technical', label: 'Technical' },
-    { value: 'financial', label: 'Financial' },
-    { value: 'support', label: 'Support' },
-  ];
-
+export default function MachineList() {
+  const {dense,page,order,orderBy,rowsPerPage,setPage,selected,setSelected,onSelectRow,onSelectAllRows,onSort,onChangeDense,onChangePage,onChangeRowsPerPage,} = useTable({ defaultOrderBy: 'createdAt', });
   const { userId, user } = useAuthContext();
-
-  const { spContacts } = useSelector((state) => state.contact);
-
+  const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  
+  const { machines, isLoading, error, initial, responseMessage } = useSelector((state) => state.machine);
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
-  const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required')  ,
-    desc: Yup.string(),
-    serialNo: Yup.string(),
-    parentMachine: Yup.string(),
-    pseriolNo: Yup.string(),
-    status: Yup.string(),
-    supplier: Yup.string(),
-    model: Yup.string(),
-    workOrder: Yup.string(),
-    instalationSite: Yup.string(),
-    billingSite: Yup.string(),
-    operators: Yup.string(),
-    accountManager: Yup.string(),
-    projectManager: Yup.string(),
-    supportManager: Yup.string(),
-    license: Yup.string(),
-    image: Yup.mixed().nullable(true),
-    tools: Yup.array(),
-    itags: Yup.string(),
-    ctags: Yup.string(),
-
-  });
-
-  const defaultValues = useMemo(
-    () => ({
-      name: ''  ,
-    desc: '',
-    serialNo: '',
-    parentMachine: '',
-    pseriolNo: '',
-    status: '',
-    supplier: '',
-    model: '',
-    workOrder: '',
-    instalationSite: '',
-    billingSite: '',
-    operators: '',
-    accountManager: '',
-    projectManager: '',
-    supportManager: '',
-    license: '',
-    image: null,
-    tools: [],
-    itags: '',
-    ctags: '',
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const methods = useForm({
-    resolver: yupResolver(AddMachineSchema),
-    defaultValues,
-  });
-
-  const {
-    reset,
-    watch,
-    setValue,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  const values = watch();
-
   useLayoutEffect(() => {
-    // dispatch(getSPContacts());
+    dispatch(getMachines());
   }, [dispatch]);
-
-
-  const onSubmit = async (data) => {
-    console.log(data);
-      try{
-        await dispatch(saveMachine(data));
-        reset();
-        enqueueSnackbar('Create success!');
-        navigate(PATH_DASHBOARD.customer.view(null));
-      } catch(error){
-        enqueueSnackbar('Saving failed!');
-        console.error(error);
-      }
-  };
-
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-
-      if (file) {
-        setValue('image', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
-  const handleRemoveFile = () => {
-    setValue('image', null);
-  };
-
   const { themeStretch } = useSettingsContext();
+  const [filterName, setFilterName] = useState('');
+  const [filterStatus, setFilterStatus] = useState([]);
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  useEffect(() => {
+    if (initial) {
+      if (machines && !error) {
+        enqueueSnackbar(responseMessage);
+      } else {
+        enqueueSnackbar(error, { variant: `error` });
+      }
+      setTableData(machines);
+    }
+  }, [machines, error, responseMessage, enqueueSnackbar, initial]);
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+    filterStatus,
+  });
+
+  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+  const denseHeight = dense ? 60 : 80;
+
+  const isFiltered = filterName !== '' || !!filterStatus.length;
+
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleFilterName = (event) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
+
+  const handleFilterStatus = (event) => {
+    setPage(0);
+    setFilterStatus(event.target.value);
+  };
+
+  const handleDeleteRow = async (id) => {
+    try {
+      console.log(id);
+      await dispatch(deleteMachine(id));
+      dispatch(getMachines());
+      setSelected([]);
+
+      if (page > 0) {
+        if (dataInPage.length < 2) {
+          setPage(page - 1);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const handleDeleteRows = (selectedRows) => {
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+    setSelected([]);
+    setTableData(deleteRows);
+
+    if (page > 0) {
+      if (selectedRows.length === dataInPage.length) {
+        setPage(page - 1);
+      } else if (selectedRows.length === dataFiltered.length) {
+        setPage(0);
+      } else if (selectedRows.length > dataInPage.length) {
+        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+        setPage(newPage);
+      }
+    }
+  };
+
+  const handleEditRow = (id) => {
+    console.log(id);
+    // navigate(PATH_DASHBOARD.machine.edit(id));
+  };
+
+  const handleViewRow = (id) => {
+    // navigate(PATH_DASHBOARD.machine.view(id));
+  };
+
+  const handleResetFilter = () => {
+    setFilterName('');
+    setFilterStatus([]);
+  };
 
   return (
     <>
-     <Container maxWidth={themeStretch ? false : 'xl'}>
-      <Grid container spacing={3}>
-        <MachineDashboardNavbar/>
-      </Grid>
-      <CustomBreadcrumbs
-            heading="Machine List"
-            sx={{ mb: -2, mt: 3 }}
-          />
-        {/* <Grid item xs={18} md={12} sx={{mt: 3}}>        
-        </Grid> */}
+           <Container maxWidth={false}>
+        <Grid container spacing={3}>
+          {/* <MachineDashboardNavbar/> */}
+        </Grid>
+        <CustomBreadcrumbs
+          heading="Machines"
+          sx={{ mb: -3, mt: 3 }}
+        />
         <Card sx={{mt: 3 }}>
-          {/* <CustomerListTableToolbar
+          <MachineListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -236,7 +224,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <CustomerListTableRow
+                        <MachineListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
@@ -270,9 +258,55 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             //
             dense={dense}
             onChangeDense={onChangeDense}
-          /> */}
+          />
         </Card>
-    </Container>
+      </Container>
+
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete <strong> {selected.length} </strong> items?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRows(selected);
+              handleCloseConfirm();
+            }}
+          >
+            Delete
+          </Button>
+        }
+      />
     </>
   );
+}
+function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+
+  if (filterName) {
+    inputData = inputData.filter(
+      (machine) => machine.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    );
+  }
+
+  if (filterStatus.length) {
+    inputData = inputData.filter((machine) => filterStatus.includes(machine.status));
+  }
+
+  return inputData;
 }

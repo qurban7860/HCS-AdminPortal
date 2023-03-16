@@ -8,7 +8,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import Select from "react-select";
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
