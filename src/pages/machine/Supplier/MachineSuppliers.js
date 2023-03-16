@@ -14,7 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { createSuppliers } from '../../../redux/slices/supplier';
+import { createSuppliers } from '../../../redux/slices/products/supplier';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -82,7 +82,7 @@ export default function MachineSuppliers() {
       region: '',
       country: '',
       city: '',
-      isDisabled: true,
+      isDisabled: false,
       
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -143,28 +143,20 @@ export default function MachineSuppliers() {
 
   const { themeStretch } = useSettingsContext();
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-      <Helmet>
+    <>
+    <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Helmet>
         <title> Machine: Supplier | Machine ERP</title>
       </Helmet>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <div style={{paddingTop:'20px'}}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      
       <CustomBreadcrumbs 
           heading="Suppliers"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            { name: 'Supplier' },
-          ]}
+          sx={{ mb: -2, mt: 3 }}
         />
 
-        </div>
-    
-      </Container>
-
-        <Grid item xs={18} md={12}>
-            <Card sx={{ p: 3, mb: 3, mt: -3 }}>
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
+            <Card sx={{ p: 3, mt: 3}}>
             <Stack spacing={3}>
             <Box
               rowGap={2}
@@ -182,7 +174,7 @@ export default function MachineSuppliers() {
               </Card>
 
 
-              <Card sx={{ p: 3, mb: 3 }}>
+              <Card sx={{ p: 3, mt: 3}}>
               <Stack spacing={3}>
               <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
                 Contact Information
@@ -207,7 +199,7 @@ export default function MachineSuppliers() {
               </Stack>
               </Card>
               {/* //address */}
-              <Card sx={{ p: 3, mb: 3 }}>
+              <Card sx={{ p: 3, mt: 3}}>
               <Stack spacing={3}>
               <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
                 Address Information
@@ -265,7 +257,9 @@ export default function MachineSuppliers() {
             
           
           </Grid>
-        </Grid>
+        
     </FormProvider>
+    </Container>
+    </>
   );
 }

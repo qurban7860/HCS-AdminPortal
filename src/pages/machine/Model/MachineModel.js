@@ -1,20 +1,22 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback } from 'react';
+import { useLayoutEffect, useMemo, useCallback, useState } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 // form
+// import Select from "react-select";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getMachinemodels, createMachinemodels } from '../../../redux/slices/model';
-import { getCategories } from '../../../redux/slices/category';
+import { getMachinemodels, createMachinemodels } from '../../../redux/slices/products/model';
+import { getCategories } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -50,6 +52,7 @@ export default function MachineModel() {
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
+  const [modelVal, setModelVal] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -65,7 +68,7 @@ export default function MachineModel() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isDisabled: false,
       createdAt: '',
       category: '',
     }),
@@ -94,6 +97,7 @@ export default function MachineModel() {
 
 
   const onSubmit = async (data) => {
+    data.category = modelVal
       try{ 
         await dispatch(createMachinemodels(data));
         reset();
@@ -111,28 +115,20 @@ export default function MachineModel() {
 
   const { themeStretch } = useSettingsContext();
   return (
+    <>
+    <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
       <Helmet>
         <title> Machine: Models | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <div style={{paddingTop:'20px'}}>
       <CustomBreadcrumbs 
           heading="Model"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            { name: 'Machine Model' },
-          ]}
+          sx={{ mb: -2, mt: 3 }}
         />
-
-        </div>
-    
-      </Container>
-
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3, mt:-6 }}>
+        
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
+          <Card sx={{ p: 3}}>
             <Stack spacing={3}>
             <Box
               rowGap={2}
@@ -146,7 +142,35 @@ export default function MachineModel() {
 
               <RHFTextField name="name" label="Machine Model" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSelect native name="category" label="Category">
+
+              <Autocomplete
+                value={modelVal || null}
+                options={categories}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setModelVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Categories" />}
+                ChipProps={{ size: 'small' }}
+              />
+
+
+
+              {/* <Autocomplete
+                freeSolo
+                options={categories}
+                onChange={(event, newValue) => {
+                  setValues(newValue?._id);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Categories" />}
+                ChipProps={{ size: 'small' }}
+              /> */}
+
+
+
+              {/* <RHFSelect native name="category" label="Category">
                     <option value="" defaultValue/>
                     { 
                     categories.length > 0 && categories.map((option) => (
@@ -154,7 +178,27 @@ export default function MachineModel() {
                       {option.name}
                     </option>
                   ))}
-              </RHFSelect>
+              </RHFSelect> */}
+              
+              {/* <Select 
+                // sx={{ paddingTop: '75%', borderRadius: 1.5 }} 
+                // name="category"
+                label="Category"
+                // options={categories.map((option) => ({
+                //   value: option._id,
+                //   label: option.name,
+                // }))}
+                // isClearable
+                // defaultValue={null}
+                // onChange={(option) => setValue("category", option?.value)}
+                // // sx={{ 
+                // //   borderColor: "hsl(210deg 13% 88%)",
+                // //   borderRadius: "8px",
+                // //   p: 8,
+                // //    }}
+              /> */}
+
+
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"
@@ -179,7 +223,9 @@ export default function MachineModel() {
             </Card>
           
           </Grid>
-        </Grid>
+        
     </FormProvider>
+    </Container>
+    </>
   );
 }

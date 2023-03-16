@@ -1,25 +1,24 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
-import axios from '../../utils/axios';
-import { CONFIG } from '../../config-global';
+import axios from '../../../utils/axios';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
 const initialState = {
   intial: false,
-  machinemodelEditFormFlag: false,
+  techparamEditFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  machinemodels: [],
-  machinemodel: {},
-  machinemodelParams: {
-  }
+  techparamcategories: [],
+  techparamcategory: {},
+  techparamcategoryParams: {}
 };
 
 const slice = createSlice({
-  name: 'machinemodel',
+  name: 'techparamcategory', 
   initialState,
   reducers: {
     // START LOADING
@@ -28,13 +27,13 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setMachinemodelsEditFormVisibility(state, action){
+    setTechparamcategoryEditFormVisibility(state, action){
       console.log('toggle', action.payload);
-      state.machinemodelEditFormFlag = action.payload;
+      state.techparamcategoryEditFormFlag = action.payload;
     },
     
     // RESET CUSTOMER
-    resetMachinemodel(state){
+    resetTechparamcategory(state){
       state.machine = {};
       state.responseMessage = null;
       state.success = false;
@@ -50,22 +49,22 @@ const slice = createSlice({
     },
 
     // GET Customers
-    getMachinemodelsSuccess(state, action) {
+    getTechparamcategoriesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machinemodels = action.payload;
+      state.techparamcategories = action.payload;
       state.initial = true;
     },
 
     // GET Customer
-    getMachinemodelSuccess(state, action) {
+    getTechparamcategorySuccess(state, action) {
       
       state.isLoading = false;
       state.success = true;
       console.log("IM DONE",action.payload)
-      state.machinemodel = action.payload;
+      state.techparamcategory = action.payload;
       state.initial = true;
-      console.log('statusSuccessSlice', state.machinestatus);
+      console.log('techparamcategorySuccessSlice', state.techparamcategory);
     },
 
 
@@ -92,8 +91,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setMachinemodelsEditFormVisibility,
-  resetMachineModel,
+  setTecparamEditFormVisibility,
+  resetTechparamcategory,
   getCart,
   addToCart,
   setResponseMessage,
@@ -106,14 +105,14 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createMachinemodels (supplyData){
+export function createTechparamcategories (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/models`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From model data");
+      console.log(response,"From techparamcategories data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -124,16 +123,17 @@ export function createMachinemodels (supplyData){
 // ----------------------------------------------------------------------
 
 
-export function getMachinemodels (){
+export function getTechparamcategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
-
-      dispatch(slice.actions.getMachinemodelsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('model loaded successfully'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories`);
+      
+      dispatch(slice.actions.getTechparamcategoriesSuccess(response.data));
+      console.log('data', response.data);
+      dispatch(slice.actions.setResponseMessage('techparamcategories loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From model data");
+      console.log(response,"From techparamcategories data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -142,14 +142,14 @@ export function getMachinemodels (){
 }
 // ----------------------------------------------------------------------
  
-export function getMachineModel(id) {
+export function getTechparamcategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/models/${id}`);
-      console.log('slice working get model',response);
-      dispatch(slice.actions.getMachinemodelSuccess(response.data));
-      console.log('requested model', response.data);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
+      console.log('slice working',response);
+      dispatch(slice.actions.getTechparamcategorySuccess(response.data));
+      console.log('requested techparam', response.data);
     } catch (error) {
       console.error(error,"Slice Error");
       dispatch(slice.actions.hasError(error));
@@ -157,16 +157,18 @@ export function getMachineModel(id) {
   };
 }
 
-export function deleteMachinemodel(id) {
+export function deleteTechparamcategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete model id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/models/${id}`);
+      console.log(id[0],'Delete techparam id xyzzzzzzz');
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
+      // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
-      
+      // get again suppliers //search
       
       console.log(response);
+      
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -176,31 +178,33 @@ export function deleteMachinemodel(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveMachinemodel(params) {
+export function saveTechparamcategory(params) {
     return async (dispatch) => {
       console.log('params', params);
-      dispatch(slice.actions.resetMachinemodel());
+      dispatch(slice.actions.resetTechparam());
       dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
         let data = {
           name: params.name,
-         
+          isDisabled: params?.isDisabled,
+          // tradingName: params.tradingName,
+          // site: {
+          //   name: params.name,
+          //   address: {},
+          // },
+          // technicalContact: {},
+          // billingContact: {},
         };
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
           }
-          if(params.displayOrderNo){
-            data.displayOrderNo = params.displayOrderNo;
-          }
-          if(params.categories){
-            data.categories.name = params.categories;
-          }
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
+        
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`, data);
 
-        console.log('response', response.data.Machinemodel);
-        dispatch(slice.actions.getMachinemodelsSuccess(response.data.Machinemodel));
+        console.log('response', response.data.Techparam);
+        dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error));
@@ -211,7 +215,7 @@ export function saveMachinemodel(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachinemodel(params) {
+export function updateTechparamcategory(params) {
   console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -222,29 +226,27 @@ export function updateMachinemodel(params) {
       let data = {
         id: params.id,
         name: params.name,
+        
+        // tradingName: params.tradingName
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
       }
-
-      if(params.displayOrderNo){
-        data.displayOrderNo = params.displayOrderNo;
-      }
-      if(params.categories){
-        data.categories.name = params.categories;
+      if(params.isDisabled){
+        data.isDisabled = params.isDisabled;
       }
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${params.id}`,
         data
       );
       console.log(response,"From update success")
-      dispatch(getMachineModel(params.id));
-      dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
+      dispatch(getTechparamcategory(params.id));
+      dispatch(slice.actions.setTechparamcategoriesEditFormVisibility(false));
 
     } catch (error) {
-      console.error(error,"from model");
+      console.error(error,"from updateTechparam");
       dispatch(slice.actions.hasError(error));
     }
   };

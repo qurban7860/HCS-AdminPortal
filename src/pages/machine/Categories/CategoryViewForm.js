@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getCategory, getCategories, setCategoryEditFormVisibility } from '../../../redux/slices/category';
+import { getCategory, getCategories, setCategoryEditFormVisibility } from '../../../redux/slices/products/category';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -76,11 +76,11 @@ export default function CategoryViewForm({ currentCategory = null }) {
           onClick={() => { 
               toggleEdit(); 
           }}
-          variant="contained"
-          size="medium"
+          variant="outlined"
+          
           startIcon={<Iconify icon="eva:edit-fill" />}
         >
-          Edit Category
+          Edit
         </Button>
 
       </Stack>

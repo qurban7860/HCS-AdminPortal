@@ -1,26 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
-import axios from '../../utils/axios';
-import { CONFIG } from '../../config-global';
+import axios from '../../../utils/axios';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
 const initialState = {
   intial: false,
-  toolEditFormFlag: false,
+  categoryEditFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  tools: [],
-  tool: {},
-  toolParams: {
+  categories: [],
+  category: {},
+  categoryParams: {
 
   }
 };
 
 const slice = createSlice({
-  name: 'tool',
+  name: 'category',
   initialState,
   reducers: {
     // START LOADING
@@ -29,13 +29,13 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setToolEditFormVisibility(state, action){
+    setCategoryEditFormVisibility(state, action){
       console.log('toggle', action.payload);
-      state.toolEditFormFlag = action.payload;
+      state.categoryEditFormFlag = action.payload;
     },
-    
+  
     // RESET CUSTOMER
-    resetTool(state){
+    resetCategory(state){
       state.machine = {};
       state.responseMessage = null;
       state.success = false;
@@ -51,22 +51,21 @@ const slice = createSlice({
     },
 
     // GET Customers
-    getToolsSuccess(state, action) {
+    getCategoriesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.tools = action.payload;
+      state.categories = action.payload;
       state.initial = true;
     },
 
     // GET Customer
-    getToolSuccess(state, action) {
+    getCategorySuccess(state, action) {
       
       state.isLoading = false;
       state.success = true;
-      console.log("IM DONE",action.payload)
-      state.tool = action.payload;
+      state.category = action.payload;
       state.initial = true;
-      console.log('toolSuccessSlice', state.tool);
+      console.log('categorySuccessSlice', state.category);
     },
 
 
@@ -93,8 +92,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setToolEditFormVisibility,
-  resetTool,
+  setCategoryEditFormVisibility,
+  resetCategory,
   getCart,
   addToCart,
   setResponseMessage,
@@ -107,14 +106,14 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createTools (supplyData){
+export function createCategorys (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     console.log(supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From tool data");
+      console.log(response,"From category data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -125,16 +124,16 @@ export function createTools (supplyData){
 // ----------------------------------------------------------------------
 
 
-export function getTools (){
+export function getCategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`);
 
-      dispatch(slice.actions.getToolsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
+      dispatch(slice.actions.getCategoriesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From tool data");
+      console.log(response,"From category data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -142,31 +141,32 @@ export function getTools (){
   }
 }
 // ----------------------------------------------------------------------
- 
-export function getTool(id) {
+
+export function getCategory(id) {
+  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools/${id}`);
-      console.log('slice working get Tool',response);
-      dispatch(slice.actions.getToolSuccess(response.data));
-      console.log('requested tool', response.data);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories/${id}`);
+      console.log('Response',response.data)
+      dispatch(slice.actions.getCategorySuccess(response.data));
+      console.log('requested categories', response.data);
     } catch (error) {
-      console.error(error,"Slice Error");
+      console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
-export function deleteTool(id) {
+export function deleteCategories(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete tool id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/tools/${id}`);
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
+      console.log(id[0],'Delete categories id xyzzzzzzz');
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/categories/${id}`);
+     
       dispatch(slice.actions.setResponseMessage(response.data));
-      // get again suppliers //search
+      
       
       console.log(response);
       // console.log(CONFIG.SERVER_URL[0])
@@ -180,28 +180,27 @@ export function deleteTool(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveTool(params) {
+export function saveCategory(params) {
     return async (dispatch) => {
       console.log('params', params);
-      dispatch(slice.actions.resetTool());
+      dispatch(slice.actions.resetCategory());
       dispatch(slice.actions.startLoading());
       try {
+        
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params?.isDisabled,
-          
+          isDisabled: !(params.isDisabled),
         };
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
           }
-
         
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`, data);
 
-        console.log('response', response.data.Tool);
-        dispatch(slice.actions.getToolsSuccess(response.data.Tool));
+        console.log('response', response.data.Category);
+        dispatch(slice.actions.getCategoriesSuccess(response.data.Category));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error));
@@ -212,7 +211,7 @@ export function saveTool(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateTool(params) {
+export function updateCategory(params) {
   console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -223,7 +222,6 @@ export function updateTool(params) {
       let data = {
         id: params.id,
         name: params.name,
-        
       };
      /* eslint-enable */
      if(params.description){
@@ -234,15 +232,18 @@ export function updateTool(params) {
       }
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
+      
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${params.id}`,
         data
       );
-      console.log(response,"From update success")
-      dispatch(getTool(params.id));
-      dispatch(slice.actions.setToolsEditFormVisibility(false));
+
+      dispatch(getCategories(params.id));
+      dispatch(slice.actions.setCategoryEditFormVisibility(false));
+
+      // this.updateCustomerSuccess(response);
 
     } catch (error) {
-      console.error(error,"from updateTool");
+      console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };

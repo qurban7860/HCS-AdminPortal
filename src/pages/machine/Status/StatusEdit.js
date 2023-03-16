@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
-import { getMachinestatuses, getMachineStatus} from '../../../redux/slices/statuses';
+import { getMachinestatuses, getMachineStatus} from '../../../redux/slices/products/statuses';
 import StatusEditForm from './StatusEditForm';
 // redux
 
@@ -45,6 +45,7 @@ export default function StatusEdit() {
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Status"
+          sx={{ mb: -2, mt: 3 }}
         />
 
         <StatusEditForm/>

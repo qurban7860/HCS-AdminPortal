@@ -9,11 +9,11 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Button, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getCustomers } from '../../../redux/slices/customer';
+import { getCustomers } from '../../../redux/slices/customer/customer';
 
-import { saveContact, setFormVisibility } from '../../../redux/slices/contact';
+import { saveContact, setFormVisibility } from '../../../redux/slices/customer/contact';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -119,6 +119,10 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       }
   };
 
+  const toggleCancel = () => 
+    {
+      dispatch(setFormVisibility(false));
+    };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -155,11 +159,29 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               
               </Box>
 
-              <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(4, 1fr)',
+                }}
+              > 
+              
                 <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
                   Save Contact
                 </LoadingButton>
-              </Stack>
+              
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+
+            </Box>
 
             </Stack>
             

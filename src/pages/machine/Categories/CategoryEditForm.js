@@ -15,7 +15,7 @@ import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dia
 // global
 
 // slice
-import { updateCategory, setCategoryEditFormVisibility, getCategory, getCategories } from '../../../redux/slices/category';
+import { updateCategory, setCategoryEditFormVisibility, getCategory, getCategories } from '../../../redux/slices/products/category';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';

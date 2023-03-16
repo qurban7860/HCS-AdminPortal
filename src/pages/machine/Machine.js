@@ -1,47 +1,32 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-// @mui
+import { useNavigate,useParams, Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid } from '@mui/material';
-// _mock_
-import {
-  _appFeatured,
-  _appAuthors,
-  _appInstalled,
-  _appRelated,
-  _appInvoices,
-  _appManagers,
-} from '../../_mock/arrays';
-// components
-import { useSettingsContext } from '../../components/settings';
-// sections
-import {
-  AppNewInvoice,
-  AppTopRelated,
-  AppAreaInstalled,
-  AppCurrentDownload,
-} from '../../sections/@dashboard/general/app';
-// assets
-import { SeoIllustration } from '../../assets/illustrations';
-
+import { Container, Grid, Card } from '@mui/material';
+import List from '@mui/material/List';
+import ListSubheader from '@mui/material/ListSubheader';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import CategoryIcon from '@mui/icons-material/Category';
+import ModelTrainingIcon from '@mui/icons-material/ModelTraining';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import Diversity1Icon from '@mui/icons-material/Diversity1';
+import FlareIcon from '@mui/icons-material/Flare';
+import ClassIcon from '@mui/icons-material/Class';
+import BuildCircleIcon from '@mui/icons-material/BuildCircle';
+import { PATH_MACHINE } from '../../routes/paths';
+import {AppCurrentDownload,} from '../../sections/@dashboard/general/app';
 import { useDispatch } from '../../redux/store';
-
-// import { getSites } from '../../redux/slices/site';
-import MachineWidget from './util/MachineWidget';
-import Iconify from '../../components/iconify';
-
-import { PATH_DASHBOARD } from '../../routes/paths';
-
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
-// import MachineView from './MachineAddForm';
-
-
-
 // ----------------------------------------------------------------------
 
 export default function MachineDashboardPage() {
-
   const dispatch = useDispatch();
+  const theme = useTheme();
+  const navigate = useNavigate();
+
+  
 
   const MACHINES = [
     { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
@@ -49,13 +34,16 @@ export default function MachineDashboardPage() {
     { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
   ];
 
-  const theme = useTheme();
+   // Functions to navigate to different pages
+   const linkCategory = () => { navigate(PATH_MACHINE.categories.list); };
+   const linkModel = () => { navigate(PATH_MACHINE.machineModel.list); };
+   const linkStatus = () => { navigate(PATH_MACHINE.machineStatus.list); };
+   const linkSupplier = () => { navigate(PATH_MACHINE.supplier.list); };
+   const linkTechParam = () => { navigate(PATH_MACHINE.parameters.params); };
+   const linktpCategory = () => { navigate(PATH_MACHINE.techParam.list); };
+   const linkTool = () => { navigate(PATH_MACHINE.tool.list); };
 
-  const { themeStretch } = useSettingsContext();
-
-  useLayoutEffect(() => {
-    // dispatch(getSites());
-  }, [dispatch]);
+  
 
   return (
     <>
@@ -63,11 +51,14 @@ export default function MachineDashboardPage() {
         <title> General: App | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
+          {/* Navigation Bar */}
           <MachineDashboardNavbar/>
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* Grid for displaying machine related information */}
+          <Grid container spacing={2}>
+          <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
             <AppCurrentDownload
               title="Current Machines"
               chart={{
@@ -85,50 +76,102 @@ export default function MachineDashboardPage() {
               }}
             />
           </Grid>
+          
+          
+            <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
+              <Card sx={{height: '234px'}}>
+                <List
+                  // sx={{fontSize: '0.7em'}}
+                  // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={
+                    <ListSubheader
+                    component="div" id="nested-list-subheader">
+                      Common Settings 
+                    </ListSubheader>
+                  }
+                >
+                  <ListItemButton onClick={linkCategory} sx={{color: 'text.disabled'}}>
+                    <ListItemIcon>
+                      <CategoryIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Machine Categories" />
+                  </ListItemButton>
 
-          <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled
-              title="Sites"
-              subheader="(+43%) than last year"
-              chart={{
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                series: [
-                  {
-                    year: '2019',
-                    data: [
-                      { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
-                      { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] },
-                    ],
-                  },
-                  {
-                    year: '2020',
-                    data: [
-                      { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                      { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
-                    ],
-                  },
-                ],
-              }}
-            />
+                  <ListItemButton onClick={linkModel} sx={{color: 'text.disabled'}}>
+                    <ListItemIcon>
+                      <ModelTrainingIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Machines Models" />
+                  </ListItemButton>
+
+                  <ListItemButton onClick={linkSupplier} sx={{color: 'text.disabled'}}>
+                    <ListItemIcon>
+                      <InventoryIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Machine Suppliers" />
+                  </ListItemButton>
+
+                  <ListItemButton onClick={linkStatus} sx={{color: 'text.disabled'}}>
+                    <ListItemIcon>
+                      <Diversity1Icon />
+                    </ListItemIcon>
+                    <ListItemText primary="Machine Status" />
+                  </ListItemButton>
+                </List>
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
+              <Card sx={{height: '234px'}}>
+                <List
+                  sx={{fontSize: '0.7em'}}
+                  // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={
+                    <ListSubheader component="div" id="nested-list-subheader">
+                      Technical Settings
+                    </ListSubheader>
+                  }
+                >
+                  <ListItemButton onClick={linktpCategory} sx={{color: 'text.disabled'}}>
+                    <ListItemIcon>
+                      <ClassIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Setting Categories" />
+                  </ListItemButton>
+
+                  <ListItemButton onClick={linkTechParam} sx={{color: 'text.disabled'}}>
+                    <ListItemIcon>
+                      <FlareIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Parameters" />
+                  </ListItemButton>
+
+                </List>
+                <List
+                  sx={{fontSize: '0.7em'}}
+                  // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={
+                    <ListSubheader component="div" id="nested-list-subheader">
+                      Tools Information
+                    </ListSubheader>
+                  }
+                >
+                  <ListItemButton onClick={linkTool} sx={{color: 'text.disabled'}}>
+                    <ListItemIcon>
+                      <BuildCircleIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Tools" />
+                  </ListItemButton>
+                </List>
+              </Card>
+            </Grid>
           </Grid>
 
-          <Grid item xs={12} lg={8}>
-            <AppNewInvoice
-              title="New Site"
-              tableData={_appInvoices}
-              tableLabels={[
-                { id: 'id', label: 'Invoice ID' },
-                { id: 'category', label: 'Category' },
-                { id: 'price', label: 'Price' },
-                { id: 'status', label: 'Status' },
-                { id: '' },
-              ]}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated title="Top Managers" list={_appManagers} />
-          </Grid>
         </Grid>
       </Container>
     </>

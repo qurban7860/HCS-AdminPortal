@@ -90,17 +90,18 @@ export default function ModelListTableRow({
           </Stack>
         </TableCell>
 
-        <TableCell align="left">
-          <Label
+        <TableCell align="center">
+        <Label
             variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
+            // color={(isDisabled === true && 'error') || 'success'}
+            color={isDisabled? 'success': 'error'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled === false ? 'Yes' : 'No'}
+            {isDisabled  ? 'Yes' : 'No'}
           </Label>
         </TableCell> 
 
-        <TableCell>{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
         
        
       </TableRow> 

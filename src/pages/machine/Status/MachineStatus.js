@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getMachineStatus, createMachinestatuses } from '../../../redux/slices/statuses';
+import { getMachineStatus, createMachinestatuses } from '../../../redux/slices/products/statuses';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -106,24 +106,19 @@ export default function MachineStatus() {
 
   const { themeStretch } = useSettingsContext();
   return (
+    <>
+    <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
       <Helmet>
         <title> Machine: Statuses | Machine ERP</title>
       </Helmet>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <div style={{paddingTop:'20px'}}>
       <CustomBreadcrumbs 
           heading="Status"
+          sx={{ mb: -2, mt: 3 }}
         />
 
-        </div>
-    
-      </Container>
-
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3, mt:-6 }}>
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
+          <Card sx={{ p: 3}}>
             <Stack spacing={3}>
             <Box
               rowGap={2}
@@ -158,14 +153,16 @@ export default function MachineStatus() {
 
             <Stack alignItems="flex-start" sx={{ mt:1 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
+                Save Status
               </LoadingButton>
             </Stack>
                         
             </Card>
           
           </Grid>
-        </Grid>
+        
     </FormProvider>
+    </Container>
+    </>
   );
 }

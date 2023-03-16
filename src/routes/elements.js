@@ -91,6 +91,15 @@ export const CategoryViewForm = Loadable(lazy(()=> import('../pages/machine/Cate
 export const CategoryEdit = Loadable(lazy(()=> import('../pages/machine/Categories/CategoryEdit')));
 export const CategoryEditForm = Loadable(lazy(()=> import('../pages/machine/Categories/CategoryEditForm')));
 
+
+// Machine Parameters
+export const MachineParameter = Loadable(lazy(()=> import('../pages/machine/Parameters/MachineParameter')));
+export const ParameterList = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterList')));
+export const ParameterView = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterView')));
+export const ParameterViewForm = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterViewForm')));
+export const ParameterEdit = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterEdit')));
+export const ParameterEditForm = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterEditForm')));
+
 // Machine Tools
 export const MachineTool = Loadable(lazy(()=> import('../pages/machine/Tool/MachineTool')));
 export const ToolList = Loadable(lazy(()=> import('../pages/machine/Tool/ToolList')));

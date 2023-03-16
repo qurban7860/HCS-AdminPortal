@@ -12,12 +12,13 @@ import {
   TableBody,
   Container,
   IconButton,
+  Stack,
   TableContainer,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getTechparamcategories, getTechparamcategory, deleteTechparamcategory } from '../../../redux/slices/tech-param';
+import { getTechparamcategories, getTechparamcategory, deleteTechparamcategory } from '../../../redux/slices/products/tech-param';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -222,22 +223,37 @@ export default function TechParamList() {
     setFilterStatus([]);
   };
 
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.techParam.techParam)
+    };
+
+
   return (
     <>
       <Helmet>
         <title> TechParamCategory: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
+      <Container maxWidth={false}>
+      
       <CustomBreadcrumbs 
           heading="TechParam List"
-          
+          sx={{ mb: -3, mt: 3 }}
         />
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+            <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New TechParam Category
+            </Button>
+            </Stack>
 
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
+        <Card sx={{mt: 3 }}>
           <TechParamListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -326,7 +342,7 @@ export default function TechParamList() {
             onChangeDense={onChangeDense}
           />
         </Card>
-        </div>
+        
       </Container>
 
       <ConfirmDialog

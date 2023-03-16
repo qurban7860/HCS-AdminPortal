@@ -13,12 +13,13 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getMachine } from '../../../redux/slices/machine';
+import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getMachinemodels, getMachineModel, deleteMachinemodel } from '../../../redux/slices/model';
+import { getMachinemodels, getMachineModel, deleteMachinemodel } from '../../../redux/slices/products/model';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -217,6 +218,11 @@ export default function ModelList() {
     setFilterStatus([]);
   };
 
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.machineModel.model)
+    };
+
   return (
     <>
       <Helmet>
@@ -224,15 +230,26 @@ export default function ModelList() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
+      
       <CustomBreadcrumbs 
-          heading="Model's List"
-          
+          heading="Model List"
+          sx={{ mb: -3, mt: 3 }}
         />
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+        <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Model
+            </Button>
+            </Stack>
 
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
+        
+        
+        <Card sx={{ mt: 3 }}>
           <ModelListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -321,7 +338,7 @@ export default function ModelList() {
             onChangeDense={onChangeDense}
           />
         </Card>
-        </div>
+        
       </Container>
 
       <ConfirmDialog

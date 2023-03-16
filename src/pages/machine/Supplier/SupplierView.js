@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getSuppliers, getSupplier, setSupplierEditFormVisibility } from '../../../redux/slices/supplier';
+import { getSuppliers, getSupplier, setSupplierEditFormVisibility } from '../../../redux/slices/products/supplier';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components

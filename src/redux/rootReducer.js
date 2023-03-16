@@ -5,18 +5,19 @@ import storage from 'redux-persist/lib/storage';
 import assetReducer from './slices/asset';
 import userReducer from './slices/user';
 import departmentReducer from './slices/department';
-import customerReducer from './slices/customer';
-import siteReducer from './slices/site';
-import contactReducer from './slices/contact';
-import noteReducer from './slices/note';
-import machineReducer from './slices/machine';
-import supplierReducer from './slices/supplier';
-import licenseReducer from './slices/license';
-import categoryReducer from './slices/category';
-import toolReducer from './slices/tools';
-import techparamReducer from './slices/tech-param';
-import machinestatusReducer from './slices/statuses';
-import machinemodelReducer from './slices/model';
+import customerReducer from './slices/customer/customer';
+import siteReducer from './slices/customer/site';
+import contactReducer from './slices/customer/contact';
+import noteReducer from './slices/customer/note';
+import machineReducer from './slices/products/machine';
+import supplierReducer from './slices/products/supplier';
+import licenseReducer from './slices/products/license';
+import categoryReducer from './slices/products/category';
+import toolReducer from './slices/products/tools';
+import techparamcategoryReducer from './slices/products/tech-param';
+import machinestatusReducer from './slices/products/statuses';
+import machinemodelReducer from './slices/products/model';
+import techparamReducer from './slices/products/parameters';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -124,6 +125,12 @@ export const machinemodelPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const techparamPersistConfig = {
+  key: 'techparam',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   asset: persistReducer(assetPersistConfig, assetReducer),
@@ -137,9 +144,10 @@ const rootReducer = combineReducers({
   license: persistReducer(licensePersistConfig,licenseReducer),
   category: persistReducer(categoryPersistConfig,categoryReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
-  techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamReducer),
+  techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
+  techparam: persistReducer(techparamPersistConfig, techparamReducer),
 });
 
 export default rootReducer;

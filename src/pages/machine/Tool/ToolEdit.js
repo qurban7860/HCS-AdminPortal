@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
-import { getTools, getTool } from '../../../redux/slices/tools';
+import { getTools, getTool } from '../../../redux/slices/products/tools';
 import ToolEditForm from './ToolEditForm';
 // redux
 

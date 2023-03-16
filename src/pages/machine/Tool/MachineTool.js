@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getTools, createTools } from '../../../redux/slices/tools';
+import { getTools, createTools } from '../../../redux/slices/products/tools';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -62,7 +62,7 @@ export default function MachineSuppliers() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isDisabled: false,
       createdAt: '',
       
     }),
@@ -110,29 +110,23 @@ export default function MachineSuppliers() {
 
   const { themeStretch } = useSettingsContext();
   return (
+    <>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
+    <Container maxWidth={themeStretch ? false : 'lg'}>
       <Helmet>
         <title> Machine: Tools | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <div style={{paddingTop:'20px'}}>
+      
+        
       <CustomBreadcrumbs 
           heading="Tools"
-          links={[
-            { name: 'Dashboard', href: PATH_MACHINE.root },
-            { name: 'Tools' },
-          ]}
+          sx={{ mb: -2, mt: 3 }}
         />
 
-        </div>
-    
-      </Container>
-
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3, mt:-6 }}>
-            <Stack spacing={3}>
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={2}>
             <Box
               rowGap={2}
               columnGap={2}
@@ -169,7 +163,8 @@ export default function MachineSuppliers() {
             </Card>
           
           </Grid>
-        </Grid>
+          </Container>
     </FormProvider>
+    </>
   );
 }

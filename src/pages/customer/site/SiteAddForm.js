@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
-import { saveSite, setFormVisibility } from '../../../redux/slices/site';
+import { saveSite, setFormVisibility } from '../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -111,6 +111,11 @@ export default function SiteAddForm() {
   };
 
 
+  const toggleCancel = () => 
+  {
+    dispatch(setFormVisibility(false));
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
@@ -204,15 +209,33 @@ export default function SiteAddForm() {
                   ))}
               </RHFSelect>
               </Box>
+
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(4, 1fr)',
+                }}
+              > 
+              
+                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+                  Save Site
+                </LoadingButton>
+              
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+
+            </Box>
             </Stack>
 
-
-
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Site
-              </LoadingButton>
-            </Stack>
+            
 
           </Card>
 

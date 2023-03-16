@@ -55,9 +55,9 @@ import NoteAddForm from './note/NoteAddForm';
 
 
 
-import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/note';
-import { getSites } from '../../redux/slices/site';
-import { getContacts } from '../../redux/slices/contact';
+import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/customer/note';
+import { getSites } from '../../redux/slices/customer/site';
+import { getContacts } from '../../redux/slices/customer/contact';
 
 
 
@@ -279,7 +279,7 @@ const toggleChecked = () =>
       <Helmet>
         <title> Note: List | Machine ERP </title>
       </Helmet>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         {!noteEditFormVisibility && 
             <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
                 <Button

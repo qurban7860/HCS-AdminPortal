@@ -13,7 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
-import { saveCustomer } from '../../redux/slices/customer';
+import { saveCustomer } from '../../redux/slices/customer/customer';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -387,7 +387,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
+            <Stack alignItems="flex-start" direction="row" spacing={2} sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
                 Save Customer
               </LoadingButton>

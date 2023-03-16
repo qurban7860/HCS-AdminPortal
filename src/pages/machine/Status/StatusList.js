@@ -13,12 +13,13 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getMachine } from '../../../redux/slices/machine';
+import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/statuses';
+import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/products/statuses';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -211,6 +212,10 @@ export default function StatusList() {
     await dispatch(getMachineStatus(id));
     navigate(PATH_MACHINE.machineStatus.view(id));
   };
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.machineStatus.status)
+    };
 
   const handleResetFilter = () => {
     setFilterName('');
@@ -223,16 +228,26 @@ export default function StatusList() {
         <title> Machine Statuses: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
+      <Container maxWidth={false}>
+      
       <CustomBreadcrumbs 
           heading="Status List"
-          
+          sx={{ mb: -3, mt: 3 }}
         />
 
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+            <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Status
+            </Button>
+            </Stack>
+            
+        <Card sx={{ mt: 3 }}>
           <StatusListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -321,7 +336,7 @@ export default function StatusList() {
             onChangeDense={onChangeDense}
           />
         </Card>
-        </div>
+        
       </Container>
 
       <ConfirmDialog

@@ -3,27 +3,27 @@ import uniq from 'lodash/uniq';
 import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
-import axios from '../../utils/axios';
-import { CONFIG } from '../../config-global';
+import axios from '../../../utils/axios';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
 const initialState = {
   intial: false,
-  supplierEditFormFlag: false,
+  machineEditFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  suppliers: [],
-  supplier: {},
-  supplierParams: {
+  machines: [],
+  machine: {},
+  machineParams: {
 
   }
 };
 
 const slice = createSlice({
-  name: 'supplier',
+  name: 'machine',
   initialState,
   reducers: {
     // START LOADING
@@ -34,7 +34,7 @@ const slice = createSlice({
     // SET TOGGLE
     setMachineEditFormVisibility(state, action){
       console.log('toggle', action.payload);
-      state.supplierEditFormFlag = action.payload;
+      state.machineEditFormFlag = action.payload;
     },
     
     // RESET CUSTOMER
@@ -112,7 +112,7 @@ export function getMachines() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/machines`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`);
       dispatch(slice.actions.getMachinesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
@@ -129,7 +129,7 @@ export function getMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}machines/machines/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/machines/${id}`);
       dispatch(slice.actions.getMachineSuccess(response.data));
       console.log('requested machine', response.data);
     } catch (error) {
@@ -146,7 +146,7 @@ export function deleteMachine(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}machines/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;
@@ -279,7 +279,7 @@ export function saveMachine(params) {
 
         // }
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}machines/machines`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         console.log('response', response.data.Machine);
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));

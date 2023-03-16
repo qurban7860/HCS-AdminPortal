@@ -40,7 +40,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
+import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer/customer';
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 
 
@@ -222,7 +222,7 @@ export default function CustomerList() {
           <CustomerDashboardNavbar/>
       </Grid>
         <CustomBreadcrumbs
-          heading="Customer List 123"
+          heading="Customer List"
           sx={{ mb: -3, mt: 3 }}
         />
         <Card sx={{mt: 3 }}>

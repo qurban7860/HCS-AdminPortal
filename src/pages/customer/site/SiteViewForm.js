@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../redux/slices/site';
+import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../redux/slices/customer/site';
 
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';

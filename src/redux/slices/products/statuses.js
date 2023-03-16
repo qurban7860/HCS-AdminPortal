@@ -1,26 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
-import axios from '../../utils/axios';
-import { CONFIG } from '../../config-global';
+import axios from '../../../utils/axios';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
 const initialState = {
   intial: false,
-  categoryEditFormFlag: false,
+  machinestatusEditFormFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  categories: [],
-  category: {},
-  categoryParams: {
-
+  machinestatuses: [],
+  machinestatus: {},
+  machinestatusParams: {
   }
 };
 
 const slice = createSlice({
-  name: 'category',
+  name: 'machinestatus',
   initialState,
   reducers: {
     // START LOADING
@@ -29,13 +28,13 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setCategoryEditFormVisibility(state, action){
+    setMachinestatusesEditFormVisibility(state, action){
       console.log('toggle', action.payload);
-      state.categoryEditFormFlag = action.payload;
+      state.machinestatusEditFormFlag = action.payload;
     },
-  
+    
     // RESET CUSTOMER
-    resetCategory(state){
+    resetMachinestatus(state){
       state.machine = {};
       state.responseMessage = null;
       state.success = false;
@@ -51,21 +50,22 @@ const slice = createSlice({
     },
 
     // GET Customers
-    getCategoriesSuccess(state, action) {
+    getMachinestatusesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.categories = action.payload;
+      state.machinestatuses = action.payload;
       state.initial = true;
     },
 
     // GET Customer
-    getCategorySuccess(state, action) {
+    getMachinestatusSuccess(state, action) {
       
       state.isLoading = false;
       state.success = true;
-      state.category = action.payload;
+      console.log("IM DONE",action.payload)
+      state.machinestatus = action.payload;
       state.initial = true;
-      console.log('categorySuccessSlice', state.category);
+      console.log('statusSuccessSlice', state.machinestatus);
     },
 
 
@@ -92,8 +92,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setCategoryEditFormVisibility,
-  resetCategory,
+  setMachinestatusesEditFormVisibility,
+  resetMachineStatus,
   getCart,
   addToCart,
   setResponseMessage,
@@ -106,14 +106,14 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createCategorys (supplyData){
+export function createMachinestatuses (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
+    console.log('param data', supplyData)
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`,supplyData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From category data");
+      console.log(response,"From statuses data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -124,16 +124,16 @@ export function createCategorys (supplyData){
 // ----------------------------------------------------------------------
 
 
-export function getCategories (){
+export function getMachinestatuses (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`);
 
-      dispatch(slice.actions.getCategoriesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
+      dispatch(slice.actions.getMachinestatusesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From category data");
+      console.log(response,"From statuses data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -141,36 +141,32 @@ export function getCategories (){
   }
 }
 // ----------------------------------------------------------------------
-
-export function getCategory(id) {
-  console.log('slice working');
+ 
+export function getMachineStatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories/${id}`);
-      console.log('Response',response.data)
-      dispatch(slice.actions.getCategorySuccess(response.data));
-      console.log('requested categories', response.data);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses/${id}`);
+      console.log('slice working get statuses',response);
+      dispatch(slice.actions.getMachinestatusSuccess(response.data));
+      console.log('requested statuses', response.data);
     } catch (error) {
-      console.error(error);
+      console.error(error,"Slice Error");
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
-export function deleteCategories(id) {
+export function deleteMachinestatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete categories id xyzzzzzzz');
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/categories/${id}`);
-     
+      console.log(id[0],'Delete statuses id xyzzzzzzz');
+      const response = await axios.delete(`${CONFIG.SERVER_URL}products/statuses/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       
       
       console.log(response);
-      // console.log(CONFIG.SERVER_URL[0])
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -180,27 +176,31 @@ export function deleteCategories(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveCategory(params) {
+export function saveMachinestatus(params) {
     return async (dispatch) => {
       console.log('params', params);
-      dispatch(slice.actions.resetCategory());
+      dispatch(slice.actions.resetMachinestatus());
       dispatch(slice.actions.startLoading());
       try {
-        
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !(params.isDisabled),
+          isDisabled: params?.isDisabled,
+         
         };
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
           }
+    
+          if(params.displayOrderNo){
+            data.displayOrderNo = params.displayOrderNo;
+          }
         
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
 
-        console.log('response', response.data.Category);
-        dispatch(slice.actions.getCategoriesSuccess(response.data.Category));
+        console.log('response', response.data.Machinestatus);
+        dispatch(slice.actions.getMachinestatusesSuccess(response.data.Machinestatus));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error));
@@ -211,7 +211,7 @@ export function saveCategory(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateCategory(params) {
+export function updateMachinestatus(params) {
   console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -222,6 +222,7 @@ export function updateCategory(params) {
       let data = {
         id: params.id,
         name: params.name,
+        // tradingName: params.tradingName
       };
      /* eslint-enable */
      if(params.description){
@@ -230,20 +231,21 @@ export function updateCategory(params) {
       if(params.isDisabled){
         data.isDisabled = params.isDisabled;
       }
+
+      if(params.displayOrderNo){
+        data.displayOrderNo = params.displayOrderNo;
+      }
       
       
-      
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${params.id}`,
         data
       );
-
-      dispatch(getCategories(params.id));
-      dispatch(slice.actions.setCategoryEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
+      console.log(response,"From update success")
+      dispatch(getMachineStatus(params.id));
+      dispatch(slice.actions.setMachinestatusesEditFormVisibility(false));
 
     } catch (error) {
-      console.error(error);
+      console.error(error,"from statuses");
       dispatch(slice.actions.hasError(error));
     }
   };
