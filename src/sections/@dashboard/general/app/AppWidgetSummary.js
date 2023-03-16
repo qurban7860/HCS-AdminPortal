@@ -14,11 +14,12 @@ AppWidgetSummary.propTypes = {
   sx: PropTypes.object,
   chart: PropTypes.object,
   title: PropTypes.string,
+  title2: PropTypes.string,
   total: PropTypes.number,
   percent: PropTypes.number,
 };
 
-export default function AppWidgetSummary({ title, percent, total, chart, sx, ...other }) {
+export default function AppWidgetSummary({ title, title2, percent, total, chart, sx, ...other }) {
   const { colors, series, options } = chart;
 
   const chartOptions = {
@@ -51,7 +52,7 @@ export default function AppWidgetSummary({ title, percent, total, chart, sx, ...
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3, ...sx }} {...other}>
       <Box sx={{ flexGrow: 1 }}>
         <Typography variant="subtitle2">{title}</Typography>
-
+        <Typography variant="subtitle2">{title2}</Typography>
         <TrendingInfo percent={percent} />
 
         <Typography variant="h3">{fNumber(total)}</Typography>

@@ -13,7 +13,9 @@ export default function MainLayout() {
   const isHome = pathname === '/';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: 1 }}>
+    <Box 
+    sx={{ display: 'flex', flexDirection: 'column', height: 1 }}
+    >
       <Header />
 
       <Box

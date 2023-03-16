@@ -58,6 +58,15 @@ import {
   CategoryViewForm,
   CategoryEditForm,
   CategoryEdit,
+
+  // Parameters
+  MachineParameter,
+  ParameterList,
+  ParameterView,
+  ParameterViewForm,
+  ParameterEditForm,
+  ParameterEdit,
+
   // Tool
   MachineTool,
   ToolList,
@@ -316,6 +325,17 @@ export default function Router() {
             {path: 'viewform', element: <CategoryViewForm/>},
             {path: ':id/edit', element: <CategoryEdit/>}, 
             {path: 'editform', element: <CategoryEditForm/>},
+          ]
+        },
+        {
+          path: 'machine-parameters',
+          children:[
+            {path: 'params', element: <MachineParameter/>},
+            {path: 'list', element: <ParameterList/>},
+            {path: ':id/view', element: <ParameterView/>},
+            {path: 'viewform', element: <ParameterViewForm/>},
+            {path: ':id/edit', element: <ParameterEdit/>}, 
+            {path: 'editform', element: <ParameterEditForm/>},
           ]
         },
         {

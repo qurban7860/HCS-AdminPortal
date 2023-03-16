@@ -194,9 +194,12 @@ export function saveMachinemodel(params) {
           if(params.displayOrderNo){
             data.displayOrderNo = params.displayOrderNo;
           }
-          if(params.category){
-            data.category = params.category;
+          if(params.category !== ""){
+            data.category = params.category._id;
+          }else{
+            data.category = null
           }
+
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
 
         console.log('response', response.data.Machinemodel);
@@ -231,8 +234,10 @@ export function updateMachinemodel(params) {
       if(params.displayOrderNo){
         data.displayOrderNo = params.displayOrderNo;
       }
-      if(params.category){
-        data.category = params.category;
+      if(params.category !== ""){
+        data.category = params.category._id;
+      }else{
+        data.category = null
       }
       
       

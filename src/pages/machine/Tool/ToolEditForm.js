@@ -104,6 +104,7 @@ export default function ToolEditForm() {
   const toggleCancel = () => 
     {
       dispatch(setToolEditFormVisibility(false));
+      navigate(PATH_MACHINE.tool.view(id));
     };
 
   const onSubmit = async (data) => {
@@ -163,11 +164,32 @@ export default function ToolEditForm() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
-              </LoadingButton>
-            </Stack>
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(5, 1fr)',
+                }}
+              > 
+
+                <LoadingButton 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  loading={isSubmitting}>
+                    Save Changes
+                </LoadingButton>
+
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+            </Box>
                         
             </Card>
           

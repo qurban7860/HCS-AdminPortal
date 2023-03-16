@@ -12,6 +12,7 @@ import {
   TableBody,
   Container,
   IconButton,
+  Stack,
   TableContainer,
 } from '@mui/material';
 // redux
@@ -222,6 +223,12 @@ export default function TechParamList() {
     setFilterStatus([]);
   };
 
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.techParam.techParam)
+    };
+
+
   return (
     <>
       <Helmet>
@@ -234,6 +241,17 @@ export default function TechParamList() {
           heading="TechParam List"
           sx={{ mb: -3, mt: 3 }}
         />
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+            <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New TechParam Category
+            </Button>
+            </Stack>
 
         <Card sx={{mt: 3 }}>
           <TechParamListTableToolbar

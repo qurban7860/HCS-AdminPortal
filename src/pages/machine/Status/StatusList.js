@@ -13,6 +13,7 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -211,6 +212,10 @@ export default function StatusList() {
     await dispatch(getMachineStatus(id));
     navigate(PATH_MACHINE.machineStatus.view(id));
   };
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.machineStatus.status)
+    };
 
   const handleResetFilter = () => {
     setFilterName('');
@@ -230,8 +235,18 @@ export default function StatusList() {
           sx={{ mb: -3, mt: 3 }}
         />
 
-        
-        
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+            <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Status
+            </Button>
+            </Stack>
+            
         <Card sx={{ mt: 3 }}>
           <StatusListTableToolbar
             filterName={filterName}

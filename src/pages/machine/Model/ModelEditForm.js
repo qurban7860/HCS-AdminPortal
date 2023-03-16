@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Select from "react-select";
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 
 // slice
@@ -73,6 +73,9 @@ export default function StatusEditForm() {
     );
 
   const { themeStretch } = useSettingsContext();
+
+  const [modelVal, setModelVal] = useState(null);
+
   
   const methods = useForm({
     resolver: yupResolver(EditModelSchema),
@@ -110,7 +113,8 @@ export default function StatusEditForm() {
     };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
+    data.category = modelVal
     try {
       await dispatch(updateMachinemodel({...data,id}));
       reset();
@@ -149,25 +153,17 @@ export default function StatusEditForm() {
 
             <RHFTextField name="name" label="Machine Model" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              {/* <RHFSelect native name="category" label="Category">
-                    <option value="" defaultValue/>
-                    { 
-                    categories.length > 0 && categories.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect> */}
-              <Select
-                name="category"
-                label="Category"
-                options={categories.map((option) => ({
-                  value: option._id,
-                  label: option.name,
-                }))}
-                isClearable
-                defaultValue={null}
-                onChange={(option) => setValue("category", option?.value)}
+              
+              <Autocomplete
+                value={modelVal || null}
+                options={categories}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setModelVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Categories" />}
+                ChipProps={{ size: 'small' }}
               />
               <RHFSwitch
               name="isDisabled"

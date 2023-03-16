@@ -58,7 +58,7 @@ export default function MachineDashboardNavbar() {
 
               />
           </Grid>
-          <Grid item xs={12} sm={6} md={3}>
+          {/* <Grid item xs={12} sm={6} md={3}>
               <MachineWidget
                 title="Sites"
                 color="info"
@@ -77,7 +77,7 @@ export default function MachineDashboardNavbar() {
                 sx={{ '&:hover': { opacity: 0.72 } }}
 
               />
-          </Grid>
+          </Grid> */}
     </>
   );
 }

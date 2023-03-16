@@ -13,6 +13,7 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -216,6 +217,11 @@ export default function ToolList() {
     setFilterStatus([]);
   };
 
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.tool.tool)
+    };
+
   return (
     <>
       <Helmet>
@@ -223,15 +229,26 @@ export default function ToolList() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
+      
       <CustomBreadcrumbs 
           heading="Tool List"
-          
+          sx={{ mb: -3, mt: 3 }}
         />
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+        <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Tool
+            </Button>
+            </Stack>
 
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
+        
+        
+        <Card sx={{ mt: 3 }}>
           <ToolListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -320,7 +337,7 @@ export default function ToolList() {
             onChangeDense={onChangeDense}
           />
         </Card>
-        </div>
+        
       </Container>
 
       <ConfirmDialog

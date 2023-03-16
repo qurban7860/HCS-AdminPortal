@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 // form
-import Select from "react-select";
+// import Select from "react-select";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -52,7 +52,7 @@ export default function MachineModel() {
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
-  // const [value, setValues] = useState(null)
+  const [modelVal, setModelVal] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -97,6 +97,7 @@ export default function MachineModel() {
 
 
   const onSubmit = async (data) => {
+    data.category = modelVal
       try{ 
         await dispatch(createMachinemodels(data));
         reset();
@@ -141,6 +142,21 @@ export default function MachineModel() {
 
               <RHFTextField name="name" label="Machine Model" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
+
+              <Autocomplete
+                value={modelVal || null}
+                options={categories}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setModelVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Categories" />}
+                ChipProps={{ size: 'small' }}
+              />
+
+
+
               {/* <Autocomplete
                 freeSolo
                 options={categories}
@@ -164,22 +180,25 @@ export default function MachineModel() {
                   ))}
               </RHFSelect> */}
               
-              <Select
-                name="category"
+              {/* <Select 
+                // sx={{ paddingTop: '75%', borderRadius: 1.5 }} 
+                // name="category"
                 label="Category"
-                options={categories.map((option) => ({
-                  value: option._id,
-                  label: option.name,
-                }))}
-                isClearable
-                defaultValue={null}
-                onChange={(option) => setValue("category", option?.value)}
-                sx={{ 
-                  borderColor: "hsl(210deg 13% 88%)",
-                  borderRadius: "8px",
-                  p: 8,
-                   }}
-              />
+                // options={categories.map((option) => ({
+                //   value: option._id,
+                //   label: option.name,
+                // }))}
+                // isClearable
+                // defaultValue={null}
+                // onChange={(option) => setValue("category", option?.value)}
+                // // sx={{ 
+                // //   borderColor: "hsl(210deg 13% 88%)",
+                // //   borderRadius: "8px",
+                // //   p: 8,
+                // //    }}
+              /> */}
+
+
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"

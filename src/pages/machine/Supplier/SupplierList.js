@@ -13,6 +13,7 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -215,22 +216,35 @@ export default function SupplierList() {
     setFilterStatus([]);
   };
 
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.supplier.supplier)
+    };
+
   return (
     <>
       <Helmet>
         <title> Supplier: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
+      <Container maxWidth={false}>
+      
       <CustomBreadcrumbs 
           heading="Supplier List"
-          
+          sx={{ mb: -3, mt: 3 }}
         />
-
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
+            <Button
+              // alignItems 
+              onClick={toggleAdd}
+              alignItems="flex-end"
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Supplier
+            </Button>
+            </Stack>
+        <Card sx={{ mt: 3 }}>
           <SupplierListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -319,7 +333,7 @@ export default function SupplierList() {
             onChangeDense={onChangeDense}
           />
         </Card>
-        </div>
+        
       </Container>
 
       <ConfirmDialog
