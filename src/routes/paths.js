@@ -180,6 +180,13 @@ export const PATH_MACHINE = {
     modeledit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/editform`),
   },
+  parameters:{
+    params: (ROOTS_MACHINE, '/machine/machine-parameters/params'),
+    list: (ROOTS_MACHINE, '/machine/machine-parameters/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/view`),
+    parameteredit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/editform`),
+  },
   
 }
 

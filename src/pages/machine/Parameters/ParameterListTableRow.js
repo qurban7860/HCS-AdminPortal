@@ -26,7 +26,7 @@ import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
-ToolListTableRow.propTypes = {
+StatusListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -35,7 +35,7 @@ ToolListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function ToolListTableRow({
+export default function StatusListTableRow({
   row,
   selected,
   onSelectRow,

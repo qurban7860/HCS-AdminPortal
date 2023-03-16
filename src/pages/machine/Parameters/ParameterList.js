@@ -12,13 +12,14 @@ import {
   TableBody,
   Container,
   IconButton,
-  Stack,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
+import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getTechparamcategories, getTechparamcategory, deleteTechparamcategory } from '../../../redux/slices/products/tech-param';
+import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/products/statuses';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -39,9 +40,10 @@ import Scrollbar from '../../../components/scrollbar';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
-import TechParamListTableRow from './TechParamListTableRow';
-import TechParamListTableToolbar from './TechParamListTableToolbar';
+import ParameterListTableRow from './ParameterListTableRow';
+import ParameterListTableToolbar from './ParameterListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
+
 
 
 
@@ -68,7 +70,7 @@ const STATUS_OPTIONS = [
 
 
 
-export default function TechParamList() {
+export default function StatusList() {
   const {
     dense,
     page,
@@ -106,31 +108,25 @@ export default function TechParamList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { techparamcategories, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparamcategory);
+  const { machinestatuses, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinestatus);
 
-  // const a= useSelector((state) => state.techparamcategory);
-  // console.log(a, 'muzna')
   
-  // console.log(useSelector((state) => state.techparamcategory))
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
 
   useLayoutEffect( () => {
     console.log('Testing done')
-     dispatch(getTechparamcategories());
+     dispatch(getMachinestatuses());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (techparamcategories && !error) {
+      if (machinestatuses && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(techparamcategories);
+      setTableData(machinestatuses);
     }
-  }, [techparamcategories, error, responseMessage, enqueueSnackbar, initial]);
+  }, [machinestatuses, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -139,7 +135,7 @@ export default function TechParamList() {
     filterStatus,
   });
 
-  console.log(techparamcategories, "testingggg")
+  console.log(machinestatuses, "testingggg")
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -168,11 +164,11 @@ export default function TechParamList() {
   };
 
   const handleDeleteRow = async (id) => {
-    await dispatch(deleteTechparamcategory(id));
+    await dispatch(deleteMachinestatus(id));
     try {
       console.log(id);
-      // await dispatch(deleteSupplier(id));
-      dispatch(getTechparamcategories());
+      
+      dispatch(getMachinestatuses());
       setSelected([]);
 
       if (page > 0) {
@@ -206,41 +202,39 @@ export default function TechParamList() {
 
   const handleEditRow = async (id) => {
     console.log(id);
-    // dispatch(getTool(id));
-    await dispatch(getTechparamcategory(id));
-    navigate(PATH_MACHINE.techParam.edit(id));
+    
+    await dispatch(getMachineStatus(id));
+    navigate(PATH_MACHINE.machineStatus.edit(id));
   };
 
   const handleViewRow = async (id) => {
-    // console.log(id,PATH_MACHINE.supplier.view(id));
     console.log(id)
-    await dispatch(getTechparamcategory(id));
-    navigate(PATH_MACHINE.techParam.view(id));
+    await dispatch(getMachineStatus(id));
+    navigate(PATH_MACHINE.machineStatus.view(id));
   };
+  const toggleAdd = () => 
+    {
+      navigate(PATH_MACHINE.machineStatus.status)
+    };
 
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
   };
 
-  const toggleAdd = () => 
-    {
-      navigate(PATH_MACHINE.techParam.techParam)
-    };
-
-
   return (
     <>
       <Helmet>
-        <title> TechParamCategory: List | Machine ERP </title>
+        <title> Machine Statuses: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={false}>
       
       <CustomBreadcrumbs 
-          heading="TechParam List"
+          heading="Status List"
           sx={{ mb: -3, mt: 3 }}
         />
+
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
             <Button
               // alignItems 
@@ -249,12 +243,12 @@ export default function TechParamList() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New TechParam Category
+              New Status
             </Button>
             </Stack>
-
-        <Card sx={{mt: 3 }}>
-          <TechParamListTableToolbar
+            
+        <Card sx={{ mt: 3 }}>
+          <ParameterListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -306,7 +300,7 @@ export default function TechParamList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <TechParamListTableRow
+                        <ParameterListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}

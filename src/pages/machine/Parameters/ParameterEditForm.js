@@ -15,7 +15,7 @@ import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dia
 // global
 
 // slice
-import { updateTool, setToolEditFormVisibility, getTool, getTools } from '../../../redux/slices/products/tools';
+import { updateMachinestatus, getMachineStatus, getMachinestatuses } from '../../../redux/slices/products/statuses';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
@@ -38,9 +38,9 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 
-export default function ToolEditForm() {
+export default function StatusEditForm() {
 
-  const { error, tool } = useSelector((state) => state.tool);
+  const { error, machinestatus } = useSelector((state) => state.machinestatus);
 
   const dispatch = useDispatch();
 
@@ -50,29 +50,33 @@ export default function ToolEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  const EditToolSchema = Yup.object().shape({
+  const EditStatusSchema = Yup.object().shape({
     name: Yup.string().min(5).max(25).required('Name is required') ,
     description: Yup.string().min(5).max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
+    displayOrderNo: Yup.number(),
   });
 
 
   const defaultValues = useMemo(
-    () => ({
-        name:tool?.name || 'N/A',
-        description:tool?.description || 'N/A',
-        createdAt: tool?.createdAt || '',
-        updatedAt: tool?.updatedAt || '',
-    }),
+    () => (
+      {
+        name:machinestatus?.name || 'N/A',
+        description:machinestatus?.description || 'N/A',
+        createdAt: machinestatus?.createdAt || '',
+        updatedAt: machinestatus?.updatedAt || '',
+        displayOrderNo: machinestatus?.displayOrderNo || '',
+       
+      }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [tool]
-  );
+    [machinestatus]
+    );
 
   const { themeStretch } = useSettingsContext();
   
   const methods = useForm({
-    resolver: yupResolver(EditToolSchema),
+    resolver: yupResolver(EditStatusSchema),
     defaultValues,
   });
 
@@ -87,33 +91,32 @@ export default function ToolEditForm() {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getTool(id));
-    // dispatch(getSites(customer._id));
-    // dispatch(getSPContacts());
+    dispatch(getMachineStatus(id));
+    
 
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (tool) {
+    if (machinestatus) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tool]);
+  }, [machinestatus]);
   console.log(id, 'testing id')
 
   const toggleCancel = () => 
     {
-      dispatch(setToolEditFormVisibility(false));
-      navigate(PATH_MACHINE.tool.view(id));
+      dispatch(updateMachinestatus(false));
+      navigate(PATH_MACHINE.machineStatus.view(id));
     };
 
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      await dispatch(updateTool({...data,id}));
+      await dispatch(updateMachinestatus({...data,id}));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.tool.view(id));
+      navigate(PATH_MACHINE.machineStatus.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -125,9 +128,9 @@ export default function ToolEditForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
+      <Grid container spacing={4}>
       <Helmet>
-        <title> Machine: Tool | Machine ERP</title>
+        <title> Machine: Status | Machine ERP</title>
       </Helmet>
 
       
@@ -145,8 +148,12 @@ export default function ToolEditForm() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Tool" required />
+                <RHFTextField name="name" label="Machine status" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
+              <RHFTextField name="displayOrderNo" label="Display Order No" type='number' />
+              {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
+                    <option value="" defaultValue/>
+              </RHFSelect> */}
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"

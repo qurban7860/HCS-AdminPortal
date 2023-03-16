@@ -120,6 +120,7 @@ export default function SupplierEditForm() {
   const toggleCancel = () => 
     {
       dispatch(setSupplierEditFormVisibility(false));
+      navigate(PATH_MACHINE.supplier.view(id));
     };
 
   const onSubmit = async (data) => {
@@ -232,16 +233,40 @@ export default function SupplierEditForm() {
                 </>
               } 
             />
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Suppliers
-              </LoadingButton>
-            </Stack>
+            
+
              </Box>
              
               
              
               </Stack>
+
+              <Box sx={{ mt: 3 }}
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(2, 1fr)',
+                  sm: 'repeat(5, 1fr)',
+                }}
+              > 
+
+                <LoadingButton 
+                  type="submit" 
+                  variant="contained" 
+                  size="large" 
+                  loading={isSubmitting}>
+                    Save Changes
+                </LoadingButton>
+
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+
+            </Box>
               </Card>
 
             
