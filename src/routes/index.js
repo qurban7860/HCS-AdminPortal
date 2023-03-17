@@ -41,6 +41,8 @@ import {
   MachinePage,
   MachineAdd,
   MachineList,
+  MachineView,
+  MachineEdit,
   // Supplier
   MachineSupplier,
   SupplierList,
@@ -298,6 +300,9 @@ export default function Router() {
         { path: 'app', element: <MachinePage /> }, 
         { path: 'new', element: <MachineAdd /> }, 
         { path: 'list', element: <MachineList /> }, 
+        { path: ':id/view', element: <MachineView /> }, 
+        { path: ':id/edit', element: <MachineEdit /> }, 
+
         {
           path : 'supplier',
           children:[

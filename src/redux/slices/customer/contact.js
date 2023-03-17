@@ -186,22 +186,24 @@ console.log(formData);
 
 // ----------------------------------------------------------------------
 
-// export function getSPContacts() {
-//   return async (dispatch) => {
-//     dispatch(slice.actions.startLoading());
-//     try {
-//       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/contacts/sp/data`);
-//       console.log(response);
-//       console.log(response.data);
-//       dispatch(slice.actions.getSPContactsSuccess(response.data));
-//       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+export function getSPContacts(customerID) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
+      {
+        params: {}
+      }
+      )
+      dispatch(slice.actions.getSPContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
 
-//     } catch (error) {
-//       console.log(error);
-//       dispatch(slice.actions.hasError(error));
-//     }
-//   };
-// }
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 
@@ -219,7 +221,7 @@ export function getContacts(customerID = null) {
         }
         );
       }else{
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/contacts/search`);
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers//contacts`);
       }
       
       // console.log(response);
