@@ -15,7 +15,7 @@ import { getContacts } from '../../redux/slices/customer/contact';
 
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-// _mock_
+// mock
 import {
   _userAbout,
   _userFeeds,
@@ -37,22 +37,19 @@ import ContactAddForm from './contact/ContactAddForm';
 import CustomerStepper from './CustomerStepper';
 import CustomerNoteList from './CustomerNoteList';
 
-/* eslint-disable */
 
 import CustomerViewForm from './CustomerViewForm';
-/* eslint-enable */
+
 
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
 
-// ----------------------------------------------------------------------
 
-/* eslint-disable */
 CustomerViewPage.propTypes = {
   editPage: PropTypes.bool,
 };
-/* eslint-enable */
+
 
 
 export default function CustomerViewPage({editPage}) {
@@ -85,14 +82,14 @@ export default function CustomerViewPage({editPage}) {
   }, [dispatch, id]);
 
   useEffect(() => {
-    /* eslint-disable */
+    
     if(customerEditFormFlag){
       setCurrentComponent(<CustomerEditForm/>);
     }else{
       setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm/>);        
     }
-    /* eslint-enable */
+   
   }, [dispatch, customerEditFormFlag, customer]);
 
 

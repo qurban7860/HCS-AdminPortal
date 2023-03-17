@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback } from 'react';
+import { useLayoutEffect, useMemo, useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
@@ -11,9 +11,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container,TextField, Autocomplete,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getMachineStatus, createMachinestatuses } from '../../../redux/slices/products/statuses';
+import { getTechparams, createTechparams } from '../../../redux/slices/products/parameters';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -39,12 +39,16 @@ import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 
 // ----------------------------------------------------------------------
 
-export default function MachineStatus() {
+export default function MachineTechParam() {
 
 
   const { userId, user } = useAuthContext();
 
+  const { techparamcategories } = useSelector((state) => state.techparamcategory);
+
   const dispatch = useDispatch();
+
+  const [paramVal, setParamVal] = useState(null);
   
   const navigate = useNavigate();
 
@@ -56,7 +60,7 @@ export default function MachineStatus() {
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
     code: Yup.string(),
-    
+    techparamcategory: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -66,6 +70,7 @@ export default function MachineStatus() {
       isDisabled: false,
       createdAt: '',
       code: '',
+      techparamcategory: '',
       
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,14 +92,16 @@ export default function MachineStatus() {
 
   const values = watch();
 
+  
 
   const onSubmit = async (data) => {
+    data.techparamcategory = paramVal
       try{ 
-        await dispatch(createMachinestatuses(data));
+        await dispatch(createTechparams(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.machineStatus.list); 
-        console.log(PATH_MACHINE.machineStatus.list)
+        navigate(PATH_MACHINE.parameters.list); 
+        console.log(PATH_MACHINE.parameters.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
         enqueueSnackbar(error?.message)
@@ -130,7 +137,7 @@ export default function MachineStatus() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Status" required />
+              <RHFTextField name="name" label="Machine Tech Param" required />
               <RHFTextField name="code" label="Code" required />
               </Box>
               <Box
@@ -143,7 +150,17 @@ export default function MachineStatus() {
               }}
             >
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              
+              <Autocomplete
+                value={paramVal || null}
+                options={techparamcategories}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setParamVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Tech Param Categories" />}
+                ChipProps={{ size: 'small' }}
+              />
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"
