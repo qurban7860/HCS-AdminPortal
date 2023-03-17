@@ -71,6 +71,9 @@ export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserE
 export const MachinePage = Loadable(lazy(()=> import('../pages/machine/Machine')));
 export const MachineAdd = Loadable(lazy(()=> import('../pages/machine/MachineAddForm')));
 export const MachineList = Loadable(lazy(()=> import('../pages/machine/MachineList')));
+export const MachineView = Loadable(lazy(()=> import('../pages/machine/MachineView')));
+export const MachineEdit = Loadable(lazy(()=> import('../pages/machine/MachineEdit')));
+
 
 // Supplier
 export const MachineSupplier = Loadable(lazy(()=> import('../pages/machine/Supplier/MachineSuppliers')));

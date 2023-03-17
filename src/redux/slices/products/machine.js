@@ -68,7 +68,7 @@ const slice = createSlice({
       state.success = true;
       state.machine = action.payload;
       state.initial = true;
-      console.log('machinesuccessslice', state.machine);
+      // console.log('machinesuccessslice', state.machine);
     },
 
 
@@ -112,7 +112,26 @@ export function getMachines() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          query: {
+            isArchived: false, 
+          },
+          populate:[
+                  {path: 'machineModel', select: '_id name'},
+                  {path: 'parentMachine', select: '_id name serialNo supplier machineModel'},
+                  {path: 'supplier', select: '_id name'},
+                  {path: 'status', select: '_id name'},
+                  {path: 'customer', select: '_id name'},
+                  {path: 'billingSite', select: '_id name'},
+                  {path: 'instalationSite', select: '_id name address'},
+                  {path: 'createdBy', select: 'firstName lastName'},
+                  {path: 'updatedBy', select: 'firstName lastName'}
+                  ]
+        }
+      });
+      console.log(response)
       dispatch(slice.actions.getMachinesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
@@ -125,11 +144,11 @@ export function getMachines() {
 // ----------------------------------------------------------------------
 
 export function getMachine(id) {
-  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/machines/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}`);
+      console.log('getMachine slice working : ',response);
       dispatch(slice.actions.getMachineSuccess(response.data));
       console.log('requested machine', response.data);
     } catch (error) {
@@ -234,53 +253,53 @@ console.log("Data for the subbmission:",data)
 
 // --------------------------------------------------------------------------
 
-// export function updateMachine(params) {
-//   console.log('update, working')
-//   return async (dispatch) => {
-//     dispatch(slice.actions.startLoading());
-//     try {
+export function updateMachine(params) {
+  console.log('update, working')
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
 
-//       const formData = new FormData();
-//       /* eslint-disable */
-//       let data = {
-//         id: params.id,
-//         name: params.name,
-//         tradingName: params.tradingName
-//       };
-//      /* eslint-enable */
+      const formData = new FormData();
+      /* eslint-disable */
+      let data = {
+        id: params.id,
+        name: params.name,
+        tradingName: params.tradingName
+      };
+     /* eslint-enable */
 
-//       if(params.mainSite){
-//         data.mainSite = params.mainSite;
-//       }
-//       if(params.accountManager){
-//         data.accountManager = params.accountManager;
-//       }
-//       if(params.projectManager){
-//         data.projectManager = params.projectManager;
-//       }
-//       if(params.supportManager){
-//         data.supportManager = params.supportManager;
-//       }
-//       if(params.primaryBillingContact){
-//         data.primaryBillingContact = params.primaryBillingContact;        
-//       }
-//       if(params.primaryTechnicalContact){
-//         data.primaryTechnicalContact = params.primaryTechnicalContact;        
-//       }
+      if(params.mainSite){
+        data.mainSite = params.mainSite;
+      }
+      if(params.accountManager){
+        data.accountManager = params.accountManager;
+      }
+      if(params.projectManager){
+        data.projectManager = params.projectManager;
+      }
+      if(params.supportManager){
+        data.supportManager = params.supportManager;
+      }
+      if(params.primaryBillingContact){
+        data.primaryBillingContact = params.primaryBillingContact;        
+      }
+      if(params.primaryTechnicalContact){
+        data.primaryTechnicalContact = params.primaryTechnicalContact;        
+      }
       
-//       const response = await axios.patch(`${CONFIG.SERVER_URL}Machines/customers/${params.id}`,
-//         data
-//       );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}Machines/customers/${params.id}`,
+        data
+      );
 
-//       dispatch(getMachine(params.id));
-//       dispatch(slice.actions.setMachineEditFormVisibility(false));
+      dispatch(getMachine(params.id));
+      dispatch(slice.actions.setMachineEditFormVisibility(false));
 
-//       // this.updateCustomerSuccess(response);
+      // this.updateCustomerSuccess(response);
 
-//     } catch (error) {
-//       console.error(error);
-//       dispatch(slice.actions.hasError(error));
-//     }
-//   };
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
 
-// }
+}

@@ -43,7 +43,7 @@ export default function MachineListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, serialNo, parentMachine,status, isDisabled, createdAt } = row;
+  const { serialNo, parentMachine, machineModel ,customer, instalationSite ,status, isDisabled, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -68,9 +68,9 @@ export default function MachineListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
+        <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
+        </TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -80,14 +80,15 @@ export default function MachineListTableRow({
               variant="subtitle2"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
-            >{serialNo}</Link>
+            >{serialNo || ''}</Link>
           </Stack>
         </TableCell>
 
-        <TableCell>{serialNo}</TableCell>
-        <TableCell>{parentMachine}</TableCell>
-        <TableCell>{}</TableCell>
-        <TableCell>{status}</TableCell>
+        <TableCell>{parentMachine?.name || ''}</TableCell>
+        <TableCell>{machineModel?.name || ''}</TableCell>
+        <TableCell>{status.name}</TableCell>
+        <TableCell>{instalationSite?.name || ''}</TableCell>
+        <TableCell>{customer?.name || ''}</TableCell>
         <TableCell align="left">
           <Label
             variant="soft"

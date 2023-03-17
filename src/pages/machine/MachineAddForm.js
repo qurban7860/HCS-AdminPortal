@@ -21,7 +21,7 @@ import { getContacts} from '../../redux/slices/customer/contact';
 
 
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, {RHFSelect,RHFAutocomplete,RHFTextField,RHFMultiSelect,RHFEditor,RHFUpload,} from '../../components/hook-form';
@@ -160,7 +160,7 @@ const onSubmit = async (data) => {
   data.supportManager = suppVal?._id || null
   data.customerTags = chipData
 
-  console.log(data);
+  console.log("Machines : ",machines);
     try{
       await dispatch(saveMachine(data));
       setMachineVal('');
@@ -177,7 +177,7 @@ const onSubmit = async (data) => {
       setCurrTag('');
       reset();
       enqueueSnackbar('Create success!');
-      // navigate(PATH_DASHBOARD.customer.view(null));
+      navigate(PATH_MACHINE.machine.list);
     } catch(error){
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -233,7 +233,15 @@ const handleKeyPress = (e) => {
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   setMachineVal(newValue);
-                  
+                  console.log(newValue);
+                  if(newValue){
+                    setSupplierVal(newValue.supplier);
+                    setModelVal(newValue.machineModel);
+                  }
+                  else{             
+                    setSupplierVal("");
+                    setModelVal("");
+                  }
                 }}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Parent Machine" />}
@@ -254,7 +262,7 @@ const handleKeyPress = (e) => {
             <Box  rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete
                 // freeSolo
-                value={ machineVal !== undefined ? machineVal : supplierVal || null}
+                value={supplierVal || null}
                 options={suppliers}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
