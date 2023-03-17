@@ -91,7 +91,7 @@ export default function GeneralAppPage() {
             <AppFeatured list={_appFeatured} />
           </Grid> */}
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Total Active Users"
               title2="(Under Construction)"
@@ -104,7 +104,7 @@ export default function GeneralAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Total Machines"
               title2="(Under Construction)"
@@ -117,7 +117,7 @@ export default function GeneralAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4}>
+          <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Total Customers"
               title2="(Under Construction)"
@@ -175,7 +175,7 @@ export default function GeneralAppPage() {
             />
           </Grid> */}
 
-          <Grid item xs={12} lg={8}>
+          {/* <Grid item xs={12} lg={8}>
             <AppNewInvoice
               title="New Site"
               tableData={_appInvoices}
@@ -187,11 +187,11 @@ export default function GeneralAppPage() {
                 { id: '' },
               ]}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopRelated title="Top Related Applications" list={_appRelated} />
-          </Grid>
+          </Grid> */}
 
           {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />

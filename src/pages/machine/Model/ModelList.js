@@ -262,7 +262,7 @@ export default function ModelList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
+              
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -281,7 +281,7 @@ export default function ModelList() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size='small' sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -333,9 +333,7 @@ export default function ModelList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
+           
           />
         </Card>
         

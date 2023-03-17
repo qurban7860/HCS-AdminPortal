@@ -56,12 +56,13 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexShrink: 0,
         }}
       >
-        <Logo />
+        <Logo sx={{width: '70%', margin: '0 auto', mt: '-30px' }}/>
 
-        <NavAccount />
+        <NavAccount/>
       </Stack>
 
-      <NavSectionVertical data={navConfig} />
+      <NavSectionVertical sx={{mt: '-50px'}}
+      data={navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
 

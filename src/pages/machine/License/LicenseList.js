@@ -252,7 +252,7 @@ export default function LicenseList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
+              
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -271,7 +271,7 @@ export default function LicenseList() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size='small' sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -324,8 +324,7 @@ export default function LicenseList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             //
-            dense={dense}
-            onChangeDense={onChangeDense}
+            
           />
         </Card>
         </div>

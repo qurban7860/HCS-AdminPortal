@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/products/statuses';
+import { getTechparams, getTechparam, deleteTechparams } from '../../../redux/slices/products/parameters';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -108,25 +108,25 @@ export default function StatusList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { machinestatuses, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinestatus);
+  const { techparams, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparam);
 
   
 
   useLayoutEffect( () => {
     console.log('Testing done')
-     dispatch(getMachinestatuses());
+     dispatch(getTechparams());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (machinestatuses && !error) {
+      if (techparams && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(machinestatuses);
+      setTableData(techparams);
     }
-  }, [machinestatuses, error, responseMessage, enqueueSnackbar, initial]);
+  }, [techparams, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -135,7 +135,7 @@ export default function StatusList() {
     filterStatus,
   });
 
-  console.log(machinestatuses, "testingggg")
+  console.log(techparams, "testingggg")
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -164,11 +164,11 @@ export default function StatusList() {
   };
 
   const handleDeleteRow = async (id) => {
-    await dispatch(deleteMachinestatus(id));
+    await dispatch(deleteTechparams(id));
     try {
       console.log(id);
       
-      dispatch(getMachinestatuses());
+      dispatch(getTechparams());
       setSelected([]);
 
       if (page > 0) {
@@ -203,18 +203,18 @@ export default function StatusList() {
   const handleEditRow = async (id) => {
     console.log(id);
     
-    await dispatch(getMachineStatus(id));
-    navigate(PATH_MACHINE.machineStatus.edit(id));
+    await dispatch(getTechparam(id));
+    navigate(PATH_MACHINE.parameters.edit(id));
   };
 
   const handleViewRow = async (id) => {
     console.log(id)
-    await dispatch(getMachineStatus(id));
-    navigate(PATH_MACHINE.machineStatus.view(id));
+    await dispatch(getTechparam(id));
+    navigate(PATH_MACHINE.parameters.view(id));
   };
   const toggleAdd = () => 
     {
-      navigate(PATH_MACHINE.machineStatus.status)
+      navigate(PATH_MACHINE.parameters.status)
     };
 
   const handleResetFilter = () => {
@@ -260,7 +260,7 @@ export default function StatusList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
+              
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -279,7 +279,7 @@ export default function StatusList() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size='small'sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -331,9 +331,7 @@ export default function StatusList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
+          
           />
         </Card>
         

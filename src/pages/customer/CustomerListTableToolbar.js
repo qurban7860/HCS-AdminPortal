@@ -12,6 +12,8 @@ import {
   FormControl,
   OutlinedInput,
   InputAdornment,
+  Grid,
+  Box,
 } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
@@ -78,20 +80,24 @@ export default function CustomerListTableToolbar({
           ))}
         </Select>
       </FormControl> */}
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
+        {/* <Grid item xs={12} sm={8}> */}
 
-      <TextField
-        fullWidth
-        value={filterName}
-        onChange={onFilterName}
-        placeholder="Search..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-            </InputAdornment>
-          ),
-        }}
-      />
+          <TextField
+          fullWidth
+          value={filterName}
+          onChange={onFilterName}
+          placeholder="Search..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            ),
+          }}
+          />
+        {/* </Grid> */}
 
       {isFiltered && (
         <Button
@@ -103,6 +109,21 @@ export default function CustomerListTableToolbar({
           Clear
         </Button>
       )}
+        </Grid>
+        <Grid item xs={8} sm={3}>
+          <Stack alignItems="flex-end" > 
+            <Button sx={{p:2}}
+              // onClick={toggleAdd}
+                variant="contained"
+                startIcon={ <Iconify icon="eva:plus-fill" /> }
+                >
+                Add Customer 
+            </Button>
+          </Stack>
+        </Grid>
+      </Grid>
+      
+      
     </Stack>
   );
 }

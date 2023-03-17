@@ -7,7 +7,7 @@ import { Box, Link } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
+const Logo = forwardRef(({ disabledLink = false, sx, src="/logo/logo.svg", ...other }, ref) => {
   const theme = useTheme();
 
   const PRIMARY_LIGHT = theme.palette.primary.light;
@@ -21,7 +21,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
   const logo = (
     <Box
       component="img"
-      src="/logo/logo_single.png"
+      src={src}
       sx={{ width: 100, height: 100, cursor: 'pointer', ...sx }}
     />
   );
@@ -88,6 +88,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
 Logo.propTypes = {
   sx: PropTypes.object,
   disabledLink: PropTypes.bool,
+  src: PropTypes.string,
 };
 
 export default Logo;

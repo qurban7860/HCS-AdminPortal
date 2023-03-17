@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography, Container} from '@mui/material';
 // slice
 import { getMachinemodels, createMachinemodels } from '../../../redux/slices/products/model';
 import { getCategories } from '../../../redux/slices/products/category';
@@ -61,7 +61,7 @@ export default function MachineModel() {
     description: Yup.string().min(5).max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
-    category: Yup.string(),
+    category: Yup.string().required('Category is required'),
   });
 
   const defaultValues = useMemo(

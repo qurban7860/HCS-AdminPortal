@@ -39,7 +39,7 @@ export default function NavMini() {
           ...hideScrollbarX,
         }}
       >
-        <Logo sx={{ mx: 'auto', my: 2 }} />
+        <Logo src="/logo/download.jpg" sx={{  mx: 'auto', my: 2, width: '40px', height: '40px' }} />
 
         <NavSectionMini data={navConfig} />
       </Stack>

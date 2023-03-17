@@ -18,7 +18,7 @@ import Iconify from '../../../components/iconify/Iconify';
 
 // ----------------------------------------------------------------------
 
-StatusListTableToolbar.propTypes = {
+ParameterTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -28,7 +28,7 @@ StatusListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function StatusListTableToolbar({
+export default function ParameterTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

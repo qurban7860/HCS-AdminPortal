@@ -13,6 +13,7 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -42,7 +43,7 @@ import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
 import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer/customer';
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
-
+import { CustomerCoverList } from './util/CustomerCoverList';
 
 
 // ----------------------------------------------------------------------
@@ -77,7 +78,6 @@ const STATUS_OPTIONS = [
 
 export default function CustomerList() {
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -90,7 +90,6 @@ export default function CustomerList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
@@ -139,7 +138,7 @@ export default function CustomerList() {
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  const denseHeight = dense ? 60 : 80;
+  const denseHeight = 60;
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
@@ -218,13 +217,66 @@ export default function CustomerList() {
       </Helmet>
 
       <Container maxWidth={false}>
-      <Grid container spacing={3}>
-          <CustomerDashboardNavbar/>
-      </Grid>
+
+
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+          }}
+        >
+          <CustomerCoverList name='Customer List'/>
+
+          {/* <Tabs
+            value={currentTab}
+            onChange={(event, newValue) => setCurrentTab(newValue)}
+            sx={{
+  
+              width: 1,
+              bottom: 0,
+              zIndex: 9,
+              position: 'absolute',
+              bgcolor: 'background.paper',
+              '& .MuiTabs-flexContainer': {
+                pr: { md: 3 },
+                justifyContent: {
+                  sm: 'center',
+                  md: 'flex-end',
+                },
+              },
+            }}
+          >
+            {TABS.map((tab) => (
+              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+            ))}
+          </Tabs> */}
+          
+        </Card>
+        
+      {/* <CustomerCover name = 'Customer List' /> */}
+
+
+      {/* <Card sx={{
+        mt: 5,
+        background: '#364782',
+        color: 'white'
+        }}>
+        
         <CustomBreadcrumbs
           heading="Customer List"
-          sx={{ mb: -3, mt: 3 }}
+          sx={{ mb: 3, mt: 4, ml: 3 }}
         />
+        <Stack alignItems="flex-end" > 
+            <Button sx={{ mt: -8, mr: 3, }}
+              // onClick={toggleAdd}
+                variant="contained"
+                startIcon={ <Iconify icon="eva:plus-fill" /> }
+                >
+                Add Customer 
+            </Button>
+          </Stack>
+        </Card> */}
         <Card sx={{mt: 3 }}>
           <CustomerListTableToolbar
             filterName={filterName}
@@ -238,7 +290,6 @@ export default function CustomerList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -257,7 +308,7 @@ export default function CustomerList() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size='small' sx={{ minWidth: 960}}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -286,6 +337,7 @@ export default function CustomerList() {
                           onDeleteRow={() => handleDeleteRow(row._id)}
                           // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -309,9 +361,6 @@ export default function CustomerList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
       </Container>

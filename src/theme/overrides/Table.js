@@ -2,6 +2,7 @@
 
 export default function Table(theme) {
   return {
+    
     MuiTableContainer: {
       styleOverrides: {
         root: {
@@ -12,6 +13,13 @@ export default function Table(theme) {
     MuiTableRow: {
       styleOverrides: {
         root: {
+          '&:nth-of-type(even)': {
+            backgroundColor: '#f4f6f866',
+          },
+          // hide last border
+          '&:last-child td, &:last-child th': {
+            border: 0,
+          },
           '&.Mui-selected': {
             backgroundColor: theme.palette.action.selected,
             '&:hover': {
@@ -27,7 +35,7 @@ export default function Table(theme) {
           borderBottom: 'none',
         },
         head: {
-          color: theme.palette.text.secondary,
+          color: theme.palette.text.black,
           backgroundColor: theme.palette.background.neutral,
         },
         stickyHeader: {
