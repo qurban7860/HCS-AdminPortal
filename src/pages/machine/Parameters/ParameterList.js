@@ -213,7 +213,7 @@ export default function StatusList() {
   };
   const toggleAdd = () => 
     {
-      navigate(PATH_MACHINE.parameters.status)
+      navigate(PATH_MACHINE.parameters.params)
     };
 
   const handleResetFilter = () => {

@@ -39,7 +39,7 @@ export default function MachineDashboardPage() {
    const linkModel = () => { navigate(PATH_MACHINE.machineModel.list); };
    const linkStatus = () => { navigate(PATH_MACHINE.machineStatus.list); };
    const linkSupplier = () => { navigate(PATH_MACHINE.supplier.list); };
-   const linkTechParam = () => { navigate(PATH_MACHINE.parameters.params); };
+   const linkTechParam = () => { navigate(PATH_MACHINE.parameters.list); };
    const linktpCategory = () => { navigate(PATH_MACHINE.techParam.list); };
    const linkTool = () => { navigate(PATH_MACHINE.tool.list); };
 
