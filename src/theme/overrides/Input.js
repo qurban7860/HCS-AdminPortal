@@ -72,7 +72,7 @@ export default function Input(theme) {
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: alpha(theme.palette.grey[500], 0.32),
             // backgroundColor: 'red',
-            padding: '0 12x',
+            // padding: '0 12x',
           },
           '&.Mui-focused': {
             '& .MuiOutlinedInput-notchedOutline': {

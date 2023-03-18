@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
-import { getMachinestatuses, getMachineStatus} from '../../../redux/slices/products/statuses';
+import { getTechparam} from '../../../redux/slices/products/parameters';
 // import StatusEditForm from './StatusEditForm';
 // redux
 
@@ -14,8 +14,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-
-
+import ParameterEditForm from './ParameterEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -28,27 +27,27 @@ export default function StatusEdit() {
   console.log(id);
 
   
-  const { machinestatus } = useSelector((state) => state.machinestatus);
+  const { techparam } = useSelector((state) => state.techparam);
 
   useLayoutEffect(() => {
-     dispatch(getMachineStatus(id));
+     dispatch(getTechparam(id));
   }, [dispatch, id]);
 
   
   return (
     <>
       <Helmet>
-        <title> Machine Status: Edit Page | Machine ERP</title>
+        <title> Machine Parameter: Edit Page | Machine ERP</title>
       </Helmet>
       
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Edit Status"
+          heading="Edit Tech Parameter"
           sx={{ mb: -2, mt: 3 }}
         />
 
-        {/* <StatusEditForm/> */}
+        <ParameterEditForm/>
       </Container>
     </>
   );

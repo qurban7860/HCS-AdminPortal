@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -11,11 +11,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 
 // slice
-import { updateMachinestatus, getMachineStatus, getMachinestatuses } from '../../../redux/slices/products/statuses';
+import { updateTechparam, getTechparam } from '../../../redux/slices/products/parameters';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
@@ -40,7 +40,11 @@ import FormProvider, {
 
 export default function StatusEditForm() {
 
-  const { error, machinestatus } = useSelector((state) => state.machinestatus);
+  const { error, techparam } = useSelector((state) => state.techparam);
+
+  const { techparamcategories } = useSelector((state) => state.techparamcategory);
+
+  const [paramVal, setParamVal] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -55,22 +59,24 @@ export default function StatusEditForm() {
     description: Yup.string().min(5).max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
-    displayOrderNo: Yup.number(),
+    code: Yup.string(),
+    techparamcategory: Yup.string(),
   });
 
 
   const defaultValues = useMemo(
     () => (
       {
-        name:machinestatus?.name || 'N/A',
-        description:machinestatus?.description || 'N/A',
-        createdAt: machinestatus?.createdAt || '',
-        updatedAt: machinestatus?.updatedAt || '',
-        displayOrderNo: machinestatus?.displayOrderNo || '',
+        name:techparam?.name || 'N/A',
+        code: techparam?.code || '',
+        description:techparam?.description || 'N/A',
+        createdAt: techparam?.createdAt || '',
+        updatedAt: techparam?.updatedAt || '',
+        techparamcategory: techparam?.techparamcategory || 'NA', 
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machinestatus]
+    [techparam]
     );
 
   const { themeStretch } = useSettingsContext();
@@ -91,32 +97,32 @@ export default function StatusEditForm() {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getMachineStatus(id));
+    dispatch(getTechparam(id));
     
 
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (machinestatus) {
+    if (techparam) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [machinestatus]);
+  }, [techparam]);
   console.log(id, 'testing id')
 
   const toggleCancel = () => 
     {
-      dispatch(updateMachinestatus(false));
-      navigate(PATH_MACHINE.machineStatus.view(id));
+      dispatch(updateTechparam(false));
+      navigate(PATH_MACHINE.parameters.view(id));
     };
 
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      await dispatch(updateMachinestatus({...data,id}));
+      await dispatch(updateTechparam({...data,id}));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machineStatus.view(id));
+      navigate(PATH_MACHINE.parameters.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -127,18 +133,27 @@ export default function StatusEditForm() {
 
 
   return (
+    <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
-      <Helmet>
-        <title> Machine: Status | Machine ERP</title>
-      </Helmet>
-
       
-
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3 }}>
+      
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
+          <Card sx={{ p: 3}}>
             <Stack spacing={3}>
             <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(2, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+
+              <RHFTextField name="name" label="Machine Tech Param" required />
+              <RHFTextField name="code" label="Code" required />
+              </Box>
+              <Box
               rowGap={2}
               columnGap={2}
               display="grid"
@@ -147,13 +162,18 @@ export default function StatusEditForm() {
                 sm: 'repeat(1, 1fr)',
               }}
             >
-
-                <RHFTextField name="name" label="Machine status" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFTextField name="displayOrderNo" label="Display Order No" type='number' />
-              {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
-                    <option value="" defaultValue/>
-              </RHFSelect> */}
+              <Autocomplete
+                value={paramVal || null}
+                options={techparamcategories}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  setParamVal(newValue);
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Tech Param Categories" />}
+                ChipProps={{ size: 'small' }}
+              />
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"
@@ -167,41 +187,19 @@ export default function StatusEditForm() {
             />
              </Box>
              
-              
-             
               </Stack>
 
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
-                }}
-              > 
-
-                <LoadingButton 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
-                  loading={isSubmitting}>
-                    Save Changes
-                </LoadingButton>
-
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-            </Box>
+            <Stack alignItems="flex-start" sx={{ mt:1 }}>
+              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+                Save Tech Param
+              </LoadingButton>
+            </Stack>
                         
             </Card>
           
           </Grid>
-        </Grid>
+        
     </FormProvider>
+    </Container>
   );
 }

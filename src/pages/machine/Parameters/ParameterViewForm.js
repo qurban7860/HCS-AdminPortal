@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getMachineStatus, updateMachinestatus } from '../../../redux/slices/products/statuses';
+import { getTechparam, updateTechparam } from '../../../redux/slices/products/parameters';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -31,26 +31,26 @@ import FormProvider, {
 
 
 StatusViewForm.propTypes = {
-  currentMachinestatus: PropTypes.object,
+  currentTechparam: PropTypes.object,
 };
 
 // ----------------------------------------------------------------------
 
-export default function StatusViewForm({ currentMachinestatus = null }) {
+export default function StatusViewForm({ currentTechparam = null }) {
 
 
   const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
-    dispatch(updateMachinestatus(true));
-    navigate(PATH_MACHINE.machineStatus.statusedit(id));
+    dispatch(updateTechparam(true));
+    navigate(PATH_MACHINE.parameters.parameteredit(id));
   }
 
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { machinestatus } = useSelector((state) => state.machinestatus);
+  const { techparam } = useSelector((state) => state.techparam);
 
   const { id } = useParams();
 
@@ -60,15 +60,16 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinestatus?.name || 'N/A',
-        description:machinestatus?.description || 'N/A',
-        createdAt: machinestatus?.createdAt || '',
-        updatedAt: machinestatus?.updatedAt || '',
-        displayOrderNo: machinestatus?.displayOrderNo || '',
+        name:techparam?.name || 'N/A',
+        code: techparam?.code || '',
+        description:techparam?.description || 'N/A',
+        createdAt: techparam?.createdAt || '',
+        updatedAt: techparam?.updatedAt || '',
+        techparamcategory: techparam?.techparamcategory || 'NA', 
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentMachinestatus, machinestatus]
+    [currentTechparam, techparam]
     );
 
 
@@ -98,6 +99,14 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
 
         </Grid>
 
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Code
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.code ? defaultValues.code : 'N/A'}</Typography>
+
+        </Grid>
 
         <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
@@ -107,14 +116,16 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
 
         </Grid>
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Display Order No
-          </Typography>
 
-          <Typography variant="body2">{defaultValues.displayOrderNo ? defaultValues.displayOrderNo : 'N/A'}</Typography>
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+              Tech Param Category Name
+            </Typography>
 
-        </Grid>
+            <Typography variant="body2">{defaultValues.techparamcategory.name}</Typography>
+            
+          </Grid>
+        
         
 
         <Grid container spacing={0} sx={{ mb: 5}}>

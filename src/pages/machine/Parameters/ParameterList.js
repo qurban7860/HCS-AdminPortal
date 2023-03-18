@@ -224,7 +224,7 @@ export default function StatusList() {
   return (
     <>
       <Helmet>
-        <title> Machine Statuses: List | Machine ERP </title>
+        <title> Machine Parameter: List | Machine ERP </title>
       </Helmet>
   
       <Container maxWidth={false}>
@@ -247,7 +247,7 @@ export default function StatusList() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >
-              New Status
+              New TechParameter
             </Button>
             </Stack>
             

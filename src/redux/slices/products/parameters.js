@@ -196,6 +196,15 @@ export function saveTechparam(params) {
         if(params.description){
             data.description = params.description;
           }
+          if(params.code){
+            data.code = params.code;
+          }
+
+          if(params.techparamcategory !== ""){
+            data.techparamcategory = params.techparamcategory._id;
+          }else{
+            data.techparamcategory = null
+          }
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`, data);
 
@@ -229,6 +238,14 @@ export function updateTechparam(params) {
       }
       if(params.isDisabled){
         data.isDisabled = params.isDisabled;
+      }
+      if(params.code){
+        data.code = params.code;
+      }
+      if(params.techparamcategory !== ""){
+        data.techparamcategory = params.techparamcategory._id;
+      }else{
+        data.techparamcategory = null
       }
       
       

@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getMachinestatuses, setMachinestatusesEditFormVisibility } from '../../../redux/slices/products/statuses';
+import { getTechparams, setTechparamEditFormVisibility } from '../../../redux/slices/products/parameters';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -40,36 +40,36 @@ export default function StatusViewPage({editPage}) {
 
   const { themeStretch } = useSettingsContext();
 
-  const { machinestatusEditFormFlag } = useSelector((state) => state.machinestatus);
+  const { techparamEditFormFlag } = useSelector((state) => state.techparam);
 
-  const { machinestatusEditFormVisibility } = useSelector((state) => state.machinestatus);
+  const { TechparamEditFormVisibility } = useSelector((state) => state.techparam);
   
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
 
   const [currentComponent, setCurrentComponent] = useState(<ParameterViewForm/>);
 
-  const [machinestatusFlag, setMachinestatusFlag] = useState(true);
-  const {machinestatus} = useSelector((state) => state.machinestatus);
+  const [techparamFlag, setTechparamFlag] = useState(true);
+  const {techparam} = useSelector((state) => state.techparam);
   
   useLayoutEffect(() => {
-    dispatch(setMachinestatusesEditFormVisibility(editFlag));
+    dispatch(setTechparamEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
 
   useEffect(() => {
-    if(machinestatusEditFormFlag){
+    if(techparamEditFormFlag){
       setCurrentComponent(<ParameterEditForm/>);
     }else{
-      setMachinestatusFlag(false);
+      setTechparamFlag(false);
       setCurrentComponent(<ParameterViewForm/>);        
     }
-  }, [editPage, machinestatusEditFormFlag, machinestatus]);
+  }, [editPage, techparamEditFormFlag, techparam]);
 
   
   return (
     <>
       <Helmet>
-        <title> Machine Statuses List: Detail | Machine ERP</title>
+        <title> Machine Parameter List: Detail | Machine ERP</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -83,7 +83,7 @@ export default function StatusViewPage({editPage}) {
             mt: '24px',
           }}
         >
-          <MachineCover name={machinestatus?.name} /> 
+          <MachineCover name={techparam?.name} /> 
         </Card>
         
         <ParameterViewForm/>
