@@ -81,6 +81,7 @@ export default function SupplierViewPage({editPage}) {
             mb: 3,
             height: 160,
             position: 'relative',
+            mt: '24px',
           }}
         >
           <SupplierCover name={supplier?.name} /> 

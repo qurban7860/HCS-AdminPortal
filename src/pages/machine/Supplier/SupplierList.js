@@ -42,8 +42,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import SupplierListTableRow from './SupplierListTableRow';
 import SupplierListTableToolbar from './SupplierListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
-
+import { MachineCoverList } from '../util/MachineCoverList';
 
 // ----------------------------------------------------------------------
 
@@ -228,11 +227,16 @@ export default function SupplierList() {
       </Helmet>
 
       <Container maxWidth={false}>
-      
-      <CustomBreadcrumbs 
-          heading="Supplier List"
-          sx={{ mb: -3, mt: 3 }}
-        />
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='Supplier List'/>
+        </Card>
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
             <Button
               // alignItems 
@@ -257,7 +261,7 @@ export default function SupplierList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
+              
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -276,7 +280,7 @@ export default function SupplierList() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size='small' sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -328,9 +332,7 @@ export default function SupplierList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
+           
           />
         </Card>
         

@@ -43,7 +43,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import StatusListTableRow from './StatusListTableRow';
 import StatusListTableToolbar from './StatusListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
+import { MachineCoverList } from '../util/MachineCoverList';
 
 
 
@@ -229,11 +229,16 @@ export default function StatusList() {
       </Helmet>
 
       <Container maxWidth={false}>
-      
-      <CustomBreadcrumbs 
-          heading="Status List"
-          sx={{ mb: -3, mt: 3 }}
-        />
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='Status List'/>
+        </Card>
 
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
             <Button

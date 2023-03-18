@@ -42,6 +42,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import CategoryListTableRow from './CategoryListTableRow';
 import CategoryListTableToolbar from './CategoryListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
+import { MachineCoverList } from '../util/MachineCoverList';
 
 
 
@@ -228,12 +229,18 @@ export default function CategoryList() {
         <title> Category: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      
-      <CustomBreadcrumbs 
-          heading="Category List"
-          sx={{ mb: -3, mt: 3 }}
-        />
+      <Container maxWidth={false}>
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='Category List'/>
+        </Card>
+        
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
         <Button
               // alignItems 

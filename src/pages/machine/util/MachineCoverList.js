@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 // utils
-import PersonIcon from '@mui/icons-material/Person';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import { bgBlur } from '../../../utils/cssStyles';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -44,20 +44,20 @@ const StyledInfo = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-CustomerCoverList.propTypes = {
+MachineCoverList.propTypes = {
   cover: PropTypes.string,
   name: PropTypes.string,
   role: PropTypes.string,
 };
 
-export function CustomerCoverList({ name, role, cover }) {
-//   const { customer } = useAuthContext();
+export function MachineCoverList({ name, role, cover }) {
+//   cMachine } = useAuthContext();
 
   return (
     <StyledRoot>
       <StyledInfo>
         <CustomAvatar
-        //   src={customer?.photoURL}
+        // Machine?.photoURL}
         //   alt={name}
         //   name={name}Ï
           sx={{
@@ -70,7 +70,7 @@ export function CustomerCoverList({ name, role, cover }) {
             height: { xs: 80, md: 110 },
           }}
         >
-            <PersonIcon sx={{
+            <ManageAccountsIcon sx={{
                  width: {xs: 32, md: 48 }, 
                  height: {xs: 32, md: 48},
                  color: 'white'

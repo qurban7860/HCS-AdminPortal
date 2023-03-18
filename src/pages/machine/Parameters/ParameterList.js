@@ -43,8 +43,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ParameterListTableRow from './ParameterListTableRow';
 import ParameterListTableToolbar from './ParameterListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
-
+import { MachineCoverList } from '../util/MachineCoverList';
 
 
 // ----------------------------------------------------------------------
@@ -227,13 +226,18 @@ export default function StatusList() {
       <Helmet>
         <title> Machine Statuses: List | Machine ERP </title>
       </Helmet>
-
+  
       <Container maxWidth={false}>
-      
-      <CustomBreadcrumbs 
-          heading="Status List"
-          sx={{ mb: -3, mt: 3 }}
-        />
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='TechParameter List'/>
+        </Card>
 
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
             <Button

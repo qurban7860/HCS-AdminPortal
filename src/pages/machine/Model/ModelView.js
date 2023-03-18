@@ -77,6 +77,7 @@ export default function ModelViewPage({editPage}) {
             mb: 3,
             height: 160,
             position: 'relative',
+            mt: '24px',
           }}
         >
           <MachineCover name={machinemodel?.name} /> 

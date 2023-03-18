@@ -42,7 +42,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ToolListTableRow from './ToolListTableRow';
 import ToolListTableToolbar from './ToolListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
+import { MachineCoverList } from '../util/MachineCoverList';
 
 
 // ----------------------------------------------------------------------
@@ -228,12 +228,17 @@ export default function ToolList() {
         <title> Tool: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      
-      <CustomBreadcrumbs 
-          heading="Tool List"
-          sx={{ mb: -3, mt: 3 }}
-        />
+      <Container maxWidth={false}>
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='Tool List'/>
+        </Card>
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
         <Button
               // alignItems 

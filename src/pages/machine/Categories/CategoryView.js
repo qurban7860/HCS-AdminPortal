@@ -67,7 +67,7 @@ export default function CategoryViewPage({editPage}) {
       setCurrentComponent(<CategoryViewForm/>);        
     }
   }, [editPage, categoryEditFormFlag, category]);
-  console.log( "muzna")
+  
   return (
     <>
       <Helmet>
@@ -82,6 +82,7 @@ export default function CategoryViewPage({editPage}) {
             mb: 3,
             height: 160,
             position: 'relative',
+            mt: '24px',
           }}
         >
           <MachineCover name={category?.name} /> 

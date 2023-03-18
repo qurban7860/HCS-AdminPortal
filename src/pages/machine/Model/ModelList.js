@@ -43,7 +43,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
+import { MachineCoverList } from '../util/MachineCoverList';
 
 
 
@@ -229,12 +229,18 @@ export default function ModelList() {
         <title> Machine Models: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='Model List'/>
+        </Card>
       
-      <CustomBreadcrumbs 
-          heading="Model List"
-          sx={{ mb: -3, mt: 3 }}
-        />
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
         <Button
               // alignItems 

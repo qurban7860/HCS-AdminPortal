@@ -224,59 +224,13 @@ export default function CustomerList() {
             mb: 3,
             height: 160,
             position: 'relative',
+            mt: '24px',
           }}
         >
           <CustomerCoverList name='Customer List'/>
-
-          {/* <Tabs
-            value={currentTab}
-            onChange={(event, newValue) => setCurrentTab(newValue)}
-            sx={{
-  
-              width: 1,
-              bottom: 0,
-              zIndex: 9,
-              position: 'absolute',
-              bgcolor: 'background.paper',
-              '& .MuiTabs-flexContainer': {
-                pr: { md: 3 },
-                justifyContent: {
-                  sm: 'center',
-                  md: 'flex-end',
-                },
-              },
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
-            ))}
-          </Tabs> */}
-          
         </Card>
         
-      {/* <CustomerCover name = 'Customer List' /> */}
-
-
-      {/* <Card sx={{
-        mt: 5,
-        background: '#364782',
-        color: 'white'
-        }}>
-        
-        <CustomBreadcrumbs
-          heading="Customer List"
-          sx={{ mb: 3, mt: 4, ml: 3 }}
-        />
-        <Stack alignItems="flex-end" > 
-            <Button sx={{ mt: -8, mr: 3, }}
-              // onClick={toggleAdd}
-                variant="contained"
-                startIcon={ <Iconify icon="eva:plus-fill" /> }
-                >
-                Add Customer 
-            </Button>
-          </Stack>
-        </Card> */}
+      
         <Card sx={{mt: 3 }}>
           <CustomerListTableToolbar
             filterName={filterName}
