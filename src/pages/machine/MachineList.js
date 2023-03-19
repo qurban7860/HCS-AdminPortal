@@ -276,7 +276,7 @@ export default function MachineList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              handleDeleteRow(selected);
               handleCloseConfirm();
             }}
           >

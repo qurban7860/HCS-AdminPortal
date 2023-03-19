@@ -51,7 +51,7 @@ export default function CustomerViewForm() {
       status:                   machine?.status?.name || "",
       customer:                 machine?.customer?.name || "",
       instalationSite:          machine?.instalationSite?.name || "",
-      billingSite:              machine?.billingSite.Box?.name || "",
+      billingSite:              machine?.billingSite?.name || "",
       instalationAddressCity:   machine?.instalationSite?.address?.city || "",  
       instalationAddressCountry:machine?.instalationSite?.address?.country || "",    
       description:              machine?.description || "",
@@ -60,12 +60,12 @@ export default function CustomerViewForm() {
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
       createdAt:                machine?.createdAt || "",
-      createdByFname:           machine?.createdBy.firstName || "",
-      createdByLname:           machine?.createdBy.lastName || "",
+      createdByFname:           machine?.createdBy?.firstName || "",
+      createdByLname:           machine?.createdBy?.lastName || "",
       createdIP:                machine?.createdIP || "",
       updatedAt:                machine?.updatedAt || "",
-      updatedByFname:           machine?.updatedBy.firstName || "",
-      updatedByLname:           machine?.updatedBy.lastName || "",
+      updatedByFname:           machine?.updatedBy?.firstName || "",
+      updatedByLname:           machine?.updatedBy?.lastName || "",
       updatedIP:                machine?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,7 +75,7 @@ export default function CustomerViewForm() {
 
   return (
 
-      <Card sx={{ p: 4 }}>
+      <Card sx={{ p: 3 }}>
       {/* <Grid item xs={12} sm={12} > */}
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4}}>
               <Button

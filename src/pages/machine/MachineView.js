@@ -62,7 +62,7 @@ export default function MachineView({editPage}) {
 
   const dispatch = useDispatch();
 
-  const {  machine } = useSelector((state) => state.machine);
+  const {  machine , machines  } = useSelector((state) => state.machine);
 
 //   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
 //   const { contactEditFormVisibility } = useSelector((state) => state.contact);
@@ -74,7 +74,7 @@ export default function MachineView({editPage}) {
 
   const [currentComponent, setCurrentComponent] = useState(<MachineViewForm/>);
 
-//   const [machineFlag, setMachineFlag] = useState(true);
+  // const [machineFlag, setMachineFlag] = useState(true);
 
   useEffect(() => {
     if(id !== 'null'){
@@ -105,28 +105,35 @@ export default function MachineView({editPage}) {
       component: currentComponent
     },
     {
-    //   disabled: machineEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
+      // disabled: setMachineEditFormVisibility,
       value: 'liscence',
       label: 'Liscence',
       icon: <Iconify icon="eva:navigation-2-outline" />,
-      component: <MachineViewForm/>,
+      // component: <MachineViewForm/>,
     },
     {
-    //   disabled: machineEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
+      // disabled: setMachineEditFormVisibility,
       value: 'toolsInstalled',
       label: 'Tools Installed',
       icon: <Iconify icon="eva:people-outline" />,
-      component: <MachineViewForm/>,
+      // component: <MachineViewForm/>,
     },
     {
-    //   disabled: machineEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
+      // disabled: setMachineEditFormVisibility,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="eva:archive-outline" />,
-      component: <MachineViewForm/>
+      // component: <MachineViewForm/>
     },
     {
-    //   disabled: machineEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      // disabled: setMachineEditFormVisibility,
+      value: 'documents',
+      label: 'Documents',
+      icon: <Iconify icon="eva:archive-outline" />,
+      // component: <MachineViewForm/>
+    },
+    {
+      // disabled: setMachineEditFormVisibility,
       value: 'techParamValues',
       label: 'Tech Param Values',
       icon: <Iconify icon="eva:book-fill" />,
