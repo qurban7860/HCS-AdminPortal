@@ -62,7 +62,9 @@ export default function MachineView({editPage}) {
 
   const dispatch = useDispatch();
 
-  const {  machine , machines  } = useSelector((state) => state.machine);
+  const {  machine , machines , machineEditFormFlag } = useSelector((state) => state.machine);
+  const [editFlag, setEditFlag] = useState(false);
+  const toggleEditFlag = () => setEditFlag(value => !value);
 
 //   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
 //   const { contactEditFormVisibility } = useSelector((state) => state.contact);
@@ -74,7 +76,7 @@ export default function MachineView({editPage}) {
 
   const [currentComponent, setCurrentComponent] = useState(<MachineViewForm/>);
 
-  // const [machineFlag, setMachineFlag] = useState(true);
+  const [machineFlag, setMachineFlag] = useState(true);
 
   useEffect(() => {
     if(id !== 'null'){
@@ -86,14 +88,14 @@ export default function MachineView({editPage}) {
 
   useEffect(() => {
     /* eslint-disable */
-    // if(machineEditFormFlag){
-    //   setCurrentComponent(<MachineEditForm/>);
-    // }else{
-    //   setMachineFlag(false);
+    if(machineEditFormFlag){
+      setCurrentComponent(<MachineEditForm/>);
+    }else{
+      setMachineFlag(false);
       setCurrentComponent(<MachineViewForm/>);        
-    // }
+    }
     /* eslint-enable */
-  }, [dispatch, machine]);
+  }, [dispatch,machineEditFormFlag, machine]);
 
 
   const TABS = [
@@ -148,9 +150,9 @@ export default function MachineView({editPage}) {
       </Helmet>
 
       <Container maxWidth={false}>
-        <CustomBreadcrumbs
+        {/* <CustomBreadcrumbs
           heading="Machine View"
-        />
+        /> */}
         <Card
           sx={{
             mb: 3,

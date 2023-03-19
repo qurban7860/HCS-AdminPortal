@@ -207,6 +207,7 @@ const handleKeyPress = (e) => {
   const handleChange = (e) => {
 		setCurrTag(e.target.value);
   };
+
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -407,7 +408,7 @@ const handleKeyPress = (e) => {
             />
           </ListItem>
        )}
-       <TextField name="tag" sx={{pt:1}}   variant="standard"  
+       <TextField name="tag" sx={{p:1}}   variant="standard"  
         InputProps={{disableUnderline: true,}} 
         placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
     </Card>

@@ -132,6 +132,12 @@ export default function CustomerViewForm() {
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+                Work Order / Perchase Order
+                </Typography>
+                <Typography variant="body2">{defaultValues.workOrderRef? defaultValues.workOrderRef : ''}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Customer
                 </Typography>
                 <Typography variant="body2">{defaultValues.customer? defaultValues.customer : ''}</Typography>

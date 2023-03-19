@@ -287,7 +287,7 @@ export function updateMachine(params) {
         data.primaryTechnicalContact = params.primaryTechnicalContact;        
       }
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}Machines/customers/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data
       );
 
