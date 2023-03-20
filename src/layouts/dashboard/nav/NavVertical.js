@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
-import { Box, Stack, Drawer } from '@mui/material';
+import { Box, Stack, Drawer, Slide } from '@mui/material'
 // hooks
+import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
 // config
 import { NAV } from '../../../config-global';
@@ -26,7 +27,7 @@ NavVertical.propTypes = {
 
 export default function NavVertical({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-
+  const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -69,7 +70,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
       <NavDocs />
     </Scrollbar>
   );
-
+// console.log({ themeLayout, isDesktop })
   return (
     <Box
       component="nav"
@@ -83,7 +84,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
       {isDesktop ? (
         <Drawer
           open
-          variant="permanent"
+          variant="persistent"
           PaperProps={{
             sx: {
               zIndex: 0,
