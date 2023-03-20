@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
+
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ListAltIcon from '@mui/icons-material/ListAlt';
@@ -52,6 +54,10 @@ MachineCoverList.propTypes = {
 };
 
 export function MachineCoverList({ name, role, cover }) {
+
+    // const [selectedOption, setSelectedOption] = useState('Option 1');
+    // const [selectedOption2, setSelectedOption2] = useState('Option 1');
+    // const [selectedOption3, setSelectedOption3] = useState('Option 1');
 //   cMachine } = useAuthContext();
 
   return (
@@ -89,9 +95,41 @@ export function MachineCoverList({ name, role, cover }) {
           }}
         >
           <Typography variant="h4">{name}</Typography>
-
+          {/* Muzna */}
           {/* <Typography sx={{ opacity: 0.72 }}>{role}</Typography> */}
         </Box>
+        {/* <Select
+          value={selectedOption}
+          onChange={(event) => setSelectedOption(event.target.value)}
+          sx={{ ml: 2, color: 'common.white' }}
+        ><MenuItem value="Option 1">Common Settings </MenuItem>
+          <MenuItem value="Option 2">Machine Categories </MenuItem>
+          <MenuItem value="Option 3">Machine Models</MenuItem>
+          <MenuItem value="Option 4">Machine Suppliers</MenuItem>
+          <MenuItem value="Option 5">Machine Status</MenuItem>
+        </Select>
+
+        <Select
+          value={selectedOption2}
+          onChange={(event) => setSelectedOption3(event.target.value)}
+          sx={{ ml: 2, color: 'common.white' }}
+        > 
+        <MenuItem value="Option 1">Technical Settings</MenuItem>
+          <MenuItem value="Option 2">Setting Categories</MenuItem>
+          <MenuItem value="Option 3">Parameters</MenuItem>
+          
+        </Select>
+
+        <Select
+          value={selectedOption3}
+          onChange={(event) => setSelectedOption2(event.target.value)}
+          sx={{ ml: 2, color: 'common.white' }}
+        >
+          <MenuItem value="Option 1">Tools Information</MenuItem>
+          <MenuItem value="Option 2">Tools</MenuItem>
+          
+        </Select> */}
+
       </StyledInfo>
 
       <Image

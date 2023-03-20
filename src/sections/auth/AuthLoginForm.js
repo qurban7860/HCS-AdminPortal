@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment } from '@mui/material';
+import { Link, Stack, Alert, IconButton, InputAdornment, Card } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
@@ -59,7 +59,9 @@ export default function AuthLoginForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    
       <Stack spacing={3} sx={{mt: -3}}>
+      
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
         <RHFTextField name="email" label="Email address" />
@@ -78,6 +80,7 @@ export default function AuthLoginForm() {
             ),
           }}
         />
+        
       </Stack>
 
       <Stack alignItems="flex-end" sx={{ my: 2 }}>
@@ -91,6 +94,7 @@ export default function AuthLoginForm() {
           Forgot password?
         </Link>
       </Stack>
+      
 
       <LoadingButton
         fullWidth
@@ -99,17 +103,20 @@ export default function AuthLoginForm() {
         type="submit"
         variant="contained"
         loading={isSubmitSuccessful || isSubmitting}
-        sx={{
-          bgcolor: 'text.primary',
-          color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-          '&:hover': {
-            bgcolor: 'text.primary',
-            color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-          },
-        }}
+        // sx={{
+        //   bgcolor: 'text.primary',
+        //   color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
+        //   '&:hover': {
+        //     bgcolor: 'text.primary',
+        //     color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
+        //   },
+        // }}
+        sx={{bgcolor: '#10079F', color: 'white'}}
       >
         Login
       </LoadingButton>
+      
+
     </FormProvider>
   );
 }
