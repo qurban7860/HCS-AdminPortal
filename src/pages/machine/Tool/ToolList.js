@@ -217,11 +217,6 @@ export default function ToolList() {
     setFilterStatus([]);
   };
 
-  const toggleAdd = () => 
-    {
-      navigate(PATH_MACHINE.tool.tool)
-    };
-
   return (
     <>
       <Helmet>
@@ -239,18 +234,7 @@ export default function ToolList() {
         >
           <MachineCoverList name='Tool List'/>
         </Card>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
-        <Button
-              // alignItems 
-              onClick={toggleAdd}
-              alignItems="flex-end"
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Tool
-            </Button>
-            </Stack>
-
+       
         
         
         <Card sx={{ mt: 3 }}>

@@ -32,7 +32,9 @@ export default function SupplierEdit() {
   const { supplier } = useSelector((state) => state.supplier);
 
   useLayoutEffect(() => {
-    dispatch(getSupplier(id));
+    if(id){
+      dispatch(getSupplier(id));
+    }
   }, [dispatch, id]);
 
   

@@ -211,6 +211,10 @@ export function saveSupplier(params) {
         if(params.website){
           data.website = params.website;        
         }
+        if(params.street || params.subrub || params.city || params.region || params.country) {
+          data.address = {}
+        }
+        
         if(params.street){
           data.address.street = params.street;        
         }
@@ -274,6 +278,11 @@ export function updateSupplier(params) {
       if(params.fax){
         data.fax = params.fax;        
       }
+      
+      if(params.street || params.subrub || params.city || params.region || params.country) {
+        data.address = {}
+      }
+
       if(params.street){
         data.address.street = params.street;        
       }
