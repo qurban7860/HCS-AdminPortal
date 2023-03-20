@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { Box, Stack, Drawer, Slide } from '@mui/material'
+
 // hooks
 import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
@@ -30,7 +31,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
   const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
 
-  useEffect(() => {
+  useEffect(() => {                                    
     if (openNav) {
       onCloseNav();
     }
@@ -70,7 +71,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
       <NavDocs />
     </Scrollbar>
   );
-// console.log({ themeLayout, isDesktop })
+      // console.log({ themeLayout, isDesktop })
   return (
     <Box
       component="nav"

@@ -93,7 +93,7 @@ export default function GeneralAppPage() {
 
           <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
-              title="Total Active Users"
+              title="Active Users"
               title2="(Under Construction)"
               // percent={2.6}
               // total={18765}
@@ -106,7 +106,7 @@ export default function GeneralAppPage() {
 
           <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
-              title="Total Machines"
+              title="Machines"
               title2="(Under Construction)"
               // percent={0.2}
               // total={20}
@@ -119,7 +119,7 @@ export default function GeneralAppPage() {
 
           <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
-              title="Total Customers"
+              title="Customers"
               title2="(Under Construction)"
               // percent={-0.1}
               // total={678}
