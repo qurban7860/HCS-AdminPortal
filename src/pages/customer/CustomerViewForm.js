@@ -48,12 +48,14 @@ export default function CustomerViewForm() {
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
-      createdAt: customer?.createdAt || "",
-      createdBy: customer?.createdBy || "",
-      createdIP: customer?.createdIP || "",
-      updatedAt: customer?.updatedAt || "",
-      updatedBy: customer?.updatedBy || "",
-      updatedIP: customer?.updatedIP || "",
+      createdAt:                customer?.createdAt || "",
+      createdByFname:           customer?.createdBy?.firstName || "",
+      createdByLname:           customer?.createdBy?.lastName || "",
+      createdIP:                customer?.createdIP || "",
+      updatedAt:                customer?.updatedAt || "",
+      updatedByFname:           customer?.updatedBy?.firstName || "",
+      updatedByLname:           customer?.updatedBy?.lastName || "",
+      updatedIP:                customer?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -269,12 +271,12 @@ export default function CustomerViewForm() {
         <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdBy}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFname} {defaultValues.createdByLname} {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedBy}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

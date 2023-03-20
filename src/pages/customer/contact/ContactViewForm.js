@@ -74,12 +74,14 @@ export default function ContactViewForm({ currentContact = null }) {
       contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
       phone: currentContact ? currentContact.phone : contact?.phone || 'N/A',
       email: currentContact ? currentContact.email : contact?.email || 'N/A',
-      createdAt: currentContact?.createdAt || "",
-      createdBy: currentContact?.createdBy || "",
-      createdIP: currentContact?.createdIP || "",
-      updatedAt: currentContact?.updatedAt || "",
-      updatedBy: currentContact?.updatedBy || "",
-      updatedIP: currentContact?.updatedIP || "",
+      createdAt:                currentContact?.createdAt || "",
+      createdByFname:           currentContact?.createdBy?.firstName || "",
+      createdByLname:           currentContact?.createdBy?.lastName || "",
+      createdIP:                currentContact?.createdIP || "",
+      updatedAt:                currentContact?.updatedAt || "",
+      updatedByFname:           currentContact?.updatedBy?.firstName || "",
+      updatedByLname:           currentContact?.updatedBy?.lastName || "",
+      updatedIP:                currentContact?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentContact, contact]
@@ -169,12 +171,12 @@ export default function ContactViewForm({ currentContact = null }) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdBy}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedBy}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

@@ -78,12 +78,14 @@ export default function SiteViewForm({ currentSite = null }) {
         city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
         region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
-        createdAt: currentSite?.createdAt || "",
-        createdBy: currentSite?.createdBy || "",
-        createdIP: currentSite?.createdIP || "",
-        updatedAt: currentSite?.updatedAt || "",
-        updatedBy: currentSite?.updatedBy || "",
-        updatedIP: currentSite?.updatedIP || "",
+        createdAt:                currentSite?.createdAt || "",
+        createdByFname:           currentSite?.createdBy?.firstName || "",
+        createdByLname:           currentSite?.createdBy?.lastName || "",
+        createdIP:                currentSite?.createdIP || "",
+        updatedAt:                currentSite?.updatedAt || "",
+        updatedByFname:           currentSite?.updatedBy?.firstName || "",
+        updatedByLname:           currentSite?.updatedBy?.lastName || "",
+        updatedIP:                currentSite?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSite, site]
@@ -226,12 +228,12 @@ export default function SiteViewForm({ currentSite = null }) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdBy}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedBy}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

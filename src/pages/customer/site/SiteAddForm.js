@@ -18,6 +18,7 @@ import { countries } from '../../../assets/data';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
+  RHFAutocomplete
 } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -40,7 +41,7 @@ export default function SiteAddForm() {
     customer: Yup.string(),
     billingSite: Yup.string(),
     phone: Yup.string(),
-    email: Yup.string(),
+    email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     fax: Yup.string(),
     website: Yup.string(),
     street: Yup.string(),
@@ -165,14 +166,23 @@ export default function SiteAddForm() {
 
                 <RHFTextField name="region" label="Region" />
 
-                <RHFSelect native name="country" label="Country" placeholder="Country">
+                {/* <RHFSelect native name="country" label="Country" placeholder="Country">
                   <option defaultValue value="null" selected >No Country Selected</option>
                   {countries.map((country) => (
                     <option key={country.code} value={country.label}>
                       {country.label}
                     </option>
                   ))}
-                </RHFSelect>
+                </RHFSelect> */}
+                <RHFAutocomplete
+                  name="country"
+                  label="Country"
+                  freeSolo
+                  options={countries.map((country) => country.label)}
+                  // getOptionLabel={(option) => option.title}
+                  
+                  ChipProps={{ size: 'small' }}
+                />
 
               </Box>
 

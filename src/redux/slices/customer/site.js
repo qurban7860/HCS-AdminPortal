@@ -229,9 +229,20 @@ export function getSites(customerID = null) {
       let response = null;
       if(customerID){
         response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
+        // {
+        //   params: {
+        //     isArchived: false
+        //   }
+        // }
         {
           params: {
-            isArchived: false
+            query: {
+              isArchived: false, 
+            },
+            populate:[
+                    {path: 'createdBy', select: 'firstName lastName'},
+                    {path: 'updatedBy', select: 'firstName lastName'}
+                    ]
           }
         }
         );

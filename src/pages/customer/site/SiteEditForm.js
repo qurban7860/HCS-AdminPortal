@@ -45,7 +45,7 @@ export default function SiteEditForm() {
     name: Yup.string().min(5).max(40).required('Name is required'),
     billingSite: Yup.string(),
     phone: Yup.string(),
-    email: Yup.string(),
+    email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     fax: Yup.string(),
     website: Yup.string(),
     street: Yup.string(),

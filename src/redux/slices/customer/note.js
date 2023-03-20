@@ -202,7 +202,9 @@ export function getNotes(id) {
           populate:[
                   {path: 'contact', select: 'firstName lastName'},
                   {path: 'site', select: 'name'},
-                  {path: 'user', select: 'firstName'}
+                  {path: 'user', select: 'firstName'},
+                  {path: 'createdBy', select: 'firstName lastName'},
+                  {path: 'updatedBy', select: 'firstName lastName'}
                   ]
         }
       }

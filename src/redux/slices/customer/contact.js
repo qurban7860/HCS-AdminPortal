@@ -212,17 +212,24 @@ export function getContacts(customerID = null) {
     dispatch(slice.actions.startLoading());
     try {
       let response = null;
-      if(customerID){
+      // if(customerID){
         response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
         {
           params: {
-            isArchived: false
+            query: {
+              isArchived: false, 
+              customer: customerID,
+            },
+            populate:[
+                    {path: 'createdBy', select: 'firstName lastName'},
+                    {path: 'updatedBy', select: 'firstName lastName'}
+                    ]
           }
         }
         );
-      }else{
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers//contacts`);
-      }
+      // }else{
+      //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers//contacts`);
+      // }
       
       // console.log(response);
       // console.log(response.data);

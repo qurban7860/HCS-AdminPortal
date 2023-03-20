@@ -130,7 +130,19 @@ export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
+      {
+        params: {
+          query: {
+            isArchived: false, 
+          },
+          populate:[
+                  {path: 'createdBy', select: 'firstName lastName'},
+                  {path: 'updatedBy', select: 'firstName lastName'}
+                  ]
+        }
+      }
+      );
       dispatch(slice.actions.getCustomerSuccess(response.data));
       // console.log('requested customer', response.data);
     } catch (error) {

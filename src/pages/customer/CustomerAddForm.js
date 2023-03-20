@@ -87,7 +87,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     // site details
     billingSite: Yup.string(),
     phone: Yup.string(),
-    email: Yup.string().email('Email must be a valid email address'),
+    email: Yup.string().trim('The contact name cannot include leading and trailing spaces').email('Email must be a valid email address'),
     fax: Yup.string(),
     website: Yup.string(),
     street: Yup.string(),

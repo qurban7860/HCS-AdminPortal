@@ -63,7 +63,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     title: Yup.string(),
     contactTypes: Yup.array(),
     phone: Yup.string(),
-    email: Yup.string().email('Email must be a valid email address'),
+    email: Yup.string().trim('The email name cannot include leading and trailing spaces').email('Email must be a valid email address'),
   });
 
   const defaultValues = useMemo(
