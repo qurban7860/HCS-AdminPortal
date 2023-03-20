@@ -170,7 +170,7 @@ export default function CustomerViewForm() {
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Tags
                 </Typography>
-                <Typography variant="body2">{defaultValues.customerTags? defaultValues.customerTags : ''}</Typography>
+                <Typography variant="body2">{defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''}</Typography>
             </Grid>
         </Grid>
 

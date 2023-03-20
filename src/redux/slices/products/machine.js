@@ -196,8 +196,8 @@ export function saveMachine(params) {
         if(params.parentMachine){
           data.parentMachine = params.parentMachine;        
         }
-        if(params.pserialNo){
-          data.parentSerialNo = params.pserialNo;        
+        if(params.parentSerialNo){
+          data.parentSerialNo = params.parentSerialNo;        
         }
         if(params.status){
           data.status = params.status;        
@@ -205,11 +205,11 @@ export function saveMachine(params) {
         if(params.supplier){
           data.supplier = params.supplier;        
         }
-        if(params.model){
-            data.machineModel = params.model;        
+        if(params.machineModel){
+            data.machineModel = params.machineModel;        
         }
-        if(params.workOrder){
-          data.workOrder = params.workOrder;        
+        if(params.workOrderRef){
+          data.workOrderRef = params.workOrderRef;        
         }
         if(params.customer){
           data.customer = params.customer;        
@@ -232,8 +232,8 @@ export function saveMachine(params) {
         if(params.supportManager){
             data.supportManager = params.supportManager;        
         }
-        if(params.desc){
-          data.description = params.desc;        
+        if(params.description){
+          data.description = params.description;        
         }
         if(params.customerTags){
           data.customerTags = params.customerTags;        
@@ -264,29 +264,57 @@ export function updateMachine(params) {
       let data = {
         id: params.id,
         name: params.name,
-        tradingName: params.tradingName
       };
      /* eslint-enable */
-
-      if(params.mainSite){
-        data.mainSite = params.mainSite;
-      }
-      if(params.accountManager){
-        data.accountManager = params.accountManager;
-      }
-      if(params.projectManager){
-        data.projectManager = params.projectManager;
-      }
-      if(params.supportManager){
-        data.supportManager = params.supportManager;
-      }
-      if(params.primaryBillingContact){
-        data.primaryBillingContact = params.primaryBillingContact;        
-      }
-      if(params.primaryTechnicalContact){
-        data.primaryTechnicalContact = params.primaryTechnicalContact;        
-      }
-      
+    if(params.serialNo){
+      data.serialNo = params.serialNo;        
+    }
+    if(params.parentMachine){
+      data.parentMachine = params.parentMachine;        
+    }
+    if(params.parentSerialNo){
+      data.parentSerialNo = params.parentSerialNo;        
+    }
+    if(params.status){
+      data.status = params.status;        
+    }
+    if(params.supplier){
+      data.supplier = params.supplier;        
+    }
+    if(params.machineModel){
+        data.machineModel = params.machineModel;        
+    }
+    if(params.workOrderRef){
+      data.workOrderRef = params.workOrderRef;        
+    }
+    if(params.customer){
+      data.customer = params.customer;        
+    }
+    if(params.billingSite){
+      data.billingSite = params.billingSite;        
+    }
+    if(params.instalationSite){
+      data.instalationSite = params.instalationSite;        
+    }
+    // if(params.operators){
+    //     data.operators = params.operators;        
+    // }
+    if(params.accountManager){
+      data.accountManager = params.accountManager;        
+    }
+    if(params.projectManager){
+        data.projectManager = params.projectManager;        
+    }
+    if(params.supportManager){
+        data.supportManager = params.supportManager;        
+    }
+    if(params.description){
+      data.description = params.description;        
+    }
+    if(params.customerTags){
+      data.customerTags = params.customerTags;        
+    }
+  console.log("Machines Edit : ",data);
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data
       );

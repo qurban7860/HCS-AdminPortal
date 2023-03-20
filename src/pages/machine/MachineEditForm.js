@@ -106,19 +106,19 @@ useLayoutEffect(() => {
     serialNo: Yup.string().required('Serial Number is required'),
     name: Yup.string().min(5).max(40),
     parentMachine: Yup.string(),
-    pserialNo: Yup.string(),
+    parentSerialNo: Yup.string(),
     supplier: Yup.string(),
-    model: Yup.string(),
+    machineModel: Yup.string(),
     status: Yup.string(),
-    workOrder: Yup.string(),
-    customere:Yup.string(),
+    workOrderRef: Yup.string(),
+    customer:Yup.string(),
     instalationSite: Yup.string(),
     billingSite: Yup.string(),
     accountManager: Yup.string(),
     projectManager: Yup.string(),
     supportManager: Yup.string(),
+    description: Yup.string(),
     customerTags: Yup.array(),
-    desc: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -127,18 +127,18 @@ useLayoutEffect(() => {
       serialNo: machine?.serialNo || '',
       name: machine?.name || '',
       parentMachine: machineVal._id,
-      pserialNo: machineVal?.serialNo,
+      parentSerialNo: machineVal?.serialNo,
       supplier: supplierVal?._id,
-      model: modelVal?._id,
+      machineModel: modelVal?._id,
       status: statusVal?._id,
-      workOrder: machine?.workOrderRef || '',
-      customere:customerVal._id,
+      workOrderRef: machine?.workOrderRef || '',
+      customer:customerVal._id,
       instalationSite: installVal?._id,
       billingSite: billingVal?._id,
       accountManager: accoVal?._id,
       projectManager: projVal?._id,
       supportManager: suppVal?._id,
-      desc: machine?.description || '',
+      description: machine?.description || '',
       customerTags: chipData,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,9 +178,9 @@ useLayoutEffect(() => {
 
 const onSubmit = async (data) => {
   data.parentMachine = machineVal?._id || null
-  data.pserialNo = machineVal?.serialNo || null
+  data.parentSerialNo = machineVal?.serialNo || null
   data.supplier = supplierVal?._id || null
-  data.model = modelVal?._id || null
+  data.machineModel = modelVal?._id || null
   data.status = statusVal?._id || null
   data.customer =customerVal._id || null
   data.instalationSite = installVal?._id || null
@@ -190,7 +190,7 @@ const onSubmit = async (data) => {
   data.supportManager = suppVal?._id || null
   data.customerTags = chipData
 
-  console.log("Machines Edit : ",data);
+  // console.log("Machines Edit : ",data);
     try{
       await dispatch(updateMachine(data));
       setMachineVal('');
@@ -325,7 +325,7 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params}  label="Status" />}
                 ChipProps={{ size: 'small' }}
               />
-              <RHFTextField name="workOrder" label="Work Order/ Purchase Order" />
+              <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
             </Box>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
               <Autocomplete sx={{ my:-3}}
@@ -405,7 +405,7 @@ const handleKeyPress = (e) => {
             
               </Box>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
-                <RHFTextField name="desc" label="Description" minRows={8} multiline sx={{ my:-3}}/>
+                <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ my:-3}}/>
               </Box>
 {/* -------------------------start add chips------------------------- */}
 {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
