@@ -222,11 +222,6 @@ export default function TechParamList() {
     setFilterStatus([]);
   };
 
-  const toggleAdd = () => 
-    {
-      navigate(PATH_MACHINE.techParam.techParam)
-    };
-
 
   return (
     <>
@@ -246,17 +241,7 @@ export default function TechParamList() {
           <MachineCoverList name='TechParam Category List'/>
         </Card>
 
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
-            <Button
-              // alignItems 
-              onClick={toggleAdd}
-              alignItems="flex-end"
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New TechParam Category
-            </Button>
-            </Stack>
+        
 
         <Card sx={{mt: 3 }}>
           <TechParamListTableToolbar

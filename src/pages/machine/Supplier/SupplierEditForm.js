@@ -41,8 +41,9 @@ import { countries } from '../../../assets/data';
 
 export default function SupplierEditForm() {
 
-  const { error, supplier } = useSelector((state) => state.supplier);
-
+  const { error, suppliers } = useSelector((state) => state.supplier);
+  const supplier = suppliers
+  
   const dispatch = useDispatch();
 
   const navigate = useNavigate();

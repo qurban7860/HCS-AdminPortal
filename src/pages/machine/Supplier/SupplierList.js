@@ -215,11 +215,6 @@ export default function SupplierList() {
     setFilterStatus([]);
   };
 
-  const toggleAdd = () => 
-    {
-      navigate(PATH_MACHINE.supplier.supplier)
-    };
-
   return (
     <>
       <Helmet>
@@ -237,17 +232,7 @@ export default function SupplierList() {
         >
           <MachineCoverList name='Supplier List'/>
         </Card>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
-            <Button
-              // alignItems 
-              onClick={toggleAdd}
-              alignItems="flex-end"
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Supplier
-            </Button>
-            </Stack>
+      
         <Card sx={{ mt: 3 }}>
           <SupplierListTableToolbar
             filterName={filterName}

@@ -211,11 +211,7 @@ export default function StatusList() {
     await dispatch(getTechparam(id));
     navigate(PATH_MACHINE.parameters.view(id));
   };
-  const toggleAdd = () => 
-    {
-      navigate(PATH_MACHINE.parameters.params)
-    };
-
+ 
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
@@ -238,18 +234,6 @@ export default function StatusList() {
         >
           <MachineCoverList name='TechParameter List'/>
         </Card>
-
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
-            <Button
-              // alignItems 
-              onClick={toggleAdd}
-              alignItems="flex-end"
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New TechParameter
-            </Button>
-            </Stack>
             
         <Card sx={{ mt: 3 }}>
           <ParameterListTableToolbar

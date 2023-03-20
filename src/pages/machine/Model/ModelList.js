@@ -218,10 +218,7 @@ export default function ModelList() {
     setFilterStatus([]);
   };
 
-  const toggleAdd = () => 
-    {
-      navigate(PATH_MACHINE.machineModel.model)
-    };
+  
 
   return (
     <>
@@ -241,17 +238,6 @@ export default function ModelList() {
           <MachineCoverList name='Model List'/>
         </Card>
       
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: 3}}>
-        <Button
-              // alignItems 
-              onClick={toggleAdd}
-              alignItems="flex-end"
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Model
-            </Button>
-            </Stack>
 
         
         
