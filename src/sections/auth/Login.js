@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Alert, Tooltip, Stack, Typography, Link, Box } from '@mui/material';
+import { Alert, Tooltip, Stack, Typography, Link, Box, Card} from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // routes
@@ -19,6 +19,7 @@ export default function Login() {
 
   return (
     <>
+    <Card>
     <LoginLayout
     title={CONFIG.MESSAGE_LOGIN_USER}>
     <Logo
@@ -26,7 +27,8 @@ export default function Login() {
           zIndex: 9,
           position: 'absolute',
           mt: -20,
-          ml: 10,
+          // ml: 5,
+          width: '15%',
           // mt: { xs: 1.5, md: 5 },
           // ml: { xs: 2, md: 5 },
         }}
@@ -62,6 +64,7 @@ export default function Login() {
 
       {/* <AuthWithSocial /> */}
     </LoginLayout>
+    </Card>
     </>
   );
 }
