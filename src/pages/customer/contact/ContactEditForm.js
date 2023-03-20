@@ -104,9 +104,8 @@
     }, [contact]);
 
     const onSubmit = async (data) => {
-      // console.log(data);
       try {
-        await dispatch(updateContact(contact.customer._id, data));
+        await dispatch(updateContact(customer._id, data));
         reset();
         // navigate(PATH_DASHBOARD.contact.list);
       } catch (err) {
