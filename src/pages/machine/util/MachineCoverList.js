@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import ListAltIcon from '@mui/icons-material/ListAlt';
 import { bgBlur } from '../../../utils/cssStyles';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -70,7 +71,7 @@ export function MachineCoverList({ name, role, cover }) {
             height: { xs: 80, md: 110 },
           }}
         >
-            <ManageAccountsIcon sx={{
+            <ListAltIcon sx={{
                  width: {xs: 32, md: 48 }, 
                  height: {xs: 32, md: 48},
                  color: 'white'

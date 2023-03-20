@@ -50,6 +50,7 @@ import { MachineCoverList } from '../util/MachineCoverList';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'category', label: 'Category', align: 'left' },
   { id: 'description', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
   
@@ -109,7 +110,7 @@ export default function StatusList() {
 
   const { techparams, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparam);
 
-  
+  console.log("tech params : ",techparams)
 
   useLayoutEffect( () => {
     console.log('Testing done')
@@ -232,7 +233,7 @@ export default function StatusList() {
             mt: '24px',
           }}
         >
-          <MachineCoverList name='TechParameter List'/>
+          <MachineCoverList name='Technical Parameter List'/>
         </Card>
             
         <Card sx={{ mt: 3 }}>

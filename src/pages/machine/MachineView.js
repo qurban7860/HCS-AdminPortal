@@ -108,16 +108,22 @@ export default function MachineView({editPage}) {
     },
     {
       // disabled: setMachineEditFormVisibility,
-      value: 'liscence',
-      label: 'Liscence',
-      icon: <Iconify icon="eva:navigation-2-outline" />,
+      value: 'settings',
+      label: 'Settings',
+      icon: <Iconify icon="eva:settings-2-outline" />,
+    },
+    {
+      // disabled: setMachineEditFormVisibility,
+      value: 'license',
+      label: 'License',
+      icon: <Iconify icon="mdi:license" />,
       // component: <MachineViewForm/>,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'toolsInstalled',
       label: 'Tools Installed',
-      icon: <Iconify icon="eva:people-outline" />,
+      icon: <Iconify icon="iconoir:tools" />,
       // component: <MachineViewForm/>,
     },
     {
@@ -136,11 +142,16 @@ export default function MachineView({editPage}) {
     },
     {
       // disabled: setMachineEditFormVisibility,
-      value: 'techParamValues',
-      label: 'Tech Param Values',
-      icon: <Iconify icon="eva:book-fill" />,
+      value: 'repairHistory',
+      label: 'Repair History',
+      icon: <Iconify icon="ic:round-manage-history" />,
+    },
+    {
+      // disabled: setMachineEditFormVisibility,
+      value: 'serviceHistory',
+      label: 'Service History',
+      icon: <Iconify icon="ic:round-manage-history" />,
     }
-
   ];
 
   return (

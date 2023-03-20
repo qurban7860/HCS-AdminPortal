@@ -46,8 +46,8 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'Customer', path: PATH_DASHBOARD.customer.list, icon: ICONS.ecommerce },
-      { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon,
+      { title: 'Customers', path: PATH_DASHBOARD.customer.list, icon: <Iconify icon="ph:users-three-light" /> },
+      { title: 'Machines', path: PATH_MACHINE.general.app, icon: <Iconify icon="et:gears" />,
       // children: [
       //   { title: 'Dashboard', path: PATH_MACHINE.general.app },
       //   { title: 'New Machine', path: PATH_MACHINE.machine.new },

@@ -165,7 +165,11 @@ export function deleteMachine(id) {
     dispatch(slice.actions.startLoading());
     try {
       console.log(id);
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`);
+      // const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${id}`,
+      {
+        isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
       console.log(response.data);
       // state.responseMessage = response.data;
@@ -314,7 +318,7 @@ export function updateMachine(params) {
     if(params.customerTags){
       data.customerTags = params.customerTags;        
     }
-  console.log("Machines Edit : ",data);
+  // console.log("Machines Edit : ",data);
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data
       );

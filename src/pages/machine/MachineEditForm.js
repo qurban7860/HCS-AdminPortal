@@ -95,8 +95,8 @@ export default function CustomerEditForm() {
 }, [dispatch , machine]);
 
 useLayoutEffect(() => {
-  if(customerVal !== null && customerVal._id !== undefined){
-    dispatch(getSites(customerVal._id));
+  if(customerVal !== null && customerVal?.id !== ''){
+    dispatch(getSites(customerVal?._id));
   }
 //   setInstallVal(null);
 //   setBillingVal(null);
@@ -104,19 +104,19 @@ useLayoutEffect(() => {
 
   const EditMachineSchema = Yup.object().shape({
     serialNo: Yup.string().required('Serial Number is required'),
-    name: Yup.string().min(5).max(40),
-    parentMachine: Yup.string(),
-    parentSerialNo: Yup.string(),
-    supplier: Yup.string(),
-    machineModel: Yup.string(),
-    status: Yup.string(),
+    name: Yup.string(),
+    // parentMachine: Yup.string(),
+    // parentSerialNo: Yup.string(),
+    // supplier: Yup.string(),
+    // machineModel: Yup.string(),
+    // status: Yup.string(),
     workOrderRef: Yup.string(),
-    customer:Yup.string(),
-    instalationSite: Yup.string(),
-    billingSite: Yup.string(),
-    accountManager: Yup.string(),
-    projectManager: Yup.string(),
-    supportManager: Yup.string(),
+    // customer:Yup.string(),
+    // instalationSite: Yup.string(),
+    // billingSite: Yup.string(),
+    // accountManager: Yup.string(),
+    // projectManager: Yup.string(),
+    // supportManager: Yup.string(),
     description: Yup.string(),
     customerTags: Yup.array(),
   });
@@ -126,18 +126,18 @@ useLayoutEffect(() => {
       id: machine?._id || '',
       serialNo: machine?.serialNo || '',
       name: machine?.name || '',
-      parentMachine: machineVal._id,
-      parentSerialNo: machineVal?.serialNo,
-      supplier: supplierVal?._id,
-      machineModel: modelVal?._id,
-      status: statusVal?._id,
+      parentMachine: machineVal?._id || null,
+      parentSerialNo: machineVal?.serialNo  || null,
+      supplier: supplierVal?._id  || null,
+      machineModel: modelVal?._id  || null,
+      status: statusVal?._id  || null,
       workOrderRef: machine?.workOrderRef || '',
-      customer:customerVal._id,
-      instalationSite: installVal?._id,
-      billingSite: billingVal?._id,
-      accountManager: accoVal?._id,
-      projectManager: projVal?._id,
-      supportManager: suppVal?._id,
+      customer:customerVal?._id  || null,
+      instalationSite: installVal?._id  || null,
+      billingSite: billingVal?._id || null,
+      accountManager: accoVal?._id || null,
+      projectManager: projVal?._id || null,
+      supportManager: suppVal?._id || null,
       description: machine?.description || '',
       customerTags: chipData,
     }),
@@ -182,7 +182,7 @@ const onSubmit = async (data) => {
   data.supplier = supplierVal?._id || null
   data.machineModel = modelVal?._id || null
   data.status = statusVal?._id || null
-  data.customer =customerVal._id || null
+  data.customer =customerVal?._id || null
   data.instalationSite = installVal?._id || null
   data.billingSite = billingVal?._id || null
   data.accountManager = accoVal?._id || null
@@ -255,26 +255,29 @@ const handleKeyPress = (e) => {
               <RHFTextField name="name" label="Name" />
               <Autocomplete
                 // freeSolo
+                disablePortal
+                id="combo-box-demo"
                 value={machineVal || null}
                 options={machines}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  setMachineVal(newValue);
                   console.log(newValue);
                   if(newValue){
                     setSupplierVal(newValue.supplier);
                     setModelVal(newValue.machineModel);
+                    setMachineVal(newValue);
                   }
-                  else{             
+                  else{          
+                    setMachineVal("");
                     setSupplierVal("");
                     setModelVal("");
                   }
                 }}
-                id="controllable-states-demo"
+                // id="controllable-states-demo"
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 renderInput={(params) => <TextField {...params}  label="Parent Machine" />}
                 ChipProps={{ size: 'small' }}
               />
-              {/* <RHFTextField name="pserialNo" value={machineVal?.serialNo} label="Parent Machine Serial No." /> */}
               <Autocomplete
                 // freeSolo
                 disabled

@@ -18,7 +18,7 @@ import { getMachinestatuses } from '../../redux/slices/products/statuses';
 import { getMachinemodels} from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
 import { getContacts} from '../../redux/slices/customer/contact';
-
+import { MachineCoverList } from './util/MachineCoverList';
 
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
@@ -90,19 +90,19 @@ useLayoutEffect(() => {
 
   const AddMachineSchema = Yup.object().shape({
     serialNo: Yup.string().required('Serial Number is required'),
-    name: Yup.string().min(5).max(40),
-    parentMachine: Yup.string(),
-    parentSerialNo: Yup.string(),
-    supplier: Yup.string(),
-    machineModel: Yup.string(),
-    status: Yup.string(),
+    name: Yup.string(),
+    // parentMachine: Yup.string(),
+    // parentSerialNo: Yup.string(),
+    // supplier: Yup.string(),
+    // machineModel: Yup.string(),
+    // status: Yup.string(),
     workOrderRef: Yup.string(),
-    customer:Yup.string(),
-    instalationSite: Yup.string(),
-    billingSite: Yup.string(),
-    accountManager: Yup.string(),
-    projectManager: Yup.string(),
-    supportManager: Yup.string(),
+    // customer:Yup.string(),
+    // instalationSite: Yup.string(),
+    // billingSite: Yup.string(),
+    // accountManager: Yup.string(),
+    // projectManager: Yup.string(),
+    // supportManager: Yup.string(),
     customerTags: Yup.array(),
     description: Yup.string(),
   });
@@ -111,18 +111,18 @@ useLayoutEffect(() => {
     () => ({
       serialNo: '',
       name: ''  ,
-      parentMachine: machineVal._id,
-      parentSerialNo: machineVal?.serialNo,
-      supplier: supplierVal?._id,
-      machineModel: modelVal?._id,
-      status: statusVal?._id,
+      parentMachine: machineVal._id || null,
+      parentSerialNo: machineVal?.serialNo || null,
+      supplier: supplierVal?._id || null,
+      machineModel: modelVal?._id || null,
+      status: statusVal?._id || null,
       workOrderRef: '',
-      customer:customerVal._id,
-      instalationSite: installVal?._id,
-      billingSite: billingVal?._id,
-      accountManager: accoVal?._id,
-      projectManager: projVal?._id,
-      supportManager: suppVal?._id,
+      customer:customerVal._id || null,
+      instalationSite: installVal?._id || null,
+      billingSite: billingVal?._id || null,
+      accountManager: accoVal?._id || null,
+      projectManager: projVal?._id || null,
+      supportManager: suppVal?._id || null,
       customerTags: chipData,
       description: '',
     }),
@@ -217,10 +217,20 @@ const handleKeyPress = (e) => {
       <Grid container spacing={3}>
         {/* <MachineDashboardNavbar/> */}
       </Grid>
-      <CustomBreadcrumbs
+      <Card
+          sx={{
+            mb: 3,
+            height: 150,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='New Machine'/>
+        </Card>
+      {/* <CustomBreadcrumbs
             heading=" New Machine "
             sx={{ mb: -2, mt: 3 }}
-          />
+          /> */}
       <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={6}>

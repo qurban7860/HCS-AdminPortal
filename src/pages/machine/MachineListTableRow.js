@@ -86,7 +86,7 @@ export default function MachineListTableRow({
 
         <TableCell>{parentMachine?.name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
-        <TableCell>{status.name}</TableCell>
+        {/* <TableCell>{status.name}</TableCell> */}
         <TableCell>{instalationSite?.name || ''}</TableCell>
         <TableCell>{customer?.name || ''}</TableCell>
         <TableCell align="left">

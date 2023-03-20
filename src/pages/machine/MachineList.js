@@ -15,6 +15,7 @@ import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
+import { MachineCoverList } from './util/MachineCoverList';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
 import { getMachines, deleteMachine } from '../../redux/slices/products/machine';
@@ -168,10 +169,20 @@ export default function MachineList() {
         <Grid container spacing={3}>
           {/* <MachineDashboardNavbar/> */}
         </Grid>
-        <CustomBreadcrumbs
+        <Card
+          sx={{
+            mb: 3,
+            height: 150,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <MachineCoverList name='Machines List'/>
+        </Card>
+        {/* <CustomBreadcrumbs
           heading="Machines"
           sx={{ mb: -3, mt: 3 }}
-        />
+        /> */}
         <Card sx={{mt: 3 }}>
           <MachineListTableToolbar
             filterName={filterName}

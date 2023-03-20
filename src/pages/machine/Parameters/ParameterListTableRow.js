@@ -89,7 +89,7 @@ export default function StatusListTableRow({
             </Link>
           </Stack>
         </TableCell>
-
+        <TableCell>category</TableCell>
         <TableCell align="center">
         <Label
             variant="soft"

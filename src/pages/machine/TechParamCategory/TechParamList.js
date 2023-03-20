@@ -226,11 +226,11 @@ export default function TechParamList() {
   return (
     <>
       <Helmet>
-        <title> TechParamCategory: List | Machine ERP </title>
+        <title> Technical Parameter Category: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={false}>
-      <Card
+        <Card
           sx={{
             mb: 3,
             height: 160,
@@ -238,7 +238,7 @@ export default function TechParamList() {
             mt: '24px',
           }}
         >
-          <MachineCoverList name='TechParam Category List'/>
+          <MachineCoverList name='Technical Parameter Category List'/>
         </Card>
 
         
