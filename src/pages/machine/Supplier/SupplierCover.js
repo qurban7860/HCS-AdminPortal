@@ -21,7 +21,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
     zIndex: 9,
     content: "''",
     width: '100%',
-    height: '100%',
+    height: 'calc(100% - 50px)',
     position: 'absolute',
   },
 }));
@@ -64,11 +64,9 @@ export default function SupplierCover({ name, role, cover }) {
             borderWidth: 2,
             borderStyle: 'solid',
             borderColor: 'common.white',
-            bottom:28,
-            color:'#fff',
-            width: { xs: 50, md: 110 },
-            height: { xs: 50, md: 110 },
-            inset: 'unset'
+            background: '#2065d1',
+            width: { xs: 80, md: 110 },
+            height: { xs: 80, md: 110 },
           }}
         />
 

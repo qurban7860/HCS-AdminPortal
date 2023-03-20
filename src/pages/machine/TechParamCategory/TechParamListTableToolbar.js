@@ -12,13 +12,16 @@ import {
   FormControl,
   OutlinedInput,
   InputAdornment,
+  Grid,
+  Box,
 } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // components
 import Iconify from '../../../components/iconify/Iconify';
-
+import { PATH_MACHINE } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
-TechParamListTableToolbar.propTypes = {
+CustomerListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -28,7 +31,7 @@ TechParamListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function TechParamListTableToolbar({
+export default function CustomerListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -37,6 +40,8 @@ export default function TechParamListTableToolbar({
   onResetFilter,
   onFilterStatus,
 }) {
+  const navigate = useNavigate();
+  const toggleAdd = () => { navigate(PATH_MACHINE.techParam.techParam); };
   return (
     <Stack
       spacing={2}
@@ -47,20 +52,25 @@ export default function TechParamListTableToolbar({
       }}
       sx={{ px: 2.5, py: 3 }}
     >
+      
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
+        {/* <Grid item xs={12} sm={8}> */}
 
-      <TextField
-        fullWidth
-        value={filterName}
-        onChange={onFilterName}
-        placeholder="Search..."
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-            </InputAdornment>
-          ),
-        }}
-      />
+          <TextField
+          fullWidth
+          value={filterName}
+          onChange={onFilterName}
+          placeholder="Search..."
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+              </InputAdornment>
+            ),
+          }}
+          />
+        
 
       {isFiltered && (
         <Button
@@ -72,6 +82,21 @@ export default function TechParamListTableToolbar({
           Clear
         </Button>
       )}
+        </Grid>
+        <Grid item xs={8} sm={3}>
+          <Stack alignItems="flex-end" > 
+            <Button sx={{p:2}}
+              onClick={toggleAdd}
+                variant="contained"
+                startIcon={ <Iconify icon="eva:plus-fill" /> }
+                >
+                Add Category 
+            </Button>
+          </Stack>
+        </Grid>
+      </Grid>
+      
+      
     </Stack>
   );
 }
