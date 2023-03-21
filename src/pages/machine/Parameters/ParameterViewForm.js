@@ -65,7 +65,7 @@ export default function ParameterViewForm({ currentTechparam = null }) {
         description:techparam?.description || '',
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
-        category: techparam?.category.name || '', 
+        category: techparam?.category?.name || '', 
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
