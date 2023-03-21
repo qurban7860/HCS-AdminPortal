@@ -148,7 +148,6 @@ export function updateNote(customerId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const formData = new FormData();
       const data = {
         note: params.note,
       }
@@ -171,7 +170,6 @@ export function updateNote(customerId,params) {
       }
       console.log("Update before post: ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
-      // console.log(data)
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
     } catch (error) {
@@ -187,30 +185,14 @@ export function getNotes(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const isArchived = { 
-      //   isArchived: false, 
-      //   customer: id 
-      // }
-      // console.log(id)
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes` , 
       {
         params: {
-          query: {
-            isArchived: false, 
-            customer: id,
-          },
-          populate:[
-                  {path: 'contact', select: 'firstName lastName'},
-                  {path: 'site', select: 'name'},
-                  {path: 'user', select: 'firstName'},
-                  {path: 'createdBy', select: 'firstName lastName'},
-                  {path: 'updatedBy', select: 'firstName lastName'}
-                  ]
+          isArchived: false
         }
       }
       );
       console.log("Notes Response : ",response);
-      // console.log(response.data);
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
@@ -224,7 +206,6 @@ export function getNotes(id) {
 // -------------------------------get Note---------------------------------------
 
 export function getNote(customerId,noteId) {
-  // console.log('Get Note Id');console.log(id)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -245,7 +226,6 @@ export function deleteNote(customerId,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // console.log(id);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`,
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${id}` , 
       {

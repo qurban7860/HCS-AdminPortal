@@ -126,27 +126,19 @@ export function getCustomers() {
 // ----------------------------------------------------------------------
 
 export function getCustomer(id) {
-  // console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
       {
         params: {
-          query: {
-            isArchived: false, 
-          },
-          populate:[
-                  {path: 'createdBy', select: 'firstName lastName'},
-                  {path: 'updatedBy', select: 'firstName lastName'}
-                  ]
+          isArchived: false
         }
       }
       );
       dispatch(slice.actions.getCustomerSuccess(response.data));
-      // console.log('requested customer', response.data);
     } catch (error) {
-      // console.error(error);
+      console.error(error);
       // dispatch(slice.actions.hasError(error));
     }
   };
@@ -173,7 +165,6 @@ export function deleteCustomer(id) {
 // --------------------------------------------------------------------------
 
 export function saveCustomer(params) {
-  console.log('params', params);
 
     return async (dispatch) => {
       dispatch(slice.actions.resetCustomer());
@@ -313,7 +304,6 @@ export function saveCustomer(params) {
 // --------------------------------------------------------------------------
 
 export function updateCustomer(params) {
-  console.log('update, working',params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -356,7 +346,6 @@ export function updateCustomer(params) {
       }else{
         data.primaryTechnicalContact = null;  
       }
-      console.log("Data : ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
         data
       );

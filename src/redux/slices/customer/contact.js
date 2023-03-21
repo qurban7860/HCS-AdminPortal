@@ -156,8 +156,6 @@ export function updateContact(customerId,params) {
     dispatch(slice.actions.setEditFormVisibility(false));
 
     try {
-      const formData = new FormData();
-console.log(formData);
       /* eslint-disable */
       let data = {
         customer: customerId,
@@ -186,15 +184,11 @@ console.log(formData);
 
 // ----------------------------------------------------------------------
 
-export function getSPContacts(customerID) {
+export function getSPContacts() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
-      {
-        params: {}
-      }
-      )
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`)
       dispatch(slice.actions.getSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
 
@@ -207,32 +201,17 @@ export function getSPContacts(customerID) {
 
 // ----------------------------------------------------------------------
 
-export function getContacts(customerID = null) {
+export function getContacts(customerID ) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      let response = null;
-      // if(customerID){
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
         {
           params: {
-            query: {
-              isArchived: false, 
-              customer: customerID,
-            },
-            populate:[
-                    {path: 'createdBy', select: 'firstName lastName'},
-                    {path: 'updatedBy', select: 'firstName lastName'}
-                    ]
+            isArchived: false
           }
         }
         );
-      // }else{
-      //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers//contacts`);
-      // }
-      
-      // console.log(response);
-      // console.log(response.data);
       dispatch(slice.actions.getContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
 

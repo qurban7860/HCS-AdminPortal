@@ -10,14 +10,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, styled, Grid,Container, Stack,TextField,Autocomplete,Select, Chip, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-// import { getSPContacts } from '../../redux/slices/contact';
+import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers} from '../../redux/slices/customer/customer';
 import { getSites } from '../../redux/slices/customer/site';
 import { saveMachine,   getMachines } from '../../redux/slices/products/machine';
 import { getMachinestatuses } from '../../redux/slices/products/statuses';
 import { getMachinemodels} from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
-import { getContacts} from '../../redux/slices/customer/contact';
 import { MachineCoverList } from './util/MachineCoverList';
 
 // routes
@@ -43,6 +42,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const navigate = useNavigate();
   
   const { spContacts } = useSelector((state) => state.contact);
+  console.log("spContacts : ",spContacts)
   const { machines} = useSelector((state) => state.machine);
   const { suppliers} = useSelector((state) => state.supplier);
   const { machinemodels} = useSelector((state) => state.machinemodel);
@@ -71,6 +71,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   dispatch(getMachinestatuses());
   dispatch(getMachinemodels());
   dispatch(getSuppliers());
+  dispatch(getSPContacts());
+  
 }, [dispatch]);
 
 useLayoutEffect(() => {
@@ -354,7 +356,8 @@ const handleKeyPress = (e) => {
                 // freeSolo
                 value={accoVal || null}
                 options={spContacts}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+
                 onChange={(event, newValue) => {
                   setBillingVal(newValue?._id);
                 }}
@@ -366,7 +369,7 @@ const handleKeyPress = (e) => {
                 // freeSolo
                 value={projVal || null}
                 options={spContacts}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
                   setBillingVal(newValue?._id);
                 }}
@@ -378,7 +381,7 @@ const handleKeyPress = (e) => {
                 // freeSolo
                 value={suppVal || null}
                 options={spContacts}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
                   setBillingVal(newValue?._id);
                 }}

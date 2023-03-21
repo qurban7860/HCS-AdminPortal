@@ -105,8 +105,6 @@ export const {
 export function saveSite(params) {
   return async (dispatch) => {
     dispatch(slice.actions.setFormVisibility(false));
-
-    console.log('siteparams', params); 
     dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -167,7 +165,6 @@ export function updateSite(params) {
   
   return async (dispatch) => {
     dispatch(slice.actions.setEditFormVisibility(false));
-
     dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -210,8 +207,6 @@ export function updateSite(params) {
         const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites/${params.id}`
          , data);
 
-
-
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error));
@@ -229,29 +224,15 @@ export function getSites(customerID = null) {
       let response = null;
       if(customerID){
         response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
-        // {
-        //   params: {
-        //     isArchived: false
-        //   }
-        // }
         {
           params: {
-            query: {
-              isArchived: false, 
-            },
-            populate:[
-                    {path: 'createdBy', select: 'firstName lastName'},
-                    {path: 'updatedBy', select: 'firstName lastName'}
-                    ]
+            isArchived: false
           }
         }
         );
       }else{
         response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
       }
-      
-      // console.log(response);
-      // console.log(response.data);
       dispatch(slice.actions.getSitesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
 
@@ -265,7 +246,6 @@ export function getSites(customerID = null) {
 // ----------------------------------------------------------------------
 
 export function getSite(customerID, id) {
-  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

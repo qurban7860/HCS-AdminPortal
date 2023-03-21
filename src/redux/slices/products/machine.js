@@ -115,20 +115,7 @@ export function getMachines() {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
         params: {
-          query: {
-            isArchived: false, 
-          },
-          populate:[
-                  {path: 'machineModel', select: '_id name'},
-                  {path: 'parentMachine', select: '_id name serialNo supplier machineModel'},
-                  {path: 'supplier', select: '_id name'},
-                  {path: 'status', select: '_id name'},
-                  {path: 'customer', select: '_id name'},
-                  {path: 'billingSite', select: '_id name'},
-                  {path: 'instalationSite', select: '_id name address'},
-                  {path: 'createdBy', select: 'firstName lastName'},
-                  {path: 'updatedBy', select: 'firstName lastName'}
-                  ]
+          isArchived: false
         }
       });
       console.log(response)
