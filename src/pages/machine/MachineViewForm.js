@@ -94,15 +94,15 @@ export default function CustomerViewForm() {
         <Grid container>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                  Name
-                </Typography>
-                <Typography variant="body2">{defaultValues.name}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Serial No
                 </Typography>
                 <Typography variant="body2">{defaultValues.serialNo ? defaultValues.serialNo : ''}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+                  Name
+                </Typography>
+                <Typography variant="body2">{defaultValues.name}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
@@ -126,7 +126,7 @@ export default function CustomerViewForm() {
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Machine Model
                 </Typography>
-                <Typography variant="body2">{defaultValues.supplier? defaultValues.supplier : ''}</Typography>
+                <Typography variant="body2">{defaultValues.machineModel? defaultValues.machineModel : ''}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
@@ -168,7 +168,7 @@ export default function CustomerViewForm() {
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Description
                 </Typography>
-                <Typography variant="body2">{defaultValues.description? defaultValues.description : ''}</Typography>
+                <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>{defaultValues.description? defaultValues.description : ''}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>

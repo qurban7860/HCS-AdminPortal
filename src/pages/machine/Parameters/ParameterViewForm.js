@@ -30,13 +30,13 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 
-StatusViewForm.propTypes = {
+ParameterViewForm.propTypes = {
   currentTechparam: PropTypes.object,
 };
 
 // ----------------------------------------------------------------------
 
-export default function StatusViewForm({ currentTechparam = null }) {
+export default function ParameterViewForm({ currentTechparam = null }) {
 
 
   const [editFlag, setEditFlag] = useState(false);
