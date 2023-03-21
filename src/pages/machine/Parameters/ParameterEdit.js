@@ -42,10 +42,7 @@ export default function StatusEdit() {
       
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Edit Tech Parameter"
-          sx={{ mb: -2, mt: 3 }}
-        />
+
 
         <ParameterEditForm/>
       </Container>

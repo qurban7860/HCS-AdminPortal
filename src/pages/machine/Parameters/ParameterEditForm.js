@@ -60,19 +60,17 @@ export default function StatusEditForm() {
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
     code: Yup.string(),
-    techparamcategory: Yup.string(),
   });
 
 
   const defaultValues = useMemo(
     () => (
       {
-        name:techparam?.name || 'N/A',
+        name:techparam?.name || '',
         code: techparam?.code || '',
-        description:techparam?.description || 'N/A',
+        description:techparam?.description || '',
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
-        techparamcategory: techparam?.techparamcategory || 'NA', 
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,14 +96,13 @@ export default function StatusEditForm() {
 
   useLayoutEffect(() => {
     dispatch(getTechparam(id));
-    
-
   }, [dispatch, id]);
 
   useEffect(() => {
     if (techparam) {
       reset(defaultValues);
     }
+    setParamVal(techparam.category)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [techparam]);
   console.log(id, 'testing id')
@@ -135,10 +132,13 @@ export default function StatusEditForm() {
   return (
     <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      
-      
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
+             <Stack spacing={1} sx={{pb:2}}>
+                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
+                  Edit Tech Parameter
+                </Typography>
+              </Stack>
             <Stack spacing={3}>
             <Box
               rowGap={2}
@@ -149,7 +149,7 @@ export default function StatusEditForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-
+           
               <RHFTextField name="name" label="Machine Tech Param" required />
               <RHFTextField name="code" label="Code" required />
               </Box>

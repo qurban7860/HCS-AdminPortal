@@ -60,7 +60,6 @@ export default function MachineTechParam() {
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
     code: Yup.string(),
-    category: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -70,7 +69,6 @@ export default function MachineTechParam() {
       isDisabled: false,
       createdAt: '',
       code: '',
-      category: '',
       
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -92,10 +90,10 @@ export default function MachineTechParam() {
 
   const values = watch();
 
-  
-
   const onSubmit = async (data) => {
-    data.category = paramCategoryVal._id
+    if(paramCategoryVal !== null && paramCategoryVal !== ""){
+      data.category = paramCategoryVal?._id
+    }
       try{ 
         await dispatch(createTechparams(data));
         reset();
@@ -108,8 +106,6 @@ export default function MachineTechParam() {
         console.error(error);
       }
   };
-
-  
 
   const { themeStretch } = useSettingsContext();
   return (

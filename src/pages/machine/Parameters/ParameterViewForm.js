@@ -60,12 +60,12 @@ export default function StatusViewForm({ currentTechparam = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:techparam?.name || 'N/A',
+        name:techparam?.name || '',
         code: techparam?.code || '',
-        description:techparam?.description || 'N/A',
+        description:techparam?.description || '',
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
-        techparamcategory: techparam?.techparamcategory || 'NA', 
+        category: techparam?.category.name || '', 
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -89,59 +89,49 @@ export default function StatusViewForm({ currentTechparam = null }) {
 
       </Stack>
       <Grid container>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Name
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Code
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.code ? defaultValues.code : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Description
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Tech Param Category Name
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.techparamcategory.name}</Typography>
-            
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Name
+              </Typography>
+              <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
           </Grid>
-        
-        
 
-        <Grid container spacing={0} sx={{ mb: 5}}>
+          <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Code
+              </Typography>
+              <Typography variant="body2">{defaultValues.code ? defaultValues.code : ''}</Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={12} sx={{ pt:2 }}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Description
+              </Typography>
+              <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={12} sx={{ pt:2 }}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Tech Param Category Name
+              </Typography>
+              <Typography variant="body2">{defaultValues?.category || ""}</Typography>
+          </Grid>
+      </Grid>
+      
+      <Grid container>
+          <Grid container spacing={0} sx={{  mb: 1,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                Created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
+                created by: {defaultValues.createdByFname} {defaultValues.createdByLname} {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              Updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
-            </Typography>
+              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              </Typography>
             </Grid>
+          </Grid>
         </Grid>
-
-      </Grid>
     </Card>
   );
 }

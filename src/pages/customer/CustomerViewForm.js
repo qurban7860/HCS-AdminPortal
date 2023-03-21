@@ -268,29 +268,20 @@ export default function CustomerViewForm() {
 
 
         <Grid container>
-        <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
+          <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
                 created by: {defaultValues.createdByFname} {defaultValues.createdByLname} {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
+              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              </Typography>
             </Grid>
           </Grid>
+        </Grid>
 
-          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Department
-            </Typography>
-            
-            <Typography variant="body2">{customer.mainSite.department}</Typography>
-            
-          </Grid> */}
-
-            </Grid>
-            </Card>
+      </Card>
   );
 }

@@ -242,7 +242,7 @@ export function updateTechparam(params) {
       if(params.code){
         data.code = params.code;
       }
-      if(params.techparamcategory !== ""){
+      if(params.techparamcategory !== "" && params.techparamcategory !== null){
         data.techparamcategory = params.techparamcategory._id;
       }else{
         data.techparamcategory = null
