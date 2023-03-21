@@ -60,7 +60,7 @@ export default function MachineDashboardPage() {
           <Grid container spacing={2}>
           <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
             <AppCurrentDownload
-              title="Current Machines"
+              title="Current Machines (Under Construction)"
               chart={{
                 colors: [
                   theme.palette.primary.main,
@@ -88,7 +88,7 @@ export default function MachineDashboardPage() {
                   subheader={
                     <ListSubheader
                     component="div" id="nested-list-subheader">
-                      Common Settings 
+                      Common Settings(Under Construction) 
                     </ListSubheader>
                   }
                 >
@@ -131,7 +131,7 @@ export default function MachineDashboardPage() {
                   aria-labelledby="nested-list-subheader"
                   subheader={
                     <ListSubheader component="div" id="nested-list-subheader">
-                      Technical Settings
+                      Technical Settings(Under Construction)
                     </ListSubheader>
                   }
                 >
