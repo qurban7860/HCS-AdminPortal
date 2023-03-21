@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Alert, Tooltip, Stack, Typography, Link, Box, Card} from '@mui/material';
+import { Alert, Container, Tooltip, Stack, Typography, Link, Box, Card} from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // routes
@@ -14,12 +14,10 @@ import Logo from '../../components/logo';
 import { CONFIG } from '../../config-global';
 // ----------------------------------------------------------------------
 
-export default function Login() {
-  const { method } = useAuthContext();
-
-  return (
+export default function Login(){
+return (
     <>
-    <Card>
+    <Card variant='outlined'>
     <LoginLayout
     title={CONFIG.MESSAGE_LOGIN_USER}>
     <Logo
@@ -33,7 +31,7 @@ export default function Login() {
           // ml: { xs: 2, md: 5 },
         }}
       />
-      <Stack spacing={2} sx={{ mb: 5, position: 'relative'}}>
+      <Stack spacing={2} sx={{ mb: 5, position: 'absolute'}}>
       
         <Typography sx={{mt: -9}}
         variant="h4">Sign In | {CONFIG.APP_TITLE}</Typography>

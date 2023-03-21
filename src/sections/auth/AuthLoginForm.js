@@ -60,7 +60,7 @@ export default function AuthLoginForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
     
-      <Stack spacing={3} sx={{mt: -3}}>
+      <Stack spacing={3} sx={{mt: 1}}>
       
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
