@@ -195,6 +195,8 @@ export default function MachineList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          {selected.length > 1 ? "" :
+
             <TableSelectedAction
               
               numSelected={selected.length}
@@ -213,6 +215,7 @@ export default function MachineList() {
                 </Tooltip>
               }
             />
+          }
 
             <Scrollbar>
               <Table size= 'small' sx={{ minWidth: 960 }}>

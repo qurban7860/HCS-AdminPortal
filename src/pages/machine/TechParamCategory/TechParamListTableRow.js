@@ -89,7 +89,6 @@ export default function TechParamListTableRow({
             </Link>
           </Stack>
         </TableCell>
-
         <TableCell align="center">
         <Label
             variant="soft"

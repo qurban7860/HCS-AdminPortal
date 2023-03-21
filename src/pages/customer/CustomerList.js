@@ -227,7 +227,7 @@ export default function CustomerList() {
             mt: '24px',
           }}
         >
-          <CustomerCoverList name='Customer List'/>
+          <CustomerCoverList name='Customers List'/>
         </Card>
         
       

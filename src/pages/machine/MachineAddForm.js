@@ -51,8 +51,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { sites} = useSelector((state) => state.site);
 
   const { enqueueSnackbar } = useSnackbar();
-  const [machineVal, setMachineVal] = useState('');
-  const [machSerVal, setMachSerVal] = useState('');
+  const [parMachineVal, setParMachineVal] = useState('');
+  const [parMachSerVal, setParMachSerVal] = useState('');
   const [supplierVal, setSupplierVal] = useState('');
   const [statusVal, setStatusVal] = useState('');
   const [modelVal, setModelVal] = useState('');
@@ -91,14 +91,14 @@ useLayoutEffect(() => {
 // },[machineVal])
 
   const AddMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().required('Serial Number is required'),
-    name: Yup.string(),
+    serialNo: Yup.string().max(100).required('Serial Number is required'),
+    name: Yup.string().max(50),
     // parentMachine: Yup.string(),
     // parentSerialNo: Yup.string(),
     // supplier: Yup.string(),
     // machineModel: Yup.string(),
     // status: Yup.string(),
-    workOrderRef: Yup.string(),
+    workOrderRef: Yup.string().max(50),
     // customer:Yup.string(),
     // instalationSite: Yup.string(),
     // billingSite: Yup.string(),
@@ -106,15 +106,15 @@ useLayoutEffect(() => {
     // projectManager: Yup.string(),
     // supportManager: Yup.string(),
     customerTags: Yup.array(),
-    description: Yup.string(),
+    description: Yup.string().max(1500),
   });
 
   const defaultValues = useMemo(
     () => ({
       serialNo: '',
       name: ''  ,
-      parentMachine: machineVal._id || null,
-      parentSerialNo: machineVal?.serialNo || null,
+      parentMachine: parMachineVal._id || null,
+      parentSerialNo: parMachSerVal?.serialNo || null,
       supplier: supplierVal?._id || null,
       machineModel: modelVal?._id || null,
       status: statusVal?._id || null,
@@ -149,8 +149,8 @@ useLayoutEffect(() => {
     margin: theme.spacing(0.5),
   }));
 const onSubmit = async (data) => {
-  data.parentMachine = machineVal?._id || null
-  data.parentSerialNo = machineVal?.serialNo || null
+  data.parentMachine = parMachineVal?._id || null
+  data.parentSerialNo = parMachSerVal?.serialNo || null
   data.supplier = supplierVal?._id || null
   data.machineModel = modelVal?._id || null
   data.status = statusVal?._id || null
@@ -165,7 +165,8 @@ const onSubmit = async (data) => {
   console.log("Machines : ",machines);
     try{
       await dispatch(saveMachine(data));
-      setMachineVal('');
+      setParMachineVal('');
+      setParMachSerVal('');
       setSupplierVal('');
       setModelVal('');
       setStatusVal('');
@@ -241,21 +242,25 @@ const handleKeyPress = (e) => {
               <RHFTextField name="name" label="Name" />
               <Autocomplete
                 // freeSolo
-                value={machineVal || null}
+                value={parMachineVal || null}
                 options={machines}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  setMachineVal(newValue);
                   console.log(newValue);
                   if(newValue){
+                    setParMachineVal(newValue);
+                    setParMachSerVal(newValue);
                     setSupplierVal(newValue.supplier);
                     setModelVal(newValue.machineModel);
                   }
-                  else{             
+                  else{  
+                    setParMachineVal("");
+                    setParMachSerVal("");           
                     setSupplierVal("");
                     setModelVal("");
                   }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Parent Machine" />}
                 ChipProps={{ size: 'small' }}
@@ -263,11 +268,20 @@ const handleKeyPress = (e) => {
               {/* <RHFTextField name="pserialNo" value={machineVal?.serialNo} label="Parent Machine Serial No." /> */}
               <Autocomplete
                 // freeSolo
-                disabled
-                value={machineVal || null}
-                options={machineVal}
+                // disabled
+                value={parMachSerVal || null}
+                options={machines}
                 getOptionLabel={(option) => option.serialNo}
                 id="controllable-states-demo"
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setParMachSerVal(newValue);
+                  }
+                  else{ 
+                  setParMachSerVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.serialNo}</Box>)}
                 renderInput={(params) => <TextField {...params}  label="Parent Machine Serial No." />}
                 ChipProps={{ size: 'small' }}
               />
@@ -279,8 +293,14 @@ const handleKeyPress = (e) => {
                 options={suppliers}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
+                  if(newValue){
                   setSupplierVal(newValue);
+                  }
+                  else{ 
+                  setSupplierVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Supplier" />}
                 ChipProps={{ size: 'small' }}
@@ -292,8 +312,14 @@ const handleKeyPress = (e) => {
                 options={machinemodels}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
+                  if(newValue){
                   setModelVal(newValue);
+                  }
+                  else{ 
+                  setModelVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
@@ -305,8 +331,14 @@ const handleKeyPress = (e) => {
                 options={machinestatuses}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
+                  if(newValue){
                   setStatusVal(newValue);
+                  }
+                  else{ 
+                  setStatusVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Status" />}
                 ChipProps={{ size: 'small' }}
@@ -319,8 +351,14 @@ const handleKeyPress = (e) => {
                 options={customers}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
+                  if(newValue){
                   setCustomerVal(newValue);
+                  }
+                  else{ 
+                  setCustomerVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
@@ -334,8 +372,14 @@ const handleKeyPress = (e) => {
                 options={sites}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
+                  if(newValue){
                   setInstallVal(newValue);
+                  }
+                  else{ 
+                  setInstallVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
@@ -346,8 +390,14 @@ const handleKeyPress = (e) => {
                 options={sites}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
+                  if(newValue){
                   setBillingVal(newValue);
+                  }
+                  else{ 
+                  setBillingVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
@@ -357,10 +407,15 @@ const handleKeyPress = (e) => {
                 value={accoVal || null}
                 options={spContacts}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-
                 onChange={(event, newValue) => {
-                  setBillingVal(newValue?._id);
+                  if(newValue){
+                  setAccoManVal(newValue);
+                  }
+                  else{ 
+                  setAccoManVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -371,8 +426,14 @@ const handleKeyPress = (e) => {
                 options={spContacts}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
-                  setBillingVal(newValue?._id);
+                  if(newValue){
+                  setProjManVal(newValue);
+                  }
+                  else{ 
+                  setProjManVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -383,8 +444,14 @@ const handleKeyPress = (e) => {
                 options={spContacts}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
-                  setBillingVal(newValue?._id);
+                  if(newValue){
+                  setSuppManVal(newValue);
+                  }
+                  else{ 
+                  setSuppManVal("");
+                  }
                 }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Support Manager" />}
                 ChipProps={{ size: 'small' }}

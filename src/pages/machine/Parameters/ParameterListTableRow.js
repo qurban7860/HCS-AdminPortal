@@ -43,7 +43,7 @@ export default function StatusListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isDisabled, createdAt} = row;
+  const { name, category, isDisabled, createdAt} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -89,7 +89,8 @@ export default function StatusListTableRow({
             </Link>
           </Stack>
         </TableCell>
-        <TableCell>category</TableCell>
+        <TableCell>{category?.name || ''}</TableCell>
+        {/* <TableCell>category</TableCell> */}
         <TableCell align="center">
         <Label
             variant="soft"

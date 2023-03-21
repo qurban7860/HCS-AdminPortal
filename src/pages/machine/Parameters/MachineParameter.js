@@ -48,7 +48,7 @@ export default function MachineTechParam() {
 
   const dispatch = useDispatch();
 
-  const [paramVal, setParamVal] = useState(null);
+  const [paramCategoryVal, setParamCategoryVal] = useState(null);
   
   const navigate = useNavigate();
 
@@ -60,7 +60,7 @@ export default function MachineTechParam() {
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
     code: Yup.string(),
-    techparamcategory: Yup.string(),
+    category: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -70,7 +70,7 @@ export default function MachineTechParam() {
       isDisabled: false,
       createdAt: '',
       code: '',
-      techparamcategory: '',
+      category: '',
       
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,7 +95,7 @@ export default function MachineTechParam() {
   
 
   const onSubmit = async (data) => {
-    data.techparamcategory = paramVal
+    data.category = paramCategoryVal._id
       try{ 
         await dispatch(createTechparams(data));
         reset();
@@ -137,7 +137,7 @@ export default function MachineTechParam() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Tech Param" required />
+              <RHFTextField name="name" label="Machine Technical Parameter" required />
               <RHFTextField name="code" label="Code" required />
               </Box>
               <Box
@@ -151,14 +151,14 @@ export default function MachineTechParam() {
             >
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <Autocomplete
-                value={paramVal || null}
+                value={paramCategoryVal || null}
                 options={techparamcategories}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  setParamVal(newValue);
+                  setParamCategoryVal(newValue);
                 }}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Tech Param Categories" />}
+                renderInput={(params) => <TextField {...params} label="Technical Parameter Categories" />}
                 ChipProps={{ size: 'small' }}
               />
               <RHFSwitch

@@ -32,6 +32,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { countries } from '../../assets/data';
 // util
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
+import { CustomerCoverList } from './util/CustomerCoverList';
 
 
 // ----------------------------------------------------------------------
@@ -173,13 +174,23 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
     {/* <Container maxWidth={false}> */}
-      <Grid container spacing={3}>
+      {/* <Grid container spacing={3}>
         <CustomerDashboardNavbar/>
-      </Grid>
-      <CustomBreadcrumbs
+      </Grid> */}
+      {/* <CustomBreadcrumbs
             heading=" New Customer "
             sx={{ mb: -2, mt: 3 }}
-          />
+          /> */}
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            mt: '24px',
+          }}
+        >
+          <CustomerCoverList name='New Customer'/>
+        </Card>
       <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3, mb: 3 }}>
             <Stack spacing={3}>

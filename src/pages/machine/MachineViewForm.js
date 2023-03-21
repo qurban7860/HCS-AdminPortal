@@ -30,12 +30,16 @@ export default function CustomerViewForm() {
 
   const dispatch = useDispatch();
 
-  const { machine } = useSelector((state) => state.machine);
+  const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
+  useLayoutEffect(() => {
+    dispatch(setMachineEditFormVisibility(false))
+  }, [ dispatch ,machine ])
 
   const toggleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
   }
-  
+
+
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
@@ -184,19 +188,19 @@ export default function CustomerViewForm() {
                 <Typography variant="overline" sx={{ color: 'text.disabled' }}>
                   Account Manager
                 </Typography>
-                {/* <Typography variant="body2">{defaultValues.accountManager.firstName} {defaultValues.accountManager.lastName}</Typography> */}
+                <Typography variant="body2">{defaultValues?.accountManager?.firstName || "" } {defaultValues?.accountManager?.lastName || ""}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                   Project Manager
                 </Typography>
-                {/* <Typography variant="body2">{defaultValues.projectManager.firstName} {defaultValues.projectManager.lastName}</Typography> */}
+                <Typography variant="body2">{defaultValues?.projectManager?.firstName || ""} {defaultValues?.projectManager?.lastName || ""}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                  Suppport Manager
                 </Typography>
-                {/* <Typography variant="body2">{defaultValues.supportManager.firstName} {defaultValues.supportManager.lastName}</Typography> */}
+                <Typography variant="body2">{defaultValues?.supportManager?.firstName || ""} {defaultValues?.supportManager?.lastName || ""}</Typography>
             </Grid> 
         </Grid>
         <Grid container>

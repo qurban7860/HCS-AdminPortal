@@ -221,42 +221,42 @@ const toggleChecked = () =>
     {
       setChecked(value => !value);
       dispatch(setNoteFormVisibility(!formVisibility));
-    
     };
 
   const handleDeleteRow = async (id) => {
     try {
       // console.log(id);
       await dispatch(deleteNote(id));
+      setExpanded(false);
       dispatch(getNotes());
       setSelected([]);
 
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
+      // if (page > 0) {
+      //   if (dataInPage.length < 2) {
+      //     setPage(page - 1);
+      //   }
+      // }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
+  // const handleDeleteRows = (selectedRows) => {
+  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
 
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
+  //   if (page > 0) {
+  //     if (selectedRows.length === dataInPage.length) {
+  //       setPage(page - 1);
+  //     } else if (selectedRows.length === dataFiltered.length) {
+  //       setPage(0);
+  //     } else if (selectedRows.length > dataInPage.length) {
+  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+  //       setPage(newPage);
+  //     }
+  //   }
+  // };
 
 //   const handleEditRow = (id) => {
 //     console.log(id);
@@ -335,7 +335,7 @@ const toggleChecked = () =>
               variant="contained"
               color="error"
               onClick={() => {
-                handleDeleteRows(selected);
+                handleDeleteRow(selected);
                 handleCloseConfirm();
               }}
             >
