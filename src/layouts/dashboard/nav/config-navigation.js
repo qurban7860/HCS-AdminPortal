@@ -1,4 +1,5 @@
 // routes
+import { Button } from '@mui/material';
 import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 // components
 import Label from '../../../components/label';
@@ -47,27 +48,12 @@ const navConfig = [
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Customer', path: PATH_DASHBOARD.customer.list, icon: ICONS.ecommerce },
-      { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon,
-      // children: [
-      //   { title: 'Dashboard', path: PATH_MACHINE.general.app },
-      //   { title: 'New Machine', path: PATH_MACHINE.machine.new },
-      //   { title: 'Machine List', path: PATH_MACHINE.machine.list },
-      //   { title: 'Audit Log', path: PATH_MACHINE.general.app },
-      //   { title: 'Category', path: PATH_MACHINE.categories.categories},
-      //   { title: 'License', path: PATH_MACHINE.license.license},
-      //   { title: 'Model', path: PATH_MACHINE.machineModel.model },
-      //   { title: 'Note', path: PATH_DASHBOARD.user.account },
-      //   { title: 'Status', path: PATH_MACHINE.machineStatus.status },
-      //   { title: 'Supplier', path: PATH_MACHINE.supplier.supplier},
-      //   { title: 'Tech Param', path: PATH_MACHINE.supplier.supplier},
-      //   { title: 'Tech Param Category', path: PATH_MACHINE.techParam.techParam },
-      //   { title: 'Tech Param Value', path: PATH_MACHINE.techParam.techParam },
-      //   { title: 'Tool', path: PATH_MACHINE.tool.tool },
-      //   { title: 'Tool Installed', path: PATH_MACHINE.tool.tool },
-
-        
-      // ],
-    },
+      { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon},
+      // {
+      //   title: 'Button Title',
+      //   path: '/PATH_DASHBOARD.customer.new',
+      //   // icon: <Button variant="contained" color="primary">Add Customer</Button>,
+      // },
       // deleted components
       // { title: 'ecommerce', path: PATH_DASHBOARD.general.ecommerce, icon: ICONS.ecommerce },
       // { title: 'analytics', path: PATH_DASHBOARD.general.analytics, icon: ICONS.analytics },

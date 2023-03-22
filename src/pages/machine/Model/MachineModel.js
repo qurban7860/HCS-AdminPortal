@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback, useState } from 'react';
+import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
@@ -88,17 +88,21 @@ export default function MachineModel() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
   const values = watch();
 
   useLayoutEffect(() => {
     dispatch(getCategories());
   }, [dispatch]);
 
+  useEffect(() => {
+    if(modelVal && modelVal._id){
+      setValue('category', modelVal._id);
+    }
+  }, [modelVal, setValue])
 
-  const onSubmit = async (data) => {
-    data.category = modelVal
-      try{ 
+
+  const onSubmit = async (data) => {    
+      try{
         await dispatch(createMachinemodels(data));
         reset();
         enqueueSnackbar('Create success!');
