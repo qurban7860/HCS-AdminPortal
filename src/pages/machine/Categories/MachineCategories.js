@@ -54,18 +54,18 @@ export default function MachineSuppliers() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(20).required('Name is required') ,
-    description: Yup.string().min(5).max(2000),
+    name: Yup.string().min(5).max(1000).required('Name is required') ,
+    description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
-    
+
   });
 
   const defaultValues = useMemo(
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: false,
+      isDisabled: true,
       createdAt: '',
       
     }),
