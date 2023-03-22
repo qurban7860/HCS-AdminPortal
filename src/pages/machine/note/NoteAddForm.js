@@ -15,7 +15,7 @@ import { Box, Button, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputA
 // import { getSites } from '../../../redux/slices/site';
 // import { getContacts } from '../../../redux/slices/contact';
 // import { getCustomers } from '../../../redux/slices/customer';
-import { saveNote, setNoteFormVisibility } from '../../../redux/slices/customer/note';
+import { saveNote, setNoteFormVisibility } from '../../../redux/slices/products/machine-note';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -43,11 +43,11 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   // const { users } = useSelector((state) => state.user);
 
-  const { sites } = useSelector((state) => state.site);
+  // const { sites } = useSelector((state) => state.site);
 
-  const { contacts } = useSelector((state) => state.contact);
+  // const { contacts } = useSelector((state) => state.contact);
 
-  const { customer } = useSelector((state) => state.customer);
+  const { machine } = useSelector((state) => state.machine);
 
 
   const dispatch = useDispatch();
@@ -59,20 +59,14 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
  // a note can be archived. An archived 
 
   const AddNoteSchema = Yup.object().shape({
-    note: Yup.string().required("Note Field is required!"),
-    // customer: Yup.string().nullable(),
-    site: Yup.string().nullable(),
-    // user: Yup.string(),
-    contact: Yup.string().nullable(),
+    note: Yup.string().max(1500).required("Note Field is required!"),
+    
   });
 
   const defaultValues = useMemo(
     () => ({
       note: '',
-      site: null,
-      contact: null,
-      machine: customer._id,
-      // user: '',
+      // machine: machine._id,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentNote]
@@ -109,7 +103,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const onSubmit = async (data) => {
     console.log("Form Submited",data);
       try{
-        await dispatch(saveNote(customer._id,data));
+        await dispatch(saveNote(machine._id,data));
         reset();
       } catch(error){
         enqueueSnackbar('Saving failed!');
@@ -148,80 +142,9 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
                 Create a new Note
                 </Typography>
-
               </Stack>
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-              {/* <RHFSelect native name="against" id="against" label="Please select Notes Against" onChange={handleChange} >
-                    <option value="" defaultValue="Please select Notes Against"/>
-
-                    <option key={1} value='site'>Site</option>
-                    <option key={2} value='contact'>Contact</option>
-
-              </RHFSelect> */}
-
-              {/* <RHFSelect native name="customer" label="Customer">
-                    <option value="" defaultValue="please select option" />
-                    { 
-                    customers.length > 0 && customers.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect> */}
-              <RHFSelect native name="site" label="Select Site" className="visible" >
-                    <option defaultValue value="null" selected >No Site Selected</option>
-                    { 
-                    sites.length > 0 && sites.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect>
-              <RHFSelect native  name="contact" label="Select Contact" className="visible" >
-                    <option defaultValue value="null" selected >No Contact Selected</option>
-                    { 
-                    contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              {/* <RHFSelect native name="user" label="User" >
-                    <option value="" defaultValue="please select option"/>
-                    { 
-                    users.length > 0 && users.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect> */}
-
-              </Box>
-              {/* <RHFEditor simple name="note"  /> */}
+             
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
-              {/* <TextField name="note" label="Note*" minRows={8} multiline /> */}
-
-              {/* <RHFSwitch
-              name="isArchived"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    isArchived
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-              /> */}
 
             <Box
                 rowGap={5}

@@ -38,7 +38,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-import { getNotes, deleteNote, getNote } from '../../../redux/slices/customer/note';
+import { getMachineNotes, deleteMachineNote, getMachineNote } from '../../../redux/slices/products/machine-note';
 
 
 // ----------------------------------------------------------------------
@@ -108,13 +108,14 @@ export default function NoteList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { notes, isLoading, error, initial, responseMessage } = useSelector((state) => state.note);
-  const { customer } = useSelector((state) => state.customer);
+  const { notes, isLoading, error, initial, responseMessage } = useSelector((state) => state.machine);
+  
+  const { machine } = useSelector((state) => state.machine);
 
 
   useLayoutEffect(() => {
-    dispatch(getNotes(customer._id));
-  }, [dispatch,customer._id]);
+    dispatch(getMachineNotes(machine._id));
+  }, [dispatch,machine._id]);
 
   useEffect(() => {
     if (initial) {
@@ -163,8 +164,8 @@ export default function NoteList() {
   const handleDeleteRow = async (id) => {
     try {
       // console.log(id);
-      await dispatch(deleteNote(id));
-      dispatch(getNotes());
+      await dispatch(deleteMachineNote(id));
+      dispatch(getMachineNotes());
       setSelected([]);
 
       if (page > 0) {

@@ -44,8 +44,7 @@ import MachineViewForm from './MachineViewForm';
 /* eslint-enable */
 
 import MachineEditForm from './MachineEditForm';
-// import CustomerSiteList from './CustomerSiteList';
-// import CustomerContactList from './CustomerContactList';
+import MachineNoteList from './MachineNoteList';
 
 // ----------------------------------------------------------------------
 
@@ -131,7 +130,7 @@ export default function MachineView({editPage}) {
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="eva:archive-outline" />,
-      // component: <MachineViewForm/>
+      component: <MachineNoteList/>
     },
     {
       // disabled: setMachineEditFormVisibility,

@@ -90,7 +90,7 @@ const STATUS_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function NoteList() {
+export default function CustomerNoteList() {
   const {
     dense,
     page,

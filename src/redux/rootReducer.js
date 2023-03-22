@@ -15,6 +15,7 @@ import licenseReducer from './slices/products/license';
 import categoryReducer from './slices/products/category';
 import toolReducer from './slices/products/tools';
 import techparamcategoryReducer from './slices/products/tech-param';
+import machinenoteReducer from './slices/products/machine-note';
 import machinestatusReducer from './slices/products/statuses';
 import machinemodelReducer from './slices/products/model';
 import techparamReducer from './slices/products/parameters';
@@ -145,6 +146,7 @@ const rootReducer = combineReducers({
   category: persistReducer(categoryPersistConfig,categoryReducer),
   tool: persistReducer(toolPersistConfig,toolReducer),
   techparamcategory: persistReducer(techparamcategoryPersistConfig,techparamcategoryReducer),
+  machinenote: persistReducer(techparamcategoryPersistConfig,machinenoteReducer),
   machinestatus: persistReducer(machinestatusPersistConfig, machinestatusReducer),
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
   techparam: persistReducer(techparamPersistConfig, techparamReducer),

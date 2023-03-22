@@ -7,8 +7,7 @@ import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getNotes, getNote } from '../../../redux/slices/customer/note';
-import { getDepartments } from '../../../redux/slices/department';
+import {  getNote } from '../../../redux/slices/products/machine-note';
 
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -43,7 +42,7 @@ export default function NoteViewPage() {
   }, [dispatch, id]);
   // 
 
-  const { note } = useSelector((state) => state.note);
+  const { note } = useSelector((state) => state.machine-note);
 console.log(note)
   const { themeStretch } = useSettingsContext();
 

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Typography } from '@mui/material';
+import { Box, Typography ,Button} from '@mui/material';
 
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -21,6 +21,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
     ...bgBlur({
       color: theme.palette.primary.darker,
     }),
+    justifyContent: 'flex-end',
     top: 0,
     zIndex: 9,
     content: "''",
@@ -62,6 +63,7 @@ export function MachineCoverList({ name, role, cover }) {
 
   return (
     <StyledRoot>
+        <Button>Setting</Button>
       <StyledInfo>
         <CustomAvatar
         // Machine?.photoURL}
@@ -95,43 +97,11 @@ export function MachineCoverList({ name, role, cover }) {
           }}
         >
           <Typography variant="h4">{name}</Typography>
-          {/* Muzna */}
-          {/* <Typography sx={{ opacity: 0.72 }}>{role}</Typography> */}
         </Box>
-        {/* <Select
-          value={selectedOption}
-          onChange={(event) => setSelectedOption(event.target.value)}
-          sx={{ ml: 2, color: 'common.white' }}
-        ><MenuItem value="Option 1">Common Settings </MenuItem>
-          <MenuItem value="Option 2">Machine Categories </MenuItem>
-          <MenuItem value="Option 3">Machine Models</MenuItem>
-          <MenuItem value="Option 4">Machine Suppliers</MenuItem>
-          <MenuItem value="Option 5">Machine Status</MenuItem>
-        </Select>
+        
 
-        <Select
-          value={selectedOption2}
-          onChange={(event) => setSelectedOption3(event.target.value)}
-          sx={{ ml: 2, color: 'common.white' }}
-        > 
-        <MenuItem value="Option 1">Technical Settings</MenuItem>
-          <MenuItem value="Option 2">Setting Categories</MenuItem>
-          <MenuItem value="Option 3">Parameters</MenuItem>
-          
-        </Select>
-
-        <Select
-          value={selectedOption3}
-          onChange={(event) => setSelectedOption2(event.target.value)}
-          sx={{ ml: 2, color: 'common.white' }}
-        >
-          <MenuItem value="Option 1">Tools Information</MenuItem>
-          <MenuItem value="Option 2">Tools</MenuItem>
-          
-        </Select> */}
 
       </StyledInfo>
-
       <Image
         alt="cover"
         // src={cover}
@@ -143,7 +113,24 @@ export function MachineCoverList({ name, role, cover }) {
           position: 'absolute',
         }}
       />
-      
+        <Box 
+        style={{ width: '100%' }}
+        sx={{
+          // top: 0,
+          // left: 1000,
+          // right: 0,
+          // bottom: 0,
+
+          // position: 'relative',
+              // width: '100%',
+              // mr: 'auto',
+              // justifyContent: 'flex-end',
+              // mt: { xs: 1, md: 0 },
+              // color: 'common.white',
+              // textAlign: { xs: 'center', md: 'right' },
+            }}>
+          Setting
+          </Box>
     </StyledRoot>
   );
 }

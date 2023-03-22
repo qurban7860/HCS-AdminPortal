@@ -202,7 +202,7 @@ export default function CustomerContactList() {
   return (
     <>
       <Helmet>
-        <title> Site: List | Machine ERP </title>
+        <title> Contact: List | Machine ERP </title>
       </Helmet>
 
       <Container maxWidth={false}>

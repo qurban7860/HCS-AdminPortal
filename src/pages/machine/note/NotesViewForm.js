@@ -16,7 +16,7 @@ import { fDate,fDateTime } from '../../../utils/formatTime';
 // components
 // import { useSnackbar } from '../../components/snackbar';
 // import { getNotes, getNote } from '../../redux/slices/note';
-import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../../redux/slices/customer/note';
+import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../../redux/slices/products/machine-note';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Iconify from '../../../components/iconify';
 
@@ -25,16 +25,17 @@ NoteViewForm.propTypes = {
 
 };
 export default function NoteViewForm({currentNote = null}) {
-  const { note } = useSelector((state) => state.note);
-  // console.log("Note : ",note)
+  const { note, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.machinenote);
+
+  console.log("Note : ",note)
   // console.log("Current note : ",currentNote)
   // const navigate = useNavigate();
   // const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
-  const { customer } = useSelector((state) => state.customer);
-
+  const { machine } = useSelector((state) => state.machine);
+console.log(" Machine : ",machine)
   const  handleEdit = async () => {
-    await dispatch(getNote(customer._id,currentNote._id));
+    await dispatch(getNote(machine._id,currentNote._id));
     dispatch(setNoteEditFormVisibility(true));
   };
 
@@ -55,9 +56,9 @@ export default function NoteViewForm({currentNote = null}) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteNote(customer._id,currentNote._id));
+    await dispatch(deleteNote(machine._id,currentNote._id));
     handleCloseConfirm();
-    dispatch(getNotes(customer._id));
+    dispatch(getNotes(machine._id));
     // dispatch(getContacts());
   };
 
@@ -71,10 +72,6 @@ export default function NoteViewForm({currentNote = null}) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentNote?._id || 'N/A',
-      site_name:  currentNote.site === null || currentNote.site === undefined ? "" : currentNote.site.name,
-      contact_firstName: currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.firstName,
-      contact_lastName:  currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.lastName,
       note: currentNote?.note || "",
       createdAt:                currentNote?.createdAt || "",
       createdByFname:           currentNote?.createdBy?.firstName || "",
@@ -114,22 +111,6 @@ export default function NoteViewForm({currentNote = null}) {
             </Stack>
 
         <Grid container>
-            <Grid item xs={12} sm={6} >
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Site
-              </Typography>
-              <Typography variant="body2">
-                  {defaultValues.site_name}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                  Contact
-              </Typography>
-              <Typography variant="body2">
-                  {defaultValues.contact_firstName} {defaultValues.contact_lastName !== 'N/A' ?defaultValues.contact_lastName:""}
-              </Typography>
-            </Grid>
           <Grid item xs={18} sm={12} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
