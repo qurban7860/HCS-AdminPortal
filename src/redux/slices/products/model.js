@@ -178,7 +178,7 @@ export function deleteMachinemodel(id) {
 
 export function saveMachinemodel(params) {
     return async (dispatch) => {
-      console.log('params', params);
+      console.log('save Macshine model params', params);
       dispatch(slice.actions.resetMachinemodel());
       dispatch(slice.actions.startLoading());
       try {

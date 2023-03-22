@@ -103,7 +103,7 @@ export default function MachineDashboardPage() {
                     <ListItemIcon>
                       <ModelTrainingIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Machines Models (Under Construction)" />
+                    <ListItemText primary="Machines Models" />
                   </ListItemButton>
 
                   <ListItemButton onClick={linkSupplier} sx={{color: 'text.disabled'}}>
@@ -146,7 +146,7 @@ export default function MachineDashboardPage() {
                     <ListItemIcon>
                       <FlareIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Parameters (Under Construction)" />
+                    <ListItemText primary="Parameters" />
                   </ListItemButton>
 
                 </List>
