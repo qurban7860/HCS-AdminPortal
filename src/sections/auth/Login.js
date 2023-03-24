@@ -17,15 +17,15 @@ import { CONFIG } from '../../config-global';
 export default function Login(){
 return (
     <>
-    <Card variant='outlined'>
+    
     <LoginLayout
     title={CONFIG.MESSAGE_LOGIN_USER}>
     <Logo
         sx={{
           zIndex: 9,
           position: 'absolute',
-          mt: -20,
-          // ml: 5,
+          mt: -25,
+          ml: 9,
           width: '15%',
           // mt: { xs: 1.5, md: 5 },
           // ml: { xs: 2, md: 5 },
@@ -62,7 +62,7 @@ return (
 
       {/* <AuthWithSocial /> */}
     </LoginLayout>
-    </Card>
+    
     </>
   );
 }
