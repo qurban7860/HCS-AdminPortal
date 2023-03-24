@@ -64,6 +64,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
         description:category?.description || 'N/A',
         createdAt: category?.createdAt || '',
         updatedAt: category?.updatedAt || '',
+        isDisabled: true,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCategory, category]
@@ -96,7 +97,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
         </Grid>
 
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
@@ -104,15 +105,22 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
 
         </Grid>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Active
+          </Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+
+        </Grid>
         <Grid container spacing={0} sx={{ mb: 5}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                Created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
+                created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              Updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
+              updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
             </Typography>
             </Grid>
         </Grid>

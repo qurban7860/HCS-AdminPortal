@@ -112,7 +112,7 @@ export default function MachineTechParam() {
     <>
     <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
+      
       <Helmet>
         <title> Machine: Tech Params | Machine ERP</title>
       </Helmet>
@@ -162,7 +162,7 @@ export default function MachineTechParam() {
             </Card>
           
           </Grid>
-        </Grid>
+        
     </FormProvider>
     </Container>
     </>
