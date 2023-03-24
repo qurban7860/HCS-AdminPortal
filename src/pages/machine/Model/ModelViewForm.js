@@ -114,7 +114,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
 
             <Typography variant="body2">{defaultValues.category.name}</Typography>
             
-          </Grid>
+        </Grid>
         
 
         <Grid container spacing={0} sx={{ mb: 5}}>

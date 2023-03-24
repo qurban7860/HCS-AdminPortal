@@ -185,7 +185,7 @@ export default function CustomerNoteList() {
 
 //   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!notes.length && !noteEditFormVisibility && !formVisibility);
 
 //   const handleOpenConfirm = () => {
 //     setOpenConfirm(true);
@@ -318,7 +318,7 @@ const toggleChecked = () =>
               </AccordionDetails>
             </Accordion>
           ))} 
-          {isNotFound && !noteEditFormVisibility && !formVisibility && <EmptyContent title="No Data"/>}
+          {isNotFound  && <EmptyContent title="No Data"/>}
         </Card>
       </Container>
         <ConfirmDialog

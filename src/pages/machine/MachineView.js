@@ -45,6 +45,7 @@ import MachineViewForm from './MachineViewForm';
 
 import MachineEditForm from './MachineEditForm';
 import MachineNoteList from './MachineNoteList';
+import MachineSettingList from './MachineSettingList';
 
 // ----------------------------------------------------------------------
 
@@ -110,6 +111,7 @@ export default function MachineView({editPage}) {
       value: 'settings',
       label: 'Settings',
       icon: <Iconify icon="eva:settings-2-outline" />,
+      component: <MachineSettingList/>
     },
     {
       // disabled: setMachineEditFormVisibility,

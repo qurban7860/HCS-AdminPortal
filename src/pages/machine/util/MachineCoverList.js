@@ -21,7 +21,6 @@ const StyledRoot = styled('div')(({ theme }) => ({
     ...bgBlur({
       color: theme.palette.primary.darker,
     }),
-    justifyContent: 'flex-end',
     top: 0,
     zIndex: 9,
     content: "''",

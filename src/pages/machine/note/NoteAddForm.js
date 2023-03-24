@@ -87,13 +87,6 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const values = watch();
 
-  // useLayoutEffect(() => {
-  //   // dispatch(getUsers(customer._id));
-  //   dispatch(getSites(customer._id));
-  //   dispatch(getContacts(customer._id));
-
-  // }, [dispatch,customer]);
-
   useEffect(() => {
       reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
