@@ -275,7 +275,6 @@ const toggleChecked = () =>
       <Helmet>
         <title> Note: List | Machine ERP </title>
       </Helmet>
-      <Container maxWidth={false}>
         {!noteEditFormVisibility && 
             <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
                 <Button
@@ -316,7 +315,6 @@ const toggleChecked = () =>
           ))} 
           {isNotFound && !noteEditFormVisibility && !formVisibility && <EmptyContent title="No Data"/>}
         </Card>
-      </Container>
         <ConfirmDialog
           open={openConfirm}
           onClose={handleCloseConfirm}

@@ -63,6 +63,8 @@ export default function SupplierCover({ name, role, cover }) {
             mx: 'auto',
             borderWidth: 2,
             borderStyle: 'solid',
+            // borderColor: 'common.black',
+            // background: 'orange',
             borderColor: 'common.white',
             background: '#2065d1',
             width: { xs: 80, md: 110 },

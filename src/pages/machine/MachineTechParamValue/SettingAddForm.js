@@ -29,7 +29,7 @@ export default function SettingAddForm() {
 
   const { formVisibility } = useSelector((state) => state.machineSetting);
   const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-console.log("tech param by category : ",techparamsByCategory)
+// console.log("tech param by category : ",techparamsByCategory)
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState('');
@@ -80,11 +80,11 @@ useEffect(()=>{
 
   const onSubmit = async (data) => {
     try {
-      if(techParamVal){
-        data.techParam = techParamVal._id;
+      console.log("techParamVal : ",techParamVal._id)
+      if(techParamVal !== ""){
+        data.techParam = techParamVal;
       }
-      techParamVal("");
-      setCategory("")
+      
       console.log('params',data);
       await dispatch(saveSetting(machine._id,data));
       reset();
