@@ -63,9 +63,7 @@ export function MachineCover({ name, role, cover }) {
             mx: 'auto',
             borderWidth: 2,
             borderStyle: 'solid',
-            // borderColor: 'common.white',
-            borderColor: 'common.black',
-            background: 'orange',
+            borderColor: 'common.white',
             width: { xs: 80, md: 110 },
             height: { xs: 80, md: 110 },
           }}
