@@ -197,7 +197,6 @@ export default function CustomerSiteList() {
         <title> Site: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false}>
 
         {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
@@ -359,7 +358,6 @@ export default function CustomerSiteList() {
             onChangeDense={onChangeDense}
           /> */}
         </Card>
-      </Container>
 
       {/* <ConfirmDialog
         open={openConfirm}

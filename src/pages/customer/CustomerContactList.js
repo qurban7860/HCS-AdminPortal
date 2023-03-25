@@ -205,8 +205,6 @@ export default function CustomerContactList() {
         <title> Contact: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false}>
-
         {!contactEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
               // alignItems 
@@ -267,8 +265,6 @@ export default function CustomerContactList() {
           {isNotFound && <EmptyContent title="No Data"/>}
 
         </Card>
-      </Container>
-
     </>
   );
 }
