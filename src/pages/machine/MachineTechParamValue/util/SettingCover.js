@@ -49,7 +49,7 @@ SiteCover.propTypes = {
   role: PropTypes.string,
 };
 
-export default function SiteCover({ name, role, cover }) {
+export default function SettingCover({ name, role, cover }) {
   const { customer } = useAuthContext();
 
   return (

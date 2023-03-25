@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
-import { getTechparamcategories, getTechparamcategory } from '../../../redux/slices/products/tech-param';
+import { getTechparamcategories, getTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
 import TechParamCategoryEditForm from './TechParamCategoryEditForm';
 // redux
 

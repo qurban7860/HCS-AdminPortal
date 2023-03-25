@@ -12,7 +12,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import SiteEditForm from './SiteEditForm';
+import SettingEditForm from './SettingEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -51,8 +51,7 @@ export default function SiteEdit() {
             { name: site?.name },
           ]}
         />
-
-        <SiteEditForm />
+        <SettingEditForm />
       </Container>
     </>
   );

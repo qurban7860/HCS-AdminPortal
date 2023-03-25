@@ -7,11 +7,11 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 // sections
-import SiteAddForm from './SiteAddForm';
+import SettingAddForm from './SettingAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function SiteAdd() {
+export default function SettingEdit() {
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -32,7 +32,7 @@ export default function SiteAdd() {
             { name: 'New Site' },
           ]}
         />
-        <SiteAddForm />
+        <SettingAddForm />
       </Container>
     </>
   );

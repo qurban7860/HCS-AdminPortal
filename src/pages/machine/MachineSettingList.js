@@ -44,9 +44,13 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './ToolsInstalled/SiteListTableRow';
 import SiteListTableToolbar from './ToolsInstalled/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/customer/site';
-import SiteAddForm from './ToolsInstalled/SiteAddForm';
-import SiteEditForm from './ToolsInstalled/SiteEditForm';
+
+import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
+import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
+import { getTechparams } from '../../redux/slices/products/machineTechParam';
+
+import SettingAddForm from './MachineTechParamValue/SettingAddForm'
+import SettingEditForm from './MachineTechParamValue/SettingEditForm';
 
 import _mock from '../../_mock';
 import SiteViewForm from './ToolsInstalled/SiteViewForm';
@@ -123,14 +127,16 @@ export default function MachineSettingList() {
   };
   const dispatch = useDispatch();
 
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
+  const { techparamsByCategory } = useSelector((state) => state.techparam);
 
-  const { customer } = useSelector((state) => state.customer);
+  const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
-  const toggleChecked = async () => 
-    {
-      dispatch(setFormVisibility(!siteAddFormVisibility));    
-    };
+  const { settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
+  const { machine } = useSelector((state) => state.machine);
+  // const toggleChecked = async () => 
+  //   {
+  //     dispatch(setFormVisibility(!siteAddFormVisibility));    
+  //   };
 
   const { themeStretch } = useSettingsContext();
 
@@ -151,28 +157,30 @@ export default function MachineSettingList() {
     setActiveIndex(accordianIndex)
    }
   };
-
+useLayoutEffect(()=>{
+dispatch(getSettings(machine._id))
+},[dispatch,settings,machine])
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
     console.log("Expended : ",expanded)
   };
 
-  useEffect(() => {
-    if(!siteAddFormVisibility && !siteEditFormVisibility){
-      dispatch(getSites(customer._id));
-    }
-  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
+  // useEffect(() => {
+  //   if(!siteAddFormVisibility && !siteEditFormVisibility){
+  //     dispatch(getSites(customer._id));
+  //   }
+  // }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 
-  useEffect(() => {
-    if (initial) {
-      if (sites && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }   
-      setTableData(sites);
-    }
-  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
+  // useEffect(() => {
+  //   if (initial) {
+  //     if (sites && !error) {
+  //       enqueueSnackbar(responseMessage);
+  //     } else {
+  //       enqueueSnackbar(error, { variant: `error` });
+  //     }   
+  //     setTableData(sites);
+  //   }
+  // }, [sites, error, responseMessage, enqueueSnackbar, initial]);
 
 
 
@@ -189,7 +197,7 @@ export default function MachineSettingList() {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
+  const isNotFound = !settings.length && !formVisibility && !settingEditFormVisibility;
 
   return (
     <>
@@ -197,9 +205,9 @@ export default function MachineSettingList() {
         <title> Machine Setting: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false}>
+      <Container maxWidth={false} >
 
-        {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+        {/* {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
               // alignItems 
               onClick={toggleChecked}
@@ -207,31 +215,32 @@ export default function MachineSettingList() {
               variant="contained"
               startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
             >
-              New Site
+              New Setting
             </Button>
 
-        </Stack>}
+        </Stack>} */}
+        <SettingAddForm/>
         
-        <Card>
+        <Card sx={{mt:3}}>
 
-          {siteEditFormVisibility && <SiteEditForm/>}
+          {settingEditFormVisibility && <SettingEditForm/>}
 
-          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm/>}
+          {/* {formVisibility && !settingEditFormVisibility && <SettingAddForm/>} */}
 
-          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) => (
+          {!formVisibility && !settingEditFormVisibility && settings.map((setting, index) => (
 
-            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)}>
+            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
                   <Grid item xs={12} sm={4} >
                     <Typography variant="body2" >
-                    {site.name} 
+                    {setting.name} 
                     </Typography>
                   </Grid>
-                  {site.address && <Grid item xs={12} sm={8}>
+                  {setting.address && <Grid item xs={12} sm={8}>
                     <Typography variant="body2" >
-                    {Object.values(site.address)?.join(", ")}
+                    {Object.values(setting.address)?.join(", ")}
                     </Typography>
                   </Grid>}
                 </Grid>
@@ -239,7 +248,7 @@ export default function MachineSettingList() {
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5}}>
                 <SiteViewForm
-                currentSite={site}
+                currentSite={setting}
                 />
               </AccordionDetails>
             </Accordion>

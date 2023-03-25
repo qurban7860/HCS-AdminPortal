@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,TextField, Autocomplete,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getTechparams, createTechparams } from '../../../redux/slices/products/parameters';
+import { getTechparams, createTechparams } from '../../../redux/slices/products/machineTechParam';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';

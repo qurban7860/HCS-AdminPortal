@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getTechparams, setTechparamEditFormVisibility } from '../../../redux/slices/products/parameters';
+import { getTechparams, setTechparamEditFormVisibility } from '../../../redux/slices/products/machineTechParam';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components

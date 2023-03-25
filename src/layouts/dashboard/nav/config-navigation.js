@@ -36,7 +36,9 @@ const ICONS = {
   analytics: icon('ic_analytics'),
   dashboard: icon('ic_dashboard'),
   map: icon('ic_location'),
-  icon: <Iconify icon="eva:settings-2-outline" />,
+  machines: <Iconify icon="et:gears" />,
+  users: <Iconify icon="ph:users-three-light" />
+  
 
 };
 
@@ -47,8 +49,9 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'Customer', path: PATH_DASHBOARD.customer.list, icon: ICONS.ecommerce },
-      { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon},
+      { title: 'Customers', path: PATH_DASHBOARD.customer.list, icon: ICONS.users },
+      { title: 'Machines', path: PATH_MACHINE.machine.list, icon: ICONS.machines},
+      // { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon},
       // {
       //   title: 'Button Title',
       //   path: '/PATH_DASHBOARD.customer.new',

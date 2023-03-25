@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getTechparamcategory, getTechparamcategories, updateTechparamcategory } from '../../../redux/slices/products/tech-param';
+import { getTechparamcategory, getTechparamcategories, updateTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components

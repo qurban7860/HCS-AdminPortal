@@ -28,7 +28,7 @@ SiteListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function SiteListTableToolbar({
+export default function SettingListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

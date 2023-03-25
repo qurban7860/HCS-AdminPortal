@@ -35,7 +35,7 @@ SiteListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function SiteListTableRow({
+export default function SettingListTableRow({
   row,
   selected,
   onSelectRow,

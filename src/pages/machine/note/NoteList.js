@@ -38,7 +38,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import NoteListTableRow from './NoteListTableRow';
 import NoteListTableToolbar from './NoteListTableToolbar';
-import { getMachineNotes, deleteMachineNote, getMachineNote } from '../../../redux/slices/products/machine-note';
+import { getMachineNotes, deleteMachineNote, getMachineNote } from '../../../redux/slices/products/machineNote';
 
 
 // ----------------------------------------------------------------------

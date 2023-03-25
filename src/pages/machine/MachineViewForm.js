@@ -106,15 +106,15 @@ export default function CustomerViewForm() {
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Parent Machine
+                Previous Machine Serial No
                 </Typography>
-                <Typography variant="body2">{defaultValues.parentMachine ? defaultValues.parentMachine : ''}</Typography>
+                <Typography variant="body2">{defaultValues.parentSerialNo? defaultValues.parentSerialNo : ''}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Parent Machine Serial No
+                Previous Machine
                 </Typography>
-                <Typography variant="body2">{defaultValues.parentSerialNo? defaultValues.parentSerialNo : ''}</Typography>
+                <Typography variant="body2">{defaultValues.parentMachine ? defaultValues.parentMachine : ''}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
@@ -164,7 +164,7 @@ export default function CustomerViewForm() {
                 </Typography>
                 <Typography variant="body2">{defaultValues.instalationAddressCity? defaultValues.instalationAddressCity : ''} {defaultValues.instalationAddressCountry? ', ' : null} {defaultValues.instalationAddressCountry? defaultValues.instalationAddressCountry: ''} </Typography>
             </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Grid item xs={12} sm={12} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Description
                 </Typography>

@@ -16,7 +16,7 @@ import { fDate,fDateTime } from '../../../utils/formatTime';
 // components
 // import { useSnackbar } from '../../components/snackbar';
 // import { getNotes, getNote } from '../../redux/slices/note';
-import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../../redux/slices/products/machine-note';
+import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../../redux/slices/products/machineNote';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Iconify from '../../../components/iconify';
 

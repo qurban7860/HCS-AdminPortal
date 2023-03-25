@@ -109,7 +109,7 @@ export const {
 export function createCategorys (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
+    console.log(" Category",supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`,supplyData);
       // dispatch(slice.actions)
@@ -129,7 +129,7 @@ export function getCategories (){
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`);
-
+      console.log(" Category",response)
       dispatch(slice.actions.getCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
       // dispatch(slice.actions)

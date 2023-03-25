@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getTechparams, getTechparam, deleteTechparams } from '../../../redux/slices/products/parameters';
+import { getTechparams, getTechparam, deleteTechparams } from '../../../redux/slices/products/machineTechParam';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';

@@ -15,7 +15,7 @@ import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dia
 // global
 
 // slice
-import { updateTechparamcategory, getTechparamcategory, getTechparamcategories } from '../../../redux/slices/products/tech-param';
+import { updateTechparamcategory, getTechparamcategory, getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';

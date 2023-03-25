@@ -78,6 +78,8 @@ export function MachineCover({ name, role, cover }) {
           }}
         >
           <Typography variant="h4">{name}</Typography>
+          {/* <Typography variant="h4">setting</Typography> */}
+
 
           <Typography sx={{ opacity: 0.72 }}>{role}</Typography>
         </Box>

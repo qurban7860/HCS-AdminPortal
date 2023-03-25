@@ -7,7 +7,7 @@ import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import {  getNote } from '../../../redux/slices/products/machine-note';
+import {  getNote } from '../../../redux/slices/products/machineNote';
 
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';

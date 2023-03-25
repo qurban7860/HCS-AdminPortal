@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import {  updateNote ,setNoteEditFormVisibility} from '../../../redux/slices/products/machine-note';
+import {  updateNote ,setNoteEditFormVisibility} from '../../../redux/slices/products/machineNote';
 
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';

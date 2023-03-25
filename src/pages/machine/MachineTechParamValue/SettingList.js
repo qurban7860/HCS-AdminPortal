@@ -38,7 +38,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import SiteListTableRow from './SiteListTableRow';
 import SiteListTableToolbar from './SiteListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
-import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
+import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 
 
 // ----------------------------------------------------------------------
@@ -64,7 +64,7 @@ const STATUS_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function SiteList() {
+export default function SettingList() {
   const {
     dense,
     page,
@@ -210,7 +210,7 @@ export default function SiteList() {
         
 
         <Grid container spacing={3}>
-          <CustomerDashboardNavbar/>
+          <MachineDashboardNavbar/>
           </Grid>
         <Card>
           <SiteListTableToolbar

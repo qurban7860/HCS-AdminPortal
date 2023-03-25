@@ -83,6 +83,9 @@ export default function MachineWidget({
         <Typography variant="subtitle2" align='left' noWrap >
           {title}
         </Typography>
+        <Typography variant="subtitle2" align='left' noWrap >
+          title
+        </Typography>
       </Grid>
     </Grid>
       </Card>

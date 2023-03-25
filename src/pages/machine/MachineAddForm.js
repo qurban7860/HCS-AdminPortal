@@ -242,6 +242,32 @@ const handleKeyPress = (e) => {
               <RHFTextField name="name" label="Name" />
               <Autocomplete
                 // freeSolo
+                value={parMachSerVal || null}
+                options={machines}
+                getOptionLabel={(option) => option.serialNo}
+                id="controllable-states-demo"
+                onChange={(event, newValue) => {
+                  
+                  if(newValue){
+                    setParMachineVal(newValue);
+                    setParMachSerVal(newValue);
+                    setSupplierVal(newValue.supplier);
+                    setModelVal(newValue.machineModel);
+                  }
+                  else{  
+                    setParMachineVal("");
+                    setParMachSerVal("");           
+                    setSupplierVal("");
+                    setModelVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.serialNo}</Box>)}
+                renderInput={(params) => <TextField {...params}  label="Previous Machine Serial No." />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete
+                // freeSolo
+                disabled
                 value={parMachineVal || null}
                 options={machines}
                 getOptionLabel={(option) => option.name}
@@ -262,29 +288,10 @@ const handleKeyPress = (e) => {
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Parent Machine" />}
+                renderInput={(params) => <TextField {...params}  label="Previous Machine" />}
                 ChipProps={{ size: 'small' }}
               />
-              {/* <RHFTextField name="pserialNo" value={machineVal?.serialNo} label="Parent Machine Serial No." /> */}
-              <Autocomplete
-                // freeSolo
-                // disabled
-                value={parMachSerVal || null}
-                options={machines}
-                getOptionLabel={(option) => option.serialNo}
-                id="controllable-states-demo"
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setParMachSerVal(newValue);
-                  }
-                  else{ 
-                  setParMachSerVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.serialNo}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Parent Machine Serial No." />}
-                ChipProps={{ size: 'small' }}
-              />
+              
             </Box>
             <Box  rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete

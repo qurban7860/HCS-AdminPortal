@@ -258,8 +258,36 @@ const handleKeyPress = (e) => {
             <Box sx={{mb:-3}} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="serialNo" label="Serial No." />
               <RHFTextField name="name" label="Name" />
+
               <Autocomplete
                 // freeSolo
+                value={parMachSerVal || null}
+                options={machines}
+                getOptionLabel={(option) => option.serialNo}
+                onChange={(event, newValue) => {
+                  console.log(newValue);
+                  if(newValue){
+                    setParMachineVal(newValue);
+                    setParMachSerVal(newValue);
+                    setSupplierVal(newValue.supplier);
+                    setModelVal(newValue.machineModel);
+                  }
+                  else{          
+                    setParMachineVal("");
+                    setParMachSerVal("");
+                    setSupplierVal("");
+                    setModelVal("");
+                  }
+                }}
+                id="controllable-states-demo"
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.serialNo}</Box>)}
+                renderInput={(params) => <TextField {...params}  label="Previous Machine Serial No." />}
+                ChipProps={{ size: 'small' }}
+              />
+
+              <Autocomplete
+                // freeSolo
+                disabled
                 disablePortal
                 id="combo-box-demo"
                 value={parMachineVal || null}
@@ -282,29 +310,10 @@ const handleKeyPress = (e) => {
                 }}
                 // id="controllable-states-demo"
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Parent Machine" />}
+                renderInput={(params) => <TextField {...params}  label="Previous Machine" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete
-                // freeSolo
-                // disabled
-                value={parMachSerVal || null}
-                options={machines}
-                getOptionLabel={(option) => option.serialNo}
-                onChange={(event, newValue) => {
-                  console.log(newValue);
-                  if(newValue){
-                    setParMachSerVal(newValue);
-                  }
-                  else{          
-                    setParMachSerVal("");
-                  }
-                }}
-                id="controllable-states-demo"
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.serialNo}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Parent Machine Serial No." />}
-                ChipProps={{ size: 'small' }}
-              />
+              
             </Box>
             <Box  rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete

@@ -18,11 +18,11 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
-SiteViewForm.propTypes = {
+SettingViewForm.propTypes = {
   currentSite: PropTypes.object,
 };
 
-export default function SiteViewForm({ currentSite = null }) {
+export default function SettingViewForm({ currentSite = null }) {
 
   const { site } = useSelector((state) => state.site);
 

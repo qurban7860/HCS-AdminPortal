@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
-import { getTechparam} from '../../../redux/slices/products/parameters';
+import { getTechparam} from '../../../redux/slices/products/machineTechParam';
 // import StatusEditForm from './StatusEditForm';
 // redux
 

@@ -14,13 +14,13 @@ import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
 import {
-  SiteCover
+  SettingCover
 } from './util';
 
-import SiteViewForm from './SiteViewForm'
+import SettingViewForm from './SettingViewForm'
 // ----------------------------------------------------------------------
 
-export default function SiteViewPage() {
+export default function SettingView() {
 
   const dispatch = useDispatch();
 
@@ -42,7 +42,7 @@ export default function SiteViewPage() {
       value: 'site-edit',
       label: 'Basic Info',
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <SiteViewForm/>,
+      component: <SettingViewForm/>,
     },
     {
       value: 'configuration',
@@ -64,7 +64,7 @@ export default function SiteViewPage() {
   return (
     <>
       <Helmet>
-        <title> Site: Information | Machine ERP</title>
+        <title> Setting: Information | Machine ERP</title>
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -86,7 +86,7 @@ export default function SiteViewPage() {
             position: 'relative',
           }}
         >
-          <SiteCover name={site?.name}/>
+          <SettingCover name={site?.name}/>
 
           <Tabs
             value={currentTab}

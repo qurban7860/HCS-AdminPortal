@@ -54,7 +54,7 @@ import NoteAddForm from './note/NoteAddForm';
 
 
 
-import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/products/machine-note';
+import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/products/machineNote';
 
 
 

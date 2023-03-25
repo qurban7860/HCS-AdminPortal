@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Typography ,Button} from '@mui/material';
+import { Box, Typography ,Button, Grid} from '@mui/material';
 
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -13,6 +14,8 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 // components
 import Image from '../../../components/image';
 import { CustomAvatar } from '../../../components/custom-avatar';
+import Iconify from '../../../components/iconify';
+import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -54,26 +57,31 @@ MachineCoverList.propTypes = {
 };
 
 export function MachineCoverList({ name, role, cover }) {
-
+  const navigate = useNavigate()
+  const handleNavigate = () => {
+    navigate(PATH_MACHINE.general.app);
+    // console.log('navigate')
+  };
     // const [selectedOption, setSelectedOption] = useState('Option 1');
     // const [selectedOption2, setSelectedOption2] = useState('Option 1');
     // const [selectedOption3, setSelectedOption3] = useState('Option 1');
 //   cMachine } = useAuthContext();
 
   return (
-    <StyledRoot>
-        <Button>Setting</Button>
-      <StyledInfo>
+    <StyledRoot >
+      <StyledInfo style={{width: '100%'}}>
         <CustomAvatar
         // Machine?.photoURL}
         //   alt={name}
         //   name={name}Ï
           sx={{
-            mx: 'auto',
+            mx: {xs:'auto', md:0},
             borderWidth: 2,
             borderStyle: 'solid',
-            borderColor: 'common.white',
-            background: '#2065d1',
+            borderColor: 'common.black',
+            // background: '#2065d1',
+            background: 'orange',
+            ml: {xs: 2, md:0},
             width: { xs: 80, md: 110 },
             height: { xs: 80, md: 110 },
           }}
@@ -81,27 +89,42 @@ export function MachineCoverList({ name, role, cover }) {
             <ListAltIcon sx={{
                  width: {xs: 32, md: 48 }, 
                  height: {xs: 32, md: 48},
-                 color: 'white'
+                 color: 'black',
                 }}  
             />
         </CustomAvatar>
-        
 
-        <Box
+        
+        {/* <Box
           sx={{
-            ml: { md: 3 },
-            mt: { xs: 1, md: 0 },
-            color: 'common.white',
-            textAlign: { xs: 'center', md: 'left' },
+            // ml: { md: 3 },
+            // mt: { xs: 1, md: 0 },
+            // color: 'common.white',
+            // textAlign: { xs: 'center', md: 'left' },
           }}
-        >
-          <Typography variant="h4">{name}</Typography>
-        </Box>
-        
+        > */}
+        <Typography variant="h4" 
+        sx={{ ml:3,
+        color: 'common.white' ,
+        mb: { xs: -3, md: 0},
+        display: { xs: 'none', md: 'block' },
+        }}
+        >{name}</Typography>
 
+          <Button variant="h4" 
+          sx={{ ml: {md:'auto', xs:5}, mr:3,
+          color: {xs: 'common.black' ,md: 'common.white'},
+          display: { xs: 'flex-end', md: 'block'},
+          mb: { xs: 5, md: -2},
+          }} 
+          onClick={handleNavigate}
+           ><Iconify icon="eva:settings-2-outline" /></Button>
+        {/* </Box> */}
+      
+        
 
       </StyledInfo>
-      <Image
+      {/* <Image
         alt="cover"
         // src={cover}
         sx={{
@@ -111,25 +134,9 @@ export function MachineCoverList({ name, role, cover }) {
           bottom: 0,
           position: 'absolute',
         }}
-      />
-        <Box 
-        style={{ width: '100%' }}
-        sx={{
-          // top: 0,
-          // left: 1000,
-          // right: 0,
-          // bottom: 0,
-
-          // position: 'relative',
-              // width: '100%',
-              // mr: 'auto',
-              // justifyContent: 'flex-end',
-              // mt: { xs: 1, md: 0 },
-              // color: 'common.white',
-              // textAlign: { xs: 'center', md: 'right' },
-            }}>
-          Setting
-          </Box>
+      /> */}
+      
+        
     </StyledRoot>
   );
 }
