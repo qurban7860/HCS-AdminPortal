@@ -168,7 +168,6 @@ export function getTechparamsByCategory (cateegoryId){
         }
       }
       );
-
       dispatch(slice.actions.getTechparamsByCategorySuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Techparams loaded successfully'));
       // dispatch(slice.actions)

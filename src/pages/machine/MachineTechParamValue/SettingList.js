@@ -35,8 +35,8 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './SiteListTableRow';
-import SiteListTableToolbar from './SiteListTableToolbar';
+import SiteListTableRow from './SettingListTableRow';
+import SiteListTableToolbar from './SettingListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 
