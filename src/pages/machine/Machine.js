@@ -54,13 +54,13 @@ export default function MachineDashboardPage() {
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           {/* Navigation Bar */}
-          <MachineDashboardNavbar/>
+          {/* <MachineDashboardNavbar/> */}
 
           {/* Grid for displaying machine related information */}
           <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
+          {/* <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
             <AppCurrentDownload
-              title="Current Machines (Under Construction)"
+              title="Current Machines"
               chart={{
                 colors: [
                   theme.palette.primary.main,
@@ -75,11 +75,11 @@ export default function MachineDashboardPage() {
                 ],
               }}
             />
-          </Grid>
+          </Grid> */}
           
           
             <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
-              <Card sx={{height: '234px'}}>
+              <Card sx={{height: '234px', mt: '24px'}}>
                 <List
                   // sx={{fontSize: '0.7em'}}
                   // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
@@ -123,7 +123,7 @@ export default function MachineDashboardPage() {
               </Card>
             </Grid>
             <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
-              <Card sx={{height: '234px'}}>
+              <Card sx={{height: '234px', mt: '24px'}}>
                 <List
                   sx={{fontSize: '0.7em'}}
                   // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
