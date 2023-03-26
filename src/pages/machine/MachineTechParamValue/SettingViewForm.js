@@ -7,26 +7,23 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../redux/slices/customer/site';
 
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
-
+import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , deleteSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 SettingViewForm.propTypes = {
-  currentSite: PropTypes.object,
+  currentSetting: PropTypes.object,
 };
 
-export default function SettingViewForm({ currentSite = null }) {
+export default function SettingViewForm({ currentSetting = null }) {
 
-  const { site } = useSelector((state) => state.site);
-
-  const { customer } = useSelector((state) => state.customer);
+  const { machine } = useSelector((state) => state.machine);
 
   const navigate = useNavigate();
 
@@ -49,46 +46,34 @@ export default function SettingViewForm({ currentSite = null }) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteSite(customer._id, currentSite._id));
+    await dispatch(deleteSetting(machine._id, currentSetting._id));
     handleCloseConfirm();
-    dispatch(getSites(customer._id));
+    dispatch(getSettings(machine._id));
     // dispatch(getContacts());
   };
 
   const  handleEdit = async () => {
-    await dispatch(getSite(customer._id, currentSite._id));
-    dispatch(setEditFormVisibility(true));
+    await dispatch(getSetting(machine._id, currentSetting._id));
+    dispatch(setSettingEditFormVisibility (true));
   };
 
 
   const defaultValues = useMemo(
     () => (
       {
-        id: currentSite ? currentSite._id : site?._id || 'N/A',
-        name: currentSite ? currentSite.name : site?.name || 'N/A',
-        customer: currentSite ? currentSite.name : site?.tradingName || 'N/A',
-        billingSite: currentSite ? currentSite._id : site?.accountManager || 'N/A',
-        phone: currentSite ? currentSite.phone : site?.phone || 'N/A',
-        email: currentSite ? currentSite.email : site?.email || 'N/A',
-        fax: currentSite ? currentSite.fax : site?.fax || 'N/A',
-        website: currentSite ? currentSite.website : site?.website || 'N/A',
-
-        street: currentSite ? currentSite.address?.street : site?.address.street || 'N/A',
-        suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || 'N/A',
-        city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
-        region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
-        country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
-        createdAt:                currentSite?.createdAt || "",
-        createdByFname:           currentSite?.createdBy?.firstName || "",
-        createdByLname:           currentSite?.createdBy?.lastName || "",
-        createdIP:                currentSite?.createdIP || "",
-        updatedAt:                currentSite?.updatedAt || "",
-        updatedByFname:           currentSite?.updatedBy?.firstName || "",
-        updatedByLname:           currentSite?.updatedBy?.lastName || "",
-        updatedIP:                currentSite?.updatedIP || "",
+        techParam: currentSetting?.techParam || "",
+        techParamValue: currentSetting?.techParamValue || "",
+        createdAt:                currentSetting?.createdAt || "",
+        createdByFname:           currentSetting?.createdBy?.firstName || "",
+        createdByLname:           currentSetting?.createdBy?.lastName || "",
+        createdIP:                currentSetting?.createdIP || "",
+        updatedAt:                currentSetting?.updatedAt || "",
+        updatedByFname:           currentSetting?.updatedBy?.firstName || "",
+        updatedByLname:           currentSetting?.updatedBy?.lastName || "",
+        updatedIP:                currentSetting?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentSite, site]
+    [currentSetting, machine]
   );
 
   return (
@@ -118,110 +103,22 @@ export default function SettingViewForm({ currentSite = null }) {
           <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Name
+              Technical Perameter 
               </Typography>
             </Grid>
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.name ? defaultValues.name : ''}
+            {defaultValues.techParam ? defaultValues.techParam : ''}
             </Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Phone
+              Technical Perameter Value
               </Typography>
             </Grid>
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.phone ? defaultValues.phone : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Fax
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.fax ? defaultValues.fax : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Email
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.email ? defaultValues.email : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Website
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.website ? defaultValues.website : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Street
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.street ? defaultValues.street : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Suburb
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.suburb ? defaultValues.suburb : ''}
-            </Typography>
-          </Grid>
-
-         <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              City
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.city ? defaultValues.city : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Region
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.region ? defaultValues.region : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Country
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.country ? defaultValues.country : ''}
+            {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
             </Typography>
           </Grid>
 

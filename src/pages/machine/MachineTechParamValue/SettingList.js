@@ -224,7 +224,7 @@ export default function SettingList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               
               numSelected={selected.length}
               rowCount={tableData.length}
@@ -241,7 +241,7 @@ export default function SettingList() {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size='small' sx={{ minWidth: 960 }}>
@@ -250,14 +250,14 @@ export default function SettingList() {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>

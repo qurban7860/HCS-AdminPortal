@@ -119,7 +119,7 @@ export function saveSetting(machineId,params) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
       console.log(response)
     //   dispatch(slice.actions.setSettingFormVisibility(false));
-      dispatch(slice.actions.setResponseMessage('Note saved successfully'));
+      dispatch(slice.actions.setResponseMessage('Setting saved successfully'));
 
     } catch (error) {
       console.log(error);
@@ -141,7 +141,7 @@ export function updateSetting(machineId,settingId,params) {
       }
       console.log("Update before post: ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
-      dispatch(slice.actions.setResponseMessage('Note updated successfully'));
+      dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
 
     } catch (error) {
       console.log(error);
@@ -163,9 +163,8 @@ export function getSettings(id) {
         }
       }
       );
-      console.log("Machine notes : ",response)
-      console.log("Notes Response : ",response);
-      dispatch(slice.actions.getNotesSuccess(response.data));
+      console.log("Settings Response : ",response);
+      dispatch(slice.actions.getSettingsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
     } catch (error) {
@@ -182,7 +181,7 @@ export function getSetting(machineId,settingId) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`);
-      dispatch(slice.actions.getNoteSuccess(response.data));
+      dispatch(slice.actions.getSettingSuccess(response.data));
       // console.log('requested note', response.data);
       // dispatch(slice.actions.setResponseMessage('Notes Loaded Successfuly'));
     } catch (error) {

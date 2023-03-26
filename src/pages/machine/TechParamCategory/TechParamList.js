@@ -235,7 +235,7 @@ export default function TechParamList() {
             mb: 3,
             height: 160,
             position: 'relative',
-            mt: '24px',
+            // mt: '24px',
           }}
         >
           <MachineCoverList name='Technical Parameter Category List'/>
@@ -255,7 +255,7 @@ export default function TechParamList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               
               numSelected={selected.length}
               rowCount={tableData.length}
@@ -272,7 +272,7 @@ export default function TechParamList() {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size='small' sx={{ minWidth: 960 }}>

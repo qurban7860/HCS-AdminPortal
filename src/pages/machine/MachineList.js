@@ -195,7 +195,7 @@ export default function MachineList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          {selected.length > 1 ? "" :
+          {/* {selected.length > 1 ? "" :
 
             <TableSelectedAction
               
@@ -215,7 +215,7 @@ export default function MachineList() {
                 </Tooltip>
               }
             />
-          }
+          } */}
 
             <Scrollbar>
               <Table size= 'small' sx={{ minWidth: 960 }}>
@@ -224,14 +224,14 @@ export default function MachineList() {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
@@ -242,9 +242,9 @@ export default function MachineList() {
                         <MachineListTableRow
                           key={row._id}
                           row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
+                          // selected={selected.includes(row._id)}
+                          // onSelectRow={() => onSelectRow(row._id)}
+                          // onDeleteRow={() => handleDeleteRow(row._id)}
                           // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />

@@ -42,10 +42,8 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './ToolsInstalled/SiteListTableRow';
-import SiteListTableToolbar from './ToolsInstalled/SiteListTableToolbar';
 
-import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
+import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting , saveSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
 import { getTechparams } from '../../redux/slices/products/machineTechParam';
 
@@ -53,8 +51,9 @@ import SettingAddForm from './MachineTechParamValue/SettingAddForm'
 import SettingEditForm from './MachineTechParamValue/SettingEditForm';
 
 import _mock from '../../_mock';
-import SiteViewForm from './ToolsInstalled/SiteViewForm';
+import SettingViewForm from './MachineTechParamValue/SettingViewForm';
 import EmptyContent from '../../components/empty-content';
+import { fDate,fDateTime } from '../../utils/formatTime';
 
 
 
@@ -132,6 +131,7 @@ export default function MachineSettingList() {
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
   const { settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
+  console.log("Settings :" , settings)
   const { machine } = useSelector((state) => state.machine);
   // const toggleChecked = async () => 
   //   {
@@ -149,7 +149,9 @@ export default function MachineSettingList() {
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [activeIndex, setActiveIndex] = useState(null);
+
   const [expanded, setExpanded] = useState(false);
+
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
     setActiveIndex(null)
@@ -157,9 +159,14 @@ export default function MachineSettingList() {
     setActiveIndex(accordianIndex)
    }
   };
-useLayoutEffect(()=>{
-dispatch(getSettings(machine._id))
-},[dispatch,settings,machine])
+
+
+useLayoutEffect(() => {
+  if(!formVisibility && !settingEditFormVisibility){
+  dispatch(getSettings(machine._id));
+  }
+}, [dispatch, machine._id, settingEditFormVisibility , formVisibility ]);
+
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
     console.log("Expended : ",expanded)
@@ -233,22 +240,24 @@ dispatch(getSettings(machine._id))
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
-                  <Grid item xs={12} sm={4} >
+                  <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
-                    {setting.name} 
+                    {fDate(setting?.createdAt || "")}
                     </Typography>
                   </Grid>
-                  {setting.address && <Grid item xs={12} sm={8}>
-                    <Typography variant="body2" >
-                    {Object.values(setting.address)?.join(", ")}
-                    </Typography>
-                  </Grid>}
+                  <Grid item xs={12} sm={9} md={10}>
+                  <Typography variant="body2" >
+                      {/* {setting?.techParam.name !== "" ? setting?.techParam?.name : "" }, */}
+                       {/* {console.log(setting)} */}
+                       , {setting?.techParamValue || "" }
+                  </Typography>
+                </Grid>
                 </Grid>
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5}}>
-                <SiteViewForm
-                currentSite={setting}
+                <SettingViewForm
+                currentSetting={setting}
                 />
               </AccordionDetails>
             </Accordion>

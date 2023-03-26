@@ -224,7 +224,7 @@ export default function CustomerList() {
             mb: 3,
             height: 160,
             position: 'relative',
-            mt: '24px',
+            // mt: '24px',
           }}
         >
           <CustomerCoverList name='Customers List'/>
