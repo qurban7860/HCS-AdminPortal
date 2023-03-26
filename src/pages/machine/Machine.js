@@ -88,7 +88,7 @@ export default function MachineDashboardPage() {
                   subheader={
                     <ListSubheader
                     component="div" id="nested-list-subheader">
-                      Common Settings(Under Construction) 
+                      Common Settings
                     </ListSubheader>
                   }
                 >
@@ -131,7 +131,7 @@ export default function MachineDashboardPage() {
                   aria-labelledby="nested-list-subheader"
                   subheader={
                     <ListSubheader component="div" id="nested-list-subheader">
-                      Technical Settings(Under Construction)
+                      Technical Settings
                     </ListSubheader>
                   }
                 >

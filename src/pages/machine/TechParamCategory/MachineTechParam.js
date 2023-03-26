@@ -62,7 +62,7 @@ export default function MachineTechParam() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: false,
+      isDisabled: true,
       createdAt: '',
       
     }),

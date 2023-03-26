@@ -52,7 +52,7 @@ export default function MachineSuppliers() {
 
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().min(5).max(25).required('Name is required') ,
-    description: Yup.string().min(5).max(2000),
+    description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
     
@@ -62,7 +62,7 @@ export default function MachineSuppliers() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: false,
+      isDisabled: true,
       createdAt: '',
       
     }),
