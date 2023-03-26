@@ -52,7 +52,7 @@ export default function AuthLoginForm() {
       reset();
       setError('afterSubmit', {
         ...error,
-        message: error.message,
+        message: error.Message,
       });
     }
   };
