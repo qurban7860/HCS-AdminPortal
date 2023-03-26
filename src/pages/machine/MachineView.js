@@ -111,7 +111,7 @@ export default function MachineView({editPage}) {
       value: 'settings',
       label: 'Settings',
       icon: <Iconify icon="eva:settings-2-outline" />,
-      component: <MachineSettingList/>
+      // component: <MachineSettingList/>
     },
     {
       // disabled: setMachineEditFormVisibility,
