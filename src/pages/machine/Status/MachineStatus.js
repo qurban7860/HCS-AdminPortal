@@ -63,7 +63,7 @@ export default function MachineStatus() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: false,
+      isDisabled: true,
       createdAt: '',
       displayOrderNo: '',
       

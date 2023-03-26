@@ -82,7 +82,7 @@ export default function MachineSuppliers() {
       region: '',
       country: '',
       city: '',
-      isDisabled: false,
+      isDisabled: true,
       
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
