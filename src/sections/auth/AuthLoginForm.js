@@ -28,8 +28,8 @@ export default function AuthLoginForm() {
   });
 
   const defaultValues = {
-    email: 'naveed@terminustech.co.nz',
-    password: 'qwer1234',
+    email: '',
+    password: '',
   };
 
   const methods = useForm({
@@ -52,7 +52,7 @@ export default function AuthLoginForm() {
       reset();
       setError('afterSubmit', {
         ...error,
-        message: error.message,
+        message: error.Message,
       });
     }
   };
