@@ -21,7 +21,7 @@ import { useSettingsContext } from '../../../components/settings';
 
 import ParameterList from './ParameterList';
 import ParameterViewForm from './ParameterViewForm';
-import { MachineCover } from '../util';
+import { Cover } from '../../components/Cover';
 import ParameterEditForm from './ParameterEditForm';
 
 
@@ -72,7 +72,7 @@ export default function StatusViewPage({editPage}) {
         <title> Machine Parameter List: Detail | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false }>
         
 
         <Card
@@ -83,7 +83,7 @@ export default function StatusViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <MachineCover name={techparam?.name} /> 
+          <Cover name={techparam?.name} setting="enable"/> 
         </Card>
         
         <ParameterViewForm/>

@@ -42,8 +42,8 @@ export default function ParameterViewForm({ currentTechparam = null }) {
   const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
-    dispatch(updateTechparam(true));
-    navigate(PATH_MACHINE.parameters.parameteredit(id));
+    dispatch(getTechparam(currentTechparam._id));
+    navigate(PATH_MACHINE.parameters.parameteredit(true));
   }
 
   const navigate = useNavigate();

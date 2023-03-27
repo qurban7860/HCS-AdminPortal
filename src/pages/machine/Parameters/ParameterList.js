@@ -43,7 +43,8 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ParameterListTableRow from './ParameterListTableRow';
 import ParameterListTableToolbar from './ParameterListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { MachineCoverList } from '../util/MachineCoverList';
+import { Cover } from '../../components/Cover';
+
 
 
 // ----------------------------------------------------------------------
@@ -233,7 +234,7 @@ export default function StatusList() {
             // mt: '24px',
           }}
         >
-          <MachineCoverList name='Technical Parameter List'/>
+          <Cover name='Technical Parameter List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
             
         <Card sx={{ mt: 3 }}>

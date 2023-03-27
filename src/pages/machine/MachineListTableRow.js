@@ -43,7 +43,7 @@ export default function MachineListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { serialNo, parentMachine, machineModel ,customer, instalationSite ,status, isDisabled, createdAt } = row;
+  const { serialNo,name ,parentMachine, machineModel ,customer, instalationSite ,status, isDisabled, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -72,6 +72,7 @@ export default function MachineListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
+        <TableCell>{parentMachine ? <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> : ""}</TableCell>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Link
@@ -79,16 +80,17 @@ export default function MachineListTableRow({
               color="inherit"
               variant="subtitle2"
               onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
+              sx={{ cursor: 'pointer',ml:-3 }}
             >{serialNo || ''}</Link>
           </Stack>
         </TableCell>
 
-        <TableCell>{parentMachine?.name || ''}</TableCell>
+        {/* <TableCell>{parentMachine?.name || ''}</TableCell> */}
+        <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
         <TableCell>{status?.name || ''}</TableCell>
-        <TableCell>{instalationSite?.name || ''}</TableCell>
         <TableCell>{customer?.name || ''}</TableCell>
+        <TableCell>{instalationSite?.name || ''}</TableCell>
         <TableCell align="left">
           <Label
             variant="soft"

@@ -21,7 +21,7 @@ import { useSettingsContext } from '../../../components/settings';
 
 import ToolList from './ToolList';
 import ToolViewForm from './ToolViewForm';
-import { MachineCover } from '../util';
+import { Cover } from '../../components/Cover';
 import ToolEditForm from './ToolEditForm';
 /* eslint-disable */
 
@@ -75,7 +75,7 @@ export default function ToolViewPage({editPage}) {
         <title> Tools List: Detail | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false }>
         
 
         <Card
@@ -86,7 +86,7 @@ export default function ToolViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <MachineCover name={tool?.name} /> 
+          <Cover name={tool?.name} setting="setting"/> 
         </Card>
         
         <ToolViewForm/>

@@ -42,12 +42,7 @@ export default function ModelEdit() {
       </Helmet>
       
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Edit Model"
-          sx={{ mb: -2, mt: 3 }}
-        />
-
+      <Container maxWidth={false }>
         <ModelEditForm/>
       </Container>
     </>

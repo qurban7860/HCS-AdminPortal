@@ -38,7 +38,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import SiteListTableRow from './SettingListTableRow';
 import SiteListTableToolbar from './SettingListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
+import Cover from '../../components/Cover';
 
 
 // ----------------------------------------------------------------------
@@ -206,11 +206,11 @@ export default function SettingList() {
         <title> Site: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={ false }>
         
 
         <Grid container spacing={3}>
-          <MachineDashboardNavbar/>
+          <Cover name="Setting List" icon='material-symbols:list-alt-outline' setting="enable" />
           </Grid>
         <Card>
           <SiteListTableToolbar

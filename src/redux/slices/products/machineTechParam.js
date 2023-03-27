@@ -257,8 +257,8 @@ export function saveTechparam(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateTechparam(params) {
-  console.log('update, working', params)
+export function updateTechparam(params,techparam) {
+  console.log('techparamcategory  Data : ', params , techparam._id)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -266,25 +266,21 @@ export function updateTechparam(params) {
       const formData = new FormData();
       /* eslint-disable */
       let data = {
-        id: params.id,
         name: params.name,
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
       }
-      if(params.isDisabled){
-        data.isDisabled = params.isDisabled;
-      }
       if(params.code){
         data.code = params.code;
       }
-      if(params.techparamcategory !== "" && params.techparamcategory !== null){
-        data.techparamcategory = params.techparamcategory._id;
+      if(params.category){
+        data.category = params.category;
       }else{
-        data.techparamcategory = null
+        data.category = null
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${techparam._id}`,
         data
       );
 

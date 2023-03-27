@@ -108,7 +108,11 @@ useEffect(()=>{
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-
+            <Stack spacing={1}>
+                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
+                Create a new Setting
+                </Typography>
+              </Stack>
               <Box
                 rowGap={2}
                 columnGap={2}

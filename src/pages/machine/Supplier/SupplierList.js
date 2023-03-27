@@ -42,7 +42,8 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import SupplierListTableRow from './SupplierListTableRow';
 import SupplierListTableToolbar from './SupplierListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { MachineCoverList } from '../util/MachineCoverList';
+import { Cover } from '../../components/Cover';
+
 
 // ----------------------------------------------------------------------
 
@@ -230,7 +231,7 @@ export default function SupplierList() {
             // mt: '24px',
           }}
         >
-          <MachineCoverList name='Supplier List'/>
+          <Cover name='Supplier List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
       
         <Card sx={{ mt: 3 }}>

@@ -43,7 +43,8 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import StatusListTableRow from './StatusListTableRow';
 import StatusListTableToolbar from './StatusListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { MachineCoverList } from '../util/MachineCoverList';
+import { Cover } from '../../components/Cover';
+
 
 
 
@@ -234,7 +235,7 @@ export default function StatusList() {
             // mt: '24px',
           }}
         >
-          <MachineCoverList name='Status List'/>
+          <Cover name='Status List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
 
         

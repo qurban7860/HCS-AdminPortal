@@ -41,7 +41,7 @@ export default function StatusEdit() {
       </Helmet>
       
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false }>
 
 
         <ParameterEditForm/>

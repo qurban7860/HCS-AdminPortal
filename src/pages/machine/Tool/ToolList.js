@@ -42,7 +42,8 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ToolListTableRow from './ToolListTableRow';
 import ToolListTableToolbar from './ToolListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { MachineCoverList } from '../util/MachineCoverList';
+import { Cover } from '../../components/Cover';
+
 
 
 // ----------------------------------------------------------------------
@@ -232,7 +233,7 @@ export default function ToolList() {
             // mt: '24px',
           }}
         >
-          <MachineCoverList name='Tool List'/>
+          <Cover name='Tool List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
        
         

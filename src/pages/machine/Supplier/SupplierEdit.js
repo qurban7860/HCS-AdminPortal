@@ -45,12 +45,7 @@ export default function SupplierEdit() {
       </Helmet>
       
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Edit Supplier"
-          
-        />
-
+      <Container maxWidth={false}>
         <SupplierEditForm/>
       </Container>
     </>

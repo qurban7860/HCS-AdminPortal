@@ -17,7 +17,8 @@ import { saveMachine,   getMachines } from '../../redux/slices/products/machine'
 import { getMachinestatuses } from '../../redux/slices/products/statuses';
 import { getMachinemodels} from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
-import { MachineCoverList } from './util/MachineCoverList';
+import { Cover } from '../components/Cover';
+
 
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
@@ -228,7 +229,7 @@ const handleKeyPress = (e) => {
             mt: '24px',
           }}
         >
-          <MachineCoverList name='New Machine'/>
+          <Cover name='New Machine' icon='material-symbols:list-alt-outline' setting="enable"/>
         </Card>
       {/* <CustomBreadcrumbs
             heading=" New Machine "

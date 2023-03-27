@@ -15,7 +15,7 @@ import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
-import { MachineCoverList } from './util/MachineCoverList';
+import { Cover } from '../components/Cover';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
 import { getMachines, deleteMachine } from '../../redux/slices/products/machine';
@@ -46,12 +46,14 @@ const STATUS_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
+  { id: 'havePrevious', label: '', align: 'left' },
   { id: 'serialNumber', label: 'Serial Number', align: 'left' },
-  { id: 'parentMachine', label: 'Parent Machine', align: 'left' },
+  // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
+  { id: 'machineName', label: 'Name', align: 'left' },
   { id: 'model', label: 'Model', align: 'left' },
   { id: 'status', label: 'Status', align: 'left' },
-  { id: 'instalationSite', label: 'Installation Site', align: 'left' },
   { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'instalationSite', label: 'Installation Site', align: 'left' },
   { id: 'active', label: 'Active', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
 ];
@@ -172,12 +174,12 @@ export default function MachineList() {
         <Card
           sx={{
             mb: 3,
-            height: 150,
+            height: 160,
             position: 'relative',
             mt: '24px',
           }}
         >
-          <MachineCoverList name='Machines List'/>
+          <Cover name='Machines List' icon='arcticons:materialistic' setting="enable" />
         </Card>
         {/* <CustomBreadcrumbs
           heading="Machines"

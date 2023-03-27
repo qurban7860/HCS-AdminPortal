@@ -42,11 +42,7 @@ export default function ToolEdit() {
       </Helmet>
       
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Edit Tool"
-        />
-
+      <Container maxWidth={false }>
         <ToolEditForm/>
       </Container>
     </>

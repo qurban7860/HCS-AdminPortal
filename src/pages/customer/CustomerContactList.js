@@ -239,12 +239,12 @@ export default function CustomerContactList() {
                 } */}
                 { index !==  activeIndex ? 
               <Grid container spacing={0}>
-                <Grid item xs={12} sm={4} >
+                <Grid item xs={12} sm={3} md={2} >
                   <Typography variant="body2" >
                   {contact.firstName} {contact.lastName} 
                   </Typography>
                 </Grid>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={12} sm={9} md={10}>
                 {contact.email && <Typography variant="body2" >
                   {contact.email}
                   </Typography>

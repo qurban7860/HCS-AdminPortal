@@ -21,7 +21,7 @@ import { useSettingsContext } from '../../../components/settings';
 
 import StatusList from './StatusList';
 import StatusViewForm from './StatusViewForm';
-import { MachineCover } from '../util';
+import { Cover } from '../../components/Cover';
 import StatusEditForm from './StatusEditForm';
 
 
@@ -72,7 +72,7 @@ export default function StatusViewPage({editPage}) {
         <title> Machine Statuses List: Detail | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         
 
         <Card
@@ -83,7 +83,7 @@ export default function StatusViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <MachineCover name={machinestatus?.name} /> 
+          <Cover name={machinestatus?.name} setting="enable"/> 
         </Card>
         
         <StatusViewForm/>

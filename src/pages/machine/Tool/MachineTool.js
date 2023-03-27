@@ -112,21 +112,22 @@ export default function MachineSuppliers() {
   return (
     <>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-    <Container maxWidth={themeStretch ? false : 'lg'}>
+    <Container maxWidth={false }>
       <Helmet>
         <title> Machine: Tools | Machine ERP</title>
       </Helmet>
 
       
         
-      <CustomBreadcrumbs 
-          heading="Tools"
-          sx={{ mb: -2, mt: 3 }}
-        />
 
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
+            <Stack spacing={1}>
+                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
+                Create a new Tool
+                </Typography>
+              </Stack>
             <Box
               rowGap={2}
               columnGap={2}

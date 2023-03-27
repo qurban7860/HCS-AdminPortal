@@ -21,7 +21,7 @@ import { useSettingsContext } from '../../../components/settings';
 
 import ModelList from './ModelList';
 import ModelViewForm from './ModelViewForm';
-import { MachineCover } from '../util';
+import { Cover } from '../../components/Cover';
 import ModelEditForm from './ModelEditForm';
 
 ModelViewPage.propTypes = {
@@ -69,7 +69,7 @@ export default function ModelViewPage({editPage}) {
         <title> Machine Models List: Detail | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false }>
         
 
         <Card
@@ -80,7 +80,7 @@ export default function ModelViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <MachineCover name={machinemodel?.name} /> 
+          <Cover name={machinemodel?.name} setting="enabble"/> 
         </Card>
         
         <ModelViewForm/>

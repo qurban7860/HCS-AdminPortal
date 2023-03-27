@@ -67,7 +67,7 @@ export default function SettingView() {
         <title> Setting: Information | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={ false }>
         <CustomBreadcrumbs
           heading="Site View"
           links={[

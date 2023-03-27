@@ -43,7 +43,8 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { MachineCoverList } from '../util/MachineCoverList';
+import { Cover } from '../../components/Cover';
+
 
 
 
@@ -235,7 +236,7 @@ export default function ModelList() {
             // mt: '24px',
           }}
         >
-          <MachineCoverList name='Model List'/>
+          <Cover name='Model List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
       
 

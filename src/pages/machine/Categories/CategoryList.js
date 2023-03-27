@@ -42,7 +42,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import CategoryListTableRow from './CategoryListTableRow';
 import CategoryListTableToolbar from './CategoryListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { MachineCoverList } from '../util/MachineCoverList';
+import { Cover } from '../../components/Cover';
 
 
 
@@ -235,7 +235,7 @@ export default function CategoryList() {
             // mt: '24px',
           }}
         >
-          <MachineCoverList name='Category List'/>
+          <Cover name='Category List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
         
         

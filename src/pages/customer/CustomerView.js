@@ -28,7 +28,7 @@ import Iconify from '../../components/iconify';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import { CustomerCover } from './util/CustomerCover';
+import { Cover } from '../components/Cover';
 
 import CustomerAddForm from './CustomerAddForm'
 import SiteAddForm from './site/SiteAddForm';
@@ -154,7 +154,7 @@ export default function CustomerViewPage({editPage}) {
             position: 'relative',
           }}
         >
-          <CustomerCover name={customer ? customer.name : 'New Customer'}/>
+          <Cover name={customer ? customer.name : 'New Customer'} icon="ph:users-light"/>
 
           
           

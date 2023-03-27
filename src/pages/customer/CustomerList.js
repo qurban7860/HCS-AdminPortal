@@ -43,7 +43,7 @@ import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
 import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer/customer';
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
-import { CustomerCoverList } from './util/CustomerCoverList';
+import { Cover } from '../components/Cover';
 
 
 // ----------------------------------------------------------------------
@@ -227,7 +227,7 @@ export default function CustomerList() {
             // mt: '24px',
           }}
         >
-          <CustomerCoverList name='Customers List'/>
+          <Cover name='Customers List' icon="ph:users-light"/>
         </Card>
         
       

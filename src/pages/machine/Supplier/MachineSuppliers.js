@@ -144,7 +144,7 @@ export default function MachineSuppliers() {
   const { themeStretch } = useSettingsContext();
   return (
     <>
-    <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Container maxWidth={ false }>
     <Helmet>
         <title> Machine: Supplier | Machine ERP</title>
       </Helmet>

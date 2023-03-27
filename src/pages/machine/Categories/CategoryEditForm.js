@@ -133,6 +133,11 @@ export default function CategoryEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
+              <Stack spacing={1}>
+                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
+                 Edit Category
+                </Typography>
+              </Stack>
             <Box
               rowGap={2}
               columnGap={2}

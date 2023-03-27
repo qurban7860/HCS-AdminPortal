@@ -21,7 +21,7 @@ import { useSettingsContext } from '../../../components/settings';
 // import SupplierCover from './SupplierCover';
 import CategoryList from './CategoryList';
 import CategoryViewForm from './CategoryViewForm';
-import { MachineCover } from '../util';
+import { Cover } from '../../components/Cover';
 /* eslint-disable */
 // import SupplierEditForm from './SupplierEditForm';
 
@@ -74,7 +74,7 @@ export default function CategoryViewPage({editPage}) {
         <title> Categories List: Detail | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false }>
         
 
         <Card
@@ -85,7 +85,7 @@ export default function CategoryViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <MachineCover name={category?.name} /> 
+          <Cover name={category?.name} setting="setting"/> 
         </Card>
         
         <CategoryViewForm/>

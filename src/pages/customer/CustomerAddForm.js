@@ -32,7 +32,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { countries } from '../../assets/data';
 // util
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
-import { CustomerCoverList } from './util/CustomerCoverList';
+import { Cover } from '../components/Cover';
 
 
 // ----------------------------------------------------------------------
@@ -186,10 +186,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             mb: 3,
             height: 160,
             position: 'relative',
-            mt: '24px',
+            // mt: '24px',
           }}
         >
-          <CustomerCoverList name='New Customer'/>
+          <Cover name='New Customer' icon="mdi:user"/>
         </Card>
       <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3, mb: 3 }}>

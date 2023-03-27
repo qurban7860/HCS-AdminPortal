@@ -120,20 +120,20 @@ export default function MachineModel() {
   const { themeStretch } = useSettingsContext();
   return (
     <>
-    <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Helmet>
         <title> Machine: Models | Machine ERP</title>
       </Helmet>
-
-      <CustomBreadcrumbs 
-          heading="Model"
-          sx={{ mb: -2, mt: 3 }}
-        />
         
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
+            <Stack spacing={1}>
+                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
+                Create a new Model
+                </Typography>
+              </Stack>
             <Box
               rowGap={2}
               columnGap={2}

@@ -42,12 +42,7 @@ export default function TechParamCategoryEdit() {
       </Helmet>
       
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Edit Tech Param Category"
-          sx={{ mb: -2, mt: 3 }}
-        />
-
+      <Container maxWidth={ false}>
         <TechParamCategoryEditForm/>
       </Container>
     </>

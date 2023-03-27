@@ -132,7 +132,7 @@ export default function CustomerViewForm() {
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Status
                 </Typography>
-                <Typography variant="body2">{defaultValues.supplier? defaultValues.supplier : ''}</Typography>
+                <Typography variant="body2">{defaultValues.status? defaultValues.status : ''}</Typography>
             </Grid>
             <Grid item xs={12} sm={6} sx={{ pt:2 }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
@@ -207,12 +207,12 @@ export default function CustomerViewForm() {
             <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
                 <Grid item xs={12} sm={6} >
                     <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                      created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+                      created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
                     </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6} >
                     <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                      updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+                      updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
                     </Typography>
                 </Grid>
             </Grid>

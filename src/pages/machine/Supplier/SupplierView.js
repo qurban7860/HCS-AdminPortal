@@ -18,11 +18,11 @@ import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import SupplierCover from './SupplierCover';
 import SupplierList from './SupplierList';
 import SupplierViewForm from './SupplierViewForm';
 /* eslint-disable */
 import SupplierEditForm from './SupplierEditForm';
+import {Cover} from '../../components/Cover';
 
 
 SupplierViewPage.propTypes = {
@@ -73,7 +73,7 @@ export default function SupplierViewPage({editPage}) {
         <title> Supplier List: Detail | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false }>
         
 
         <Card
@@ -84,7 +84,7 @@ export default function SupplierViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <SupplierCover name={supplier?.name} /> 
+          <Cover name={supplier?.name} setting="enable"/> 
         </Card>
         
         <SupplierViewForm/>

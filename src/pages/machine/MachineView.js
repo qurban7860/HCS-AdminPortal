@@ -29,7 +29,7 @@ import Iconify from '../../components/iconify';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import { MachineCover } from './MachineCover';
+import { Cover } from '../components/Cover';
 
 // import CustomerAddForm from './CustomerAddForm'
 // import SiteAddForm from './site/SiteAddForm';
@@ -172,7 +172,7 @@ export default function MachineView({editPage}) {
             position: 'relative',
           }}
         >
-          <MachineCover name={machine ? machine.name : 'New Machine'}/>
+          <Cover name={machine ? machine.name : 'New Machine'} icon='et:gears' setting="enable" />
 
           <Tabs
             value={currentTab}

@@ -21,7 +21,7 @@ import { useSettingsContext } from '../../../components/settings';
 
 import TechParamList from './TechParamList';
 import TechParamCategoryViewForm from './TechParamCategoryViewForm';
-import { MachineCover } from '../util';
+import { Cover } from '../../components/Cover';
 // import ToolEditForm from './ToolEditForm';
 /* eslint-disable */
 
@@ -75,7 +75,7 @@ export default function TechParamCategoryViewPage({editPage}) {
         <title> Tech param category's List: Detail | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={ false } >
         
 
         <Card
@@ -86,7 +86,7 @@ export default function TechParamCategoryViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <MachineCover name={techparamcategory?.name} /> 
+          <Cover name={techparamcategory?.name} setting="enable"/> 
         </Card>
         
         <TechParamCategoryViewForm/>

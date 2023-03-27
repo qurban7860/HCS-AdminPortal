@@ -39,18 +39,7 @@ export default function SiteEdit() {
         <title> Site: Edit Page | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Edit Site"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Site',
-              href: PATH_DASHBOARD.site.list,
-            },
-            { name: site?.name },
-          ]}
-        />
+      <Container maxWidth={false}>
         <SettingEditForm />
       </Container>
     </>

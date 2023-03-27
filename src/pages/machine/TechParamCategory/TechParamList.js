@@ -42,7 +42,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import TechParamListTableRow from './TechParamListTableRow';
 import TechParamListTableToolbar from './TechParamListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { MachineCoverList } from '../util/MachineCoverList';
+import { Cover } from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
@@ -238,11 +238,8 @@ export default function TechParamList() {
             // mt: '24px',
           }}
         >
-          <MachineCoverList name='Technical Parameter Category List'/>
+          <Cover name='Technical Parameter Category List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
-
-        
-
         <Card sx={{mt: 3 }}>
           <TechParamListTableToolbar
             filterName={filterName}

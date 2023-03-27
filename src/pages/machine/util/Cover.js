@@ -7,7 +7,7 @@ import { Box, Typography ,Button, Grid} from '@mui/material';
 
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import ListAltIcon from '@mui/icons-material/ListAlt';
+// import ListAltIcon from '@mui/icons-material/ListAlt';
 import { bgBlur } from '../../../utils/cssStyles';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -50,13 +50,14 @@ const StyledInfo = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-MachineCoverList.propTypes = {
+Cover.propTypes = {
   cover: PropTypes.string,
   name: PropTypes.string,
   role: PropTypes.string,
+  setting: PropTypes.string,
 };
 
-export function MachineCoverList({ name, role, cover }) {
+export function Cover({ name, role, cover,setting }) {
   const navigate = useNavigate()
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
@@ -86,12 +87,12 @@ export function MachineCoverList({ name, role, cover }) {
             height: { xs: 80, md: 110 },
           }}
         >
-            <ListAltIcon sx={{
+        
+        <Iconify icon="material-symbols:list-alt-outline-rounded" sx={{
                  width: {xs: 32, md: 48 }, 
                  height: {xs: 32, md: 48},
-                 color: 'black',
-                }}  
-            />
+                 color: 'white',
+                }}/>
         </CustomAvatar>
 
         
@@ -110,7 +111,7 @@ export function MachineCoverList({ name, role, cover }) {
         display: { xs: 'none', md: 'block' },
         }}
         >{name}</Typography>
-
+          {setting ? 
           <Button variant="h4" 
           sx={{ ml: {md:'auto', xs:5}, mr:3,
           color: {xs: 'common.black' ,md: 'common.white'},
@@ -119,6 +120,8 @@ export function MachineCoverList({ name, role, cover }) {
           }} 
           onClick={handleNavigate}
            ><Iconify icon="eva:settings-2-outline" /></Button>
+           : " "}
+
         {/* </Box> */}
       
         
