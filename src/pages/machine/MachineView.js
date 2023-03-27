@@ -70,7 +70,7 @@ export default function MachineView({editPage}) {
 //   const { contactEditFormVisibility } = useSelector((state) => state.contact);
 //   const { noteEditFormVisibility} = useSelector((state) => state.note);
   const [currentTab, setCurrentTab] = useState('Machine-info');
-
+console.log("Current Tav machine View : ",currentTab)
 //   const [editFlag, setEditFlag] = useState(false);
 //   const toggleEditFlag = () => setEditFlag(value => !value);
 
@@ -111,7 +111,7 @@ export default function MachineView({editPage}) {
       value: 'settings',
       label: 'Settings',
       icon: <Iconify icon="eva:settings-2-outline" />,
-      // component: <MachineSettingList/>
+      component: <MachineSettingList/>
     },
     {
       // disabled: setMachineEditFormVisibility,

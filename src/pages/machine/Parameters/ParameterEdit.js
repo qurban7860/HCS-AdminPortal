@@ -24,14 +24,13 @@ export default function StatusEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
 
   
   const { techparam } = useSelector((state) => state.techparam);
 
-  useLayoutEffect(() => {
-     dispatch(getTechparam(id));
-  }, [dispatch, id]);
+  // useLayoutEffect(() => {
+  //   //  dispatch(getTechparam(id));
+  // }, [dispatch, id]);
 
   
   return (

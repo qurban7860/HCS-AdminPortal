@@ -257,8 +257,8 @@ export function saveTechparam(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateTechparam(params,techparam) {
-  console.log('techparamcategory  Data : ', params , techparam._id)
+export function updateTechparam(params,id) {
+  console.log('techparamcategory  Data : ', params , id)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -280,12 +280,11 @@ export function updateTechparam(params,techparam) {
       }else{
         data.category = null
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${techparam._id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}`,
         data
       );
 
-      dispatch(getTechparams(params.id));
-      dispatch(slice.actions.setTechparamEditFormVisibility(false));
+      // dispatch(slice.actions.setTechparamEditFormVisibility(false));
 
       // this.updateCustomerSuccess(response);
 

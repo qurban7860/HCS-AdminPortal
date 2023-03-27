@@ -30,31 +30,28 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 
-ParameterViewForm.propTypes = {
-  currentTechparam: PropTypes.object,
-};
 
 // ----------------------------------------------------------------------
 
-export default function ParameterViewForm({ currentTechparam = null }) {
+export default function ParameterViewForm() {
 
 
   const [editFlag, setEditFlag] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  const { id } = useParams();
+  const dispatch = useDispatch()
+  const { techparam } = useSelector((state) => state.techparam);
+  const navigate = useNavigate();
 
   const toggleEdit = () => {
-    dispatch(getTechparam(currentTechparam._id));
     navigate(PATH_MACHINE.parameters.parameteredit(true));
   }
 
-  const navigate = useNavigate();
+useLayoutEffect(()=>{
+    dispatch(getTechparam(techparam._id));
+},[dispatch,techparam._id])
 
-  const { enqueueSnackbar } = useSnackbar();
 
-  const { techparam } = useSelector((state) => state.techparam);
-
-  const { id } = useParams();
-
-  const dispatch = useDispatch()
   
 
   const defaultValues = useMemo(
@@ -69,7 +66,7 @@ export default function ParameterViewForm({ currentTechparam = null }) {
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentTechparam, techparam]
+    [ techparam]
     );
 
 

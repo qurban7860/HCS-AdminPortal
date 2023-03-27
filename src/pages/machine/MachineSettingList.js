@@ -131,7 +131,7 @@ export default function MachineSettingList() {
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
   const { settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
-  console.log("Settings :" , settings)
+  console.log("Machine Settings : " , settings)
   const { machine } = useSelector((state) => state.machine);
   // const toggleChecked = async () => 
   //   {
@@ -242,15 +242,15 @@ useLayoutEffect(() => {
                 <Grid container spacing={0}>
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
+                    {/* {console.log(setting?.techParam?.name)} */}
                     {fDate(setting?.createdAt || "")}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={9} md={10}>
-                  <Typography variant="body2" >
-                      {/* {setting?.techParam.name !== "" ? setting?.techParam?.name : "" }, */}
-                       {/* {console.log(setting)} */}
-                       , {setting?.techParamValue || "" }
-                  </Typography>
+                  {setting?.techParam|| "" }
+                  {setting?.techParamValue || "" }
+                  {/* <Typography variant="body2" >
+                  </Typography> */}
                 </Grid>
                 </Grid>
                 : null }

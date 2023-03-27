@@ -40,7 +40,7 @@ import FormProvider, {
 
 export default function StatusEditForm() {
 
-  const { error, techparam } = useSelector((state) => state.techparam);
+  const { techparam, error} = useSelector((state) => state.techparam);
 
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
@@ -93,9 +93,9 @@ export default function StatusEditForm() {
 
   const values = watch();
 
-  useLayoutEffect(() => {
-    dispatch(getTechparam(id));
-  }, [dispatch, id]);
+  // useLayoutEffect(() => {
+  //   dispatch(getTechparam(id));
+  // }, [dispatch, id]);
 
   useEffect(() => {
     if (techparam) {
@@ -107,7 +107,6 @@ export default function StatusEditForm() {
 
   const toggleCancel = () => 
     {
-      dispatch(updateTechparam(false));
       navigate(PATH_MACHINE.parameters.view(id));
     };
 
@@ -116,7 +115,8 @@ export default function StatusEditForm() {
       if(paramVal  !== null && paramVal  !== ""){
         data.category = paramVal?._id
       }
-      await dispatch(updateTechparam({data,techparam}));
+      console.log("Submit Data : ",data)
+      await dispatch(updateTechparam(data,techparam._id));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.parameters.view(id));
@@ -188,12 +188,32 @@ export default function StatusEditForm() {
              </Box>
              
               </Stack>
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(4, 1fr)',
+                }}
+              > 
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Tech Param
+              <LoadingButton 
+                type="submit"
+                variant="contained"
+                size="large"
+                loading={isSubmitting}>
+                  Save Changes
               </LoadingButton>
-            </Stack>
+
+              <Button 
+                onClick={toggleCancel}
+                variant="outlined" 
+                size="large">
+                  Cancel
+              </Button>
+
+            </Box>
                         
             </Card>
           

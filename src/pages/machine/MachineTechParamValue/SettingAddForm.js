@@ -49,7 +49,9 @@ useLayoutEffect(() => {
   });
 
 useEffect(()=>{
-  dispatch(getTechparamsByCategory(category._id));
+  if(category){
+    dispatch(getTechparamsByCategory(category._id));
+  }
 },[dispatch,category])
 
   const defaultValues = useMemo(
