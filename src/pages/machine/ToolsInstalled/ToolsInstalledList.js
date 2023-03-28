@@ -35,10 +35,10 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './SiteListTableRow';
-import SiteListTableToolbar from './SiteListTableToolbar';
+import SiteListTableRow from './ToolsInstalledListTableRow';
+import SiteListTableToolbar from './ToolsInstalledListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
-import CustomerDashboardNavbar from '../util/CustomerDashboardNavbar';
+import Cover from '../../components/Cover';
 
 
 // ----------------------------------------------------------------------
@@ -64,7 +64,7 @@ const STATUS_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function SiteList() {
+export default function ToolsInstalledList() {
   const {
     dense,
     page,
@@ -102,7 +102,7 @@ export default function SiteList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  // const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
     dispatch(getSites());
@@ -206,11 +206,11 @@ export default function SiteList() {
         <title> Site: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={ false }>
         
 
         <Grid container spacing={3}>
-          <CustomerDashboardNavbar/>
+          <Cover name="Setting List" icon='material-symbols:list-alt-outline' setting="enable" />
           </Grid>
         <Card>
           <SiteListTableToolbar
@@ -224,7 +224,7 @@ export default function SiteList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               
               numSelected={selected.length}
               rowCount={tableData.length}
@@ -241,7 +241,7 @@ export default function SiteList() {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size='small' sx={{ minWidth: 960 }}>
@@ -250,14 +250,14 @@ export default function SiteList() {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>

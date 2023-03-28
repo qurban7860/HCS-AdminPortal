@@ -146,7 +146,7 @@ export default function MachineDashboardPage() {
                     <ListItemIcon>
                       <FlareIcon />
                     </ListItemIcon>
-                    <ListItemText primary="Parameters (Under Construction)" />
+                    <ListItemText primary="Parameters" />
                   </ListItemButton>
 
                 </List>

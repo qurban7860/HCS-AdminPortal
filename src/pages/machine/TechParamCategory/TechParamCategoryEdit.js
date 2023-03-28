@@ -25,7 +25,6 @@ export default function TechParamCategoryEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
 
   
   const { techparamcategory } = useSelector((state) => state.techparamcategory);

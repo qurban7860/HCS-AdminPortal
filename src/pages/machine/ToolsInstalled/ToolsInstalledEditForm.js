@@ -1,100 +1,115 @@
+import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo , useState, useLayoutEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
+import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField} from '@mui/material';
+// global
+import { CONFIG } from '../../../config-global';
 // slice
-import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
+// routes
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-// assets
-import { countries } from '../../../assets/data';
-
+import Iconify from '../../../components/iconify';
 
 import FormProvider, {
   RHFSelect,
   RHFTextField,
-  RHFAutocomplete
+  RHFAutocomplete,
+
 } from '../../../components/hook-form';
+import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
+import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
+import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
 
 // ----------------------------------------------------------------------
 
-export default function SettingAddForm() {
+export default function ToolsInstalledEditForm() {
 
-  const { formVisibility } = useSelector((state) => state.machineSetting);
+  const { setting, settings, settingEditFormVisibility, formVisibility ,error} = useSelector((state) => state.machineSetting);
   const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
 // console.log("tech param by category : ",techparamsByCategory)
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
-  const [techParamVal, setTechParamVal] = useState('');
+  const [techParam, setTechParam] = useState('');
   const [paramData, setparamData] = useState([]);
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
+
   const { enqueueSnackbar } = useSnackbar();
 
-useLayoutEffect(() => {
-  dispatch(getTechparamcategories())
-}, [dispatch]);
+  useLayoutEffect(() => {
+    setCategory(setting.techParam.category);
+    setTechParam(setting.techParam);
+  }, [dispatch , setting]);
 
-  const AddSettingSchema = Yup.object().shape({
+  const EditSettingSchema = Yup.object().shape({
     techParamValue: Yup.string().max(20),
-
   });
 
-useEffect(()=>{
-  if(category){
-    dispatch(getTechparamsByCategory(category._id));
-  }
-},[dispatch,category])
+  useEffect(()=>{
+    if(category){
+      dispatch(getTechparamsByCategory(category._id));
+    }
+  },[dispatch,category])
 
   const defaultValues = useMemo(
     () => ({
-      techParamValue: '',
-
+      techParamValue: setting?.techParamValue || '',
+      techparam: techParam || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
   const methods = useForm({
-
-    resolver: yupResolver(AddSettingSchema),
+    resolver: yupResolver(EditSettingSchema),
     defaultValues,
   });
 
   const {
     reset,
+    watch,
+    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  const onChange = (event) => {
-    const value = event.target.value;
+  const values = watch();
+
+  // useEffect(() => {
+  //   if (site) {
+  //     reset(defaultValues);
+  //   }
+  // }, [site, reset, defaultValues]);
+
+  const toggleCancel = () => 
+  {
+    dispatch(setSettingEditFormVisibility (false));
   };
 
   const onSubmit = async (data) => {
+    data.techParam = techParam || null
+    console.log("Setting update Data : ",data);
     try {
-      if(techParamVal !== ""){
-        data.techParam = techParamVal;
-      }
-      console.log('params',data);
-      await dispatch(saveSetting(machine._id,data));
+      await dispatch(updateSetting( machine._id,setting._id,data));
       reset();
       setCategory("")
-      setTechParamVal("")
+      setTechParam("")
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(err);
+      console.error(error);
     }
   };
-
 
 
   return (
@@ -105,20 +120,19 @@ useEffect(()=>{
             <Stack spacing={3}>
             <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Setting
+                Edit Setting 
                 </Typography>
               </Stack>
-              <Box
-                rowGap={2}
-                columnGap={2}
+            <Box
+                rowGap={3}
+                columnGap={3}
                 display="grid"
                 gridTemplateColumns={{
                   xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
+                  sm: 'repeat(2, 1fr)',
                 }}
               >
-
-                <Autocomplete
+                 <Autocomplete
                 // freeSolo
                 value={ category || null}
                 options={techparamcategories}
@@ -127,9 +141,11 @@ useEffect(()=>{
                 onChange={(event, newValue) => {
                   if(newValue){
                   setCategory(newValue);
+                  setTechParam("")
                   }
                   else{ 
                   setCategory("");
+                  setTechParam("");
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
@@ -139,16 +155,16 @@ useEffect(()=>{
               
               <Autocomplete
                 // freeSolo
-                value={techParamVal || null}
+                value={techParam || null}
                 options={techparamsByCategory}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
                   if(newValue){
-                  setTechParamVal(newValue);
+                  setTechParam(newValue);
                   }
                   else{ 
-                  setTechParamVal("");
+                  setTechParam("");
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
@@ -158,13 +174,9 @@ useEffect(()=>{
 
                 <RHFTextField name="techParamValue" label="Technical Parameter Value" />
 
-                <Button sx={{p:2}} variant="contained" type="submit" size="large" loading={isSubmitting} >
-                  Add Setting
-                </Button>
               </Box>
-              
 
-              {/* <Box
+              <Box
                 rowGap={5}
                 columnGap={4}
                 display="grid"
@@ -173,23 +185,25 @@ useEffect(()=>{
                   sm: 'repeat(4, 1fr)',
                 }}
               > 
-              
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Save Site
-                </LoadingButton>
-              
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
 
+              <LoadingButton 
+                type="submit"
+                variant="contained"
+                size="large"
+                loading={isSubmitting}>
+                  Save Changes
+              </LoadingButton>
 
-            </Box> */}
+              <Button 
+                onClick={toggleCancel}
+                variant="outlined" 
+                size="large">
+                  Cancel
+              </Button>
+
+            </Box>
+
             </Stack>
-
-            
 
           </Card>
 
@@ -198,4 +212,3 @@ useEffect(()=>{
     </FormProvider>
   );
 }
-

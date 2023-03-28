@@ -20,6 +20,7 @@ import machinestatusReducer from './slices/products/statuses';
 import machinemodelReducer from './slices/products/model';
 import techparamReducer from './slices/products/machineTechParam';
 import machineSettingReducer from './slices/products/machineTechParamValue';
+import toolsInstalledReducer from './slices/products/toolsInstalled';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -139,6 +140,13 @@ export const machineSettingPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const machineToolsInstalledPersistConfig = {
+  key: 'toolsInstalled',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
   asset: persistReducer(assetPersistConfig, assetReducer),
@@ -158,6 +166,7 @@ const rootReducer = combineReducers({
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
   techparam: persistReducer(techparamPersistConfig, techparamReducer),
   machineSetting: persistReducer(machineSettingPersistConfig, machineSettingReducer),
+  toolsInstalled: persistReducer(machineToolsInstalledPersistConfig, toolsInstalledReducer),
 });
 
 export default rootReducer;

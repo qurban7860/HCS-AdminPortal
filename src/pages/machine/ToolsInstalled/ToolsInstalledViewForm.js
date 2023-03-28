@@ -21,7 +21,7 @@ SettingViewForm.propTypes = {
   currentSetting: PropTypes.object,
 };
 
-export default function SettingViewForm({ currentSetting = null }) {
+export default function ToolsInstalledViewForm({ currentSetting = null }) {
   const { machine } = useSelector((state) => state.machine);
 
   const navigate = useNavigate();

@@ -5,30 +5,27 @@ import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getSite } from '../../../redux/slices/customer/site';
+import { getSetting } from '../../../redux/slices/products/machineTechParamValue';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import SiteEditForm from './SiteEditForm';
+import ToolsInstalledEditForm from './ToolsInstalledEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function SiteEdit() {
+export default function ToolsInstalledEdit() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  console.log(id);
 
-
-  const { site } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
-    dispatch(getSite(id));
+    dispatch(getSetting(id));
   }, [dispatch, id]);
 
 
@@ -39,20 +36,8 @@ export default function SiteEdit() {
         <title> Site: Edit Page | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Edit Site"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Site',
-              href: PATH_DASHBOARD.site.list,
-            },
-            { name: site?.name },
-          ]}
-        />
-
-        <SiteEditForm />
+      <Container maxWidth={false}>
+        <ToolsInstalledEditForm />
       </Container>
     </>
   );

@@ -48,7 +48,7 @@ export default function SettingEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    setCategory(setting.techParam);
+    setCategory(setting.techParam.category);
     setTechParam(setting.techParam);
   }, [dispatch , setting]);
 
@@ -56,9 +56,16 @@ export default function SettingEditForm() {
     techParamValue: Yup.string().max(20),
   });
 
+  useEffect(()=>{
+    if(category){
+      dispatch(getTechparamsByCategory(category._id));
+    }
+  },[dispatch,category])
+
   const defaultValues = useMemo(
     () => ({
       techParamValue: setting?.techParamValue || '',
+      techparam: techParam || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -91,9 +98,10 @@ export default function SettingEditForm() {
   };
 
   const onSubmit = async (data) => {
+    data.techParam = techParam || null
     console.log("Setting update Data : ",data);
     try {
-      await dispatch(updateSetting(data));
+      await dispatch(updateSetting( machine._id,setting._id,data));
       reset();
       setCategory("")
       setTechParam("")
@@ -133,9 +141,11 @@ export default function SettingEditForm() {
                 onChange={(event, newValue) => {
                   if(newValue){
                   setCategory(newValue);
+                  setTechParam("")
                   }
                   else{ 
                   setCategory("");
+                  setTechParam("");
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}

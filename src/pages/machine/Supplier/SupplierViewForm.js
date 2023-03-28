@@ -52,7 +52,6 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const supplier = suppliers;
 
   // const supplier = suppliers?.find((supp)=>supp?._id === id);
-  // console.log(suppliers, "muzna")
   const dispatch = useDispatch()
   useLayoutEffect(() => {
     if(id != null){
@@ -63,7 +62,6 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   // const  handleEdit = async () => {
   //   await dispatch(getSuppliers(currentSupplier._id));
   //   // dispatch(setEditFormVisibility(true));
-  //   console.log(currentSupplier) 
   // };
 
   const defaultValues = useMemo(
@@ -89,7 +87,6 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     [currentSupplier, supplier]
     );
     
-    // console.log(supplier,"Testing",defaultValues)
 
   return (
     <Card sx={{ px: 5 }}>

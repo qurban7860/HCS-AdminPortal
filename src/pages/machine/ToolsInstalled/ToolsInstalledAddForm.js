@@ -25,7 +25,7 @@ import FormProvider, {
 
 // ----------------------------------------------------------------------
 
-export default function SettingAddForm() {
+export default function ToolsInstalledAddForm() {
 
   const { formVisibility } = useSelector((state) => state.machineSetting);
   const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);

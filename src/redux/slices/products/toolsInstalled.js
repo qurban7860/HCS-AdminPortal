@@ -13,21 +13,21 @@ import { CONFIG } from '../../../config-global';
 
 const initialState = {
   formVisibility: false,
-  settingEditFormVisibility: false,
+  ToolInstalledEditFormVisibility: false,
   intial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  settings: [],
-  setting: null,
-  settingParams: {
+  ToolsInstalled: [],
+  ToolInstalled: null,
+  ToolInstalledParams: {
 
   }
 };
 
 const slice = createSlice({
-  name: 'machineSetting',
+  name: 'ToolInstalled',
   initialState,
   reducers: {
     // START LOADING
@@ -37,12 +37,12 @@ const slice = createSlice({
 
     },
     // SET TOGGLE
-    setSettingFormVisibility(state, action){
+    setToolInstalledFormVisibility(state, action){
       state.formVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setSettingEditFormVisibility(state, action){
+    setToolInstalledEditFormVisibility(state, action){
       state.settingEditFormVisibility = action.payload;
     },
     // HAS ERROR
@@ -53,18 +53,18 @@ const slice = createSlice({
     },
 
     // GET Setting
-    getSettingsSuccess(state, action) {
+    getToolsInstalledSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.settings = action.payload;
+      state.ToolsInstalled = action.payload;
       state.initial = true;
     },
 
     // GET Setting
-    getSettingSuccess(state, action) {
+    getToolInstalledSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.setting = action.payload;
+      state.ToolInstalled = action.payload;
       state.initial = true;
     },
 
@@ -92,8 +92,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setSettingFormVisibility,
-  setSettingEditFormVisibility,
+  setToolInstalledFormVisibility,
+  setToolInstalledEditFormVisibility,
   getCart,
   addToCart,
   setResponseMessage,
@@ -105,7 +105,7 @@ export const {
 
 // ----------------------------Save Note------------------------------------------
 
-export function saveSetting(machineId,params) {
+export function saveToolInstalled(machineId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
@@ -114,9 +114,9 @@ export function saveSetting(machineId,params) {
                 techParamValue: params.techParamValue,
             }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
-    //   dispatch(slice.actions.setSettingFormVisibility(false));
-      dispatch(slice.actions.setResponseMessage('Setting saved successfully'));
-      dispatch(getSettings(machineId));
+    //   dispatch(slice.actions.ToolInstalledFormVisibility(false));
+      dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
+      dispatch(getToolInstalled(machineId));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error));
@@ -126,7 +126,7 @@ export function saveSetting(machineId,params) {
 
 // ---------------------------------Update Note-------------------------------------
 
-export function updateSetting(machineId,settingId,params) {
+export function updateToolsInstalled(machineId,settingId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -135,8 +135,8 @@ export function updateSetting(machineId,settingId,params) {
         techParamValue: params.techParamValue,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
-      dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
-      dispatch(setSettingEditFormVisibility (false));
+      dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
+      dispatch(setToolInstalledEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error));
@@ -146,7 +146,7 @@ export function updateSetting(machineId,settingId,params) {
 
 // -----------------------------------Get Settings-----------------------------------
 
-export function getSettings(id) {
+export function getToolInstalled(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -157,8 +157,8 @@ export function getSettings(id) {
         }
       }
       );
-      dispatch(slice.actions.getSettingsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Setting loaded successfully'));
+      dispatch(slice.actions.getToolInstalledSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Installed Tool loaded successfully'));
 
     } catch (error) {
       console.log(error);
@@ -169,13 +169,13 @@ export function getSettings(id) {
 
 // -------------------------------get Setting---------------------------------------
 
-export function getSetting(machineId,settingId) {
+export function getToolsInstalled(machineId,settingId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`);
-      dispatch(slice.actions.getSettingSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Setting Loaded Successfuly'));
+      dispatch(slice.actions.getToolsInstalledSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Installed Tools Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -185,7 +185,7 @@ export function getSetting(machineId,settingId) {
 
 // ---------------------------------archive Note-------------------------------------
 
-export function deleteSetting(machineId,id) {
+export function deleteToolsInstalled(machineId,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

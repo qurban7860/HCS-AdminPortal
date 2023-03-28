@@ -7,11 +7,11 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 // sections
-import SiteAddForm from './SiteAddForm';
+import ToolsInstalledAddForm from './ToolsInstalledAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function SiteAdd() {
+export default function ToolsInstalledAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -20,19 +20,8 @@ export default function SiteAdd() {
         <title> Site: Create a new Site</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Create a new Site"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Site',
-              href: PATH_DASHBOARD.customer.list,
-            },
-            { name: 'New Site' },
-          ]}
-        />
-        <SiteAddForm />
+      <Container maxWidth={false }>
+        <ToolsInstalledAddForm />
       </Container>
     </>
   );

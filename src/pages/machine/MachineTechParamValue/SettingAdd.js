@@ -11,7 +11,7 @@ import SettingAddForm from './SettingAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function SettingEdit() {
+export default function SettingAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (

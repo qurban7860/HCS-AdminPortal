@@ -57,9 +57,9 @@ Cover.propTypes = {
   setting: PropTypes.string,
   photoURL:PropTypes.string,
   icon: PropTypes.string,
+  serialNo: PropTypes.string,
 };
-
-export function Cover({ cover, name, role, setting , photoURL , icon }) {
+export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon }) {
   const navigate = useNavigate()
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
@@ -78,7 +78,7 @@ export function Cover({ cover, name, role, setting , photoURL , icon }) {
           alt={name}
           name={icon === undefined ? name : ""}
           sx={{
-            mx: {xs:'auto', md:0},
+            // mx: {xs:'auto', md:0},
             borderWidth: 2,
             borderStyle: 'solid',
             borderColor: 'common.black',
@@ -90,12 +90,6 @@ export function Cover({ cover, name, role, setting , photoURL , icon }) {
             height: { xs: 80, md: 110 },
           }}
         >
-            {/* <ListAltIcon sx={{
-                 width: {xs: 32, md: 48 }, 
-                 height: {xs: 32, md: 48},
-                 color: 'black',
-                }}  
-            /> */}
             <Iconify icon={icon} sx={{
                  width: {xs: 32, md: 48 }, 
                  height: {xs: 32, md: 48},
@@ -112,17 +106,19 @@ export function Cover({ cover, name, role, setting , photoURL , icon }) {
             // textAlign: { xs: 'center', md: 'left' },
           }}
         > */}
-        <Typography variant="h4" 
-        sx={{ ml:3,
-        color: 'common.white' ,
-        mb: { xs: -3, md: 0},
-        display: { xs: 'none', md: 'block' },
-        }}
-        >{name}</Typography>
+        {serialNo ? 
+        <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mb: { xs: -3, md: 0}, display: { xs: 'none', md: 'block' },}} >
+        {serialNo } {name ? ` / ${name}`: ""}
+        </Typography>
+        :
+          <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mb: { xs: -3, md: 0}, display: { xs: 'none', md: 'block' },}} >
+        {name}
+        </Typography>
+        }
         
           {setting ? 
           <Button variant="h4" 
-          sx={{ ml: {md:'auto', xs:5}, 
+          sx={{ ml: {md:'auto', xs:0}, 
           pr: 5,
           color: {xs: 'common.black' ,md: 'common.white'},
           display: { xs: 'flex-end', md: 'block'},

@@ -108,15 +108,11 @@ export default function TechParamList() {
   const { techparamcategories, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparamcategory);
 
   // const a= useSelector((state) => state.techparamcategory);
-  // console.log(a, 'muzna')
-  
-  // console.log(useSelector((state) => state.techparamcategory))
   // useLayoutEffect(() => {
   //   dispatch(getCustomers());
   // }, [dispatch]);
 
   useLayoutEffect( () => {
-    console.log('Testing done')
      dispatch(getTechparamcategories());
   }, [dispatch]);
 
@@ -137,8 +133,6 @@ export default function TechParamList() {
     filterName,
     filterStatus,
   });
-
-  console.log(techparamcategories, "testingggg")
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -169,7 +163,6 @@ export default function TechParamList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteTechparamcategory(id));
     try {
-      console.log(id);
       // await dispatch(deleteSupplier(id));
       dispatch(getTechparamcategories());
       setSelected([]);
@@ -185,7 +178,6 @@ export default function TechParamList() {
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -204,15 +196,12 @@ export default function TechParamList() {
   };
 
   const handleEditRow = async (id) => {
-    console.log(id);
     // dispatch(getTool(id));
     await dispatch(getTechparamcategory(id));
     navigate(PATH_MACHINE.techParam.edit(id));
   };
 
   const handleViewRow = async (id) => {
-    // console.log(id,PATH_MACHINE.supplier.view(id));
-    console.log(id)
     await dispatch(getTechparamcategory(id));
     navigate(PATH_MACHINE.techParam.view(id));
   };

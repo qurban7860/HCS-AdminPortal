@@ -40,11 +40,12 @@ export default function SiteEditForm() {
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
+  const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
   const EditSiteSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     billingSite: Yup.string(),
-    phone: Yup.string(),
+    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: false}).min(10, "too short").max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     fax: Yup.string(),
     website: Yup.string(),

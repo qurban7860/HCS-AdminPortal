@@ -47,11 +47,11 @@ import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting
 import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
 import { getTechparams } from '../../redux/slices/products/machineTechParam';
 
-import SettingAddForm from './MachineTechParamValue/SettingAddForm'
-import SettingEditForm from './MachineTechParamValue/SettingEditForm';
+import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm'
+import ToolsInstalledEditForm from './ToolsInstalled/ToolsInstalledEditForm';
 
 import _mock from '../../_mock';
-import SettingViewForm from './MachineTechParamValue/SettingViewForm';
+import ToolsInstalledViewForm from './ToolsInstalled/ToolsInstalledViewForm';
 import EmptyContent from '../../components/empty-content';
 import { fDate,fDateTime } from '../../utils/formatTime';
 
@@ -221,22 +221,22 @@ useLayoutEffect(() => {
         {/* <SettingAddForm/> */}
         
 
-          {!settingEditFormVisibility && <SettingAddForm/>}
-          {settingEditFormVisibility && <SettingEditForm/>}
+          {!settingEditFormVisibility && <ToolsInstalledAddForm/>}
+          {settingEditFormVisibility && <ToolsInstalledEditForm/>}
         <Card sx={{mt:3}}>
-          {!formVisibility && !settingEditFormVisibility && settings.map((setting, index) => (
+          {!formVisibility && !settingEditFormVisibility && settings.map((tool, index) => (
 
-            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)}>
+            <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
-                    {fDate(setting?.createdAt || "")}
+                    {fDate(tool?.createdAt || "")}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={9} md={10}>
-                  {setting?.techParam?.name || "" }, {setting?.techParamValue || "" }
+                  {tool?.techParam?.name || "" }, {tool?.techParamValue || "" }
                   {/* <Typography variant="body2" >
                   </Typography> */}
                 </Grid>
@@ -244,8 +244,8 @@ useLayoutEffect(() => {
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5}}>
-                <SettingViewForm
-                currentSetting={setting}
+                <ToolsInstalledViewForm
+                currentTool={tool}
                 />
               </AccordionDetails>
             </Accordion>

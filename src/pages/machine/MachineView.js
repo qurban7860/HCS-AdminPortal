@@ -171,7 +171,7 @@ export default function MachineView({editPage}) {
             position: 'relative',
           }}
         >
-          <Cover name={machine ? machine.name : 'New Machine'} icon='et:gears' setting="enable" />
+          <Cover name={machine?.name } serialNo={machine ? machine.serialNo : 'Serial Number'} icon='et:gears' setting="enable" />
 
           <Tabs
             value={currentTab}
