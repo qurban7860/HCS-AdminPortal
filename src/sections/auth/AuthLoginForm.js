@@ -24,7 +24,7 @@ export default function AuthLoginForm() {
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().min(6).required('Password is required'),
+    password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
@@ -59,12 +59,10 @@ export default function AuthLoginForm() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-    
-      <Stack spacing={3} sx={{mt: 1}}>
-      
+      <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="email" label="Email address" autoComplete="username" />
 
         <RHFTextField
           name="password"
@@ -79,8 +77,8 @@ export default function AuthLoginForm() {
               </InputAdornment>
             ),
           }}
+          autoComplete="current-password"
         />
-        
       </Stack>
 
       <Stack alignItems="flex-end" sx={{ my: 2 }}>
@@ -94,7 +92,6 @@ export default function AuthLoginForm() {
           Forgot password?
         </Link>
       </Stack>
-      
 
       <LoadingButton
         fullWidth
@@ -103,20 +100,11 @@ export default function AuthLoginForm() {
         type="submit"
         variant="contained"
         loading={isSubmitSuccessful || isSubmitting}
-        // sx={{
-        //   bgcolor: 'text.primary',
-        //   color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-        //   '&:hover': {
-        //     bgcolor: 'text.primary',
-        //     color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
-        //   },
-        // }}
-        sx={{bgcolor: '#10079F', color: 'white'}}
+        sx={{ bgcolor: '#10079F', color: 'white' }}
       >
         Login
       </LoadingButton>
-      
-
     </FormProvider>
   );
+
 }
