@@ -141,7 +141,7 @@ export const machineSettingPersistConfig = {
   blacklist: ['error', 'initial', 'responseMessage']
 };
 export const machineToolsInstalledPersistConfig = {
-  key: 'toolsInstalled',
+  key: 'toolInstalled',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -166,7 +166,7 @@ const rootReducer = combineReducers({
   machinemodel: persistReducer(machinemodelPersistConfig, machinemodelReducer),
   techparam: persistReducer(techparamPersistConfig, techparamReducer),
   machineSetting: persistReducer(machineSettingPersistConfig, machineSettingReducer),
-  toolsInstalled: persistReducer(machineToolsInstalledPersistConfig, toolsInstalledReducer),
+  toolInstalled: persistReducer(machineToolsInstalledPersistConfig, toolsInstalledReducer),
 });
 
 export default rootReducer;
