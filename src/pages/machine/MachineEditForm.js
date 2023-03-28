@@ -46,7 +46,6 @@ import FormProvider, {
 export default function CustomerEditForm() {
 
   const { machine } = useSelector((state) => state.machine);
-// console.log("Machine : ",machine)
   const { users } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -193,8 +192,7 @@ const onSubmit = async (data) => {
   data.projectManager = projVal?._id || null
   data.supportManager = suppVal?._id || null
   data.customerTags = chipData
-
-  console.log("Machines Edit : ",data);
+// console.log("Machine edit Data",data)
     try{
       await dispatch(updateMachine(data));
       setParMachineVal('');
@@ -221,14 +219,12 @@ const onSubmit = async (data) => {
 const handleDelete = (data,index) => {
   const arr = [...chipData]
   arr.splice(index,1)
-  // console.log(data)
   setChipData(arr)
 };
 
 const handleKeyPress = (e) => {
   setCurrTag(currTag.trim())
   if (e.keyCode === 13 || e.key === 'Enter') {
-    // console.log("Enter presed!") 
     e.preventDefault();
     if(currTag.trim().length > 0){
       currTag.trim();
@@ -265,18 +261,17 @@ const handleKeyPress = (e) => {
                 options={machines}
                 getOptionLabel={(option) => option.serialNo}
                 onChange={(event, newValue) => {
-                  console.log(newValue);
                   if(newValue){
                     setParMachineVal(newValue);
                     setParMachSerVal(newValue);
-                    setSupplierVal(newValue.supplier);
-                    setModelVal(newValue.machineModel);
+                    // setSupplierVal(newValue.supplier);
+                    // setModelVal(newValue.machineModel);
                   }
                   else{          
                     setParMachineVal("");
                     setParMachSerVal("");
-                    setSupplierVal("");
-                    setModelVal("");
+                    // setSupplierVal("");
+                    // setModelVal("");
                   }
                 }}
                 id="controllable-states-demo"
@@ -294,18 +289,17 @@ const handleKeyPress = (e) => {
                 options={machines}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  console.log(newValue);
-                  if(newValue){
-                    setParMachineVal(newValue);
-                    setParMachSerVal(newValue);
-                    setSupplierVal(newValue.supplier);
-                    setModelVal(newValue.machineModel);
+                  if(newValue !== null){
+                    // setParMachineVal(newValue);
+                    // setParMachSerVal(newValue);
+                    // setSupplierVal(newValue.supplier);
+                    // setModelVal(newValue.machineModel);
                   }
                   else{          
-                    setParMachineVal("");
-                    setParMachSerVal("");
-                    setSupplierVal("");
-                    setModelVal("");
+                    // setParMachineVal("");
+                    // setParMachSerVal("");
+                    // setSupplierVal("");
+                    // setModelVal("");
                   }
                 }}
                 // id="controllable-states-demo"

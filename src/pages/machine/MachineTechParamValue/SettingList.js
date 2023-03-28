@@ -102,7 +102,7 @@ export default function SettingList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  // const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
     dispatch(getSites());

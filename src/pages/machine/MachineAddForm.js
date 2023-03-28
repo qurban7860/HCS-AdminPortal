@@ -43,7 +43,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const navigate = useNavigate();
   
   const { spContacts } = useSelector((state) => state.contact);
-  console.log("spContacts : ",spContacts)
   const { machines} = useSelector((state) => state.machine);
   const { suppliers} = useSelector((state) => state.supplier);
   const { machinemodels} = useSelector((state) => state.machinemodel);
@@ -84,7 +83,6 @@ useLayoutEffect(() => {
   setBillingVal(null);
 }, [dispatch, customerVal]);
 
-// console.log(machineVal)
 
 // useEffect(()=>{
 //   setMachSerVal()
@@ -163,7 +161,6 @@ const onSubmit = async (data) => {
   data.supportManager = suppVal?._id || null
   data.customerTags = chipData
 
-  console.log("Machines : ",machines);
     try{
       await dispatch(saveMachine(data));
       setParMachineVal('');
@@ -191,14 +188,12 @@ const onSubmit = async (data) => {
 const handleDelete = (data,index) => {
   const arr = [...chipData]
   arr.splice(index,1)
-  // console.log(data)
   setChipData(arr)
 };
 
 const handleKeyPress = (e) => {
   setCurrTag(currTag.trim())
   if (e.keyCode === 13 || e.key === 'Enter') {
-    // console.log("Enter presed!") 
     e.preventDefault();
     if(currTag.trim().length > 0){
       currTag.trim();
@@ -273,7 +268,6 @@ const handleKeyPress = (e) => {
                 options={machines}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  console.log(newValue);
                   if(newValue){
                     setParMachineVal(newValue);
                     setParMachSerVal(newValue);

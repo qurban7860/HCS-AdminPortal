@@ -33,7 +33,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setMachineEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.machineEditFormFlag = action.payload;
     },
     
@@ -68,7 +67,6 @@ const slice = createSlice({
       state.success = true;
       state.machine = action.payload;
       state.initial = true;
-      // console.log('machinesuccessslice', state.machine);
     },
 
 
@@ -118,7 +116,6 @@ export function getMachines() {
           isArchived: false
         }
       });
-      console.log(response)
       dispatch(slice.actions.getMachinesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
@@ -135,9 +132,7 @@ export function getMachine(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}`);
-      console.log('getMachine slice working : ',response);
       dispatch(slice.actions.getMachineSuccess(response.data));
-      console.log('requested machine', response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -151,14 +146,12 @@ export function deleteMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`);
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${id}`,
       {
         isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
@@ -171,7 +164,6 @@ export function deleteMachine(id) {
  
 export function saveMachine(params) {
     return async (dispatch) => {
-      console.log('params from data', params);
       dispatch(slice.actions.resetMachine());
       dispatch(slice.actions.startLoading());
       try {
@@ -211,9 +203,6 @@ export function saveMachine(params) {
         if(params.instalationSite){
           data.instalationSite = params.instalationSite;        
         }
-        // if(params.operators){
-        //     data.operators = params.operators;        
-        // }
         if(params.accountManager){
           data.accountManager = params.accountManager;        
         }
@@ -229,10 +218,8 @@ export function saveMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
-console.log("Data for the subbmission:",data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
-        console.log('response', response.data.Machine);
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
       } catch (error) {
         console.error(error);
@@ -245,67 +232,31 @@ console.log("Data for the subbmission:",data)
 // --------------------------------------------------------------------------
 
 export function updateMachine(params) {
-  console.log('update, working')
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
       const formData = new FormData();
-      /* eslint-disable */
-      let data = {
-        id: params.id,
+
+      const data = {
+        serialNo: params.serialNo,
         name: params.name,
+        parentSerialNo: params.parentSerialNo,
+        parentMachine: params.parentMachine,
+        status: params.status,
+        supplier: params.supplier,
+        machineModel: params.machineModel,
+        workOrderRef: params.workOrderRef,
+        customer: params.customer,
+        billingSite: params.billingSite,
+        instalationSite: params.instalationSite,
+        accountManager: params.accountManager,
+        projectManager: params.projectManager,
+        supportManager: params.supportManager,
+        description: params.description,
+        customerTags: params.customerTags,
       };
      /* eslint-enable */
-    if(params.serialNo){
-      data.serialNo = params.serialNo;        
-    }
-    if(params.parentMachine){
-      data.parentMachine = params.parentMachine;        
-    }
-    if(params.parentSerialNo){
-      data.parentSerialNo = params.parentSerialNo;        
-    }
-    if(params.status){
-      data.status = params.status;        
-    }
-    if(params.supplier){
-      data.supplier = params.supplier;        
-    }
-    if(params.machineModel){
-        data.machineModel = params.machineModel;        
-    }
-    if(params.workOrderRef){
-      data.workOrderRef = params.workOrderRef;        
-    }
-    if(params.customer){
-      data.customer = params.customer;        
-    }
-    if(params.billingSite){
-      data.billingSite = params.billingSite;        
-    }
-    if(params.instalationSite){
-      data.instalationSite = params.instalationSite;        
-    }
-    // if(params.operators){
-    //     data.operators = params.operators;        
-    // }
-    if(params.accountManager){
-      data.accountManager = params.accountManager;        
-    }
-    if(params.projectManager){
-        data.projectManager = params.projectManager;        
-    }
-    if(params.supportManager){
-        data.supportManager = params.supportManager;        
-    }
-    if(params.description){
-      data.description = params.description;        
-    }
-    if(params.customerTags){
-      data.customerTags = params.customerTags;        
-    }
-  // console.log("Machines Edit : ",data);
+
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data
       );

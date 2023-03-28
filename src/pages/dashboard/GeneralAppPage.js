@@ -60,7 +60,6 @@ export default function GeneralAppPage() {
     dispatch(getSites());
   }, [dispatch]);
 
-  console.log('sites', sites)
 
   return (
     <>

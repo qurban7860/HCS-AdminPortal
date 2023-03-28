@@ -44,13 +44,11 @@ const slice = createSlice({
 
     // SET TOGGLE
     setFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.formVisibility = action.payload;
     },
 
     // SET TOGGLE
     setEditFormVisibility(state, action){
-      console.log('setEditFormVisibility', action.payload);
       state.contactEditFormVisibility = action.payload;
     },
 
@@ -150,7 +148,6 @@ export function saveContact(params) {
 // ----------------------------------------------------------------------
 
 export function updateContact(customerId,params) {
-  console.log(customerId)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     dispatch(slice.actions.setEditFormVisibility(false));
@@ -225,13 +222,11 @@ export function getContacts(customerID ) {
 // ----------------------------------------------------------------------
 
 export function getContact(customerID, id) {
-  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts/${id}`);
       dispatch(slice.actions.getContactSuccess(response.data));
-      console.log('requested contact', response.data);
       // dispatch(slice.actions.setResponseMessage('Contacts Loaded Successfuly'));
     } catch (error) {
       console.error(error);
@@ -246,7 +241,6 @@ export function deleteContact(customerID, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
       const data = {
         isArchived: true,
       };
@@ -254,7 +248,6 @@ export function deleteContact(customerID, id) {
         data
       );
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

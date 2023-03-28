@@ -228,7 +228,7 @@ export default function CustomerSiteList() {
                     {site.name} 
                     </Typography>
                   </Grid>
-                  {site.address && <Grid xs={12} sm={9} md={10}>
+                  {site.address && <Grid item xs={12} sm={9} md={10}>
                     <Typography variant="body2" >
                     {Object.values(site.address)?.join(", ")}
                     </Typography>

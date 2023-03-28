@@ -44,7 +44,6 @@ export default function NoteEditForm() {
   
   const { machine } = useSelector((state) => state.machine);
 
-console.log("Note : ",note)
   const { enqueueSnackbar } = useSnackbar();
 
   const EditNoteSchema = Yup.object().shape({
@@ -58,7 +57,6 @@ console.log("Note : ",note)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [note]
   );
-  // console.log(defaultValues)
 
   const methods = useForm({
     resolver: yupResolver(EditNoteSchema),
@@ -88,7 +86,6 @@ console.log("Note : ",note)
   };
 
   const onSubmit = async (data) => {
-    console.log("Update Data : ",data);
     try {
       await dispatch(updateNote(machine._id,note._id,data));
       reset();

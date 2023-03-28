@@ -25,7 +25,7 @@ NoteStatistics.propTypes = {
 export default function NoteStatistics({current_note_Statistics = null}) {
 
   const { note } = useSelector((state) => state.note);
-//   console.log("note : ",note)
+  
 //   const navigate = useNavigate();
 
 //   const { enqueueSnackbar } = useSnackbar();
@@ -42,9 +42,7 @@ export default function NoteStatistics({current_note_Statistics = null}) {
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [current_note_Statistics, note]
-  );
-
-  // console.log(defaultValues); 
+  ); 
   return (
     <Card sx={{  p: 2 }}>
         <Grid container>

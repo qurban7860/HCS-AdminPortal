@@ -30,7 +30,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setCategoryEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.categoryEditFormFlag = action.payload;
     },
   
@@ -65,7 +64,6 @@ const slice = createSlice({
       state.success = true;
       state.category = action.payload;
       state.initial = true;
-      console.log('categorySuccessSlice', state.category);
     },
 
 
@@ -109,11 +107,9 @@ export const {
 export function createCategorys (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(" Category",supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From category data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -129,11 +125,9 @@ export function getCategories (){
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`);
-      console.log(" Category",response)
       dispatch(slice.actions.getCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From category data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -143,14 +137,11 @@ export function getCategories (){
 // ----------------------------------------------------------------------
 
 export function getCategory(id) {
-  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/categories/${id}`);
-      console.log('Response',response.data)
       dispatch(slice.actions.getCategorySuccess(response.data));
-      console.log('requested categories', response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -162,14 +153,8 @@ export function deleteCategories(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete categories id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/categories/${id}`);
-     
       dispatch(slice.actions.setResponseMessage(response.data));
-      
-      
-      console.log(response);
-      // console.log(CONFIG.SERVER_URL[0])
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
@@ -182,7 +167,6 @@ export function deleteCategories(id) {
 
 export function saveCategory(params) {
     return async (dispatch) => {
-      console.log('params', params);
       dispatch(slice.actions.resetCategory());
       dispatch(slice.actions.startLoading());
       try {
@@ -199,7 +183,6 @@ export function saveCategory(params) {
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`, data);
 
-        console.log('response', response.data.Category);
         dispatch(slice.actions.getCategoriesSuccess(response.data.Category));
       } catch (error) {
         console.error(error);
@@ -212,7 +195,6 @@ export function saveCategory(params) {
 // --------------------------------------------------------------------------
 
 export function updateCategory(params) {
-  console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

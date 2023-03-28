@@ -115,9 +115,7 @@ export function saveNote(machineId,params) {
             if(params.user){
                 data.user =    params.user;
             }
-            console.log("Machine Param : ",params , " Data : ",data);
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
-      console.log(response)
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
 
@@ -131,14 +129,12 @@ export function saveNote(machineId,params) {
 // ---------------------------------Update Note-------------------------------------
 
 export function updateNote(machineId,noteId,params) {
-  console.log("update note params : ", params);
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
         note: params.note,
       }
-      console.log("Update before post: ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
@@ -162,11 +158,8 @@ export function getNotes(id) {
         }
       }
       );
-      console.log("Machine notes : ",response)
-      console.log("Notes Response : ",response);
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error));
@@ -182,8 +175,7 @@ export function getNote(machineId,noteId) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
-      // console.log('requested note', response.data);
-      // dispatch(slice.actions.setResponseMessage('Notes Loaded Successfuly'));
+      // dispatch(slice.actions.setResponseMessage('Note Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -203,7 +195,6 @@ export function deleteNote(machineId,id) {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
-      // console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);

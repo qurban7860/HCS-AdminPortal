@@ -35,7 +35,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setCustomerEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.customerEditFormFlag = action.payload;
     },
     
@@ -69,7 +68,6 @@ const slice = createSlice({
       state.success = true;
       state.customer = action.payload;
       state.initial = true;
-      // console.log('customersuccessslice', state.customer);
     },
 
 
@@ -150,10 +148,8 @@ export function deleteCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
       const response = await axios.delete(`${CONFIG.SERVER_URL}crm/customers/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);

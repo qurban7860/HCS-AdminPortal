@@ -36,13 +36,11 @@ const slice = createSlice({
     },
     // SET TOGGLE
     setNoteFormVisibility(state, action){
-      // console.log('toggle', action.payload);
       state.formVisibility = action.payload;
     },
 
     // SET TOGGLE
     setNoteEditFormVisibility(state, action){
-      // console.log('setEditFormVisibility', action.payload);
       state.noteEditFormVisibility = action.payload;
     },
     // HAS ERROR
@@ -106,7 +104,6 @@ export const {
 // ----------------------------Save Note------------------------------------------
 
 export function saveNote(customerId,params) {
-  // console.log(params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -130,7 +127,6 @@ export function saveNote(customerId,params) {
         data.user =    params.user;
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
-      // console.log(response)
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
 
@@ -144,7 +140,6 @@ export function saveNote(customerId,params) {
 // ---------------------------------Update Note-------------------------------------
 
 export function updateNote(customerId,params) {
-  console.log("update note params : ", params);
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -168,7 +163,6 @@ export function updateNote(customerId,params) {
       if(params.user){
         data.user = params.user;
       }
-      console.log("Update before post: ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
@@ -192,7 +186,6 @@ export function getNotes(id) {
         }
       }
       );
-      console.log("Notes Response : ",response);
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
@@ -211,7 +204,6 @@ export function getNote(customerId,noteId) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${noteId}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
-      // console.log('requested note', response.data);
       // dispatch(slice.actions.setResponseMessage('Notes Loaded Successfuly'));
     } catch (error) {
       console.error(error);

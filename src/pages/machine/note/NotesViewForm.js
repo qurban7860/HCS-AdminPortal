@@ -27,13 +27,10 @@ NoteViewForm.propTypes = {
 export default function NoteViewForm({currentNote = null}) {
   const { note, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.machinenote);
 
-  console.log("Note : ",note)
-  // console.log("Current note : ",currentNote)
   // const navigate = useNavigate();
   // const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { machine } = useSelector((state) => state.machine);
-console.log(" Machine : ",machine)
   const  handleEdit = async () => {
     await dispatch(getNote(machine._id,currentNote._id));
     dispatch(setNoteEditFormVisibility(true));

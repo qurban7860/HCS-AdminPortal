@@ -46,7 +46,7 @@ const STATUS_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'havePrevious', label: '', align: 'left' },
+  { id: 'havePrevious', label: '', align: 'left', },
   { id: 'serialNumber', label: 'Serial Number', align: 'left' },
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
   { id: 'machineName', label: 'Name', align: 'left' },
@@ -120,7 +120,6 @@ export default function MachineList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
       await dispatch(deleteMachine(id));
       dispatch(getMachines());
       setSelected([]);
@@ -152,11 +151,9 @@ export default function MachineList() {
   };
 
   // const handleEditRow = (id) => {
-  //   console.log(id);
   //   navigate(PATH_MACHINE.machine.edit(id));
   // };
   const handleViewRow = (id) => {
-    console.log("Machine View : ",id)
     navigate(PATH_MACHINE.machine.view(id));
   };
 

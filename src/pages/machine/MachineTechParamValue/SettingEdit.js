@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getSite } from '../../../redux/slices/customer/site';
+import { getSetting } from '../../../redux/slices/products/machineTechParamValue';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -22,13 +22,10 @@ export default function SiteEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
-  console.log(id);
 
-
-  const { site } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
-    dispatch(getSite(id));
+    dispatch(getSetting(id));
   }, [dispatch, id]);
 
 

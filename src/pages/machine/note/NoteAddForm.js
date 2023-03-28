@@ -94,7 +94,6 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
 
   const onSubmit = async (data) => {
-    console.log("Form Submited",data);
       try{
         await dispatch(saveNote(machine._id,data));
         reset();

@@ -138,21 +138,17 @@ export default function CustomerNoteList() {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    console.log("Expended : ",expanded)
   };
   
 
   const { notes, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.machinenote);
   const { machine } = useSelector((state) => state.machine);
   const [checked, setChecked] = useState(false);
-// console.log("noteEditFormVisibility: " , noteEditFormVisibility)
-console.log("Notes : " , notes, " machine: " , machine)
   useLayoutEffect(() => {
     if(!formVisibility && !noteEditFormVisibility){
     dispatch(getNotes(machine._id));
     }
   }, [dispatch, machine._id, noteEditFormVisibility, formVisibility ]);
-// console.log(machine._id)
   useEffect(() => {
     if (initial) {
       if (notes && !error) {
@@ -221,7 +217,6 @@ const toggleChecked = () =>
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteNote(id));
       setExpanded(false);
       dispatch(getNotes(machine._id));

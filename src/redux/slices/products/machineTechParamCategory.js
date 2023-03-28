@@ -28,7 +28,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setTechparamcategoryEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.techparamcategoryEditFormFlag = action.payload;
     },
     
@@ -61,10 +60,8 @@ const slice = createSlice({
       
       state.isLoading = false;
       state.success = true;
-      console.log("IM DONE",action.payload)
       state.techparamcategory = action.payload;
       state.initial = true;
-      console.log('techparamcategorySuccessSlice', state.techparamcategory);
     },
 
 
@@ -108,11 +105,9 @@ export const {
 export function createTechparamcategories (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From techparamcategories data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -136,10 +131,8 @@ export function getTechparamcategories (){
       );
       
       dispatch(slice.actions.getTechparamcategoriesSuccess(response.data));
-      console.log('data', response.data);
       dispatch(slice.actions.setResponseMessage('techparamcategories loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From techparamcategories data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -153,11 +146,8 @@ export function getTechparamcategory(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
-      console.log('slice working',response);
       dispatch(slice.actions.getTechparamcategorySuccess(response.data));
-      console.log('requested techparam', response.data);
     } catch (error) {
-      console.error(error,"Slice Error");
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -167,13 +157,10 @@ export function deleteTechparamcategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete techparam id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search
-      
-      console.log(response);
       
     } catch (error) {
       console.error(error);
@@ -186,7 +173,6 @@ export function deleteTechparamcategory(id) {
 
 export function saveTechparamcategory(params) {
     return async (dispatch) => {
-      console.log('params', params);
       dispatch(slice.actions.resetTechparam());
       dispatch(slice.actions.startLoading());
       try {
@@ -209,7 +195,6 @@ export function saveTechparamcategory(params) {
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`, data);
 
-        console.log('response', response.data.Techparam);
         dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
       } catch (error) {
         console.error(error);
@@ -222,7 +207,6 @@ export function saveTechparamcategory(params) {
 // --------------------------------------------------------------------------
 
 export function updateTechparamcategory(params) {
-  console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -247,12 +231,10 @@ export function updateTechparamcategory(params) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${params.id}`,
         data
       );
-      console.log(response,"From update success")
       dispatch(getTechparamcategory(params.id));
       dispatch(slice.actions.setTechparamcategoriesEditFormVisibility(false));
 
     } catch (error) {
-      console.error(error,"from updateTechparam");
       dispatch(slice.actions.hasError(error));
     }
   };

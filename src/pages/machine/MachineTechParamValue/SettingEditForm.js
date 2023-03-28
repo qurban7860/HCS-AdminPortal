@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo , useState, useLayoutEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -10,11 +10,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { updateSite, setEditFormVisibility } from '../../../redux/slices/customer/site';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -27,62 +26,46 @@ import FormProvider, {
   RHFAutocomplete,
 
 } from '../../../components/hook-form';
-
-import { countries } from '../../../assets/data';
+import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
+import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
+import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
 
 // ----------------------------------------------------------------------
 
 export default function SettingEditForm() {
 
-  const { error, site } = useSelector((state) => state.site);
-
-  const { contacts } = useSelector((state) => state.contact);
+  const { setting, settings, settingEditFormVisibility, formVisibility ,error} = useSelector((state) => state.machineSetting);
+  const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
+// console.log("tech param by category : ",techparamsByCategory)
+  const { techparamcategories } = useSelector((state) => state.techparamcategory);
+  const [category, setCategory] = useState('');
+  const [techParam, setTechParam] = useState('');
+  const [paramData, setparamData] = useState([]);
+  const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const EditSiteSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
-    billingSite: Yup.string(),
-    phone: Yup.string(),
-    email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-    fax: Yup.string(),
-    website: Yup.string(),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    city: Yup.string(),
-    region: Yup.string(),
-    country: Yup.string().nullable(),
-    primaryBillingContact: Yup.string().nullable(),
-    primaryTechnicalContact: Yup.string().nullable(),
-  });
+  useLayoutEffect(() => {
+    setCategory(setting.techParam);
+    setTechParam(setting.techParam);
+  }, [dispatch , setting]);
 
+  const EditSettingSchema = Yup.object().shape({
+    techParamValue: Yup.string().max(20),
+  });
 
   const defaultValues = useMemo(
     () => ({
-      id: site?._id || '',
-      name: site?.name || '',
-      customer: site?.customer || '',
-      billingSite: site?.billingSite || '',
-      phone: site?.phone || '',
-      email: site?.email || '',
-      fax: site?.fax || '',
-      website: site?.website || '',
-      street: site?.address?.street || '',
-      suburb: site?.address?.suburb || '',
-      city: site?.address?.city || '',
-      region: site?.address?.region || '',
-      country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
-      primaryBillingContact: site.primaryBillingContact === null || site.primaryBillingContact === undefined  ? null : site.primaryBillingContact,
-      primaryTechnicalContact: site.primaryTechnicalContact === null || site.primaryTechnicalContact === undefined  ? null : site.primaryTechnicalContact,
+      techParamValue: setting?.techParamValue || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [site]
+    []
   );
 
   const methods = useForm({
-    resolver: yupResolver(EditSiteSchema),
+    resolver: yupResolver(EditSettingSchema),
     defaultValues,
   });
 
@@ -96,22 +79,24 @@ export default function SettingEditForm() {
 
   const values = watch();
 
-  useEffect(() => {
-    if (site) {
-      reset(defaultValues);
-    }
-  }, [site, reset, defaultValues]);
+  // useEffect(() => {
+  //   if (site) {
+  //     reset(defaultValues);
+  //   }
+  // }, [site, reset, defaultValues]);
 
   const toggleCancel = () => 
   {
-    dispatch(setEditFormVisibility(false));
+    dispatch(setSettingEditFormVisibility (false));
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    console.log("Setting update Data : ",data);
     try {
-      await dispatch(updateSite(data));
+      await dispatch(updateSetting(data));
       reset();
+      setCategory("")
+      setTechParam("")
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -139,26 +124,46 @@ export default function SettingEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-                  
-                  ChipProps={{ size: 'small' }}
-                />
+                 <Autocomplete
+                // freeSolo
+                value={ category || null}
+                options={techparamcategories}
+                getOptionLabel={(option) => option.name}
+                id="controllable-states-demo"
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setCategory(newValue);
+                  }
+                  else{ 
+                  setCategory("");
+                  }
+                }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
+                renderInput={(params) => <TextField {...params}  label="category" />}
+                ChipProps={{ size: 'small' }}
+              />
+              
+              <Autocomplete
+                // freeSolo
+                value={techParam || null}
+                options={techparamsByCategory}
+                getOptionLabel={(option) => option.name}
+                id="controllable-states-demo"
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setTechParam(newValue);
+                  }
+                  else{ 
+                  setTechParam("");
+                  }
+                }}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
+                renderInput={(params) => <TextField {...params}  label="Technical Parameters" />}
+                ChipProps={{ size: 'small' }}
+              />
 
-                <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-                  
-                  ChipProps={{ size: 'small' }}
-                />
                 <RHFTextField name="techParamValue" label="Technical Parameter Value" />
+
               </Box>
 
               <Box

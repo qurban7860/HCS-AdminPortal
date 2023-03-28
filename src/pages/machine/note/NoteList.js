@@ -163,7 +163,6 @@ export default function NoteList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteMachineNote(id));
       dispatch(getMachineNotes());
       setSelected([]);
@@ -196,7 +195,6 @@ export default function NoteList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
     navigate(PATH_DASHBOARD.note.edit(id));
   };
 

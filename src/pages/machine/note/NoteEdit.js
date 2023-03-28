@@ -29,8 +29,6 @@ export default function NoteEdit() {
 
 
   const { id } = useParams(); 
-  // console.log(id);
-
 
   const { note } = useSelector((state) => state.note);
 

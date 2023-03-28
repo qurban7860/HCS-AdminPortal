@@ -122,7 +122,8 @@ export function Cover({ cover, name, role, setting , photoURL , icon }) {
         
           {setting ? 
           <Button variant="h4" 
-          sx={{ ml: {md:'auto', xs:5}, mr:3,
+          sx={{ ml: {md:'auto', xs:5}, 
+          pr: 5,
           color: {xs: 'common.black' ,md: 'common.white'},
           display: { xs: 'flex-end', md: 'block'},
           mb: { xs: 5, md: -2},

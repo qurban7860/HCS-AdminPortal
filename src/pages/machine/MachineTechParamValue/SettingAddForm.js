@@ -40,9 +40,9 @@ export default function SettingAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
 useLayoutEffect(() => {
-  // dispatch(getTechparams())
   dispatch(getTechparamcategories())
 }, [dispatch]);
+
   const AddSettingSchema = Yup.object().shape({
     techParamValue: Yup.string().max(20),
 
@@ -77,21 +77,18 @@ useEffect(()=>{
 
   const onChange = (event) => {
     const value = event.target.value;
-    console.log('value----->',value);
   };
 
   const onSubmit = async (data) => {
     try {
-      console.log("techParamVal : ",techParamVal._id)
       if(techParamVal !== ""){
         data.techParam = techParamVal;
       }
-      
       console.log('params',data);
       await dispatch(saveSetting(machine._id,data));
       reset();
-      
-
+      setCategory("")
+      setTechParamVal("")
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(err);

@@ -35,13 +35,11 @@ const slice = createSlice({
 
     // SET TOGGLE
     setFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.siteAddFormVisibility = action.payload;
     },
 
     // SET TOGGLE
     setEditFormVisibility(state, action){
-      console.log('setEditFormVisibility', action.payload);
       state.siteEditFormVisibility = action.payload;
     },
 
@@ -251,7 +249,6 @@ export function getSite(customerID, id) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites/${id}`);
       dispatch(slice.actions.getSiteSuccess(response.data));
-      console.log('requested site', response.data);
       // dispatch(slice.actions.setResponseMessage('Sites Loaded Successfuly'));
     } catch (error) {
       console.error(error);
@@ -273,7 +270,6 @@ export function deleteSite(customerID, id) {
         data
       );
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));

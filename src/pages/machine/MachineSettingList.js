@@ -130,9 +130,9 @@ export default function MachineSettingList() {
 
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
-  const { settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
-  console.log("Machine Settings : " , settings)
+  const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
   const { machine } = useSelector((state) => state.machine);
+
   // const toggleChecked = async () => 
   //   {
   //     dispatch(setFormVisibility(!siteAddFormVisibility));    
@@ -162,32 +162,26 @@ export default function MachineSettingList() {
 
 
 useLayoutEffect(() => {
-  if(!formVisibility && !settingEditFormVisibility){
+  // if(!formVisibility && !settingEditFormVisibility){
   dispatch(getSettings(machine._id));
-  }
+  // }
 }, [dispatch, machine._id, settingEditFormVisibility , formVisibility ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    console.log("Expended : ",expanded)
   };
 
-  // useEffect(() => {
-  //   if(!siteAddFormVisibility && !siteEditFormVisibility){
-  //     dispatch(getSites(customer._id));
-  //   }
-  // }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
-
-  // useEffect(() => {
-  //   if (initial) {
-  //     if (sites && !error) {
-  //       enqueueSnackbar(responseMessage);
-  //     } else {
-  //       enqueueSnackbar(error, { variant: `error` });
-  //     }   
-  //     setTableData(sites);
-  //   }
-  // }, [sites, error, responseMessage, enqueueSnackbar, initial]);
+ 
+  useEffect(() => {
+    if (initial) {
+      if (settings && !error) {
+        enqueueSnackbar(responseMessage);
+      } else {
+        enqueueSnackbar(error, { variant: `error` });
+      }   
+      setTableData(settings);
+    }
+  }, [settings, error, responseMessage, enqueueSnackbar, initial]);
 
 
 
@@ -212,7 +206,6 @@ useLayoutEffect(() => {
         <title> Machine Setting: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false} >
 
         {/* {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
@@ -226,14 +219,12 @@ useLayoutEffect(() => {
             </Button>
 
         </Stack>} */}
-        <SettingAddForm/>
+        {/* <SettingAddForm/> */}
         
-        <Card sx={{mt:3}}>
 
+          {!settingEditFormVisibility && <SettingAddForm/>}
           {settingEditFormVisibility && <SettingEditForm/>}
-
-          {/* {formVisibility && !settingEditFormVisibility && <SettingAddForm/>} */}
-
+        <Card sx={{mt:3}}>
           {!formVisibility && !settingEditFormVisibility && settings.map((setting, index) => (
 
             <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)}>
@@ -242,13 +233,11 @@ useLayoutEffect(() => {
                 <Grid container spacing={0}>
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
-                    {/* {console.log(setting?.techParam?.name)} */}
                     {fDate(setting?.createdAt || "")}
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={9} md={10}>
-                  {setting?.techParam|| "" }
-                  {setting?.techParamValue || "" }
+                  {setting?.techParam|| "" }, {setting?.techParamValue || "" }
                   {/* <Typography variant="body2" >
                   </Typography> */}
                 </Grid>
@@ -266,118 +255,8 @@ useLayoutEffect(() => {
 
           {isNotFound && <EmptyContent title="No Data"/>}
             
-          {/* </Block> */}
-          {/* <Block title="Controlled">
-            {_accordions.map((item, index) => (
-              <Accordion
-                key={item.value}
-                disabled={index === 3}
-                expanded={controlled === item.value}
-                onChange={handleChangeControlled(item.value)}
-              >
-                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                  <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
-                    {item.heading}
-                  </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{item.subHeading}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{item.detail}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Block> */}
 
-
-           {/* <SiteListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
-                />
-
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <SiteListTableRow
-                          key={row._id}
-                          row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
-          /> */}
         </Card>
-      </Container>
 
       {/* <ConfirmDialog
         open={openConfirm}
