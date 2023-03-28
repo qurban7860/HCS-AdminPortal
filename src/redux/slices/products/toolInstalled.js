@@ -13,15 +13,15 @@ import { CONFIG } from '../../../config-global';
 
 const initialState = {
   formVisibility: false,
-  ToolInstalledEditFormVisibility: false,
+  toolInstalledEditFormVisibility: false,
   intial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  ToolsInstalled: [],
-  ToolInstalled: null,
-  ToolInstalledParams: {
+  toolsInstalled: [],
+  toolInstalled: null,
+  toolInstalledParams: {
 
   }
 };
@@ -43,7 +43,7 @@ const slice = createSlice({
 
     // SET TOGGLE
     setToolInstalledEditFormVisibility(state, action){
-      state.settingEditFormVisibility = action.payload;
+      state.toolInstalledEditFormVisibility = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -56,7 +56,7 @@ const slice = createSlice({
     getToolsInstalledSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ToolsInstalled = action.payload;
+      state.toolsInstalled = action.payload;
       state.initial = true;
     },
 
@@ -64,7 +64,7 @@ const slice = createSlice({
     getToolInstalledSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.ToolInstalled = action.payload;
+      state.toolInstalled = action.payload;
       state.initial = true;
     },
 
@@ -110,10 +110,11 @@ export function saveToolInstalled(machineId,params) {
         dispatch(slice.actions.startLoading());
         try {
             const data = {
-                techParam: params.techParam,
-                techParamValue: params.techParamValue,
+                tool: params.tool,
+                note: params.note,
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
+            console.log("Tool Installed", data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
     //   dispatch(slice.actions.ToolInstalledFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
       dispatch(getToolInstalled(machineId));
@@ -126,15 +127,15 @@ export function saveToolInstalled(machineId,params) {
 
 // ---------------------------------Update Note-------------------------------------
 
-export function updateToolsInstalled(machineId,settingId,params) {
+export function updateToolInstalled(machineId,settingId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        techParam: params.techParam,
-        techParamValue: params.techParamValue,
+        tool: params.tool,
+        note: params.note,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${settingId}`, data, );
       dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
       dispatch(setToolInstalledEditFormVisibility (false));
     } catch (error) {
@@ -146,19 +147,19 @@ export function updateToolsInstalled(machineId,settingId,params) {
 
 // -----------------------------------Get Settings-----------------------------------
 
-export function getToolInstalled(id) {
+export function getToolsInstalled(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled` , 
       {
         params: {
           isArchived: false
         }
       }
       );
-      dispatch(slice.actions.getToolInstalledSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Installed Tool loaded successfully'));
+      dispatch(slice.actions.getToolsInstalledSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Installed Tools loaded successfully'));
 
     } catch (error) {
       console.log(error);
@@ -169,13 +170,13 @@ export function getToolInstalled(id) {
 
 // -------------------------------get Setting---------------------------------------
 
-export function getToolsInstalled(machineId,settingId) {
+export function getToolInstalled(machineId,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`);
-      dispatch(slice.actions.getToolsInstalledSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Installed Tools Loaded Successfuly'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${Id}`);
+      dispatch(slice.actions.getToolInstalledSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Installed Tool Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -185,12 +186,12 @@ export function getToolsInstalled(machineId,settingId) {
 
 // ---------------------------------archive Note-------------------------------------
 
-export function deleteToolsInstalled(machineId,id) {
+export function deleteToolInstalled(machineId,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       // const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`,
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${id}` , 
       {
           isArchived: true, 
       });

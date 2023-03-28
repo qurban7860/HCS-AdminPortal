@@ -88,8 +88,6 @@ export function getDepartments() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}departments`);
-      console.log(response);
-      console.log(response.data);
       dispatch(slice.actions.getDepartmentsSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Departments Loaded Successfuly'));
 
@@ -122,10 +120,8 @@ export function deleteDepartment(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
       const response = await axios.delete(`${CONFIG.SERVER_URL}departments/${id}`);
       dispatch(slice.actions.setResponseMessage('Department Deleted Successfuly'));
-      console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);

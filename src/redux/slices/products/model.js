@@ -29,7 +29,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setMachinemodelsEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.machinemodelEditFormFlag = action.payload;
     },
     
@@ -62,10 +61,8 @@ const slice = createSlice({
       
       state.isLoading = false;
       state.success = true;
-      console.log("IM DONE",action.payload)
       state.machinemodel = action.payload;
       state.initial = true;
-      console.log('statusSuccessSlice', state.machinestatus);
     },
 
 
@@ -109,11 +106,9 @@ export const {
 export function createMachinemodels (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/models`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From model data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -133,7 +128,6 @@ export function getMachinemodels (){
       dispatch(slice.actions.getMachinemodelsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('model loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From model data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -147,9 +141,7 @@ export function getMachineModel(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models/${id}`);
-      console.log('slice working get model',response);
       dispatch(slice.actions.getMachinemodelSuccess(response.data));
-      console.log('requested model', response.data);
     } catch (error) {
       console.error(error,"Slice Error");
       dispatch(slice.actions.hasError(error));
@@ -161,12 +153,8 @@ export function deleteMachinemodel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete model id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/models/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
-      
-      
-      console.log(response);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -178,7 +166,6 @@ export function deleteMachinemodel(id) {
 
 export function saveMachinemodel(params) {
     return async (dispatch) => {
-      console.log('save Macshine model params', params);
       dispatch(slice.actions.resetMachinemodel());
       dispatch(slice.actions.startLoading());
       try {
@@ -202,7 +189,6 @@ export function saveMachinemodel(params) {
 
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
 
-        console.log('response', response.data.Machinemodel);
         dispatch(slice.actions.getMachinemodelsSuccess(response.data.Machinemodel));
       } catch (error) {
         console.error(error);
@@ -215,7 +201,6 @@ export function saveMachinemodel(params) {
 // --------------------------------------------------------------------------
 
 export function updateMachinemodel(params) {
-  console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -244,7 +229,6 @@ export function updateMachinemodel(params) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${params.id}`,
         data
       );
-      console.log(response,"From update success")
       dispatch(getMachineModel(params.id));
       dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
 

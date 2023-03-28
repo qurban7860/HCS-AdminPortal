@@ -17,23 +17,23 @@ import ToolsInstalledEditForm from './ToolsInstalledEditForm';
 // ----------------------------------------------------------------------
 
 export default function ToolsInstalledEdit() {
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
-  const { id } = useParams();
+  // const { id } = useParams();
 
 
-  useLayoutEffect(() => {
-    dispatch(getSetting(id));
-  }, [dispatch, id]);
+  // useLayoutEffect(() => {
+  //   dispatch(getSetting(id));
+  // }, [dispatch, id]);
 
 
 
   return (
     <>
       <Helmet>
-        <title> Site: Edit Page | Machine ERP</title>
+        <title> Tools Installed: Edit Page | Machine ERP</title>
       </Helmet>
 
       <Container maxWidth={false}>

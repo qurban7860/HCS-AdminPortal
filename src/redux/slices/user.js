@@ -95,8 +95,6 @@ const slice = createSlice({
         
         formData.append('image', action.payload.avatarUrl);
 
-        console.log('formdata', formData);
-
         const response = await axios.post(`${CONFIG.SERVER_URL}users`,
           formData,
         );
@@ -204,7 +202,6 @@ export function deleteUser(id) {
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}users/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);

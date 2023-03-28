@@ -43,15 +43,14 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 
-import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting , saveSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
-import { getTechparams } from '../../redux/slices/products/machineTechParam';
+import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../redux/slices/products/toolInstalled';
+import { getTools } from '../../redux/slices/products/tools';
 
 import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm'
 import ToolsInstalledEditForm from './ToolsInstalled/ToolsInstalledEditForm';
+import ToolsInstalledViewForm from './ToolsInstalled/ToolsInstalledViewForm';
 
 import _mock from '../../_mock';
-import ToolsInstalledViewForm from './ToolsInstalled/ToolsInstalledViewForm';
 import EmptyContent from '../../components/empty-content';
 import { fDate,fDateTime } from '../../utils/formatTime';
 
@@ -59,15 +58,15 @@ import { fDate,fDateTime } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
+// const TABLE_HEAD = [
+//   { id: 'name', label: 'Site', align: 'left' },
+//   { id: 'email', label: 'Email', align: 'left' },
+//   { id: 'website', label: 'Website', align: 'left' },
+//   { id: 'isverified', label: 'Disabled', align: 'left' },
+//   { id: 'created_at', label: 'Created At', align: 'left' },
+//   { id: 'action', label: 'Actions', align: 'left' },
 
-];
+// ];
 
 const STATUS_OPTIONS = [
   // { id: '1', value: 'Order Received' },
@@ -126,16 +125,13 @@ export default function MachineSettingList() {
   };
   const dispatch = useDispatch();
 
-  const { techparamsByCategory } = useSelector((state) => state.techparam);
-
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-
-  const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
+  const { tools } = useSelector((state) => state.tool);
+  const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
   const { machine } = useSelector((state) => state.machine);
-  // const toggleChecked = async () => 
-  //   {
-  //     dispatch(setFormVisibility(!siteAddFormVisibility));    
-  //   };
+  const toggleChecked = async () => 
+    {
+      dispatch(setToolInstalledFormVisibility (!formVisibility));    
+    };
 
   const { themeStretch } = useSettingsContext();
 
@@ -159,12 +155,11 @@ export default function MachineSettingList() {
    }
   };
 
-
 useLayoutEffect(() => {
-  // if(!formVisibility && !settingEditFormVisibility){
-  dispatch(getSettings(machine._id));
+  // if(!formVisibility && !toolInstalledEditFormVisibility){
+  dispatch(getToolsInstalled(machine._id));
   // }
-}, [dispatch, machine._id, settingEditFormVisibility ]);
+}, [dispatch, machine._id,toolInstalledEditFormVisibility, formVisibility]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -173,14 +168,14 @@ useLayoutEffect(() => {
  
   useEffect(() => {
     if (initial) {
-      if (settings && !error) {
+      if (toolsInstalled && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }   
-      setTableData(settings);
+      setTableData(toolsInstalled);
     }
-  }, [settings, error, responseMessage, enqueueSnackbar, initial]);
+  }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial]);
 
 
 
@@ -197,34 +192,30 @@ useLayoutEffect(() => {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !settings.length && !formVisibility && !settingEditFormVisibility;
+  const isNotFound = !toolsInstalled.length && !formVisibility && !toolInstalledEditFormVisibility;
 
   return (
     <>
       <Helmet>
-        <title> Machine Setting: List | Machine ERP </title>
+        <title> Machine Tools Installed: List | Machine ERP </title>
       </Helmet>
 
 
-        {/* {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+        {!toolInstalledEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
               // alignItems 
               onClick={toggleChecked}
-
               variant="contained"
-              startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
+              startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
             >
-              New Setting
+            Install New Tool
             </Button>
-
-        </Stack>} */}
-        {/* <SettingAddForm/> */}
+        </Stack>}
         
-
-          {!settingEditFormVisibility && <ToolsInstalledAddForm/>}
-          {settingEditFormVisibility && <ToolsInstalledEditForm/>}
         <Card sx={{mt:3}}>
-          {!formVisibility && !settingEditFormVisibility && settings.map((tool, index) => (
+          {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm/>}
+          {toolInstalledEditFormVisibility && <ToolsInstalledEditForm/>}
+          {!formVisibility && !toolInstalledEditFormVisibility && toolsInstalled.map((tool, index) => (
 
             <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
@@ -236,7 +227,9 @@ useLayoutEffect(() => {
                     </Typography>
                   </Grid>
                   <Grid item xs={12} sm={9} md={10}>
-                  {tool?.techParam?.name || "" }, {tool?.techParamValue || "" }
+                  {tool?.tool?.name || "" }{tool?.note ? ",  ": ""}
+                  {tool?.note.length > 100 ? tool?.note.substring(0, 100) :tool?.note}
+                  {tool?.note.length > 100 ? "..." :null}
                   {/* <Typography variant="body2" >
                   </Typography> */}
                 </Grid>

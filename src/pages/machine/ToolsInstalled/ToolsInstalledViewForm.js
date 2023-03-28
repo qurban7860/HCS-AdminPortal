@@ -7,23 +7,22 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-
+import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility , updateToolInstalled ,deleteToolInstalled, saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , deleteSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
-SettingViewForm.propTypes = {
-  currentSetting: PropTypes.object,
+ToolsInstalledViewForm.propTypes = {
+  currentTool: PropTypes.object,
 };
+export default function ToolsInstalledViewForm({ currentTool = null }) {
 
-export default function ToolsInstalledViewForm({ currentSetting = null }) {
+  const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, toolInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
   const { machine } = useSelector((state) => state.machine);
-
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
@@ -45,35 +44,34 @@ export default function ToolsInstalledViewForm({ currentSetting = null }) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteSetting(machine._id, currentSetting._id));
+    await dispatch(deleteToolInstalled(machine._id, currentTool._id));
     handleCloseConfirm();
-    dispatch(getSettings(machine._id));
-    // dispatch(getContacts());
+    dispatch(getToolsInstalled(machine._id));
   };
 
   const  handleEdit = async () => {
-    await dispatch(getSetting(machine._id, currentSetting._id));
-    dispatch(setSettingEditFormVisibility (true));
+    await dispatch(getToolInstalled(machine._id, currentTool._id));
+    dispatch(setToolInstalledEditFormVisibility(true));
+    console.log(toolInstalledEditFormVisibility)
   };
 
 
   const defaultValues = useMemo(
     () => (
       {
-        techParamName: currentSetting?.techParam?.name || "",
-        techParamCode: currentSetting?.techParam?.code || "",
-        techParamValue: currentSetting?.techParamValue || "",
-        createdAt:                currentSetting?.createdAt || "",
-        createdByFname:           currentSetting?.createdBy?.firstName || "",
-        createdByLname:           currentSetting?.createdBy?.lastName || "",
-        createdIP:                currentSetting?.createdIP || "",
-        updatedAt:                currentSetting?.updatedAt || "",
-        updatedByFname:           currentSetting?.updatedBy?.firstName || "",
-        updatedByLname:           currentSetting?.updatedBy?.lastName || "",
-        updatedIP:                currentSetting?.updatedIP || "",
+        toolName:                 currentTool?.tool?.name || "",
+        toolNote:                 currentTool?.note|| "",
+        createdAt:                currentTool?.createdAt || "",
+        createdByFname:           currentTool?.createdBy?.firstName || "",
+        createdByLname:           currentTool?.createdBy?.lastName || "",
+        createdIP:                currentTool?.createdIP || "",
+        updatedAt:                currentTool?.updatedAt || "",
+        updatedByFname:           currentTool?.updatedBy?.firstName || "",
+        updatedByLname:           currentTool?.updatedBy?.lastName || "",
+        updatedIP:                currentTool?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentSetting, machine]
+    [currentTool, machine]
   );
 
   return (
@@ -103,33 +101,22 @@ export default function ToolsInstalledViewForm({ currentSetting = null }) {
           <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Technical Perameter 
+              Tool 
               </Typography>
             </Grid>
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.techParamName ? defaultValues.techParamName : ''}
+            {defaultValues.toolName ? defaultValues.toolName : ''}
             </Typography>
           </Grid>
 
           <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Technical Perameter Code
+              Note
               </Typography>
             </Grid>
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.techParamCode ? defaultValues.techParamCode : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Technical Perameter Value
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
+            {defaultValues.toolNote ? defaultValues.toolNote : ''}
             </Typography>
           </Grid>
 

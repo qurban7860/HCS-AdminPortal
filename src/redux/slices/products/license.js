@@ -30,7 +30,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setLicenseEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.licenseEditFormFlag = action.payload;
     },
     
@@ -65,7 +64,6 @@ const slice = createSlice({
       state.success = true;
       state.license = action.payload;
       state.initial = true;
-      console.log('licenseSuccessSlice', state.license);
     },
 
 
@@ -109,11 +107,9 @@ export const {
 export function createLicenses (machineId, supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From license data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -133,7 +129,6 @@ export function getLicenses (machineId){
       dispatch(slice.actions.getLicensesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Licenses loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From license data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -144,13 +139,11 @@ export function getLicenses (machineId){
 // ----------------------------------------------------------------------
 
 export function getLicense(machineId, id) {
-  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`);
       dispatch(slice.actions.getLicensesSuccess(response.data));
-      console.log('requested license', response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -168,8 +161,6 @@ export function deleteLicense(machineId, id) {
      
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers 
-      
-      console.log(response);
       
     } catch (error) {
       console.error(error);

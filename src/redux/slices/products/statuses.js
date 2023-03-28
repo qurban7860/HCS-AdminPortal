@@ -29,7 +29,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setMachinestatusesEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.machinestatusEditFormFlag = action.payload;
     },
     
@@ -62,10 +61,8 @@ const slice = createSlice({
       
       state.isLoading = false;
       state.success = true;
-      console.log("IM DONE",action.payload)
       state.machinestatus = action.payload;
       state.initial = true;
-      console.log('statusSuccessSlice', state.machinestatus);
     },
 
 
@@ -109,11 +106,9 @@ export const {
 export function createMachinestatuses (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log('param data', supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From statuses data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -133,7 +128,6 @@ export function getMachinestatuses (){
       dispatch(slice.actions.getMachinestatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From statuses data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -147,9 +141,7 @@ export function getMachineStatus(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses/${id}`);
-      console.log('slice working get statuses',response);
       dispatch(slice.actions.getMachinestatusSuccess(response.data));
-      console.log('requested statuses', response.data);
     } catch (error) {
       console.error(error,"Slice Error");
       dispatch(slice.actions.hasError(error));
@@ -161,12 +153,8 @@ export function deleteMachinestatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete statuses id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/statuses/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
-      
-      
-      console.log(response);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -178,7 +166,6 @@ export function deleteMachinestatus(id) {
 
 export function saveMachinestatus(params) {
     return async (dispatch) => {
-      console.log('params', params);
       dispatch(slice.actions.resetMachinestatus());
       dispatch(slice.actions.startLoading());
       try {
@@ -192,14 +179,12 @@ export function saveMachinestatus(params) {
         if(params.description){
             data.description = params.description;
           }
-    
           if(params.displayOrderNo){
             data.displayOrderNo = params.displayOrderNo;
           }
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
 
-        console.log('response', response.data.Machinestatus);
         dispatch(slice.actions.getMachinestatusesSuccess(response.data.Machinestatus));
       } catch (error) {
         console.error(error);
@@ -212,7 +197,6 @@ export function saveMachinestatus(params) {
 // --------------------------------------------------------------------------
 
 export function updateMachinestatus(params) {
-  console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -240,10 +224,8 @@ export function updateMachinestatus(params) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${params.id}`,
         data
       );
-      console.log(response,"From update success")
       dispatch(getMachineStatus(params.id));
       dispatch(slice.actions.setMachinestatusesEditFormVisibility(false));
-
     } catch (error) {
       console.error(error,"from statuses");
       dispatch(slice.actions.hasError(error));

@@ -46,6 +46,7 @@ import MachineViewForm from './MachineViewForm';
 import MachineEditForm from './MachineEditForm';
 import MachineNoteList from './MachineNoteList';
 import MachineSettingList from './MachineSettingList';
+import MachineToolsInstalledList from './MachineToolsInstalledList';
 
 // ----------------------------------------------------------------------
 
@@ -124,7 +125,7 @@ export default function MachineView({editPage}) {
       value: 'toolsInstalled',
       label: 'Tools Installed',
       icon: <Iconify icon="iconoir:tools" />,
-      // component: <MachineViewForm/>,
+      component: <MachineToolsInstalledList/>,
     },
     {
       // disabled: setMachineEditFormVisibility,

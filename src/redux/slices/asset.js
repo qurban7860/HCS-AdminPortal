@@ -73,13 +73,11 @@ const slice = createSlice({
     async saveAsset(state, action) {
       try {
         const formData = new FormData();
-        console.log(action.payload.department);
         formData.append('id', action.payload.id);
         formData.append('name', action.payload.name);
         formData.append('assetTag', action.payload.tag);
         formData.append('assetModel', action.payload.model);
         if(action.payload.department){
-          console.log(action.payload.department);
           formData.append('department', action.payload.department);
         }
         formData.append('status', action.payload.status);
@@ -167,8 +165,6 @@ export function getAssets() {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}assets`);
-      console.log(response);
-      console.log(response.data);
       dispatch(slice.actions.getAssetsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Assets loaded successfully'));
 
@@ -182,13 +178,11 @@ export function getAssets() {
 // ----------------------------------------------------------------------
 
 export function getAsset(id) {
-  console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}assets/${id}`);
       dispatch(slice.actions.getAssetSuccess(response.data));
-      console.log('requested asset', response.data);
       // dispatch(slice.actions.setResponseMessage('Assets Loaded Successfuly'));
     } catch (error) {
       console.error(error);
@@ -203,10 +197,8 @@ export function deleteAsset(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
       const response = await axios.delete(`${CONFIG.SERVER_URL}assets/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);

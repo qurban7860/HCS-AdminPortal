@@ -14,6 +14,8 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../../config-global';
 // slice
+import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
+import { getTools } from '../../../redux/slices/products/tools';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -26,21 +28,14 @@ import FormProvider, {
   RHFAutocomplete,
 
 } from '../../../components/hook-form';
-import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
 
 // ----------------------------------------------------------------------
 
 export default function ToolsInstalledEditForm() {
 
-  const { setting, settings, settingEditFormVisibility, formVisibility ,error} = useSelector((state) => state.machineSetting);
-  const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-// console.log("tech param by category : ",techparamsByCategory)
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-  const [category, setCategory] = useState('');
-  const [techParam, setTechParam] = useState('');
-  const [paramData, setparamData] = useState([]);
+  const { tools } = useSelector((state) => state.tool);
+  const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, toolInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
+  const [toolVal, setToolVal] = useState('');
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
@@ -48,24 +43,19 @@ export default function ToolsInstalledEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    setCategory(setting.techParam.category);
-    setTechParam(setting.techParam);
-  }, [dispatch , setting]);
-
+    setToolVal(toolInstalled.tool);
+    dispatch(getTools())
+  }, [dispatch , toolInstalled]);
+console.log("toolInstalled : ",toolInstalled)
   const EditSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(20),
+    note: Yup.string().max(1500),
   });
 
-  useEffect(()=>{
-    if(category){
-      dispatch(getTechparamsByCategory(category._id));
-    }
-  },[dispatch,category])
 
   const defaultValues = useMemo(
     () => ({
-      techParamValue: setting?.techParamValue || '',
-      techparam: techParam || ''
+      // tool: toolInstalled?.tool || '',
+      note: toolInstalled?.note || ''
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -94,17 +84,16 @@ export default function ToolsInstalledEditForm() {
 
   const toggleCancel = () => 
   {
-    dispatch(setSettingEditFormVisibility (false));
+    dispatch(setToolInstalledEditFormVisibility(false));
   };
 
   const onSubmit = async (data) => {
-    data.techParam = techParam || null
+    data.tool = toolVal._id || null
     console.log("Setting update Data : ",data);
     try {
-      await dispatch(updateSetting( machine._id,setting._id,data));
+      await dispatch(updateToolInstalled(machine._id,toolInstalled._id,data));
       reset();
-      setCategory("")
-      setTechParam("")
+      setToolVal("");
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -120,62 +109,38 @@ export default function ToolsInstalledEditForm() {
             <Stack spacing={3}>
             <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Edit Setting 
+                Edit Installed Tool 
                 </Typography>
               </Stack>
-            <Box
-                rowGap={3}
-                columnGap={3}
+              <Box
+                rowGap={2}
+                columnGap={2}
                 display="grid"
                 gridTemplateColumns={{
                   xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
+                  sm: 'repeat(1, 1fr)',
                 }}
               >
-                 <Autocomplete
+                <Autocomplete
                 // freeSolo
-                value={ category || null}
-                options={techparamcategories}
+                value={ toolVal|| null}
+                options={tools}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
                   if(newValue){
-                  setCategory(newValue);
-                  setTechParam("")
+                  setToolVal(newValue);
                   }
                   else{ 
-                  setCategory("");
-                  setTechParam("");
+                  setToolVal("");
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="category" />}
+                renderInput={(params) => <TextField {...params}  label="Tool" />}
                 ChipProps={{ size: 'small' }}
               />
-              
-              <Autocomplete
-                // freeSolo
-                value={techParam || null}
-                options={techparamsByCategory}
-                getOptionLabel={(option) => option.name}
-                id="controllable-states-demo"
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setTechParam(newValue);
-                  }
-                  else{ 
-                  setTechParam("");
-                  }
-                }}
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Technical Parameters" />}
-                ChipProps={{ size: 'small' }}
-              />
-
-                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-
+                <RHFTextField name="note" label="Note*" minRows={8} multiline />
               </Box>
-
               <Box
                 rowGap={5}
                 columnGap={4}
@@ -185,23 +150,16 @@ export default function ToolsInstalledEditForm() {
                   sm: 'repeat(4, 1fr)',
                 }}
               > 
-
-              <LoadingButton 
-                type="submit"
-                variant="contained"
-                size="large"
-                loading={isSubmitting}>
-                  Save Changes
-              </LoadingButton>
-
-              <Button 
-                onClick={toggleCancel}
-                variant="outlined" 
-                size="large">
-                  Cancel
-              </Button>
-
-            </Box>
+                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
+                Update Installed Tool
+                </LoadingButton>
+                <Button 
+                  onClick={toggleCancel}
+                  variant="outlined" 
+                  size="large">
+                    Cancel
+                </Button>
+              </Box>
 
             </Stack>
 

@@ -8,14 +8,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // slice
-import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
+import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
+import { getTools } from '../../../redux/slices/products/tools';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
-import { countries } from '../../../assets/data';
-
 
 import FormProvider, {
   RHFSelect,
@@ -26,37 +23,31 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 export default function ToolsInstalledAddForm() {
-
-  const { formVisibility } = useSelector((state) => state.machineSetting);
-  const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-// console.log("tech param by category : ",techparamsByCategory)
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-  const [category, setCategory] = useState('');
-  const [techParamVal, setTechParamVal] = useState('');
-  const [paramData, setparamData] = useState([]);
+  const { tools } = useSelector((state) => state.tool);
+  const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
+  const [toolVal, setToolVal] = useState('');
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
 useLayoutEffect(() => {
-  dispatch(getTechparamcategories())
+  dispatch(getTools())
 }, [dispatch]);
 
   const AddSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(20),
+    note: Yup.string().max(1500),
 
   });
 
-useEffect(()=>{
-  if(category){
-    dispatch(getTechparamsByCategory(category._id));
-  }
-},[dispatch,category])
+const toggleCancel = () => 
+{
+  dispatch(setToolInstalledFormVisibility(false));
+};
 
   const defaultValues = useMemo(
     () => ({
-      techParamValue: '',
+      note: '',
 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,14 +72,14 @@ useEffect(()=>{
 
   const onSubmit = async (data) => {
     try {
-      if(techParamVal !== ""){
-        data.techParam = techParamVal;
+      if(toolVal !== ""){
+        data.tool = toolVal._id;
       }
-      console.log('params',data);
-      await dispatch(saveSetting(machine._id,data));
+      await dispatch(saveToolInstalled(machine._id,data));
       reset();
-      setCategory("")
-      setTechParamVal("")
+      setToolVal("")
+  dispatch(setToolInstalledFormVisibility(false));
+
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(err);
@@ -105,7 +96,7 @@ useEffect(()=>{
             <Stack spacing={3}>
             <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Setting
+                Install a new Tool
                 </Typography>
               </Stack>
               <Box
@@ -114,57 +105,33 @@ useEffect(()=>{
                 display="grid"
                 gridTemplateColumns={{
                   xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
+                  sm: 'repeat(1, 1fr)',
                 }}
               >
 
                 <Autocomplete
                 // freeSolo
-                value={ category || null}
-                options={techparamcategories}
+                value={ toolVal|| null}
+                options={tools}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
                   if(newValue){
-                  setCategory(newValue);
+                  setToolVal(newValue);
                   }
                   else{ 
-                  setCategory("");
+                  setToolVal("");
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="category" />}
+                renderInput={(params) => <TextField {...params}  label="Tool" />}
                 ChipProps={{ size: 'small' }}
               />
-              
-              <Autocomplete
-                // freeSolo
-                value={techParamVal || null}
-                options={techparamsByCategory}
-                getOptionLabel={(option) => option.name}
-                id="controllable-states-demo"
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setTechParamVal(newValue);
-                  }
-                  else{ 
-                  setTechParamVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Technical Parameters" />}
-                ChipProps={{ size: 'small' }}
-              />
-
-                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-
-                <Button sx={{p:2}} variant="contained" type="submit" size="large" loading={isSubmitting} >
-                  Add Setting
-                </Button>
+                <RHFTextField name="note" label="Note*" minRows={8} multiline />
               </Box>
               
 
-              {/* <Box
+              <Box
                 rowGap={5}
                 columnGap={4}
                 display="grid"
@@ -175,7 +142,7 @@ useEffect(()=>{
               > 
               
                 <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Save Site
+                  Install New Tool
                 </LoadingButton>
               
                 <Button 
@@ -186,7 +153,7 @@ useEffect(()=>{
                 </Button>
 
 
-            </Box> */}
+            </Box>
             </Stack>
 
             

@@ -149,6 +149,7 @@ export default function CustomerNoteList() {
     dispatch(getNotes(machine._id));
     }
   }, [dispatch, machine._id, noteEditFormVisibility, formVisibility ]);
+  
   useEffect(() => {
     if (initial) {
       if (notes && !error) {

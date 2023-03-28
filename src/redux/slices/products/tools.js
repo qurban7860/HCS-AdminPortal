@@ -110,11 +110,9 @@ export const {
 export function createTools (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From tool data");
     } catch (e) {
       console.log(e);
       dispatch(slice.actions.hasError(e))
@@ -134,7 +132,6 @@ export function getTools (){
       dispatch(slice.actions.getToolsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From tool data");
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error))
@@ -148,9 +145,7 @@ export function getTool(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/tools/${id}`);
-      console.log('slice working get Tool',response);
       dispatch(slice.actions.getToolSuccess(response.data));
-      console.log('requested tool', response.data);
     } catch (error) {
       console.error(error,"Slice Error");
       dispatch(slice.actions.hasError(error));
@@ -162,14 +157,11 @@ export function deleteTool(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete tool id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/tools/${id}`);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search
       
-      console.log(response);
-      // console.log(CONFIG.SERVER_URL[0])
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
@@ -182,7 +174,6 @@ export function deleteTool(id) {
 
 export function saveTool(params) {
     return async (dispatch) => {
-      console.log('params', params);
       dispatch(slice.actions.resetTool());
       dispatch(slice.actions.startLoading());
       try {
@@ -200,7 +191,6 @@ export function saveTool(params) {
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`, data);
 
-        console.log('response', response.data.Tool);
         dispatch(slice.actions.getToolsSuccess(response.data.Tool));
       } catch (error) {
         console.error(error);
@@ -213,7 +203,6 @@ export function saveTool(params) {
 // --------------------------------------------------------------------------
 
 export function updateTool(params) {
-  console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -237,12 +226,11 @@ export function updateTool(params) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
         data
       );
-      console.log(response,"From update success")
       dispatch(getTool(params.id));
       dispatch(slice.actions.setToolsEditFormVisibility(false));
 
     } catch (error) {
-      console.error(error,"from updateTool");
+      console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };
