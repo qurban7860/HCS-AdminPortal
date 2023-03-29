@@ -13,7 +13,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicenses , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 
 import { fDate,fDateTime } from '../../../utils/formatTime';
 
