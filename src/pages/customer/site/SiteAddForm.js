@@ -124,6 +124,7 @@ export default function SiteAddForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
+                <RHFTextField name="name" label="Name" />
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -133,14 +134,11 @@ export default function SiteAddForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="name" label="Name" />
 
                 <RHFTextField name="phone" label="Phone" />
-
-                <RHFTextField name="email" label="Email" />
-
                 <RHFTextField name="fax" label="Fax" />
 
+                <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
 
               </Box>

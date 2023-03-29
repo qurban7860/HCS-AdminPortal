@@ -215,7 +215,7 @@ const toggleChecked = () =>
       setChecked(value => !value);
       dispatch(setNoteFormVisibility(!formVisibility));
     };
-
+console.log("screen Width : ",window.innerWidth)
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteNote(id));
@@ -290,15 +290,15 @@ const toggleChecked = () =>
               <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
             { index !==  activeIndex ? 
               <Grid container spacing={0}>
+                <Grid item xs={12} sm={9} md={10}>
+                  <Typography variant="body2" >
+                      {window.innerWidth > 1200 ? note.note.substring(0, 100) :note.note}
+                      {note.note.length > 50 ? "..." :null}
+                  </Typography>
+                </Grid>
                 <Grid item xs={12} sm={3} md={2} >
                   <Typography variant="body2" >
                     {fDate(note.createdAt)}  
-                  </Typography>
-                </Grid>
-                <Grid item xs={12} sm={9} md={10}>
-                  <Typography variant="body2" >
-                      {note.note.length > 100 ? note.note.substring(0, 100) :note.note}
-                      {note.note.length > 100 ? "..." :null}
                   </Typography>
                 </Grid>
               </Grid>

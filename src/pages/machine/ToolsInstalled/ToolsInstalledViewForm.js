@@ -98,7 +98,7 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
       </Stack>
       <Grid container>
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+          <Grid item xs={12} sm={12} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Tool 
@@ -109,7 +109,7 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+          <Grid item xs={12} sm={12} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Note

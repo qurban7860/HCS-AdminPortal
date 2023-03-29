@@ -208,7 +208,7 @@ useLayoutEffect(() => {
               variant="contained"
               startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
             >
-            Install New Tool
+            New Tool
             </Button>
         </Stack>}
         
@@ -221,18 +221,21 @@ useLayoutEffect(() => {
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
+                  
+                  <Grid item xs={12} sm={3} md={2}>
+                    {tool?.tool?.name || "" }
+                  </Grid>
+
+                  <Grid item xs={12} sm={6} md={8}>
+                    {tool?.note.length > 100 ? tool?.note.substring(0, 100) :tool?.note}
+                    {tool?.note.length > 100 ? "..." :null}
+                  </Grid>
+
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
                     {fDate(tool?.createdAt || "")}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={9} md={10}>
-                  {tool?.tool?.name || "" }{tool?.note ? ",  ": ""}
-                  {tool?.note.length > 100 ? tool?.note.substring(0, 100) :tool?.note}
-                  {tool?.note.length > 100 ? "..." :null}
-                  {/* <Typography variant="body2" >
-                  </Typography> */}
-                </Grid>
                 </Grid>
                 : null }
               </AccordionSummary>

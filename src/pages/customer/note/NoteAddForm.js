@@ -59,7 +59,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
  // a note can be archived. An archived 
 
   const AddNoteSchema = Yup.object().shape({
-    note: Yup.string().required("Note Field is required!"),
+    note: Yup.string().max(2000).required("Note Field is required!"),
     // customer: Yup.string().nullable(),
     site: Yup.string().nullable(),
     // user: Yup.string(),

@@ -111,7 +111,12 @@ export function getCustomers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          isArchived: false
+        }
+      });
       dispatch(slice.actions.getCustomersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
@@ -148,7 +153,10 @@ export function deleteCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}crm/customers/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${id}`,
+      {
+        isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
     } catch (error) {
@@ -161,7 +169,6 @@ export function deleteCustomer(id) {
 // --------------------------------------------------------------------------
 
 export function saveCustomer(params) {
-
     return async (dispatch) => {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
@@ -303,7 +310,6 @@ export function updateCustomer(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
       const formData = new FormData();
       /* eslint-disable */
       let data = {

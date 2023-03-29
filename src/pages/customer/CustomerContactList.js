@@ -240,12 +240,33 @@ export default function CustomerContactList() {
                 { index !==  activeIndex ? 
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={3} md={2} >
-                  <Typography variant="body2" >
-                  {contact.firstName} {contact.lastName} 
-                  </Typography>
+                  {/* <Typography variant="body2" > */}
+                  {contact?.firstName} {contact.lastName} 
+                  {/* </Typography> */}
                 </Grid>
-                <Grid item xs={12} sm={9} md={10}>
-                {contact.email && <Typography variant="body2" >
+                <Grid item xs={12} sm={9} md={3}>
+                {contact?.email && <Typography variant="body2" >
+                  {contact.email}
+                  </Typography>
+                }
+                </Grid>
+
+                <Grid item xs={12} sm={9} md={2} display={{ sm:"none", md:"block"}}>
+                {contact?.phone && <Typography variant="body2" >
+                  {contact.phone}
+                  </Typography>
+                }
+                </Grid>
+
+                <Grid item xs={12} sm={9} md={2} display={{ sm:"none", md:"none", lg:"block"}}>
+                {contact?.title && <Typography variant="body2" >
+                  {contact.title}
+                  </Typography>
+                }
+                </Grid>
+
+                <Grid item xs={12} sm={9} md={2} display={{ sm:"none", md:"none",  lg:"block"}}>
+                {contact?.email && <Typography variant="body2" >
                   {contact.email}
                   </Typography>
                 }

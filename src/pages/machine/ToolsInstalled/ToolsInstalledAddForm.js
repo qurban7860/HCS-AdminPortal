@@ -96,7 +96,7 @@ const toggleCancel = () =>
             <Stack spacing={3}>
             <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Install a new Tool
+                New Tool
                 </Typography>
               </Stack>
               <Box
@@ -142,7 +142,7 @@ const toggleCancel = () =>
               > 
               
                 <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Install New Tool
+                  New Tool
                 </LoadingButton>
               
                 <Button 
@@ -151,9 +151,8 @@ const toggleCancel = () =>
                   size="large">
                     Cancel
                 </Button>
-
-
-            </Box>
+              </Box>
+              
             </Stack>
 
             

@@ -136,7 +136,7 @@ export default function MachineSettingList() {
   //   {
   //     dispatch(setFormVisibility(!siteAddFormVisibility));    
   //   };
-
+console.log("settings : ",settings)
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -229,17 +229,24 @@ useLayoutEffect(() => {
             <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
+                
                 <Grid container spacing={0}>
+                  <Grid item xs={18} sm={12} md={12}>
+                    {/* <Typography variant="body2" > */}
+                    {setting?.techParam?.category?.name || ""}
+                    {/* </Typography> */}
+                  </Grid>
+                  <Grid item xs={12} sm={3} md={3}>
+                    {setting?.techParam?.name || "" }
+                  </Grid>
+                  <Grid item xs={12} sm={6} md={7}>
+                    {setting?.techParamValue || "" }
+                  </Grid>
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
                     {fDate(setting?.createdAt || "")}
                     </Typography>
                   </Grid>
-                  <Grid item xs={12} sm={9} md={10}>
-                  {setting?.techParam?.name || "" }, {setting?.techParamValue || "" }
-                  {/* <Typography variant="body2" >
-                  </Typography> */}
-                </Grid>
                 </Grid>
                 : null }
               </AccordionSummary>

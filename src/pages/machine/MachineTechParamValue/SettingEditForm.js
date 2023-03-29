@@ -134,6 +134,7 @@ export default function SettingEditForm() {
               >
                  <Autocomplete
                 // freeSolo
+                disabled
                 value={ category || null}
                 options={techparamcategories}
                 getOptionLabel={(option) => option.name}
@@ -155,6 +156,7 @@ export default function SettingEditForm() {
               
               <Autocomplete
                 // freeSolo
+                disabled
                 value={techParam || null}
                 options={techparamsByCategory}
                 getOptionLabel={(option) => option.name}

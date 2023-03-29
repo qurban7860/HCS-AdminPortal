@@ -109,7 +109,7 @@ console.log("toolInstalled : ",toolInstalled)
             <Stack spacing={3}>
             <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Edit Installed Tool 
+                Edit Tool 
                 </Typography>
               </Stack>
               <Box
@@ -123,6 +123,7 @@ console.log("toolInstalled : ",toolInstalled)
               >
                 <Autocomplete
                 // freeSolo
+                disabled
                 value={ toolVal|| null}
                 options={tools}
                 getOptionLabel={(option) => option.name}
@@ -151,7 +152,7 @@ console.log("toolInstalled : ",toolInstalled)
                 }}
               > 
                 <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Update Installed Tool
+                Update
                 </LoadingButton>
                 <Button 
                   onClick={toggleCancel}

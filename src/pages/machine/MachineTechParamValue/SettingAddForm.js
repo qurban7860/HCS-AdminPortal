@@ -108,13 +108,15 @@ useEffect(()=>{
                 Create a new Setting
                 </Typography>
               </Stack>
+              <Grid item md={12} xs={18} display="flex">
+              <Grid item md={9} xs={12}>
               <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
                 gridTemplateColumns={{
                   xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
+                  sm: 'repeat(2, 1fr)',
                 }}
               >
 
@@ -157,36 +159,17 @@ useEffect(()=>{
               />
 
                 <RHFTextField name="techParamValue" label="Technical Parameter Value" />
-
-                <Button sx={{p:2}} variant="contained" type="submit" size="large" loading={isSubmitting} >
-                  Add Setting
-                </Button>
+                
               </Box>
-              
+              </Grid>
 
-              {/* <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
+              <Grid item xs={18} md={3} style={{width: "100%"}} display="flex">
               
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Save Site
-                </LoadingButton>
-              
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-
-            </Box> */}
+                  <Button  sx={{ m: 'auto',}} variant="contained" type="submit" size="large" loading={isSubmitting} >
+                    Add Setting
+                  </Button>
+              </Grid>
+              </Grid>
             </Stack>
 
             

@@ -47,7 +47,7 @@ export default function NoteEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const EditNoteSchema = Yup.object().shape({
-    note: Yup.string().max(1500).required("Note Field is required!"),
+    note: Yup.string().max(10000).required("Note Field is required!"),
   });
 
   const defaultValues = useMemo(

@@ -52,7 +52,7 @@ export default function NoteEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const EditNoteSchema = Yup.object().shape({
-    note: Yup.string(),
+    note: Yup.string().max(2000).required("Note Field is required!"),
     user: Yup.string(),
     customer: Yup.string(),
     editSite: Yup.string().nullable(),
