@@ -49,6 +49,7 @@ import { Cover } from '../components/Cover';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'type', label: '', align: 'left', width: 1.5 },
   { id: 'name', label: 'Customer', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
   { id: 'mainSiteAddress', label: 'Address', align: 'left' },

@@ -24,7 +24,6 @@ import Iconify from '../../../components/iconify';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
-  RHFAutocomplete
 
 } from '../../../components/hook-form';
 
@@ -46,7 +45,7 @@ export default function SiteEditForm() {
   const EditSiteSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     billingSite: Yup.string(),
-    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: false}).min(10, "too short").max(17, "too long"),
+    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: false}).min(10, "too short").max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     fax: Yup.string(),
     website: Yup.string(),
@@ -75,8 +74,8 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
-      primaryBillingContact: site.primaryBillingContact === null || site.primaryBillingContact === undefined  ? null : site.primaryBillingContact,
-      primaryTechnicalContact: site.primaryTechnicalContact === null || site.primaryTechnicalContact === undefined  ? null : site.primaryTechnicalContact,
+      primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
+      primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
@@ -126,7 +125,6 @@ export default function SiteEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-                <RHFTextField name="name" label="Name" />
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -136,11 +134,14 @@ export default function SiteEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+                <RHFTextField name="name" label="Name" />
 
                 <RHFTextField name="phone" label="Phone" />
-                <RHFTextField name="fax" label="Fax" />
 
                 <RHFTextField name="email" label="Email" />
+
+                <RHFTextField name="fax" label="Fax" />
+
                 <RHFTextField name="website" label="Website" />
 
               </Box>
@@ -169,22 +170,15 @@ export default function SiteEditForm() {
 
                 <RHFTextField name="region" label="Region" />
 
-                {/* <RHFSelect native name="country" label="Country" >
+                <RHFSelect native name="country" label="Country" >
                   <option defaultValue value="null" selected >No Country Selected                  </option>
                   {countries.map((country) => (
                     <option key={country.code} value={country.label}>
                       {country.label}
                     </option>
                   ))}
-                </RHFSelect> */}
+                </RHFSelect>
 
-                <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  ChipProps={{ size: 'small' }}
-                />
               </Box>
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Contact Details

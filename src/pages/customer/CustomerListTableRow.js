@@ -55,7 +55,7 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isDisabled, createdAt } = row;
+  const { name, tradingName, mainSite, isDisabled, type, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -83,6 +83,10 @@ export default function CustomerListTableRow({
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
+        {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
+        <TableCell
+        sx={{color: 'text.disabled' }}>{type==='SP' ? type : ""}</TableCell>
+
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
