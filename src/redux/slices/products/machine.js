@@ -36,7 +36,7 @@ const slice = createSlice({
       state.machineEditFormFlag = action.payload;
     },
     
-    // RESET CUSTOMER
+    // RESET Machine
     resetMachine(state){
       state.machine = {};
       state.responseMessage = null;
@@ -52,7 +52,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET Machines
     getMachinesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -60,7 +60,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET Machine
     getMachineSuccess(state, action) {
       
       state.isLoading = false;
@@ -146,7 +146,6 @@ export function deleteMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`);
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${id}`,
       {
         isArchived: true, 

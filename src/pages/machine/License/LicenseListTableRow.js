@@ -13,10 +13,11 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { fData,fCurrency } from '../../../utils/formatNumber';
+import { fDate } from '../../../utils/formatTime';
+import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify/Iconify';
-import MenuPopover from '../../../components/menu-popover/MenuPopover';
+import Iconify from '../../../components/iconify';
+import MenuPopover from '../../../components/menu-popover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 
@@ -25,7 +26,7 @@ import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
-SupplierListTableRow.propTypes = {
+SiteListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -34,7 +35,7 @@ SupplierListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function SupplierListTableRow({
+export default function LicenseListTableRow({
   row,
   selected,
   onSelectRow,
@@ -42,8 +43,8 @@ export default function SupplierListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { licenseKey, licenseDetail  } = row;
-console.log('detail', licenseDetail);
+  const { name, email, website, isDisabled, createdAt } = row;
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -66,13 +67,12 @@ console.log('detail', licenseDetail);
     setOpenPopover(null);
   };
 
-
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
@@ -84,17 +84,33 @@ console.log('detail', licenseDetail);
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
-              {licenseKey}
+              {name}
             </Link>
           </Stack>
         </TableCell>
 
-        <TableCell>{licenseDetail.version}</TableCell>
-        <TableCell>{licenseDetail.type}</TableCell>
-        <TableCell>{licenseDetail.deviceName}</TableCell>
-        <TableCell>{licenseDetail.production}</TableCell>
-       
-      </TableRow> 
+        <TableCell>{email}</TableCell>
+
+        <TableCell>{website}</TableCell>
+
+        <TableCell align="false">
+          <Label
+            variant="soft"
+            color={(isDisabled === true && 'error') || 'success'}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {isDisabled === false ? 'false' : true}
+          </Label>
+        </TableCell>
+
+        <TableCell>{fDate(createdAt)}</TableCell>
+
+        <TableCell align="center">
+          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
+            <Iconify icon="eva:more-vertical-fill" />
+          </IconButton>
+        </TableCell>
+      </TableRow>
 
       <MenuPopover
         open={openPopover}

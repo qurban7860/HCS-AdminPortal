@@ -1,105 +1,124 @@
 import { Helmet } from 'react-helmet-async';
-import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { useLayoutEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // routes
-import { PATH_MACHINE } from 'src/routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
-import { useDispatch, useSelector } from 'react-redux';
-import { getSuppliers, getSupplier, setSupplierEditFormVisibility } from 'src/redux/slices/supplier';
-// auth
-import { useAuthContext } from 'src/auth/useAuthContext';
+import { useDispatch, useSelector } from '../../../redux/store';
+import { getSite } from '../../../redux/slices/customer/site';
 // components
-
-import Iconify from 'src/components/iconify/Iconify';
-import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/CustomBreadcrumbs';
-import { useSettingsContext } from 'src/components/settings';
+import Iconify from '../../../components/iconify';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import { useSettingsContext } from '../../../components/settings';
 // sections
-import { MachineCover } from '../util';
-import SupplierList from './SupplierList';
-import SupplierViewForm from './SupplierViewForm';
-/* eslint-disable */
-import SupplierEditForm from './SupplierEditForm';
+import {
+  SettingCover
+} from './util';
 
-
-SupplierViewPage.propTypes = {
-  editPage: PropTypes.bool,
-};
-
+import SettingViewForm from './LicenseViewForm'
 // ----------------------------------------------------------------------
 
-export default function SupplierViewPage({editPage}) {
+export default function LicenseView() {
+
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
 
-  const { themeStretch } = useSettingsContext();
-
-  const { supplierEditFormFlag } = useSelector((state) => state.supplier);
-
-  const { supplierEditFormVisibility } = useSelector((state) => state.supplier);
-  
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
-
-  const [currentComponent, setCurrentComponent] = useState(<SupplierViewForm/>);
-
-  const [supplierFlag, setSupplierFlag] = useState(true);
-  const {suppliers} = useSelector((state) => state.supplier);
-  const supplier = suppliers
-  console.log(suppliers)
-  // return "wow"
-  // const supplier = suppliers.find((supp)=>supp._id === id);
-  // useLayoutEffect(() => {
-  //   if(id != null){
-  //     dispatch(getSupplier(id));
-  //   }
-  // }, [dispatch, id]);
-
   useLayoutEffect(() => {
-    dispatch(setSupplierEditFormVisibility(editFlag));
-  }, [dispatch, editFlag]);
-
- 
-
-  
-  
-
-  // useLayoutEffect(() => {
-  //   dispatch(getSupplier(id));
-  // }, [dispatch, id]);
+    dispatch(getSite(id));
+  }, [dispatch, id]);
   // 
 
-  
-  useEffect(() => {
-    if(supplierEditFormFlag){
-      setCurrentComponent(<SupplierEditForm/>);
-    }else{
-      setSupplierFlag(false);
-      setCurrentComponent(<SupplierViewForm/>);        
-    }
-  }, [editPage, supplierEditFormFlag, supplier]);
+  const { site } = useSelector((state) => state.site);
+
+  const { themeStretch } = useSettingsContext();
+
+  const [currentTab, setCurrentTab] = useState('site-edit');
+
+  const TABS = [
+    {
+      value: 'site-edit',
+      label: 'Basic Info',
+      icon: <Iconify icon="ic:round-account-box" />,
+      component: <SettingViewForm/>,
+    },
+    {
+      value: 'configuration',
+      label: 'Configuration',
+      icon: <Iconify icon="eva:settings-2-outline" />,
+    },
+    {
+      value: 'service-history',
+      label: 'Service History',
+      icon: <Iconify icon="eva:clock-outline" />,
+    },
+    {
+      value: 'repair-history',
+      label: 'Repair History',
+      icon: <Iconify icon="eva:archive-outline" />,
+    },
+  ];
+
   return (
     <>
       <Helmet>
-        <title> Supplier List: Detail | Machine ERP</title>
+        <title> Setting: Information | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        
-
+      <Container maxWidth={ false }>
+        <CustomBreadcrumbs
+          heading="Site View"
+          links={[
+            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            {
+              name: 'Site',
+              href: PATH_DASHBOARD.site.list,
+            },
+            { name: 'View' },
+          ]}
+        />
         <Card
           sx={{
             mb: 3,
-            height: 160,
+            height: 280,
             position: 'relative',
           }}
         >
-          <MachineCover name={supplier?.name} /> 
+          <SettingCover name={site?.name}/>
+
+          <Tabs
+            value={currentTab}
+            onChange={(event, newValue) => setCurrentTab(newValue)}
+            sx={{
+              width: 1,
+              bottom: 0,
+              zIndex: 9,
+              position: 'absolute',
+              bgcolor: 'background.paper',
+              '& .MuiTabs-flexContainer': {
+                pr: { md: 3 },
+                justifyContent: {
+                  sm: 'center',
+                  md: 'flex-end',
+                },
+              },
+            }}
+          >
+            {TABS.map((tab) => (
+              <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+            ))}
+          </Tabs>
+          
         </Card>
-        <SupplierViewForm/>
+        
+        {TABS.map(
+          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
+            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
+          } </Box>
+        )}
+        
       </Container>
     </>
   );

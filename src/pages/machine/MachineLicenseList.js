@@ -42,29 +42,29 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './ToolsInstalled/SiteListTableRow';
-import SiteListTableToolbar from './ToolsInstalled/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/customer/site';
-import SiteAddForm from './ToolsInstalled/SiteAddForm';
-import SiteEditForm from './ToolsInstalled/SiteEditForm';
+
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../redux/slices/products/license';
+import LicenseAddForm from './License/LicenseAddForm'
+import LicenseEditForm from './License/LicenseEditForm';
+import LicenseViewForm from './License/LicenseViewForm';
 
 import _mock from '../../_mock';
-import SiteViewForm from './ToolsInstalled/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
+import { fDate,fDateTime } from '../../utils/formatTime';
 
 
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
+// const TABLE_HEAD = [
+//   { id: 'name', label: 'Site', align: 'left' },
+//   { id: 'email', label: 'Email', align: 'left' },
+//   { id: 'website', label: 'Website', align: 'left' },
+//   { id: 'isverified', label: 'Disabled', align: 'left' },
+//   { id: 'created_at', label: 'Created At', align: 'left' },
+//   { id: 'action', label: 'Actions', align: 'left' },
 
-];
+// ];
 
 const STATUS_OPTIONS = [
   // { id: '1', value: 'Order Received' },
@@ -93,7 +93,7 @@ const _accordions = [...Array(8)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export default function CustomerSiteList() {
+export default function MachineSettingList() {
   const {
     dense,
     page,
@@ -123,13 +123,11 @@ export default function CustomerSiteList() {
   };
   const dispatch = useDispatch();
 
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
-
-  const { customer } = useSelector((state) => state.customer);
-
+  const { initial,error, responseMessage , licenseEditFormVisibility ,licenses, formVisibility } = useSelector((state) => state.license);
+  const { machine } = useSelector((state) => state.machine);
   const toggleChecked = async () => 
     {
-      dispatch(setFormVisibility(!siteAddFormVisibility));    
+      dispatch(setLicenseFormVisibility (!formVisibility));    
     };
 
   const { themeStretch } = useSettingsContext();
@@ -143,7 +141,9 @@ export default function CustomerSiteList() {
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [activeIndex, setActiveIndex] = useState(null);
+
   const [expanded, setExpanded] = useState(false);
+
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
     setActiveIndex(null)
@@ -152,26 +152,22 @@ export default function CustomerSiteList() {
    }
   };
 
+
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-  useEffect(() => {
-    if(!siteAddFormVisibility && !siteEditFormVisibility){
-      dispatch(getSites(customer._id));
-    }
-  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
-
+ 
   useEffect(() => {
     if (initial) {
-      if (sites && !error) {
+      if (licenses && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }   
-      setTableData(sites);
+      setTableData(licenses);
     }
-  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
+  }, [licenses, error, responseMessage, enqueueSnackbar, initial]);
 
 
 
@@ -188,57 +184,56 @@ export default function CustomerSiteList() {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
+  const isNotFound = !licenses.length && !formVisibility && !licenseEditFormVisibility;
 
   return (
     <>
       <Helmet>
-        <title> Site: List | Machine ERP </title>
+        <title> Machine Tools Installed: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={false}>
 
-        {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+        {!licenseEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
               // alignItems 
               onClick={toggleChecked}
-
               variant="contained"
-              startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
+              startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
             >
-              New Site
+            New License
             </Button>
-
         </Stack>}
         
-        <Card>
+        <Card sx={{mt:3}}>
+          {formVisibility && !licenseEditFormVisibility && <LicenseAddForm/>}
+          {licenseEditFormVisibility && <LicenseEditForm/>}
+          {!formVisibility && !licenseEditFormVisibility && licenses.map((license, index) => (
 
-          {siteEditFormVisibility && <SiteEditForm/>}
-
-          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm/>}
-
-          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) => (
-
-            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)}>
+            <Accordion key={license._id} expanded={expanded === index} onChange={handleChange(index)}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
-                  <Grid item xs={12} sm={4} >
+                  
+                  {/* <Grid item xs={12} sm={3} md={2}>
+                    {license?.license?.name || "" }
+                  </Grid> */}
+
+                  <Grid item xs={12} sm={6} md={8}>
+                    {license?.licenseDetail?.length > 100 ? license?.licenseDetail.substring(0, 100) :license?.licenseDetail}
+                    {license?.licenseDetail?.length > 100 ? "..." :null}
+                  </Grid>
+
+                  <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
-                    {site.name} 
+                    {fDate(license?.createdAt || "")}
                     </Typography>
                   </Grid>
-                  {site.address && <Grid item xs={12} sm={8}>
-                    <Typography variant="body2" >
-                    {Object.values(site.address)?.join(", ")}
-                    </Typography>
-                  </Grid>}
                 </Grid>
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5}}>
-                <SiteViewForm
-                currentSite={site}
+                <LicenseViewForm
+                currentTool={license}
                 />
               </AccordionDetails>
             </Accordion>
@@ -247,118 +242,8 @@ export default function CustomerSiteList() {
 
           {isNotFound && <EmptyContent title="No Data"/>}
             
-          {/* </Block> */}
-          {/* <Block title="Controlled">
-            {_accordions.map((item, index) => (
-              <Accordion
-                key={item.value}
-                disabled={index === 3}
-                expanded={controlled === item.value}
-                onChange={handleChangeControlled(item.value)}
-              >
-                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                  <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
-                    {item.heading}
-                  </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{item.subHeading}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{item.detail}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Block> */}
 
-
-           {/* <SiteListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
-                />
-
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <SiteListTableRow
-                          key={row._id}
-                          row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
-          /> */}
         </Card>
-      </Container>
 
       {/* <ConfirmDialog
         open={openConfirm}

@@ -83,8 +83,8 @@ export const SupplierViewForm = Loadable(lazy(()=> import('../pages/machine/Supp
 export const SupplierEdit = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierEdit')));
 export const SupplierEditForm = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierEditForm')));
 // License
-export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
-export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
+// export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
+// export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
 
 // Machine Categories
 export const MachineCategories = Loadable(lazy(()=> import('../pages/machine/Categories/MachineCategories')));

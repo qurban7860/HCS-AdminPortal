@@ -1,5 +1,4 @@
 import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -17,7 +16,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_MACHINE } from '../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
@@ -34,23 +33,24 @@ import {
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import LicenseListTableRow from './LicenseListTableRow';
-import LicenseListTableToolbar from './LicenseListTableToolbar';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { getLicenses, deleteLicense } from '../../../redux/slices/products/license';
+import SiteListTableRow from './LicenseListTableRow';
+import SiteListTableToolbar from './LicenseListTableToolbar';
+import { getSites, deleteSite } from '../../../redux/slices/customer/site';
+import Cover from '../../components/Cover';
+
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'license', label: 'License', align: 'left' },
-  { id: 'version', label: 'Version', align: 'left' },
-  { id: 'type', label: 'Type', align: 'left' },
-  { id: 'D_name', label: 'Device Name', align: 'left' },
-  { id: 'production', label: 'Production', align: 'left' },
-  
+  { id: 'name', label: 'Site', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'website', label: 'Website', align: 'left' },
+  { id: 'isverified', label: 'Disabled', align: 'left' },
+  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'action', label: 'Actions', align: 'left' },
+
 ];
 
 const STATUS_OPTIONS = [
@@ -62,17 +62,7 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-// const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
-
 // ----------------------------------------------------------------------
-
-
 
 export default function LicenseList() {
   const {
@@ -112,29 +102,22 @@ export default function LicenseList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { licenses, isLoading, error, initial, responseMessage } = useSelector((state) => state.license);
+  // const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
 
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
-
-  useLayoutEffect( () => {
-    console.log('Testing done')
-     dispatch(getLicenses());
+  useLayoutEffect(() => {
+    dispatch(getSites());
   }, [dispatch]);
 
-
-  console.log(licenses, "test2");
   useEffect(() => {
     if (initial) {
-      if (licenses && !error) {
+      if (sites && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(licenses);
+      setTableData(sites);
     }
-  }, [licenses, error, responseMessage, enqueueSnackbar, initial]);
+  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -142,7 +125,7 @@ export default function LicenseList() {
     filterName,
     filterStatus,
   });
-  console.log(tableData, 'test')
+
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = dense ? 60 : 80;
@@ -170,11 +153,10 @@ export default function LicenseList() {
   };
 
   const handleDeleteRow = async (id) => {
-    await dispatch(deleteLicense(id));
     try {
       console.log(id);
-      // await dispatch(deleteSupplier(id));
-      dispatch(getLicenses());
+      await dispatch(deleteSite(id));
+      dispatch(getSites());
       setSelected([]);
 
       if (page > 0) {
@@ -187,8 +169,7 @@ export default function LicenseList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+  const handleDeleteRows = (selectedRows) => {
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -203,21 +184,15 @@ export default function LicenseList() {
         setPage(newPage);
       }
     }
-
-    // dispatch delete supplier
-    // await dispatch(deleteSuppliers(selectedRows));
-    // await dispatch(getSuppliers())
-    handleClose()
   };
 
   const handleEditRow = (id) => {
     console.log(id);
-    navigate(PATH_MACHINE.supplier.edit(id));
+    navigate(PATH_DASHBOARD.site.edit(id));
   };
 
   const handleViewRow = (id) => {
-    // console.log(id,PATH_MACHINE.supplier.view(id));
-    navigate(PATH_MACHINE.supplier.view(id));
+    navigate(PATH_DASHBOARD.site.view(id));
   };
 
   const handleResetFilter = () => {
@@ -228,19 +203,17 @@ export default function LicenseList() {
   return (
     <>
       <Helmet>
-        <title> Supplier: List | Machine ERP </title>
+        <title> Site: List | Machine ERP </title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      <div style={{paddingBottom:'0px', }}>
-      <CustomBreadcrumbs 
-          heading="License's List"
-        />
+      <Container maxWidth={ false }>
+        
 
-        </div>
-        <div style={{paddingTop:'0px'}}>
-        <Card sx={{ mt: -3 }}>
-          <LicenseListTableToolbar
+        <Grid container spacing={3}>
+          <Cover name="Setting List" icon='material-symbols:list-alt-outline' setting="enable" />
+          </Grid>
+        <Card>
+          <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -251,7 +224,7 @@ export default function LicenseList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
+            {/* <TableSelectedAction
               
               numSelected={selected.length}
               rowCount={tableData.length}
@@ -268,7 +241,7 @@ export default function LicenseList() {
                   </IconButton>
                 </Tooltip>
               }
-            />
+            /> */}
 
             <Scrollbar>
               <Table size='small' sx={{ minWidth: 960 }}>
@@ -277,14 +250,14 @@ export default function LicenseList() {
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
                   rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
@@ -292,13 +265,13 @@ export default function LicenseList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <LicenseListTableRow
+                        <SiteListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -323,11 +296,9 @@ export default function LicenseList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
             
           />
         </Card>
-        </div>
       </Container>
 
       <ConfirmDialog
@@ -344,7 +315,7 @@ export default function LicenseList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRow(selected);
+              handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >
@@ -359,8 +330,8 @@ export default function LicenseList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  // const stabilizedThis = inputData?.map((el, index) => [el, index]);
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -371,12 +342,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (license) => license.license.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((license) => filterStatus.includes(license.status));
+    inputData = inputData.filter((site) => filterStatus.includes(site.status));
   }
 
   return inputData;

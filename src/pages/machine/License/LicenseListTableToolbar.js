@@ -14,11 +14,11 @@ import {
   InputAdornment,
 } from '@mui/material';
 // components
-import Iconify from '../../../components/iconify/Iconify';
+import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-SupplierListTableToolbar.propTypes = {
+SiteListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -28,7 +28,7 @@ SupplierListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function SupplierListTableToolbar({
+export default function LicenseListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -47,6 +47,37 @@ export default function SupplierListTableToolbar({
       }}
       sx={{ px: 2.5, py: 3 }}
     >
+      <FormControl
+        sx={{
+          width: { xs: 1, md: 240 },
+        }}
+      >
+        <InputLabel sx={{ '&.Mui-focused': { color: 'text.primary' } }}>Status</InputLabel>
+        <Select
+          multiple
+          value={filterStatus}
+          onChange={onFilterStatus}
+          input={<OutlinedInput label="Status" />}
+          renderValue={(selected) => selected.map((value) => sentenceCase(value)).join(', ')}
+        >
+          {statusOptions.map((option) => (
+            <MenuItem
+              key={option.value}
+              value={option.value}
+              sx={{
+                p: 0,
+                mx: 1,
+                borderRadius: 0.75,
+                typography: 'body2',
+                textTransform: 'capitalize',
+              }}
+            >
+              <Checkbox disableRipple size="small" checked={filterStatus.includes(option.value)} />
+              {option.value}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
       <TextField
         fullWidth

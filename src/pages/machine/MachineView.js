@@ -46,6 +46,8 @@ import MachineViewForm from './MachineViewForm';
 import MachineEditForm from './MachineEditForm';
 import MachineNoteList from './MachineNoteList';
 import MachineSettingList from './MachineSettingList';
+import MachineLicenseList from './MachineLicenseList';
+
 import MachineToolsInstalledList from './MachineToolsInstalledList';
 
 // ----------------------------------------------------------------------
@@ -118,7 +120,7 @@ export default function MachineView({editPage}) {
       value: 'license',
       label: 'License',
       icon: <Iconify icon="mdi:license" />,
-      // component: <MachineViewForm/>,
+      component: <MachineLicenseList/>,
     },
     {
       // disabled: setMachineEditFormVisibility,
