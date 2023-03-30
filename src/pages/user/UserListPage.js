@@ -108,10 +108,10 @@ export default function UserListPage() {
   const [filterStatus, setFilterStatus] = useState('all');
 
 
-  useLayoutEffect(() => {
-    dispatch(getUsers());
-    // dispatch(getDepartments());
-  }, [dispatch]);
+  // useLayoutEffect(() => {
+  //   dispatch(getUsers());
+  //   // dispatch(getDepartments());
+  // }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
@@ -170,9 +170,9 @@ export default function UserListPage() {
   const handleDeleteRow = async (id) => {
     try {
       try {
-        console.log(id);
-        dispatch(deleteUser(id));
-        dispatch(getUsers());
+        // console.log(id);
+        // dispatch(deleteUser(id));
+        // dispatch(getUsers());
         setSelected([]);
   
         if (page > 0) {
