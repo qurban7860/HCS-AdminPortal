@@ -22,15 +22,15 @@ export default function UserCards() {
         <title> User: Cards | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+      <Container maxWidth={false }>
+        {/* <CustomBreadcrumbs
           heading="User Cards"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             { name: 'User', href: PATH_DASHBOARD.user.root },
             { name: 'Cards' },
           ]}
-        />
+        /> */}
 
         <Box
           gap={3}

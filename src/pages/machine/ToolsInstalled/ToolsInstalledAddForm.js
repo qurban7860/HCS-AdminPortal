@@ -26,6 +26,7 @@ export default function ToolsInstalledAddForm() {
   const { tools } = useSelector((state) => state.tool);
   const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
   const [toolVal, setToolVal] = useState('');
+  const [toolsVal, setToolsVal] = useState([]);
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
@@ -33,7 +34,15 @@ export default function ToolsInstalledAddForm() {
 
 useLayoutEffect(() => {
   dispatch(getTools())
-}, [dispatch]);
+  dispatch(getToolsInstalled)
+}, [dispatch,tools,toolsInstalled]);
+
+useLayoutEffect(() => {
+const filterTool = [];
+toolsInstalled.map((toolInstalled)=>(filterTool.push(toolInstalled.tool._id)))
+const filteredsetting = tools.filter(item => !filterTool.includes(item._id));
+setToolsVal(filteredsetting);
+}, [tools,toolsInstalled]);
 
   const AddSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),
@@ -109,10 +118,10 @@ const toggleCancel = () =>
                 }}
               >
 
-                <Autocomplete
+              <Autocomplete
                 // freeSolo
                 value={ toolVal|| null}
-                options={tools}
+                options={toolsVal}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
@@ -127,6 +136,7 @@ const toggleCancel = () =>
                 renderInput={(params) => <TextField {...params}  label="Tool" />}
                 ChipProps={{ size: 'small' }}
               />
+              
                 <RHFTextField name="note" label="Note*" minRows={8} multiline />
               </Box>
               

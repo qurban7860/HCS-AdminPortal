@@ -36,7 +36,6 @@ export default function SettingEditForm() {
 
   const { setting, settings, settingEditFormVisibility, formVisibility ,error} = useSelector((state) => state.machineSetting);
   const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-// console.log("tech param by category : ",techparamsByCategory)
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParam, setTechParam] = useState('');
@@ -52,9 +51,15 @@ export default function SettingEditForm() {
     setTechParam(setting.techParam);
   }, [dispatch , setting]);
 
-  const EditSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(20),
-  });
+  // useLayoutEffect(() => {
+  //   const filterSetting = [];
+  //   settings.map((setting)=>(filterSetting.push(setting.techParam._id)))
+  //   const filteredsetting = techparamsByCategory.filter(item => !filterSetting.includes(item._id));
+  //   setparamData(filteredsetting);
+  //   }, [settings,techparamsByCategory]);
+  // const EditSettingSchema = Yup.object().shape({
+  //   techParamValue: Yup.string().max(20),
+  // });
 
   useEffect(()=>{
     if(category){
@@ -70,6 +75,9 @@ export default function SettingEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+  const EditSettingSchema = Yup.object().shape({
+    techParamValue: Yup.string().max(50),
+  });
 
   const methods = useForm({
     resolver: yupResolver(EditSettingSchema),

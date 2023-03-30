@@ -19,7 +19,6 @@ import { getMachinemodels} from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
 import { Cover } from '../components/Cover';
 
-
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // components
