@@ -177,7 +177,7 @@ export function saveCustomer(params) {
         let data = {
           name: params.name,
           tradingName: params.tradingName,
-          siteObj: {
+          mainSite: {
             name: params.name,
             address: {},
           },
@@ -205,40 +205,40 @@ export function saveCustomer(params) {
 
         // params.phone ? data.phone = params.supportManager : '';
         if(params.phone){
-          data.siteObj.phone = params.phone;        
+          data.mainSite.phone = params.phone;        
         }
 
         // params.email ? data.email = params.email : '';
         if(params.email){
-          data.siteObj.email = params.email;        
+          data.mainSite.email = params.email;        
         }
 
         if(params.fax){
-          data.siteObj.fax = params.fax;        
+          data.mainSite.fax = params.fax;        
         }
 
         if(params.website){
-          data.siteObj.website = params.website;        
+          data.mainSite.website = params.website;        
         }
 
         if(params.street){
-          data.siteObj.address.street = params.street;        
+          data.mainSite.address.street = params.street;        
         }
 
         if(params.suburb){
-          data.siteObj.address.suburb = params.suburb;        
+          data.mainSite.address.suburb = params.suburb;        
         }
 
         if(params.city){
-          data.siteObj.address.city = params.city;        
+          data.mainSite.address.city = params.city;        
         }
 
         if(params.region){
-          data.siteObj.address.region = params.region;        
+          data.mainSite.address.region = params.region;        
         }
 
         if(params.country){
-          data.siteObj.address.country = params.country;        
+          data.mainSite.address.country = params.country;        
         }        
 
         // Billing Contact Information Start
@@ -294,7 +294,7 @@ export function saveCustomer(params) {
           data.technicalContact = technicalContact;
         }
 
-        const response = await axios.post(`${CONFIG.SERVER_URL}crm//customers`, data);
+        const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
         dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);
