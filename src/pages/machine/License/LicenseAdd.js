@@ -7,11 +7,11 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 // sections
-import SettingAddForm from './SettingAddForm';
+import LicenseAddForm from './LicenseAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function LicenseAdd() {
+export default function SettingAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -21,7 +21,7 @@ export default function LicenseAdd() {
       </Helmet>
 
       <Container maxWidth={false }>
-        <SettingAddForm />
+        <LicenseAddForm />
       </Container>
     </>
   );

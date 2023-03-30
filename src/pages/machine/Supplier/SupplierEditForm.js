@@ -47,7 +47,7 @@ export default function SupplierEditForm() {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  console.log(navigate, 'test')
+  // console.log(navigate, 'test')
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -84,6 +84,7 @@ export default function SupplierEditForm() {
       country: supplier?.address?.country || 'N/A',
       createdAt: supplier?.createdAt || '',
       updatedAt: supplier?.updatedAt || '',
+      isDisabled: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [supplier]
@@ -116,7 +117,7 @@ export default function SupplierEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [supplier]);
-  console.log(id, 'testing id')
+  // console.log(id, 'testing id')
 
   const toggleCancel = () => 
     {
@@ -125,7 +126,7 @@ export default function SupplierEditForm() {
     };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       await dispatch(updateSupplier({...data,id}));
       reset(); 

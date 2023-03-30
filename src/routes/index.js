@@ -51,8 +51,8 @@ import {
   SupplierEdit,
   SupplierEditForm,
   // License
-  MachineLicenses,
-  LicenseList,
+  // MachineLicenses,
+  // LicenseList,
   // Categories
   MachineCategories,
   CategoryList,
@@ -314,13 +314,13 @@ export default function Router() {
             { path: 'editform', element: <SupplierEditForm/>},
           ]
         },
-        {
-          path: 'license',
-          children:[
-            {path: 'license', element: <MachineLicenses/>},
-            {path: 'list', element: <LicenseList/>}
-          ]
-        },
+        // {
+        //   path: 'license',
+        //   children:[
+        //     {path: 'license', element: <MachineLicenses/>},
+        //     {path: 'list', element: <LicenseList/>}
+        //   ]
+        // },
         {
           path: 'categories',
           children:[

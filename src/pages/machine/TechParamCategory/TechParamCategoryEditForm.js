@@ -63,6 +63,7 @@ export default function TechParamCategoryEditForm() {
         description:techparamcategory?.description || 'N/A',
         createdAt: techparamcategory?.createdAt || '',
         updatedAt: techparamcategory?.updatedAt || '',
+        isDisabled: techparamcategory?.isDisabled || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparamcategory]

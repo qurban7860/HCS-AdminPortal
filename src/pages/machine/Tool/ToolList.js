@@ -114,7 +114,7 @@ export default function ToolList() {
   // }, [dispatch]);
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getTools());
   }, [dispatch]);
 
@@ -165,7 +165,7 @@ export default function ToolList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteTool(id));
     try {
-      console.log(id);
+      // console.log(id);
       // await dispatch(deleteSupplier(id));
       dispatch(getTools());
       setSelected([]);
@@ -176,12 +176,12 @@ export default function ToolList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -200,7 +200,7 @@ export default function ToolList() {
   };
 
   const handleEditRow = async (id) => {
-    console.log(id);
+    // console.log(id);
     // dispatch(getTool(id));
     await dispatch(getTool(id));
     navigate(PATH_MACHINE.tool.edit(id));
@@ -208,7 +208,7 @@ export default function ToolList() {
 
   const handleViewRow = async (id) => {
     // console.log(id,PATH_MACHINE.supplier.view(id));
-    console.log(id)
+    // console.log(id)
     await dispatch(getTool(id));
     navigate(PATH_MACHINE.tool.view(id));
   };

@@ -29,6 +29,7 @@ import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
+import {Cover} from '../components/Cover';
 import {
   useTable,
   getComparator,
@@ -168,7 +169,7 @@ export default function UserListPage() {
   const handleDeleteRow = async (id) => {
     try {
       try {
-        console.log(id);
+        // console.log(id);
         dispatch(deleteUser(id));
         dispatch(getUsers());
         setSelected([]);
@@ -179,12 +180,12 @@ export default function UserListPage() {
           }
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
 
       
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -206,8 +207,8 @@ export default function UserListPage() {
   };
 
   const handleEditRow = (id) => {
-    console.log('id', id);
-    console.log('edit');
+    // console.log('id', id);
+    // console.log('edit');
     navigate(PATH_DASHBOARD.user.edit(id));
   };
 
@@ -223,8 +224,8 @@ export default function UserListPage() {
         <title> User: List | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+      <Container maxWidth={false }>
+        {/* <CustomBreadcrumbs
           heading="User List"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
@@ -241,8 +242,17 @@ export default function UserListPage() {
               New User
             </Button>
           }
-        />
-
+        /> */}
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            // mt: '24px',
+          }}
+        >
+          <Cover name='Users List' icon="ph:users-light"/>
+        </Card>
         <Card>
           <Tabs
             value={filterStatus}

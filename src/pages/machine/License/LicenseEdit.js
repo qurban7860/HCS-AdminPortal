@@ -5,18 +5,20 @@ import { useParams } from 'react-router-dom';
 import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getSetting } from '../../../redux/slices/products/machineTechParamValue';
+// Slice
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicenses , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import SettingEditForm from './SettingEditForm';
+import LicenseEditForm from './LicenseEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function SettingEdit() {
+export default function LicenseEdit() {
+
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
@@ -25,7 +27,7 @@ export default function SettingEdit() {
 
 
   useLayoutEffect(() => {
-    dispatch(getSetting(id));
+    dispatch(getLicense(id));
   }, [dispatch, id]);
 
 
@@ -37,7 +39,7 @@ export default function SettingEdit() {
       </Helmet>
 
       <Container maxWidth={false}>
-        <SettingEditForm />
+        <LicenseEditForm />
       </Container>
     </>
   );

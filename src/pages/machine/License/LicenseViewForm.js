@@ -1,295 +1,164 @@
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getLicense, getLicenses, setLicenseEditFormVisibility } from '../../../redux/slices/products/license';
+
 // paths
-import { PATH_MACHINE } from '../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
+import Iconify from '../../../components/iconify';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 
-// Iconify
-
-import { fDate } from '../../../utils/formatTime';
-
-import LicenseEditForm from './LicenseEditForm';
-
-import Iconify from '../../../components/iconify/Iconify';
-
-
-
+import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
-
-
 LicenseViewForm.propTypes = {
-  currentSupplier: PropTypes.object,
+  currentLicense: PropTypes.object,
 };
-
-// ----------------------------------------------------------------------
 
 export default function LicenseViewForm({ currentLicense = null }) {
 
-  // const { suppliers } = useSelector((state) => state.supplier);
-
-  const [editFlag, setEditFlag] = useState(false);
-
-  const toggleEdit = () => {
-    dispatch(setLicenseEditFormVisibility(true));
-    navigate(PATH_MACHINE.license.Llcenseedit(id));
-  }
+  const { initial,error, responseMessage , licenseEditFormVisibility ,licenses, license, formVisibility } = useSelector((state) => state.license);
+  const { machine } = useSelector((state) => state.machine);
 
   const navigate = useNavigate();
 
-  const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch(); 
+  
+  const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { license } = useSelector((state) => state.license);
-  const { id } = useParams();
-  const license = licenses;
+  const [openPopover, setOpenPopover] = useState(null);
 
-  // const supplier = suppliers?.find((supp)=>supp?._id === id);
-  // console.log(suppliers, "muzna")
-  const dispatch = useDispatch()
-  useLayoutEffect(() => {
-    if(id != null){
-      dispatch(getLicense(id));
-    }
-  }, [dispatch, id]);
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
+  };
 
-  // const  handleEdit = async () => {
-  //   await dispatch(getSuppliers(currentSupplier._id));
-  //   // dispatch(setEditFormVisibility(true));
-  //   console.log(currentSupplier) 
-  // };
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
+
+  const handleClosePopover = () => {
+    setOpenPopover(null);
+  };
+
+  const onDelete = async () => {
+    await dispatch(deleteLicense(machine._id, currentLicense._id));
+    handleCloseConfirm();
+    dispatch(getLicenses(machine._id));
+    // dispatch(getContacts());
+  };
+
+  const  handleEdit = async () => {
+    await dispatch(getLicense(machine._id, currentLicense._id));
+    dispatch(setLicenseEditFormVisibility (true));
+  };
+
 
   const defaultValues = useMemo(
     () => (
       {
-        license:license?.license|| 'N/A',
-        version:license?.version|| 'N/A',
-        type:license?.type|| 'N/A',
-        D_name:license?.D_name|| 'N/A',
-        device_G:license?.device_G|| 'N/A',
-        production:license?.production|| 'N/A',
-        waste:license?.waste|| 'N/A',
-        contactName:license?.contactName || 'N/A',
-        contactTitle: license?.contactTitle || 'N/A',
-        phone: license?.phone || 'N/A',
-        email: license?.email || 'N/A',
-        website: license?.website || 'N/A',
-        street: license?.address?.street || 'N/A',
-        suburb: license?.address?.suburb || 'N/A',
-        city: license?.address?.city || 'N/A',
-        region: license?.address?.region || 'N/A',
-        country: license?.address?.country || 'N/A',
-        createdAt: license?.createdAt || '',
-        updatedAt: license?.updatedAt || '',
-        
+        licenseDetail:            currentLicense?.licenseDetail || "",
+        createdAt:                currentLicense?.createdAt || "",
+        createdByFname:           currentLicense?.createdBy?.firstName || "",
+        createdByLname:           currentLicense?.createdBy?.lastName || "",
+        createdIP:                currentLicense?.createdIP || "",
+        updatedAt:                currentLicense?.updatedAt || "",
+        updatedByFname:           currentLicense?.updatedBy?.firstName || "",
+        updatedByLname:           currentLicense?.updatedBy?.lastName || "",
+        updatedIP:                currentLicense?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentLicense, license]
-    );
-    
-    // console.log(supplier,"Testing",defaultValues)
+    [currentLicense, machine]
+  );
 
   return (
-    <Card sx={{ px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
+    <Grid sx={{ p: 2 }}>
+      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button
-          onClick={() => { 
-              toggleEdit(); 
-          }}
+          onClick={() => handleEdit()}
           variant="outlined"
           startIcon={<Iconify icon="eva:edit-fill" />}
         >
           Edit
         </Button>
-
+        <Button
+          onClick={() => {
+            handleOpenConfirm();
+            handleClosePopover();
+          }}
+          variant="outlined"
+          color="error"
+          startIcon={<Iconify icon="eva:trash-2-fill" />}
+        >
+          Delete
+        </Button>
       </Stack>
       <Grid container>
 
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            License Key
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.license ? defaultValues.license : 'N/A'}</Typography>
-
-        </Grid>
-        // License Detail
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Version
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
-
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Type
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
-
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Device Name
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Device GUID
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Production
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
-
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Waste
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Updated At
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Technical Perameter 
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.techParamName ? defaultValues.techParamName : ''}
             </Typography>
+          </Grid>
 
-            <Typography variant="body2">{fDate(defaultValues.updatedAt)}</Typography>
-            
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Contact Name
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.contactName : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Contact Title
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.fax ? defaultValues.contactTitle : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Phone
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.email ? defaultValues.phone : 'N/A'}</Typography>
-
-        </Grid> 
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Email
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
-
-        </Grid>
-
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Website
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.website ? defaultValues.website : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Street
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.street ? defaultValues.street : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Suburb
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            City
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.city ? defaultValues.city : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Region
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.region ? defaultValues.region : 'N/A'}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Country
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
-
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Created At
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Technical Perameter Code
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.techParamCode ? defaultValues.techParamCode : ''}
             </Typography>
+          </Grid>
 
-            <Typography variant="body2">{fDate(defaultValues.createdAt)}</Typography>
-            
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Updated At
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Technical Perameter Value
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
             </Typography>
+          </Grid>
 
-            <Typography variant="body2">{fDate(defaultValues.updatedAt)}</Typography>
-            
-        </Grid>
+          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
+            <Grid item xs={12} sm={6} >
+              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
+                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} >
+            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+            </Typography>
+            </Grid>
+          </Grid>
+        <ConfirmDialog
+            open={openConfirm}
+            onClose={handleCloseConfirm}
+            title="Delete"
+            content="Are you sure want to delete?"
+            action={
+              <Button variant="contained" color="error" onClick={onDelete}>
+                Delete
+              </Button>
+            }
+          />
 
       </Grid>
-    </Card>
+    </Grid>
   );
 }

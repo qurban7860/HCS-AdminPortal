@@ -1,55 +1,39 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
   Stack,
+  Avatar,
   Button,
-  TableRow,
   Checkbox,
+  TableRow,
   MenuItem,
   TableCell,
   IconButton,
-  Link,
+  Typography,
 } from '@mui/material';
-// utils
-import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
-
-import { useSelector } from '../../../redux/store';
-
+import Label from '../../components/label';
+import Iconify from '../../components/iconify';
+import MenuPopover from '../../components/menu-popover';
+import ConfirmDialog from '../../components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
-SiteListTableRow.propTypes = {
+UserTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
-  onViewRow: PropTypes.func,
-  onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
+  onSelectRow: PropTypes.func,
 };
 
-export default function LicenseListTableRow({
-  row,
-  selected,
-  onSelectRow,
-  onDeleteRow,
-  onEditRow,
-  onViewRow,
-}) {
-  const { name, email, website, isDisabled, createdAt } = row;
+export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
+  const { email, firstName, lastName, role, status, image } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
-
-  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -70,43 +54,50 @@ export default function LicenseListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
+        <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
+        </TableCell>
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
+            <Avatar alt={firstName + lastName} src={image} />
 
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
-          </Stack>
+            <Typography variant="subtitle2" noWrap>
+              {`${firstName} ${lastName}`}
+            </Typography>
+          </Stack>  
         </TableCell>
 
-        <TableCell>{email}</TableCell>
+        <TableCell align="left">{email}</TableCell>
 
-        <TableCell>{website}</TableCell>
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {role}
+        </TableCell>
 
-        <TableCell align="false">
+        {/* <TableCell align="center">
+          <Iconify
+            icon={isVerified ? 'eva:checkmark-circle-fill' : 'eva:clock-outline'}
+            sx={{
+              width: 20,
+              height: 20,
+              color: 'success.main',
+              ...(!isVerified && { color: 'warning.main' }),
+            }}
+          />
+        </TableCell> */}
+
+         <TableCell align="left">
           <Label
             variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
+            color={(status === 'banned' && 'error') || 'success'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled === false ? 'false' : true}
+            {status}
           </Label>
-        </TableCell>
+        </TableCell> 
 
-        <TableCell>{fDate(createdAt)}</TableCell>
-
-        <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
+        <TableCell align="right">
+          <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>

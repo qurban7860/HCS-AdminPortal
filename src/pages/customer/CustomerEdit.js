@@ -27,7 +27,7 @@ export default function CustomerEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
 
   const { customer } = useSelector((state) => state.customer);

@@ -67,7 +67,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const toggleCheckboxFlag = () => setCheckboxFlag(value => !value);
 
-  console.log('checked ------> ', contactFlag);
+  // console.log('checked ------> ', contactFlag);
 
   const dispatch = useDispatch();
   
@@ -133,7 +133,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     [AddCustomerSchema]
   );
 
-  console.log('samecheckboxflag', defaultValues.contactFlag);
+  // console.log('samecheckboxflag', defaultValues.contactFlag);
 
   const methods = useForm({
     resolver: yupResolver(AddCustomerSchema),
@@ -161,7 +161,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         reset();
         enqueueSnackbar('Create success!');
         if(customerSaveSuccess){
-          console.log('customer', customer);
+          // console.log('customer', customer);
         }
         navigate(PATH_DASHBOARD.customer.view(null));
       } catch(error){

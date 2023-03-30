@@ -10,7 +10,7 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } f
 // slice
 import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
+import { getTechparams , getTechparamsByCategory , resetTechparamByCategory } from '../../../redux/slices/products/machineTechParam';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -26,30 +26,35 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 export default function SettingAddForm() {
-
-  const { formVisibility } = useSelector((state) => state.machineSetting);
+  const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
   const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-// console.log("tech param by category : ",techparamsByCategory)
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState('');
   const [paramData, setparamData] = useState([]);
   const { machine } = useSelector((state) => state.machine);
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
 useLayoutEffect(() => {
   dispatch(getTechparamcategories())
+  dispatch(resetTechparamByCategory())
 }, [dispatch]);
 
-  const AddSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(20),
-
-  });
+useLayoutEffect(() => {
+const filterSetting = [];
+settings.map((setting)=>(filterSetting.push(setting.techParam._id)))
+const filteredsetting = techparamsByCategory.filter(item => !filterSetting.includes(item._id));
+setparamData(filteredsetting);
+}, [settings,techparamsByCategory]);
+  
+const AddSettingSchema = Yup.object().shape({
+  techParamValue: Yup.string().max(20),
+});
 
 useEffect(()=>{
   if(category){
+    dispatch(resetTechparamByCategory())
     dispatch(getTechparamsByCategory(category._id));
   }
 },[dispatch,category])
@@ -87,7 +92,7 @@ useEffect(()=>{
       console.log('params',data);
       await dispatch(saveSetting(machine._id,data));
       reset();
-      setCategory("")
+      // setCategory("")
       setTechParamVal("")
     } catch (err) {
       enqueueSnackbar('Saving failed!');
@@ -132,6 +137,7 @@ useEffect(()=>{
                   }
                   else{ 
                   setCategory("");
+                    dispatch(resetTechparamByCategory())
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
@@ -142,7 +148,7 @@ useEffect(()=>{
               <Autocomplete
                 // freeSolo
                 value={techParamVal || null}
-                options={techparamsByCategory}
+                options={paramData}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
@@ -158,8 +164,20 @@ useEffect(()=>{
                 ChipProps={{ size: 'small' }}
               />
 
-                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
                 
+              </Box>
+
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(1, 1fr)',
+                }}
+                sx={{mt:3}}
+              >
+                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
               </Box>
               </Grid>
 

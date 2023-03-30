@@ -34,13 +34,28 @@ const slice = createSlice({
       state.techparamEditFormFlag = action.payload;
     },
   
-    // RESET CUSTOMER
-    resettechparam(state){
-      state.machine = {};
+    // RESET Technical Parameters
+    resetTechparams(state){
+      state.techparams = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
+    },
 
+    // RESET Technical Parameter
+    resetTechparam(state){
+      state.techparam = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET Technical Parameter By Category
+    resetTechparamByCategory(state){
+      state.techparamsByCategory = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
     // HAS ERROR
@@ -98,7 +113,9 @@ export default slice.reducer;
 // Actions
 export const {
   setTechparamEditFormVisibility,
+  resetTechparams,
   resetTechparam,
+  resetTechparamByCategory,
   getCart,
   addToCart,
   setResponseMessage,

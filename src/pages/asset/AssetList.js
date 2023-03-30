@@ -163,7 +163,7 @@ export default function AssetList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteAsset(id));
       dispatch(getAssets());
       setSelected([]);
@@ -174,7 +174,7 @@ export default function AssetList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -196,7 +196,7 @@ export default function AssetList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_DASHBOARD.asset.edit(id));
   };
 

@@ -45,7 +45,7 @@ export default function CategoryEditForm() {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  console.log(navigate, 'test')
+  // console.log(navigate, 'test')
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -64,6 +64,7 @@ export default function CategoryEditForm() {
         description:category?.description || 'N/A',
         createdAt: category?.createdAt || '',
         updatedAt: category?.updatedAt || '',
+        isDisabled: category?.isDisabled || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [category]
@@ -96,7 +97,7 @@ export default function CategoryEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category]);
-  console.log(id, 'testing id')
+  // console.log(id, 'testing id')
 
   const toggleCancel = () => 
     {
@@ -105,7 +106,7 @@ export default function CategoryEditForm() {
     };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       await dispatch(updateCategory({...data,id}));
       reset(); 

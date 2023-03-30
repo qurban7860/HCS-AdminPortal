@@ -66,6 +66,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         updatedAt: machinemodel?.updatedAt || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
+        isDisabled: true,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinemodel, machinemodel]
@@ -114,6 +115,13 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
 
             <Typography variant="body2">{defaultValues.category.name}</Typography>
             
+        </Grid>
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Active
+          </Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+
         </Grid>
         
 

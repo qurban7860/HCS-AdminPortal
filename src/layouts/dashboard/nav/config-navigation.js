@@ -51,7 +51,7 @@ const navConfig = [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Customers', path: PATH_DASHBOARD.customer.list, icon: ICONS.users },
       { title: 'Machines', path: PATH_MACHINE.machine.list, icon: ICONS.machines},
-      // { title: 'Machine', path: PATH_MACHINE.general.app, icon: ICONS.icon},
+      { title: 'Security', path: PATH_DASHBOARD.user.list, icon: ICONS.user},
       // {
       //   title: 'Button Title',
       //   path: '/PATH_DASHBOARD.customer.new',

@@ -60,7 +60,7 @@ export const NoteView = Loadable(  lazy(() => import('../pages/customer/note/Not
 // DASHBOARD: USER
 export const UserProfilePage = Loadable(lazy(() => import('../pages/dashboard/UserProfilePage')));
 export const UserCardsPage = Loadable(lazy(() => import('../pages/dashboard/UserCardsPage')));
-export const UserListPage = Loadable(lazy(() => import('../pages/dashboard/UserListPage')));
+export const UserListPage = Loadable(lazy(() => import('../pages/user/UserListPage')));
 export const UserAccountPage = Loadable(lazy(() => import('../pages/dashboard/UserAccountPage')));
 export const UserCreatePage = Loadable(lazy(() => import('../pages/dashboard/UserCreatePage')));
 export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')))
@@ -83,8 +83,8 @@ export const SupplierViewForm = Loadable(lazy(()=> import('../pages/machine/Supp
 export const SupplierEdit = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierEdit')));
 export const SupplierEditForm = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierEditForm')));
 // License
-export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
-export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
+// export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
+// export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
 
 // Machine Categories
 export const MachineCategories = Loadable(lazy(()=> import('../pages/machine/Categories/MachineCategories')));

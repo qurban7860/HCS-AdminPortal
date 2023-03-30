@@ -107,7 +107,7 @@ export default function MachineModel() {
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.machineModel.list); 
-        console.log(PATH_MACHINE.machineModel.list)
+        // console.log(PATH_MACHINE.machineModel.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
         enqueueSnackbar(error?.message)

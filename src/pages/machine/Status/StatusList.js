@@ -114,7 +114,7 @@ export default function StatusList() {
   
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getMachinestatuses());
   }, [dispatch]);
 
@@ -136,7 +136,7 @@ export default function StatusList() {
     filterStatus,
   });
 
-  console.log(machinestatuses, "testingggg")
+  // console.log(machinestatuses, "testingggg")
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -167,7 +167,7 @@ export default function StatusList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteMachinestatus(id));
     try {
-      console.log(id);
+      // console.log(id)
       
       dispatch(getMachinestatuses());
       setSelected([]);
@@ -178,12 +178,12 @@ export default function StatusList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -202,14 +202,14 @@ export default function StatusList() {
   };
 
   const handleEditRow = async (id) => {
-    console.log(id);
+    // console.log(id);
     
     await dispatch(getMachineStatus(id));
     navigate(PATH_MACHINE.machineStatus.edit(id));
   };
 
   const handleViewRow = async (id) => {
-    console.log(id)
+    // console.log(id)
     await dispatch(getMachineStatus(id));
     navigate(PATH_MACHINE.machineStatus.view(id));
   };

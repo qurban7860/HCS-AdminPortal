@@ -17,7 +17,7 @@ import {
   DialogTitle,
   Dialog, 
   Typography,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion, AccordionSummary, AccordionDetails, Divider
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -136,7 +136,6 @@ export default function MachineSettingList() {
   //   {
   //     dispatch(setFormVisibility(!siteAddFormVisibility));    
   //   };
-console.log("settings : ",settings)
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -227,11 +226,14 @@ useLayoutEffect(() => {
           {!formVisibility && !settingEditFormVisibility && settings.map((setting, index) => (
 
             <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} 
+          // aria-controls="panel2bh-content"
+          // id="panel2bh-header"
+          >
                 { index !==  activeIndex ? 
                 
                 <Grid container spacing={0}>
-                  <Grid item xs={18} sm={12} md={12}>
+                  <Grid item xs={12} sm={3} md={3}>
                     {/* <Typography variant="body2" > */}
                     {setting?.techParam?.category?.name || ""}
                     {/* </Typography> */}
@@ -239,7 +241,7 @@ useLayoutEffect(() => {
                   <Grid item xs={12} sm={3} md={3}>
                     {setting?.techParam?.name || "" }
                   </Grid>
-                  <Grid item xs={12} sm={6} md={7}>
+                  <Grid item xs={12} sm={3} md={4}>
                     {setting?.techParamValue || "" }
                   </Grid>
                   <Grid item xs={12} sm={3} md={2}>
@@ -247,10 +249,11 @@ useLayoutEffect(() => {
                     {fDate(setting?.createdAt || "")}
                     </Typography>
                   </Grid>
+                <Divider />
                 </Grid>
                 : null }
               </AccordionSummary>
-              <AccordionDetails sx={{mt:-5}}>
+              <AccordionDetails sx={{mt:-5, }}>
                 <SettingViewForm
                 currentSetting={setting}
                 />

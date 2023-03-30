@@ -15,7 +15,7 @@ import { useSnackbar } from '../../../components/snackbar';
 // Iconify
 
 import { fDate } from '../../../utils/formatTime';
-import TechParamCategoryEditForm from './TechParamCategoryEditForm';
+
 
 import Iconify from '../../../components/iconify/Iconify';
 
@@ -64,6 +64,7 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
         description:techparamcategory?.description || 'N/A',
         createdAt: techparamcategory?.createdAt || '',
         updatedAt: techparamcategory?.updatedAt || '',
+        isDisabled: true,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTechparamcategory, techparamcategory]
@@ -105,6 +106,17 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
           <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
 
         </Grid>
+
+
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Active
+          </Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+
+        </Grid>
+
+        
         <Grid container spacing={0} sx={{ mb: 5}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>

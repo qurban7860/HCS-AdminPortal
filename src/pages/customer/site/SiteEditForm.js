@@ -115,7 +115,7 @@ export default function SiteEditForm() {
   };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       await dispatch(updateSite(data));
       reset();
