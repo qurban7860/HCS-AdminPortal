@@ -111,10 +111,10 @@ export default function StatusList() {
 
   const { techparams, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparam);
 
-  console.log("tech params : ",techparams)
+  // console.log("tech params : ",techparams)
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getTechparams());
   }, [dispatch]);
 
@@ -136,7 +136,7 @@ export default function StatusList() {
     filterStatus,
   });
 
-  console.log(techparams, "testingggg")
+  // console.log(techparams, "testingggg")
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -167,7 +167,7 @@ export default function StatusList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteTechparams(id));
     try {
-      console.log(id);
+      // console.log(id);
       
       dispatch(getTechparams());
       setSelected([]);
@@ -178,12 +178,12 @@ export default function StatusList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -202,14 +202,14 @@ export default function StatusList() {
   };
 
   const handleEditRow = async (id) => {
-    console.log(id);
+    // console.log(id);
     
     await dispatch(getTechparam(id));
     navigate(PATH_MACHINE.parameters.edit(id));
   };
 
   const handleViewRow = async (id) => {
-    console.log(id)
+    // console.log(id)
     await dispatch(getTechparam(id));
     navigate(PATH_MACHINE.parameters.view(id));
   };

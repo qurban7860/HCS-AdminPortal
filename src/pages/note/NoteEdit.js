@@ -27,7 +27,7 @@ export default function NoteEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
 
   const { note } = useSelector((state) => state.note);

@@ -15,7 +15,7 @@ import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography,
 // global
 
 // slice
-import { updateTechparam, getTechparam } from '../../../redux/slices/products/machineTechParam';
+import { updateTechparam, getTechparam } from '../../../redux/slices/products/parameters';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
@@ -70,7 +70,6 @@ export default function StatusEditForm() {
         isDisabled: techparam?.isDisabled || '',
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
-       
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
@@ -115,14 +114,14 @@ export default function StatusEditForm() {
       if(paramVal  !== null && paramVal  !== ""){
         data.category = paramVal?._id
       }
-      console.log("Submit Data : ",data)
+      // console.log("Submit Data : ",data)
       await dispatch(updateTechparam(data,techparam._id));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.parameters.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      // console.error(error);
     }
   };
 

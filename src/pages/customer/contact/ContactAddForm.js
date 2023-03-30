@@ -109,7 +109,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
       try{
         await dispatch(saveContact(data));
         reset();

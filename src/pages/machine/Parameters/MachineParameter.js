@@ -99,7 +99,7 @@ export default function MachineTechParam() {
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.parameters.list); 
-        console.log(PATH_MACHINE.parameters.list)
+        // console.log(PATH_MACHINE.parameters.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
         enqueueSnackbar(error?.message)

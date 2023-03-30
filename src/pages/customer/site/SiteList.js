@@ -154,7 +154,7 @@ export default function SiteList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteSite(id));
       dispatch(getSites());
       setSelected([]);
@@ -165,7 +165,7 @@ export default function SiteList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -187,7 +187,7 @@ export default function SiteList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_DASHBOARD.site.edit(id));
   };
 

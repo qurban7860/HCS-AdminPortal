@@ -94,7 +94,7 @@ export default function MachineStatus() {
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.machineStatus.list); 
-        console.log(PATH_MACHINE.machineStatus.list)
+        // console.log(PATH_MACHINE.machineStatus.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
         enqueueSnackbar(error?.message)

@@ -119,12 +119,12 @@ export default function LicenseList() {
   // }, [dispatch]);
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getLicenses());
   }, [dispatch]);
 
 
-  console.log(licenses, "test2");
+  // console.log(licenses, "test2");
   useEffect(() => {
     if (initial) {
       if (licenses && !error) {
@@ -142,7 +142,7 @@ export default function LicenseList() {
     filterName,
     filterStatus,
   });
-  console.log(tableData, 'test')
+  // console.log(tableData, 'test')
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = dense ? 60 : 80;
@@ -172,7 +172,7 @@ export default function LicenseList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteLicense(id));
     try {
-      console.log(id);
+      // console.log(id);
       // await dispatch(deleteSupplier(id));
       dispatch(getLicenses());
       setSelected([]);
@@ -183,12 +183,12 @@ export default function LicenseList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -211,7 +211,7 @@ export default function LicenseList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_MACHINE.supplier.edit(id));
   };
 

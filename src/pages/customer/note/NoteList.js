@@ -173,7 +173,7 @@ export default function NoteList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -195,7 +195,7 @@ export default function NoteList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_DASHBOARD.note.edit(id));
   };
 
