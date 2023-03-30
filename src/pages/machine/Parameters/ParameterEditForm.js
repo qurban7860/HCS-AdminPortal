@@ -15,7 +15,7 @@ import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography,
 // global
 
 // slice
-import { updateTechparam, getTechparam } from '../../../redux/slices/products/machinetechparam';
+import { updateTechparam, getTechparam } from '../../../redux/slices/products/machineTechParam';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
