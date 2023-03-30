@@ -35,24 +35,28 @@ export default function SiteAddForm() {
 
   const { enqueueSnackbar } = useSnackbar();
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+  const numberRegExp = /^[0-9]+$/;
 
 
   const AddSiteSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     customer: Yup.string(),
     billingSite: Yup.string(),
-    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: false}).min(10, "too short").max(15, "too long"),
+    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     fax: Yup.string(),
     website: Yup.string(),
+    lat: Yup.string(),
+    long: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
+    postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
     country: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
-
+ 
   });
 
   const defaultValues = useMemo(
@@ -68,6 +72,7 @@ export default function SiteAddForm() {
       suburb: '',
       city: '',
       region: '',
+      postcode: '',
       country: null,
       isArchived: false,
 
@@ -141,6 +146,9 @@ export default function SiteAddForm() {
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
 
+
+                <RHFTextField name="lat" label="Latitude" />
+                <RHFTextField name="long" label="Longitude" />
               </Box>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
@@ -164,6 +172,8 @@ export default function SiteAddForm() {
                 <RHFTextField name="city" label="City" />
 
                 <RHFTextField name="region" label="Region" />
+
+                <RHFTextField name="postcode" label="Post Code" />
 
                 {/* <RHFSelect native name="country" label="Country" placeholder="Country">
                   <option defaultValue value="null" selected >No Country Selected</option>

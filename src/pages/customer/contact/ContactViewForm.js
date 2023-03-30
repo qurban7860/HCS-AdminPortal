@@ -74,6 +74,14 @@ export default function ContactViewForm({ currentContact = null }) {
       contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
       phone: currentContact ? currentContact.phone : contact?.phone || 'N/A',
       email: currentContact ? currentContact.email : contact?.email || 'N/A',
+
+      street: currentContact ? currentContact.address?.street : contact?.address.street || 'N/A',
+      suburb: currentContact ? currentContact.address?.suburb : contact?.address.suburb || 'N/A',
+      city: currentContact ? currentContact.address?.city : contact?.address.city || 'N/A',
+      postcode: currentContact ? currentContact.address?.postcode : contact?.address.postcode || 'N/A',
+      region: currentContact ? currentContact.address?.region : contact?.address.region || 'N/A',
+      country: currentContact ? currentContact.address?.country : contact?.address.country || 'N/A',
+        
       createdAt:                currentContact?.createdAt || "",
       createdByFname:           currentContact?.createdBy?.firstName || "",
       createdByLname:           currentContact?.createdBy?.lastName || "",
@@ -167,6 +175,73 @@ export default function ContactViewForm({ currentContact = null }) {
               {defaultValues.email ? defaultValues.email : ''}
               </Typography>
             </Grid>
+
+            <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Street
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.street ? defaultValues.street : ''}
+            </Typography>
+          </Grid>
+
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Suburb
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.suburb ? defaultValues.suburb : ''}
+            </Typography>
+          </Grid>
+
+         <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              City
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.city ? defaultValues.city : ''}
+            </Typography>
+          </Grid>
+
+        <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Region
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.region ? defaultValues.region : ''}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Post Code
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.postcode ? defaultValues.postcode : ''}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Country
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.country ? defaultValues.country : ''}
+            </Typography>
+          </Grid>
+            
 
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >

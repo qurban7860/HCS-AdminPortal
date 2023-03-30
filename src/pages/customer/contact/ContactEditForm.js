@@ -22,12 +22,15 @@
   import Iconify from '../../../components/iconify';
 
   import FormProvider, {
+    RHFAutocomplete,
     RHFSelect,
     RHFMultiSelect,
     RHFUpload,
     RHFTextField,
 
   } from '../../../components/hook-form';
+  // assets
+  import { countries } from '../../../assets/data';
 
 
 
@@ -55,6 +58,8 @@
 
     const { enqueueSnackbar } = useSnackbar();
 
+    const numberRegExp = /^[0-9]+$/;
+
     const EditContactSchema = Yup.object().shape({
       // customer: Yup.string(),
       firstName: Yup.string(),
@@ -63,6 +68,12 @@
       contactTypes: Yup.array(),
       phone: Yup.string(),
       email: Yup.string().trim('The contact name cannot include leading and trailing spaces').email('Email must be a valid email address'),
+      street: Yup.string(),
+      suburb: Yup.string(),
+      city: Yup.string(),
+      region: Yup.string(),
+      postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
+      country: Yup.string().nullable()
       // isPrimary: Yup.boolean(),
     });
 
@@ -77,6 +88,12 @@
         contactTypes: contact?.contactTypes || [],
         phone: contact?.phone || '',
         email: contact?.email || '',
+        street: contact?.address?.street || '',
+        suburb: contact?.address?.suburb || '',
+        city: contact?.address?.city || '',
+        region: contact?.address?.region || '',
+        postcode: contact?.address?.postcode || '',
+        country: contact.address?.country === null || contact.address?.country === undefined  ? null : contact.address.country,
       }),
       [contact]
     );
@@ -124,7 +141,7 @@
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={6}>
+            <Stack spacing={3}>
             <Box
               rowGap={3}
               columnGap={2}
@@ -153,6 +170,50 @@
 
               <RHFTextField name="email" label="Email" />
               
+              </Box>
+
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Address Details
+              </Typography>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+
+                <RHFTextField name="street" label="Street" />
+
+                <RHFTextField name="suburb" label="Suburb" />
+
+                <RHFTextField name="city" label="City" />
+
+                <RHFTextField name="region" label="Region" />
+
+                <RHFTextField name="postcode" label="Post Code" />
+
+                {/* <RHFSelect native name="country" label="Country" placeholder="Country">
+                  <option defaultValue value="null" selected >No Country Selected</option>
+                  {countries.map((country) => (
+                    <option key={country.code} value={country.label}>
+                      {country.label}
+                    </option>
+                  ))}
+                </RHFSelect> */}
+                <RHFAutocomplete
+                  name="country"
+                  label="Country"
+                  freeSolo
+                  options={countries.map((country) => country.label)}
+                  // getOptionLabel={(option) => option.title}
+                  
+                  ChipProps={{ size: 'small' }}
+                />
+
               </Box>
 
               <Box
