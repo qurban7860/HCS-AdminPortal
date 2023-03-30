@@ -106,7 +106,7 @@ export default function UserAddForm({ isEdit = false, currentUser }) {
   }, [isEdit, currentUser]);
 
   const onSubmit = async (data) => {
-     console.log(data);
+    //  console.log(data);
       try{
         dispatch(saveUser(data));
         reset();

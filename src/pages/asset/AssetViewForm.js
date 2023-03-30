@@ -50,7 +50,7 @@ export default function AssetViewForm() {
     [asset]
   );
 
-  console.log(defaultValues); 
+  // console.log(defaultValues); 
 
 
 

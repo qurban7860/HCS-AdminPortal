@@ -23,7 +23,7 @@ export default function UserEditPage() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
 
   const { user } = useSelector((state) => state.user);

@@ -117,7 +117,7 @@ export default function CustomerEditForm() {
     };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       dispatch(updateCustomer(data));
       reset();

@@ -113,7 +113,7 @@ export default function ModelList() {
   
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getMachinemodels());
   }, [dispatch]);
 
@@ -166,7 +166,7 @@ export default function ModelList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteMachinemodel(id));
     try {
-      console.log(id);
+      // console.log(id);
       
       dispatch(getMachinemodels());
       setSelected([]);
@@ -177,12 +177,12 @@ export default function ModelList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -201,14 +201,14 @@ export default function ModelList() {
   };
 
   const handleEditRow = async (id) => {
-    console.log(id);
+    // console.log(id);
     
     await dispatch(getMachineModel(id));
     navigate(PATH_MACHINE.machineModel.edit(id));
   };
 
   const handleViewRow = async (id) => {
-    console.log(id)
+    // console.log(id)
     await dispatch(getMachineModel(id));
     navigate(PATH_MACHINE.machineModel.view(id));
   };

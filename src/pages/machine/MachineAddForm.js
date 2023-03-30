@@ -42,7 +42,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const navigate = useNavigate();
   
   const { spContacts } = useSelector((state) => state.contact);
-  console.log("spContacts : ",spContacts)
+  // console.log("spContacts : ",spContacts)
   const { machines} = useSelector((state) => state.machine);
   const { suppliers} = useSelector((state) => state.supplier);
   const { machinemodels} = useSelector((state) => state.machinemodel);
@@ -162,7 +162,7 @@ const onSubmit = async (data) => {
   data.supportManager = suppVal?._id || null
   data.customerTags = chipData
 
-  console.log("Machines : ",machines);
+  // console.log("Machines : ",machines);
     try{
       await dispatch(saveMachine(data));
       setParMachineVal('');
@@ -246,7 +246,7 @@ const handleKeyPress = (e) => {
                 options={machines}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  console.log(newValue);
+                  // console.log(newValue);
                   if(newValue){
                     setParMachineVal(newValue);
                     setParMachSerVal(newValue);

@@ -25,7 +25,7 @@ export default function CategoryEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
   
   const { category } = useSelector((state) => state.category);

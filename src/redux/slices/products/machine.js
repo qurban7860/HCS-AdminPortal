@@ -33,7 +33,7 @@ const slice = createSlice({
 
     // SET TOGGLE
     setMachineEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
+      // console.log('toggle', action.payload);
       state.machineEditFormFlag = action.payload;
     },
     
@@ -118,11 +118,11 @@ export function getMachines() {
           isArchived: false
         }
       });
-      console.log(response)
+      // console.log(response)
       dispatch(slice.actions.getMachinesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -135,11 +135,11 @@ export function getMachine(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}`);
-      console.log('getMachine slice working : ',response);
+      // console.log('getMachine slice working : ',response);
       dispatch(slice.actions.getMachineSuccess(response.data));
-      console.log('requested machine', response.data);
+      // console.log('requested machine', response.data);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -151,14 +151,14 @@ export function deleteMachine(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
+      // console.log(id);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}products/machines/${id}`);
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${id}`,
       {
         isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
+      // console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
@@ -171,7 +171,7 @@ export function deleteMachine(id) {
  
 export function saveMachine(params) {
     return async (dispatch) => {
-      console.log('params from data', params);
+      // console.log('params from data', params);
       dispatch(slice.actions.resetMachine());
       dispatch(slice.actions.startLoading());
       try {
@@ -229,10 +229,10 @@ export function saveMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
-console.log("Data for the subbmission:",data)
+// console.log("Data for the subbmission:",data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
-        console.log('response', response.data.Machine);
+        // console.log('response', response.data.Machine);
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
       } catch (error) {
         console.error(error);
@@ -245,7 +245,7 @@ console.log("Data for the subbmission:",data)
 // --------------------------------------------------------------------------
 
 export function updateMachine(params) {
-  console.log('update, working')
+  // console.log('update, working')
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

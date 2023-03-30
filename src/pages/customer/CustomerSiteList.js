@@ -154,7 +154,7 @@ export default function CustomerSiteList() {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    console.log("Expended : ",expanded)
+    // console.log("Expended : ",expanded)
   };
 
   useEffect(() => {

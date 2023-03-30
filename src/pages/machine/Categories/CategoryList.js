@@ -114,7 +114,7 @@ export default function CategoryList() {
   // }, [dispatch]);
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getCategories());
   }, [dispatch]);
 
@@ -165,7 +165,7 @@ export default function CategoryList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteCategories(id));
     try {
-      console.log(id);
+      // console.log(id);
       // await dispatch(deleteSupplier(id));
       dispatch(getCategories());
       setSelected([]);
@@ -176,12 +176,12 @@ export default function CategoryList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -204,7 +204,7 @@ export default function CategoryList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_MACHINE.categories.edit(id));
   };
 

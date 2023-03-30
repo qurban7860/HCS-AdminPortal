@@ -49,7 +49,7 @@ export default function SupplierViewPage({editPage}) {
   const [supplierFlag, setSupplierFlag] = useState(true);
   const {suppliers} = useSelector((state) => state.supplier);
   const supplier = suppliers
-  console.log(suppliers)
+  // console.log(suppliers)
   // return "wow"
   // const supplier = suppliers.find((supp)=>supp._id === id);
   // useLayoutEffect(() => {

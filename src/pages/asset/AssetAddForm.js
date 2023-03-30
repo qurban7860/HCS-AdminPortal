@@ -134,7 +134,7 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
       try{
         dispatch(saveAsset(data));
         reset();

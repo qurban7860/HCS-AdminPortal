@@ -96,12 +96,12 @@ export default function SiteAddForm() {
 
   const onChange = (event) => {
     const value = event.target.value;
-    console.log('value----->',value);
+    // console.log('value----->',value);
   };
 
   const onSubmit = async (data) => {
     try {
-      console.log('params',data);
+      // console.log('params',data);
       await dispatch(saveSite(data));
       reset();
 

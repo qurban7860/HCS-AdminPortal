@@ -44,7 +44,7 @@ export default function StatusEditForm() {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  console.log(navigate, 'test')
+  // console.log(navigate, 'test')
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -66,6 +66,7 @@ export default function StatusEditForm() {
         updatedAt: machinemodel?.updatedAt || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
+        isDisabled: machinemodel?.isDisabled || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machinemodel]
@@ -103,7 +104,7 @@ export default function StatusEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [machinemodel]);
-  console.log(id, 'testing id')
+  // console.log(id, 'testing id')
 
   const toggleCancel = () => 
     {

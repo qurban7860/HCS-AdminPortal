@@ -111,7 +111,7 @@ export default function SupplierList() {
   // }, [dispatch]);
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getSuppliers());
   }, [dispatch]);
 
@@ -162,7 +162,7 @@ export default function SupplierList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteSupplier(id));
     try {
-      console.log(id);
+      // console.log(id);
       // await dispatch(deleteSupplier(id));
       dispatch(getSuppliers());
       setSelected([]);
@@ -173,12 +173,12 @@ export default function SupplierList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -201,7 +201,7 @@ export default function SupplierList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_MACHINE.supplier.edit(id));
   };
 

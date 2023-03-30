@@ -22,7 +22,7 @@ export default function AssetEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
 
   const { asset } = useSelector((state) => state.asset);

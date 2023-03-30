@@ -68,7 +68,7 @@ export default function ToolViewPage({editPage}) {
       setCurrentComponent(<ToolViewForm/>);        
     }
   }, [editPage, toolEditFormFlag, tool]);
-  console.log( "muzna")
+  // console.log( "muzna")
   return (
     <>
       <Helmet>

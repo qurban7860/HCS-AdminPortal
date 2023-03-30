@@ -125,7 +125,7 @@ export default function AssetEditForm() {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
       try{
         dispatch(updateAsset(data));
         reset();

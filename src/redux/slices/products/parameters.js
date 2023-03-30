@@ -30,7 +30,7 @@ const slice = createSlice({
 
     // SET TOGGLE
     setTechparamEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
+      // console.log('toggle', action.payload);
       state.techparamEditFormFlag = action.payload;
     },
   
@@ -65,7 +65,7 @@ const slice = createSlice({
       state.success = true;
       state.techparam = action.payload;
       state.initial = true;
-      console.log('techparamSuccessSlice', state.techparam);
+      // console.log('techparamSuccessSlice', state.techparam);
     },
 
 
@@ -109,13 +109,13 @@ export const {
 export function createTechparams (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
+    // console.log(supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From techparam data");
+      // console.log(response,"From techparam data");
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       dispatch(slice.actions.hasError(e))
     }
   }
@@ -133,9 +133,9 @@ export function getTechparams (){
       dispatch(slice.actions.getTechparamsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Techparams loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From techparams data");
+      // console.log(response,"From techparams data");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(slice.actions.hasError(error))
     }
   }
@@ -143,14 +143,14 @@ export function getTechparams (){
 // ----------------------------------------------------------------------
 
 export function getTechparam(id) {
-  console.log('slice working');
+  // console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/techparams/${id}`);
-      console.log('Response',response.data)
+      // console.log('Response',response.data)
       dispatch(slice.actions.getTechparamSuccess(response.data));
-      console.log('requested techparams', response.data);
+      // console.log('requested techparams', response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -162,13 +162,13 @@ export function deleteTechparams(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete techparams id xyzzzzzzz');
+      // console.log(id[0],'Delete techparams id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparams/${id}`);
      
       dispatch(slice.actions.setResponseMessage(response.data));
       
       
-      console.log(response);
+      // console.log(response);
       // console.log(CONFIG.SERVER_URL[0])
       // state.responseMessage = response.data;
     } catch (error) {
@@ -182,7 +182,7 @@ export function deleteTechparams(id) {
 
 export function saveTechparam(params) {
     return async (dispatch) => {
-      console.log('params', params);
+      // console.log('params', params);
       dispatch(slice.actions.resetTechparam());
       dispatch(slice.actions.startLoading());
       try {
@@ -208,7 +208,7 @@ export function saveTechparam(params) {
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`, data);
 
-        console.log('response', response.data.Techparam);
+        // console.log('response', response.data.Techparam);
         dispatch(slice.actions.getTechparamsSuccess(response.data.Techparam));
       } catch (error) {
         console.error(error);
@@ -221,7 +221,7 @@ export function saveTechparam(params) {
 // --------------------------------------------------------------------------
 
 export function updateTechparam(params) {
-  console.log('update, working', params)
+  // console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

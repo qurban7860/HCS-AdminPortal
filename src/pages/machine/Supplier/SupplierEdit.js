@@ -26,7 +26,7 @@ export default function SupplierEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
 
   const { supplier } = useSelector((state) => state.supplier);

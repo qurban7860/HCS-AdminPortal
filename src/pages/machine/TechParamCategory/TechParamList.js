@@ -116,7 +116,7 @@ export default function TechParamList() {
   // }, [dispatch]);
 
   useLayoutEffect( () => {
-    console.log('Testing done')
+    // console.log('Testing done')
      dispatch(getTechparamcategories());
   }, [dispatch]);
 
@@ -138,7 +138,7 @@ export default function TechParamList() {
     filterStatus,
   });
 
-  console.log(techparamcategories, "testingggg")
+  // console.log(techparamcategories, "testingggg")
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -169,7 +169,7 @@ export default function TechParamList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteTechparamcategory(id));
     try {
-      console.log(id);
+      // console.log(id);
       // await dispatch(deleteSupplier(id));
       dispatch(getTechparamcategories());
       setSelected([]);
@@ -180,12 +180,12 @@ export default function TechParamList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
   const handleDeleteRows = async (selectedRows,handleClose) => {
-    console.log(selectedRows)
+    // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -204,7 +204,7 @@ export default function TechParamList() {
   };
 
   const handleEditRow = async (id) => {
-    console.log(id);
+    // console.log(id);
     // dispatch(getTool(id));
     await dispatch(getTechparamcategory(id));
     navigate(PATH_MACHINE.techParam.edit(id));
@@ -212,7 +212,7 @@ export default function TechParamList() {
 
   const handleViewRow = async (id) => {
     // console.log(id,PATH_MACHINE.supplier.view(id));
-    console.log(id)
+    // console.log(id)
     await dispatch(getTechparamcategory(id));
     navigate(PATH_MACHINE.techParam.view(id));
   };

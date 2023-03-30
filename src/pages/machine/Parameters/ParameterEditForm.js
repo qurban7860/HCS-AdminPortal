@@ -40,7 +40,7 @@ import FormProvider, {
 
 export default function StatusEditForm() {
 
-  const { error, techparam } = useSelector((state) => state.techparam);
+  const { techparam, error} = useSelector((state) => state.techparam);
 
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
@@ -49,7 +49,6 @@ export default function StatusEditForm() {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  console.log(navigate, 'test')
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -58,7 +57,6 @@ export default function StatusEditForm() {
     name: Yup.string().min(2).max(25).required('Name is required') ,
     description: Yup.string().min(2).max(2000),
     isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
     code: Yup.string(),
   });
 
@@ -68,10 +66,10 @@ export default function StatusEditForm() {
       {
         name:techparam?.name || '',
         code: techparam?.code || '',
-        description:techparam?.description || '',
+        description: techparam?.description || '',
+        isDisabled: techparam?.isDisabled || '',
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
-       
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
@@ -94,9 +92,9 @@ export default function StatusEditForm() {
 
   const values = watch();
 
-  useLayoutEffect(() => {
-    dispatch(getTechparam(id));
-  }, [dispatch, id]);
+  // useLayoutEffect(() => {
+  //   dispatch(getTechparam(id));
+  // }, [dispatch, id]);
 
   useEffect(() => {
     if (techparam) {
@@ -105,24 +103,25 @@ export default function StatusEditForm() {
     setParamVal(techparam.category)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [techparam]);
-  console.log(id, 'testing id')
 
   const toggleCancel = () => 
     {
-      dispatch(updateTechparam(false));
       navigate(PATH_MACHINE.parameters.view(id));
     };
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
-      await dispatch(updateTechparam({...data,id}));
+      if(paramVal  !== null && paramVal  !== ""){
+        data.category = paramVal?._id
+      }
+      // console.log("Submit Data : ",data)
+      await dispatch(updateTechparam(data,techparam._id));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.parameters.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      // console.error(error);
     }
   };
 
@@ -130,13 +129,13 @@ export default function StatusEditForm() {
 
 
   return (
-    <Container maxWidth={themeStretch ? false : 'xl'}>
+    <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
              <Stack spacing={1} sx={{pb:2}}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                  Edit Tech Parameter
+                  Edit Parameter
                 </Typography>
               </Stack>
             <Stack spacing={3}>
@@ -188,12 +187,32 @@ export default function StatusEditForm() {
              </Box>
              
               </Stack>
+              <Box
+                rowGap={5}
+                columnGap={4}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(4, 1fr)',
+                }}
+              > 
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Tech Param
+              <LoadingButton 
+                type="submit"
+                variant="contained"
+                size="large"
+                loading={isSubmitting}>
+                  Save Changes
               </LoadingButton>
-            </Stack>
+
+              <Button 
+                onClick={toggleCancel}
+                variant="outlined" 
+                size="large">
+                  Cancel
+              </Button>
+
+            </Box>
                         
             </Card>
           

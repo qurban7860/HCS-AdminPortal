@@ -118,7 +118,7 @@ export default function MachineList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteMachine(id));
       dispatch(getMachines());
       setSelected([]);
@@ -128,7 +128,7 @@ export default function MachineList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -154,7 +154,7 @@ export default function MachineList() {
   //   navigate(PATH_MACHINE.machine.edit(id));
   // };
   const handleViewRow = (id) => {
-    console.log("Machine View : ",id)
+    // console.log("Machine View : ",id)
     navigate(PATH_MACHINE.machine.view(id));
   };
 

@@ -24,7 +24,7 @@ export default function StatusEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
   
   const { techparam } = useSelector((state) => state.techparam);

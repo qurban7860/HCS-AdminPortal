@@ -135,7 +135,7 @@ export function saveNote(customerId,params) {
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -144,7 +144,7 @@ export function saveNote(customerId,params) {
 // ---------------------------------Update Note-------------------------------------
 
 export function updateNote(customerId,params) {
-  console.log("update note params : ", params);
+  // console.log("update note params : ", params);
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -168,12 +168,12 @@ export function updateNote(customerId,params) {
       if(params.user){
         data.user = params.user;
       }
-      console.log("Update before post: ",data)
+      // console.log("Update before post: ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -192,12 +192,12 @@ export function getNotes(id) {
         }
       }
       );
-      console.log("Notes Response : ",response);
+      // console.log("Notes Response : ",response);
       dispatch(slice.actions.getNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };

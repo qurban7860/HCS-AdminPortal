@@ -194,7 +194,7 @@ const onSubmit = async (data) => {
   data.supportManager = suppVal?._id || null
   data.customerTags = chipData
 
-  console.log("Machines Edit : ",data);
+  // console.log("Machines Edit : ",data);
     try{
       await dispatch(updateMachine(data));
       setParMachineVal('');
@@ -266,7 +266,7 @@ const handleKeyPress = (e) => {
                 options={machines}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
-                  console.log(newValue);
+                  // console.log(newValue);
                   if(newValue){
                     setParMachineVal(newValue);
                     setParMachSerVal(newValue);
@@ -292,7 +292,7 @@ const handleKeyPress = (e) => {
                 options={machines}
                 getOptionLabel={(option) => option.serialNo}
                 onChange={(event, newValue) => {
-                  console.log(newValue);
+                  // console.log(newValue);
                   if(newValue){
                     setParMachSerVal(newValue);
                   }

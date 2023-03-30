@@ -117,7 +117,7 @@ export function getCustomers() {
       dispatch(slice.actions.getCustomersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(slice.actions.hasError(error));
     }
   };
@@ -150,13 +150,13 @@ export function deleteCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id);
+      // console.log(id);
       const response = await axios.delete(`${CONFIG.SERVER_URL}crm/customers/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
-      console.log(response.data);
+      // console.log(response.data);
       // state.responseMessage = response.data;
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       dispatch(slice.actions.hasError(error));
     }
   };

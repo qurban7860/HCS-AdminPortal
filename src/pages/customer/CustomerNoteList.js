@@ -140,7 +140,7 @@ export default function NoteList() {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    console.log("Expended : ",expanded)
+    // console.log("Expended : ",expanded)
   };
   
 
@@ -237,7 +237,7 @@ const toggleChecked = () =>
       //   }
       // }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 

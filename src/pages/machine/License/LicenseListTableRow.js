@@ -43,7 +43,7 @@ export default function SupplierListTableRow({
   onViewRow,
 }) {
   const { licenseKey, licenseDetail  } = row;
-console.log('detail', licenseDetail);
+// console.log('detail', licenseDetail);
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);

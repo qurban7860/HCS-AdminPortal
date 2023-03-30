@@ -45,7 +45,7 @@ export default function ToolEditForm() {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-  console.log(navigate, 'test')
+  // console.log(navigate, 'test')
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -99,7 +99,7 @@ export default function ToolEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tool]);
-  console.log(id, 'testing id')
+  // console.log(id, 'testing id')
 
   const toggleCancel = () => 
     {
@@ -108,7 +108,7 @@ export default function ToolEditForm() {
     };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       await dispatch(updateTool({...data,id}));
       reset();

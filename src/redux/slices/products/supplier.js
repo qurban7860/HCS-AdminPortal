@@ -30,7 +30,7 @@ const slice = createSlice({
 
     // SET TOGGLE
     setSupplierEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
+      // console.log('toggle', action.payload);
       state.supplierEditFormFlag = action.payload;
     },
     
@@ -65,7 +65,7 @@ const slice = createSlice({
       state.success = true;
       state.supplier = action.payload;
       state.initial = true;
-      console.log('supplierSuccessSlice', state.supplier);
+      // console.log('supplierSuccessSlice', state.supplier);
     },
 
 
@@ -109,13 +109,13 @@ export const {
 export function createSuppliers (supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    console.log(supplyData)
+    // console.log(supplyData)
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`,supplyData);
       // dispatch(slice.actions)
-      console.log(response,"From supplyer data");
+      // console.log(response,"From supplyer data");
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       dispatch(slice.actions.hasError(e))
     }
   }
@@ -133,9 +133,9 @@ export function getSuppliers (){
       dispatch(slice.actions.getSuppliersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
       // dispatch(slice.actions)
-      console.log(response,"From supplyer data");
+      // console.log(response,"From supplyer data");
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       dispatch(slice.actions.hasError(error))
     }
   }
@@ -143,13 +143,13 @@ export function getSuppliers (){
 // ----------------------------------------------------------------------
 
 export function getSupplier(id) {
-  console.log('slice working');
+  // console.log('slice working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
       dispatch(slice.actions.getSuppliersSuccess(response.data));
-      console.log('requested supplier', response.data);
+      // console.log('requested supplier', response.data);
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error));
@@ -161,13 +161,13 @@ export function deleteSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log(id[0],'Delete Supplier id xyzzzzzzz');
+      // console.log(id[0],'Delete Supplier id xyzzzzzzz');
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search
       
-      console.log(response);
+      // console.log(response);
       // console.log(CONFIG.SERVER_URL[0])
       // state.responseMessage = response.data;
     } catch (error) {
@@ -181,7 +181,7 @@ export function deleteSupplier(id) {
 
 export function saveSupplier(params) {
     return async (dispatch) => {
-      console.log('params', params);
+      // console.log('params', params);
       dispatch(slice.actions.resetSupplier());
       dispatch(slice.actions.startLoading());
       try {
@@ -234,7 +234,7 @@ export function saveSupplier(params) {
 
         const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`, data);
 
-        console.log('response', response.data.Supplier);
+        // console.log('response', response.data.Supplier);
         dispatch(slice.actions.getSupplierSuccess(response.data.Supplier));
       } catch (error) {
         console.error(error);
@@ -247,7 +247,7 @@ export function saveSupplier(params) {
 // --------------------------------------------------------------------------
 
 export function updateSupplier(params) {
-  console.log('update, working', params)
+  // console.log('update, working', params)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

@@ -46,7 +46,7 @@ export default function NoteViewForm() {
     [note]
   );
 
-  console.log(defaultValues); 
+  // console.log(defaultValues); 
 
 
 
