@@ -64,6 +64,7 @@ export default function ToolEditForm() {
         description:tool?.description || 'N/A',
         createdAt: tool?.createdAt || '',
         updatedAt: tool?.updatedAt || '',
+        isDisabled: tool?.isDisabled || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tool]

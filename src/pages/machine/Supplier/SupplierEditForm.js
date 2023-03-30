@@ -84,6 +84,7 @@ export default function SupplierEditForm() {
       country: supplier?.address?.country || 'N/A',
       createdAt: supplier?.createdAt || '',
       updatedAt: supplier?.updatedAt || '',
+      isDisabled: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [supplier]
