@@ -36,7 +36,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
 
   const toggleEdit = () => {
     dispatch(setCategoryEditFormVisibility(true));
-    console.log(PATH_MACHINE.categories.categoryedit(id))
+    // console.log(PATH_MACHINE.categories.categoryedit(id))
     navigate(PATH_MACHINE.categories.categoryedit(id));
   }
 

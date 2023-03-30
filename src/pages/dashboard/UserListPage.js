@@ -169,7 +169,7 @@ export default function UserListPage() {
   const handleDeleteRow = async (id) => {
     try {
       try {
-        console.log(id);
+        // console.log(id);
         dispatch(deleteUser(id));
         dispatch(getUsers());
         setSelected([]);
@@ -180,12 +180,12 @@ export default function UserListPage() {
           }
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
       }
 
       
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -207,8 +207,8 @@ export default function UserListPage() {
   };
 
   const handleEditRow = (id) => {
-    console.log('id', id);
-    console.log('edit');
+    // console.log('id', id);
+    // console.log('edit');
     navigate(PATH_DASHBOARD.user.edit(id));
   };
 

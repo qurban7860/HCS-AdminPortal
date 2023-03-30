@@ -16,9 +16,9 @@ import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE } from '../../routes/paths';
-import {AppCurrentDownload,} from '../../sections/@dashboard/general/app';
 import { useDispatch } from '../../redux/store';
-import MachineDashboardNavbar from './util/MachineDashboardNavbar';
+import { Cover } from '../components/Cover';
+
 // ----------------------------------------------------------------------
 
 export default function MachineDashboardPage() {
@@ -51,7 +51,19 @@ export default function MachineDashboardPage() {
         <title> General: App | Machine ERP</title>
       </Helmet>
 
+     
+
       <Container maxWidth={false}>
+      <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            // mt: '24px',
+          }}
+        >
+          <Cover name='Settings' icon='material-symbols:list-alt-outline' />
+        </Card>
         <Grid container spacing={3}>
           {/* Navigation Bar */}
           {/* <MachineDashboardNavbar/> */}
@@ -78,8 +90,8 @@ export default function MachineDashboardPage() {
           </Grid> */}
           
           
-            <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
-              <Card sx={{height: '234px', mt: '24px'}}>
+            <Grid item xs={12} md={6} lg={4} sx={{ml: '22px'}}>
+              <Card sx={{height: '234px', mt: '14px'}}>
                 <List
                   // sx={{fontSize: '0.7em'}}
                   // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
@@ -122,8 +134,8 @@ export default function MachineDashboardPage() {
                 </List>
               </Card>
             </Grid>
-            <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
-              <Card sx={{height: '234px', mt: '24px'}}>
+            <Grid item xs={12} md={6} lg={4}>
+              <Card sx={{height: '234px', mt: '14px'}}>
                 <List
                   sx={{fontSize: '0.7em'}}
                   // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}

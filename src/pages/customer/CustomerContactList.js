@@ -162,7 +162,7 @@ export default function CustomerContactList() {
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
-    console.log("Expended : ",expanded)
+    // console.log("Expended : ",expanded)
   };
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));

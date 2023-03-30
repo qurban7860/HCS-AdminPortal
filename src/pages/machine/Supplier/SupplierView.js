@@ -66,7 +66,7 @@ export default function SupplierViewPage({editPage}) {
       setCurrentComponent(<SupplierViewForm/>);        
     }
   }, [editPage, supplierEditFormFlag, supplier]);
-  console.log( "muzna")
+  // console.log( "muzna")
   return (
     <>
       <Helmet>

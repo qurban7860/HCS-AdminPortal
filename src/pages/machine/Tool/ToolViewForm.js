@@ -66,6 +66,7 @@ export default function ToolViewForm({ currentTool = null }) {
         createdAt: tool?.createdAt || '',
         updatedAt: tool?.updatedAt || '',
         updatedIP: tool?.updatedIP || '',
+        isDisabled: true,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]
@@ -105,6 +106,14 @@ export default function ToolViewForm({ currentTool = null }) {
           </Typography>
 
           <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Active
+          </Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
 
         </Grid>
         

@@ -81,6 +81,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         country: supplier?.address?.country || 'N/A',
         createdAt: supplier?.createdAt || '',
         updatedAt: supplier?.updatedAt || '',
+        isDisabled: true,
         
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -209,6 +210,13 @@ export default function SupplierViewForm({ currentSupplier = null }) {
           </Typography>
 
           <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
+
+        </Grid>
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Active
+          </Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
 
         </Grid>
         <Grid container spacing={0} sx={{ mb: 5}}>

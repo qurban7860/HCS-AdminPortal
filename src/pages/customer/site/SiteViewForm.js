@@ -78,12 +78,15 @@ export default function SiteViewForm({ currentSite = null }) {
         city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
         region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
+        primaryBillingContact: currentSite?.primaryBillingContact || null,
+        primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
+      
         createdAt:                currentSite?.createdAt || "",
-        createdByFname:           currentSite?.createdBy?.firstName || "",
+        createdByFname:           currentSite?.createdBy?.name || "",
         createdByLname:           currentSite?.createdBy?.lastName || "",
         createdIP:                currentSite?.createdIP || "",
         updatedAt:                currentSite?.updatedAt || "",
-        updatedByFname:           currentSite?.updatedBy?.firstName || "",
+        updatedByFname:           currentSite?.updatedBy?.name || "",
         updatedByLname:           currentSite?.updatedBy?.lastName || "",
         updatedIP:                currentSite?.updatedIP || "",
       }),
@@ -224,6 +227,33 @@ export default function SiteViewForm({ currentSite = null }) {
             {defaultValues.country ? defaultValues.country : ''}
             </Typography>
           </Grid>
+
+          {(defaultValues.primaryBillingContact || defaultValues.primaryTechnicalContact)&& <Grid container>
+
+            {defaultValues.primaryBillingContact && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+            Primary Billing Contact
+            </Typography>
+
+            <Typography variant="body2">
+            {defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}
+            </Typography>
+
+            </Grid>}
+
+            {defaultValues.primaryTechnicalContact && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+            Primary Technical Contact
+            </Typography>
+
+            <Typography variant="body2">
+            {defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''}  {defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}
+            </Typography>
+
+            </Grid>}
+
+
+          </Grid>}
 
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >

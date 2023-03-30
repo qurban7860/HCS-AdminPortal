@@ -157,7 +157,7 @@ export default function ContactList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteContact(id));
       dispatch(getContacts());
       setSelected([]);
@@ -168,7 +168,7 @@ export default function ContactList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -190,7 +190,7 @@ export default function ContactList() {
   };
 
   const handleEditRow = (customerID, contactID) => {
-    console.log(customerID);
+    // console.log(customerID);
     navigate(PATH_DASHBOARD.customer.view(customerID, contactID));
   };
 

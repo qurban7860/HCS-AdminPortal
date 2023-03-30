@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 import { CONFIG } from '../../config-global';
 // slice
 import { updateCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
-import { getContacts } from '../../redux/slices/customer/contact';
+import { getContacts, getSPContacts } from '../../redux/slices/customer/contact';
 import { getSites } from '../../redux/slices/customer/site';
 
 
@@ -100,7 +100,7 @@ export default function CustomerEditForm() {
   useLayoutEffect(() => {
     dispatch(getContacts(customer._id));
     dispatch(getSites(customer._id));
-    // dispatch(getSPContacts());
+    dispatch(getSPContacts());
 
   }, [dispatch, customer]);
 
@@ -117,7 +117,7 @@ export default function CustomerEditForm() {
     };
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     try {
       dispatch(updateCustomer(data));
       reset();

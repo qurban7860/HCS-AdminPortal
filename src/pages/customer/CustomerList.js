@@ -49,6 +49,7 @@ import { Cover } from '../components/Cover';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'type', label: '', align: 'left', width: 1.5 },
   { id: 'name', label: 'Customer', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
   { id: 'mainSiteAddress', label: 'Address', align: 'left' },
@@ -164,7 +165,7 @@ export default function CustomerList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteCustomer(id));
       dispatch(getCustomers());
       setSelected([]);
@@ -175,7 +176,7 @@ export default function CustomerList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -197,7 +198,7 @@ export default function CustomerList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_DASHBOARD.customer.edit(id));
   };
 
