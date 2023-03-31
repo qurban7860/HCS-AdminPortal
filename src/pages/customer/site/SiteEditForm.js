@@ -41,18 +41,22 @@ export default function SiteEditForm() {
 
   const { enqueueSnackbar } = useSnackbar();
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+  const numberRegExp = /^[0-9]+$/;
 
   const EditSiteSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     billingSite: Yup.string(),
-    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: false}).min(10, "too short").max(15, "too long"),
+    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     fax: Yup.string(),
     website: Yup.string(),
+    lat: Yup.string(),
+    long: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
+    postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}),
     country: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
@@ -69,10 +73,13 @@ export default function SiteEditForm() {
       email: site?.email || '',
       fax: site?.fax || '',
       website: site?.website || '',
+      lat: site?.lat || '',
+      long: site?.long || '',
       street: site?.address?.street || '',
       suburb: site?.address?.suburb || '',
       city: site?.address?.city || '',
       region: site?.address?.region || '',
+      postcode: site?.address?.postcode || '',
       country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
       primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
       primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
@@ -124,7 +131,8 @@ export default function SiteEditForm() {
       <Grid container spacing={4}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
+          <Stack spacing={3}>
+                <RHFTextField name="name" label="Name" />
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -134,7 +142,6 @@ export default function SiteEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="name" label="Name" />
 
                 <RHFTextField name="phone" label="Phone" />
 
@@ -144,6 +151,10 @@ export default function SiteEditForm() {
 
                 <RHFTextField name="website" label="Website" />
 
+                <RHFTextField name="lat" label="Latitude" />
+                
+                <RHFTextField name="long" label="Longitude" />
+              
               </Box>
 
 
@@ -169,6 +180,8 @@ export default function SiteEditForm() {
                 <RHFTextField name="city" label="City" />
 
                 <RHFTextField name="region" label="Region" />
+
+                <RHFTextField name="postcode" label="Post Code" />
 
                 <RHFSelect native name="country" label="Country" >
                   <option defaultValue value="null" selected >No Country Selected                  </option>

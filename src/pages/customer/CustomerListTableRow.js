@@ -84,8 +84,7 @@ export default function CustomerListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell
-        sx={{color: 'text.disabled' }}>{type==='SP' ? type : ""}</TableCell>
+        <TableCell align="right">{type==='SP' ? <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled' }} />  : ""}</TableCell>
 
 
         <TableCell>

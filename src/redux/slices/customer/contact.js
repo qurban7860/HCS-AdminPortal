@@ -127,9 +127,29 @@ export function saveContact(params) {
         contactTypes: params.contactTypes,
         phone: params.phone,
         email: params.email,
+        address: {}
+
       };
 
       /* eslint-enable */
+      if(params.street){
+        data.address.street = params.street;        
+      }
+      if(params.suburb){
+        data.address.suburb = params.suburb;        
+      }
+      if(params.city){
+        data.address.city = params.city;        
+      }
+      if(params.region){
+        data.address.region = params.region;        
+      }
+      if(params.postcode){
+        data.address.postcode = params.postcode;        
+      }
+      if(params.country !== "null" && params.country !== null){
+        data.address.country = params.country;        
+      }
 
       const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/contacts`,
         data,
@@ -163,9 +183,29 @@ export function updateContact(customerId,params) {
         contactTypes: params.contactTypes,
         phone: params.phone,
         email: params.email,
+        address: {}
       };
 
       /* eslint-enable */
+
+      if(params.street){
+        data.address.street = params.street;        
+      }
+      if(params.suburb){
+        data.address.suburb = params.suburb;        
+      }
+      if(params.city){
+        data.address.city = params.city;        
+      }
+      if(params.region){
+        data.address.region = params.region;        
+      }
+      if(params.postcode){
+        data.address.postcode = params.postcode;        
+      }
+      if(params.country !== "null" && params.country !== null){
+        data.address.country = params.country;        
+      }
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/contacts/${params.id}`,
         data

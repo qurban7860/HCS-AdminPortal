@@ -113,6 +113,8 @@ export function saveSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
+          lat: params.lat,
+          long: params.long,
           address: {}
         };
 
@@ -128,6 +130,9 @@ export function saveSite(params) {
         }
         if(params.region){
           data.address.region = params.region;        
+        }
+        if(params.postcode){
+          data.address.postcode = params.postcode;        
         }
         if(params.country !== "null" && params.country !== null){
           data.address.country = params.country;        
@@ -173,6 +178,8 @@ export function updateSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
+          lat: params.lat,
+          long: params.long,
           address: {}
         };
         /* eslint-enable */
@@ -187,6 +194,9 @@ export function updateSite(params) {
         }
         if(params.region){
           data.address.region = params.region;        
+        }
+        if(params.postcode){
+          data.address.postcode = params.postcode;        
         }
         if(params.country !== "null" && params.country !== null){
           data.address.country = params.country;        

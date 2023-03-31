@@ -72,10 +72,14 @@ export default function SiteViewForm({ currentSite = null }) {
         email: currentSite ? currentSite.email : site?.email || 'N/A',
         fax: currentSite ? currentSite.fax : site?.fax || 'N/A',
         website: currentSite ? currentSite.website : site?.website || 'N/A',
+        lat: currentSite ? currentSite.lat : site?.lat || 'N/A',
+        long: currentSite ? currentSite.long : site?.long || 'N/A',
+
 
         street: currentSite ? currentSite.address?.street : site?.address.street || 'N/A',
         suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || 'N/A',
         city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
+        postcode: currentSite ? currentSite.address?.postcode : site?.address.postcode || 'N/A',
         region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
         primaryBillingContact: currentSite?.primaryBillingContact || null,
@@ -220,6 +224,17 @@ export default function SiteViewForm({ currentSite = null }) {
           <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Post Code
+              </Typography>
+            </Grid>
+            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            {defaultValues.postcode ? defaultValues.postcode : ''}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+            <Grid item xs={12} sm={12} >
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Country
               </Typography>
             </Grid>
@@ -227,6 +242,33 @@ export default function SiteViewForm({ currentSite = null }) {
             {defaultValues.country ? defaultValues.country : ''}
             </Typography>
           </Grid>
+
+          {(defaultValues.lat || defaultValues.primaryTechnicalContact)&& <Grid container>
+
+            {defaultValues.lat && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+            Latitude
+            </Typography>
+
+            <Typography variant="body2">
+            {defaultValues.lat ? defaultValues.lat : ''}
+            </Typography>
+
+            </Grid>}
+
+            {defaultValues.long && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+            Longitude
+            </Typography>
+
+            <Typography variant="body2">
+            {defaultValues.long ? defaultValues.long : ''}
+            </Typography>
+
+            </Grid>}
+
+
+            </Grid>}
 
           {(defaultValues.primaryBillingContact || defaultValues.primaryTechnicalContact)&& <Grid container>
 
