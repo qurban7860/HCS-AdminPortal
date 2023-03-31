@@ -193,7 +193,7 @@ export default function MachineSettingList() {
       </Helmet>
 
 
-        {!licenseEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+        {!licenseEditFormVisibility && <Stack alignItems="flex-end" sx={{ mb: 3, px:4 }}>
           <Button
               // alignItems 
               onClick={toggleChecked}
@@ -210,7 +210,7 @@ export default function MachineSettingList() {
           {!formVisibility && !licenseEditFormVisibility && licenses.map((license, index) => (
 
             <Accordion key={license._id} expanded={expanded === index} onChange={handleChange(index)}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} sx={{ bg:'light'}}>
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
                   

@@ -201,7 +201,7 @@ useLayoutEffect(() => {
       </Helmet>
 
 
-        {!toolInstalledEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+        {!toolInstalledEditFormVisibility && <Stack alignItems="flex-end" sx={{ mb: 3, px:4 }}>
           <Button
               // alignItems 
               onClick={toggleChecked}

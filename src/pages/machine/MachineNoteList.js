@@ -272,7 +272,7 @@ const toggleChecked = () =>
         <title> Note: List | Machine ERP </title>
       </Helmet>
         {!noteEditFormVisibility && 
-            <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+            <Stack alignItems="flex-end" sx={{  px: 4,mb:3 }}>
                 <Button
                     onClick={toggleChecked}
                     variant="contained"
@@ -304,7 +304,7 @@ const toggleChecked = () =>
               </Grid>
             : null }
               </AccordionSummary>
-              <AccordionDetails sx={{ mt:-5 }}>
+              <AccordionDetails sx={{ mt:-5}} >
                 <NotesViewForm currentNote={note} />
               </AccordionDetails>
             </Accordion>
