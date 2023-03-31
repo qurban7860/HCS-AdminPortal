@@ -103,6 +103,8 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
 
         </Grid>
+
+        
         <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
@@ -110,6 +112,8 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
 
         </Grid>
+
+
         <Grid container spacing={0} sx={{ mb: 5}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
