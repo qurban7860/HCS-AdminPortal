@@ -233,6 +233,10 @@ export function saveCustomer(params) {
           data.mainSite.address.city = params.city;        
         }
 
+        if(params.postcode){
+          data.mainSite.address.postcode = params.postcode;        
+        }
+
         if(params.region){
           data.mainSite.address.region = params.region;        
         }

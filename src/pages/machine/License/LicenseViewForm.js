@@ -65,12 +65,10 @@ export default function LicenseViewForm({ currentLicense = null }) {
       {
         licenseDetail:            currentLicense?.licenseDetail || "",
         createdAt:                currentLicense?.createdAt || "",
-        createdByFname:           currentLicense?.createdBy?.firstName || "",
-        createdByLname:           currentLicense?.createdBy?.lastName || "",
+        createdByFullname:           currentLicense?.createdBy?.name || "",
         createdIP:                currentLicense?.createdIP || "",
         updatedAt:                currentLicense?.updatedAt || "",
-        updatedByFname:           currentLicense?.updatedBy?.firstName || "",
-        updatedByLname:           currentLicense?.updatedBy?.lastName || "",
+        updatedByFullname:           currentLicense?.updatedBy?.name || "",
         updatedIP:                currentLicense?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,12 +135,12 @@ export default function LicenseViewForm({ currentLicense = null }) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

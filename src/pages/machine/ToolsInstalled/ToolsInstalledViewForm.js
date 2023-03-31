@@ -62,12 +62,10 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
         toolName:                 currentTool?.tool?.name || "",
         toolNote:                 currentTool?.note|| "",
         createdAt:                currentTool?.createdAt || "",
-        createdByFname:           currentTool?.createdBy?.firstName || "",
-        createdByLname:           currentTool?.createdBy?.lastName || "",
+        createdByFullname:           currentTool?.createdBy?.name || "",
         createdIP:                currentTool?.createdIP || "",
         updatedAt:                currentTool?.updatedAt || "",
-        updatedByFname:           currentTool?.updatedBy?.firstName || "",
-        updatedByLname:           currentTool?.updatedBy?.lastName || "",
+        updatedByFullname:           currentTool?.updatedBy?.name || "",
         updatedIP:                currentTool?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,12 +121,12 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

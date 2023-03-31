@@ -79,12 +79,10 @@ export default function SiteViewForm({ currentSite = null }) {
         region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
         createdAt:                currentSite?.createdAt || "",
-        createdByFname:           currentSite?.createdBy?.firstName || "",
-        createdByLname:           currentSite?.createdBy?.lastName || "",
+        createdByFullname:           currentSite?.createdBy?.name || "",
         createdIP:                currentSite?.createdIP || "",
         updatedAt:                currentSite?.updatedAt || "",
-        updatedByFname:           currentSite?.updatedBy?.firstName || "",
-        updatedByLname:           currentSite?.updatedBy?.lastName || "",
+        updatedByFullname:           currentSite?.updatedBy?.firstNsame || "",
         updatedIP:                currentSite?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,7 +163,8 @@ export default function SiteViewForm({ currentSite = null }) {
               Website
               </Typography>
             </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            updatedByFname
+updatedByFname         <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
             {defaultValues.website ? defaultValues.website : ''}
             </Typography>
           </Grid>
@@ -228,12 +227,12 @@ export default function SiteViewForm({ currentSite = null }) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullname} {defaultValues.createdByLname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFullname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>
