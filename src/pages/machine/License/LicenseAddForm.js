@@ -31,7 +31,7 @@ export default function LicenseAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddLicenseSchema = Yup.object().shape({
-    licenseKey: Yup.string().max(100).required('License key is required!') ,
+    licenseKey: Yup.string().max(1000).required('License key is required!') ,
     licenseDetail: Yup.string().max(10000).required('License detail is required!'),
   });
 
@@ -67,7 +67,7 @@ export default function LicenseAddForm() {
   const onSubmit = async (data) => {
     try {
       console.log('licenseDetail : ',data);
-      await dispatch(saveLicense(machine._id,data));
+      // await dispatch(saveLicense(machine._id,data));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
@@ -97,7 +97,7 @@ export default function LicenseAddForm() {
                   sm: 'repeat(1, 1fr)',
                 }}
               >
-                <RHFTextField name="licenseKey" label="License Key" multiline/>
+                <RHFTextField name="licenseKey" label="License Key" minRows={8} multiline/>
                 <RHFTextField name="licenseDetail" label="License Detail" minRows={8} multiline />
 
               </Box>
@@ -116,16 +116,14 @@ export default function LicenseAddForm() {
                 variant="contained"
                 size="large"
                 loading={isSubmitting}>
-                  Create License
+                  Add License
               </LoadingButton>
-
               <Button 
                 onClick={toggleCancel}
                 variant="outlined" 
                 size="large">
                   Cancel
               </Button>
-
             </Box>
             </Stack>
           </Card>

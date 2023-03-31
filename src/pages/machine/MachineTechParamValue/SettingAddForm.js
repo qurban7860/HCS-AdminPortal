@@ -45,6 +45,19 @@ useLayoutEffect(() => {
 const filterSetting = [];
 settings.map((setting)=>(filterSetting.push(setting.techParam._id)))
 const filteredsetting = techparamsByCategory.filter(item => !filterSetting.includes(item._id));
+
+filteredsetting.sort((a, b) =>{
+  const nameA = a.name.toUpperCase(); // ignore upper and lowercase
+  const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+});
+
 setparamData(filteredsetting);
 }, [settings,techparamsByCategory]);
   

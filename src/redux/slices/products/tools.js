@@ -36,7 +36,7 @@ const slice = createSlice({
     
     // RESET CUSTOMER
     resetTool(state){
-      state.machine = {};
+      state.tool = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;

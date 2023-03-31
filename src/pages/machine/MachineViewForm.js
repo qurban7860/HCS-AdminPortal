@@ -16,13 +16,13 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
-
+import ViewFormSubtitle from '../components/ViewFormSubtitle';
 // slices
 import { getMachines, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 
 
-import { fDateTime , fDate } from '../../utils/formatTime';
-
+import ViewFormField from '../components/ViewFormField';
+import ViewFormAudit from '../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
 
@@ -64,10 +64,12 @@ export default function CustomerViewForm() {
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
       createdAt:                machine?.createdAt || "",
-      createdByFullname:        machine?.createdBy?.name || "",
+      createdByFname:           machine?.createdBy?.firstName || "",
+      createdByLname:           machine?.createdBy?.lastName || "",
       createdIP:                machine?.createdIP || "",
       updatedAt:                machine?.updatedAt || "",
-      updatedByFullname:        machine?.updatedBy?.name || "",
+      updatedByFname:           machine?.updatedBy?.firstName || "",
+      updatedByLname:           machine?.updatedBy?.lastName || "",
       updatedIP:                machine?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -81,7 +83,7 @@ export default function CustomerViewForm() {
       {/* <Grid item xs={12} sm={12} > */}
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4}}>
               <Button
-                onClick={() => { toggleEdit(); }}
+                onClick={toggleEdit}
                 variant="contained"
                 size="medium"
                 startIcon={<Iconify icon="eva:edit-fill" />} >
@@ -90,130 +92,30 @@ export default function CustomerViewForm() {
         </Stack>
       {/* </Grid> */}
         <Grid container>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Serial No
-                </Typography>
-                <Typography variant="body2">{defaultValues.serialNo ? defaultValues.serialNo : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                  Name
-                </Typography>
-                <Typography variant="body2">{defaultValues.name}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Previous Machine Serial No
-                </Typography>
-                <Typography variant="body2">{defaultValues.parentSerialNo? defaultValues.parentSerialNo : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Previous Machine
-                </Typography>
-                <Typography variant="body2">{defaultValues.parentMachine ? defaultValues.parentMachine : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Supplier
-                </Typography>
-                <Typography variant="body2">{defaultValues.supplier? defaultValues.supplier : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Machine Model
-                </Typography>
-                <Typography variant="body2">{defaultValues.machineModel? defaultValues.machineModel : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Status
-                </Typography>
-                <Typography variant="body2">{defaultValues.status? defaultValues.status : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Work Order / Perchase Order
-                </Typography>
-                <Typography variant="body2">{defaultValues.workOrderRef? defaultValues.workOrderRef : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Customer
-                </Typography>
-                <Typography variant="body2">{defaultValues.customer? defaultValues.customer : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Instalation Site
-                </Typography>
-                <Typography variant="body2">{defaultValues.instalationSite? defaultValues.instalationSite : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Billing Site
-                </Typography>
-                <Typography variant="body2">{defaultValues.billingSite? defaultValues.billingSite : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Site Address
-                </Typography>
-                <Typography variant="body2">{defaultValues.instalationAddressCity? defaultValues.instalationAddressCity : ''} {defaultValues.instalationAddressCountry? ', ' : null} {defaultValues.instalationAddressCountry? defaultValues.instalationAddressCountry: ''} </Typography>
-            </Grid>
-            <Grid item xs={12} sm={12} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Description
-                </Typography>
-                <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>{defaultValues.description? defaultValues.description : ''}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Tags
-                </Typography>
-                <Typography variant="body2">{defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''}</Typography>
-            </Grid>
+            <ViewFormField sm={6} heading="Serial No" param={defaultValues.serialNo ? defaultValues.serialNo : ''} />
+            <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+            <ViewFormField sm={6} heading="Previous Machine Serial No" param={defaultValues.parentSerialNo? defaultValues.parentSerialNo : ''} />
+            <ViewFormField sm={6} heading="Previous Machine" param={defaultValues.parentMachine ? defaultValues.parentMachine : ''} />
+            <ViewFormField sm={6} heading="Supplier" param={defaultValues.supplier? defaultValues.supplier : ''} />
+            <ViewFormField sm={6} heading="Machine Model" param={defaultValues.machineModel? defaultValues.machineModel : ''} />
+            <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
+            <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
+            <ViewFormField sm={6} heading="Customer" param={defaultValues.customer? defaultValues.customer : ''} />
+            <ViewFormField sm={6} heading="Instalation Site" param={defaultValues.instalationSite? defaultValues.instalationSite : ''} />
+            <ViewFormField sm={6} heading="Billing Site" param={defaultValues.billingSite? defaultValues.billingSite : ''} />
+            <ViewFormField sm={6} heading="Site Address" param={defaultValues.instalationAddressCity? defaultValues.instalationAddressCity : ''} />
+            <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description : ''} />
+            <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} />
         </Grid>
 
         <Grid container>
-            <Grid item xs={12} sm={12} sx={{ pt:2 }}>
-                <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-                   Howick Resources
-                </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-                  Account Manager
-                </Typography>
-                <Typography variant="body2">{defaultValues?.accountManager?.firstName || "" } {defaultValues?.accountManager?.lastName || ""}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                  Project Manager
-                </Typography>
-                <Typography variant="body2">{defaultValues?.projectManager?.firstName || ""} {defaultValues?.projectManager?.lastName || ""}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-                <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                 Suppport Manager
-                </Typography>
-                <Typography variant="body2">{defaultValues?.supportManager?.firstName || ""} {defaultValues?.supportManager?.lastName || ""}</Typography>
-            </Grid> 
+            <ViewFormSubtitle sm={12} heading="Howick Resources"/>
+            <ViewFormField sm={6} heading="Account Manager" param={defaultValues?.accountManager?.firstName || ""} secondParam={defaultValues?.accountManager?.lastName || ""}/>
+            <ViewFormField sm={6} heading="Project Manager" param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
+            <ViewFormField sm={6} heading="Suppport Manager" param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
         </Grid>
         <Grid container>
-            <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
-                <Grid item xs={12} sm={6} >
-                    <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                      created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-                    </Typography>
-                </Grid>
-                <Grid item xs={12} sm={6} >
-                    <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                      updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-                    </Typography>
-                </Grid>
-            </Grid>
+            <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
     </Card>
   );

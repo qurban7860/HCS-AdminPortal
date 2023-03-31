@@ -215,7 +215,7 @@ const toggleChecked = () =>
       setChecked(value => !value);
       dispatch(setNoteFormVisibility(!formVisibility));
     };
-console.log("screen Width : ",window.innerWidth)
+// console.log("screen Width : ",window.innerWidth)
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteNote(id));
@@ -272,7 +272,7 @@ console.log("screen Width : ",window.innerWidth)
         <title> Note: List | Machine ERP </title>
       </Helmet>
         {!noteEditFormVisibility && 
-            <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+            <Stack alignItems="flex-end" sx={{  px: 4,mb:3 }}>
                 <Button
                     onClick={toggleChecked}
                     variant="contained"
@@ -286,7 +286,7 @@ console.log("screen Width : ",window.innerWidth)
           {noteEditFormVisibility && <NoteEditForm/> }
           {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
           {!formVisibility && !noteEditFormVisibility && notes.map((note, index) => (
-            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  >
+            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""} >
               <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
             { index !==  activeIndex ? 
               <Grid container spacing={0}>
@@ -304,7 +304,7 @@ console.log("screen Width : ",window.innerWidth)
               </Grid>
             : null }
               </AccordionSummary>
-              <AccordionDetails sx={{ mt:-5 }}>
+              <AccordionDetails sx={{ mt:-5}} >
                 <NotesViewForm currentNote={note} />
               </AccordionDetails>
             </Accordion>

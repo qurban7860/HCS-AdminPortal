@@ -24,9 +24,7 @@ import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import {
-  NoteCover
-} from './util';
+import Cover from '../../components/Cover';
 
 import NoteViewForm from './NotesViewForm'
 // ----------------------------------------------------------------------
@@ -96,7 +94,7 @@ export default function NoteViewPage() {
             position: 'relative',
           }}
         >
-          <NoteCover name={note?.name}/>
+          <Cover name={note?.name}/>
 
           
            

@@ -225,7 +225,7 @@ export function updateSite(params) {
 
 // ----------------------------------------------------------------------
 
-export function getSites(customerID = null) {
+export function getSites(customerID) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -238,11 +238,12 @@ export function getSites(customerID = null) {
           }
         }
         );
-      }else{
-        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
+        dispatch(slice.actions.getSitesSuccess(response.data));
+        dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
       }
-      dispatch(slice.actions.getSitesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
+      // else{
+        //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
+        // }
 
     } catch (error) {
       console.log(error);

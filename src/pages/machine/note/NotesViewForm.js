@@ -115,8 +115,8 @@ export default function NoteViewForm({currentNote = null}) {
             <Typography variant="string" sx={{ whiteSpace: 'pre-line'}}>
                 {defaultValues.note}
             </Typography>
-            
           </Grid>
+
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>

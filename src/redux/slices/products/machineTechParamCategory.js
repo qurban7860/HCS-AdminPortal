@@ -33,7 +33,7 @@ const slice = createSlice({
     
     // RESET CUSTOMER
     resetTechparamcategory(state){
-      state.machine = {};
+      state.techparamcategory = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
