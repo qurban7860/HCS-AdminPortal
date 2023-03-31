@@ -206,7 +206,7 @@ useLayoutEffect(() => {
         <Card sx={{mt:3}}>
           {!formVisibility && !settingEditFormVisibility && settings.map((setting, index) => (
 
-            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)}>
+            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} 
           // aria-controls="panel2bh-content"
           // id="panel2bh-header"

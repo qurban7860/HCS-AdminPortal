@@ -286,7 +286,7 @@ const toggleChecked = () =>
           {noteEditFormVisibility && <NoteEditForm/> }
           {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
           {!formVisibility && !noteEditFormVisibility && notes.map((note, index) => (
-            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  >
+            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""} >
               <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
             { index !==  activeIndex ? 
               <Grid container spacing={0}>

@@ -209,8 +209,8 @@ export default function MachineSettingList() {
           {licenseEditFormVisibility && <LicenseEditForm/>}
           {!formVisibility && !licenseEditFormVisibility && licenses.map((license, index) => (
 
-            <Accordion key={license._id} expanded={expanded === index} onChange={handleChange(index)}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} sx={{ bg:'light'}}>
+            <Accordion key={license._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
                   

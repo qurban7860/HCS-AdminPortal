@@ -203,7 +203,6 @@ useLayoutEffect(() => {
 
         {!toolInstalledEditFormVisibility && <Stack alignItems="flex-end" sx={{ mb: 3, px:4 }}>
           <Button
-              // alignItems 
               onClick={toggleChecked}
               variant="contained"
               startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
@@ -216,8 +215,7 @@ useLayoutEffect(() => {
           {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm/>}
           {toolInstalledEditFormVisibility && <ToolsInstalledEditForm/>}
           {!formVisibility && !toolInstalledEditFormVisibility && toolsInstalled.map((tool, index) => (
-
-            <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)}>
+            <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>

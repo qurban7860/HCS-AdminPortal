@@ -228,7 +228,7 @@ export default function CustomerContactList() {
           {!formVisibility && !contactEditFormVisibility && contacts.map((contact, index) => (
           
   
-            <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} >
+            <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 {/* <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
                   {contact.firstName} {contact.lastName} 

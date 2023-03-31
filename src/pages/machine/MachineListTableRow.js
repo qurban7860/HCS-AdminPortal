@@ -71,8 +71,7 @@ export default function MachineListTableRow({
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
-
-        <TableCell>{parentMachine ? <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> : ""}</TableCell>
+        <TableCell align="right" >{parentMachine ? <Iconify icon="bi:layer-backward" sx={{ color: 'text.disabled',mr:-2 }} />  : ""}</TableCell>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Link
@@ -80,11 +79,10 @@ export default function MachineListTableRow({
               color="inherit"
               variant="subtitle2"
               onClick={onViewRow}
-              sx={{ cursor: 'pointer',ml:-3 }}
+              sx={{ cursor: 'pointer' }}
             >{serialNo || ''}</Link>
           </Stack>
         </TableCell>
-
         {/* <TableCell>{parentMachine?.name || ''}</TableCell> */}
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
