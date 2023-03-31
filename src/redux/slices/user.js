@@ -47,7 +47,20 @@ const slice = createSlice({
       state.error = action.payload;
       state.initial = true;
     },
-
+    // RESET USERS
+    resetUsers(state){
+      state.users = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET USER
+    resetUser(state){
+      state.user = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // GET users
     getUsersSuccess(state, action) {
       state.isLoading = false;
@@ -76,62 +89,56 @@ const slice = createSlice({
     async saveUser(state, action){
       try {
         
-        const formData = new FormData();
+        const data = {
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName,
+          email: action.payload.email,
+          password: action.payload.password,
+          address: action.payload.address,
+          phoneNumber: action.payload.phoneNumber,
+          country: action.payload.country,
+          state: action.payload.state,
+          city: action.payload.city,
+          zip: action.payload.zipCode,
+          addedBy: action.payload.email,
+          isVerified: action.payload.isVerified,
+          role: action.payload.role,
+        };
+        if(action.payload.avatarUrl){
+          data.image = action.payload.avatarUrl
+        }
 
-        formData.append('firstName', action.payload.firstName);
-        formData.append('lastName', action.payload.lastName);
-        formData.append('email', action.payload.email);
-        formData.append('password', action.payload.password);
-        formData.append('address', action.payload.address);
-        formData.append('phoneNumber', action.payload.phoneNumber);
-        formData.append('country', action.payload.country);
-        formData.append('state', action.payload.state);
-        formData.append('city', action.payload.city);
-        formData.append('zip', action.payload.zipCode);
-        formData.append('addedBy', action.payload.addedBy);
-        formData.append('isVerified', action.payload.isVerified);
-        formData.append('role', action.payload.role);
-
-        
-        formData.append('image', action.payload.avatarUrl);
-
-        const response = await axios.post(`${CONFIG.SERVER_URL}users`,
-          formData,
-        );
-
+        const response = await axios.post(`${CONFIG.SERVER_URL}users`, data);
 
       } catch (error) {
         console.error(error);
         this.hasError(error.message);
       }
-
     },
 
     async updateUser(state, action) {
       try {
+        const data = {
+          firstName: action.payload.firstName,
+          lastName: action.payload.lastName,
+          email: action.payload.email,
+          password: action.payload.password,
+          address: action.payload.address,
+          phoneNumber: action.payload.phoneNumber,
+          country: action.payload.country,
+          state: action.payload.state,
+          city: action.payload.city,
+          zip: action.payload.zipCode,
+          addedBy: action.payload.email,
+          isVerified: action.payload.isVerified,
+          role: action.payload.role,
+        };
 
-        const formData = new FormData();
-        formData.append('id', action.payload.id);
-        formData.append('firstName', action.payload.firstName);
-        formData.append('lastName', action.payload.lastName);
-        formData.append('email', action.payload.email);
-        formData.append('password', action.payload.password);
-        formData.append('address', action.payload.address);
-        formData.append('phoneNumber', action.payload.phoneNumber);
-        formData.append('country', action.payload.country);
-        formData.append('state', action.payload.state);
-        formData.append('city', action.payload.city);
-        formData.append('zip', action.payload.zipCode);
-        formData.append('addedBy', action.payload.email);
-        formData.append('isVerified', action.payload.isVerified);
-        formData.append('role', action.payload.role);
         if(action.payload.avatarUrl){
-          formData.append('image', action.payload.avatarUrl);
+          data.image= action.payload.avatarUrl
         }
 
-        const response = await axios.patch(`${CONFIG.SERVER_URL}users/${action.payload.id}`,
-          formData
-        );
+        const response = await axios.patch(`${CONFIG.SERVER_URL}users/${action.payload.id}`, data);
 
       } catch (error) {
         console.error(error);
@@ -157,6 +164,8 @@ export default slice.reducer;
 export const {
   saveUser,
   updateUser,
+  resetUsers,
+  resetUser,
   gotoStep,
   backStep,
   nextStep,
@@ -178,6 +187,7 @@ export function getUsers() {
     }
   };
 }
+
 // ----------------------------------------------------------------------
 
 export function getUser(id) {
