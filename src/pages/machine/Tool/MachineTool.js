@@ -35,8 +35,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
-
+import {Cover} from '../../components/Cover'
 // ----------------------------------------------------------------------
 
 export default function MachineSuppliers() {
@@ -113,6 +112,16 @@ export default function MachineSuppliers() {
     <>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
     <Container maxWidth={false }>
+    <Card
+                sx={{
+                  mb: 3,
+                  height: 160,
+                  position: 'relative',
+                  // mt: '24px',
+                }}
+              >
+                <Cover name='New Tool' icon='fa-solid:tools' />
+              </Card>
       <Helmet>
         <title> Machine: Tools | Machine ERP</title>
       </Helmet>
@@ -123,11 +132,7 @@ export default function MachineSuppliers() {
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Tool
-                </Typography>
-              </Stack>
+            
             <Box
               rowGap={2}
               columnGap={2}

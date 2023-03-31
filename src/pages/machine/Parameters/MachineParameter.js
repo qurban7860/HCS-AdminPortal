@@ -35,7 +35,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
+import {Cover} from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
@@ -111,6 +111,16 @@ export default function MachineTechParam() {
   return (
     <>
     <Container maxWidth={false }>
+    <Card
+                sx={{
+                  mb: 3,
+                  height: 160,
+                  position: 'relative',
+                  // mt: '24px',
+                }}
+              >
+                <Cover name='New Parameter' icon='ic:round-flare' />
+              </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Helmet>
         <title> Machine: Tech Params | Machine ERP</title>
@@ -119,11 +129,7 @@ export default function MachineTechParam() {
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Parameter
-                </Typography>
-              </Stack>
+            
             <Box
               rowGap={2}
               columnGap={2}

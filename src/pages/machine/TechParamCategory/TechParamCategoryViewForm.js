@@ -64,11 +64,12 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
         description:techparamcategory?.description || 'N/A',
         createdAt: techparamcategory?.createdAt || '',
         updatedAt: techparamcategory?.updatedAt || '',
-        isDisabled: true,
+        isDisabled: techparamcategory?.isDisabled || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTechparamcategory, techparamcategory]
     );
+    console.log(defaultValues)
 
     // console.log(tool, "test")
 
@@ -112,7 +113,7 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes'}</Typography>
 
         </Grid>
 
