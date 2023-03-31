@@ -31,18 +31,28 @@ export default function ToolsInstalledAddForm() {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-
 useLayoutEffect(() => {
   dispatch(getTools())
   dispatch(getToolsInstalled)
-}, [dispatch,tools,toolsInstalled]);
+}, [dispatch,machine]);
 
 useLayoutEffect(() => {
 const filterTool = [];
 toolsInstalled.map((toolInstalled)=>(filterTool.push(toolInstalled.tool._id)))
-const filteredsetting = tools.filter(item => !filterTool.includes(item._id));
-setToolsVal(filteredsetting);
-}, [tools,toolsInstalled]);
+const filteredTool = tools.filter(item => !filterTool.includes(item._id));
+filteredTool.sort((a, b) =>{
+  const nameA = a.name.toUpperCase(); 
+  const nameB = b.name.toUpperCase(); 
+  if (nameA < nameB) {
+    return -1;
+  }
+  if (nameA > nameB) {
+    return 1;
+  }
+  return 0;
+})
+setToolsVal(filteredTool);
+}, [tools,toolsInstalled,machine]);
 
   const AddSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),

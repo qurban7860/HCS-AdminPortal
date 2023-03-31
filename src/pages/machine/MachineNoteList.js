@@ -215,7 +215,7 @@ const toggleChecked = () =>
       setChecked(value => !value);
       dispatch(setNoteFormVisibility(!formVisibility));
     };
-console.log("screen Width : ",window.innerWidth)
+// console.log("screen Width : ",window.innerWidth)
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteNote(id));

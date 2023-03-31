@@ -69,23 +69,6 @@ const TABLE_HEAD = [
 
 ];
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_sites', label: 'All Sites' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
-
 const _accordions = [...Array(8)].map((_, index) => ({
   id: _mock.id(index),
   value: `panel${index + 1}`,
@@ -181,8 +164,6 @@ useLayoutEffect(() => {
     }
   }, [settings, error, responseMessage, enqueueSnackbar, initial]);
 
-
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -234,9 +215,7 @@ useLayoutEffect(() => {
                 
                 <Grid container spacing={0}>
                   <Grid item xs={12} sm={3} md={3}>
-                    {/* <Typography variant="body2" > */}
                     {setting?.techParam?.category?.name || ""}
-                    {/* </Typography> */}
                   </Grid>
                   <Grid item xs={12} sm={3} md={3}>
                     {setting?.techParam?.name || "" }

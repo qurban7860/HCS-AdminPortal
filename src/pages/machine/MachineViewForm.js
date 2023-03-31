@@ -83,7 +83,7 @@ export default function CustomerViewForm() {
       {/* <Grid item xs={12} sm={12} > */}
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4}}>
               <Button
-                onClick={() => { toggleEdit(); }}
+                onClick={toggleEdit}
                 variant="contained"
                 size="medium"
                 startIcon={<Iconify icon="eva:edit-fill" />} >
