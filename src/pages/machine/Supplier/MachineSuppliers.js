@@ -36,7 +36,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
+import {Cover} from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
@@ -145,15 +145,22 @@ export default function MachineSuppliers() {
   return (
     <>
     <Container maxWidth={ false }>
+    <Card
+                sx={{
+                  mb: 3,
+                  height: 160,
+                  position: 'relative',
+                  // mt: '24px',
+                }}
+              >
+                <Cover name='New Supplier' icon='material-symbols:inventory-2-rounded' />
+              </Card>
     <Helmet>
         <title> Machine: Supplier | Machine ERP</title>
       </Helmet>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       
-      <CustomBreadcrumbs 
-          heading="Suppliers"
-          sx={{ mb: -2, mt: 3 }}
-        />
+      
 
         <Grid item xs={18} md={12} sx={{mt: 3}}>
             <Card sx={{ p: 3, mt: 3}}>
