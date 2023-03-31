@@ -7,14 +7,9 @@ import { Container } from '@mui/material';
 import { useDispatch, useSelector } from '../../../redux/store';
 // slices
 import { getNote } from '../../../redux/slices/customer/note';
-import { getUsers } from '../../../redux/slices/user';
 import { getSites } from '../../../redux/slices/customer/site';
 import { getContacts } from '../../../redux/slices/customer/contact';
 
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
 import NoteEditForm from './NoteEditForm';
@@ -23,18 +18,12 @@ import NoteEditForm from './NoteEditForm';
 
 export default function NoteEdit() {
   const { themeStretch } = useSettingsContext();
-
   const dispatch = useDispatch();
   const { customer } = useSelector((state) => state.customer);
-
-
   const { id } = useParams(); 
-
   const { note } = useSelector((state) => state.note);
-
   useLayoutEffect(() => {
     dispatch(getNote(id));
-    // dispatch(getUsers());
     dispatch(getSites(customer._id));
     dispatch(getContacts(customer._id));
   }, [dispatch, id, customer._id]);
@@ -44,20 +33,7 @@ export default function NoteEdit() {
       <Helmet>
         <title> Note: Edit Page | Machine ERP</title>
       </Helmet>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          // heading="Edit Note"
-          // links={[
-          //   { name: 'Dashboard', href: PATH_DASHBOARD.root },
-          //   {
-          //     name: 'Note',
-          //     href: PATH_DASHBOARD.note.list,
-          //   },
-          //   { name: note?.name },
-          // ]}
-        />
-
+      <Container maxWidth={false }>
         <NoteEditForm/>
       </Container>
     </>

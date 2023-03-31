@@ -8,6 +8,7 @@ import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
 import UserNewEditForm from '../../sections/@dashboard/user/UserNewEditForm';
+import {Cover} from '../components/Cover';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +22,7 @@ export default function UserAdd() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+        {/* <CustomBreadcrumbs
           heading="Create a new user"
           links={[
             {
@@ -34,7 +35,8 @@ export default function UserAdd() {
             },
             { name: 'New user' },
           ]}
-        />
+        /> */}
+        <Cover/>
         <UserNewEditForm />
       </Container>
     </>

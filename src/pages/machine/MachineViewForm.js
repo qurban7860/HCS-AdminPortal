@@ -16,11 +16,11 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
-import ViewFormSubtitle from '../components/ViewFormSubtitle';
 // slices
 import { getMachines, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 
 
+import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 
@@ -107,7 +107,6 @@ export default function CustomerViewForm() {
             <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description : ''} />
             <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} />
         </Grid>
-
         <Grid container>
             <ViewFormSubtitle sm={12} heading="Howick Resources"/>
             <ViewFormField sm={6} heading="Account Manager" param={defaultValues?.accountManager?.firstName || ""} secondParam={defaultValues?.accountManager?.lastName || ""}/>

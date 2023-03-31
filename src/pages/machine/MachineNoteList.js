@@ -51,7 +51,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import NotesViewForm from './note/NotesViewForm';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
-
+import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 
 
 import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/products/machineNote';
@@ -265,6 +265,7 @@ const toggleChecked = () =>
 //   };
 // ------------------------------------------------------------------------------------
 
+// <AddButtonAboveAccordion name="New Note" formVisibility={formVisibility} FormVisibility={formVisibility} /> 
 
   return (
     <>
@@ -272,7 +273,7 @@ const toggleChecked = () =>
         <title> Note: List | Machine ERP </title>
       </Helmet>
         {!noteEditFormVisibility && 
-            <Stack alignItems="flex-end" sx={{  px: 4,mb:3 }}>
+            <Stack alignItems="flex-end" sx={{  px: 4,mb:2, mt:-1 }}>
                 <Button
                     onClick={toggleChecked}
                     variant="contained"
