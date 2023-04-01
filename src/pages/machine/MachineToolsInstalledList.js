@@ -214,8 +214,10 @@ useLayoutEffect(() => {
         <Card sx={{mt:3}}>
           {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm/>}
           {toolInstalledEditFormVisibility && <ToolsInstalledEditForm/>}
-          {!formVisibility && !toolInstalledEditFormVisibility && toolsInstalled.map((tool, index) => (
-            <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
+          {!formVisibility && !toolInstalledEditFormVisibility && toolsInstalled.map((tool, index) => { 
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return(
+            <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
@@ -244,7 +246,7 @@ useLayoutEffect(() => {
               </AccordionDetails>
             </Accordion>
             
-          ))} 
+          )})} 
 
           {isNotFound && <EmptyContent title="No Data"/>}
             

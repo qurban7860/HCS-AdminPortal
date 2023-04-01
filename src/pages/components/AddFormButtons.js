@@ -6,14 +6,13 @@ import ConfirmDialog from '../../components/confirm-dialog';
 
 AddFormButtons.propTypes = {
   saveButtonName: PropTypes.string,
-  cancelButtonName: PropTypes.number,
-  toggleCancel: PropTypes.object,
-  isSubmitting: PropTypes.object,
+  cancelButtonName: PropTypes.string,
+  toggleCancel: PropTypes.func,
+  isSubmitting: PropTypes.bool,
   };
 
 export default function AddFormButtons({saveButtonName,toggleCancel,isSubmitting,cancelButtonName}) {
 const [openConfirm, setOpenConfirm] = useState(false);
-console.log("confirm : ")
 
 const handleOpenConfirm = () => {
   setOpenConfirm(true);

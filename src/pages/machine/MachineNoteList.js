@@ -237,7 +237,6 @@ const toggleChecked = () =>
   //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
   //   setSelected([]);
   //   setTableData(deleteRows);
-
   //   if (page > 0) {
   //     if (selectedRows.length === dataInPage.length) {
   //       setPage(page - 1);
@@ -265,29 +264,21 @@ const toggleChecked = () =>
 //   };
 // ------------------------------------------------------------------------------------
 
-// <AddButtonAboveAccordion name="New Note" formVisibility={formVisibility} FormVisibility={formVisibility} /> 
-
   return (
     <>
       <Helmet>
         <title> Note: List | Machine ERP </title>
       </Helmet>
         {!noteEditFormVisibility && 
-            <Stack alignItems="flex-end" sx={{  px: 4,mb:2, mt:-1 }}>
-                <Button
-                    onClick={toggleChecked}
-                    variant="contained"
-                    startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-                    >
-                    New Note 
-                </Button>
-            </Stack>
+           <AddButtonAboveAccordion name="New Note" toggleChecked={toggleChecked} FormVisibility={formVisibility} /> 
         }
         <Card>
           {noteEditFormVisibility && <NoteEditForm/> }
           {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
-          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) => (
-            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""} >
+          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{ 
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return(
+            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)} sx={{ borderTop: borderTopVal}} >
               <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
             { index !==  activeIndex ? 
               <Grid container spacing={0}>
@@ -309,31 +300,9 @@ const toggleChecked = () =>
                 <NotesViewForm currentNote={note} />
               </AccordionDetails>
             </Accordion>
-          ))} 
+          )})} 
           {isNotFound && !noteEditFormVisibility && !formVisibility && <EmptyContent title="No Data"/>}
         </Card>
-        <ConfirmDialog
-          open={openConfirm}
-          onClose={handleCloseConfirm}
-          title="Delete"
-          content={
-            <>
-              Are you sure want to delete <strong> {selected.length} </strong> items?
-            </>
-          }
-          action={
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                handleDeleteRow(selected);
-                handleCloseConfirm();
-              }}
-            >
-              Delete
-            </Button>
-          }
-        />
     </>
   );
 }

@@ -5,8 +5,8 @@ import Iconify from '../../components/iconify';
 
 AddButtonAboveAccordion.propTypes = {
   name: PropTypes.string,
-  FormVisibility: PropTypes.object,
-  toggleChecked: PropTypes.object,
+  FormVisibility: PropTypes.bool,
+  toggleChecked: PropTypes.func,
   };
 export default function AddButtonAboveAccordion({name,toggleChecked,FormVisibility}) {
     return (

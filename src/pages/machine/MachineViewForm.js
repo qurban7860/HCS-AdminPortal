@@ -1,46 +1,36 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, Container, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
-// global
-import { CONFIG } from '../../config-global';
+import { Card, Grid} from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// components
-import { useSnackbar } from '../../components/snackbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import Iconify from '../../components/iconify';
+import { PATH_MACHINE } from '../../routes/paths';
 // slices
-import { getMachines, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
-
-
+import { getMachines, getMachine,deleteMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
-
 export default function CustomerViewForm() {
-
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
+
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false))
   }, [ dispatch ,machine ])
 
-  const toggleEdit = () => {
+  const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
   }
 
-
-  const { enqueueSnackbar } = useSnackbar();
+  const onDelete = async () => {
+    await dispatch(deleteMachine(machine._id));
+    dispatch(getMachines());
+    navigate(PATH_MACHINE.machine.list)
+  };
 
   const defaultValues = useMemo(
     () => ({
@@ -75,22 +65,10 @@ export default function CustomerViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
-
-
+  
   return (
-
       <Card sx={{ p: 3 }}>
-      {/* <Grid item xs={12} sm={12} > */}
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4}}>
-              <Button
-                onClick={toggleEdit}
-                variant="contained"
-                size="medium"
-                startIcon={<Iconify icon="eva:edit-fill" />} >
-                Edit Machine
-              </Button>
-        </Stack>
-      {/* </Grid> */}
+        <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete} />
         <Grid container>
             <ViewFormField sm={6} heading="Serial No" param={defaultValues.serialNo ? defaultValues.serialNo : ''} />
             <ViewFormField sm={6} heading="Name" param={defaultValues.name} />

@@ -6,8 +6,8 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 
 ViewFormEditDeleteButtons.propTypes = {
-  handleEdit: PropTypes.object,
-  onDelete: PropTypes.object,
+  handleEdit: PropTypes.func,
+  onDelete: PropTypes.func,
   };
 export default function ViewFormEditDeleteButtons({onDelete,handleEdit}) {
 const [openConfirm, setOpenConfirm] = useState(false);
@@ -20,7 +20,7 @@ const handleCloseConfirm = () => {
 };
     return (
       <>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-2, mr:3}}>
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
               <Button
                 onClick={() => handleEdit()}
                 variant="outlined"
