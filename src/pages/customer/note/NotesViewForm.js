@@ -77,12 +77,10 @@ export default function NoteViewForm({currentNote = null}) {
       contact_lastName:  currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.lastName,
       note: currentNote?.note || "",
       createdAt:                currentNote?.createdAt || "",
-      createdByFname:           currentNote?.createdBy?.firstName || "",
-      createdByLname:           currentNote?.createdBy?.lastName || "",
+      createdByFullname:           currentNote?.createdBy?.name || "",
       createdIP:                currentNote?.createdIP || "",
       updatedAt:                currentNote?.updatedAt || "",
-      updatedByFname:           currentNote?.updatedBy?.firstName || "",
-      updatedByLname:           currentNote?.updatedBy?.lastName || "",
+      updatedByFullname:           currentNote?.updatedBy?.name || "",
       updatedIP:                currentNote?.updatedIP || "",
 
       
@@ -144,12 +142,12 @@ export default function NoteViewForm({currentNote = null}) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

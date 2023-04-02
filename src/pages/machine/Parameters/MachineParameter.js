@@ -36,7 +36,7 @@ import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import {Cover} from '../../components/Cover';
-
+import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function MachineTechParam() {
@@ -106,6 +106,10 @@ export default function MachineTechParam() {
         console.error(error);
       }
   };
+  const toggleCancel = () => 
+      {
+        navigate(PATH_MACHINE.parameters.list);
+      };
 
   const { themeStretch } = useSettingsContext();
   return (
@@ -135,25 +139,11 @@ export default function MachineTechParam() {
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-
-              <RHFTextField name="name" label="Machine Technical Parameter" required />
-              <RHFTextField name="code" label="Code" required />
-              </Box>
-              <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <Autocomplete
+            <Autocomplete
                 value={paramCategoryVal || null}
                 options={techparamcategories}
                 getOptionLabel={(option) => option.name}
@@ -164,6 +154,33 @@ export default function MachineTechParam() {
                 renderInput={(params) => <TextField {...params} label="Technical Parameter Categories" />}
                 ChipProps={{ size: 'small' }}
               />
+              </Box>
+              <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(2, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+
+              <RHFTextField name="name" label="Machine Technical Parameter" required />
+              <RHFTextField name="code" label="Code" required />
+              </Box>
+
+              <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
+              
+              <RHFTextField name="description" label="Description" minRows={7} multiline />
+              
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"
@@ -179,11 +196,7 @@ export default function MachineTechParam() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Tech Param
-              </LoadingButton>
-            </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
                         
             </Card>
           

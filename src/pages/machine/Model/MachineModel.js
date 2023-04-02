@@ -39,6 +39,7 @@ import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import {Cover} from '../../components/Cover';
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -114,6 +115,10 @@ export default function MachineModel() {
         console.error(error);
       }
   };
+  const toggleCancel = () => 
+  {
+    navigate(PATH_MACHINE.machineModel.list);
+  };
 
   
 
@@ -131,115 +136,67 @@ export default function MachineModel() {
               >
                 <Cover name='New Model' icon='material-symbols:model-training-outline-rounded' />
               </Card>
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Helmet>
-        <title> Machine: Models | Machine ERP</title>
-      </Helmet>
-      
-        
-        <Grid item xs={18} md={12} sx={{mt: 3}}>
-          <Card sx={{ p: 3}}>
-            <Stack spacing={3}>
-            {/* <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Model
-                </Typography>
-              </Stack> */}
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
-
-              <RHFTextField name="name" label="Machine Model" required />
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-
-              <Autocomplete
-                value={modelVal || null}
-                options={categories}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  setModelVal(newValue);
-                }}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Categories" />}
-                ChipProps={{ size: 'small' }}
-              />
-
-
-
-              {/* <Autocomplete
-                freeSolo
-                options={categories}
-                onChange={(event, newValue) => {
-                  setValues(newValue?._id);
-                }}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Categories" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-
-
-
-              {/* <RHFSelect native name="category" label="Category">
-                    <option value="" defaultValue/>
-                    { 
-                    categories.length > 0 && categories.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect> */}
+          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+            <Helmet>
+              <title> Machine: Models | Machine ERP</title>
+            </Helmet>
+            
               
-              {/* <Select 
-                // sx={{ paddingTop: '75%', borderRadius: 1.5 }} 
-                // name="category"
-                label="Category"
-                // options={categories.map((option) => ({
-                //   value: option._id,
-                //   label: option.name,
-                // }))}
-                // isClearable
-                // defaultValue={null}
-                // onChange={(option) => setValue("category", option?.value)}
-                // // sx={{ 
-                // //   borderColor: "hsl(210deg 13% 88%)",
-                // //   borderRadius: "8px",
-                // //   p: 8,
-                // //    }}
-              /> */}
+              <Grid item xs={18} md={12} sx={{mt: 3}}>
+                <Card sx={{ p: 3}}>
+                  <Stack spacing={3}>
+                  
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{
+                      xs: 'repeat(1, 1fr)',
+                      sm: 'repeat(1, 1fr)',
+                    }}
+                  >
 
+                    <Autocomplete
+                      value={modelVal || null}
+                      options={categories}
+                      getOptionLabel={(option) => option.name}
+                      onChange={(event, newValue) => {
+                        setModelVal(newValue);
+                      }}
+                      id="controllable-states-demo"
+                      renderInput={(params) => <TextField {...params} label="Categories" />}
+                      ChipProps={{ size: 'small' }}
+                    />
 
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
-             </Box>
-             
-              </Stack>
+                    <RHFTextField name="name" label="Machine Model" required />
+                    <RHFTextField name="description" label="Description" minRows={7} multiline />
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save 
-              </LoadingButton>
-            </Stack>
-                        
-            </Card>
-          
-          </Grid>
-        
-    </FormProvider>
+                    <RHFSwitch
+                    name="isDisabled"
+                    labelPlacement="start"
+                    
+                    label={
+                      <>
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                          Active
+                        </Typography>
+                      </>
+                    } 
+                  />
+                  </Box>
+                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+                  
+                  
+                    </Stack>
+                    
+
+                  
+                              
+                  </Card>
+                
+                </Grid>
+              
+          </FormProvider>
     </Container>
     </>
   );

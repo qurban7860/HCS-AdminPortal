@@ -86,12 +86,10 @@ export default function SiteViewForm({ currentSite = null }) {
         primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
       
         createdAt:                currentSite?.createdAt || "",
-        createdByFname:           currentSite?.createdBy?.name || "",
-        createdByLname:           currentSite?.createdBy?.lastName || "",
+        createdByFullname:           currentSite?.createdBy?.name || "",
         createdIP:                currentSite?.createdIP || "",
         updatedAt:                currentSite?.updatedAt || "",
-        updatedByFname:           currentSite?.updatedBy?.name || "",
-        updatedByLname:           currentSite?.updatedBy?.lastName || "",
+        updatedByFullname:           currentSite?.updatedBy?.name || "",
         updatedIP:                currentSite?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -300,12 +298,12 @@ export default function SiteViewForm({ currentSite = null }) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

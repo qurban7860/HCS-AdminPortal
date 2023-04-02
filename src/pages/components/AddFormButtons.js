@@ -52,8 +52,8 @@ const onConfirm = () => {
         <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
-            title="Cancle"
-            content="Are you sure want to discard data?"
+            title="Cancel"
+            content="Are you sure you want to cancel?"
             action={
               <Button variant="contained" color="error" onClick={onConfirm}>
                 Confirm

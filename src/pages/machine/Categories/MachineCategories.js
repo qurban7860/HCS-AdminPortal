@@ -14,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
+import AddFormButtons from '../../components/AddFormButtons';
 import { getCategories, createCategorys } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
@@ -50,6 +51,7 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -93,6 +95,13 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
   //   dispatch(getSPContacts());
   // }, [dispatch]);
 
+  
+  const toggleCancel = () => 
+  {
+    navigate(PATH_MACHINE.categories.list);
+  };
+  
+
 
   const onSubmit = async (data) => {
       try{ 
@@ -131,7 +140,7 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
       
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
-            <Stack spacing={3}>
+            <Stack spacing={2}>
             
             <Box
               rowGap={2}
@@ -157,18 +166,20 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
               } 
             />
              </Box>
+             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+             
              
               </Stack>
+              
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Categories
-              </LoadingButton>
-            </Stack>
+            
                         
             </Card>
+            
+
           
           </Grid>
+          
         
     </FormProvider>
     </Container>

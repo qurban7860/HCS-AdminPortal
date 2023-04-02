@@ -83,12 +83,10 @@ export default function ContactViewForm({ currentContact = null }) {
       country: currentContact ? currentContact.address?.country : contact?.address.country || 'N/A',
         
       createdAt:                currentContact?.createdAt || "",
-      createdByFname:           currentContact?.createdBy?.firstName || "",
-      createdByLname:           currentContact?.createdBy?.lastName || "",
+      createdByFullname:           currentContact?.createdBy?.name || "",
       createdIP:                currentContact?.createdIP || "",
       updatedAt:                currentContact?.updatedAt || "",
-      updatedByFname:           currentContact?.updatedBy?.firstName || "",
-      updatedByLname:           currentContact?.updatedBy?.lastName || "",
+      updatedByFullname:           currentContact?.updatedBy?.name || "",
       updatedIP:                currentContact?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -246,12 +244,12 @@ export default function ContactViewForm({ currentContact = null }) {
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

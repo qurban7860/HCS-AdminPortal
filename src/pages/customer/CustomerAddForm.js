@@ -75,6 +75,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
+  const numberRegExp = /^[0-9]+$/;
+
   const AddCustomerSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     tradingName: Yup.string(),
@@ -94,6 +96,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
+    postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
     region: Yup.string(),
     country: Yup.string().nullable(true),
 
@@ -239,6 +242,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 <RHFTextField name="suburb" label="Suburb" />
 
                 <RHFTextField name="city" label="City" />
+
+                <RHFTextField name="postcode" label="Post Code" />
 
                 <RHFTextField name="region" label="Region" />
 

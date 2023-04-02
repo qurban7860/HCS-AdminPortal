@@ -49,12 +49,10 @@ export default function CustomerViewForm() {
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       createdAt:                customer?.createdAt || "",
-      createdByFname:           customer?.createdBy?.firstName || "",
-      createdByLname:           customer?.createdBy?.lastName || "",
+      createdByFullname:           customer?.createdBy?.name || "",
       createdIP:                customer?.createdIP || "",
       updatedAt:                customer?.updatedAt || "",
-      updatedByFname:           customer?.updatedBy?.firstName || "",
-      updatedByLname:           customer?.updatedBy?.lastName || "",
+      updatedByFullname:           customer?.updatedBy?.name || "",
       updatedIP:                customer?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -181,6 +179,15 @@ export default function CustomerViewForm() {
 
         <Grid item xs={12} sm={6} sx={{ pt:2 }}>
           <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+            Post Code
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.mainSite.address?.postcode  ? defaultValues.mainSite.address.postcode : ''}</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+          <Typography variant="overline" sx={{ color: 'text.disabled' }}>
             Region
           </Typography>
 
@@ -271,12 +278,12 @@ export default function CustomerViewForm() {
           <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFname} {defaultValues.createdByLname} {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
               <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+                updated by: {defaultValues.updatedByFullname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
               </Typography>
             </Grid>
           </Grid>
