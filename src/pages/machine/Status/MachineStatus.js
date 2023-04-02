@@ -36,6 +36,7 @@ import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import {Cover} from '../../components/Cover';
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -102,6 +103,11 @@ export default function MachineStatus() {
       }
   };
 
+  const toggleCancel = () => 
+      {
+        navigate(PATH_MACHINE.machineStatus.list);
+      };
+
   
 
   const { themeStretch } = useSettingsContext();
@@ -158,11 +164,7 @@ export default function MachineStatus() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Status
-              </LoadingButton>
-            </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
                         
             </Card>
           
