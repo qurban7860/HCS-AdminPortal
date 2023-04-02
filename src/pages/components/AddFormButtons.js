@@ -54,7 +54,7 @@ const onConfirm = () => {
             open={openConfirm}
             onClose={handleCloseConfirm}
             title="Cancel"
-            content="Are you sure want to discard data?"
+            content="Are you sure you want to cancel?"
             action={
               <Button variant="contained" color="error" onClick={onConfirm}>
                 Confirm
