@@ -43,7 +43,7 @@ import {
 // sections
 import UserTableToolbar from './UserTableToolbar';
 import  UserTableRow  from './UserTableRow';
-import { getUsers, deleteUser } from '../../redux/slices/user';
+import { getUsers, deleteUser , setEditFormVisibility } from '../../redux/slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -59,9 +59,9 @@ const ROLE_OPTIONS = [
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
-  { id: 'role', label: 'Role', align: 'left' },
+  // { id: 'role', label: 'Role', align: 'left' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
-  { id: 'status', label: 'Status', align: 'left' },
+  // { id: 'status', label: 'Status', align: 'left' },
   { id: '' },
 ];
 
@@ -89,7 +89,7 @@ export default function UserListPage() {
 
   const dispatch = useDispatch();
 
-  const { users, error, responseMessage, initial} = useSelector((state) => state.user);
+  const { users, error, responseMessage, initial,editFormVisibility,formVisibility} = useSelector((state) => state.user);
 
   const { themeStretch } = useSettingsContext();
 
@@ -97,7 +97,7 @@ export default function UserListPage() {
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -107,11 +107,10 @@ export default function UserListPage() {
 
   const [filterStatus, setFilterStatus] = useState('all');
 
-
-  // useLayoutEffect(() => {
-  //   dispatch(getUsers());
-  //   // dispatch(getDepartments());
-  // }, [dispatch]);
+// console.log("users : ", users)
+  useLayoutEffect(() => {
+    dispatch(getUsers());
+  }, [dispatch,editFormVisibility,formVisibility]);
 
   useEffect(() => {
     if (initial) {
@@ -170,9 +169,8 @@ export default function UserListPage() {
   const handleDeleteRow = async (id) => {
     try {
       try {
-        // console.log(id);
-        // dispatch(deleteUser(id));
-        // dispatch(getUsers());
+        dispatch(deleteUser(id));
+        dispatch(getUsers());
         setSelected([]);
   
         if (page > 0) {
@@ -210,6 +208,7 @@ export default function UserListPage() {
   const handleEditRow = (id) => {
     console.log('id', id);
     console.log('edit');
+    dispatch(setEditFormVisibility(true))
     navigate(PATH_DASHBOARD.user.edit(id));
   };
 
@@ -285,19 +284,19 @@ export default function UserListPage() {
               dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
+              // onSelectAllRows={(checked) =>
+              //   onSelectAllRows(
+              //     checked,
+              //     tableData.map((row) => row._id)
+              //   )
+              // }
+              // action={
+              //   <Tooltip title="Delete">
+              //     <IconButton color="primary" onClick={handleOpenConfirm}>
+              //       <Iconify icon="eva:trash-2-outline" />
+              //     </IconButton>
+              //   </Tooltip>
+              // }
             />
 
             <Scrollbar>
@@ -306,18 +305,19 @@ export default function UserListPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // rowCount={tableData.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
+
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
@@ -328,6 +328,7 @@ export default function UserListPage() {
                         onSelectRow={() => onSelectRow(row._id)}
                         onDeleteRow={() => handleDeleteRow(row._id)}
                         onEditRow={() => handleEditRow(row._id)}
+                        // onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
 

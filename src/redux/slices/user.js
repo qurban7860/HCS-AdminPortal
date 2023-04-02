@@ -9,6 +9,8 @@ import { CONFIG } from '../../config-global';
 // ----------------------------------------------------------------------
 
 const initialState = {
+  formVisibility: false,
+  editFormVisibility: false,
   intial: false,
   responseMessage: null,
   success: false,
@@ -47,6 +49,17 @@ const slice = createSlice({
       state.error = action.payload;
       state.initial = true;
     },
+
+    // SET VISIBILITY
+    setFormVisibility(state, action){
+      state.formVisibility = action.payload;
+    },
+
+    // SET VISIBILITY
+    setEditFormVisibility(state, action){
+      state.editFormVisibility = action.payload;
+    },
+
     // RESET USERS
     resetUsers(state){
       state.users = [];
@@ -86,67 +99,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    async saveUser(state, action){
-      try {
-        
-        const data = {
-          firstName: action.payload.firstName,
-          lastName: action.payload.lastName,
-          email: action.payload.email,
-          password: action.payload.password,
-          address: action.payload.address,
-          phoneNumber: action.payload.phoneNumber,
-          country: action.payload.country,
-          state: action.payload.state,
-          city: action.payload.city,
-          zip: action.payload.zipCode,
-          addedBy: action.payload.email,
-          isVerified: action.payload.isVerified,
-          role: action.payload.role,
-        };
-        if(action.payload.avatarUrl){
-          data.image = action.payload.avatarUrl
-        }
-
-        const response = await axios.post(`${CONFIG.SERVER_URL}users`, data);
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-    },
-
-    async updateUser(state, action) {
-      try {
-        const data = {
-          firstName: action.payload.firstName,
-          lastName: action.payload.lastName,
-          email: action.payload.email,
-          password: action.payload.password,
-          address: action.payload.address,
-          phoneNumber: action.payload.phoneNumber,
-          country: action.payload.country,
-          state: action.payload.state,
-          city: action.payload.city,
-          zip: action.payload.zipCode,
-          addedBy: action.payload.email,
-          isVerified: action.payload.isVerified,
-          role: action.payload.role,
-        };
-
-        if(action.payload.avatarUrl){
-          data.image= action.payload.avatarUrl
-        }
-
-        const response = await axios.patch(`${CONFIG.SERVER_URL}users/${action.payload.id}`, data);
-
-      } catch (error) {
-        console.error(error);
-        this.hasError(error.message);
-      }
-
-    },
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -162,22 +114,77 @@ export default slice.reducer;
 
 // Actions
 export const {
-  saveUser,
-  updateUser,
+  setFormVisibility,
+  setEditFormVisibility,
   resetUsers,
   resetUser,
   gotoStep,
   backStep,
   nextStep,
 } = slice.actions;
+// ----------------------------------------------------------------------
 
+export function saveUser(param) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+      customer: param.customer,
+      contact: param.contact,
+      name: param.name,
+      email: param.email,
+      password: param.password,
+      phone:  param.phoneNumber,
+      login: param.email,
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
+      dispatch(slice.actions.setResponseMessage('User Saved successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+// ----------------------------------------------------------------------
+
+export function updateUser(param,id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        customer: param.customer,
+        contact: param.contact,
+        name: param.name,
+        email: param.email,
+        phone:  param.phoneNumber,
+        login: param.email,
+        }
+        if(param.password === ""){
+            data.password = param.password 
+        }
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
+      dispatch(slice.actions.setResponseMessage('User updated successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 // ----------------------------------------------------------------------
 
 export function getUsers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}users`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
+      {
+        params: {
+          isArchived: false
+        }
+      }
+      );
       dispatch(slice.actions.getUsersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Users loaded successfully'));
 
@@ -194,7 +201,7 @@ export function getUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}users/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
       dispatch(slice.actions.getUserSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
     } catch (error) {
@@ -210,7 +217,7 @@ export function deleteUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}users/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
     } catch (error) {

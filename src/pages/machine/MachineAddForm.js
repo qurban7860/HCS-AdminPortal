@@ -12,7 +12,7 @@ import { Box, Card, styled, Grid,Container, Stack,TextField,Autocomplete,Select,
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers} from '../../redux/slices/customer/customer';
-import { getSites } from '../../redux/slices/customer/site';
+import { getSites , resetSites } from '../../redux/slices/customer/site';
 import { saveMachine,   getMachines } from '../../redux/slices/products/machine';
 import { getMachinestatuses } from '../../redux/slices/products/statuses';
 import { getMachinemodels} from '../../redux/slices/products/model';
@@ -357,6 +357,7 @@ const handleKeyPress = (e) => {
                   }
                   else{ 
                   setCustomerVal("");
+                  dispatch(resetSites());
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}

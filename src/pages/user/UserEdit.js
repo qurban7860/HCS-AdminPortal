@@ -29,7 +29,7 @@ export default function UserEdit() {
       </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+        {/* <CustomBreadcrumbs
           heading="Edit user"
           links={[
             {
@@ -42,7 +42,7 @@ export default function UserEdit() {
             },
             { name: currentUser?.name },
           ]}
-        />
+        /> */}
 
         <UserAddForm isEdit currentUser={currentUser} />
       </Container>

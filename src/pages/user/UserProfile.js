@@ -37,6 +37,9 @@ export default function UserProfile() {
   const [searchFriends, setSearchFriends] = useState('');
 
   const [currentTab, setCurrentTab] = useState('profile');
+  // const handleViewRow = (id) => {
+  //   navigate(PATH_MACHINE.machine.view(id));
+  // };
 
   const TABS = [
     {

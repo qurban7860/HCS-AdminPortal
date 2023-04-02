@@ -44,7 +44,14 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
+    },
 
+    // RESET CUSTOMERS
+    resetCustomers(state){
+      state.customers = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
     // HAS ERROR
@@ -96,6 +103,7 @@ export default slice.reducer;
 export const {
   setCustomerEditFormVisibility,
   resetCustomer,
+  resetCustomers,
   getCart,
   addToCart,
   setResponseMessage,
@@ -189,17 +197,17 @@ export function saveCustomer(params) {
         /* eslint-enable */
         // params.accountManager ? data.accountManager = params.accountManager : '';
 
-        if(params.accountManager){
+        if(params.accountManager !== "null" && params.accountManager !== "undefined") {
           data.accountManager = params.accountManager;        
         }
 
         // params.projectManager ? data.projectManager = params.projectManager : '';
-        if(params.projectManager){
+        if(params.projectManager !== "null" && params.projectManager !== "undefined"){
           data.projectManager = params.projectManager;        
         }
 
         // params.supportManager ? data.supportManager = params.supportManager : '';
-        if(params.supportManager){
+        if(params.supportManager !== "null" && params.supportManager !== "undefined"){
           data.supportManager = params.supportManager;        
         }
 

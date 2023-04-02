@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -8,7 +8,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, IconButton, InputAdornment  } from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, IconButton, InputAdornment, Autocomplete,TextField } from '@mui/material';
 // component
 import Iconify from '../../../components/iconify';
 // utils
@@ -27,9 +27,13 @@ import FormProvider, {
   RHFUploadAvatar,
 } from '../../../components/hook-form';
 // slice
-import { updateUser } from '../../../redux/slices/user';
+import { saveUser, getUsers, updateUser, setEditFormVisibility } from '../../../redux/slices/user';
+import { getCustomers } from '../../../redux/slices/customer/customer';
+import { getContacts , resetContacts} from '../../../redux/slices/customer/contact';
 // current user
 import { useAuthContext } from '../../../auth/useAuthContext';
+import AddFormButtons from '../../../pages/components/AddFormButtons';
+
 
 // ----------------------------------------------------------------------
 
@@ -43,50 +47,71 @@ const ROLES = [
 export default function UserEditForm() {
 
   const [showPassword, setShowPassword] = useState(false);
+  const [customerVal, setCustomerVal] = useState('');
+  const [contactVal, setContactVal] = useState('');
+  const [roleVal, setRoleVal] = useState('');
+  const { customers } = useSelector((state) => state.customer);
+  const { contacts } = useSelector((state) => state.contact);
+  const { userId } = useAuthContext();
+  
 
   const { error, user } = useSelector((state) => state.user);
 
   const currentUser = user;
-  
+  console.log("currentUser :",currentUser)
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
+useEffect(() => {
+    dispatch(getCustomers());
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [dispatch]);
+
+useEffect(() => {
+  if(customerVal){
+    dispatch(getContacts(customerVal._id));
+  }
+// eslint-disable-next-line react-hooks/exhaustive-deps
+}, [dispatch,customerVal]);
+
+  useLayoutEffect(()=>{
+    setContactVal(currentUser.contact);
+    setCustomerVal(currentUser.customer);
+  },[currentUser])
 
   const NewUserSchema = Yup.object().shape({
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
+    name: Yup.string().required('First name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required').min(6),
+    passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     phoneNumber: Yup.number().required('Phone number is required'),
-    address: Yup.string().required('Address is required'),
-    country: Yup.string().required('Country is required'),
-    state: Yup.string().required('State is required'),
-    city: Yup.string().required('City is required'),
-    role: Yup.string().required('Role is required'),
-    zipCode: Yup.string(),
-    avatarUrl: Yup.string().nullable(true),
+    // address: Yup.string().required('Address is required'),
+    // country: Yup.string().required('Country is required'),
+    // state: Yup.string().required('State is required'),
+    // city: Yup.string().required('City is required'),
+    // role: Yup.string().required('Role is required').nullable(),
+    // zipCode: Yup.string(),
+    // avatarUrl: Yup.string().nullable(true),
   });
 
   const defaultValues = useMemo(
     () => ({
       id: currentUser?._id || '',
-      firstName: currentUser?.firstName || '',
-      lastName: currentUser?.lastName || '',
+      name: currentUser?.name || '',
       email: currentUser?.email || '',
-      password: currentUser?.passwordText || '',
-      phoneNumber: currentUser?.phoneNumber || '',
-      address: currentUser?.address || '',
-      country: currentUser?.country || '',
-      state: currentUser?.state || '',
-      city: currentUser?.city || '',
-      zipCode: currentUser?.zipCode || '',
-      avatarUrl: currentUser?.image || null,
-      isVerified: currentUser?.isVerified || true,
-      status: currentUser?.status,
-      role: currentUser?.role || '',
-      addedBy: currentUser?.addedBy || '',
+      phoneNumber: currentUser?.phone || '',
+      // address: currentUser?.address || '',
+      // country: currentUser?.country || '',
+      // state: currentUser?.state || '',
+      // city: currentUser?.city || '',
+      // zipCode: currentUser?.zipCode || '',
+      // avatarUrl: currentUser?.image || null,
+      // isVerified: currentUser?.isVerified || true,
+      // status: currentUser?.status,
+      // role: currentUser?.role || '',
+      // addedBy: currentUser?.addedBy || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -119,9 +144,17 @@ export default function UserEditForm() {
   const onSubmit = async (data) => {
      console.log(data);
       try{
-        dispatch(updateUser(data));
+        if(customerVal){
+          data.customer = customerVal._id;
+        }
+        if(contactVal){
+          data.contact = contactVal._id;
+        }
+
+        dispatch(updateUser(data,currentUser._id));
         reset();
         enqueueSnackbar('Update success!');
+        dispatch(setEditFormVisibility(false))
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
@@ -144,10 +177,14 @@ export default function UserEditForm() {
     [setValue]
   );
 
+  const toggleCancel = ()=>{
+    navigate(PATH_DASHBOARD.user.list);
+  }
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={4}>
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>
               <Label
                 color={values.status === 'active' ? 'success' : 'error'}
@@ -227,9 +264,9 @@ export default function UserEditForm() {
               sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
             />
           </Card>
-        </Grid>
+        </Grid> */}
 
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
             <Box
               rowGap={3}
@@ -240,8 +277,60 @@ export default function UserEditForm() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="firstName" label="First Name" />
-              <RHFTextField name="lastName" label="Last Name" />
+
+            <Autocomplete 
+                // freeSolo
+                value={customerVal || null}
+                options={customers}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setCustomerVal(newValue);
+                  }
+                  else{ 
+                  setCustomerVal("");
+                  setContactVal("");
+                  dispatch(resetContacts());
+                  }
+                }}
+                // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Customer" />}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option.id}>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </Autocomplete>
+
+              <Autocomplete 
+                // freeSolo
+                value={ contactVal || null}
+                options={contacts}
+                getOptionLabel={(option) => `${option?.firstName || ""} ${option?.lastName || ""}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setContactVal(newValue);
+                  }
+                  else{ 
+                  setContactVal("");
+                  }
+                }}
+                // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Contact" />}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option.id}>
+                    <span>{`${option.firstName} ${option.lastName}`}</span>
+                  </div>
+                )}
+              </Autocomplete>
+
+              <RHFTextField name="name" label="Full Name" />
               <RHFTextField name="email" label="Email Address" />
               <RHFTextField
                 name="password"
@@ -257,35 +346,64 @@ export default function UserEditForm() {
                   ),
                 }}
               />
+              <RHFTextField
+                name="passwordConfirmation"
+                label="Confirm Password"
+                type={showPassword ? 'text' : 'password'}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
               <RHFTextField name="phoneNumber" label="Phone Number" />
 
-              <RHFSelect native name="country" label="Country" placeholder="Country">
+              {/* <RHFSelect native name="country" label="Country" placeholder="Country">
                 <option value="" />
                 {countries.map((country) => (
                   <option key={country.code} value={country.label}>
                     {country.label}
                   </option>
                 ))}
-              </RHFSelect>
+              </RHFSelect> */}
+              {/* <RHFAutocomplete
+                  name="country"
+                  label="Country"
+                  freeSolo
+                  options={countries.map((country) => country.label)}
+                  ChipProps={{ size: 'small' }}
+                /> */}
 
-              <RHFTextField name="state" label="State/Region" />
+
+              {/* <RHFTextField name="state" label="State/Region" />
               <RHFTextField name="city" label="City" />
               <RHFTextField name="address" label="Address" />
-              <RHFTextField name="zipCode" label="Zip/Code" />
-              <RHFSelect native name="role" label="Roles">
+              <RHFTextField name="zipCode" label="Zip/Code" /> */}
+              {/* <RHFSelect native name="role" label="Roles">
                 <option value="" disabled/>
                 {ROLES.map((option) => (
                     <option key={option.id} value={option.value}>
                       {option.value}
                     </option>
                   ))}
-                </RHFSelect>            
-              </Box>
+                </RHFSelect>             */}
+                {/* <RHFAutocomplete
+                  name="role" 
+                  label="Roles"
+                  freeSolo
+                  options={ROLES.map((option) => option.value)}
+                  // getOptionLabel={(option) => option.title}
+                  
+                  ChipProps={{ size: 'small' }}
+                /> */}
+            </Box>
 
-            <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-                Save Changes
-              </LoadingButton>
+            <Stack  sx={{ mt: 3 }}>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>
           </Card>
         </Grid>

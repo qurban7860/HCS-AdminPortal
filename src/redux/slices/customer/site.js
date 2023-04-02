@@ -66,6 +66,21 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // RESET SITE
+    resetSite(state){
+      state.site = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET SITES
+    resetSites(state){
+      state.sites = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -92,6 +107,8 @@ export const {
   setFormVisibility,
   setEditFormVisibility,
   setResponseMessage,
+  resetSite,
+  resetSites,
   gotoStep,
   backStep,
   nextStep,

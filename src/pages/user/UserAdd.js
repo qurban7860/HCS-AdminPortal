@@ -7,7 +7,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-import UserNewEditForm from '../../sections/@dashboard/user/UserNewEditForm';
+import UserAddForm from '../../sections/@dashboard/user/UserNewEditForm';
 import {Cover} from '../components/Cover';
 
 // ----------------------------------------------------------------------
@@ -37,7 +37,7 @@ export default function UserAdd() {
           ]}
         /> */}
         <Cover/>
-        <UserNewEditForm />
+        <UserAddForm />
       </Container>
     </>
   );

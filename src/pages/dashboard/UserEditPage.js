@@ -3,7 +3,7 @@ import { paramCase } from 'change-case';
 import { useParams } from 'react-router-dom';
 import { useLayoutEffect } from 'react';
 // @mui
-import { Container } from '@mui/material';
+import { Container , Card } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
@@ -14,6 +14,7 @@ import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
 import UserEditForm from '../../sections/@dashboard/user/UserEditForm';
+import {Cover} from '../components/Cover';
 
 // ----------------------------------------------------------------------
 
@@ -38,8 +39,8 @@ export default function UserEditPage() {
         <title> User: Edit user | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+      <Container maxWidth={false}>
+        {/* <CustomBreadcrumbs
           heading="Edit user"
           links={[
             {
@@ -52,8 +53,16 @@ export default function UserEditPage() {
             },
             { name: user?.firstName },
           ]}
-        />
-
+        /> */}
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+          }}
+        >
+          <Cover name="Edit User" icon='mdi:user-circle'/>
+        </Card>
         <UserEditForm />
       </Container>
     </>

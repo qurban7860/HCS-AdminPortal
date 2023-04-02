@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Container } from '@mui/material';
+import { Container , Card} from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -8,7 +8,7 @@ import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
 import UserNewEditForm from '../../sections/@dashboard/user/UserNewEditForm';
-
+import {Cover} from '../components/Cover';
 // ----------------------------------------------------------------------
 
 export default function UserCreatePage() {
@@ -20,21 +20,16 @@ export default function UserCreatePage() {
         <title> User: Create a new user | Machine ERP</title>
       </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Create a new user"
-          links={[
-            {
-              name: 'Dashboard',
-              href: PATH_DASHBOARD.root,
-            },
-            {
-              name: 'User',
-              href: PATH_DASHBOARD.user.list,
-            },
-            { name: 'New user' },
-          ]}
-        />
+      <Container maxWidth={false}>
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+          }}
+        >
+          <Cover name="Create User" icon='mdi:user-circle'/>
+        </Card>
         <UserNewEditForm />
       </Container>
     </>

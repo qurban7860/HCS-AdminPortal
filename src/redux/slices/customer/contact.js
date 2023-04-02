@@ -52,6 +52,23 @@ const slice = createSlice({
       state.contactEditFormVisibility = action.payload;
     },
 
+    // RESET CONTACT
+    resetContact(state){
+      state.contact = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET CONTACTS
+    resetContacts(state){
+      state.contacts = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+      
     // GET Contacts
     getContactsSuccess(state, action) {
       state.isLoading = false;
@@ -102,6 +119,8 @@ export default slice.reducer;
 export const {
   setFormVisibility,
   setEditFormVisibility,
+  resetContact,
+  resetContacts,
   getCart,
   addToCart,
   setResponseMessage,

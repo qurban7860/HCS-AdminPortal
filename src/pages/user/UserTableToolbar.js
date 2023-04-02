@@ -5,6 +5,9 @@ import { Stack, InputAdornment, TextField, MenuItem, Button } from '@mui/materia
 // components
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
+import { setFormVisibility} from '../../redux/slices/user';
+import { useDispatch} from '../../redux/store';
+
 // ----------------------------------------------------------------------
 
 UserTableToolbar.propTypes = {
@@ -26,6 +29,10 @@ export default function UserTableToolbar({
   onFilterRole,
   onResetFilter,
 }) {
+  const dispatch = useDispatch();
+  const formVisibleToggle = ()=>{
+    dispatch(setFormVisibility(true));
+  }
   return (
     <Stack
       spacing={2}
@@ -36,7 +43,7 @@ export default function UserTableToolbar({
       }}
       sx={{ px: 2.5, py: 3 }}
     >
-      <TextField
+      {/* <TextField
         fullWidth
         select
         label="Role"
@@ -70,7 +77,7 @@ export default function UserTableToolbar({
             {option}
           </MenuItem>
         ))}
-      </TextField>
+      </TextField> */}
 
       <TextField
         fullWidth
@@ -99,6 +106,7 @@ export default function UserTableToolbar({
       <Button
         component={RouterLink}
         sx={{p:2, px:4}}
+        onClick={formVisibleToggle}
         to={PATH_DASHBOARD.user.new}
         variant="contained"
         startIcon={<Iconify icon="eva:plus-fill" />}

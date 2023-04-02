@@ -29,7 +29,7 @@ UserTableRow.propTypes = {
 };
 
 export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { email, firstName, lastName, role, status, image } = row;
+  const { email, name, role, status, image } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -50,29 +50,33 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
+  const onDelete = () => {
+    onDeleteRow()
+    setOpenConfirm(false);
+  };
 
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+        {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell>
+        </TableCell> */}
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={firstName + lastName} src={image} />
+            <Avatar alt={name} src={image} />
 
             <Typography variant="subtitle2" noWrap>
-              {`${firstName} ${lastName}`}
+              {`${name}`}
             </Typography>
           </Stack>  
         </TableCell>
 
         <TableCell align="left">{email}</TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {/* <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {role}
-        </TableCell>
+        </TableCell> */}
 
         {/* <TableCell align="center">
           <Iconify
@@ -86,7 +90,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           />
         </TableCell> */}
 
-         <TableCell align="left">
+         {/* <TableCell align="left">
           <Label
             variant="soft"
             color={(status === 'banned' && 'error') || 'success'}
@@ -94,7 +98,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
           >
             {status}
           </Label>
-        </TableCell> 
+        </TableCell>  */}
 
         <TableCell align="right">
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
@@ -137,7 +141,7 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
         title="Delete"
         content="Are you sure want to delete?"
         action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
+          <Button variant="contained" color="error" onClick={onDelete}>
             Delete
           </Button>
         }
