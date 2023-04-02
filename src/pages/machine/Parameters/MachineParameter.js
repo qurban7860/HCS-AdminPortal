@@ -135,25 +135,11 @@ export default function MachineTechParam() {
               columnGap={2}
               display="grid"
               gridTemplateColumns={{
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-
-              <RHFTextField name="name" label="Machine Technical Parameter" required />
-              <RHFTextField name="code" label="Code" required />
-              </Box>
-              <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <Autocomplete
+            <Autocomplete
                 value={paramCategoryVal || null}
                 options={techparamcategories}
                 getOptionLabel={(option) => option.name}
@@ -164,6 +150,33 @@ export default function MachineTechParam() {
                 renderInput={(params) => <TextField {...params} label="Technical Parameter Categories" />}
                 ChipProps={{ size: 'small' }}
               />
+              </Box>
+              <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(2, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+
+              <RHFTextField name="name" label="Machine Technical Parameter" required />
+              <RHFTextField name="code" label="Code" required />
+              </Box>
+
+              <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
+              
+              <RHFTextField name="description" label="Description" minRows={7} multiline />
+              
               <RHFSwitch
               name="isDisabled"
               labelPlacement="start"

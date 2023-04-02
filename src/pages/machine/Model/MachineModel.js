@@ -155,9 +155,6 @@ export default function MachineModel() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Model" required />
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-
               <Autocomplete
                 value={modelVal || null}
                 options={categories}
@@ -169,6 +166,11 @@ export default function MachineModel() {
                 renderInput={(params) => <TextField {...params} label="Categories" />}
                 ChipProps={{ size: 'small' }}
               />
+
+              <RHFTextField name="name" label="Machine Model" required />
+              <RHFTextField name="description" label="Description" minRows={7} multiline />
+
+              
 
 
 

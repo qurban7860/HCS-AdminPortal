@@ -43,7 +43,7 @@ export default function ModelListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isDisabled, createdAt} = row;
+  const { name, category, isDisabled, createdAt} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -76,7 +76,7 @@ export default function ModelListTableRow({
         </TableCell> */}
 
         <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
+          <Stack direction="row" alignItems="left" spacing={2}>
 
             <Link
               noWrap
@@ -89,8 +89,9 @@ export default function ModelListTableRow({
             </Link>
           </Stack>
         </TableCell>
+        <TableCell align="left">{category?.name || ''}</TableCell>
 
-        <TableCell align="center">
+        <TableCell align="left">
         <Label
             variant="soft"
             // color={(isDisabled === true && 'error') || 'success'}
@@ -101,7 +102,7 @@ export default function ModelListTableRow({
           </Label>
         </TableCell> 
 
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
+        <TableCell align="left">{fDate(createdAt)}</TableCell>
         
        
       </TableRow> 
