@@ -110,7 +110,7 @@ export function createTechparamcategories (supplyData){
       // dispatch(slice.actions)
     } catch (e) {
       console.log(e);
-      dispatch(slice.actions.hasError(e))
+      throw e;
     }
   }
 }
@@ -198,7 +198,7 @@ export function saveTechparamcategory(params) {
         dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        // dispatch(slice.actions.hasError(error));
       }
     };
 

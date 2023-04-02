@@ -26,6 +26,7 @@ import FormProvider, {
 } from '../../components/hook-form';
 // slice
 import { saveUser } from '../../redux/slices/user';
+import {Cover} from '../components/Cover';
 
 // ----------------------------------------------------------------------
 

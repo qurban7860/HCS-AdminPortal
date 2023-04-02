@@ -7,7 +7,6 @@ ViewFormField.propTypes = {
     secondParam: PropTypes.string,
     sm: PropTypes.number,
   };
-
 export default function ViewFormField({heading,param,secondParam,sm}) {
     return (
       <>

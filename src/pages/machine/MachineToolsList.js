@@ -217,9 +217,10 @@ export default function CustomerSiteList() {
 
           {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm/>}
 
-          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) => (
-
-            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
+          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) => { 
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return(
+            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
@@ -243,7 +244,7 @@ export default function CustomerSiteList() {
               </AccordionDetails>
             </Accordion>
             
-          ))} 
+          )})} 
 
           {isNotFound && <EmptyContent title="No Data"/>}
             

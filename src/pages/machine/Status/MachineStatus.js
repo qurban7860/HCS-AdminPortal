@@ -35,7 +35,8 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
+import {Cover} from '../../components/Cover';
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -102,12 +103,27 @@ export default function MachineStatus() {
       }
   };
 
+  const toggleCancel = () => 
+      {
+        navigate(PATH_MACHINE.machineStatus.list);
+      };
+
   
 
   const { themeStretch } = useSettingsContext();
   return (
     <>
     <Container maxWidth={ false }>
+    <Card
+                sx={{
+                  mb: 3,
+                  height: 160,
+                  position: 'relative',
+                  // mt: '24px',
+                }}
+              >
+                <Cover name='New Status' icon='material-symbols:diversity-1-rounded' />
+              </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Helmet>
         <title> Machine: Statuses | Machine ERP</title>
@@ -116,11 +132,7 @@ export default function MachineStatus() {
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Status
-                </Typography>
-              </Stack>
+            
             <Box
               rowGap={2}
               columnGap={2}
@@ -152,11 +164,7 @@ export default function MachineStatus() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Status
-              </LoadingButton>
-            </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
                         
             </Card>
           

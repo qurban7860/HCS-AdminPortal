@@ -5,7 +5,6 @@ ViewFormSubtitle.propTypes = {
     heading: PropTypes.string,
     sm: PropTypes.number,
   };
-
 export default function ViewFormSubtitle({heading,sm}) {
     return (
       <>

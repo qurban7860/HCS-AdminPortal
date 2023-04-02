@@ -260,6 +260,7 @@ const handleKeyPress = (e) => {
                 value={parMachSerVal || null}
                 options={machines}
                 getOptionLabel={(option) => option.serialNo}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                     setParMachineVal(newValue);
@@ -288,6 +289,7 @@ const handleKeyPress = (e) => {
                 value={parMachineVal || null}
                 options={machines}
                 getOptionLabel={(option) => option.name}
+                 
                 onChange={(event, newValue) => {
                   if(newValue !== null){
                     // setParMachineVal(newValue);
@@ -315,6 +317,7 @@ const handleKeyPress = (e) => {
                 value={supplierVal || null}
                 options={suppliers}
                 getOptionLabel={(option) => option.name}
+                 
                 onChange={(event, newValue) => {
                 if(newValue){
                   setSupplierVal(newValue);
@@ -334,6 +337,7 @@ const handleKeyPress = (e) => {
                 value={modelVal || null}
                 options={machinemodels}
                 getOptionLabel={(option) => option.name}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setModelVal(newValue);
@@ -353,6 +357,7 @@ const handleKeyPress = (e) => {
                 value={statusVal || null}
                 options={machinestatuses}
                 getOptionLabel={(option) => option.name}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setStatusVal(newValue);
@@ -373,6 +378,7 @@ const handleKeyPress = (e) => {
                 value={customerVal || null}
                 options={customers}
                 getOptionLabel={(option) => option.name}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setCustomerVal(newValue);
@@ -394,6 +400,7 @@ const handleKeyPress = (e) => {
                 value={installVal || null}
                 options={sites}
                 getOptionLabel={(option) => option.name}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setInstallVal(newValue);
@@ -412,6 +419,7 @@ const handleKeyPress = (e) => {
                 value={billingVal || null}
                 options={sites}
                 getOptionLabel={(option) => option.name}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setBillingVal(newValue);
@@ -430,6 +438,7 @@ const handleKeyPress = (e) => {
                 value={accoVal || null}
                 options={spContacts}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setAccoManVal(newValue);
@@ -448,6 +457,7 @@ const handleKeyPress = (e) => {
                 value={projVal || null}
                 options={spContacts}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setProjManVal(newValue);
@@ -466,6 +476,7 @@ const handleKeyPress = (e) => {
                 value={suppVal || null}
                 options={spContacts}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                 
                 onChange={(event, newValue) => {
                   if(newValue){
                   setSuppManVal(newValue);

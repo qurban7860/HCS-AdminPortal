@@ -207,9 +207,10 @@ export default function MachineSettingList() {
         <Card sx={{mt:3}}>
           {formVisibility && !licenseEditFormVisibility && <LicenseAddForm/>}
           {licenseEditFormVisibility && <LicenseEditForm/>}
-          {!formVisibility && !licenseEditFormVisibility && licenses.map((license, index) => (
-
-            <Accordion key={license._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
+          {!formVisibility && !licenseEditFormVisibility && licenses.map((license, index) => { 
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return(
+            <Accordion key={license._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
@@ -238,7 +239,7 @@ export default function MachineSettingList() {
               </AccordionDetails>
             </Accordion>
             
-          ))} 
+          )})} 
 
           {isNotFound && <EmptyContent title="No Data"/>}
             

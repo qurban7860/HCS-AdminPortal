@@ -35,8 +35,8 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
-
+import {Cover} from '../../components/Cover';
+import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function MachineTechParam() {
@@ -100,31 +100,44 @@ export default function MachineTechParam() {
         // console.log(PATH_MACHINE.tool.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
-        enqueueSnackbar(error?.message)
+        if(error?.message){
+          enqueueSnackbar(error.message, { variant: `error` });
+        }
         console.error(error);
       }
   };
+      const toggleCancel = () => 
+      {
+        navigate(PATH_MACHINE.techParam.list);
+      };
 
   
 
   const { themeStretch } = useSettingsContext();
   return (
     <>
-    <Container maxWidth={false }>
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      
-      <Helmet>
+    <Helmet>
         <title> Machine: Tech Params | Machine ERP</title>
       </Helmet>
+    <Container maxWidth={false }>
+    <Card
+                sx={{
+                  mb: 3,
+                  height: 160,
+                  position: 'relative',
+                  // mt: '24px',
+                }}
+              >
+                <Cover name='New Parameter Category' icon='ic:round-class' />
+              </Card>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      
+      
 
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Technical Parameter Category
-                </Typography>
-              </Stack>
+           
             <Box
               rowGap={2}
               columnGap={2}
@@ -152,11 +165,7 @@ export default function MachineTechParam() {
              
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Tech Param Category
-              </LoadingButton>
-            </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
                         
             </Card>
           

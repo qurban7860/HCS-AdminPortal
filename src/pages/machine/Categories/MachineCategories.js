@@ -14,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
+import AddFormButtons from '../../components/AddFormButtons';
 import { getCategories, createCategorys } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
@@ -36,20 +37,21 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-
+import {Cover} from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
 export default function MachineSuppliers() {
 
   
-
+console.log("Machine Category : ",PATH_MACHINE.categories.list)
 
   const { userId, user } = useAuthContext();
 
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -93,6 +95,13 @@ export default function MachineSuppliers() {
   //   dispatch(getSPContacts());
   // }, [dispatch]);
 
+  
+  const toggleCancel = () => 
+  {
+    navigate(PATH_MACHINE.categories.list);
+  };
+  
+
 
   const onSubmit = async (data) => {
       try{ 
@@ -117,16 +126,22 @@ export default function MachineSuppliers() {
     <Helmet>
         <title> Machine: Categories | Machine ERP</title>
       </Helmet>
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Card
+                sx={{
+                  mb: 3,
+                  height: 160,
+                  position: 'relative',
+                  // mt: '24px',
+                }}
+              >
+                <Cover name='New Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
+              </Card>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
-            <Stack spacing={3}>
-              <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Category
-                </Typography>
-              </Stack>
+            <Stack spacing={2}>
+            
             <Box
               rowGap={2}
               columnGap={2}
@@ -151,18 +166,20 @@ export default function MachineSuppliers() {
               } 
             />
              </Box>
+             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+             
              
               </Stack>
+              
 
-            <Stack alignItems="flex-start" sx={{ mt:1 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Categories
-              </LoadingButton>
-            </Stack>
+            
                         
             </Card>
+            
+
           
           </Grid>
+          
         
     </FormProvider>
     </Container>
