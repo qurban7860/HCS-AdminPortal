@@ -37,8 +37,10 @@ useLayoutEffect(() => {
 }, [dispatch,machine]);
 
 useLayoutEffect(() => {
+  if(toolsInstalled.length > 0) {
+
 const filterTool = [];
-toolsInstalled.map((toolInstalled)=>(filterTool.push(toolInstalled.tool._id)))
+toolsInstalled.map((toolInstalled)=>(filterTool.push(toolInstalled?.tool?._id)))
 const filteredTool = tools.filter(item => !filterTool.includes(item._id));
 filteredTool.sort((a, b) =>{
   const nameA = a.name.toUpperCase(); 
@@ -52,6 +54,7 @@ filteredTool.sort((a, b) =>{
   return 0;
 })
 setToolsVal(filteredTool);
+}
 }, [tools,toolsInstalled,machine]);
 
   const AddSettingSchema = Yup.object().shape({
