@@ -52,8 +52,9 @@ import { Cover } from '../../components/Cover';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
+  { id: 'category', label: 'Category', align: 'left' },
+  { id: 'isDisabled', label: 'Active', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'left' },
   
 ];
 
