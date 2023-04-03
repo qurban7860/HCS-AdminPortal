@@ -58,12 +58,19 @@ Cover.propTypes = {
   photoURL:PropTypes.string,
   icon: PropTypes.string,
   serialNo: PropTypes.string,
+  backLink: PropTypes.string,
 };
-export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon }) {
+export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon , backLink }) {
   const navigate = useNavigate()
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
     // console.log('navigate')
+  };
+  const handleBacklink = () => {
+    // navigate(PATH_MACHINE.general.app);
+    navigate(backLink)
+    // console.log('navigate')
+    console.log(backLink)
   };
     // const [selectedOption, setSelectedOption] = useState('Option 1');
     // const [selectedOption2, setSelectedOption2] = useState('Option 1');
@@ -115,10 +122,29 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon }
         {name}
         </Typography>
         }
+
+        <div style={{ flex:1,
+                  display: 'flex',
+                  justifyContent: 'end',
+        }}>
+
+        {backLink ? 
+          <Button variant="h4" 
+          sx={{ 
+          // ml: {md:'auto', xs:0}, 
+          pr: 0,
+          color: {xs: 'common.black' ,md: 'common.white'},
+          display: { xs: 'flex-end', md: 'block'},
+          mb: { xs: 5, md: -2},
+          }} 
+          onClick={handleBacklink}
+           ><Iconify icon="ri:arrow-go-back-fill" /></Button>
+           : " "}
         
           {setting ? 
           <Button variant="h4" 
-          sx={{ ml: {md:'auto', xs:0}, 
+          sx={{ 
+          // ml: {md:'auto', xs:0}, 
           pr: 5,
           color: {xs: 'common.black' ,md: 'common.white'},
           display: { xs: 'flex-end', md: 'block'},
@@ -127,6 +153,10 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon }
           onClick={handleNavigate}
            ><Iconify icon="eva:settings-2-outline" /></Button>
            : " "}
+
+           </div>
+
+           
 
         {/* </Box> */}
       

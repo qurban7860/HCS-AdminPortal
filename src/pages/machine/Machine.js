@@ -42,6 +42,7 @@ export default function MachineDashboardPage() {
    const linkTechParam = () => { navigate(PATH_MACHINE.parameters.list); };
    const linktpCategory = () => { navigate(PATH_MACHINE.techParam.list); };
    const linkTool = () => { navigate(PATH_MACHINE.tool.list); };
+   
 
   
 

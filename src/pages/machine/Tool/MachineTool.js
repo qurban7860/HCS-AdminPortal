@@ -51,7 +51,7 @@ export default function MachineSuppliers() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(25).required('Name is required') ,
+    name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),

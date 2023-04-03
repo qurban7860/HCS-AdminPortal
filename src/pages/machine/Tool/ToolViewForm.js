@@ -66,7 +66,7 @@ export default function ToolViewForm({ currentTool = null }) {
         createdAt: tool?.createdAt || '',
         updatedAt: tool?.updatedAt || '',
         updatedIP: tool?.updatedIP || '',
-        isDisabled: true,
+        isDisabled: tool?.isDisabled || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]

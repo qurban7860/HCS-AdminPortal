@@ -80,7 +80,7 @@ export default function ModelViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={machinemodel?.name} setting="enabble"/> 
+          <Cover name={machinemodel?.name} setting="enabble" backLink={PATH_MACHINE.machineModel.list}/> 
         </Card>
         
         <ModelViewForm/>

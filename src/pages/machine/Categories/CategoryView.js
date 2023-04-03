@@ -95,7 +95,8 @@ export default function CategoryViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={category?.name} setting="setting" back="back"/> 
+          <Cover name={category?.name} setting="setting" backLink={PATH_MACHINE.categories.list}/>
+          
         </Card>
         {/* <Stack alignItems="flex-end" sx={{
           color: 'text.disabled',

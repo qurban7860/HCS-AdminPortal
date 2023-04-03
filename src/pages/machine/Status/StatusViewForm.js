@@ -65,7 +65,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         createdAt: machinestatus?.createdAt || '',
         updatedAt: machinestatus?.updatedAt || '',
         displayOrderNo: machinestatus?.displayOrderNo || '',
-       
+        isDisabled: machinestatus?.isDisabled || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinestatus, machinestatus]

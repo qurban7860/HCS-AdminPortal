@@ -54,7 +54,7 @@ export default function StatusEditForm() {
   const { id } = useParams();
 
   const EditStatusSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(25).required('Name is required') ,
+    name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().min(2).max(2000),
     isDisabled : Yup.boolean(),
     code: Yup.string(),
