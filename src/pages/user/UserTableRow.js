@@ -28,8 +28,8 @@ UserTableRow.propTypes = {
   onSelectRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow, onSelectRow, onDeleteRow }) {
-  const { email, name, role, status, image } = row;
+export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, onDeleteRow }) {
+  const { email, name, roles, phone, status, image } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -74,9 +74,13 @@ export default function UserTableRow({ row, selected, onEditRow, onSelectRow, on
 
         <TableCell align="left">{email}</TableCell>
 
-        {/* <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {role}
-        </TableCell> */}
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {phone || ""}
+        </TableCell>
+
+        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+          {roles || ""}
+        </TableCell>
 
         {/* <TableCell align="center">
           <Iconify

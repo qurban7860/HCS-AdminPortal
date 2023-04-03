@@ -18,7 +18,6 @@ const initialState = {
   machines: [],
   machine: {},
   machineParams: {
-
   }
 };
 

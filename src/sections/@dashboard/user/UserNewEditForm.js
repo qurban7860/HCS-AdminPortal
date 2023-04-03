@@ -386,14 +386,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 }}
               />
 
-              {/* <RHFSelect native name="country" label="Country" placeholder="Country">
-                <option value="" />
-                {countries.map((country) => (
-                  <option key={country.code} value={country.label}>
-                    {country.label}
-                  </option>
-                ))}
-              </RHFSelect> */}
               {/* <RHFAutocomplete
                   name="country"
                   label="Country"
@@ -407,14 +399,14 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               <RHFTextField name="city" label="City" />
               <RHFTextField name="address" label="Address" />
               <RHFTextField name="zipCode" label="Zip/Code" /> */}
-              {/* <RHFSelect native name="role" label="Roles">
+              <RHFSelect native name="role" label="Roles">
                 <option value="" disabled/>
                 {ROLES.map((option) => (
                     <option key={option.id} value={option.value}>
                       {option.value}
                     </option>
                   ))}
-                </RHFSelect>             */}
+                </RHFSelect>            
                 {/* <RHFAutocomplete
                   name="role" 
                   label="Roles"

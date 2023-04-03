@@ -77,16 +77,21 @@ useEffect(() => {
 }, [dispatch,customerVal]);
 
   useLayoutEffect(()=>{
-    setContactVal(currentUser.contact);
-    setCustomerVal(currentUser.customer);
+    if(currentUser.customer !== undefined && currentUser.customer !== null){
+      setCustomerVal(currentUser?.customer);
+    }
+    if(currentUser.contact !== undefined && currentUser.contact !== null){
+      setContactVal(currentUser?.contact);
+    }
+
   },[currentUser])
 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('First name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required').min(6),
+    password: Yup.string().min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    phoneNumber: Yup.number().required('Phone number is required'),
+    phoneNumber: Yup.number().required('Phone number is required').nullable(),
     // address: Yup.string().required('Address is required'),
     // country: Yup.string().required('Country is required'),
     // state: Yup.string().required('State is required'),
@@ -144,13 +149,8 @@ useEffect(() => {
   const onSubmit = async (data) => {
      console.log(data);
       try{
-        if(customerVal){
-          data.customer = customerVal._id;
-        }
-        if(contactVal){
-          data.contact = contactVal._id;
-        }
-
+        data.customer = customerVal?._id || null
+        data.contact = contactVal?._id || null
         dispatch(updateUser(data,currentUser._id));
         reset();
         enqueueSnackbar('Update success!');
