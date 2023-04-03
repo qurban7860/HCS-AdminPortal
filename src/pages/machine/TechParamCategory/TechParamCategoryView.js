@@ -86,7 +86,7 @@ export default function TechParamCategoryViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={techparamcategory?.name} setting="enable"/> 
+          <Cover name={techparamcategory?.name} setting="enable" backLink={PATH_MACHINE.techParam.list} /> 
         </Card>
         
         <TechParamCategoryViewForm/>

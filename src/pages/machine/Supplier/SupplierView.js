@@ -84,7 +84,7 @@ export default function SupplierViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={supplier?.name} setting="enable"/> 
+          <Cover name={supplier?.name} setting="enable" backLink={PATH_MACHINE.supplier.list}/> 
         </Card>
         
         <SupplierViewForm/>

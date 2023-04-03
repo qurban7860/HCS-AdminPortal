@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { updateMachinemodel } from '../../../redux/slices/products/model';
+import { setMachinemodelsEditFormVisibility, updateMachinemodel } from '../../../redux/slices/products/model';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -42,7 +42,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
-    dispatch(updateMachinemodel(true));
+    dispatch(setMachinemodelsEditFormVisibility(true));
     navigate(PATH_MACHINE.machineModel.modeledit(id));
   }
 
@@ -66,7 +66,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         updatedAt: machinemodel?.updatedAt || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
-        isDisabled: true,
+        isDisabled: machinemodel?.isDisabled || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinemodel, machinemodel]

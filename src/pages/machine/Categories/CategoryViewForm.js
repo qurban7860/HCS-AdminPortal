@@ -62,7 +62,8 @@ export default function CategoryViewForm({ currentCategory = null }) {
         description:category?.description || 'N/A',
         createdAt: category?.createdAt || '',
         updatedAt: category?.updatedAt || '',
-        isDisabled: true,
+        isDisabled: category?.isDisabled || '',
+        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCategory, category]
