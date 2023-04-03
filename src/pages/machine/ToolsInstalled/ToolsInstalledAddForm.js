@@ -38,7 +38,6 @@ useLayoutEffect(() => {
 
 useLayoutEffect(() => {
   if(toolsInstalled.length > 0) {
-
 const filterTool = [];
 toolsInstalled.map((toolInstalled)=>(filterTool.push(toolInstalled?.tool?._id)))
 const filteredTool = tools.filter(item => !filterTool.includes(item._id));

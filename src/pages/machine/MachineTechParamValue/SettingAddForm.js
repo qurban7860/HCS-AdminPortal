@@ -194,12 +194,12 @@ useEffect(()=>{
               </Box>
               </Grid>
 
-                {/* <Grid item xs={18} md={3} style={{width: "100%"}} display="flex">
+                <Grid item xs={18} md={3} style={{width: "100%"}} display="flex">
                 
                     <Button  sx={{ m: 'auto',}} variant="contained" type="submit" size="large" loading={isSubmitting} >
                       Add Setting
                     </Button>
-                </Grid> */}
+                </Grid>
               </Grid>
             </Stack>
 

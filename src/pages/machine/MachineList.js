@@ -252,10 +252,10 @@ export default function MachineList() {
                       )
                     )}
 
-                  <TableEmptyRows
+                  {/* <TableEmptyRows
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
+                  /> */}
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

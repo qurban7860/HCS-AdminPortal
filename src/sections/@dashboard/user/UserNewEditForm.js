@@ -333,7 +333,30 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               </Autocomplete>
 
               <RHFTextField name="name" label="Full Name" />
-              <RHFTextField name="email" label="Email Address" />
+              <RHFTextField name="phoneNumber" label="Phone Number" />
+
+            </Box>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
+              <RHFTextField name="email" label="Email Address" sx={{my:3}}/>
+            </Box>
+              <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              
               <RHFTextField
                 name="password"
                 label="Password"
@@ -362,7 +385,6 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                   ),
                 }}
               />
-              <RHFTextField name="phoneNumber" label="Phone Number" />
 
               {/* <RHFSelect native name="country" label="Country" placeholder="Country">
                 <option value="" />

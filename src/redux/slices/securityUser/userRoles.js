@@ -1,0 +1,199 @@
+import sum from 'lodash/sum';
+import uniq from 'lodash/uniq';
+import uniqBy from 'lodash/uniqBy';
+import { createSlice } from '@reduxjs/toolkit';
+// utils
+import axios from '../../utils/axios';
+import { CONFIG } from '../../config-global';
+
+// ----------------------------------------------------------------------
+
+const initialState = {
+  formVisibility: false,
+  editFormVisibility: false,
+  intial: false,
+  responseMessage: null,
+  success: false,
+  isLoading: false,
+  error: null,
+  roles: [],
+  role: null,
+  roleParams: {
+  }
+};
+
+const slice = createSlice({
+  name: 'role',
+  initialState,
+  reducers: {
+    // START LOADING
+    startLoading(state) {
+      state.isLoading = true;
+    },
+
+    // HAS ERROR
+    hasError(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.initial = true;
+    },
+
+    // SET VISIBILITY
+    setFormVisibility(state, action){
+      state.formVisibility = action.payload;
+    },
+
+    // SET VISIBILITY
+    setEditFormVisibility(state, action){
+      state.editFormVisibility = action.payload;
+    },
+
+    // RESET USERS
+    resetRoles(state){
+      state.roles = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET USER
+    resetRole(state){
+      state.role = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // GET users
+    getRolesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.roles = action.payload;
+      state.initial = true;
+    },
+
+
+    // GET user
+    getRoleSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.role = action.payload;
+      state.initial = true;
+    },
+
+    // SET RES MESSAGE
+    setResponseMessage(state, action) {
+      state.responseMessage = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+
+    backStep(state) {
+      state.checkout.activeStep -= 1;
+    },
+
+    nextStep(state) {
+      state.checkout.activeStep += 1;
+    },
+  },
+});
+
+// Reducer
+export default slice.reducer;
+
+// Actions
+export const {
+  setFormVisibility,
+  setEditFormVisibility,
+  resetRoles,
+  resetRole,
+  gotoStep,
+  backStep,
+  nextStep,
+} = slice.actions;
+// ----------------------------------------------------------------------
+
+export function saveRole(param) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
+      dispatch(slice.actions.setResponseMessage('Role Saved successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+// ----------------------------------------------------------------------
+
+export function updateRole(param,id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        }
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
+      dispatch(slice.actions.setResponseMessage('Role updated successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+// ----------------------------------------------------------------------
+
+export function getRoles() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
+      {
+        params: {
+          isArchived: false
+        }
+      }
+      );
+      dispatch(slice.actions.getRolesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Roles loaded successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getRole(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
+      dispatch(slice.actions.getRoleSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function deleteRole(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`);
+      dispatch(slice.actions.setResponseMessage(response.data));
+      // state.responseMessage = response.data;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
