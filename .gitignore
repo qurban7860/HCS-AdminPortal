@@ -30,6 +30,9 @@ dist/
 target/
 dist/
 
+# VS Code
+.vscode/
+
 # JetBrains IDE
 .idea/
 
