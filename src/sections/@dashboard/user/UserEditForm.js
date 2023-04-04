@@ -62,7 +62,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
   const { error, user } = useSelector((state) => state.user);
 
   const currentUser = user;
-  console.log("currentUser :",currentUser)
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -153,7 +152,6 @@ const phoneRegExp = /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ -]*\d+)*$/
     try{
       data.customer = customerVal?._id || null
       data.contact = contactVal?._id || null
-      console.log("User Update Data : ",data);
         dispatch(updateUser(data,currentUser._id));
         reset();
         enqueueSnackbar('Update success!');

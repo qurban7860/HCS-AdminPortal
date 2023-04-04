@@ -58,10 +58,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const { roles } = useSelector((state) => state.role);
 const ROLES = [];
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
-console.log("Roles : ",ROLES)
 
   const [roleVal, setRoleVal] = useState("");
-  console.log("roleVal : ", roleVal);
   // roles.sort((a, b) => a > b);
   // roles.sort((a, b) =>{
   //   const nameA = a.name.toUpperCase(); 
@@ -74,7 +72,6 @@ console.log("Roles : ",ROLES)
   //   }
   //   return 0;
   // })
-  console.log("role : ",roles)
   const { userId } = useAuthContext();
   
   const dispatch = useDispatch();
@@ -175,7 +172,6 @@ console.log("Roles : ",ROLES)
           roleVal.map((role)=>(roleId.push(role?._id)))
           data.roles = roleId;
         }
-        console.log("Data : ", data);
         dispatch(saveUser(data));
         reset();
         enqueueSnackbar('Create success!');
