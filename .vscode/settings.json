@@ -1,4 +1,6 @@
 {
   "javascript.validate.enable": false,
   "typescript.validate.enable": false,
+  "atlascode.enableHttpsTunnel": true,
+  "atlascode.offlineMode": true,
 }
