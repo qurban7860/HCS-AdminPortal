@@ -83,7 +83,7 @@ export default function StatusViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={techparam?.name} setting="enable"/> 
+          <Cover name={techparam?.name} setting="enable" backLink={PATH_MACHINE.parameters.list}/> 
         </Card>
         
         <ParameterViewForm/>

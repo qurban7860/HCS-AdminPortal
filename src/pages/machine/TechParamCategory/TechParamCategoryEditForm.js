@@ -50,8 +50,8 @@ export default function TechParamCategoryEditForm() {
   const { id } = useParams();
 
   const EditToolSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(25).required('Name is required') ,
-    description: Yup.string().min(2).max(2000),
+    name: Yup.string().max(50).required('Name is required') ,
+    description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
   });

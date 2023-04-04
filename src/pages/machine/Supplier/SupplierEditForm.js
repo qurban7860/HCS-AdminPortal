@@ -53,7 +53,7 @@ export default function SupplierEditForm() {
   const { id } = useParams();
 
   const EditCategorySchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required('Name is required')  ,
+    name: Yup.string().max(50).required('Name is required')  ,
     isDisabled : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),

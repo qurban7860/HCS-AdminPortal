@@ -51,7 +51,7 @@ export default function CategoryEditForm() {
   const { id } = useParams();
 
   const EditCategorySchema = Yup.object().shape({
-    name: Yup.string().min(5).max(1000).required('Name is required') ,
+    name: Yup.string().min(5).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
     createdAt: Yup.string(),
