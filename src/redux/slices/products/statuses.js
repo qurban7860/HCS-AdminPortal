@@ -111,7 +111,7 @@ export function createMachinestatuses (supplyData){
       // dispatch(slice.actions)
     } catch (e) {
       console.log(e);
-      dispatch(slice.actions.hasError(e))
+      dispatch(slice.actions.hasError(e.Message))
     }
   }
 }
@@ -130,7 +130,7 @@ export function getMachinestatuses (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -144,7 +144,7 @@ export function getMachineStatus(id) {
       dispatch(slice.actions.getMachinestatusSuccess(response.data));
     } catch (error) {
       console.error(error,"Slice Error");
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -157,7 +157,7 @@ export function deleteMachinestatus(id) {
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -188,7 +188,7 @@ export function saveMachinestatus(params) {
         dispatch(slice.actions.getMachinestatusesSuccess(response.data.Machinestatus));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -228,7 +228,7 @@ export function updateMachinestatus(params) {
       dispatch(slice.actions.setMachinestatusesEditFormVisibility(false));
     } catch (error) {
       console.error(error,"from statuses");
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

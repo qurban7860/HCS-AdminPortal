@@ -120,7 +120,7 @@ export function saveToolInstalled(machineId,params) {
       dispatch(getToolInstalled(machineId));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -140,7 +140,7 @@ export function updateToolInstalled(machineId,settingId,params) {
       dispatch(setToolInstalledEditFormVisibility (false));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -163,7 +163,7 @@ export function getToolsInstalled(machineId) {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -179,7 +179,7 @@ export function getToolInstalled(machineId,Id) {
       dispatch(slice.actions.setResponseMessage('Installed Tool Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -199,7 +199,7 @@ export function deleteToolInstalled(machineId,id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

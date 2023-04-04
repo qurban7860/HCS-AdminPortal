@@ -93,7 +93,7 @@ export function getDepartments() {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -109,7 +109,7 @@ export function getDepartment(id) {
       // dispatch(slice.actions.setResponseMessage('Depratments Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -125,7 +125,7 @@ export function deleteDepartment(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -141,7 +141,7 @@ export function getAssetLocations() {
 
     // } catch (error) {
     //   console.error(error);
-    //   dispatch(slice.actions.hasError(error));
+    //   dispatch(slice.actions.hasError(error.Message));
     // }
   };
 }

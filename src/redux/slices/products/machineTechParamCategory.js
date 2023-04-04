@@ -110,7 +110,8 @@ export function createTechparamcategories (supplyData){
       // dispatch(slice.actions)
     } catch (e) {
       console.log(e);
-      throw e;
+      dispatch(slice.actions.hasError(e.Message))
+
     }
   }
 }
@@ -135,7 +136,7 @@ export function getTechparamcategories (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -148,7 +149,7 @@ export function getTechparamcategory(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
       dispatch(slice.actions.getTechparamcategorySuccess(response.data));
     } catch (error) {
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -164,7 +165,7 @@ export function deleteTechparamcategory(id) {
       
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -198,7 +199,7 @@ export function saveTechparamcategory(params) {
         dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
       } catch (error) {
         console.error(error);
-        // dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -235,7 +236,7 @@ export function updateTechparamcategory(params) {
       dispatch(slice.actions.setTechparamcategoriesEditFormVisibility(false));
 
     } catch (error) {
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

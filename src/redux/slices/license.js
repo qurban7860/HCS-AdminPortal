@@ -112,7 +112,7 @@ export function createLicenses (machineId=null, supplyData){
       // dispatch(slice.actions)
     } catch (e) {
       console.log(e);
-      dispatch(slice.actions.hasError(e))
+      dispatch(slice.actions.hasError(e.Message))
     }
   }
 }
@@ -131,7 +131,7 @@ export function getLicenses (machineId=null){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -145,7 +145,7 @@ export function getLicense(machineId=null, id) {
       dispatch(slice.actions.getLicensesSuccess(response.data));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -161,7 +161,7 @@ export function deleteLicense(machineId=null, id) {
       
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -239,7 +239,7 @@ export function saveLicense(machineId, params) {
         dispatch(slice.actions.getLicenseSuccess(response.data.License));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 

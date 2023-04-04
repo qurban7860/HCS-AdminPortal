@@ -30,7 +30,7 @@ UserTableRow.propTypes = {
 
 export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, onDeleteRow }) {
   const { email, name, roles, phone, status, image } = row;
-
+  const names = roles.map((a) => a.name);
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -79,7 +79,7 @@ export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, o
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {roles || ""}
+        {names ? names.join(" , ") : ""}
         </TableCell>
 
         {/* <TableCell align="center">

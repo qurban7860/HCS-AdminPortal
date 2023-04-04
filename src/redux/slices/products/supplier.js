@@ -112,7 +112,7 @@ export function createSuppliers (supplyData){
       // dispatch(slice.actions)
     } catch (e) {
       console.log(e);
-      dispatch(slice.actions.hasError(e))
+      dispatch(slice.actions.hasError(e.Message))
     }
   }
 }
@@ -131,7 +131,7 @@ export function getSuppliers (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -145,7 +145,7 @@ export function getSupplier(id) {
       dispatch(slice.actions.getSuppliersSuccess(response.data));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -161,7 +161,7 @@ export function deleteSupplier(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -225,7 +225,7 @@ export function saveSupplier(params) {
         dispatch(slice.actions.getSupplierSuccess(response.data.Supplier));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -299,7 +299,7 @@ export function updateSupplier(params) {
 
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

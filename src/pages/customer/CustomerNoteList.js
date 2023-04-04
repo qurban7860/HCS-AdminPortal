@@ -293,8 +293,10 @@ const toggleChecked = () =>
         <Card>
           {noteEditFormVisibility && <NoteEditForm/> }
           {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
-          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) => (
-            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
+          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{ 
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return(
+            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  sx={{borderTop: borderTopVal}}>
               <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
             { index !==  activeIndex ? 
               <Grid container spacing={0}>
@@ -318,7 +320,7 @@ const toggleChecked = () =>
                 <NotesViewForm currentNote={note} />
               </AccordionDetails>
             </Accordion>
-          ))} 
+          )})} 
           {isNotFound  && <EmptyContent title="No Data"/>}
         </Card>
         <ConfirmDialog

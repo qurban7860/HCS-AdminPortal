@@ -8,7 +8,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, IconButton, InputAdornment ,Autocomplete ,TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, IconButton, InputAdornment ,Autocomplete ,TextField, Checkbox } from '@mui/material';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // component
 import Iconify from '../../../components/iconify';
 // utils
@@ -21,16 +23,18 @@ import { countries } from '../../../assets/data';
 import Label from '../../../components/label';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
-  RHFSelect,
   RHFSwitch,
   RHFTextField,
   RHFUploadAvatar, 
   RHFAutocomplete,
+  RHFMultiSelect,
+  RHFSelect,
 } from '../../../components/hook-form';
 // slice
 import { saveUser, getUsers, setFormVisibility } from '../../../redux/slices/user';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts , resetContacts} from '../../../redux/slices/customer/contact';
+import { getRoles } from '../../../redux/slices/securityUser/role';
 // current user
 import { useAuthContext } from '../../../auth/useAuthContext';
 import AddFormButtons from '../../../pages/components/AddFormButtons';
@@ -41,23 +45,36 @@ UserNewEditForm.propTypes = {
   currentUser: PropTypes.object,
 };
 
-const ROLES = [
-  { id: '1', value: 'Administrator' },
-  { id: '2', value: 'Normal User' },
-  { id: '3', value: 'Guest User' },
-  { id: '4', value: 'Restriced User' },
-];
-
 export default function UserNewEditForm({ isEdit = false, currentUser }) {
-
+  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
+  const checkedIcon = <CheckBoxIcon fontSize="small" />;
   const [showPassword, setShowPassword] = useState(false);
-  const [customerVal, setCustomerVal] = useState('');
-  const [contactVal, setContactVal] = useState('');
-  const [roleVal, setRoleVal] = useState('');
 
   const { error } = useSelector((state) => state.user);
   const { customers } = useSelector((state) => state.customer);
+  const [customerVal, setCustomerVal] = useState("");
   const { contacts } = useSelector((state) => state.contact);
+  const [contactVal, setContactVal] = useState("");
+  const { roles } = useSelector((state) => state.role);
+const ROLES = [];
+roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
+console.log("Roles : ",ROLES)
+
+  const [roleVal, setRoleVal] = useState("");
+  console.log("roleVal : ", roleVal);
+  // roles.sort((a, b) => a > b);
+  // roles.sort((a, b) =>{
+  //   const nameA = a.name.toUpperCase(); 
+  //   const nameB = b.name.toUpperCase(); 
+  //   if (nameA < nameB) {
+  //     return -1;
+  //   }
+  //   if (nameA > nameB) {
+  //     return 1;
+  //   }
+  //   return 0;
+  // })
+  console.log("role : ",roles)
   const { userId } = useAuthContext();
   
   const dispatch = useDispatch();
@@ -68,6 +85,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
   useEffect(() => {
       dispatch(getCustomers());
+      dispatch(getRoles())
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -77,13 +95,15 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [dispatch,customerVal]);
-
+ const phoneRegExp = /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ -]*\d+)*$/
+ 
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('First name is required'),
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required').min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    phoneNumber: Yup.number().required('Phone number is required'),
+    phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+    roles: Yup.array().required('Roles are required'),
     // address: Yup.string().required('Address is required'),
     // country: Yup.string().required('Country is required'),
     // state: Yup.string().required('State is required'),
@@ -99,7 +119,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       email: currentUser?.email || '',
       password: currentUser?.password || '',
       passwordConfirmation: currentUser?.passwordConfirmation || '',
-      phoneNumber: currentUser?.phoneNumber || '',
+      phone: '',
       // address: currentUser?.address || '',
       // country: currentUser?.country || '',
       // state: currentUser?.state || '',
@@ -108,7 +128,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
       // avatarUrl: currentUser?.avatarUrl || null,
       // isVerified: currentUser?.isVerified || true,
       // status: currentUser?.status,
-      // role: currentUser?.role || '',
+      roles: currentUser?.roles || [],
       // addedBy: userId,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,7 +170,12 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
         if(contactVal){
           data.contact = contactVal._id;
         }
-
+        if(roleVal){
+          const roleId = []
+          roleVal.map((role)=>(roleId.push(role?._id)))
+          data.roles = roleId;
+        }
+        console.log("Data : ", data);
         dispatch(saveUser(data));
         reset();
         enqueueSnackbar('Create success!');
@@ -282,12 +307,16 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
 
             <Autocomplete 
                 // freeSolo
+                required
                 value={customerVal || null}
                 options={customers}
                 getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setCustomerVal(newValue);
+                  setContactVal("");
+                  dispatch(resetContacts());
                   }
                   else{ 
                   setCustomerVal("");
@@ -295,9 +324,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                   dispatch(resetContacts());
                   }
                 }}
-                // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Customer" />}
+                renderInput={(params) => <TextField {...params} name='customer' label="Customer" required/>}
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
@@ -310,7 +338,9 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               <Autocomplete 
                 // freeSolo
                 value={ contactVal || null}
+                required
                 options={contacts}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -322,7 +352,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
                 }}
                 // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Contact" />}
+                renderInput={(params) => <TextField {...params} name='contact' label="Contact" required/>}
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
@@ -333,7 +363,7 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               </Autocomplete>
 
               <RHFTextField name="name" label="Full Name" />
-              <RHFTextField name="phoneNumber" label="Phone Number" />
+              <RHFTextField name="phone" label="Phone Number" />
 
             </Box>
             <Box
@@ -399,14 +429,86 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
               <RHFTextField name="city" label="City" />
               <RHFTextField name="address" label="Address" />
               <RHFTextField name="zipCode" label="Zip/Code" /> */}
-              <RHFSelect native name="role" label="Roles">
+              <RHFMultiSelect
+                chip
+                checkbox
+                name="roles"
+                label="Roles"
+                options={ROLES}
+              />
+              {/* <Autocomplete 
+                // freeSolo
+                multiple
+                // value={roleVal}
+                options={roles}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setRoleVal(newValue);
+                  }
+                  else{ 
+                  setRoleVal("");
+                  }
+                }}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Customer" />}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option.id}>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </Autocomplete> */}
+
+              {/* <Autocomplete
+                multiple
+                id="checkboxes-tags-demo"
+                // value={ roleVal}
+                options={roles}
+                disableCloseOnSelect
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setRoleVal(newValue);
+                  }
+                  else{ 
+                  setRoleVal([]);
+                  }
+                }}
+                renderOption={(props, option, { selected }) => (
+                  <li {...props}>
+                    <Checkbox
+                      icon={icon}
+                      checkedIcon={checkedIcon}
+                      style={{ marginRight: 8 }}
+                      checked={selected}
+                    />
+                    {option.name}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} label="Roles"  />
+                )}
+              /> */}
+              {/* <RHFMultiSelect
+                chip
+                checkbox
+                name="rolesTypes"
+                label="Roles Types"
+                options={roles}
+              /> */}
+
+              {/* <RHFSelect native name="role" label="Roles">
                 <option value="" disabled/>
-                {ROLES.map((option) => (
-                    <option key={option.id} value={option.value}>
-                      {option.value}
+                {roles.map((option) => (
+                    <option key={option._id} value={option._id}>
+                      {option.name}
                     </option>
                   ))}
-                </RHFSelect>            
+                </RHFSelect>             */}
                 {/* <RHFAutocomplete
                   name="role" 
                   label="Roles"
