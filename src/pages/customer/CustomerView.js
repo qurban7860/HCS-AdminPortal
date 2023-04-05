@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, tabsClasses } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
@@ -155,16 +155,16 @@ export default function CustomerViewPage({editPage}) {
           }}
         >
           <Cover name={customer ? customer.name : 'New Customer'} icon="ph:users-light"/>
-
-          
-          
-           
-
           <Tabs
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
+            variant="scrollable"
+            scrollButtons
+            aria-label="visible arrows tabs example"
             sx={{
-  
+              [`& .${tabsClasses.scrollButtons}`]: {
+                '&.Mui-disabled': { opacity: 0.3 },
+              },
               width: 1,
               bottom: 0,
               zIndex: 9,
@@ -173,7 +173,6 @@ export default function CustomerViewPage({editPage}) {
               '& .MuiTabs-flexContainer': {
                 pr: { md: 3 },
                 justifyContent: {
-                  sm: 'center',
                   md: 'flex-end',
                 },
               },
@@ -183,10 +182,7 @@ export default function CustomerViewPage({editPage}) {
               <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
           </Tabs>
-          
         </Card>
-        
-        
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />

@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack  ,tabsClasses } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 
@@ -179,8 +179,10 @@ export default function MachineView({editPage}) {
           <Tabs
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
+            variant="scrollable"
+            scrollButtons="auto"
+            aria-label="scrollable auto tabs example"
             sx={{
-  
               width: 1,
               bottom: 0,
               zIndex: 9,
@@ -189,7 +191,6 @@ export default function MachineView({editPage}) {
               '& .MuiTabs-flexContainer': {
                 pr: { md: 3 },
                 justifyContent: {
-                  sm: 'center',
                   md: 'flex-end',
                 },
               },
