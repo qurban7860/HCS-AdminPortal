@@ -59,8 +59,6 @@ export default function SiteViewForm({ currentSite = null }) {
     await dispatch(getSite(customer._id, currentSite._id));
     dispatch(setEditFormVisibility(true));
   };
-
-
   const defaultValues = useMemo(
     () => (
       {
@@ -120,7 +118,7 @@ export default function SiteViewForm({ currentSite = null }) {
       </Stack>
       <Grid container>
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+          <Grid item xs={12} sm={12} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Name

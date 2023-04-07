@@ -38,13 +38,13 @@ const StyledInfo = styled('div')(({ theme }) => ({
   right: 0,
   zIndex: 99,
   position: 'absolute',
-  marginTop: theme.spacing(5),
+  // marginTop: theme.spacing(5),
   [theme.breakpoints.up('md')]: {
-    right: 'auto',
+    // right: 'auto',
     display: 'flex',
-    alignItems: 'center',
-    left: theme.spacing(3),
-    bottom: theme.spacing(3),
+    // alignItems: 'center',
+    // left: theme.spacing(3),
+    // bottom: theme.spacing(3),
   },
 }));
 
@@ -78,8 +78,14 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
 //   cMachine } = useAuthContext();
 
   return (
-    <StyledRoot >
-      <StyledInfo style={{width: '100%'}}>
+    <StyledRoot style={{
+    p: {xs: 2, md:0},
+
+}}>
+      <StyledInfo style={{width: '100%' ,
+                  flex:1,
+                  display: 'flex',
+                  justifyContent: 'space-between'}}>
         <CustomAvatar
           src={photoURL}
           alt={name}
@@ -92,7 +98,8 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
             color: 'black',
             background: 'orange',
             // background: '#2065d1',
-            ml: {xs: 2, md:0},
+            ml: {xs: 3, md:3},
+            mt: {xs: 3, md:1},
             width: { xs: 80, md: 110 },
             height: { xs: 80, md: 110 },
           }}
@@ -114,11 +121,11 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
           }}
         > */}
         {serialNo ? 
-        <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mb: { xs: -3, md: 0}, display: { xs: 'none', md: 'block' },}} >
+        <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mt: { xs: -3, md:'auto' } ,mb: 3, display: { xs: 'none', md: 'block' },}} >
         {serialNo } {name ? ` / ${name}`: ""}
         </Typography>
         :
-          <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mb: { xs: -3, md: 0}, display: { xs: 'none', md: 'block' },}} >
+          <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mt: { xs: -3, md: 'auto'}, mb: 3, display: { xs: 'none', md: 'block' },}} >
         {name}
         </Typography>
         }
@@ -126,7 +133,7 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
         <div style={{ flex:1,
                   display: 'flex',
                   justifyContent: 'end',
-        }}>
+                    }}>
 
         {backLink ? 
           <Button variant="h4" 
@@ -143,12 +150,12 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
         
           {setting ? 
           <Button variant="h4" 
-          sx={{ 
-          // ml: {md:'auto', xs:0}, 
-          pr: 5,
-          color: {xs: 'common.black' ,md: 'common.white'},
-          display: { xs: 'flex-end', md: 'block'},
-          mb: { xs: 5, md: -2},
+          sx={{  
+          mt:'auto', 
+          pr: 3,
+          color: 'common.white',
+          display: { xs: 'flex-end', md: 'inline-flex'},
+          mb: 3,
           }} 
           onClick={handleNavigate}
            ><Iconify icon="eva:settings-2-outline" /></Button>
