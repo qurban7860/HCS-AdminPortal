@@ -175,8 +175,7 @@ export default function SiteAddForm() {
                 <RHFTextField name="email" label="Email" />
                 <RHFTextField name="website" label="Website" />
 
-                <RHFTextField name="lat" label="Latitude" />
-                <RHFTextField name="long" label="Longitude" />
+                
               </Box>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
@@ -254,7 +253,8 @@ export default function SiteAddForm() {
                       />
                     )}
                 />
-
+                <RHFTextField name="lat" label="Latitude" />
+                <RHFTextField name="long" label="Longitude" />
               </Box>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>

@@ -188,9 +188,7 @@ export default function SiteEditForm() {
 
                 <RHFTextField name="website" label="Website" />
 
-                <RHFTextField name="lat" label="Latitude" />
-                
-                <RHFTextField name="long" label="Longitude" />
+
               
               </Box>
 
@@ -265,6 +263,10 @@ export default function SiteEditForm() {
                       />
                     )}
                 />
+
+                <RHFTextField name="lat" label="Latitude" />
+                
+                <RHFTextField name="long" label="Longitude" />
 
               </Box>
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
