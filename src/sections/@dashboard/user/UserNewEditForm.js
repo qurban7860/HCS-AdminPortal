@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, IconButton, InputAdornment ,Autocomplete ,TextField, Checkbox } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -56,6 +57,8 @@ export default function UserNewEditForm({ isEdit = false, currentUser }) {
   const { contacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState("");
   const { roles } = useSelector((state) => state.role);
+  const [phone, setPhone] = useState('')
+
 const ROLES = [];
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
@@ -99,7 +102,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required').min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+    // phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
     roles: Yup.array().required('Roles are required'),
     // address: Yup.string().required('Address is required'),
     // country: Yup.string().required('Country is required'),
@@ -116,7 +119,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
       email: currentUser?.email || '',
       password: currentUser?.password || '',
       passwordConfirmation: currentUser?.passwordConfirmation || '',
-      phone: '',
+      // phone: '',
       // address: currentUser?.address || '',
       // country: currentUser?.country || '',
       // state: currentUser?.state || '',
@@ -158,9 +161,18 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentUser]);
 
-  
+  const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setPhone(newValue)
+    }
+  }
+
   const onSubmit = async (data) => {
       try{
+        if(phone){
+          data.phone = phone ;
+        }
         if(customerVal){
           data.customer = customerVal._id;
         }
@@ -359,7 +371,8 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
               </Autocomplete>
 
               <RHFTextField name="name" label="Full Name" />
-              <RHFTextField name="phone" label="Phone Number" />
+              {/* <RHFTextField name="phone" label="Phone" /> */}
+              <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium" defaultCountry="NZ" onChange={handlePhoneChange} forceCallingCode/>
 
             </Box>
             <Box

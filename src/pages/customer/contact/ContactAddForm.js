@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo , useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Button, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Button, Typography, DialogTitle, Dialog, InputAdornment , TextField} from '@mui/material';
 // slice
 import { getCustomers } from '../../../redux/slices/customer/customer';
 
@@ -63,20 +64,22 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const numberRegExp = /^[0-9]+$/;
 
+  const [phone, setPhone] = useState('')
+  const [country, setCountryVal] = useState('')
 
   const AddContactSchema = Yup.object().shape({
     firstName: Yup.string(),
     lastName: Yup.string(),
     title: Yup.string(),
     contactTypes: Yup.array(),
-    phone: Yup.string(),
+    // phone: Yup.string(),
     email: Yup.string().trim('The email name cannot include leading and trailing spaces').email('Email must be a valid email address'),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
     postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
-    country: Yup.string().nullable()
+    // country: Yup.string().nullable()
   });
 
   const defaultValues = useMemo(
@@ -86,7 +89,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       lastName: '',
       title: '',
       contactTypes: [],
-      phone: '',
+      // phone: '',
       email: '',
       loginUser: {
         userId,
@@ -120,10 +123,22 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
+  const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setPhone(newValue)
+    }
+  }
 
   const onSubmit = async (data) => {
     // console.log(data);
       try{
+        if(phone){
+          data.phone = phone ;
+        }
+        if(country){
+          data.country = country.label
+        }
         await dispatch(saveContact(data));
         reset();
       } catch(error){
@@ -150,7 +165,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(2, 1fr)',
               }}
-            >
+              >
 
               <RHFTextField name="firstName" label="First Name" />
 
@@ -166,8 +181,9 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 options={CONTACT_TYPES}
               />
 
-              <RHFTextField name="phone" label="Phone" />
-
+              {/* <RHFTextField name="phone" label="Phone" /> */}
+              <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
+                
               <RHFTextField name="email" label="Email" />
               
               </Box>
@@ -195,15 +211,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
                 <RHFTextField name="postcode" label="Post Code" />
 
-                {/* <RHFSelect native name="country" label="Country" placeholder="Country">
-                  <option defaultValue value="null" selected >No Country Selected</option>
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.label}>
-                      {country.label}
-                    </option>
-                  ))}
-                </RHFSelect> */}
-                <RHFAutocomplete
+
+                {/* <RHFAutocomplete
                   name="country"
                   label="Country"
                   freeSolo
@@ -211,8 +220,43 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                   // getOptionLabel={(option) => option.title}
                   
                   ChipProps={{ size: 'small' }}
+                /> */}
+                <RHFAutocomplete
+                   id="country-select-demo"
+                    options={countries}
+                    value={country || null}
+                    name="country"
+                    label="Country"
+                    autoHighlight
+                    isOptionEqualToValue={(option, value) => option.lable === value.lable}
+                    onChange={(event, newValue) => {
+                      if(newValue){
+                      setCountryVal(newValue);
+                      }
+                      else{ 
+                      setCountryVal("");
+                      }
+                    }}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img
+                          loading="lazy"
+                          width="20"
+                          src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                          alt=""
+                        />
+                        {option.label} ({option.code}) +{option.phone}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Choose a country"
+                      />
+                    )}
                 />
-
               </Box>
 
               <Box
