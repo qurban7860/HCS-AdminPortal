@@ -38,13 +38,8 @@ const StyledInfo = styled('div')(({ theme }) => ({
   right: 0,
   zIndex: 99,
   position: 'absolute',
-  // marginTop: theme.spacing(5),
   [theme.breakpoints.up('md')]: {
-    // right: 'auto',
     display: 'flex',
-    // alignItems: 'center',
-    // left: theme.spacing(3),
-    // bottom: theme.spacing(3),
   },
 }));
 
@@ -64,19 +59,11 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
   const navigate = useNavigate()
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
-    // console.log('navigate')
   };
   const handleBacklink = () => {
-    // navigate(PATH_MACHINE.general.app);
     navigate(backLink)
-    // console.log('navigate')
     console.log(backLink)
   };
-    // const [selectedOption, setSelectedOption] = useState('Option 1');
-    // const [selectedOption2, setSelectedOption2] = useState('Option 1');
-    // const [selectedOption3, setSelectedOption3] = useState('Option 1');
-//   cMachine } = useAuthContext();
-
   return (
     <StyledRoot style={{
     p: {xs: 2, md:0},
@@ -86,6 +73,7 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
                   flex:1,
                   display: 'flex',
                   justifyContent: 'space-between'}}>
+
         <CustomAvatar
           src={photoURL}
           alt={name}
@@ -111,15 +99,6 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
                 }}/>
         </CustomAvatar>
 
-        
-        {/* <Box
-          sx={{
-            // ml: { md: 3 },
-            // mt: { xs: 1, md: 0 },
-            // color: 'common.white',
-            // textAlign: { xs: 'center', md: 'left' },
-          }}
-        > */}
         {serialNo ? 
         <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mt: { xs: -3, md:'auto' } ,mb: 3, display: { xs: 'none', md: 'block' },}} >
         {serialNo } {name ? ` / ${name}`: ""}
@@ -133,56 +112,32 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
         <div style={{ flex:1,
                   display: 'flex',
                   justifyContent: 'end',
+                  mt: 'auto'
                     }}>
-
-        {backLink ? 
-          <Button variant="h4" 
-          sx={{ 
-          // ml: {md:'auto', xs:0}, 
-          pr: 0,
-          color: {xs: 'common.black' ,md: 'common.white'},
-          display: { xs: 'flex-end', md: 'block'},
-          mb: { xs: 5, md: -2},
-          }} 
-          onClick={handleBacklink}
-           ><Iconify icon="ri:arrow-go-back-fill" /></Button>
-           : " "}
-        
-          {setting ? 
-          <Button variant="h4" 
-          sx={{  
-          mt:'auto', 
-          pr: 3,
-          color: 'common.white',
-          display: { xs: 'flex-end', md: 'inline-flex'},
-          mb: 3,
-          }} 
-          onClick={handleNavigate}
-           ><Iconify icon="eva:settings-2-outline" /></Button>
-           : " "}
-
-           </div>
-
-           
-
-        {/* </Box> */}
-      
-        
-
+              {backLink ? 
+              <Button title="Go Back" variant="h4" 
+              sx={{ 
+              mt:'auto',
+              ml: 'auto', 
+              mr: { xs: -4, md: -4},
+              color: 'common.white',
+              mb: 1,
+              }} 
+              onClick={handleBacklink}
+               ><Iconify icon="material-symbols:arrow-back-rounded" /></Button>
+               : " "}
+              {setting ? 
+              <Button title="Machine Setting" variant="h4" 
+              sx={{   
+              mt:'auto',
+              color: 'common.white',
+              mb: 1,
+              }} 
+              onClick={handleNavigate}
+               ><Iconify icon="eva:settings-2-outline" /></Button>
+               : " "}
+        </div>
       </StyledInfo>
-      {/* <Image
-        alt="cover"
-        // src={cover}
-        sx={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          position: 'absolute',
-        }}
-      /> */}
-      
-        
     </StyledRoot>
   );
 }
