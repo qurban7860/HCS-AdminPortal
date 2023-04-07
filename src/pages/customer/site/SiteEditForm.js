@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,8 +9,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link, TextField } from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
@@ -24,7 +25,7 @@ import Iconify from '../../../components/iconify';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
-
+  RHFAutocomplete
 } from '../../../components/hook-form';
 
 import { countries } from '../../../assets/data';
@@ -36,28 +37,46 @@ export default function SiteEditForm() {
   const { error, site } = useSelector((state) => state.site);
 
   const { contacts } = useSelector((state) => state.contact);
-
+  const [country, setCountryVal] = useState('')
   const dispatch = useDispatch();
-
+  
   const { enqueueSnackbar } = useSnackbar();
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const numberRegExp = /^[0-9]+$/;
+  
+  const [phone, setPhone] = useState('')
+  const [fax, setFaxVal] = useState('')
+
+  function filtter(data , input) {
+    const filteredOutput = data.filter( obj => ( Object.keys(input).every( filterKeys => (
+              obj[filterKeys] === input[filterKeys]
+    ))
+    ))
+    return filteredOutput
+  }
+
+  useEffect(()=>{
+    setPhone(site.phone)
+    const siteCountry= filtter(countries,{label: site.address.country})
+    setCountryVal(siteCountry[0])
+    setFaxVal(site.fax)
+  },[site])
 
   const EditSiteSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     billingSite: Yup.string(),
-    phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
+    // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-    fax: Yup.string(),
+    // fax: Yup.string(),
     website: Yup.string(),
-    lat: Yup.string(),
-    long: Yup.string(),
+    lat: Yup.string().max(25),
+    long: Yup.string().max(25),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
     postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}),
-    country: Yup.string().nullable(),
+    // country: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
   });
@@ -69,9 +88,9 @@ export default function SiteEditForm() {
       name: site?.name || '',
       customer: site?.customer || '',
       billingSite: site?.billingSite || '',
-      phone: site?.phone || '',
+      // phone: site?.phone || '',
       email: site?.email || '',
-      fax: site?.fax || '',
+      // fax: site?.fax || '',
       website: site?.website || '',
       lat: site?.lat || '',
       long: site?.long || '',
@@ -80,7 +99,7 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
-      country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
+      // country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
       primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
       primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
     }),
@@ -114,9 +133,25 @@ export default function SiteEditForm() {
     dispatch(setEditFormVisibility(false));
   };
 
+  const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setPhone(newValue)
+    }
+  }
+
+  const handleFaxChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setFaxVal(newValue)
+    }
+  }
+
   const onSubmit = async (data) => {
-    // console.log(data);
     try {
+      data.phone = phone ;
+      data.fax = fax
+      data.country = country.label
       await dispatch(updateSite(data));
       reset();
     } catch (err) {
@@ -143,11 +178,13 @@ export default function SiteEditForm() {
                 }}
               >
 
-                <RHFTextField name="phone" label="Phone" />
+                {/* <RHFTextField name="phone" label="Phone" /> */}
+                <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
+                
+                {/* <RHFTextField name="fax" label="Fax" /> */}
+                <MuiTelInput value={fax} name='fax' label="Fax" flagSize="medium"  onChange={handleFaxChange} forceCallingCode defaultCountry="NZ"/>
 
                 <RHFTextField name="email" label="Email" />
-
-                <RHFTextField name="fax" label="Fax" />
 
                 <RHFTextField name="website" label="Website" />
 
@@ -183,14 +220,51 @@ export default function SiteEditForm() {
 
                 <RHFTextField name="postcode" label="Post Code" />
 
-                <RHFSelect native name="country" label="Country" >
+                {/* <RHFSelect native name="country" label="Country" >
                   <option defaultValue value="null" selected >No Country Selected                  </option>
                   {countries.map((country) => (
                     <option key={country.code} value={country.label}>
                       {country.label}
                     </option>
                   ))}
-                </RHFSelect>
+                </RHFSelect> */}
+
+                <RHFAutocomplete
+                   id="country-select-demo"
+                    options={countries}
+                    value={country || null}
+                    name="country"
+                    label="Country"
+                    autoHighlight
+                    isOptionEqualToValue={(option, value) => option.lable === value.lable}
+                    onChange={(event, newValue) => {
+                      if(newValue){
+                      setCountryVal(newValue);
+                      }
+                      else{ 
+                      setCountryVal("");
+                      }
+                    }}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img
+                          loading="lazy"
+                          width="20"
+                          src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                          alt=""
+                        />
+                        {option.label} ({option.code}) +{option.phone}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Choose a country"
+                      />
+                    )}
+                />
 
               </Box>
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>

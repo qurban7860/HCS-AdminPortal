@@ -1,6 +1,6 @@
   import PropTypes from 'prop-types';
   import * as Yup from 'yup';
-  import { useCallback, useEffect, useMemo } from 'react';
+  import { useCallback, useEffect, useMemo, useState } from 'react';
   import { useDispatch, useSelector } from 'react-redux';
 
   import { useNavigate } from 'react-router-dom';
@@ -9,8 +9,9 @@
   import { yupResolver } from '@hookform/resolvers/yup';
 
   // @mui
+  import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
   import { LoadingButton } from '@mui/lab';
-  import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+  import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link , TextField} from '@mui/material';
   // global
   import { CONFIG } from '../../../config-global';
   // slice
@@ -60,20 +61,34 @@
 
     const numberRegExp = /^[0-9]+$/;
 
+    const [phone, setPhone] = useState('')
+    const [country, setCountryVal] = useState('')
+
+    function filtter(data , input) {
+      const filteredOutput = data.filter( obj => ( Object.keys(input).every( filterKeys => ( obj[filterKeys] === input[filterKeys] ))))
+      return filteredOutput
+    }
+
+    useEffect(()=>{
+      setPhone(contact.phone)
+      const contactCountry= filtter(countries,{label: contact.address.country})
+      setCountryVal(contactCountry[0])
+    },[contact])
+
     const EditContactSchema = Yup.object().shape({
       // customer: Yup.string(),
       firstName: Yup.string(),
       lastName: Yup.string(),
       title: Yup.string(),
       contactTypes: Yup.array(),
-      phone: Yup.string(),
+      // phone: Yup.string(),
       email: Yup.string().trim('The contact name cannot include leading and trailing spaces').email('Email must be a valid email address'),
       street: Yup.string(),
       suburb: Yup.string(),
       city: Yup.string(),
       region: Yup.string(),
       postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
-      country: Yup.string().nullable()
+      // country: Yup.string().nullable()
       // isPrimary: Yup.boolean(),
     });
 
@@ -86,14 +101,14 @@
         lastName: contact?.lastName || '',
         title: contact?.title || '',
         contactTypes: contact?.contactTypes || [],
-        phone: contact?.phone || '',
+        // phone: contact?.phone || '',
         email: contact?.email || '',
         street: contact?.address?.street || '',
         suburb: contact?.address?.suburb || '',
         city: contact?.address?.city || '',
         region: contact?.address?.region || '',
         postcode: contact?.address?.postcode || '',
-        country: contact.address?.country === null || contact.address?.country === undefined  ? null : contact.address.country,
+        // country: contact.address?.country === null || contact.address?.country === undefined  ? null : contact.address.country,
       }),
       [contact]
     );
@@ -120,8 +135,21 @@
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [contact]);
 
+    const handlePhoneChange = (newValue) => {
+      matchIsValidTel(newValue)
+      if(newValue.length < 20){
+        setPhone(newValue)
+      }
+    }
+
     const onSubmit = async (data) => {
       try {
+        if(phone){
+          data.phone = phone ;
+        }
+        if(country){
+          data.country = country.label
+        }
         await dispatch(updateContact(customer._id, data));
         reset();
         // navigate(PATH_DASHBOARD.contact.list);
@@ -166,8 +194,9 @@
                 options={CONTACT_TYPES}
               />
 
-              <RHFTextField name="phone" label="Phone" />
-
+              {/* <RHFTextField name="phone" label="Phone" /> */}
+              <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
+                
               <RHFTextField name="email" label="Email" />
               
               </Box>
@@ -196,15 +225,7 @@
 
                 <RHFTextField name="postcode" label="Post Code" />
 
-                {/* <RHFSelect native name="country" label="Country" placeholder="Country">
-                  <option defaultValue value="null" selected >No Country Selected</option>
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.label}>
-                      {country.label}
-                    </option>
-                  ))}
-                </RHFSelect> */}
-                <RHFAutocomplete
+                {/* <RHFAutocomplete
                   name="country"
                   label="Country"
                   freeSolo
@@ -212,6 +233,43 @@
                   // getOptionLabel={(option) => option.title}
                   
                   ChipProps={{ size: 'small' }}
+                /> */}
+
+                <RHFAutocomplete
+                   id="country-select-demo"
+                    options={countries}
+                    value={country || null}
+                    name="country"
+                    label="Country"
+                    autoHighlight
+                    isOptionEqualToValue={(option, value) => option.lable === value.lable}
+                    onChange={(event, newValue) => {
+                      if(newValue){
+                      setCountryVal(newValue);
+                      }
+                      else{ 
+                      setCountryVal("");
+                      }
+                    }}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img
+                          loading="lazy"
+                          width="20"
+                          src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                          alt=""
+                        />
+                        {option.label} ({option.code}) +{option.phone}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Choose a country"
+                      />
+                    )}
                 />
 
               </Box>
