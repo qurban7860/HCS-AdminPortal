@@ -159,7 +159,6 @@ export default function CustomerViewPage({editPage}) {
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
             variant="scrollable"
-            scrollButtons
             aria-label="visible arrows tabs example"
             sx={{
               [`& .${tabsClasses.scrollButtons}`]: {

@@ -180,9 +180,12 @@ export default function MachineView({editPage}) {
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
             variant="scrollable"
-            scrollButtons="auto"
-            aria-label="scrollable auto tabs example"
+            allowScrollButtonsMobile
+            aria-label="scrollable force tabs example"
             sx={{
+              [`& .${tabsClasses.scrollButtons}`]: {
+                '&.Mui-disabled': { opacity: 0.3 },
+              },
               width: 1,
               bottom: 0,
               zIndex: 9,
@@ -190,8 +193,9 @@ export default function MachineView({editPage}) {
               bgcolor: 'background.paper',
               '& .MuiTabs-flexContainer': {
                 pr: { md: 3 },
+                pl: {lg:2},
                 justifyContent: {
-                  md: 'flex-end',
+                  xl: 'flex-end',
                 },
               },
             }}
