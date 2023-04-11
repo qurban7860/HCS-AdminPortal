@@ -25,7 +25,6 @@ export default function ToolEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
 
   
   const { tool } = useSelector((state) => state.tool);

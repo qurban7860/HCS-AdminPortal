@@ -24,7 +24,7 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-
+  RHFSwitch
 } from '../../../components/hook-form';
 import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 
@@ -43,12 +43,15 @@ export default function LicenseEditForm() {
   const EditLicenseSchema = Yup.object().shape({
     licenseKey: Yup.string().max(100).required('License key is required!'),
     licenseDetail: Yup.string().max(10000).required('License detail is required!'),
+    isDisabled : Yup.boolean(),
+
   });
 
   const defaultValues = useMemo(
     () => ({
       licenseKey: license?.licenseKey ||'',
       licenseDetail: license?.licenseDetail || '',
+      isDisabled : license?.isDisabled ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -114,7 +117,17 @@ export default function LicenseEditForm() {
               >
                 <RHFTextField name="licenseKey" label="License Key" multiline/>
                 <RHFTextField name="licenseDetail" label="License Detail" minRows={8} multiline />
-
+                <RHFSwitch
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
               </Box>
 
               <Box

@@ -94,10 +94,10 @@ export default function StatusListTableRow({
         <Label
             variant="soft"
             // color={(isDisabled === true && 'error') || 'success'}
-            color={isDisabled? 'success': 'error'}
+            color={isDisabled? 'error' : 'success'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled  ? 'Yes' : 'No'}
+            {isDisabled  ? 'No' : 'Yes' }
           </Label>
         </TableCell> 
 

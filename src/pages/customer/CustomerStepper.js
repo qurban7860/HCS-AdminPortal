@@ -8,7 +8,7 @@ import SiteAddForm from './site/SiteAddForm';
 
 const steps = ['Enter Contact Details', 'Enter Site Details'];
 
-export default function LinearAlternativeLabel() {
+export default function CustomerStepper() {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
 

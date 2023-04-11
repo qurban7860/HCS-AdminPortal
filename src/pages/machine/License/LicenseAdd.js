@@ -11,7 +11,7 @@ import LicenseAddForm from './LicenseAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function SettingAdd() {
+export default function LicenseAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (

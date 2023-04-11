@@ -172,16 +172,13 @@ export function saveMachinestatus(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params?.isDisabled,
-         
+          isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
           }
-          if(params.displayOrderNo){
-            data.displayOrderNo = params.displayOrderNo;
-          }
+          console.log(data)
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
 
@@ -196,7 +193,7 @@ export function saveMachinestatus(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachinestatus(params) {
+export function updateMachinestatus(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -206,25 +203,19 @@ export function updateMachinestatus(params) {
       let data = {
         id: params.id,
         name: params.name,
-        // tradingName: params.tradingName
+        displayOrderNo: params.displayOrderNo
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
       }
-      if(params.isDisabled){
-        data.isDisabled = params.isDisabled;
-      }
+        data.isDisabled = !params.isDisabled;
 
-      if(params.displayOrderNo){
-        data.displayOrderNo = params.displayOrderNo;
-      }
-      
-      
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${params.id}`,
+      console.log(" Patch Data: ",data)
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
         data
       );
-      dispatch(getMachineStatus(params.id));
+      dispatch(getMachineStatus(Id));
       dispatch(slice.actions.setMachinestatusesEditFormVisibility(false));
     } catch (error) {
       console.error(error,"from statuses");

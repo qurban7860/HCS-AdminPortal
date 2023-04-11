@@ -87,7 +87,7 @@ export const SupplierEditForm = Loadable(lazy(()=> import('../pages/machine/Supp
 // export const LicenseList = Loadable(lazy(()=> import('../pages/machine/License/LicenseList')));
 
 // Machine Categories
-export const MachineCategories = Loadable(lazy(()=> import('../pages/machine/Categories/MachineCategories')));
+export const CategoryAddForm = Loadable(lazy(()=> import('../pages/machine/Categories/CategoryAddForm')));
 export const CategoryList = Loadable(lazy(()=> import('../pages/machine/Categories/CategoryList')));
 export const CategoryView = Loadable(lazy(()=> import('../pages/machine/Categories/CategoryView')));
 export const CategoryViewForm = Loadable(lazy(()=> import('../pages/machine/Categories/CategoryViewForm')));

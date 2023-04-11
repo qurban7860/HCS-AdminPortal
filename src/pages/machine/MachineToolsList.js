@@ -93,7 +93,7 @@ const _accordions = [...Array(8)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export default function CustomerSiteList() {
+export default function MachineToolsList() {
   const {
     dense,
     page,

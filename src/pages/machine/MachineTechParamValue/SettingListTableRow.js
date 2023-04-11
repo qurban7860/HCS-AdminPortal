@@ -96,10 +96,10 @@ export default function SettingListTableRow({
         <TableCell align="false">
           <Label
             variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
+            color={isDisabled? 'error' : 'success'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled === false ? 'false' : true}
+            {isDisabled  ? 'No' : 'Yes' }
           </Label>
         </TableCell>
 

@@ -17,7 +17,8 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
-  RHFAutocomplete
+  RHFAutocomplete,
+  RHFSwitch
 } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -33,6 +34,7 @@ export default function LicenseAddForm() {
   const AddLicenseSchema = Yup.object().shape({
     licenseKey: Yup.string().max(1000).required('License key is required!') ,
     licenseDetail: Yup.string().max(10000).required('License detail is required!'),
+    isDisabled : Yup.boolean(),
   });
 
   const toggleCancel = () => 
@@ -44,6 +46,8 @@ export default function LicenseAddForm() {
     () => ({
       licenseKey: '',
       licenseDetail: '',
+    isDisabled : true,
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -99,7 +103,17 @@ export default function LicenseAddForm() {
               >
                 <RHFTextField name="licenseKey" label="License Key" minRows={8} multiline/>
                 <RHFTextField name="licenseDetail" label="License Detail" minRows={8} multiline />
-
+                <RHFSwitch
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
               </Box>
               <Box
                 rowGap={5}

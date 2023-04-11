@@ -46,13 +46,13 @@ import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
 
 
-CustomerViewPage.propTypes = {
+CustomerView.propTypes = {
   editPage: PropTypes.bool,
 };
 
 
 
-export default function CustomerViewPage({editPage}) {
+export default function CustomerView({editPage}) {
 
   const { id } = useParams(); 
 

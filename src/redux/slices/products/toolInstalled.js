@@ -112,12 +112,13 @@ export function saveToolInstalled(machineId,params) {
             const data = {
                 tool: params.tool,
                 note: params.note,
+                isDisabled: !params.isDisabled,
             }
             console.log("Tool Installed", data);
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
     //   dispatch(slice.actions.ToolInstalledFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
-      dispatch(getToolInstalled(machineId));
+      // dispatch(getToolInstalled(machineId));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -127,15 +128,17 @@ export function saveToolInstalled(machineId,params) {
 
 // ---------------------------------Update Note-------------------------------------
 
-export function updateToolInstalled(machineId,settingId,params) {
+export function updateToolInstalled(machineId,toolInstallledId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
         tool: params.tool,
         note: params.note,
+        isDisabled: !params.isDisabled,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${settingId}`, data, );
+      console.log(" slice Data : ",data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
       dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
       dispatch(setToolInstalledEditFormVisibility (false));
     } catch (error) {

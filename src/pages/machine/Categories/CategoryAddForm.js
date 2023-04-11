@@ -41,7 +41,7 @@ import {Cover} from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
-export default function MachineSuppliers() {
+export default function CategoryAddForm() {
 
   
 console.log("Machine Category : ",PATH_MACHINE.categories.list)
@@ -155,16 +155,16 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
               <RHFTextField name="name" label="Machine Category" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
              </Box>
              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
              

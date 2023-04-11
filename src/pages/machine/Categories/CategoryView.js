@@ -28,13 +28,13 @@ import CategoryEditForm from './CategoryEditForm';
 
 
 
-CategoryViewPage.propTypes = {
+CategoryView.propTypes = {
   editPage: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-export default function CategoryViewPage({editPage}) {
+export default function CategoryView({editPage}) {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 

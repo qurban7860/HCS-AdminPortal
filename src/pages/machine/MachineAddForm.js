@@ -23,7 +23,7 @@ import { Cover } from '../components/Cover';
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {RHFSelect,RHFAutocomplete,RHFTextField,RHFMultiSelect,RHFEditor,RHFUpload,} from '../../components/hook-form';
+import FormProvider, {RHFSelect,RHFAutocomplete,RHFTextField,RHFMultiSelect,RHFEditor,RHFUpload,RHFSwitch} from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
@@ -105,6 +105,8 @@ useLayoutEffect(() => {
     // supportManager: Yup.string(),
     customerTags: Yup.array(),
     description: Yup.string().max(1500),
+    isDisabled : Yup.boolean(),
+
   });
 
   const defaultValues = useMemo(
@@ -125,6 +127,7 @@ useLayoutEffect(() => {
       supportManager: suppVal?._id || null,
       customerTags: chipData,
       description: '',
+      isDisabled : true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -505,6 +508,19 @@ const handleKeyPress = (e) => {
         InputProps={{disableUnderline: true,}} 
         placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
     </Card>
+
+              <RHFSwitch
+              sx={{mt:-3}}
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
 {/* -------------------------end add chips------------------------- */}
               </Stack>
 

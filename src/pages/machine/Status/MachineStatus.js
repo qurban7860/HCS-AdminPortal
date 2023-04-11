@@ -51,7 +51,7 @@ export default function MachineStatus() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const AddMachineSchema = Yup.object().shape({
+  const AddStatusSchema = Yup.object().shape({
     name: Yup.string().min(5).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
@@ -74,7 +74,7 @@ export default function MachineStatus() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddMachineSchema),
+    resolver: yupResolver(AddStatusSchema),
     defaultValues,
   });
 

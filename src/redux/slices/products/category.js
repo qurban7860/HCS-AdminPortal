@@ -174,7 +174,7 @@ export function saveCategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !(params.isDisabled),
+          isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
         if(params.description){
@@ -194,28 +194,24 @@ export function saveCategory(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateCategory(params) {
+export function updateCategory(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
-      const formData = new FormData();
       /* eslint-disable */
-      let data = {
-        id: params.id,
+      const data = {
         name: params.name,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
       }
-      if(params.isDisabled){
-        data.isDisabled = params.isDisabled;
-      }
+      console.log("Params : ",data)
       
       
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );
 

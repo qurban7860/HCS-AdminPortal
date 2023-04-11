@@ -113,14 +113,14 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
               Category Name
             </Typography>
 
-            <Typography variant="body2">{defaultValues.category.name}</Typography>
+            <Typography variant="body2">{defaultValues?.category?.name || " "}</Typography>
             
         </Grid>
         <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
 
         </Grid>
         

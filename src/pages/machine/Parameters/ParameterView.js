@@ -27,13 +27,13 @@ import ParameterEditForm from './ParameterEditForm';
 
 
 
-StatusViewPage.propTypes = {
+ParameterViewPage.propTypes = {
   editPage: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-export default function StatusViewPage({editPage}) {
+export default function ParameterViewPage({editPage}) {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 

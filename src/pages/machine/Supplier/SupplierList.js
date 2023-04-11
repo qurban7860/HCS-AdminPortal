@@ -43,7 +43,7 @@ import SupplierListTableRow from './SupplierListTableRow';
 import SupplierListTableToolbar from './SupplierListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
-
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -52,6 +52,8 @@ const TABLE_HEAD = [
   { id: 'ContactName', label: 'ContactName', align: 'left' },
   { id: 'city', label: 'City', align: 'left' },
   { id: 'country', label: 'Country', align: 'left' },
+  { id: 'isDisabled', label: 'Active', align: 'center' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
   
 ];
 
@@ -107,13 +109,10 @@ export default function SupplierList() {
 
   const { suppliers, isLoading, error, initial, responseMessage } = useSelector((state) => state.supplier);
 
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
 
   useLayoutEffect( () => {
     // console.log('Testing done')
-     dispatch(getSuppliers());
+      dispatch(getSuppliers());
   }, [dispatch]);
 
   useEffect(() => {
@@ -300,12 +299,6 @@ export default function SupplierList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>

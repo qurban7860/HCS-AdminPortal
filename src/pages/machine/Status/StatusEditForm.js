@@ -67,7 +67,7 @@ export default function StatusEditForm() {
         createdAt: machinestatus?.createdAt || '',
         updatedAt: machinestatus?.updatedAt || '',
         displayOrderNo: machinestatus?.displayOrderNo || '',
-        isDisabled: machinestatus?.isDisabled || '',
+        isDisabled: !machinestatus.isDisabled,
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -93,8 +93,6 @@ export default function StatusEditForm() {
 
   useLayoutEffect(() => {
     dispatch(getMachineStatus(id));
-    
-
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -107,14 +105,13 @@ export default function StatusEditForm() {
 
   const toggleCancel = () => 
     {
-      dispatch(updateMachinestatus(false));
       navigate(PATH_MACHINE.machineStatus.view(id));
     };
 
   const onSubmit = async (data) => {
-    // console.log(data);
+    console.log(data);
     try {
-      await dispatch(updateMachinestatus({...data,id}));
+      await dispatch(updateMachinestatus(data,id));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.machineStatus.view(id));

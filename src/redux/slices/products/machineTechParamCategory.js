@@ -100,21 +100,21 @@ export const {
 } = slice.actions;
 
 
-// ----------------------------------------------------------------------
+// // ----------------------------------------------------------------------
 
-export function createTechparamcategories (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e.Message))
+// export function createTechparamcategories (supplyData){
+//   return async (dispatch) =>{
+//     dispatch(slice.actions.startLoading());
+//     try{
+//       const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`,supplyData);
+//       // dispatch(slice.actions)
+//     } catch (e) {
+//       console.log(e);
+//       dispatch(slice.actions.hasError(e.Message))
 
-    }
-  }
-}
+//     }
+//   }
+// }
 
 // ----------------------------------------------------------------------
 
@@ -180,14 +180,14 @@ export function saveTechparamcategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params?.isDisabled,
-          // tradingName: params.tradingName,
-          // site: {
-          //   name: params.name,
-          //   address: {},
-          // },
-          // technicalContact: {},
-          // billingContact: {},
+          tradingName: params.tradingName,
+          site: {
+            name: params.name,
+            address: {},
+          },
+          technicalContact: {},
+          billingContact: {},
+          isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
         if(params.description){
@@ -207,33 +207,26 @@ export function saveTechparamcategory(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateTechparamcategory(params) {
+export function updateTechparamcategory(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
-      const formData = new FormData();
+console.log("Params : ",Id,params)
       /* eslint-disable */
       let data = {
-        id: params.id,
         name: params.name,
-        
+        isDisabled: !params.isDisabled,
         // tradingName: params.tradingName
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
       }
-      if(params.isDisabled){
-        data.isDisabled = params.isDisabled;
-      }
-      
-      
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`,
         data
       );
-      dispatch(getTechparamcategory(params.id));
-      dispatch(slice.actions.setTechparamcategoriesEditFormVisibility(false));
+      dispatch(getTechparamcategory(Id));
+      // dispatch(slice.actions.setTechparamcategoriesEditFormVisibility(false));
 
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));

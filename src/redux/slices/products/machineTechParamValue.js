@@ -112,6 +112,7 @@ export function saveSetting(machineId,params) {
             const data = {
                 techParam: params.techParam,
                 techParamValue: params.techParamValue,
+                isDisabled: !params.isDisabled,
             }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
     //   dispatch(slice.actions.setSettingFormVisibility(false));
@@ -133,6 +134,7 @@ export function updateSetting(machineId,settingId,params) {
       const data = {
         techParam: params.techParam,
         techParamValue: params.techParamValue,
+        isDisabled: !params.isDisabled,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
       dispatch(slice.actions.setResponseMessage('Setting updated successfully'));

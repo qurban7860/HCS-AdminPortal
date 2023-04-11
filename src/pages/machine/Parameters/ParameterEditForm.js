@@ -38,7 +38,7 @@ import FormProvider, {
 // ----------------------------------------------------------------------
 
 
-export default function StatusEditForm() {
+export default function ParameterEditForm() {
 
   const { techparam, error} = useSelector((state) => state.techparam);
 
@@ -53,7 +53,7 @@ export default function StatusEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  const EditStatusSchema = Yup.object().shape({
+  const ParameterEditSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().min(2).max(2000),
     isDisabled : Yup.boolean(),
@@ -67,18 +67,18 @@ export default function StatusEditForm() {
         name:techparam?.name || '',
         code: techparam?.code || '',
         description: techparam?.description || '',
-        isDisabled: techparam?.isDisabled || '',
+        isDisabled: !techparam.isDisabled,
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
     );
-
+console.log("default :",defaultValues)
   const { themeStretch } = useSettingsContext();
   
   const methods = useForm({
-    resolver: yupResolver(EditStatusSchema),
+    resolver: yupResolver(ParameterEditSchema),
     defaultValues,
   });
 
@@ -129,7 +129,7 @@ export default function StatusEditForm() {
 
 
   return (
-    <Container maxWidth={false }>
+    // <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
@@ -219,6 +219,6 @@ export default function StatusEditForm() {
           </Grid>
         
     </FormProvider>
-    </Container>
+    // </Container>
   );
 }

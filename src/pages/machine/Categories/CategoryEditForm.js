@@ -34,13 +34,14 @@ import FormProvider, {
   RHFEditor,
   RHFUpload,
 } from '../../../components/hook-form';
-
+import {Cover} from '../../components/Cover'
 // ----------------------------------------------------------------------
 
 
 export default function CategoryEditForm() {
 
   const { error, category } = useSelector((state) => state.category);
+  // console.log("category : ",category)
 
   const dispatch = useDispatch();
 
@@ -57,14 +58,13 @@ export default function CategoryEditForm() {
     createdAt: Yup.string(),
   });
 
-
   const defaultValues = useMemo(
     () => ({
         name:category?.name || 'N/A',
         description:category?.description || 'N/A',
         createdAt: category?.createdAt || '',
         updatedAt: category?.updatedAt || '',
-        isDisabled: category?.isDisabled || '',
+        isDisabled: !category.isDisabled ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [category]
@@ -106,9 +106,9 @@ export default function CategoryEditForm() {
     };
 
   const onSubmit = async (data) => {
-    // console.log(data);
     try {
-      await dispatch(updateCategory({...data,id}));
+      console.log("Data : ",data);
+      await dispatch(updateCategory(data,id));
       reset(); 
       enqueueSnackbar('Update success!');
       // console.log(PATH_MACHINE.categories.view(id))
@@ -123,46 +123,51 @@ export default function CategoryEditForm() {
 
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={4}>
+    <>
+
       <Helmet>
-        <title> Machine: Category | Machine ERP</title>
+        <title> Machine: Edit Category | Machine ERP</title>
       </Helmet>
 
-      
+              <Card
+                sx={{
+                  mb: 3,
+                  height: 160,
+                  position: 'relative',
+                  // mt: '24px',
+                }}
+              >
+                <Cover name='Edit Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
+              </Card>
 
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                 Edit Category
-                </Typography>
-              </Stack>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(1, 1fr)',
+                }}
+              >
 
-              <RHFTextField name="name" label="Machine Category" required />
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
-             </Box>
+                <RHFTextField name="name" label="Machine Category" required />
+                <RHFTextField name="description" label="Description" minRows={7} multiline />
+                <RHFSwitch
+                  name="isDisabled"
+                  labelPlacement="start"
+                  label={
+                      <>
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                          Active
+                        </Typography>
+                      </>
+                    } 
+                  />
+               </Box>
              
               
              
@@ -200,7 +205,7 @@ export default function CategoryEditForm() {
             </Card>
           
           </Grid>
-        </Grid>
-    </FormProvider>
+      </FormProvider>
+    </>
   );
 }

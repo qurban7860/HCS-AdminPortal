@@ -27,13 +27,13 @@ import ToolEditForm from './ToolEditForm';
 
 
 
-ToolViewPage.propTypes = {
+ToolView.propTypes = {
   editPage: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-export default function ToolViewPage({editPage}) {
+export default function ToolView({editPage}) {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 

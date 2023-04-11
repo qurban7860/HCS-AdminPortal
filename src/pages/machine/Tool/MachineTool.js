@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getTools, createTools } from '../../../redux/slices/products/tools';
+import {  saveTool } from '../../../redux/slices/products/tools';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -39,7 +39,7 @@ import {Cover} from '../../components/Cover'
 import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
-export default function MachineSuppliers() {
+export default function MachineTool() {
 
 
   const { userId, user } = useAuthContext();
@@ -94,7 +94,7 @@ export default function MachineSuppliers() {
 
     
       try{ 
-        await dispatch(createTools(data));
+        await dispatch(saveTool(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.tool.list); 
@@ -152,9 +152,9 @@ export default function MachineSuppliers() {
               <RHFTextField name="name" label="Machine Tools" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
+                name="isDisabled"
+                labelPlacement="start"
+                label={
                 <>
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
                     Active

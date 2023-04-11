@@ -66,7 +66,7 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
   };
   return (
     <StyledRoot style={{
-    p: {xs: 2, md:0},
+    p: {xs: 0, md:0},
 
 }}>
       <StyledInfo style={{width: '100%' ,
@@ -87,14 +87,14 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
             background: 'orange',
             // background: '#2065d1',
             ml: {xs: 3, md:3},
-            mt: {xs: 3, md:1},
-            width: { xs: 80, md: 110 },
-            height: { xs: 80, md: 110 },
+            mt: {xs: 1, md:1},
+            width: { xs: 110, md: 110 },
+            height: { xs: 110, md: 110 },
           }}
         >
             <Iconify icon={icon} sx={{
-                 width: {xs: 32, md: 48 }, 
-                 height: {xs: 32, md: 48},
+                 width: {xs: 48, md: 48 }, 
+                 height: {xs: 48, md: 48},
                  color: 'black',
                 }}/>
         </CustomAvatar>
@@ -112,7 +112,7 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
         <div style={{ flex:1,
                   display: 'flex',
                   justifyContent: 'end',
-                  mt: 'auto'
+                  // mt: 'auto'
                     }}>
               {backLink ? 
               <Button title="Go Back" variant="h4" 
@@ -121,7 +121,7 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
               ml: 'auto', 
               mr: { xs: -4, md: -4},
               color: 'common.white',
-              mb: 1,
+              mb: 3,
               }} 
               onClick={handleBacklink}
                ><Iconify icon="material-symbols:arrow-back-rounded" /></Button>
@@ -131,7 +131,7 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
               sx={{   
               mt:'auto',
               color: 'common.white',
-              mb: 1,
+              mb: 3,
               }} 
               onClick={handleNavigate}
                ><Iconify icon="eva:settings-2-outline" /></Button>

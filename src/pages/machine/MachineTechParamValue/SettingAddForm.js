@@ -20,7 +20,8 @@ import { countries } from '../../../assets/data';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
-  RHFAutocomplete
+  RHFAutocomplete,
+  RHFSwitch
 } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -63,6 +64,7 @@ setparamData(filteredsetting);
   
 const AddSettingSchema = Yup.object().shape({
   techParamValue: Yup.string().max(20),
+  isDisabled : Yup.boolean(),
 });
 
 useEffect(()=>{
@@ -75,7 +77,7 @@ useEffect(()=>{
   const defaultValues = useMemo(
     () => ({
       techParamValue: '',
-
+      isDisabled : true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -142,6 +144,7 @@ useEffect(()=>{
                 // freeSolo
                 value={ category || null}
                 options={techparamcategories}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
@@ -162,6 +165,7 @@ useEffect(()=>{
                 // freeSolo
                 value={techParamVal || null}
                 options={paramData}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
@@ -176,7 +180,7 @@ useEffect(()=>{
                 renderInput={(params) => <TextField {...params}  label="Technical Parameters" />}
                 ChipProps={{ size: 'small' }}
               />
-
+              
                 
               </Box>
 
@@ -191,6 +195,17 @@ useEffect(()=>{
                 sx={{mt:3}}
               >
                 <RHFTextField name="techParamValue" label="Technical Parameter Value" />
+                <RHFSwitch
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
               </Box>
               </Grid>
 
