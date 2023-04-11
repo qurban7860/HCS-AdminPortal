@@ -121,7 +121,7 @@ export function saveNote(machineId,params) {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -140,7 +140,7 @@ export function updateNote(machineId,noteId,params) {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -162,7 +162,7 @@ export function getNotes(id) {
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -178,7 +178,7 @@ export function getNote(machineId,noteId) {
       // dispatch(slice.actions.setResponseMessage('Note Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -198,7 +198,7 @@ export function deleteNote(machineId,id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

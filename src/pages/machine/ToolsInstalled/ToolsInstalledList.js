@@ -154,11 +154,10 @@ export default function ToolsInstalledList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteSite(id));
       dispatch(getSites());
       setSelected([]);
-
       if (page > 0) {
         if (dataInPage.length < 2) {
           setPage(page - 1);
@@ -187,7 +186,7 @@ export default function ToolsInstalledList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_DASHBOARD.site.edit(id));
   };
 
@@ -278,12 +277,6 @@ export default function ToolsInstalledList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>

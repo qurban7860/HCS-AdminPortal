@@ -126,19 +126,6 @@ export const {
 } = slice.actions;
 
 
-// ----------------------------------------------------------------------
-
-export function createTechparams (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      dispatch(slice.actions.hasError(e))
-    }
-  }
-}
 
 // ----------------------------------------------------------------------
 
@@ -160,7 +147,7 @@ export function getTechparams (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -184,7 +171,7 @@ export function getTechparamsByCategory (cateegoryId){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -197,7 +184,7 @@ export function getTechparam(id) {
       dispatch(slice.actions.getTechparamSuccess(response.data));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -212,7 +199,7 @@ export function deleteTechparams(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -228,7 +215,7 @@ export function saveTechparam(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !(params.isDisabled),
+          isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
         if(params.description){
@@ -249,7 +236,7 @@ export function saveTechparam(params) {
         dispatch(slice.actions.getTechparamsSuccess(response.data.Techparam));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -266,6 +253,7 @@ export function updateTechparam(params,id) {
       /* eslint-disable */
       let data = {
         name: params.name,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
      if(params.description){
@@ -289,7 +277,7 @@ export function updateTechparam(params,id) {
 
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

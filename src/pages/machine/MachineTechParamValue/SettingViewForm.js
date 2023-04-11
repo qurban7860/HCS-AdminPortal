@@ -63,6 +63,7 @@ export default function SettingViewForm({ currentSetting = null }) {
         techParamName: currentSetting?.techParam?.name || "",
         techParamCode: currentSetting?.techParam?.code || "",
         techParamValue: currentSetting?.techParamValue || "",
+        isDisabled: currentSetting?.isDisabled,
         createdAt:                currentSetting?.createdAt || "",
         createdByFullname:           currentSetting?.createdBy?.name || "",
         createdIP:                currentSetting?.createdIP || "",
@@ -129,6 +130,14 @@ export default function SettingViewForm({ currentSetting = null }) {
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
             {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
             </Typography>
+          </Grid>
+
+          <Grid item xs={12} sm={12} sx={{pt:2}}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Active
+          </Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
+
           </Grid>
 
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>

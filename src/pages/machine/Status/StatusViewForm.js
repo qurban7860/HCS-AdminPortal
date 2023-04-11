@@ -42,7 +42,6 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
-    dispatch(updateMachinestatus(true));
     navigate(PATH_MACHINE.machineStatus.statusedit(id));
   }
 
@@ -119,7 +118,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
 
         </Grid>
         

@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Typography ,Button, Grid} from '@mui/material';
+import { Box, Typography ,Button, Grid, Link} from '@mui/material';
 
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -38,13 +38,8 @@ const StyledInfo = styled('div')(({ theme }) => ({
   right: 0,
   zIndex: 99,
   position: 'absolute',
-  marginTop: theme.spacing(5),
   [theme.breakpoints.up('md')]: {
-    right: 'auto',
     display: 'flex',
-    alignItems: 'center',
-    left: theme.spacing(3),
-    bottom: theme.spacing(3),
   },
 }));
 
@@ -64,22 +59,20 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
   const navigate = useNavigate()
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
-    // console.log('navigate')
   };
   const handleBacklink = () => {
-    // navigate(PATH_MACHINE.general.app);
     navigate(backLink)
-    // console.log('navigate')
-    console.log(backLink)
   };
-    // const [selectedOption, setSelectedOption] = useState('Option 1');
-    // const [selectedOption2, setSelectedOption2] = useState('Option 1');
-    // const [selectedOption3, setSelectedOption3] = useState('Option 1');
-//   cMachine } = useAuthContext();
-
   return (
-    <StyledRoot >
-      <StyledInfo style={{width: '100%'}}>
+    <StyledRoot style={{
+    p: {xs: 0, md:0},
+
+}}>
+      <StyledInfo style={{width: '100%' ,
+                  flex:1,
+                  display: 'flex',
+                  justifyContent: 'space-between'}}>
+
         <CustomAvatar
           src={photoURL}
           alt={name}
@@ -92,90 +85,69 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
             color: 'black',
             background: 'orange',
             // background: '#2065d1',
-            ml: {xs: 2, md:0},
-            width: { xs: 80, md: 110 },
-            height: { xs: 80, md: 110 },
+            ml: {xs: 3, md:3},
+            mt: {xs: 1, md:1},
+            width: { xs: 110, md: 110 },
+            height: { xs: 110, md: 110 },
           }}
         >
             <Iconify icon={icon} sx={{
-                 width: {xs: 32, md: 48 }, 
-                 height: {xs: 32, md: 48},
+                 width: {xs: 48, md: 48 }, 
+                 height: {xs: 48, md: 48},
                  color: 'black',
                 }}/>
         </CustomAvatar>
 
-        
-        {/* <Box
-          sx={{
-            // ml: { md: 3 },
-            // mt: { xs: 1, md: 0 },
-            // color: 'common.white',
-            // textAlign: { xs: 'center', md: 'left' },
-          }}
-        > */}
         {serialNo ? 
-        <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mb: { xs: -3, md: 0}, display: { xs: 'none', md: 'block' },}} >
+        <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mt: { xs: -3, md:'auto' } ,mb: 3, display: { xs: 'none', md: 'block' },}} >
         {serialNo } {name ? ` / ${name}`: ""}
         </Typography>
         :
-          <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mb: { xs: -3, md: 0}, display: { xs: 'none', md: 'block' },}} >
+          <Typography variant="h4" sx={{ pl:3, color: 'common.white' , mt: { xs: -3, md: 'auto'}, mb: 3, display: { xs: 'none', md: 'block' },}} >
         {name}
         </Typography>
         }
 
         <div style={{ flex:1,
                   display: 'flex',
-                  justifyContent: 'end',
-        }}>
+                  justifyContent: 'end'
+                    }}>
+              {backLink ? 
+                <Link
+                  title="Go Back"
+                  sx={{ 
+                    ml: 'auto',  
+                    mt:'auto',
+                    color: 'common.white',
+                    mb: 3,
+                    }}
+                  component="button"
+                  variant="body2"
+                  onClick={handleBacklink}
+                >
+                  <Iconify icon="material-symbols:arrow-back-rounded" />
+                </Link>
 
-        {backLink ? 
-          <Button variant="h4" 
-          sx={{ 
-          // ml: {md:'auto', xs:0}, 
-          pr: 0,
-          color: {xs: 'common.black' ,md: 'common.white'},
-          display: { xs: 'flex-end', md: 'block'},
-          mb: { xs: 5, md: -2},
-          }} 
-          onClick={handleBacklink}
-           ><Iconify icon="ri:arrow-go-back-fill" /></Button>
-           : " "}
-        
-          {setting ? 
-          <Button variant="h4" 
-          sx={{ 
-          // ml: {md:'auto', xs:0}, 
-          pr: 5,
-          color: {xs: 'common.black' ,md: 'common.white'},
-          display: { xs: 'flex-end', md: 'block'},
-          mb: { xs: 5, md: -2},
-          }} 
-          onClick={handleNavigate}
-           ><Iconify icon="eva:settings-2-outline" /></Button>
-           : " "}
+               : " "}
+              {setting ? 
+                <Link
+                  title="Machine Setting"
+                  sx={{   
+                  mt:'auto',
+                  color: 'common.white',
+                  mb: 3,
+                  mx: 2,
+                  }}
+                  component="button"
+                  variant="body2"
+                  onClick={handleNavigate}
+                >
+                  <Iconify icon="eva:settings-2-outline" />
+                </Link>
 
-           </div>
-
-           
-
-        {/* </Box> */}
-      
-        
-
+               : " "}
+        </div>
       </StyledInfo>
-      {/* <Image
-        alt="cover"
-        // src={cover}
-        sx={{
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          position: 'absolute',
-        }}
-      /> */}
-      
-        
     </StyledRoot>
   );
 }

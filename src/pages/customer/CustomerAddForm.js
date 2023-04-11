@@ -9,8 +9,9 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment, TextField } from '@mui/material';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
 import { saveCustomer } from '../../redux/slices/customer/customer';
@@ -77,6 +78,13 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const numberRegExp = /^[0-9]+$/;
 
+  const [phone, setPhone] = useState('')
+  const [country, setCountryVal] = useState('')
+  const [fax, setFaxVal] = useState('')
+  const [billingContactPhone, setBillingContactPhone] = useState('')
+  const [technicalContactPhone, setTechnicalContactPhone] = useState('')
+
+
   const AddCustomerSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     tradingName: Yup.string(),
@@ -89,23 +97,23 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
     // site details
     billingSite: Yup.string(),
-    phone: Yup.string(),
+    // phone: Yup.string(),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces').email('Email must be a valid email address'),
-    fax: Yup.string(),
+    // fax: Yup.string(),
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
     postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
     region: Yup.string(),
-    country: Yup.string().nullable(true),
+    // country: Yup.string().nullable(true),
 
     // billing contact details
     billingFirstName: Yup.string(),
     billingLastName: Yup.string(),
     billingTitle: Yup.string(),
     billingContactTypes: Yup.array(),
-    billingContactPhone: Yup.string(),
+    // billingContactPhone: Yup.string(),
     billingContactEmail: Yup.string().email('Email must be a valid email address'),
 
     // technical contact details
@@ -113,7 +121,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     technicalLastName: Yup.string(),
     technicalTitle: Yup.string(),
     technicalContactTypes: Yup.array(),
-    technicalContactPhone: Yup.string(),
+    // technicalContactPhone: Yup.string(),
     technicalContactEmail: Yup.string().email('Email must be a valid email address'),
   });
 
@@ -157,15 +165,54 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     // dispatch(getSPContacts());
   }, [dispatch]);
 
+  const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setPhone(newValue)
+    }
+  }
+
+  const handleFaxChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setFaxVal(newValue)
+    }
+  }
+
+  const handleBillingContactPhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setBillingContactPhone(newValue)
+    }
+  }
+
+  const handleTechnicalContactPhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 20){
+      setTechnicalContactPhone(newValue)
+    }
+  }
 
   const onSubmit = async (data) => {
       try{
+        if(phone){
+          data.phone = phone ;
+        }
+        if(fax){
+          data.fax = fax
+        }
+        if(country){
+          data.country = country.label
+        }
+        if(billingContactPhone){
+          data.billingContactPhone = billingContactPhone ;
+        }
+        if(technicalContactPhone){
+          data.technicalContactPhone = technicalContactPhone
+        }
         dispatch(saveCustomer(data));
         reset();
         enqueueSnackbar('Create success!');
-        if(customerSaveSuccess){
-          // console.log('customer', customer);
-        }
         navigate(PATH_DASHBOARD.customer.view(null));
       } catch(error){
         enqueueSnackbar('Saving failed!');
@@ -210,9 +257,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="tradingName" label="Trading Name" />
               
-              <RHFTextField name="phone" label="Phone" />
+              {/* <RHFTextField name="phone" label="Phone" /> */}
+              <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
+              
+              {/* <RHFTextField name="fax" label="Fax" /> */}
+              <MuiTelInput value={fax} name='fax' label="Fax" flagSize="medium"  onChange={handleFaxChange} forceCallingCode defaultCountry="NZ"/>
 
-              <RHFTextField name="fax" label="Fax" />
 
               <RHFTextField name="email" label="Email" />
 
@@ -247,7 +297,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
                 <RHFTextField name="region" label="Region" />
 
-                <RHFAutocomplete
+                {/* <RHFAutocomplete
                   name="country"
                   label="Country"
                   freeSolo
@@ -255,24 +305,45 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   // getOptionLabel={(option) => option.title}
                   
                   ChipProps={{ size: 'small' }}
-                /> 
+                />  */}
 
-                {/* <Autocomplete
-                  fullWidth
-                  freeSolo
-                  options={countries.map((option) => option.label)}
-                  renderInput={(params) => <RHFTextField {...params} label="freeSolo" />}
-                  sx={{ mb: 2 }}
-                /> */}
+                <RHFAutocomplete
+                   id="country-select-demo"
+                    options={countries}
+                    value={country || null}
+                    name="country"
+                    label="Country"
+                    autoHighlight
+                    isOptionEqualToValue={(option, value) => option.lable === value.lable}
+                    onChange={(event, newValue) => {
+                      if(newValue){
+                      setCountryVal(newValue);
+                      }
+                      else{ 
+                      setCountryVal("");
+                      }
+                    }}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    renderOption={(props, option) => (
+                      <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                        <img
+                          loading="lazy"
+                          width="20"
+                          src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                          srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                          alt=""
+                        />
+                        {option.label} ({option.code}) +{option.phone}
+                      </Box>
+                    )}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label="Choose a country"
+                      />
+                    )}
+                />
 
-                {/* <RHFSelect native name="country" label="Country" placeholder="Country">
-                  <option value="" />
-                  {countries.map((country) => (
-                    <option key={country.code} value={country.label}>
-                      {country.label}
-                    </option>
-                  ))}
-                </RHFSelect> */}
 
               </Box>
               </Stack>
@@ -300,8 +371,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="billingTitle" label="Title" />
 
-              <RHFTextField name="billingContactPhone" label="Contact Phone" />
-
+              {/* <RHFTextField name="billingContactPhone" label="Contact Phone" /> */}
+              <MuiTelInput value={billingContactPhone} name="billingContactPhone" label="Contact Phone" flagSize="medium"  onChange={handleBillingContactPhoneChange}  forceCallingCode defaultCountry="NZ"/>
+              
               <RHFTextField name="billingContactEmail" label="Contact Email" />
 
               </Box>
@@ -342,8 +414,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               <RHFTextField name="technicalTitle" label="Title" />
 
-              <RHFTextField name="technicalContactPhone" label="Contact Phone" />
-
+              {/* <RHFTextField name="technicalContactPhone" label="Contact Phone" /> */}
+              <MuiTelInput value={technicalContactPhone} name="technicalContactPhone" label="Contact Phone" flagSize="medium"  onChange={handleTechnicalContactPhoneChange}  forceCallingCode defaultCountry="NZ"/>
+              
               <RHFTextField name="technicalContactEmail" label="Contact Email" />
 
               </Box>}

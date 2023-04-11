@@ -119,7 +119,7 @@ export function getMachines() {
       dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -134,7 +134,7 @@ export function getMachine(id) {
       dispatch(slice.actions.getMachineSuccess(response.data));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -153,7 +153,7 @@ export function deleteMachine(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -168,6 +168,7 @@ export function saveMachine(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+        isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
         
@@ -216,12 +217,13 @@ export function saveMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
+        console.log(data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -252,9 +254,10 @@ export function updateMachine(params) {
         supportManager: params.supportManager,
         description: params.description,
         customerTags: params.customerTags,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
-
+console.log(data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data
       );
@@ -266,7 +269,7 @@ export function updateMachine(params) {
 
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

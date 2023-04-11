@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid} from '@mui/material';
+import { Switch, Card, Grid, Typography} from '@mui/material';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // slices
@@ -13,11 +13,11 @@ import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
-export default function CustomerViewForm() {
+export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
-
+// console.log("machine view form machine?.isDisabled : ", machine);
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false))
   }, [ dispatch ,machine ])
@@ -45,14 +45,14 @@ export default function CustomerViewForm() {
       status:                   machine?.status?.name || "",
       customer:                 machine?.customer?.name || "",
       instalationSite:          machine?.instalationSite?.name || "",
+      instalationSiteMilestone:   machine?.instalationSite?.address?.city || "",      
       billingSite:              machine?.billingSite?.name || "",
-      instalationAddressCity:   machine?.instalationSite?.address?.city || "",  
-      instalationAddressCountry:machine?.instalationSite?.address?.country || "",    
       description:              machine?.description || "",
       customerTags:             machine?.customerTags || "",
       accountManager:           machine?.accountManager || "",
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
+      isDisabled:               machine?.isDisabled,
       createdAt:                machine?.createdAt || "",
       createdByFname:           machine?.createdBy?.name || "",
       createdByLname:           machine?.createdBy?.lastName || "",
@@ -65,7 +65,8 @@ export default function CustomerViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
-  
+
+  // console.log("default Values of view form : ",defaultValues)
   return (
       <Card sx={{ p: 3 }}>
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete} />
@@ -78,12 +79,12 @@ export default function CustomerViewForm() {
             <ViewFormField sm={6} heading="Machine Model" param={defaultValues.machineModel? defaultValues.machineModel : ''} />
             <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
             <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
-            <ViewFormField sm={6} heading="Customer" param={defaultValues.customer? defaultValues.customer : ''} />
-            <ViewFormField sm={6} heading="Instalation Site" param={defaultValues.instalationSite? defaultValues.instalationSite : ''} />
+            <ViewFormField sm={12} heading="Customer" param={defaultValues.customer? defaultValues.customer : ''} />
+            <ViewFormField sm={6} heading="Installation Site" param={defaultValues.instalationSite? defaultValues.instalationSite : ''} />
+            <ViewFormField sm={6} heading="Installation Site Milestone" param={defaultValues.instalationSiteMilestone? defaultValues?.instalationSiteMilestone : ''} />
             <ViewFormField sm={6} heading="Billing Site" param={defaultValues.billingSite? defaultValues.billingSite : ''} />
-            <ViewFormField sm={6} heading="Site Address" param={defaultValues.instalationAddressCity? defaultValues.instalationAddressCity : ''} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description : ''} />
-            <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} />
+            {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
         </Grid>
         <Grid container>
             <ViewFormSubtitle sm={12} heading="Howick Resources"/>
@@ -91,6 +92,10 @@ export default function CustomerViewForm() {
             <ViewFormField sm={6} heading="Project Manager" param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
             <ViewFormField sm={6} heading="Suppport Manager" param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
         </Grid>
+
+         <Switch sx={{mt:3}} checked = { !defaultValues.isDisabled } disabled  />
+         
+        
         <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

@@ -112,6 +112,7 @@ export function saveSetting(machineId,params) {
             const data = {
                 techParam: params.techParam,
                 techParamValue: params.techParamValue,
+                isDisabled: !params.isDisabled,
             }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
     //   dispatch(slice.actions.setSettingFormVisibility(false));
@@ -119,7 +120,7 @@ export function saveSetting(machineId,params) {
       dispatch(getSettings(machineId));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -133,13 +134,14 @@ export function updateSetting(machineId,settingId,params) {
       const data = {
         techParam: params.techParam,
         techParamValue: params.techParamValue,
+        isDisabled: !params.isDisabled,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
       dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
       dispatch(setSettingEditFormVisibility (false));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -162,7 +164,7 @@ export function getSettings(id) {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -178,7 +180,7 @@ export function getSetting(machineId,settingId) {
       dispatch(slice.actions.setResponseMessage('Setting Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -198,7 +200,7 @@ export function deleteSetting(machineId,id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

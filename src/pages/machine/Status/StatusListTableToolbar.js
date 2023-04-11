@@ -21,7 +21,7 @@ import Iconify from '../../../components/iconify/Iconify';
 import { PATH_MACHINE } from '../../../routes/paths';
 // ----------------------------------------------------------------------
 
-CustomerListTableToolbar.propTypes = {
+StatusListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -31,7 +31,7 @@ CustomerListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function CustomerListTableToolbar({
+export default function StatusListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

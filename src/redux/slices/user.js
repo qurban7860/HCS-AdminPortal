@@ -134,7 +134,8 @@ export function saveUser(param) {
       name: param.name,
       email: param.email,
       password: param.password,
-      phone:  param.phoneNumber,
+      phone:  param.phone,
+      roles: param.roles,
       login: param.email,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
@@ -142,7 +143,7 @@ export function saveUser(param) {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -157,7 +158,8 @@ export function updateUser(param,id) {
         contact: param.contact,
         name: param.name,
         email: param.email,
-        phone:  param.phoneNumber,
+        phone:  param.phone,
+        roles: param.roles,
         login: param.email,
         }
         if(param.password === ""){
@@ -168,7 +170,7 @@ export function updateUser(param,id) {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -190,7 +192,7 @@ export function getUsers() {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -206,7 +208,7 @@ export function getUser(id) {
       // dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -222,7 +224,7 @@ export function deleteUser(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

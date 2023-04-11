@@ -27,13 +27,13 @@ import StatusEditForm from './StatusEditForm';
 
 
 
-StatusViewPage.propTypes = {
+StatusView.propTypes = {
   editPage: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-export default function StatusViewPage({editPage}) {
+export default function StatusView({editPage}) {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 

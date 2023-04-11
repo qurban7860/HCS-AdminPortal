@@ -15,7 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/AddFormButtons';
-import { getCategories, createCategorys } from '../../../redux/slices/products/category';
+import { getCategories, addCategory } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -41,7 +41,7 @@ import {Cover} from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
-export default function MachineSuppliers() {
+export default function CategoryAddForm() {
 
   
 console.log("Machine Category : ",PATH_MACHINE.categories.list)
@@ -105,7 +105,7 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
 
   const onSubmit = async (data) => {
       try{ 
-        await dispatch(createCategorys(data));
+        await dispatch(addCategory(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.categories.list); 
@@ -155,16 +155,16 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
               <RHFTextField name="name" label="Machine Category" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
              </Box>
              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
              

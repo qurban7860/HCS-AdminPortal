@@ -3,8 +3,8 @@ import uniq from 'lodash/uniq';
 import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
-import axios from '../../utils/axios';
-import { CONFIG } from '../../config-global';
+import axios from '../../../utils/axios';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
@@ -112,17 +112,17 @@ export const {
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function saveRole(param) {
+export function saveRole(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-      }
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
+      // const data = {
+      // }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, params);
       dispatch(slice.actions.setResponseMessage('Role Saved successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -134,12 +134,12 @@ export function updateRole(param,id) {
     try {
       const data = {
         }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
       dispatch(slice.actions.setResponseMessage('Role updated successfully'));
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -149,7 +149,7 @@ export function getRoles() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/roles`,
       {
         params: {
           isArchived: false
@@ -161,7 +161,7 @@ export function getRoles() {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -172,12 +172,12 @@ export function getRole(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/roles/${id}`);
       dispatch(slice.actions.getRoleSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -188,12 +188,12 @@ export function deleteRole(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`);
+      const response = await axios.delete(`${CONFIG.SERVER_URL}security/roles/${id}`);
       dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

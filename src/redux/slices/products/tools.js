@@ -107,18 +107,19 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createTools (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e))
-    }
-  }
-}
+// export function saveTool (supplyData){
+//   return async (dispatch) =>{
+//     dispatch(slice.actions.startLoading());
+//     try{
+
+//       const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`,supplyData);
+//       // dispatch(slice.actions)
+//     } catch (e) {
+//       console.log(e);
+//       dispatch(slice.actions.hasError(e.Message))
+//     }
+//   }
+// }
 
 // ----------------------------------------------------------------------
 
@@ -134,7 +135,7 @@ export function getTools (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -148,7 +149,7 @@ export function getTool(id) {
       dispatch(slice.actions.getToolSuccess(response.data));
     } catch (error) {
       console.error(error,"Slice Error");
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -165,7 +166,7 @@ export function deleteTool(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -180,8 +181,7 @@ export function saveTool(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params?.isDisabled,
-          
+          isDisabled: params?.isDisabled
         };
         /* eslint-enable */
         if(params.description){
@@ -194,7 +194,7 @@ export function saveTool(params) {
         dispatch(slice.actions.getToolsSuccess(response.data.Tool));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -212,26 +212,22 @@ export function updateTool(params) {
       let data = {
         id: params.id,
         name: params.name,
+        isDisabled: !params.isDisabled,
         
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
       }
-      if(params.isDisabled){
-        data.isDisabled = params.isDisabled;
-      }
-      
-      
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
         data
       );
       dispatch(getTool(params.id));
-      dispatch(slice.actions.setToolsEditFormVisibility(false));
+      // dispatch(slice.actions.setToolsEditFormVisibility(false));
 
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

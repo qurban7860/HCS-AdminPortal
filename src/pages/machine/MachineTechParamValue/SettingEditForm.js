@@ -24,7 +24,7 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-
+  RHFSwitch
 } from '../../../components/hook-form';
 import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
@@ -64,19 +64,21 @@ export default function SettingEditForm() {
   useEffect(()=>{
     if(category){
       dispatch(getTechparamsByCategory(category._id));
+      
     }
   },[dispatch,category])
 
   const defaultValues = useMemo(
     () => ({
       techParamValue: setting?.techParamValue || '',
-      techparam: techParam || ''
+      isDisabled : !setting?.isDisabled,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
   const EditSettingSchema = Yup.object().shape({
     techParamValue: Yup.string().max(50),
+    isDisabled : Yup.boolean(),
   });
 
   const methods = useForm({
@@ -145,6 +147,7 @@ export default function SettingEditForm() {
                 disabled
                 value={ category || null}
                 options={techparamcategories}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
@@ -166,6 +169,7 @@ export default function SettingEditForm() {
                 // freeSolo
                 disabled
                 value={techParam || null}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 options={techparamsByCategory}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
@@ -182,9 +186,21 @@ export default function SettingEditForm() {
                 ChipProps={{ size: 'small' }}
               />
 
-                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
+              <RHFTextField name="techParamValue" label="Technical Parameter Value" />
+
 
               </Box>
+              <RHFSwitch
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
 
               <Box
                 rowGap={5}

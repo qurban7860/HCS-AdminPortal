@@ -54,7 +54,7 @@ import {
   // MachineLicenses,
   // LicenseList,
   // Categories
-  MachineCategories,
+  CategoryAddForm,
   CategoryList,
   CategoryView,
   CategoryViewForm,
@@ -324,7 +324,7 @@ export default function Router() {
         {
           path: 'categories',
           children:[
-            {path: 'categories', element: <MachineCategories/>},
+            {path: 'categories', element: <CategoryAddForm/>},
             {path: 'list', element: <CategoryList/>},
             {path: ':id/view', element: <CategoryView/>},
             {path: 'viewform', element: <CategoryViewForm/>},

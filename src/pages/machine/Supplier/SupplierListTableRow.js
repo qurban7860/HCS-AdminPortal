@@ -19,6 +19,7 @@ import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
+import { fDate } from '../../../utils/formatTime';
 
 import { useSelector } from '../../../redux/store';
 
@@ -42,7 +43,7 @@ export default function SupplierListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, contactName, contactTitle, address} = row;
+  const { name, contactName, contactTitle, address, isDisabled, createdAt} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -92,6 +93,17 @@ export default function SupplierListTableRow({
         <TableCell>{contactName}</TableCell>
         <TableCell>{address?.city}</TableCell>
         <TableCell>{address?.country}</TableCell>
+        <TableCell align="center">
+          <Label
+            variant="soft"
+            // color={(isDisabled === true && 'error') || 'success'}
+            color={isDisabled? 'error' : 'success'}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {isDisabled  ? 'No' : 'Yes' }
+          </Label>
+        </TableCell> 
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
        
       </TableRow> 
 

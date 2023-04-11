@@ -21,6 +21,7 @@ import machinemodelReducer from './slices/products/model';
 import techparamReducer from './slices/products/machineTechParam';
 import machineSettingReducer from './slices/products/machineTechParamValue';
 import toolInstalledReducer from './slices/products/toolInstalled';
+import roleReducer from './slices/securityUser/role';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -146,6 +147,13 @@ export const machineToolInstalledPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const userRolesPersistConfig = {
+  key: 'role',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -167,6 +175,7 @@ const rootReducer = combineReducers({
   techparam: persistReducer(techparamPersistConfig, techparamReducer),
   machineSetting: persistReducer(machineSettingPersistConfig, machineSettingReducer),
   toolInstalled: persistReducer(machineToolInstalledPersistConfig, toolInstalledReducer),
+  role: persistReducer(userRolesPersistConfig, roleReducer),
 });
 
 export default rootReducer;

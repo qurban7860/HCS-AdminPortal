@@ -52,7 +52,7 @@ import { Cover } from '../../components/Cover';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description', label: 'Active', align: 'center' },
+  { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
   
 ];
@@ -305,12 +305,6 @@ export default function StatusList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>

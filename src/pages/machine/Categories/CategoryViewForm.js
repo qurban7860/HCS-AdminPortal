@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
 // redux
-import { getCategory, getCategories, setCategoryEditFormVisibility } from '../../../redux/slices/products/category';
+import { getCategory, getCategories, setEditFormVisibility } from '../../../redux/slices/products/category';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -31,39 +31,26 @@ CategoryViewForm.propTypes = {
 
 export default function CategoryViewForm({ currentCategory = null }) {
 
-
-  const [editFlag, setEditFlag] = useState(false);
-
   const toggleEdit = () => {
-    dispatch(setCategoryEditFormVisibility(true));
-    // console.log(PATH_MACHINE.categories.categoryedit(id))
+    dispatch(setEditFormVisibility(true));
     navigate(PATH_MACHINE.categories.categoryedit(id));
   }
 
   const navigate = useNavigate();
-
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { category } = useSelector((state) => state.category);
+  const { category , editFormVisibility } = useSelector((state) => state.category);
   const { id } = useParams();
 
   const dispatch = useDispatch()
-  useLayoutEffect(() => {
+    useLayoutEffect(() => {
     if(id != null){
       dispatch(getCategory(id));
     }
-  }, [dispatch, id]);
-
-
+  }, [dispatch, id,editFormVisibility]);
   const defaultValues = useMemo(
-    () => (
-      {
+    () => ({
         name:category?.name || 'N/A',
         description:category?.description || 'N/A',
-        createdAt: category?.createdAt || '',
-        updatedAt: category?.updatedAt || '',
-        isDisabled: category?.isDisabled || '',
-        
+        isDisabled: category.isDisabled || false,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCategory, category]
@@ -76,13 +63,9 @@ export default function CategoryViewForm({ currentCategory = null }) {
           onClick={() => { 
               toggleEdit(); 
           }}
-          variant="outlined"
-          
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
+          variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
           Edit
         </Button>
-
       </Stack>
       <Grid container>
 
@@ -90,30 +73,19 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
-
           <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
-
         </Grid>
 
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 2 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
-
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
-
+            <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
         </Grid>
-
         
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
-
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:2}} checked = { defaultValues.isDisabled } disabled  />
         </Grid>
-
 
         <Grid container spacing={0} sx={{ mb: 5}}>
             <Grid item xs={12} sm={6} >

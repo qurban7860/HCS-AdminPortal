@@ -10,7 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getCategory, getCategories, setCategoryEditFormVisibility } from '../../../redux/slices/products/category';
+import { getCategory, getCategories, setEditFormVisibility } from '../../../redux/slices/products/category';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -28,13 +28,13 @@ import CategoryEditForm from './CategoryEditForm';
 
 
 
-CategoryViewPage.propTypes = {
+CategoryView.propTypes = {
   editPage: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-export default function CategoryViewPage({editPage}) {
+export default function CategoryView({editPage}) {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
@@ -42,9 +42,7 @@ export default function CategoryViewPage({editPage}) {
   const { themeStretch } = useSettingsContext();
   const navigate = useNavigate();
 
-  const { categoryEditFormFlag } = useSelector((state) => state.category);
-
-  const { categoryEditFormVisibility } = useSelector((state) => state.category);
+  const { editFormVisibility } = useSelector((state) => state.category);
   
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
@@ -56,20 +54,17 @@ export default function CategoryViewPage({editPage}) {
   
   
   useLayoutEffect(() => {
-    dispatch(setCategoryEditFormVisibility(editFlag));
+    dispatch(setEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
 
-  
-
-  
   useEffect(() => {
-    if(categoryEditFormFlag){
+    if(editFormVisibility){
       setCurrentComponent(<CategoryEditForm/>);
     }else{
       setCategoryFlag(false);
       setCurrentComponent(<CategoryViewForm/>);        
     }
-  }, [editPage, categoryEditFormFlag, category]);
+  }, [editPage, editFormVisibility, category]);
 
   // const clickback = () => { navigate(PATH_MACHINE.categories.list); };
   
@@ -77,34 +72,15 @@ export default function CategoryViewPage({editPage}) {
     navigate(PATH_MACHINE.categories.list);
     // Add code here to handle the click event
   }
-  
   return (
     <>
       <Helmet>
         <title> Categories List: Detail | Machine ERP</title>
       </Helmet>
-
       <Container maxWidth={false }>
-        
-
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
           <Cover name={category?.name} setting="setting" backLink={PATH_MACHINE.categories.list}/>
-          
         </Card>
-        {/* <Stack alignItems="flex-end" sx={{
-          color: 'text.disabled',
-          cursor: 'pointer',
-          
-          }}>
-        <ArrowBackIcon onClick={clickback}/>
-        </Stack> */}
         <CategoryViewForm/>
       </Container>
     </>

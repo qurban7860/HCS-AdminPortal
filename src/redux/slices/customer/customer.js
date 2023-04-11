@@ -129,7 +129,7 @@ export function getCustomers() {
       dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -150,7 +150,7 @@ export function getCustomer(id) {
       dispatch(slice.actions.getCustomerSuccess(response.data));
     } catch (error) {
       console.error(error);
-      // dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -169,7 +169,7 @@ export function deleteCustomer(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -310,7 +310,7 @@ export function saveCustomer(params) {
         dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -371,7 +371,7 @@ export function updateCustomer(params) {
 
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

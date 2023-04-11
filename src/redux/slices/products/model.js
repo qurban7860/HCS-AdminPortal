@@ -111,7 +111,7 @@ export function createMachinemodels (supplyData){
       // dispatch(slice.actions)
     } catch (e) {
       console.log(e);
-      dispatch(slice.actions.hasError(e))
+      dispatch(slice.actions.hasError(e.Message))
     }
   }
 }
@@ -130,7 +130,7 @@ export function getMachinemodels (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error))
+      dispatch(slice.actions.hasError(error.Message))
     }
   }
 }
@@ -144,7 +144,7 @@ export function getMachineModel(id) {
       dispatch(slice.actions.getMachinemodelSuccess(response.data));
     } catch (error) {
       console.error(error,"Slice Error");
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -157,7 +157,7 @@ export function deleteMachinemodel(id) {
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -172,6 +172,7 @@ export function saveMachinemodel(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+          isDisabled: !params.isDisabled,
          
         };
         /* eslint-enable */
@@ -192,7 +193,7 @@ export function saveMachinemodel(params) {
         dispatch(slice.actions.getMachinemodelsSuccess(response.data.Machinemodel));
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
     };
 
@@ -210,6 +211,7 @@ export function updateMachinemodel(params) {
       let data = {
         id: params.id,
         name: params.name,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
      if(params.description){
@@ -234,7 +236,7 @@ export function updateMachinemodel(params) {
 
     } catch (error) {
       console.error(error,"from model");
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 

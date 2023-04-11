@@ -173,7 +173,7 @@ export function saveSite(params) {
 
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
 
   };
@@ -234,7 +234,7 @@ export function updateSite(params) {
 
       } catch (error) {
         console.error(error);
-        dispatch(slice.actions.hasError(error));
+        dispatch(slice.actions.hasError(error.Message));
       }
 
   };
@@ -264,7 +264,7 @@ export function getSites(customerID) {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -280,7 +280,7 @@ export function getSite(customerID, id) {
       // dispatch(slice.actions.setResponseMessage('Sites Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -300,7 +300,7 @@ export function deleteSite(customerID, id) {
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

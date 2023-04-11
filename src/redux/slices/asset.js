@@ -95,16 +95,14 @@ const slice = createSlice({
 
       } catch (error) {
         console.error(error);
-        this.hasError(error.message);
+        this.hasError(error.Message);
       }
 
     },
 
     async updateAsset(state, action) {
       try {
-
         const formData = new FormData();
-
         formData.append('id', action.payload.id);
         formData.append('name', action.payload.name);
         formData.append('assetTag', action.payload.tag);
@@ -126,7 +124,7 @@ const slice = createSlice({
 
       } catch (error) {
         console.error(error);
-        this.hasError(error.message);
+        this.hasError(error.Message);
       }
 
     },
@@ -170,7 +168,7 @@ export function getAssets() {
 
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -186,7 +184,7 @@ export function getAsset(id) {
       // dispatch(slice.actions.setResponseMessage('Assets Loaded Successfuly'));
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -202,7 +200,7 @@ export function deleteAsset(id) {
       // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error));
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

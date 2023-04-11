@@ -225,18 +225,11 @@ export default function CustomerContactList() {
           {formVisibility && !contactEditFormVisibility && <ContactAddForm/>}
 
           {/* {!formVisibility && !contactEditFormVisibility && <Block title="Available Sites"> */}
-          {!formVisibility && !contactEditFormVisibility && contacts.map((contact, index) => (
-          
-  
-            <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} sx={index !==0 ? {borderTop: '1px solid lightGray'}: ""}>
+          {!formVisibility && !contactEditFormVisibility && contacts.map((contact, index) =>{ 
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return(
+            <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                {/* <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
-                  {contact.firstName} {contact.lastName} 
-                </Typography>
-                {contact.email && <Typography sx={{ color: 'text.secondary' }}>
-                  {contact.email}
-                  </Typography>
-                } */}
                 { index !==  activeIndex ? 
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={3} md={2} >
@@ -281,7 +274,7 @@ export default function CustomerContactList() {
               </AccordionDetails>
             </Accordion>
             
-          ))} 
+          )})} 
 
           {isNotFound && <EmptyContent title="No Data"/>}
 
