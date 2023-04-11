@@ -1,28 +1,14 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
-import {
-  Stack,
-  Button,
-  TableRow,
-  Checkbox,
-  MenuItem,
-  TableCell,
-  IconButton,
-  Link,
-} from '@mui/material';
+import { Switch, Stack, Button, TableRow, Checkbox, MenuItem, TableCell, IconButton, Link, } from '@mui/material';
 // utils
 import { fData,fCurrency } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-
-import { useSelector } from '../../../redux/store';
-
 
 // ----------------------------------------------------------------------
 
@@ -77,28 +63,12 @@ export default function CategoryListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name} </Link>
           </Stack>
         </TableCell>
 
         <TableCell align="center">
-          <Label
-            variant="soft"
-            // color={(isDisabled === true && 'error') || 'success'}
-            color={isDisabled? 'error' : 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled  ? 'No' : 'Yes' }
-          </Label>
+         <Switch  checked = { isDisabled } disabled  />
         </TableCell> 
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>

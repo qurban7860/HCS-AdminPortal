@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Typography ,Button, Grid} from '@mui/material';
+import { Box, Typography ,Button, Grid, Link} from '@mui/material';
 
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -62,7 +62,6 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
   };
   const handleBacklink = () => {
     navigate(backLink)
-    console.log(backLink)
   };
   return (
     <StyledRoot style={{
@@ -111,30 +110,41 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
 
         <div style={{ flex:1,
                   display: 'flex',
-                  justifyContent: 'end',
-                  // mt: 'auto'
+                  justifyContent: 'end'
                     }}>
               {backLink ? 
-              <Button title="Go Back" variant="h4" 
-              sx={{ 
-              mt:'auto',
-              ml: 'auto', 
-              mr: { xs: -4, md: -4},
-              color: 'common.white',
-              mb: 3,
-              }} 
-              onClick={handleBacklink}
-               ><Iconify icon="material-symbols:arrow-back-rounded" /></Button>
+                <Link
+                  title="Go Back"
+                  sx={{ 
+                    ml: 'auto',  
+                    mt:'auto',
+                    color: 'common.white',
+                    mb: 3,
+                    }}
+                  component="button"
+                  variant="body2"
+                  onClick={handleBacklink}
+                >
+                  <Iconify icon="material-symbols:arrow-back-rounded" />
+                </Link>
+
                : " "}
               {setting ? 
-              <Button title="Machine Setting" variant="h4" 
-              sx={{   
-              mt:'auto',
-              color: 'common.white',
-              mb: 3,
-              }} 
-              onClick={handleNavigate}
-               ><Iconify icon="eva:settings-2-outline" /></Button>
+                <Link
+                  title="Machine Setting"
+                  sx={{   
+                  mt:'auto',
+                  color: 'common.white',
+                  mb: 3,
+                  mx: 2,
+                  }}
+                  component="button"
+                  variant="body2"
+                  onClick={handleNavigate}
+                >
+                  <Iconify icon="eva:settings-2-outline" />
+                </Link>
+
                : " "}
         </div>
       </StyledInfo>

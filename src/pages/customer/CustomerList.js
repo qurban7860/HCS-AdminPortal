@@ -106,6 +106,8 @@ export default function CustomerList() {
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
+  const [filterAddress, setAddress] = useState('');
+
 
   const [tableData, setTableData] = useState([]);
 

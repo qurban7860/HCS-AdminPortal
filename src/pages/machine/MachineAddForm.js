@@ -161,7 +161,7 @@ const onSubmit = async (data) => {
   data.accountManager = accoVal?._id || null
   data.projectManager = projVal?._id || null
   data.supportManager = suppVal?._id || null
-  data.customerTags = chipData
+  // data.customerTags = chipData
 
     try{
       await dispatch(saveMachine(data));
@@ -176,7 +176,7 @@ const onSubmit = async (data) => {
       setAccoManVal('');
       setProjManVal('');
       setSuppManVal('');
-      setChipData([]);
+      // setChipData([]);
       setCurrTag('');
       reset();
       enqueueSnackbar('Create success!');
@@ -187,23 +187,23 @@ const onSubmit = async (data) => {
     }
 };
 
-const handleDelete = (data,index) => {
-  const arr = [...chipData]
-  arr.splice(index,1)
-  setChipData(arr)
-};
+// const handleDelete = (data,index) => {
+//   const arr = [...chipData]
+//   arr.splice(index,1)
+//   setChipData(arr)
+// };
 
-const handleKeyPress = (e) => {
-  setCurrTag(currTag.trim())
-  if (e.keyCode === 13 || e.key === 'Enter') {
-    e.preventDefault();
-    if(currTag.trim().length > 0){
-      currTag.trim();
-      setChipData((oldState) => [...oldState, currTag.trim()]);
-      setCurrTag('')
-    }
-  }
-};
+// const handleKeyPress = (e) => {
+//   setCurrTag(currTag.trim())
+//   if (e.keyCode === 13 || e.key === 'Enter') {
+//     e.preventDefault();
+//     if(currTag.trim().length > 0){
+//       currTag.trim();
+//       setChipData((oldState) => [...oldState, currTag.trim()]);
+//       setCurrTag('')
+//     }
+//   }
+// };
 
   const handleChange = (e) => {
 		setCurrTag(e.target.value);
@@ -215,23 +215,9 @@ const handleKeyPress = (e) => {
     <>
      <Container maxWidth={themeStretch ? false : 'xl'}>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        {/* <MachineDashboardNavbar/> */}
-      </Grid>
-      <Card
-          sx={{
-            mb: 3,
-            height: 150,
-            position: 'relative',
-            mt: '24px',
-          }}
-        >
+      <Card sx={{ mb: 3, height: 150, position: 'relative', mt: '24px', }} >
           <Cover name='New Machine' icon='material-symbols:list-alt-outline' setting="enable"/>
         </Card>
-      {/* <CustomBreadcrumbs
-            heading=" New Machine "
-            sx={{ mb: -2, mt: 3 }}
-          /> */}
       <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={6}>
@@ -396,8 +382,12 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
               />
+
+              <RHFTextField name="installationSiteMileStone" label="Installation Site MileStone" />
+
               <Autocomplete 
                 // freeSolo
+                sx={{mb:-3}}
                 value={billingVal || null}
                 options={sites}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -415,6 +405,8 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
               />
+              </Box>
+            <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete 
                 // freeSolo
                 value={accoVal || null}
@@ -480,22 +472,8 @@ const handleKeyPress = (e) => {
 {/* -------------------------start add chips------------------------- */}
 {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
 
-<Card
-      sx={{
-        display: 'flex',
-        borderColor:'light gray',
-        borderWidth:'1px',
-        boxShadow:'none',
-        borderRadius:'7px',
-        flexWrap: 'wrap',
-        listStyle: 'none',
-        p: 0.7,
-        m: 0,
-        mt:-3,
-      }}
-      component="ul"
-      variant='outlined'
-    >
+{/* <Card
+      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
       {chipData.map((data,index) => 
           <ListItem key={index}>
             <Chip
@@ -508,7 +486,6 @@ const handleKeyPress = (e) => {
         InputProps={{disableUnderline: true,}} 
         placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
     </Card>
-
               <RHFSwitch
               sx={{mt:-3}}
                 name="isDisabled"
@@ -520,7 +497,7 @@ const handleKeyPress = (e) => {
                     </Typography>
                   </>
                 } 
-              />
+              /> */}
 {/* -------------------------end add chips------------------------- */}
               </Stack>
 

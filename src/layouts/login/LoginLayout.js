@@ -19,9 +19,9 @@ export default function LoginLayout({ children, illustration, title }) {
   return (
     <StyledRoot >
       <StyledContent >
-      <Grid sx={{display: 'flex',justifyContent: 'center', alignItem:'baseline', }}>
+      <Grid sx={{display: 'flex',justifyContent: 'center', alignItem:'baseline',mb:-3}}>
         <Logo
-          sx={{ width: '250px'}}
+          sx={{ width:{ lg:'300px',md:'275px', sm:'250px',xs: '225px'} }}
         />
       </Grid>
         <Stack sx={{ width: '100%' }}> {children} </Stack>

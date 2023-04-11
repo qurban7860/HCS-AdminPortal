@@ -194,7 +194,7 @@ const onSubmit = async (data) => {
   data.accountManager = accoVal?._id || null
   data.projectManager = projVal?._id || null
   data.supportManager = suppVal?._id || null
-  data.customerTags = chipData
+  // data.customerTags = chipData
     try{
       await dispatch(updateMachine(data));
       setParMachineVal('');
@@ -508,24 +508,9 @@ const handleKeyPress = (e) => {
                 <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ my:-3}}/>
               </Box>
 {/* -------------------------start add chips------------------------- */}
-{/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
 
-<Card
-      sx={{
-        display: 'flex',
-        borderColor:'light gray',
-        borderWidth:'1px',
-        boxShadow:'none',
-        borderRadius:'7px',
-        flexWrap: 'wrap',
-        listStyle: 'none',
-        p: 0.7,
-        m: 0,
-        mt:-3,
-      }}
-      component="ul"
-      variant='outlined'
-    >
+{/* <Card
+      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
       {chipData.map((data,index) => 
           <ListItem key={index}>
             <Chip
@@ -537,7 +522,7 @@ const handleKeyPress = (e) => {
        <TextField name="tag" sx={{p:1}}   variant="standard"  
         InputProps={{disableUnderline: true,}} 
         placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
-    </Card>
+    </Card> */}
 
     <RHFSwitch
     sx={{mt:-3}}
