@@ -15,7 +15,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/AddFormButtons';
-import { getCategories, createCategorys } from '../../../redux/slices/products/category';
+import { getCategories, addCategory } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -105,7 +105,7 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
 
   const onSubmit = async (data) => {
       try{ 
-        await dispatch(createCategorys(data));
+        await dispatch(addCategory(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.categories.list); 

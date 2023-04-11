@@ -7,7 +7,8 @@ import { CONFIG } from '../../../config-global';
 
 const initialState = {
   intial: false,
-  categoryEditFormFlag: false,
+  formVisibility: false,
+  editFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -15,7 +16,6 @@ const initialState = {
   categories: [],
   category: {},
   categoryParams: {
-
   }
 };
 
@@ -27,37 +27,42 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-
     // SET TOGGLE
-    setCategoryEditFormVisibility(state, action){
-      state.categoryEditFormFlag = action.payload;
+    setEditFormVisibility(state, action){
+      state.editFormVisibility = action.payload;
     },
-  
-    // RESET CUSTOMER
+    // SET TOGGLE
+    setFormVisibility(state, action){
+      state.formVisibility = action.payload;
+    },
+    // RESET Category
     resetCategory(state){
-      state.machine = {};
+      state.category = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-
     },
-
+    // RESET Categories
+    resetCategories(state){
+      state.category = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
       state.initial = true;
     },
-
-    // GET Customers
+    // GET Categories
     getCategoriesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.categories = action.payload;
       state.initial = true;
     },
-
-    // GET Customer
+    // GET Category
     getCategorySuccess(state, action) {
       
       state.isLoading = false;
@@ -65,60 +70,28 @@ const slice = createSlice({
       state.category = action.payload;
       state.initial = true;
     },
-
-
+    // SET RESPONSE MWSSAGE
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
       state.success = true;
       state.initial = true;
     },
-
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
-    },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
-    },
   },
 });
 
 // Reducer
 export default slice.reducer;
-
 // Actions
 export const {
-  setCategoryEditFormVisibility,
+  setFormVisibility,
+  setEditFormVisibility,
   resetCategory,
-  getCart,
-  addToCart,
+  resetCategories,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
-
 // ----------------------------------------------------------------------
-
-export function createCategorys (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e.Message))
-    }
-  }
-}
-
-// ----------------------------------------------------------------------
-
 
 export function getCategories (){
   return async (dispatch) =>{
@@ -134,6 +107,7 @@ export function getCategories (){
     }
   }
 }
+
 // ----------------------------------------------------------------------
 
 export function getCategory(id) {
@@ -148,6 +122,8 @@ export function getCategory(id) {
     }
   };
 }
+
+//------------------------------------------------------------------------------
 
 export function deleteCategories(id) {
   return async (dispatch) => {
@@ -165,7 +141,7 @@ export function deleteCategories(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveCategory(params) {
+export function addCategory(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetCategory());
       dispatch(slice.actions.startLoading());
@@ -174,22 +150,19 @@ export function saveCategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !params.isDisabled,
+          isDisabled: params.isDisabled,
         };
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
           }
-        
         const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`, data);
-
         dispatch(slice.actions.getCategoriesSuccess(response.data.Category));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
       }
     };
-
 }
 
 // --------------------------------------------------------------------------
@@ -201,24 +174,17 @@ export function updateCategory(params,Id) {
       /* eslint-disable */
       const data = {
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isDisabled: params.isDisabled,
       };
      /* eslint-enable */
      if(params.description){
         data.description = params.description;
       }
-      console.log("Params : ",data)
-      
-      
-      
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );
-
       dispatch(getCategories(params.id));
-      dispatch(slice.actions.setCategoryEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
+      dispatch(slice.actions.setEditFormVisibility(false));
 
     } catch (error) {
       console.error(error);

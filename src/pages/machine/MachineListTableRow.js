@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import {
+  Switch,
   Stack,
   Button,
   TableRow,
@@ -71,7 +72,7 @@ export default function MachineListTableRow({
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
-        <TableCell align="right" >{parentMachine ? <Iconify icon="bi:layer-backward" sx={{ color: 'text.disabled',mr:-2 }} />  : ""}</TableCell>
+        <TableCell align="right"  >{parentMachine ? <Iconify icon="bi:layer-backward" sx={{ color: 'text.disabled',mr:-2 ,  }} width="15px" />  : ""}</TableCell>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Link
@@ -83,23 +84,12 @@ export default function MachineListTableRow({
             >{serialNo || ''}</Link>
           </Stack>
         </TableCell>
-        {/* <TableCell>{parentMachine?.name || ''}</TableCell> */}
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
         <TableCell>{status?.name || ''}</TableCell>
         <TableCell>{customer?.name || ''}</TableCell>
         <TableCell>{instalationSite?.name || ''}</TableCell>
-        <TableCell align="left">
-        <Label
-            variant="soft"
-            // color={(isDisabled === true && 'error') || 'success'}
-            color={isDisabled ? 'error' : 'success' }
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled  ? 'No'  : 'Yes' }
-          </Label>
-        </TableCell> 
-
+        <TableCell align="left"> <Switch checked = { isDisabled } disabled size="small" /> </TableCell> 
         <TableCell>{fDate(createdAt)}</TableCell>
 
         {/* <TableCell align="center">

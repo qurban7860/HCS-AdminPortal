@@ -18,26 +18,14 @@ export default function Login(){
 return (
     <>
     
-    <LoginLayout
-    title={CONFIG.MESSAGE_LOGIN_USER}>
-    
-      <Stack  sx={{  
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  whiteSpace: 'nowrap',
-  }}>
-      
-        <Typography 
-        variant="h4">Sign In | {CONFIG.APP_TITLE}</Typography>
-
-      </Stack>
-
-      <AuthLoginForm />
+    <LoginLayout title={CONFIG.MESSAGE_LOGIN_USER}>
+        <Stack  sx={{ display: 'flex',justifyContent: 'center',alignItems: 'center',whiteSpace: 'nowrap'}}>
+            <Typography variant="h3" sx={{mb:5}}>CLOUDE SERVICES</Typography>
+        </Stack>
+        <AuthLoginForm />
       
       {/* <Stack direction="row" spacing={0.5} sx={{mt:2}}>
           <Typography variant="body2">New user?</Typography>
-
           <Link component={RouterLink} to={PATH_AUTH.register} variant="subtitle2">
             Create an account
           </Link>

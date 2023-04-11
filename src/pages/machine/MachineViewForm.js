@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Typography} from '@mui/material';
+import { Switch, Card, Grid, Typography} from '@mui/material';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // slices
@@ -79,12 +79,12 @@ export default function MachineViewForm() {
             <ViewFormField sm={6} heading="Machine Model" param={defaultValues.machineModel? defaultValues.machineModel : ''} />
             <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
             <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
-            <ViewFormField sm={6} heading="Customer" param={defaultValues.customer? defaultValues.customer : ''} />
+            <ViewFormField sm={12} heading="Customer" param={defaultValues.customer? defaultValues.customer : ''} />
             <ViewFormField sm={6} heading="Installation Site" param={defaultValues.instalationSite? defaultValues.instalationSite : ''} />
             <ViewFormField sm={6} heading="Installation Site Milestone" param={defaultValues.instalationSiteMilestone? defaultValues?.instalationSiteMilestone : ''} />
             <ViewFormField sm={6} heading="Billing Site" param={defaultValues.billingSite? defaultValues.billingSite : ''} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description : ''} />
-            <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} />
+            {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
         </Grid>
         <Grid container>
             <ViewFormSubtitle sm={12} heading="Howick Resources"/>
@@ -92,15 +92,9 @@ export default function MachineViewForm() {
             <ViewFormField sm={6} heading="Project Manager" param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
             <ViewFormField sm={6} heading="Suppport Manager" param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
         </Grid>
-        {/* <ViewFormField sm={12} heading="Disabled" param={defaultValues.isDisabled? defaultValues.isDisabled : true} />
-         */}
-         <Grid item xs={12} sm={12} sx={{pt:2}}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ?  'No'  : 'Yes'  }</Typography>
 
-        </Grid>
+         <Switch sx={{mt:3}} checked = { !defaultValues.isDisabled } disabled  />
+         
         
         <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
