@@ -185,11 +185,9 @@ export function updateCategory(params,Id) {
       );
       dispatch(getCategories(params.id));
       dispatch(slice.actions.setEditFormVisibility(false));
-
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
     }
   };
-
 }

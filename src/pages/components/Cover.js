@@ -132,7 +132,8 @@ export function Cover({ cover, name, serialNo ,role, setting , photoURL , icon ,
               {setting ? 
                 <Link
                   title="Machine Setting"
-                  sx={{   
+                  sx={{  
+                    cursor: "hover" ,
                   mt:'auto',
                   color: 'common.white',
                   mb: 3,

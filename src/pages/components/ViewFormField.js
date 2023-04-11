@@ -10,7 +10,7 @@ ViewFormField.propTypes = {
 export default function ViewFormField({heading,param,secondParam,sm}) {
     return (
       <>
-        <Grid item xs={12} sm={sm} sx={{ pt:2, overflowWrap: "break-word", }}>
+        <Grid item xs={12} sm={sm} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                     {heading}
                 </Typography>

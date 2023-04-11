@@ -68,7 +68,7 @@ export default function CategoryListTableRow({
         </TableCell>
 
         <TableCell align="center">
-         <Switch  checked = { isDisabled } disabled  />
+         <Switch  checked = { isDisabled } disabled  sx={{my:-1}}/>
         </TableCell> 
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>

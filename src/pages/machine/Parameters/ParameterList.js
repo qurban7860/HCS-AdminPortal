@@ -52,9 +52,8 @@ import { Cover } from '../../components/Cover';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'category', label: 'Category', align: 'left' },
-  { id: 'description', label: 'Active', align: 'center' },
-  { id: 'isDisabled', label: 'Active', align: 'left' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  { id: 'isDisabled', label: 'Active', align: 'center'  },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
 const STATUS_OPTIONS = [
