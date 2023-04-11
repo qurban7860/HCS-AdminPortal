@@ -104,18 +104,45 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createSuppliers (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e.Message))
-    }
-  }
-}
+// export function saveSupplier (supplyData){
+//   return async (dispatch) =>{
+//     dispatch(slice.actions.startLoading());
+//     // console.log("supplyData : ",supplyData)
+//     try{
+//       const data ={
+//         name: supplyData.name
+//       }
+//       if(supplyData.address){
+//         data.address = supplyData.address
+//       }
+//       if(supplyData.contactName){
+//         data.contactName = supplyData.contactName
+//       }
+//       if(supplyData.contactTitle){
+//         data.contactTitle = supplyData.contactTitle
+//       }
+//       if(supplyData.email){
+//         data.email = supplyData.email
+//       }
+//       if(supplyData.fax){
+//         data.fax = supplyData.fax
+//       }
+//       if(supplyData.phone){
+//         data.phone = supplyData.phone
+//       }
+//       if(supplyData.website){
+//         data.website = supplyData.website
+//       }
+//       data.isDisabled = !supplyData.isDisabled
+
+//       const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`,data);
+//       // dispatch(slice.actions)
+//     } catch (e) {
+//       console.log(e);
+//       dispatch(slice.actions.hasError(e.Message))
+//     }
+//   }
+// }
 
 // ----------------------------------------------------------------------
 
@@ -177,7 +204,7 @@ export function saveSupplier(params) {
         let data = {
         id: params.id,
         name: params.name,
-        isDisabled: params?.isDisabled,
+        isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
 
@@ -233,16 +260,16 @@ export function saveSupplier(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateSupplier(params) {
+export function updateSupplier(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
 
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         id: params.id,
         name: params.name,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
 
@@ -265,9 +292,9 @@ export function updateSupplier(params) {
         data.fax = params.fax;        
       }
       
-      if(params.street || params.subrub || params.city || params.region || params.country) {
+      // if(params.street || params.subrub || params.city || params.region || params.country) {
         data.address = {}
-      }
+      // }
 
       if(params.street){
         data.address.street = params.street;        
@@ -284,16 +311,13 @@ export function updateSupplier(params) {
       if(params.country){
         data.address.country = params.country;        
       }
-      if(params.isDisabled){
-        data.isDisabled = params.isDisabled;
-      }
       
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
         data
       );
 
-      dispatch(getSupplier(params.id));
-      dispatch(slice.actions.setSupplierEditFormVisibility(false));
+      dispatch(getSupplier(Id));
+      // dispatch(slice.actions.setSupplierEditFormVisibility(false));
 
       // this.updateCustomerSuccess(response);
 

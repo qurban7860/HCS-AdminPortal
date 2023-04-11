@@ -10,7 +10,7 @@ import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-CustomerListTableToolbar.propTypes = {
+MachineListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -20,7 +20,7 @@ CustomerListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function CustomerListTableToolbar({
+export default function MachineListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

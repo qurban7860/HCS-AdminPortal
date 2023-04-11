@@ -1,6 +1,6 @@
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Alert, Container, Tooltip, Stack, Typography, Link, Box, Card} from '@mui/material';
+import { Alert, Container, Tooltip, Stack, Typography, Link, Box, Card , Grid} from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // routes
@@ -20,45 +20,28 @@ return (
     
     <LoginLayout
     title={CONFIG.MESSAGE_LOGIN_USER}>
-    <Logo
-        sx={{
-          zIndex: 9,
-          position: 'absolute',
-          mt: -25,
-          ml: 9,
-          width: '15%',
-          // mt: { xs: 1.5, md: 5 },
-          // ml: { xs: 2, md: 5 },
-        }}
-      />
-      <Stack spacing={2} sx={{ mb: 5, position: 'absolute'}}>
+    
+      <Stack  sx={{  
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  whiteSpace: 'nowrap',
+  }}>
       
-        <Typography sx={{mt: -9}}
+        <Typography 
         variant="h4">Sign In | {CONFIG.APP_TITLE}</Typography>
 
-        {/* <Stack direction="row" spacing={0.5}>
+      </Stack>
+
+      <AuthLoginForm />
+      
+      {/* <Stack direction="row" spacing={0.5} sx={{mt:2}}>
           <Typography variant="body2">New user?</Typography>
 
           <Link component={RouterLink} to={PATH_AUTH.register} variant="subtitle2">
             Create an account
           </Link>
         </Stack> */}
-
-        {/* <Tooltip title={method} placement="left">
-          <Box
-            component="img"
-            alt={method}
-            src={`/assets/icons/auth/ic_${method}.png`}
-            sx={{ width: 32, height: 32, position: 'absolute', right: 0 }}
-          />
-        </Tooltip> */}
-      </Stack>
-
-      {/* <Alert severity="info" sx={{ mb: 3 }}>
-        Use email : <strong>naveed@terminustech.co.nz</strong> / password :<strong> qwer1234</strong>
-      </Alert> */}
-
-      <AuthLoginForm />
 
       {/* <AuthWithSocial /> */}
     </LoginLayout>

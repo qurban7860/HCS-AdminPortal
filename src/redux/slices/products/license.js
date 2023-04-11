@@ -115,6 +115,8 @@ export function saveLicense (machineId, supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
+      // isDisabled: !params.isDisabled,
+
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
     } catch (e) {
       console.log(e);
@@ -188,6 +190,7 @@ export function updateLicense(params,Id) {
     try {
       const data = {
         serialNo: params.serialNo,
+        isDisabled: params.isDisabled,
       };
      /* eslint-enable */
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${Id}`,

@@ -38,7 +38,7 @@ export default function ToolViewForm({ currentTool = null }) {
   const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
-    dispatch(setToolEditFormVisibility(true));
+    // dispatch(setToolEditFormVisibility(true));
     navigate(PATH_MACHINE.tool.tooledit(id));
   }
 
@@ -66,7 +66,7 @@ export default function ToolViewForm({ currentTool = null }) {
         createdAt: tool?.createdAt || '',
         updatedAt: tool?.updatedAt || '',
         updatedIP: tool?.updatedIP || '',
-        isDisabled: tool?.isDisabled || '',
+        isDisabled: tool.isDisabled ,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]
@@ -113,7 +113,7 @@ export default function ToolViewForm({ currentTool = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
 
         </Grid>
         

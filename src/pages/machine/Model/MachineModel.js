@@ -126,7 +126,7 @@ export default function MachineModel() {
   return (
     <>
     <Container maxWidth={false }>
-    <Card
+              <Card
                 sx={{
                   mb: 3,
                   height: 160,
@@ -134,7 +134,7 @@ export default function MachineModel() {
                   // mt: '24px',
                 }}
               >
-                <Cover name='New Model' icon='material-symbols:model-training-outline-rounded' />
+                  <Cover name='New Model' icon='material-symbols:model-training-outline-rounded' />
               </Card>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Helmet>
@@ -159,6 +159,7 @@ export default function MachineModel() {
                     <Autocomplete
                       value={modelVal || null}
                       options={categories}
+                      isOptionEqualToValue={(option, value) => option.name === value.name}
                       getOptionLabel={(option) => option.name}
                       onChange={(event, newValue) => {
                         setModelVal(newValue);

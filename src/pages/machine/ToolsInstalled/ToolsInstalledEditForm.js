@@ -26,7 +26,7 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-
+  RHFSwitch
 } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -46,16 +46,19 @@ export default function ToolsInstalledEditForm() {
     setToolVal(toolInstalled.tool);
     dispatch(getTools())
   }, [dispatch , toolInstalled]);
-console.log("toolInstalled : ",toolInstalled)
+// console.log("toolInstalled : ",toolInstalled)
+
   const EditSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),
+    isDisabled : Yup.boolean(),
   });
 
 
   const defaultValues = useMemo(
     () => ({
       // tool: toolInstalled?.tool || '',
-      note: toolInstalled?.note || ''
+      note: toolInstalled?.note || '',
+    isDisabled : !toolInstalled.isDisabled,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -88,9 +91,9 @@ console.log("toolInstalled : ",toolInstalled)
   };
 
   const onSubmit = async (data) => {
-    data.tool = toolVal._id || null
-    console.log("Setting update Data : ",data);
     try {
+      data.tool = toolVal._id || null
+      // console.log("Setting update Data : ",machine._id,toolInstalled._id,data);
       await dispatch(updateToolInstalled(machine._id,toolInstalled._id,data));
       reset();
       setToolVal("");
@@ -126,6 +129,7 @@ console.log("toolInstalled : ",toolInstalled)
                 disabled
                 value={ toolVal|| null}
                 options={tools}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
@@ -141,6 +145,17 @@ console.log("toolInstalled : ",toolInstalled)
                 ChipProps={{ size: 'small' }}
               />
                 <RHFTextField name="note" label="Note*" minRows={8} multiline />
+                <RHFSwitch
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
               </Box>
               <Box
                 rowGap={5}

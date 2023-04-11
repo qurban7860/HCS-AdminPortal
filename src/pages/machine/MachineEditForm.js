@@ -36,14 +36,14 @@ import FormProvider, {
   RHFSelect,
   RHFMultiSelect,
   RHFTextField,
-
+  RHFSwitch
 } from '../../components/hook-form';
 
 
 // ----------------------------------------------------------------------
 
 
-export default function CustomerEditForm() {
+export default function MachineEditForm() {
 
   const { machine } = useSelector((state) => state.machine);
   const { users } = useSelector((state) => state.user);
@@ -60,7 +60,7 @@ export default function CustomerEditForm() {
   const { machinestatuses } = useSelector((state) => state.machinestatus);
   const { customers } = useSelector((state) => state.customer);
   const { sites} = useSelector((state) => state.site);
-
+// console.log("machine Edit machine?.isDisabled : ",machine?.isDisabled)
   const [parMachineVal, setParMachineVal] = useState('');
   const [parMachSerVal, setParMachSerVal] = useState('');
   const [supplierVal, setSupplierVal] = useState('');
@@ -122,6 +122,8 @@ useLayoutEffect(() => {
     // supportManager: Yup.string(),
     description: Yup.string().max(1500),
     customerTags: Yup.array(),
+    isDisabled : Yup.boolean(),
+
   });
 
   const defaultValues = useMemo(
@@ -143,11 +145,12 @@ useLayoutEffect(() => {
       supportManager: suppVal?._id || null,
       description: machine?.description || '',
       customerTags: chipData,
+      isDisabled : !machine?.isDisabled,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
+// console.log("default values of edits : ",defaultValues)
   const methods = useForm({
     resolver: yupResolver(EditMachineSchema),
     defaultValues,
@@ -192,7 +195,6 @@ const onSubmit = async (data) => {
   data.projectManager = projVal?._id || null
   data.supportManager = suppVal?._id || null
   data.customerTags = chipData
-// console.log("Machine edit Data",data)
     try{
       await dispatch(updateMachine(data));
       setParMachineVal('');
@@ -536,6 +538,19 @@ const handleKeyPress = (e) => {
         InputProps={{disableUnderline: true,}} 
         placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
     </Card>
+
+    <RHFSwitch
+    sx={{mt:-3}}
+      name="isDisabled"
+      labelPlacement="start"
+      label={
+        <>
+          <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+            Active
+          </Typography>
+        </>
+      } 
+    />
 {/* -------------------------end add chips------------------------- */}
 <Box
                 rowGap={5}

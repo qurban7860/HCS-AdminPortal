@@ -39,7 +39,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
-    dispatch(setSupplierEditFormVisibility(true));
+    // dispatch(setSupplierEditFormVisibility(true));
     navigate(PATH_MACHINE.supplier.supplieredit(id));
   }
 
@@ -81,13 +81,12 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         country: supplier?.address?.country || 'N/A',
         createdAt: supplier?.createdAt || '',
         updatedAt: supplier?.updatedAt || '',
-        isDisabled: supplier?.isDisabled || '',
+        isDisabled: supplier.isDisabled,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSupplier, supplier]
     );
     
-
   return (
     <Card sx={{ px: 5 }}>
       <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
@@ -215,7 +214,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
 
         </Grid>
         <Grid container spacing={0} sx={{ mb: 5}}>

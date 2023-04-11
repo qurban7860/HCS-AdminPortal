@@ -18,7 +18,7 @@ import ParameterEditForm from './ParameterEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function StatusEdit() {
+export default function ParameterEdit() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();

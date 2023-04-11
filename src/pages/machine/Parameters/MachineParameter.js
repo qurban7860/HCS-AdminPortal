@@ -13,7 +13,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,TextField, Autocomplete,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getTechparams, createTechparams } from '../../../redux/slices/products/machineTechParam';
+import { getTechparams, saveTechparam } from '../../../redux/slices/products/machineTechParam';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -39,7 +39,7 @@ import {Cover} from '../../components/Cover';
 import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
-export default function MachineTechParam() {
+export default function MachineParameter() {
 
 
   const { userId, user } = useAuthContext();
@@ -54,7 +54,7 @@ export default function MachineTechParam() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const AddMachineSchema = Yup.object().shape({
+  const AddMachineParameterSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().min(2).max(2000),
     isDisabled : Yup.boolean(),
@@ -76,7 +76,7 @@ export default function MachineTechParam() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddMachineSchema),
+    resolver: yupResolver(AddMachineParameterSchema),
     defaultValues,
   });
 
@@ -95,7 +95,7 @@ export default function MachineTechParam() {
       data.category = paramCategoryVal?._id
     }
       try{ 
-        await dispatch(createTechparams(data));
+        await dispatch(saveTechparam(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.parameters.list); 

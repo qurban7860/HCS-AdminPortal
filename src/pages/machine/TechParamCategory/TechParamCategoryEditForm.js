@@ -63,7 +63,7 @@ export default function TechParamCategoryEditForm() {
         description:techparamcategory?.description || 'N/A',
         createdAt: techparamcategory?.createdAt || '',
         updatedAt: techparamcategory?.updatedAt || '',
-        isDisabled: techparamcategory?.isDisabled || '',
+        isDisabled: !techparamcategory.isDisabled || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparamcategory]
@@ -102,13 +102,13 @@ export default function TechParamCategoryEditForm() {
 
   const toggleCancel = () => 
     {
-      dispatch(updateTechparamcategory(false));
       navigate(PATH_MACHINE.techParam.view(id));
     };
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateTechparamcategory({...data,id}));
+      console.log("data : ", id,data);
+      await dispatch(updateTechparamcategory(data,id));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.techParam.view(id));

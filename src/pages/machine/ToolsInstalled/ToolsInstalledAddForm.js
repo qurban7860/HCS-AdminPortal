@@ -17,7 +17,8 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
-  RHFAutocomplete
+  RHFAutocomplete,
+  RHFSwitch
 } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -37,7 +38,6 @@ useLayoutEffect(() => {
 }, [dispatch,machine]);
 
 useLayoutEffect(() => {
-  if(toolsInstalled.length > 0) {
 const filterTool = [];
 toolsInstalled.map((toolInstalled)=>(filterTool.push(toolInstalled?.tool?._id)))
 const filteredTool = tools.filter(item => !filterTool.includes(item._id));
@@ -51,13 +51,16 @@ filteredTool.sort((a, b) =>{
     return 1;
   }
   return 0;
-})
-setToolsVal(filteredTool);
 }
-}, [tools,toolsInstalled,machine]);
+)
+// console.log("filteredTool: ", filteredTool)
+setToolsVal(filteredTool);
+
+}, [tools,toolsInstalled,machine] );
 
   const AddSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),
+    isDisabled : Yup.boolean(),
 
   });
 
@@ -69,7 +72,7 @@ const toggleCancel = () =>
   const defaultValues = useMemo(
     () => ({
       note: '',
-
+      isDisabled : true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -96,6 +99,7 @@ const toggleCancel = () =>
       if(toolVal !== ""){
         data.tool = toolVal._id;
       }
+      // console.log("Data", data);
       await dispatch(saveToolInstalled(machine._id,data));
       reset();
       setToolVal("")
@@ -133,6 +137,7 @@ const toggleCancel = () =>
               <Autocomplete
                 // freeSolo
                 value={ toolVal|| null}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 options={toolsVal}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
@@ -149,7 +154,19 @@ const toggleCancel = () =>
                 ChipProps={{ size: 'small' }}
               />
               
-                <RHFTextField name="note" label="Note*" minRows={8} multiline />
+              <RHFTextField name="note" label="Note*" minRows={8} multiline />
+
+              <RHFSwitch
+                name="isDisabled"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Active
+                    </Typography>
+                  </>
+                } 
+              />
               </Box>
               
 

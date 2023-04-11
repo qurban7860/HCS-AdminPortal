@@ -90,12 +90,13 @@ export default function MachineListTableRow({
         <TableCell>{customer?.name || ''}</TableCell>
         <TableCell>{instalationSite?.name || ''}</TableCell>
         <TableCell align="left">
-          <Label
+        <Label
             variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
+            // color={(isDisabled === true && 'error') || 'success'}
+            color={isDisabled ? 'error' : 'success' }
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled === false ? 'Yes' : 'No'}
+            {isDisabled  ? 'No'  : 'Yes' }
           </Label>
         </TableCell> 
 

@@ -14,7 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { createSuppliers } from '../../../redux/slices/products/supplier';
+import { saveSupplier } from '../../../redux/slices/products/supplier';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -110,23 +110,23 @@ export default function MachineSuppliers() {
 
   const onSubmit = async (data) => {
     try{ 
-      const finaldata= {
-        name: data.name,
-        contactName:data.Contact_Name,
-        contactTitle:data.contactTitle ,
-        phone:data.phone ,
-        email:data.email ,
-        website:data.website ,
-        fax: data.fax,
-        address:{
-            street:data.street ,
-            suburb:data.suburb ,
-            city:data.city ,
-            region:data.region ,
-            country:data.country ,
-        }
-    }
-      await dispatch(createSuppliers(finaldata));
+    //   const finaldata= {
+    //     name: data.name,
+    //     contactName:data.Contact_Name,
+    //     contactTitle:data.contactTitle ,
+    //     phone:data.phone ,
+    //     email:data.email ,
+    //     website:data.website ,
+    //     fax: data.fax,
+    //     address:{
+    //         street:data.street ,
+    //         suburb:data.suburb ,
+    //         city:data.city ,
+    //         region:data.region ,
+    //         country:data.country ,
+    //     }
+    // }
+      await dispatch(saveSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.supplier.list); 
@@ -241,7 +241,10 @@ export default function MachineSuppliers() {
                 /> 
 
 
-              <RHFSwitch
+              
+            
+             </Box>
+             <RHFSwitch
               name="isDisabled"
               labelPlacement="start"
               label={
@@ -252,12 +255,10 @@ export default function MachineSuppliers() {
                 </>
               } 
             />
-            
-             </Box>
-             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
              
               
              
+             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
               </Stack>
               </Card>
 

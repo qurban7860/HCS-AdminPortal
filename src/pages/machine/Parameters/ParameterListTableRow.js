@@ -26,7 +26,7 @@ import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
-StatusListTableRow.propTypes = {
+ParameterListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -35,7 +35,7 @@ StatusListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function StatusListTableRow({
+export default function ParameterListTableRow({
   row,
   selected,
   onSelectRow,
@@ -95,10 +95,10 @@ export default function StatusListTableRow({
         <Label
             variant="soft"
             // color={(isDisabled === true && 'error') || 'success'}
-            color={isDisabled? 'success': 'error'}
+            color={isDisabled? 'error' : 'success'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled  ? 'Yes' : 'No'}
+            {isDisabled  ? 'No' : 'Yes' }
           </Label>
         </TableCell> 
 

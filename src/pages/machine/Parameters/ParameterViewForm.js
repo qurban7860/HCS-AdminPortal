@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getTechparam, updateTechparam } from '../../../redux/slices/products/machineTechParam';
+import { getTechparam } from '../../../redux/slices/products/machineTechParam';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -63,6 +63,7 @@ useLayoutEffect(()=>{
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
         category: techparam?.category?.name || '', 
+        isDisabled: techparam?.isDisabled,
         createdByFullname: techparam?.createdBy?.name || "",
         updatedByFullname: techparam?.updatedBy?.name || "",
        
@@ -116,7 +117,14 @@ useLayoutEffect(()=>{
               <Typography variant="body2">{defaultValues?.category || ""}</Typography>
           </Grid>
       </Grid>
-      
+
+      <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Active
+          </Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ? 'No'  : 'Yes'   }</Typography>
+        </Grid>
+
       <Grid container>
           <Grid container spacing={0} sx={{  mb: 1,  pt:4}}>
             <Grid item xs={12} sm={6} >

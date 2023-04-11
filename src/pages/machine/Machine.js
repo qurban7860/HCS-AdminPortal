@@ -21,7 +21,7 @@ import { Cover } from '../components/Cover';
 
 // ----------------------------------------------------------------------
 
-export default function MachineDashboardPage() {
+export default function Machine() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const navigate = useNavigate();

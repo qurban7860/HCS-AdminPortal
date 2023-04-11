@@ -172,6 +172,7 @@ export function saveMachinemodel(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+          isDisabled: !params.isDisabled,
          
         };
         /* eslint-enable */
@@ -210,6 +211,7 @@ export function updateMachinemodel(params) {
       let data = {
         id: params.id,
         name: params.name,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
      if(params.description){

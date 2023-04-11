@@ -37,7 +37,6 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
   const [editFlag, setEditFlag] = useState(false);
 
   const toggleEdit = () => {
-    dispatch(updateTechparamcategory(true));
     navigate(PATH_MACHINE.techParam.techparamcategoryedit(id));
   }
 
@@ -64,7 +63,7 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
         description:techparamcategory?.description || 'N/A',
         createdAt: techparamcategory?.createdAt || '',
         updatedAt: techparamcategory?.updatedAt || '',
-        isDisabled: techparamcategory?.isDisabled || '',
+        isDisabled: techparamcategory.isDisabled ,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTechparamcategory, techparamcategory]

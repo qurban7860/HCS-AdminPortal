@@ -53,8 +53,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       dispatch(getCategory(id));
     }
   }, [dispatch, id]);
-
-
+  
   const defaultValues = useMemo(
     () => (
       {
@@ -110,7 +109,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'Yes' : 'No'}</Typography>
+          <Typography variant="body2">{defaultValues.isDisabled  ?  'No' : 'Yes'}</Typography>
 
         </Grid>
 

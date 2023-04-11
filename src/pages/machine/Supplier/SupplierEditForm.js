@@ -84,7 +84,7 @@ export default function SupplierEditForm() {
       country: supplier?.address?.country || 'N/A',
       createdAt: supplier?.createdAt || '',
       updatedAt: supplier?.updatedAt || '',
-      isDisabled: true,
+      isDisabled: !supplier.isDisabled,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [supplier]
@@ -121,14 +121,14 @@ export default function SupplierEditForm() {
 
   const toggleCancel = () => 
     {
-      dispatch(setSupplierEditFormVisibility(false));
+      // dispatch(setSupplierEditFormVisibility(false));
       navigate(PATH_MACHINE.supplier.view(id));
     };
 
   const onSubmit = async (data) => {
     // console.log(data);
     try {
-      await dispatch(updateSupplier({...data,id}));
+      await dispatch(updateSupplier(data,id));
       reset(); 
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.supplier.view(id));
@@ -229,7 +229,12 @@ export default function SupplierEditForm() {
                 /> 
 
 
-              <RHFSwitch
+             
+            
+
+             </Box>
+             
+             <RHFSwitch
               name="isDisabled"
               labelPlacement="start"
               label={
@@ -240,11 +245,6 @@ export default function SupplierEditForm() {
                 </>
               } 
             />
-            
-
-             </Box>
-             
-              
              
               </Stack>
 

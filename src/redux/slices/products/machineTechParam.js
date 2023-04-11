@@ -126,19 +126,6 @@ export const {
 } = slice.actions;
 
 
-// ----------------------------------------------------------------------
-
-export function createTechparams (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      dispatch(slice.actions.hasError(e.Message))
-    }
-  }
-}
 
 // ----------------------------------------------------------------------
 
@@ -228,7 +215,7 @@ export function saveTechparam(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !(params.isDisabled),
+          isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
         if(params.description){
@@ -266,6 +253,7 @@ export function updateTechparam(params,id) {
       /* eslint-disable */
       let data = {
         name: params.name,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
      if(params.description){

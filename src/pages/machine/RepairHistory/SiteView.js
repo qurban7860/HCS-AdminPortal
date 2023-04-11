@@ -20,7 +20,7 @@ import {
 import SiteViewForm from './SiteViewForm'
 // ----------------------------------------------------------------------
 
-export default function SiteViewPage() {
+export default function SiteView() {
 
   const dispatch = useDispatch();
 

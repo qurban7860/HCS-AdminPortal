@@ -25,13 +25,13 @@ import SupplierEditForm from './SupplierEditForm';
 import {Cover} from '../../components/Cover';
 
 
-SupplierViewPage.propTypes = {
+SupplierView.propTypes = {
   editPage: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-export default function SupplierViewPage({editPage}) {
+export default function SupplierView({editPage}) {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
@@ -52,9 +52,9 @@ export default function SupplierViewPage({editPage}) {
   const supplier = suppliers
   
 
-  useLayoutEffect(() => {
-    dispatch(setSupplierEditFormVisibility(editFlag));
-  }, [dispatch, editFlag]);
+  // useLayoutEffect(() => {
+  //   dispatch(setSupplierEditFormVisibility(editFlag));
+  // }, [dispatch, editFlag]);
 
 
   

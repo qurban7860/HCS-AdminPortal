@@ -64,7 +64,7 @@ export default function ToolEditForm() {
         description:tool?.description || 'N/A',
         createdAt: tool?.createdAt || '',
         updatedAt: tool?.updatedAt || '',
-        isDisabled: tool?.isDisabled || '',
+        isDisabled: !tool.isDisabled,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tool]
@@ -104,7 +104,7 @@ export default function ToolEditForm() {
 
   const toggleCancel = () => 
     {
-      dispatch(setToolEditFormVisibility(false));
+      // dispatch(setToolEditFormVisibility(false));
       navigate(PATH_MACHINE.tool.view(id));
     };
 

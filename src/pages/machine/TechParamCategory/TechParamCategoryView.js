@@ -27,13 +27,13 @@ import { Cover } from '../../components/Cover';
 
 
 
-TechParamCategoryViewPage.propTypes = {
+TechParamCategoryView.propTypes = {
   editPage: PropTypes.bool,
 };
 
 // ----------------------------------------------------------------------
 
-export default function TechParamCategoryViewPage({editPage}) {
+export default function TechParamCategoryView({editPage}) {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
@@ -52,11 +52,6 @@ export default function TechParamCategoryViewPage({editPage}) {
   const [techparamcategoryFlag, setTechparamcategoryFlag] = useState(true);
   const {techparamcategory} = useSelector((state) => state.techparamcategory);
   // const tool = tools
-  
-  useLayoutEffect(() => {
-    dispatch(updateTechparamcategory(editFlag));
-  }, [dispatch, editFlag]);
-
   
 
   

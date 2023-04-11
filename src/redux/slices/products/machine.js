@@ -168,6 +168,7 @@ export function saveMachine(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
+        isDisabled: !params.isDisabled,
         };
         /* eslint-enable */
         
@@ -216,6 +217,7 @@ export function saveMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
+        console.log(data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
@@ -252,9 +254,10 @@ export function updateMachine(params) {
         supportManager: params.supportManager,
         description: params.description,
         customerTags: params.customerTags,
+        isDisabled: !params.isDisabled,
       };
      /* eslint-enable */
-
+console.log(data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data
       );
