@@ -27,7 +27,6 @@ export default function MachineViewForm() {
     dispatch(setMachineEditFormVisibility(false))
     dispatch(getCustomer(machine?.customer?._id))
   }, [ dispatch ,machine ])
-console.log("customer : " , customer)
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
   }
@@ -61,14 +60,14 @@ console.log("customer : " , customer)
       status:                   machine?.status?.name || "",
       customer:                 machine?.customer || "",
       instalationSite:          machine?.instalationSite || "",
-      instalationSiteMilestone: machine?.instalationSite?.address?.city || "",      
+      siteMilestone:            machine?.siteMilestone || "",      
       billingSite:              machine?.billingSite|| "",
       description:              machine?.description || "",
       customerTags:             machine?.customerTags || "",
       accountManager:           machine?.accountManager || "",
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
-      isDisabled:               machine?.isDisabled,
+      isAisabled:               machine?.isAisabled,
       createdAt:                machine?.createdAt || "",
       createdByFname:           machine?.createdBy?.name || "",
       createdByLname:           machine?.createdBy?.lastName || "",
@@ -107,7 +106,7 @@ console.log("customer : " , customer)
         <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
         <ViewFormField sm={12} heading="Customer" param={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
         <ViewFormField sm={6} heading="Installation Site" param={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
-        <ViewFormField sm={6} heading="Installation Site Milestone" param={defaultValues.instalationSiteMilestone? defaultValues?.instalationSiteMilestone : ''} />
+        <ViewFormField sm={6} heading="Nearby Milestone" param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
         <ViewFormField sm={6} heading="Billing Site" param={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
         <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description: ''} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}

@@ -168,7 +168,8 @@ export function saveMachine(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-        isDisabled: !params.isDisabled,
+          isActive: params.isActive,
+          siteMilestone: params.siteMilestone
         };
         /* eslint-enable */
         
@@ -249,6 +250,7 @@ export function updateMachine(params) {
         customer: params.customer,
         billingSite: params.billingSite,
         instalationSite: params.instalationSite,
+        siteMilestone: params.siteMilestone,
         accountManager: params.accountManager,
         projectManager: params.projectManager,
         supportManager: params.supportManager,
