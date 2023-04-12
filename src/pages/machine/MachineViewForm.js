@@ -86,7 +86,7 @@ console.log("customer : " , customer)
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    maxwidth: 800,
+    // maxwidth: 800,
     bgcolor: 'background.paper',
     border: '1px solid #000',
     boxShadow: 24,
@@ -114,27 +114,44 @@ console.log("customer : " , customer)
       </Grid>
       <Grid container>
         <ViewFormSubtitle sm={12} heading="Howick Resources"/>
-        <ViewFormField sm={6} heading="Account Manager" param={defaultValues?.accountManager?.firstName || ""} secondParam={defaultValues?.accountManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Project Manager" param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Suppport Manager" param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
+        <ViewFormField sm={6} heading="Account Manager"   StasticsParam={defaultValues?.accountManager?.firstName || "" } secondStasticsParam={defaultValues?.accountManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Project Manager"   StasticsParam={defaultValues?.projectManager?.firstName || "" } secondStasticsParam={defaultValues?.projectManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Suppport Manager"  StasticsParam={defaultValues?.supportManager?.firstName || "" } secondStasticsParam={defaultValues?.supportManager?.lastName || ""}/> 
       </Grid>
-        <Switch sx={{mt:3}} checked = { !defaultValues.isDisabled } disabled  />
+        <Switch sx={{mt:2}} checked = { !defaultValues.isDisabled } disabled  />
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
-      <Modal open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
-        <Fade in={openCustomer}>
-          <Card sx={style}>
-            <Grid container>
-              <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
-              <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
-            </Grid>
-          </Card>
-        </Fade>
-      </Modal>
+
+      <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+        <Grid container sx={{px:2, pt:2}}>
+          <Typography variant="h3" sx={{px:2}}>Customer </Typography>
+          <ViewFormField sm={12} heading="Name"                     param={customer?.name?        customer?.name : ''} />
+          <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName? customer?.tradingName : ''} />
+          <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone?       customer?.mainSite.phone : ''} />
+          <ViewFormField sm={6} heading="Fax"                       param={customer?.mainSite?.fax?         customer?.mainSite.fax : ''} /> 
+          <ViewFormField sm={6} heading="Email"                     param={customer?.mainSite?.email?       customer?.mainSite.email : ''} />
+          <ViewFormField sm={6} heading="Site Name"                 param={customer?.mainSite?.address? customer?.mainSite?.address?.street : ''} />
+          <ViewFormField sm={6} heading="Street"                    param={customer?.mainSite?.address? customer?.mainSite?.address?.street : ''} />
+          <ViewFormField sm={6} heading="Suburb"                    param={customer?.mainSite?.address? customer?.mainSite?.address?.suburb : ''} />
+          <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address? customer?.mainSite?.address?.city : ''} />
+          <ViewFormField sm={6} heading="Region"                    param={customer?.mainSite?.address? customer?.mainSite?.address?.region : ''} />
+          <ViewFormField sm={6} heading="Post Code"                 param={customer?.mainSite?.address? customer?.mainSite?.address?.postcode : ''} />
+          <ViewFormField sm={12} heading="Country"                   param={customer?.mainSite?.address? customer?.mainSite?.address?.country : ''} />
+          <ViewFormField sm={6} heading="Primary Biling Contact"    param={customer?.primaryBillingContact?   `${customer?.primaryBillingContact?.firstName } ${customer?.primaryBillingContact?.lastName}` : ''} />
+          <ViewFormField sm={6} heading="Primary Technical Contact" param={customer?.primaryTechnicalContact? `${customer?.primaryTechnicalContact?.firstName } ${customer?.primaryTechnicalContact?.lastName}`: ''} />
+        </Grid>
+          <Typography variant="subtitle2" sx={{px:4}}>Howick Resources </Typography>
+        <Grid container sx={{px:2,pb:3}}>
+          <ViewFormField sm={6} heading="Account Manager"   param={defaultValues?.accountManager?.firstName || ""}  secondParam={defaultValues?.accountManager?.lastName || ""}/>
+          <ViewFormField sm={6} heading="Project Manager"   param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
+          <ViewFormField sm={6} heading="Suppport Manager"  param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
+        </Grid>
+      </Dialog>
+
       <Dialog open={openInstallationSite} onClose={handleCloseInstallationSite} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{p:2}}>
-        <Typography variant="h3" sx={{px:2}}>Installation Site </Typography>
+          <Typography variant="h3" sx={{px:2}}>Installation Site </Typography>
           <ViewFormField sm={12} heading="Name"     param={defaultValues.instalationSite ? defaultValues?.instalationSite?.name : ''} />
           <ViewFormField sm={6} heading="Phone"     param={defaultValues.instalationSite ? defaultValues?.instalationSite?.phone : ''} />
           <ViewFormField sm={6} heading="Fax"       param={defaultValues.instalationSite ? defaultValues?.instalationSite?.fax : ''} /> 
@@ -148,6 +165,7 @@ console.log("customer : " , customer)
           <ViewFormField sm={6} heading="Country"   param={defaultValues.instalationSite?.address ? defaultValues?.instalationSite?.address?.country : ''} />
         </Grid>
       </Dialog>
+
       <Dialog open={openBilingSite} onClose={handleCloseBillingSite} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{p:2}}>
           <Typography variant="h3" sx={{px:2}}>Billing Site </Typography>

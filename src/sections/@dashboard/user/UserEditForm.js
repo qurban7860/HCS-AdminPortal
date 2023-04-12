@@ -163,7 +163,11 @@ useEffect(() => {
     try{
       data.customer = customerVal?._id || null
       data.contact = contactVal?._id || null
-      data.phone = phone || ""
+      if(phone.length > 7 ){
+        data.phone = phone.length 
+      }else{
+        data.phone = "" 
+      }
         dispatch(updateUser(data,currentUser._id));
         reset();
         enqueueSnackbar('Update success!');

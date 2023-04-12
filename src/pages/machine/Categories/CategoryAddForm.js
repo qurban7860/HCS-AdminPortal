@@ -59,8 +59,6 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
-
   });
 
   const defaultValues = useMemo(
@@ -68,8 +66,6 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
       name: ''  ,
       description:'',
       isDisabled: true,
-      createdAt: '',
-      
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

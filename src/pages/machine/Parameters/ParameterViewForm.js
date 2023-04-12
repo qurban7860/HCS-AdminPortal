@@ -63,7 +63,7 @@ useLayoutEffect(()=>{
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
         category: techparam?.category?.name || '', 
-        isDisabled: techparam?.isDisabled,
+        isDisabled: techparam?.isActive || true,
         createdByFullname: techparam?.createdBy?.name || "",
         updatedByFullname: techparam?.updatedBy?.name || "",
        

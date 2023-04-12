@@ -57,7 +57,13 @@ export default function CustomerListTableRow({
   onViewRow,
 }) {
   const { name, tradingName, mainSite, isDisabled, type, createdAt } = row;
-
+  const address = []
+  if(mainSite?.address?.city){
+    address.push(mainSite?.address?.city)
+  }
+  if( mainSite?.address?.country){
+    address.push(mainSite?.address?.country)
+  }
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -92,7 +98,7 @@ export default function CustomerListTableRow({
           </Stack>
         </TableCell>
         <TableCell>{tradingName}</TableCell>
-        <TableCell>{mainSite?.address?.city}{mainSite?.address?.country ? `, ${mainSite?.address?.country}` : ''}</TableCell>
+        <TableCell>{address.join(", ")}</TableCell>
         <TableCell align="left">
           <Label variant="soft" color={(isDisabled === true && 'error') || 'success'} sx={{ textTransform: 'capitalize' }} >
             {isDisabled === false ? 'Yes' : 'No'}

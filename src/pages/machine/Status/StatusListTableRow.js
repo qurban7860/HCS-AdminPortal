@@ -43,7 +43,7 @@ export default function StatusListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isDisabled, createdAt} = row;
+  const { name, isActive, createdAt} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -94,10 +94,10 @@ export default function StatusListTableRow({
         <Label
             variant="soft"
             // color={(isDisabled === true && 'error') || 'success'}
-            color={isDisabled? 'error' : 'success'}
+            color={isActive? 'error' : 'success'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled  ? 'No' : 'Yes' }
+            {isActive ? 'No' : 'Yes' }
           </Label>
         </TableCell> 
 

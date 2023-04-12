@@ -151,10 +151,8 @@ export function saveSite(params) {
         if(params.postcode){
           data.address.postcode = params.postcode;        
         }
-        if(params.country !== "null" && params.country !== null){
+        if(params.country ){
           data.address.country = params.country;        
-        }else{
-          data.address.country = null;
         }
         if(params.primaryBillingContact  !== "null" && params.primaryBillingContact !== null){
           data.primaryBillingContact = params.primaryBillingContact;        
@@ -215,7 +213,7 @@ export function updateSite(params) {
         if(params.postcode){
           data.address.postcode = params.postcode;        
         }
-        if(params.country !== "null" && params.country !== null){
+        if(params.country){
           data.address.country = params.country;        
         }
         if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null ){

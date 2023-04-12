@@ -61,7 +61,6 @@ export default function MachineModel() {
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
     category: Yup.string().required('Category is required'),
   });
 

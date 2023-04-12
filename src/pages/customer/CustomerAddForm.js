@@ -94,7 +94,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     accountManager: Yup.string().nullable(),
     projectManager: Yup.string().nullable(),
     supportManager: Yup.string().nullable(),
-
     // site details
     billingSite: Yup.string(),
     // phone: Yup.string(),
@@ -195,10 +194,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const onSubmit = async (data) => {
       try{
-        if(phone){
+        if(phone.length > 7){
           data.phone = phone ;
         }
-        if(fax){
+        if(fax.length > 7){
           data.fax = fax
         }
         if(country){
@@ -323,7 +322,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       setCountryVal("");
                       }
                     }}
-                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) `}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                         <img
