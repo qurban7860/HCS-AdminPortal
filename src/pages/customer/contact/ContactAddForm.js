@@ -14,7 +14,7 @@ import { Box, Card, Grid, Stack, Button, Typography, DialogTitle, Dialog, InputA
 // slice
 import { getCustomers } from '../../../redux/slices/customer/customer';
 
-import { saveContact, setFormVisibility } from '../../../redux/slices/customer/contact';
+import { saveContact, setContactFormVisibility } from '../../../redux/slices/customer/contact';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -118,7 +118,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   useEffect(() => {
     reset(defaultValues);
     if (!formVisibility) {
-      dispatch(setFormVisibility(true));
+      dispatch(setContactFormVisibility(true));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -149,7 +149,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const toggleCancel = () => 
     {
-      dispatch(setFormVisibility(false));
+      dispatch(setContactFormVisibility(false));
     };
 
   return (

@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { updateSite, setEditFormVisibility } from '../../../redux/slices/customer/site';
+import { updateSite, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -35,9 +35,10 @@ import { countries } from '../../../assets/data';
 export default function SiteEditForm() {
 
   const { error, site } = useSelector((state) => state.site);
+  const {  customer } = useSelector((state) => state.customer);
 
   const { contacts } = useSelector((state) => state.contact);
-  const [country, setCountryVal] = useState('')
+  const [country, setCountryVal] = useState("")
   const dispatch = useDispatch();
   
   const { enqueueSnackbar } = useSnackbar();
@@ -50,24 +51,28 @@ export default function SiteEditForm() {
   function filtter(data , input) {
     const filteredOutput = data.filter( obj => ( Object.keys(input).every( filterKeys => (
               obj[filterKeys] === input[filterKeys]
-    ))
-    ))
+    ))));
     return filteredOutput
   }
 
   useEffect(()=>{
-    setPhone(site.phone)
-    const siteCountry= filtter(countries,{label: site?.address?.country || ''})
-    setCountryVal(siteCountry[0])
+    if(site?.phone){
+      setPhone(site.phone)
+    }
+    if(site?.address?.country){
+      const siteCountry= filtter(countries,{label: site?.address?.country || ''})
+      setCountryVal(siteCountry[0])
+    }
+    else{
+      setCountryVal("")
+    }
     setFaxVal(site.fax)
   },[site])
 
   const EditSiteSchema = Yup.object().shape({
     name: Yup.string().min(5).max(40).required('Name is required'),
     billingSite: Yup.string(),
-    // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
-    // fax: Yup.string(),
     website: Yup.string(),
     lat: Yup.string().max(25),
     long: Yup.string().max(25),
@@ -76,7 +81,7 @@ export default function SiteEditForm() {
     city: Yup.string(),
     region: Yup.string(),
     postcode: Yup.string(),
-    // country: Yup.string().nullable(),
+    isActive: Yup.boolean(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
   });
@@ -85,11 +90,8 @@ export default function SiteEditForm() {
   const defaultValues = useMemo(
     () => ({
       name: site?.name || '',
-      customer: site?.customer || '',
       billingSite: site?.billingSite || '',
-      // phone: site?.phone || '',
       email: site?.email || '',
-      // fax: site?.fax || '',
       website: site?.website || '',
       lat: site?.lat || '',
       long: site?.long || '',
@@ -98,7 +100,7 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
-      // country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
+      isActive: site?.isActive || true,
       primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
       primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
     }),
@@ -129,7 +131,7 @@ export default function SiteEditForm() {
 
   const toggleCancel = () => 
   {
-    dispatch(setEditFormVisibility(false));
+    dispatch(setSiteEditFormVisibility(false));
   };
 
   const handlePhoneChange = (newValue) => {
@@ -148,23 +150,18 @@ export default function SiteEditForm() {
 
   const onSubmit = async (data) => {
     try {
+      console.log("site Edit Data : ",data)
       if(phone.length > 7){
         data.phone = phone ;
-      }else{
-        data.phone = "" ;
       }
-      if(fax.length > 6){
+      if(fax.length > 7){
         data.fax = fax
-      }else{
-        data.fax = "" ;
       }
       if(country){
         data.country = country.label
-      }else{
-        data.country = "";
       }
       console.log("Site Data : ",data)
-      await dispatch(updateSite(data,site._id));
+      await dispatch(updateSite(data,customer._id,site._id));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');

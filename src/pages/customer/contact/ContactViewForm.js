@@ -15,7 +15,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 
-import { getContacts, getContact, setEditFormVisibility, deleteContact } from '../../../redux/slices/customer/contact';
+import { getContacts, getContact, setContactEditFormVisibility, deleteContact } from '../../../redux/slices/customer/contact';
 // Iconify
 import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
@@ -56,7 +56,7 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const handleEdit = async () => {
     await dispatch(getContact(customer._id, currentContact._id));
-    dispatch(setEditFormVisibility(true));
+    dispatch(setContactEditFormVisibility(true));
   };
 
   const onDelete = async () => {

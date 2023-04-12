@@ -14,7 +14,7 @@ import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../components/table';
 import Iconify from '../../components/iconify';
 // sections
-import { getContacts, setFormVisibility } from '../../redux/slices/customer/contact';
+import { getContacts, setContactFormVisibility } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
@@ -74,7 +74,7 @@ export default function CustomerContactList() {
   const toggleChecked = () => 
     {
       setChecked(value => !value);
-      dispatch(setFormVisibility(!formVisibility));
+      dispatch(setContactFormVisibility(!formVisibility));
     };
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
