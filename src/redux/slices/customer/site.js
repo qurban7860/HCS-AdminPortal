@@ -179,7 +179,7 @@ export function saveSite(params) {
 
 // ----------------------------------------------------------------------
 
-export function updateSite(params) {
+export function updateSite(params, Id) {
   
   return async (dispatch) => {
     dispatch(slice.actions.setEditFormVisibility(false));
@@ -226,8 +226,8 @@ export function updateSite(params) {
         }else{
           data.primaryTechnicalContact = null;        
         }
-
-        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites/${params.id}`
+        console.log("Site Slice data : ",data)
+        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites/${Id}`
          , data);
 
       } catch (error) {

@@ -122,7 +122,7 @@ useLayoutEffect(() => {
     // supportManager: Yup.string(),
     description: Yup.string().max(1500),
     customerTags: Yup.array(),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
 
   });
 
@@ -145,7 +145,7 @@ useLayoutEffect(() => {
       supportManager: suppVal?._id || null,
       description: machine?.description || '',
       customerTags: chipData,
-      isDisabled : !machine?.isDisabled,
+      isActive : !machine?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -442,6 +442,13 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
               />
+              </Box>
+
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
+                <RHFTextField name="siteMilestone" label="Nearby Milestone"  multiline sx={{ my:-3}}/>
+              </Box>
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
+
               <Autocomplete 
                 // freeSolo
                 value={accoVal || null}
@@ -525,15 +532,13 @@ const handleKeyPress = (e) => {
     </Card> */}
 
     <RHFSwitch
-    sx={{mt:-3}}
-      name="isDisabled"
+    sx={{my:-3}}
+      name="isActive"
       labelPlacement="start"
       label={
-        <>
           <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
             Active
           </Typography>
-        </>
       } 
     />
 {/* -------------------------end add chips------------------------- */}
