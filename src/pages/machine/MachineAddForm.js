@@ -103,10 +103,10 @@ useLayoutEffect(() => {
     // accountManager: Yup.string(),
     // projectManager: Yup.string(),
     // supportManager: Yup.string(),
+    siteMilestone: Yup.string().max(1500),
     customerTags: Yup.array(),
     description: Yup.string().max(1500),
-    isDisabled : Yup.boolean(),
-
+    isActive : Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -122,12 +122,13 @@ useLayoutEffect(() => {
       customer:customerVal._id || null,
       instalationSite: installVal?._id || null,
       billingSite: billingVal?._id || null,
+      siteMilestone: '',
       accountManager: accoVal?._id || null,
       projectManager: projVal?._id || null,
       supportManager: suppVal?._id || null,
       customerTags: chipData,
       description: '',
-      isDisabled : true,
+      isActive : true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -361,6 +362,7 @@ const onSubmit = async (data) => {
                 ChipProps={{ size: 'small' }}
               />
             </Box>
+
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
             
               <Autocomplete 
@@ -383,8 +385,6 @@ const onSubmit = async (data) => {
                 ChipProps={{ size: 'small' }}
               />
 
-              <RHFTextField name="installationSiteMileStone" label="Installation Site MileStone" />
-
               <Autocomplete 
                 // freeSolo
                 sx={{mb:-3}}
@@ -405,6 +405,10 @@ const onSubmit = async (data) => {
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
               />
+              </Box>
+
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
+                <RHFTextField name="siteMilestone" label="Nearby Milestone"  multiline sx={{ mb:-3}}/>
               </Box>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete 
@@ -466,8 +470,8 @@ const onSubmit = async (data) => {
               />
             
               </Box>
-              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
-                <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ my:-3}}/>
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} sx={{ mb:-3}} >
+                <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ mt:-3}}/>
               </Box>
 {/* -------------------------start add chips------------------------- */}
 {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
@@ -499,6 +503,16 @@ const onSubmit = async (data) => {
                 } 
               /> */}
 {/* -------------------------end add chips------------------------- */}
+<RHFSwitch
+    sx={{my:-3}}
+      name="isActive"
+      labelPlacement="start"
+      label={
+          <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+            Active
+          </Typography>
+      } 
+    />
               </Stack>
 
             <Stack alignItems="flex-start" sx={{ mt: 3 }}>

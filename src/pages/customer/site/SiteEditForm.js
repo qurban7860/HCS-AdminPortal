@@ -57,7 +57,7 @@ export default function SiteEditForm() {
 
   useEffect(()=>{
     setPhone(site.phone)
-    const siteCountry= filtter(countries,{label: site?.address?.country})
+    const siteCountry= filtter(countries,{label: site?.address?.country || ''})
     setCountryVal(siteCountry[0])
     setFaxVal(site.fax)
   },[site])
@@ -84,7 +84,6 @@ export default function SiteEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id: site?._id || '',
       name: site?.name || '',
       customer: site?.customer || '',
       billingSite: site?.billingSite || '',
@@ -164,7 +163,8 @@ export default function SiteEditForm() {
       }else{
         data.country = "";
       }
-      await dispatch(updateSite(data));
+      console.log("Site Data : ",data)
+      await dispatch(updateSite(data,site._id));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
