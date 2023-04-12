@@ -120,10 +120,10 @@ useLayoutEffect(() => {
     // accountManager: Yup.string(),
     // projectManager: Yup.string(),
     // supportManager: Yup.string(),
+    siteMilestone: Yup.string().max(1500),
     description: Yup.string().max(1500),
     customerTags: Yup.array(),
     isActive : Yup.boolean(),
-
   });
 
   const defaultValues = useMemo(
@@ -140,6 +140,7 @@ useLayoutEffect(() => {
       customer:customerVal?._id  || null,
       instalationSite: installVal?._id  || null,
       billingSite: billingVal?._id || null,
+      siteMilestone: machine?.siteMilestone || '',
       accountManager: accoVal?._id || null,
       projectManager: projVal?._id || null,
       supportManager: suppVal?._id || null,
