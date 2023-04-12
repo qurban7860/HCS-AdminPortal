@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 
 // paths
@@ -63,7 +63,7 @@ export default function SettingViewForm({ currentSetting = null }) {
         techParamName: currentSetting?.techParam?.name || "",
         techParamCode: currentSetting?.techParam?.code || "",
         techParamValue: currentSetting?.techParamValue || "",
-        isDisabled: currentSetting?.isDisabled,
+        isActive: currentSetting?.isActive,
         createdAt:                currentSetting?.createdAt || "",
         createdByFullname:           currentSetting?.createdBy?.name || "",
         createdIP:                currentSetting?.createdIP || "",
@@ -136,7 +136,7 @@ export default function SettingViewForm({ currentSetting = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
+          <Typography variant="body2">{defaultValues.isActive ? 'No' : 'Yes' }</Typography>
 
           </Grid>
 

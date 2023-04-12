@@ -224,16 +224,8 @@ export default function CustomerSiteList() {
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
-                  <Grid item xs={12} sm={3} md={2}>
-                    <Typography variant="body2" >
-                    {site.name} 
-                    </Typography>
-                  </Grid>
-                  {site.address && <Grid item xs={12} sm={9} md={10}>
-                    <Typography variant="body2" >
-                    {Object.values(site.address)?.join(", ")}
-                    </Typography>
-                  </Grid>}
+                  <Grid item xs={12} sm={4} md={4}> <Typography variant="body2" > {site.name} </Typography> </Grid>
+                  {site.address && <Grid item xs={12} sm={8} md={8}> <Typography variant="body2" >{Object.values(site.address)?.join(", ")} </Typography></Grid>}
                 </Grid>
                 : null }
               </AccordionSummary>

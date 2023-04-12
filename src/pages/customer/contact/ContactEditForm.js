@@ -87,7 +87,7 @@
       suburb: Yup.string(),
       city: Yup.string(),
       region: Yup.string(),
-      postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
+      postcode: Yup.string(),
       // country: Yup.string().nullable()
       // isPrimary: Yup.boolean(),
     });
@@ -144,11 +144,15 @@
 
     const onSubmit = async (data) => {
       try {
-        if(phone){
+        if(phone.length > 7){
           data.phone = phone ;
+        }else{
+          data.phone = "";
         }
         if(country){
           data.country = country.label
+        }else{
+          data.country = "";
         }
         await dispatch(updateContact(customer._id, data));
         reset();
@@ -251,7 +255,7 @@
                       setCountryVal("");
                       }
                     }}
-                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) `}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                         <img

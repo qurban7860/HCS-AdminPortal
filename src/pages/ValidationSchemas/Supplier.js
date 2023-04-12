@@ -1,0 +1,15 @@
+export const SupplierSchema = Yup.object().shape({
+    name: Yup.string().max(50).required('Name is required')  ,
+    isDisabled : Yup.boolean(),
+    Contact_Name: Yup.string(),
+    Contact_Title: Yup.string(),
+    phone: Yup.number(),
+    email: Yup.string().email(),
+    fax: Yup.number(),
+    website: Yup.string(),
+    street: Yup.string(),
+    suburb: Yup.string(),
+    region: Yup.string(),
+    country: Yup.string(),
+    city: Yup.string(),
+  });

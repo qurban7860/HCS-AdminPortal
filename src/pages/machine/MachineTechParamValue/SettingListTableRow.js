@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import {
+  Switch,
   Stack,
   Button,
   TableRow,
@@ -43,7 +44,7 @@ export default function SettingListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, email, website, isDisabled, createdAt } = row;
+  const { name, email, website, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -99,7 +100,7 @@ export default function SettingListTableRow({
             color={isDisabled? 'error' : 'success'}
             sx={{ textTransform: 'capitalize' }}
           >
-            {isDisabled  ? 'No' : 'Yes' }
+            {isActive  ? 'No' : 'Yes' }
           </Label>
         </TableCell>
 

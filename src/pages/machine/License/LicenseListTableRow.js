@@ -106,9 +106,7 @@ export default function LicenseListTableRow({
         <TableCell>{fDate(createdAt)}</TableCell>
 
         <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
+         <Switch  checked = { isDisabled } disabled  sx={{my:-1}}/>
         </TableCell>
       </TableRow>
 

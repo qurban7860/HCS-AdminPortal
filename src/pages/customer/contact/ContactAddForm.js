@@ -78,7 +78,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
+    postcode: Yup.string(),
     // country: Yup.string().nullable()
   });
 
@@ -133,7 +133,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const onSubmit = async (data) => {
     // console.log(data);
       try{
-        if(phone){
+        if(phone.length > 7){
           data.phone = phone ;
         }
         if(country){
@@ -237,7 +237,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                       setCountryVal("");
                       }
                     }}
-                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) `}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                         <img

@@ -71,7 +71,7 @@ export default function SettingEditForm() {
   const defaultValues = useMemo(
     () => ({
       techParamValue: setting?.techParamValue || '',
-      isDisabled : !setting?.isDisabled,
+      isActive : setting?.isActive || true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -109,7 +109,6 @@ export default function SettingEditForm() {
 
   const onSubmit = async (data) => {
     data.techParam = techParam || null
-    console.log("Setting update Data : ",data);
     try {
       await dispatch(updateSetting( machine._id,setting._id,data));
       reset();

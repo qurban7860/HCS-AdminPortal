@@ -54,17 +54,15 @@ export default function MachineStatus() {
   const AddStatusSchema = Yup.object().shape({
     name: Yup.string().min(5).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
+    isActive : Yup.boolean(),
     displayOrderNo: Yup.number(),
-    
   });
 
   const defaultValues = useMemo(
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isActive: true,
       createdAt: '',
       displayOrderNo: '',
       
@@ -150,7 +148,7 @@ export default function MachineStatus() {
                     <option value="" defaultValue/>
               </RHFSelect> */}
               <RHFSwitch
-              name="isDisabled"
+              name="isActive"
               labelPlacement="start"
               label={
                 <>

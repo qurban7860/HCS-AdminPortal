@@ -57,7 +57,7 @@ export default function SiteEditForm() {
 
   useEffect(()=>{
     setPhone(site.phone)
-    const siteCountry= filtter(countries,{label: site.address.country})
+    const siteCountry= filtter(countries,{label: site?.address?.country})
     setCountryVal(siteCountry[0])
     setFaxVal(site.fax)
   },[site])
@@ -75,7 +75,7 @@ export default function SiteEditForm() {
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}),
+    postcode: Yup.string(),
     // country: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
@@ -149,9 +149,21 @@ export default function SiteEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      data.phone = phone ;
-      data.fax = fax
-      data.country = country.label
+      if(phone.length > 7){
+        data.phone = phone ;
+      }else{
+        data.phone = "" ;
+      }
+      if(fax.length > 6){
+        data.fax = fax
+      }else{
+        data.fax = "" ;
+      }
+      if(country){
+        data.country = country.label
+      }else{
+        data.country = "";
+      }
       await dispatch(updateSite(data));
       reset();
     } catch (err) {
@@ -243,7 +255,7 @@ export default function SiteEditForm() {
                       setCountryVal("");
                       }
                     }}
-                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) `}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                         <img

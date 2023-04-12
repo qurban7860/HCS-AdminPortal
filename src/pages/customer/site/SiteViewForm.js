@@ -25,17 +25,11 @@ SiteViewForm.propTypes = {
 export default function SiteViewForm({ currentSite = null }) {
 
   const { site } = useSelector((state) => state.site);
-
   const { customer } = useSelector((state) => state.customer);
-
   const navigate = useNavigate();
-
   const dispatch = useDispatch(); 
-  
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
-
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -73,7 +67,6 @@ export default function SiteViewForm({ currentSite = null }) {
         lat: currentSite ? currentSite.lat : site?.lat || 'N/A',
         long: currentSite ? currentSite.long : site?.long || 'N/A',
 
-
         street: currentSite ? currentSite.address?.street : site?.address.street || 'N/A',
         suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || 'N/A',
         city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
@@ -97,22 +90,10 @@ export default function SiteViewForm({ currentSite = null }) {
   return (
     <Grid sx={{ p: 2 }}>
       <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-        <Button
-          onClick={() => handleEdit()}
-          variant="outlined"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
+        <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
           Edit
         </Button>
-        <Button
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          variant="outlined"
-          color="error"
-          startIcon={<Iconify icon="eva:trash-2-fill" />}
-        >
+        <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />} >
           Delete
         </Button>
       </Stack>
@@ -239,59 +220,29 @@ export default function SiteViewForm({ currentSite = null }) {
             </Typography>
           </Grid>
 
-          {(defaultValues.lat || defaultValues.primaryTechnicalContact)&& <Grid container>
+          <Grid container>
+            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Latitude</Typography>
+              <Typography variant="body2">{defaultValues.lat ? defaultValues.lat : ''}</Typography>
+            </Grid>
 
-            {defaultValues.lat && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-            Latitude
-            </Typography>
+            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Longitude</Typography>
+              <Typography variant="body2">{defaultValues.long ? defaultValues.long : ''}</Typography>
+            </Grid>
+          </Grid>
 
-            <Typography variant="body2">
-            {defaultValues.lat ? defaultValues.lat : ''}
-            </Typography>
-
-            </Grid>}
-
-            {defaultValues.long && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-            Longitude
-            </Typography>
-
-            <Typography variant="body2">
-            {defaultValues.long ? defaultValues.long : ''}
-            </Typography>
-
-            </Grid>}
-
-
-            </Grid>}
-
-          {(defaultValues.primaryBillingContact || defaultValues.primaryTechnicalContact)&& <Grid container>
-
-            {defaultValues.primaryBillingContact && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-            Primary Billing Contact
-            </Typography>
-
-            <Typography variant="body2">
-            {defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}
-            </Typography>
-
-            </Grid>}
-
-            {defaultValues.primaryTechnicalContact && <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-            Primary Technical Contact
-            </Typography>
-
-            <Typography variant="body2">
-            {defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''}  {defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}
-            </Typography>
-
-            </Grid>}
-
-
-          </Grid>}
+           <Grid container>
+            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Primary Billing Contact</Typography>
+              <Typography variant="body2">{defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}</Typography>
+            </Grid>
+            
+            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
+              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Primary Technical Contact</Typography>
+              <Typography variant="body2">{defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''}  {defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}</Typography>
+            </Grid>
+          </Grid>
 
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >

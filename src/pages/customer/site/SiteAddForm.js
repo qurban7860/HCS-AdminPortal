@@ -56,7 +56,7 @@ export default function SiteAddForm() {
     suburb: Yup.string(),
     city: Yup.string(),
     region: Yup.string(),
-    postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
+    postcode: Yup.string(),
     // country: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
@@ -125,10 +125,10 @@ export default function SiteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      if(phone){
+      if(phone.length > 7){
         data.phone = phone ;
       }
-      if(fax){
+      if(fax.length > 7){
         data.fax = fax
       }
       if(country){
@@ -233,7 +233,7 @@ export default function SiteAddForm() {
                       setCountryVal("");
                       }
                     }}
-                    getOptionLabel={(option) => `${option.label} (${option.code}) +${option.phone}`}
+                    getOptionLabel={(option) => `${option.label} (${option.code}) `}
                     renderOption={(props, option) => (
                       <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
                         <img
