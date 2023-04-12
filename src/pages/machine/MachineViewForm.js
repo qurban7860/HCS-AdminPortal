@@ -67,7 +67,7 @@ export default function MachineViewForm() {
       accountManager:           machine?.accountManager || "",
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
-      isAisabled:               machine?.isAisabled,
+      isActive:                 machine?.isActive || true,
       createdAt:                machine?.createdAt || "",
       createdByFname:           machine?.createdBy?.name || "",
       createdByLname:           machine?.createdBy?.lastName || "",
@@ -117,7 +117,7 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Project Manager"   StasticsParam={defaultValues?.projectManager?.firstName || "" } secondStasticsParam={defaultValues?.projectManager?.lastName || ""}/>
         <ViewFormField sm={6} heading="Suppport Manager"  StasticsParam={defaultValues?.supportManager?.firstName || "" } secondStasticsParam={defaultValues?.supportManager?.lastName || ""}/> 
       </Grid>
-        <Switch sx={{mt:2}} checked = { !defaultValues.isDisabled } disabled  />
+        <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>

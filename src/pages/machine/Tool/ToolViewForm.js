@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch ,Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getTool, setToolEditFormVisibility } from '../../../redux/slices/products/tools';
 // paths
@@ -61,12 +61,10 @@ export default function ToolViewForm({ currentTool = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:tool?.name || 'N/A',
-        description:tool?.description || 'N/A',
-        createdAt: tool?.createdAt || '',
-        updatedAt: tool?.updatedAt || '',
+        name:tool?.name || '',
+        description:tool?.description || '',
         updatedIP: tool?.updatedIP || '',
-        isDisabled: tool.isDisabled ,
+        isActive: tool.isActive || true,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]
@@ -86,7 +84,6 @@ export default function ToolViewForm({ currentTool = null }) {
         >
           Edit
         </Button>
-
       </Stack>
       <Grid container>
 
@@ -94,13 +91,10 @@ export default function ToolViewForm({ currentTool = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
-
           <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
-
         </Grid>
 
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
@@ -109,12 +103,8 @@ export default function ToolViewForm({ currentTool = null }) {
 
         </Grid>
 
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
-
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isDisabled } disabled  />
         </Grid>
         
         <Grid container spacing={0} sx={{ mb: 5}}>

@@ -60,13 +60,11 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinemodel?.name || 'N/A',
-        description:machinemodel?.description || 'N/A',
-        createdAt: machinemodel?.createdAt || '',
-        updatedAt: machinemodel?.updatedAt || '',
+        name:machinemodel?.name || '',
+        description:machinemodel?.description || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
-        isActive: machinemodel?.isActive || '',
+        isActive: machinemodel?.isActive || true,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinemodel, machinemodel]
@@ -108,7 +106,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Category Name
             </Typography>
@@ -116,8 +114,9 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
             <Typography variant="body2">{defaultValues?.category?.name || " "}</Typography>
             
         </Grid>
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-         <Switch  checked = { defaultValues.isActive } disabled  />
+
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isDisabled } disabled  />
         </Grid>
         
 

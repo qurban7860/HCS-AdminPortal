@@ -2,16 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
-import {
-  Stack,
-  Button,
-  TableRow,
-  Checkbox,
-  MenuItem,
-  TableCell,
-  IconButton,
-  Link,
-} from '@mui/material';
+import { Switch, Stack, Button, TableRow, Checkbox, MenuItem, TableCell, IconButton, Link, } from '@mui/material';
 // utils
 import { fData,fCurrency } from '../../../utils/formatNumber';
 // components
@@ -20,9 +11,7 @@ import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-
 import { useSelector } from '../../../redux/store';
-
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +32,7 @@ export default function ToolListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isDisabled, createdAt} = row;
+  const { name, isActive, createdAt} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -77,29 +66,10 @@ export default function ToolListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name} </Link>
           </Stack>
-        </TableCell>
-
-        <TableCell align="center">
-        <Label
-            variant="soft"
-            color={isDisabled? 'error' : 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled  ? 'No' :'Yes' }
-          </Label>
         </TableCell> 
-
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" sx={{my:-1}}/> </TableCell> 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
         
        

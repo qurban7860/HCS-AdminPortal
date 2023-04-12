@@ -125,36 +125,17 @@ export default function MachineModel() {
   return (
     <>
     <Container maxWidth={false }>
-              <Card
-                sx={{
-                  mb: 3,
-                  height: 160,
-                  position: 'relative',
-                  // mt: '24px',
-                }}
-              >
+              <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                   <Cover name='New Model' icon='material-symbols:model-training-outline-rounded' />
               </Card>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
             <Helmet>
               <title> Machine: Models | Machine ERP</title>
             </Helmet>
-            
-              
               <Grid item xs={18} md={12} sx={{mt: 3}}>
                 <Card sx={{ p: 3}}>
                   <Stack spacing={3}>
-                  
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{
-                      xs: 'repeat(1, 1fr)',
-                      sm: 'repeat(1, 1fr)',
-                    }}
-                  >
-
+                  <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
                     <Autocomplete
                       value={modelVal || null}
                       options={categories}
@@ -167,7 +148,6 @@ export default function MachineModel() {
                       renderInput={(params) => <TextField {...params} label="Categories" />}
                       ChipProps={{ size: 'small' }}
                     />
-
                     <RHFTextField name="name" label="Machine Model" required />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
 

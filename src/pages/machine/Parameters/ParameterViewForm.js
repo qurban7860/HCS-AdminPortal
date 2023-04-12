@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getTechparam } from '../../../redux/slices/products/machineTechParam';
 // paths
@@ -60,10 +60,8 @@ useLayoutEffect(()=>{
         name:techparam?.name || '',
         code: techparam?.code || '',
         description:techparam?.description || '',
-        createdAt: techparam?.createdAt || '',
-        updatedAt: techparam?.updatedAt || '',
         category: techparam?.category?.name || '', 
-        isDisabled: techparam?.isActive || true,
+        isActive: techparam?.isActive || true,
         createdByFullname: techparam?.createdBy?.name || "",
         updatedByFullname: techparam?.updatedBy?.name || "",
        
@@ -118,11 +116,8 @@ useLayoutEffect(()=>{
           </Grid>
       </Grid>
 
-      <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No'  : 'Yes'   }</Typography>
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isDisabled } disabled  />
         </Grid>
 
       <Grid container>

@@ -150,14 +150,7 @@ export default function MachineSuppliers() {
   return (
     <>
     <Container maxWidth={ false }>
-    <Card
-                sx={{
-                  mb: 3,
-                  height: 160,
-                  position: 'relative',
-                  // mt: '24px',
-                }}
-              >
+              <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='New Supplier' icon='material-symbols:inventory-2-rounded' />
               </Card>
     <Helmet>

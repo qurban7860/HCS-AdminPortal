@@ -92,9 +92,7 @@ export default function ModelListTableRow({
         </TableCell>
         <TableCell align="left">{category?.name || ''}</TableCell>
 
-        <TableCell align="center">
-         <Switch  checked = { isActive } disabled  sx={{my:-1}}/>
-        </TableCell> 
+        <TableCell align="center"> <Switch  checked = { isActive } disabled  sx={{my:-1}}/> </TableCell> 
 
         <TableCell align="left">{fDate(createdAt)}</TableCell>
         

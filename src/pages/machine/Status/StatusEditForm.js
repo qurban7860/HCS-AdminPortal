@@ -5,16 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Switch , Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // slice
 import { updateMachinestatus, getMachineStatus, getMachinestatuses } from '../../../redux/slices/products/statuses';
-
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
 // routes
@@ -23,15 +20,8 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar'
 import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
+import {Cover} from '../../components/Cover'
 
 // ----------------------------------------------------------------------
 
@@ -128,28 +118,14 @@ export default function StatusEditForm() {
       <Helmet>
         <title> Machine: Status | Machine ERP</title>
       </Helmet>
-
-      
-
         <Grid item xs={18} md={12}>
+            <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+                <Cover name='Edit Status' icon='material-symbols:diversity-1-rounded' />
+            </Card>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Status
-                </Typography>
-              </Stack>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
-
-                <RHFTextField name="name" label="Machine status" required />
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
+              <RHFTextField name="name" label="Machine status" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFTextField name="displayOrderNo" label="Display Order No" type='number' />
               {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>

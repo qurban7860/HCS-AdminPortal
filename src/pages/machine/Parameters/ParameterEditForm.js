@@ -25,16 +25,8 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar'
 import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
-
+import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
+import {Cover} from '../../components/Cover'
 // ----------------------------------------------------------------------
 
 
@@ -132,35 +124,16 @@ console.log("default :",defaultValues)
     // <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid item xs={18} md={12} sx={{mt: 3}}>
+            <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+                <Cover name='Edit Parameter' icon='ic:round-flare' />
+            </Card>
           <Card sx={{ p: 3}}>
-             <Stack spacing={1} sx={{pb:2}}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                  Edit Parameter
-                </Typography>
-              </Stack>
             <Stack spacing={3}>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(2, 1fr)',
-                sm: 'repeat(2, 1fr)',
-              }}
-            >
-           
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
               <RHFTextField name="name" label="Machine Tech Param" required />
               <RHFTextField name="code" label="Code" required />
-              </Box>
-              <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
+            </Box>
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <Autocomplete
                 value={paramVal || null}
@@ -187,15 +160,7 @@ console.log("default :",defaultValues)
              </Box>
              
               </Stack>
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
+              <Box rowGap={5} columnGap={4} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)', }} > 
 
               <LoadingButton 
                 type="submit"

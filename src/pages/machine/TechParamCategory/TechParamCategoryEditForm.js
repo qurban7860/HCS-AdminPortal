@@ -12,11 +12,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
-// global
-
 // slice
 import { updateTechparamcategory, getTechparamcategory, getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
 // routes
@@ -25,18 +22,10 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar'
 import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
+import {Cover} from '../../components/Cover'
 
 // ----------------------------------------------------------------------
-
 
 export default function TechParamCategoryEditForm() {
 
@@ -118,26 +107,18 @@ export default function TechParamCategoryEditForm() {
     }
   };
 
-
-
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
       <Helmet>
         <title> Machine: Tech Param Category | Machine ERP</title>
       </Helmet>
-
-      
-
         <Grid item xs={18} md={12}>
+            <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+                <Cover name='Edit Parameter Category' icon='ic:round-class' />
+            </Card>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Edit Technical Parameter Category
-                </Typography>
-              </Stack>
             <Box
               rowGap={2}
               columnGap={2}

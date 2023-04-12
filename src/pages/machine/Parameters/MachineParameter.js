@@ -114,14 +114,7 @@ export default function MachineParameter() {
   return (
     <>
     <Container maxWidth={false }>
-    <Card
-                sx={{
-                  mb: 3,
-                  height: 160,
-                  position: 'relative',
-                  // mt: '24px',
-                }}
-              >
+              <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='New Parameter' icon='ic:round-flare' />
               </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

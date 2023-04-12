@@ -137,21 +137,11 @@ export default function ModelEditForm() {
       <Helmet>
         <title> Machine: Model | Machine ERP</title>
       </Helmet>
-
       
-
         <Grid item xs={18} md={12}>
-            <Card
-              sx={{
-                mb: 3,
-                height: 160,
-                position: 'relative',
-                // mt: '24px',
-              }}
-            >
+            <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='Edit Model' icon='material-symbols:model-training-outline-rounded' />
             </Card>
-
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
             {/* <Stack spacing={1}>
