@@ -146,6 +146,7 @@ export function saveContact(params) {
         contactTypes: params.contactTypes,
         phone: params.phone,
         email: params.email,
+        isActive: params.isActive,
         address: {}
 
       };
@@ -174,7 +175,7 @@ export function saveContact(params) {
         data,
       );
 
-      dispatch(slice.actions.setFormVisibility(false));
+      dispatch(slice.actions.setContactFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Site saved successfully'));
 
     } catch (error) {
@@ -189,7 +190,7 @@ export function saveContact(params) {
 export function updateContact(customerId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    dispatch(slice.actions.setEditFormVisibility(false));
+    dispatch(slice.actions.setContactEditFormVisibility(false));
 
     try {
       /* eslint-disable */
@@ -202,6 +203,7 @@ export function updateContact(customerId,params) {
         contactTypes: params.contactTypes,
         phone: params.phone,
         email: params.email,
+        isActive: params.isActive,
         address: {}
       };
 

@@ -120,7 +120,7 @@ export default function CustomerEditForm() {
     };
 
   const onSubmit = async (data) => {
-    // console.log(data);
+    console.log("customer : ",data);
     try {
       dispatch(updateCustomer(data));
       reset();
@@ -236,13 +236,8 @@ export default function CustomerEditForm() {
                       </option>
                     ))}
                 </RHFSelect>
-                
-                <RHFSwitch name="isActive" labelPlacement="start" label={
-        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
-      />
-
               </Box>
-
+                <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <Box
                 rowGap={5}
                 columnGap={4}
@@ -252,7 +247,6 @@ export default function CustomerEditForm() {
                   sm: 'repeat(5, 1fr)',
                 }}
               > 
-
                 <LoadingButton 
                   type="submit" 
                   variant="contained" 
@@ -260,22 +254,15 @@ export default function CustomerEditForm() {
                   loading={isSubmitting}>
                     Save Changes
                 </LoadingButton>
-
                 <Button 
                   onClick={toggleCancel}
                   variant="outlined" 
                   size="large">
                     Cancel
                 </Button>
-
             </Box>
-
             </Stack>
-
-            
-            
           </Card>
-
         </Grid>
       </Grid>
     </FormProvider>

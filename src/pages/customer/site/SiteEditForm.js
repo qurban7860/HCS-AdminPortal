@@ -23,6 +23,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 
 import FormProvider, {
+  RHFSwitch,
   RHFSelect,
   RHFTextField,
   RHFAutocomplete
@@ -100,7 +101,7 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
-      isActive: site?.isActive || true,
+      isActive: site?.isActive ,
       primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
       primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
     }),
@@ -311,7 +312,7 @@ export default function SiteEditForm() {
                   ))}
               </RHFSelect>
               </Box>
-
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <Box
                 rowGap={5}
                 columnGap={4}

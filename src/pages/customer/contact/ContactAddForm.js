@@ -68,7 +68,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const [country, setCountryVal] = useState('')
 
   const AddContactSchema = Yup.object().shape({
-    firstName: Yup.string(),
+    firstName: Yup.string().required(),
     lastName: Yup.string(),
     title: Yup.string(),
     contactTypes: Yup.array(),
@@ -79,6 +79,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
     city: Yup.string(),
     region: Yup.string(),
     postcode: Yup.string(),
+    isActive: Yup.boolean(),
     // country: Yup.string().nullable()
   });
 
@@ -89,12 +90,14 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       lastName: '',
       title: '',
       contactTypes: [],
+      isActive: true,
       // phone: '',
       email: '',
       loginUser: {
         userId,
         email: user.email,
       },
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -258,6 +261,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                     )}
                 />
               </Box>
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
 
               <Box
                 rowGap={5}

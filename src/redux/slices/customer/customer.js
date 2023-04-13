@@ -185,6 +185,7 @@ export function saveCustomer(params) {
         let data = {
           name: params.name,
           tradingName: params.tradingName,
+          isActive: params.isActive,
           mainSite: {
             name: params.name,
             address: {},
@@ -327,7 +328,8 @@ export function updateCustomer(params) {
       let data = {
         id: params.id,
         name: params.name,
-        tradingName: params.tradingName
+        tradingName: params.tradingName,
+        isActive: params.isActive,
       };
      /* eslint-enable */
       if(params.mainSite !== "null" && params.mainSite !== null){

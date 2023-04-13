@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch,Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { deleteSite, getSite, getSites, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
 
@@ -76,7 +76,7 @@ export default function SiteViewForm({ currentSite = null }) {
         country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
         primaryBillingContact: currentSite?.primaryBillingContact || null,
         primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
-      
+        isActive: currentSite.isActive,
         createdAt:                currentSite?.createdAt || "",
         createdByFullname:           currentSite?.createdBy?.name || "",
         createdIP:                currentSite?.createdIP || "",
@@ -244,7 +244,9 @@ export default function SiteViewForm({ currentSite = null }) {
               <Typography variant="body2">{defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''}  {defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}</Typography>
             </Grid>
           </Grid>
-
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
+          </Grid>
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>
