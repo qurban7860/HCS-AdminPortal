@@ -17,6 +17,7 @@ import { countries } from '../../../assets/data';
 
 
 import FormProvider, {
+  RHFSwitch,
   RHFSelect,
   RHFTextField,
   RHFAutocomplete
@@ -60,6 +61,7 @@ export default function SiteAddForm() {
     // country: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
+    isActive: Yup.boolean(),
  
   });
 
@@ -79,6 +81,7 @@ export default function SiteAddForm() {
       postcode: '',
       // country: null,
       isArchived: false,
+      isActive: true,
 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -290,7 +293,7 @@ export default function SiteAddForm() {
                   ))}
               </RHFSelect>
               </Box>
-
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <Box
                 rowGap={5}
                 columnGap={4}

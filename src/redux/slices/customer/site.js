@@ -132,6 +132,7 @@ export function saveSite(params) {
           website: params.website,
           lat: params.lat,
           long: params.long,
+          isActive: params.isActive,
           address: {}
         };
 
@@ -195,6 +196,7 @@ export function updateSite(params,customerId,Id) {
           website: params.website,
           lat: params.lat,
           long: params.long,
+          isActive: params.isActive,
           address: {}
         };
         /* eslint-enable */

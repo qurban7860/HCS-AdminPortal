@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Switch,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // global
@@ -77,6 +77,7 @@ export default function NoteViewForm({currentNote = null}) {
       contact_firstName: currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.firstName,
       contact_lastName:  currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.lastName,
       note: currentNote?.note || "",
+      isActive: currentNote.isActive,
       createdAt:                currentNote?.createdAt || "",
       createdByFullname:           currentNote?.createdBy?.name || "",
       createdIP:                currentNote?.createdIP || "",
@@ -138,7 +139,9 @@ export default function NoteViewForm({currentNote = null}) {
             <Typography variant="string" sx={{ whiteSpace: 'pre-line'}}>
                 {defaultValues.note}
             </Typography>
-            
+            <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
+          </Grid>
           </Grid>
           <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>

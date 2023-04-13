@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Switch,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // routes
@@ -82,7 +82,7 @@ export default function ContactViewForm({ currentContact = null }) {
       postcode: currentContact ? currentContact.address?.postcode : contact?.address.postcode || 'N/A',
       region: currentContact ? currentContact.address?.region : contact?.address.region || 'N/A',
       country: currentContact ? currentContact.address?.country : contact?.address.country || 'N/A',
-        
+        isActive: currentContact.isActive,
       createdAt:                currentContact?.createdAt || "",
       createdByFullname:           currentContact?.createdBy?.name || "",
       createdIP:                currentContact?.createdIP || "",
@@ -241,7 +241,9 @@ export default function ContactViewForm({ currentContact = null }) {
             </Typography>
           </Grid>
             
-
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
+          </Grid>
           <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

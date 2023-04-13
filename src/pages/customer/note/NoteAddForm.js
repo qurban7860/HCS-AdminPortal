@@ -25,10 +25,10 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 
 
 import FormProvider, {
+  RHFSwitch,
   RHFSelect,
   RHFEditor,
   RHFTextField,
-  RHFSwitch
 } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
@@ -64,6 +64,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
     site: Yup.string().nullable(),
     // user: Yup.string(),
     contact: Yup.string().nullable(),
+    isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -72,6 +73,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
       site: null,
       contact: null,
       customer: customer._id,
+      isActive: true,
       // user: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,6 +234,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                   sm: 'repeat(4, 1fr)',
                 }}
               > 
+                <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               
                 <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
                   Save Note

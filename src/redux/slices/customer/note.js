@@ -122,6 +122,7 @@ export function saveNote(customerId,params) {
     try {
       const data = {
         note: params.note,
+        isActive: params.isActive,
       }
       if(params.customer){
         data.customer =  params.customer;
@@ -158,6 +159,7 @@ export function updateNote(customerId,params) {
     try {
       const data = {
         note: params.note,
+        isActive: params.isActive,
       }
       data.note =  params.note;
       if(params.customer){
