@@ -64,7 +64,7 @@ export default function ToolViewForm({ currentTool = null }) {
         name:tool?.name || '',
         description:tool?.description || '',
         updatedIP: tool?.updatedIP || '',
-        isActive: tool.isActive || true,
+        isActive: tool?.isActive ,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]
@@ -104,7 +104,7 @@ export default function ToolViewForm({ currentTool = null }) {
         </Grid>
 
         <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:1}} checked = { defaultValues.isDisabled } disabled  />
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
         
         <Grid container spacing={0} sx={{ mb: 5}}>

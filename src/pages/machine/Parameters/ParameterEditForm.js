@@ -48,7 +48,7 @@ export default function ParameterEditForm() {
   const ParameterEditSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().min(2).max(2000),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
     code: Yup.string(),
   });
 
@@ -59,9 +59,7 @@ export default function ParameterEditForm() {
         name:techparam?.name || '',
         code: techparam?.code || '',
         description: techparam?.description || '',
-        isActive: !techparam.isActive || true,
-        createdAt: techparam?.createdAt || '',
-        updatedAt: techparam?.updatedAt || '',
+        isActive: techparam.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
@@ -146,17 +144,9 @@ console.log("default :",defaultValues)
                 renderInput={(params) => <TextField {...params} label="Tech Param Categories" />}
                 ChipProps={{ size: 'small' }}
               />
-              <RHFSwitch
-              name="isActive"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
              </Box>
              
               </Stack>

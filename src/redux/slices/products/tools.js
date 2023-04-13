@@ -181,7 +181,7 @@ export function saveTool(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params?.isDisabled
+          isActive: params?.isActive
         };
         /* eslint-enable */
         if(params.description){
@@ -212,8 +212,7 @@ export function updateTool(params) {
       let data = {
         id: params.id,
         name: params.name,
-        isDisabled: !params.isDisabled,
-        
+        isActive: params.isActive,
       };
      /* eslint-enable */
      if(params.description){

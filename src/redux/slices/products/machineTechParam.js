@@ -215,7 +215,7 @@ export function saveTechparam(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !params.isDisabled,
+          isActive: params.isActive,
         };
         /* eslint-enable */
         if(params.description){
@@ -253,7 +253,7 @@ export function updateTechparam(params,id) {
       /* eslint-disable */
       let data = {
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
       };
      /* eslint-enable */
      if(params.description){

@@ -37,7 +37,7 @@ export default function CategoryEditForm() {
     () => ({
         name:category?.name || 'N/A',
         description:category?.description || 'N/A',
-        isActive: category.isActive || true,
+        isActive: category.isActive ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [category]

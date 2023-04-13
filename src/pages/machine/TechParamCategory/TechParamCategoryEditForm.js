@@ -41,18 +41,13 @@ export default function TechParamCategoryEditForm() {
   const EditToolSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
+    isActive : Yup.boolean(),
   });
-
-
   const defaultValues = useMemo(
     () => ({
-        name:techparamcategory?.name || 'N/A',
-        description:techparamcategory?.description || 'N/A',
-        createdAt: techparamcategory?.createdAt || '',
-        updatedAt: techparamcategory?.updatedAt || '',
-        isDisabled: !techparamcategory.isDisabled || '',
+        name:techparamcategory?.name || '',
+        description:techparamcategory?.description || '',
+        isActive: techparamcategory.isActive ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparamcategory]
@@ -131,17 +126,9 @@ export default function TechParamCategoryEditForm() {
 
               <RHFTextField name="name" label="Machine Tool" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
              </Box>
              
               

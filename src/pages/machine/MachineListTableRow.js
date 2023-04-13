@@ -89,7 +89,7 @@ export default function MachineListTableRow({
         <TableCell>{status?.name || ''}</TableCell>
         <TableCell>{customer?.name || ''}</TableCell>
         <TableCell>{instalationSite?.name || ''}</TableCell>
-        <TableCell align="left"> <Switch checked = { isActive } disabled size="small" /> </TableCell> 
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell> 
         <TableCell>{fDate(createdAt)}</TableCell>
 
         {/* <TableCell align="center">

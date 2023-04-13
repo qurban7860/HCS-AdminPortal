@@ -64,7 +64,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         description:machinemodel?.description || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
-        isActive: machinemodel?.isActive || true,
+        isActive: machinemodel?.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinemodel, machinemodel]
@@ -116,7 +116,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         </Grid>
 
         <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:1}} checked = { defaultValues.isDisabled } disabled  />
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
         
 

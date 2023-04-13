@@ -40,17 +40,14 @@ export default function ToolEditForm() {
   const EditToolSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
+    isActive : Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
-        name:tool?.name || 'N/A',
-        description:tool?.description || 'N/A',
-        createdAt: tool?.createdAt || '',
-        updatedAt: tool?.updatedAt || '',
-        isDisabled: !tool.isDisabled,
+        name:tool?.name || '',
+        description:tool?.description || '',
+        isActive: tool.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tool]
@@ -134,17 +131,9 @@ export default function ToolEditForm() {
 
               <RHFTextField name="name" label="Machine Tool" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
              </Box>
              
               

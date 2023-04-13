@@ -61,7 +61,7 @@ useLayoutEffect(()=>{
         code: techparam?.code || '',
         description:techparam?.description || '',
         category: techparam?.category?.name || '', 
-        isActive: techparam?.isActive || true,
+        isActive: techparam?.isActive,
         createdByFullname: techparam?.createdBy?.name || "",
         updatedByFullname: techparam?.updatedBy?.name || "",
        
@@ -117,7 +117,7 @@ useLayoutEffect(()=>{
       </Grid>
 
         <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:1}} checked = { defaultValues.isDisabled } disabled  />
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
       <Grid container>

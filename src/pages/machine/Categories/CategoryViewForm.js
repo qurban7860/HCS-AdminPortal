@@ -43,7 +43,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
     () => ({
         name:category?.name || '',
         description:category?.description || '',
-        isActive: category.isActive || true,
+        isActive: category.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCategory, category]
@@ -77,7 +77,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
         </Grid>
         
         <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:1}} checked = { defaultValues.isDisabled } disabled  />
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
         <Grid container spacing={0} sx={{ mb: 5}}>

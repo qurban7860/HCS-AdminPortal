@@ -59,20 +59,18 @@ export default function SupplierEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      name:supplier?.name || 'N/A',
-      contactName:supplier?.contactName || 'N/A',
-      contactTitle: supplier?.contactTitle || 'N/A',
-      phone: supplier?.phone || 'N/A',
-      email: supplier?.email || 'N/A',
-      website: supplier?.website || 'N/A',
-      fax: supplier?.fax || 'N/A',
-      street: supplier?.address?.street || 'N/A',
-      suburb: supplier?.address?.suburb || 'N/A',
-      city: supplier?.address?.city || 'N/A',
-      region: supplier?.address?.region || 'N/A',
-      country: supplier?.address?.country || 'N/A',
-      createdAt: supplier?.createdAt || '',
-      updatedAt: supplier?.updatedAt || '',
+      name:supplier?.name || '',
+      contactName:supplier?.contactName || '',
+      contactTitle: supplier?.contactTitle || '',
+      phone: supplier?.phone || '',
+      email: supplier?.email || '',
+      website: supplier?.website || '',
+      fax: supplier?.fax || '',
+      street: supplier?.address?.street || '',
+      suburb: supplier?.address?.suburb || '',
+      city: supplier?.address?.city || '',
+      region: supplier?.address?.region || '',
+      country: supplier?.address?.country || '',
       isActive: supplier.isActive || true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -188,7 +186,9 @@ export default function SupplierEditForm() {
                   <RHFTextField name="region" label="Region" />
                   <RHFAutocomplete name="country" label="Country" freeSolo options={countries.map((country) => country.label)}  ChipProps={{ size: 'small' }} /> 
                 </Box>
-                <RHFSwitch name="isActive"labelPlacement="start"label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>Active</Typography>} />
+                <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
               </Stack>
               <Box sx={{ mt: 3 }} rowGap={5} columnGap={4} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(5, 1fr)', }} > 
                 <LoadingButton 

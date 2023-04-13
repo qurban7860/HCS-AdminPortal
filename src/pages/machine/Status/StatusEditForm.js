@@ -41,8 +41,7 @@ export default function StatusEditForm() {
   const EditStatusSchema = Yup.object().shape({
     name: Yup.string().min(5).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
+    isActive : Yup.boolean(),
     displayOrderNo: Yup.number(),
   });
 
@@ -50,12 +49,10 @@ export default function StatusEditForm() {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinestatus?.name || 'N/A',
-        description:machinestatus?.description || 'N/A',
-        createdAt: machinestatus?.createdAt || '',
-        updatedAt: machinestatus?.updatedAt || '',
+        name:machinestatus?.name || '',
+        description:machinestatus?.description || '',
         displayOrderNo: machinestatus?.displayOrderNo || '',
-        isDisabled: !machinestatus.isDisabled,
+        isActive: machinestatus.isActive ,
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -131,17 +128,9 @@ export default function StatusEditForm() {
               {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                     <option value="" defaultValue/>
               </RHFSelect> */}
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
              </Box>
              
               

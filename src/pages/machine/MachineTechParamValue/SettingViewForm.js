@@ -132,13 +132,10 @@ export default function SettingViewForm({ currentSetting = null }) {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={12} sx={{pt:2}}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isActive ? 'No' : 'Yes' }</Typography>
-
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
           </Grid>
+          
 
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >

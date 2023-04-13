@@ -96,7 +96,7 @@ export default function UserTableToolbar({
       {isFiltered && (
         <Button
           color="error"
-          sx={{ flexShrink: 0 }}
+          sx={{ flexShrink: 0 , ml:1 }}
           onClick={onResetFilter}
           startIcon={<Iconify icon="eva:trash-2-outline" />}
         >

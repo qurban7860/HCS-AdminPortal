@@ -56,9 +56,9 @@ export default function MachineSuppliers() {
     isActive : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),
-    phone: Yup.number(),
+    phone: Yup.string(),
+    fax: Yup.string(),
     email: Yup.string().email(),
-    fax: Yup.number(),
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
@@ -173,7 +173,7 @@ export default function MachineSuppliers() {
               }}
             >
 
-              <RHFTextField name="name" label="Name of Supplier" required />
+              <RHFTextField name="name" label="Name of Supplier"  />
               </Box>
               </Stack>
               </Card>

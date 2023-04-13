@@ -70,7 +70,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         city: supplier?.address?.city || '',
         region: supplier?.address?.region || '',
         country: supplier?.address?.country || '',
-        isActive: supplier.isActive || true,
+        isActive: supplier.isActive ,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSupplier, supplier]

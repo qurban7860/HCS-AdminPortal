@@ -75,13 +75,11 @@ export default function ModelEditForm() {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinemodel?.name || 'N/A',
-        description:machinemodel?.description || 'N/A',
+        name:machinemodel?.name || '',
+        description:machinemodel?.description || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         // category: machinemodel?.category || '',
-        isDisabled: !machinemodel?.isDisabled || '',
-        createdAt: machinemodel?.createdAt || '',
-        updatedAt: machinemodel?.updatedAt || '',
+        isActive: machinemodel?.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machinemodel]
@@ -176,23 +174,13 @@ export default function ModelEditForm() {
                 ChipProps={{ size: 'small' }}
               />
 
-            <RHFTextField name="name" label="Machine Model" required />
+              <RHFTextField name="name" label="Machine Model" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
 
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-              } 
-            />
              </Box>
-             
-              
-             
               </Stack>
 
               <Box

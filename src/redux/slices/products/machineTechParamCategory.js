@@ -187,7 +187,7 @@ export function saveTechparamcategory(params) {
           },
           technicalContact: {},
           billingContact: {},
-          isDisabled: !params.isDisabled,
+          isActive: params.isActive,
         };
         /* eslint-enable */
         if(params.description){
@@ -215,7 +215,7 @@ console.log("Params : ",Id,params)
       /* eslint-disable */
       let data = {
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
         // tradingName: params.tradingName
       };
      /* eslint-enable */
