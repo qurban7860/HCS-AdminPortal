@@ -357,9 +357,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (filterSupplier) => filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
+    filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {

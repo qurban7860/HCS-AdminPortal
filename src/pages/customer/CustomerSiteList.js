@@ -44,7 +44,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './site/SiteListTableRow';
 import SiteListTableToolbar from './site/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/customer/site';
+import { getSites, deleteSite, getSite,setSiteFormVisibility, setSiteEditFormVisibility } from '../../redux/slices/customer/site';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 
@@ -129,7 +129,7 @@ export default function CustomerSiteList() {
 
   const toggleChecked = async () => 
     {
-      dispatch(setFormVisibility(!siteAddFormVisibility));    
+      dispatch(setSiteFormVisibility(!siteAddFormVisibility));    
     };
 
   const { themeStretch } = useSettingsContext();
@@ -160,6 +160,7 @@ export default function CustomerSiteList() {
   useEffect(() => {
     if(!siteAddFormVisibility && !siteEditFormVisibility){
       dispatch(getSites(customer._id));
+      
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 

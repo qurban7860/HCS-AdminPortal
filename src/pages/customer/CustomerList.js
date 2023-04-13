@@ -41,7 +41,10 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer/customer';
+import { getCustomers, deleteCustomer, getCustomer ,resetCustomer,resetCustomers } from '../../redux/slices/customer/customer';
+import { resetSite,resetSites, setSiteEditFormVisibility, setSiteFormVisibility     } from '../../redux/slices/customer/site';
+import { resetContact,resetContacts, setContactEditFormVisibility,setContactFormVisibility} from '../../redux/slices/customer/contact';
+import { resetNote,resetNotes ,setNoteEditFormVisibility,setNoteFormVisibility } from '../../redux/slices/customer/note';
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 import { Cover } from '../components/Cover';
 import { fDate } from '../../utils/formatTime';
@@ -58,23 +61,6 @@ const TABLE_HEAD = [
   { id: 'created_at', label: 'Created At', align: 'left' },
 
 ];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
 
 // ----------------------------------------------------------------------
 
@@ -120,6 +106,19 @@ export default function CustomerList() {
 
   useLayoutEffect(() => {
     dispatch(getCustomers());
+    dispatch(resetCustomer())
+    dispatch(resetSite())
+    dispatch(resetSites())
+    dispatch(resetContact())
+    dispatch(resetContacts())
+    dispatch(resetNote())
+    dispatch(resetNotes())
+    dispatch(setSiteFormVisibility(false));
+    dispatch(setSiteEditFormVisibility(false));
+    dispatch(setContactFormVisibility(false));
+    dispatch(setContactEditFormVisibility(false));
+    dispatch(setNoteFormVisibility(false));
+    dispatch(setNoteEditFormVisibility(false))
   }, [dispatch]);
 
   useEffect(() => {
@@ -241,7 +240,6 @@ export default function CustomerList() {
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
@@ -363,8 +361,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    console.log(filterName)
-    console.log("input Data : ",inputData)
     inputData = inputData.filter( (customer) => customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
     customer?.tradingName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
     customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 

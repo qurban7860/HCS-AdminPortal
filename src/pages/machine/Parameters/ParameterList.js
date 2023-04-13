@@ -44,8 +44,7 @@ import ParameterListTableRow from './ParameterListTableRow';
 import ParameterListTableToolbar from './ParameterListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
-
-
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -360,9 +359,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (filterParameter) => filterParameter?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    filterParameter?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||  
+    // (filterParameter?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(filterParameter?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {

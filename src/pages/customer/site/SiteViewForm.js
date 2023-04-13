@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../redux/slices/customer/site';
+import { deleteSite, getSite, getSites, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
 
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -51,7 +51,7 @@ export default function SiteViewForm({ currentSite = null }) {
 
   const  handleEdit = async () => {
     await dispatch(getSite(customer._id, currentSite._id));
-    dispatch(setEditFormVisibility(true));
+    dispatch(setSiteEditFormVisibility(true));
   };
   const defaultValues = useMemo(
     () => (

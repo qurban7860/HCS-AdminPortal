@@ -43,6 +43,7 @@ import CategoryListTableRow from './CategoryListTableRow';
 import CategoryListTableToolbar from './CategoryListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
+import { fDate } from '../../../utils/formatTime';
 
 
 
@@ -365,9 +366,9 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (category) => category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {
