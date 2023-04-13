@@ -7,7 +7,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, Container, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import {Switch, Box, Card, Grid, Stack, Typography, Button, Container, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 import { CONFIG } from '../../config-global';
 // routes
@@ -21,6 +21,7 @@ import Iconify from '../../components/iconify';
 import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 
 import { fDateTime } from '../../utils/formatTime';
+import ViewFormAudit from '../components/ViewFormAudit';
 
 
 // ----------------------------------------------------------------------
@@ -48,6 +49,7 @@ export default function CustomerViewForm() {
       mainSite: customer?.mainSite || null,
       primaryBillingContact: customer?.primaryBillingContact || null,
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
+      isActive: customer?.isActive,
       createdAt:                customer?.createdAt || "",
       createdByFullname:           customer?.createdBy?.name || "",
       createdIP:                customer?.createdIP || "",
@@ -270,23 +272,15 @@ export default function CustomerViewForm() {
             
           </Grid> 
 
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
           </Grid>
 
+          </Grid>
 
 
         <Grid container>
-          <Grid container spacing={0} sx={{  mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                updated by: {defaultValues.updatedByFullname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-              </Typography>
-            </Grid>
-          </Grid>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
 
       </Card>

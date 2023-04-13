@@ -43,7 +43,7 @@ export default function LicenseEditForm() {
   const EditLicenseSchema = Yup.object().shape({
     licenseKey: Yup.string().max(100).required('License key is required!'),
     licenseDetail: Yup.string().max(10000).required('License detail is required!'),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
 
   });
 
@@ -51,7 +51,7 @@ export default function LicenseEditForm() {
     () => ({
       licenseKey: license?.licenseKey ||'',
       licenseDetail: license?.licenseDetail || '',
-      isDisabled : license?.isDisabled ,
+      isActive : license?.isActive ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -118,7 +118,7 @@ export default function LicenseEditForm() {
                 <RHFTextField name="licenseKey" label="License Key" multiline/>
                 <RHFTextField name="licenseDetail" label="License Detail" minRows={8} multiline />
                 <RHFSwitch
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>

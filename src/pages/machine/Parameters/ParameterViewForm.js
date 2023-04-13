@@ -11,6 +11,7 @@ import { getTechparam } from '../../../redux/slices/products/machineTechParam';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // Iconify
 
@@ -120,19 +121,8 @@ useLayoutEffect(()=>{
          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
-      <Grid container>
-          <Grid container spacing={0} sx={{  mb: 1,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-              </Typography>
-            </Grid>
-          </Grid>
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
     </Card>
   );

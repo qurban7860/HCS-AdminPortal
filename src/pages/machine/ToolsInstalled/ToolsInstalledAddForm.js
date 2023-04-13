@@ -60,7 +60,7 @@ setToolsVal(filteredTool);
 
   const AddSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
   });
 
 const toggleCancel = () => 
@@ -71,7 +71,7 @@ const toggleCancel = () =>
   const defaultValues = useMemo(
     () => ({
       note: '',
-      isDisabled : true,
+      isActive : true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -155,17 +155,8 @@ const toggleCancel = () =>
               
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
 
-              <RHFSwitch
-                name="isDisabled"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                      Active
-                    </Typography>
-                  </>
-                } 
-              />
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography>} />
+
               </Box>
               
 

@@ -26,6 +26,7 @@ import FormProvider, {
   } from '../../../components/hook-form';
 
 
+  import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
 
@@ -117,17 +118,8 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
-        <Grid container spacing={0} sx={{ mb: 5}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                Created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              Updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
-            </Typography>
-            </Grid>
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
 
       </Grid>

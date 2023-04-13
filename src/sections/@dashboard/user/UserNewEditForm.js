@@ -104,6 +104,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     // phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
     roles: Yup.array().required('Roles are required'),
+    isActive: Yup.boolean()
     // address: Yup.string().required('Address is required'),
     // country: Yup.string().required('Country is required'),
     // state: Yup.string().required('State is required'),
@@ -115,10 +116,11 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.firstName || '',
-      email: currentUser?.email || '',
-      password: currentUser?.password || '',
-      passwordConfirmation: currentUser?.passwordConfirmation || '',
+      name:  '',
+      email:  '',
+      password:  '',
+      passwordConfirmation:  '',
+      isActive: true,
       // phone: '',
       // address: currentUser?.address || '',
       // country: currentUser?.country || '',
@@ -528,7 +530,9 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                   ChipProps={{ size: 'small' }}
                 /> */}
             </Box>
-            
+            <Grid md={12}>
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+            </Grid>
             <Stack  sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>

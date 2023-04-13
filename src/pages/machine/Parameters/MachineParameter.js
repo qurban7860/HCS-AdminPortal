@@ -57,7 +57,7 @@ export default function MachineParameter() {
   const AddMachineParameterSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().min(2).max(2000),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
     code: Yup.string(),
   });
 
@@ -65,7 +65,7 @@ export default function MachineParameter() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isActive: true,
       createdAt: '',
       code: '',
       
@@ -174,7 +174,7 @@ export default function MachineParameter() {
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               
               <RHFSwitch
-              name="isDisabled"
+              name="isActive"
               labelPlacement="start"
               label={
                 <>

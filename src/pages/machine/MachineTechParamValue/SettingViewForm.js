@@ -15,6 +15,7 @@ import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , deleteSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { fDate,fDateTime } from '../../../utils/formatTime';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
 SettingViewForm.propTypes = {
@@ -60,15 +61,15 @@ export default function SettingViewForm({ currentSetting = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        techParamName: currentSetting?.techParam?.name || "",
-        techParamCode: currentSetting?.techParam?.code || "",
-        techParamValue: currentSetting?.techParamValue || "",
-        isActive: currentSetting?.isActive,
+        techParamName:            currentSetting?.techParam?.name || "",
+        techParamCode:            currentSetting?.techParam?.code || "",
+        techParamValue:           currentSetting?.techParamValue || "",
+        isActive:                 currentSetting?.isActive,
         createdAt:                currentSetting?.createdAt || "",
-        createdByFullname:           currentSetting?.createdBy?.name || "",
+        createdByFullname:        currentSetting?.createdBy?.name || "",
         createdIP:                currentSetting?.createdIP || "",
         updatedAt:                currentSetting?.updatedAt || "",
-        updatedByFullname:           currentSetting?.updatedBy?.name || "",
+        updatedByFullname:        currentSetting?.updatedBy?.name || "",
         updatedIP:                currentSetting?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,18 +138,9 @@ export default function SettingViewForm({ currentSetting = null }) {
           </Grid>
           
 
-          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
-            </Grid>
-          </Grid>
+          <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
+        </Grid>
         <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}

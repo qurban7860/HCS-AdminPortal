@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField} from '@mui/material';
+import { Switch ,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
@@ -50,7 +50,7 @@ export default function ToolsInstalledEditForm() {
 
   const EditSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
   });
 
 
@@ -58,7 +58,7 @@ export default function ToolsInstalledEditForm() {
     () => ({
       // tool: toolInstalled?.tool || '',
       note: toolInstalled?.note || '',
-    isDisabled : !toolInstalled.isDisabled,
+      sisActive : toolInstalled.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -145,17 +145,7 @@ export default function ToolsInstalledEditForm() {
                 ChipProps={{ size: 'small' }}
               />
                 <RHFTextField name="note" label="Note*" minRows={8} multiline />
-                <RHFSwitch
-                name="isDisabled"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                      Active
-                    </Typography>
-                  </>
-                } 
-              />
+                <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography>} />
               </Box>
               <Box
                 rowGap={5}

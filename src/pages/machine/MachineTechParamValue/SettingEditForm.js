@@ -190,7 +190,7 @@ export default function SettingEditForm() {
 
               </Box>
               <RHFSwitch
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>

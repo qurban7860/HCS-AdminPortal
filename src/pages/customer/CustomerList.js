@@ -4,6 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
+  Switch,
   Grid,
   Card,
   Table,
@@ -57,7 +58,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Customer', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
   { id: 'mainSiteAddress', label: 'Address', align: 'left' },
-  { id: 'active', label: 'Active', align: 'left' },
+  { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
 
 ];

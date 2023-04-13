@@ -58,14 +58,14 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -151,7 +151,7 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
               <RHFTextField name="name" label="Machine Category" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>
