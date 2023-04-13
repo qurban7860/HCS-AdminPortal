@@ -43,12 +43,12 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setFormVisibility(state, action){
+    setContactFormVisibility(state, action){
       state.formVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setEditFormVisibility(state, action){
+    setContactEditFormVisibility(state, action){
       state.contactEditFormVisibility = action.payload;
     },
 
@@ -117,8 +117,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setFormVisibility,
-  setEditFormVisibility,
+  setContactFormVisibility,
+  setContactEditFormVisibility,
   resetContact,
   resetContacts,
   getCart,

@@ -15,7 +15,7 @@
   // global
   import { CONFIG } from '../../../config-global';
   // slice
-  import { updateContact, setEditFormVisibility } from '../../../redux/slices/customer/contact';
+  import { updateContact, setContactEditFormVisibility } from '../../../redux/slices/customer/contact';
   // routes
   import { PATH_DASHBOARD } from '../../../routes/paths';
   // components
@@ -59,8 +59,6 @@
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const numberRegExp = /^[0-9]+$/;
-
     const [phone, setPhone] = useState('')
     const [country, setCountryVal] = useState('')
 
@@ -70,9 +68,11 @@
     }
 
     useEffect(()=>{
-      setPhone(contact.phone)
-      const contactCountry= filtter(countries,{label: contact.address.country})
-      setCountryVal(contactCountry[0])
+      if(contact?.address?.country){
+        setPhone(contact.phone)
+        const contactCountry= filtter(countries,{label: contact.address.country})
+        setCountryVal(contactCountry[0])
+      }
     },[contact])
 
     const EditContactSchema = Yup.object().shape({
@@ -165,7 +165,7 @@
 
     const toggleCancel = () => 
     {
-      dispatch(setEditFormVisibility(false));
+      dispatch(setContactEditFormVisibility(false));
     };
 
 

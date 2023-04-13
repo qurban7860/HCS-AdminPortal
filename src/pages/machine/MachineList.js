@@ -18,7 +18,7 @@ import MachineListTableToolbar from './MachineListTableToolbar';
 import { Cover } from '../components/Cover';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
-import { getMachines, deleteMachine } from '../../redux/slices/products/machine';
+import machine, { getMachines, deleteMachine } from '../../redux/slices/products/machine';
 
 // routes
 import { PATH_DASHBOARD , PATH_MACHINE } from '../../routes/paths';
@@ -33,6 +33,7 @@ import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 
 import { useSettingsContext } from '../../components/settings';
+import { fDate } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
@@ -312,14 +313,14 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (machine) => machine.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (product) => product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
+    product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((machine) => filterStatus.includes(machine.status));
-  }
-
   return inputData;
 }
