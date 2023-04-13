@@ -12,11 +12,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
-// global
-
 // slice
 import { updateTechparamcategory, getTechparamcategory, getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
 // routes
@@ -25,18 +22,10 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar'
 import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
+import {Cover} from '../../components/Cover'
 
 // ----------------------------------------------------------------------
-
 
 export default function TechParamCategoryEditForm() {
 
@@ -52,18 +41,13 @@ export default function TechParamCategoryEditForm() {
   const EditToolSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
+    isActive : Yup.boolean(),
   });
-
-
   const defaultValues = useMemo(
     () => ({
-        name:techparamcategory?.name || 'N/A',
-        description:techparamcategory?.description || 'N/A',
-        createdAt: techparamcategory?.createdAt || '',
-        updatedAt: techparamcategory?.updatedAt || '',
-        isDisabled: !techparamcategory.isDisabled || '',
+        name:techparamcategory?.name || '',
+        description:techparamcategory?.description || '',
+        isActive: techparamcategory.isActive ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparamcategory]
@@ -118,26 +102,18 @@ export default function TechParamCategoryEditForm() {
     }
   };
 
-
-
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
       <Helmet>
         <title> Machine: Tech Param Category | Machine ERP</title>
       </Helmet>
-
-      
-
         <Grid item xs={18} md={12}>
+            <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+                <Cover name='Edit Parameter Category' icon='ic:round-class' />
+            </Card>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Edit Technical Parameter Category
-                </Typography>
-              </Stack>
             <Box
               rowGap={2}
               columnGap={2}
@@ -150,17 +126,9 @@ export default function TechParamCategoryEditForm() {
 
               <RHFTextField name="name" label="Machine Tool" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
              </Box>
              
               

@@ -59,12 +59,10 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinestatus?.name || 'N/A',
-        description:machinestatus?.description || 'N/A',
-        createdAt: machinestatus?.createdAt || '',
-        updatedAt: machinestatus?.updatedAt || '',
+        name:machinestatus?.name || '',
+        description:machinestatus?.description || '',
         displayOrderNo: machinestatus?.displayOrderNo || '',
-        isActive: machinestatus?.isActive || true,
+        isActive: machinestatus?.isActive ,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinestatus, machinestatus]
@@ -106,7 +104,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
 
         </Grid>
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Display Order No
           </Typography>
@@ -114,14 +112,10 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           <Typography variant="body2">{defaultValues.displayOrderNo ? defaultValues.displayOrderNo : 'N/A'}</Typography>
 
         </Grid>
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isActive  ? 'No' : 'Yes' }</Typography>
 
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
-        
 
         <Grid container spacing={0} sx={{ mb: 5}}>
             <Grid item xs={12} sm={6} >

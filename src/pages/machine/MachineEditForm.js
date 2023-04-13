@@ -146,7 +146,7 @@ useLayoutEffect(() => {
       supportManager: suppVal?._id || null,
       description: machine?.description || '',
       customerTags: chipData,
-      isActive : !machine?.isActive,
+      isActive : machine?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -532,16 +532,9 @@ const handleKeyPress = (e) => {
         placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
     </Card> */}
 
-    <RHFSwitch
-    sx={{my:-3}}
-      name="isActive"
-      labelPlacement="start"
-      label={
-          <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-            Active
-          </Typography>
-      } 
-    />
+    <RHFSwitch name="isActive" labelPlacement="start" label={
+        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+      />
 {/* -------------------------end add chips------------------------- */}
 <Box
                 rowGap={5}

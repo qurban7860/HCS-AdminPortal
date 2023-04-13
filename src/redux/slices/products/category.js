@@ -150,7 +150,7 @@ export function addCategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params.isDisabled,
+          isActive: params.isActive,
         };
         /* eslint-enable */
         if(params.description){
@@ -174,7 +174,7 @@ export function updateCategory(params,Id) {
       /* eslint-disable */
       const data = {
         name: params.name,
-        isDisabled: params.isDisabled,
+        isActive: params.isActive,
       };
      /* eslint-enable */
      if(params.description){

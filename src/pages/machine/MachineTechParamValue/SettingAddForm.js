@@ -64,7 +64,7 @@ setparamData(filteredsetting);
   
 const AddSettingSchema = Yup.object().shape({
   techParamValue: Yup.string().max(20),
-  isDisabled : Yup.boolean(),
+  isActive : Yup.boolean(),
 });
 
 useEffect(()=>{

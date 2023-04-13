@@ -204,7 +204,7 @@ export function saveSupplier(params) {
         let data = {
         id: params.id,
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
         };
         /* eslint-enable */
 
@@ -269,7 +269,7 @@ export function updateSupplier(params,Id) {
       let data = {
         id: params.id,
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
       };
      /* eslint-enable */
 

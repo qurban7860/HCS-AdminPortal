@@ -407,8 +407,8 @@ const onSubmit = async (data) => {
               />
               </Box>
 
-              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
-                <RHFTextField name="siteMilestone" label="Nearby Milestone"  multiline sx={{ mb:-3}}/>
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} sx={{mt:-3}} >
+                <RHFTextField name="siteMilestone" label="Nearby Milestone"  multiline sx={{ my:-3}}/>
               </Box>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete 

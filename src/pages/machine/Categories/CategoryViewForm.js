@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
@@ -11,17 +10,11 @@ import { getCategory, getCategories, setEditFormVisibility } from '../../../redu
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
 // Iconify
-
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify/Iconify';
 
-
-
-
 // ----------------------------------------------------------------------
-
 
 CategoryViewForm.propTypes = {
   currentCategory: PropTypes.object,
@@ -48,9 +41,9 @@ export default function CategoryViewForm({ currentCategory = null }) {
   }, [dispatch, id,editFormVisibility]);
   const defaultValues = useMemo(
     () => ({
-        name:category?.name || 'N/A',
-        description:category?.description || 'N/A',
-        isDisabled: category.isDisabled || false,
+        name:category?.name || '',
+        description:category?.description || '',
+        isActive: category.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCategory, category]
@@ -76,7 +69,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
         </Grid>
 
-        <Grid item xs={12} sm={12} sx={{ mb: 2 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
@@ -84,7 +77,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
         </Grid>
         
         <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:2}} checked = { defaultValues.isDisabled } disabled  />
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
         <Grid container spacing={0} sx={{ mb: 5}}>

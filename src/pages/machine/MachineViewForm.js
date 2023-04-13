@@ -67,7 +67,7 @@ export default function MachineViewForm() {
       accountManager:           machine?.accountManager || "",
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
-      isAisabled:               machine?.isAisabled,
+      isActive:                 machine?.isActive,
       createdAt:                machine?.createdAt || "",
       createdByFname:           machine?.createdBy?.name || "",
       createdByLname:           machine?.createdBy?.lastName || "",
@@ -106,18 +106,18 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
         <ViewFormField sm={12} heading="Customer" param={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
         <ViewFormField sm={6} heading="Installation Site" param={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
-        <ViewFormField sm={6} heading="Nearby Milestone" param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
         <ViewFormField sm={6} heading="Billing Site" param={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
+        <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
         <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description: ''} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
         <ViewFormSubtitle sm={12} heading="Howick Resources"/>
-        <ViewFormField sm={6} heading="Account Manager"   stasticsParam={defaultValues?.accountManager?.firstName || "" } secondStasticsParam={defaultValues?.accountManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Project Manager"   stasticsParam={defaultValues?.projectManager?.firstName || "" } secondStasticsParam={defaultValues?.projectManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Suppport Manager"  stasticsParam={defaultValues?.supportManager?.firstName || "" } secondStasticsParam={defaultValues?.supportManager?.lastName || ""}/> 
+        <ViewFormField sm={6} heading="Account Manager"   StasticsParam={defaultValues?.accountManager?.firstName || "" } secondStasticsParam={defaultValues?.accountManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Project Manager"   StasticsParam={defaultValues?.projectManager?.firstName || "" } secondStasticsParam={defaultValues?.projectManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Suppport Manager"  StasticsParam={defaultValues?.supportManager?.firstName || "" } secondStasticsParam={defaultValues?.supportManager?.lastName || ""}/> 
       </Grid>
-        <Switch sx={{mt:2}} checked = { !defaultValues.isActive } disabled  />
+        <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
@@ -136,7 +136,7 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address? customer?.mainSite?.address?.city : ''} />
           <ViewFormField sm={6} heading="Region"                    param={customer?.mainSite?.address? customer?.mainSite?.address?.region : ''} />
           <ViewFormField sm={6} heading="Post Code"                 param={customer?.mainSite?.address? customer?.mainSite?.address?.postcode : ''} />
-          <ViewFormField sm={12} heading="Country"                  param={customer?.mainSite?.address? customer?.mainSite?.address?.country : ''} />
+          <ViewFormField sm={12} heading="Country"                   param={customer?.mainSite?.address? customer?.mainSite?.address?.country : ''} />
           <ViewFormField sm={6} heading="Primary Biling Contact"    param={customer?.primaryBillingContact?   `${customer?.primaryBillingContact?.firstName } ${customer?.primaryBillingContact?.lastName}` : ''} />
           <ViewFormField sm={6} heading="Primary Technical Contact" param={customer?.primaryTechnicalContact? `${customer?.primaryTechnicalContact?.firstName } ${customer?.primaryTechnicalContact?.lastName}`: ''} />
         </Grid>

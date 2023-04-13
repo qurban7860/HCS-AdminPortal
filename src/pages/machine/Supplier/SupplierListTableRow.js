@@ -78,32 +78,14 @@ export default function SupplierListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} >{name}</Link>
           </Stack>
         </TableCell>
 
         <TableCell>{contactName}</TableCell>
         <TableCell>{address?.city}</TableCell>
-        <TableCell>{address?.country}</TableCell>
-        <TableCell align="center">
-          <Label
-            variant="soft"
-            // color={(isDisabled === true && 'error') || 'success'}
-            color={isActive? 'error' : 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isActive  ? 'No' : 'Yes' }
-          </Label>
-        </TableCell> 
+        <TableCell>{address?.country}</TableCell> 
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" sx={{my:-1}}/> </TableCell> 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
        
       </TableRow> 

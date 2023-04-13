@@ -256,7 +256,7 @@ export function updateMachine(params) {
         supportManager: params.supportManager,
         description: params.description,
         customerTags: params.customerTags,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
       };
      /* eslint-enable */
 console.log(data)

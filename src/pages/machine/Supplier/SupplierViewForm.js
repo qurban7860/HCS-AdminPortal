@@ -1,30 +1,21 @@
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch , Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getSupplier, getSuppliers, setSupplierEditFormVisibility } from '../../../redux/slices/products/supplier';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
 // Iconify
-
 import { fDate } from '../../../utils/formatTime';
-
 import SupplierEditForm from './SupplierEditForm';
-
 import Iconify from '../../../components/iconify/Iconify';
 
-
-
-
 // ----------------------------------------------------------------------
-
 
 SupplierViewForm.propTypes = {
   currentSupplier: PropTypes.object,
@@ -67,21 +58,19 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:supplier?.name || 'N/A',
-        contactName:supplier?.contactName || 'N/A',
-        contactTitle: supplier?.contactTitle || 'N/A',
-        phone: supplier?.phone || 'N/A',
-        email: supplier?.email || 'N/A',
-        fax: supplier?.fax || 'N/A',
-        website: supplier?.website || 'N/A',
-        street: supplier?.address?.street || 'N/A',
-        suburb: supplier?.address?.suburb || 'N/A',
-        city: supplier?.address?.city || 'N/A',
-        region: supplier?.address?.region || 'N/A',
-        country: supplier?.address?.country || 'N/A',
-        createdAt: supplier?.createdAt || '',
-        updatedAt: supplier?.updatedAt || '',
-        isDisabled: supplier.isDisabled,
+        name:supplier?.name || '',
+        contactName:supplier?.contactName || '',
+        contactTitle: supplier?.contactTitle || '',
+        phone: supplier?.phone || '',
+        email: supplier?.email || '',
+        fax: supplier?.fax || '',
+        website: supplier?.website || '',
+        street: supplier?.address?.street || '',
+        suburb: supplier?.address?.suburb || '',
+        city: supplier?.address?.city || '',
+        region: supplier?.address?.region || '',
+        country: supplier?.address?.country || '',
+        isActive: supplier.isActive ,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSupplier, supplier]
@@ -202,21 +191,17 @@ export default function SupplierViewForm({ currentSupplier = null }) {
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Country
           </Typography>
-
           <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
-
         </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
 
+        <Grid item xs={12} sm={12} >
+          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
+
         <Grid container spacing={0} sx={{ mb: 5}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
