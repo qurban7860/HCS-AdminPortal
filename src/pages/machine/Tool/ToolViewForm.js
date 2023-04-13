@@ -64,8 +64,13 @@ export default function ToolViewForm({ currentTool = null }) {
       {
         name:tool?.name || '',
         description:tool?.description || '',
-        updatedIP: tool?.updatedIP || '',
         isActive: tool?.isActive ,
+        createdByFullname:        tool?.createdBy?.name || "",
+        createdAt:                tool?.createdAt || "",
+        createdIP:                tool?.createdIP || "",
+        updatedByFullname:        tool?.updatedBy?.name || "",
+        updatedAt:                tool?.updatedAt || "",
+        updatedIP:                tool?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]

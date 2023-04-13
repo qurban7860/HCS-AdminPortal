@@ -45,6 +45,12 @@ export default function CategoryViewForm({ currentCategory = null }) {
         name:category?.name || '',
         description:category?.description || '',
         isActive: category.isActive,
+        createdByFullName:        category?.createdBy?.fullName || "",
+        createdAt:                category?.createdAt || "",
+        createdIP:                category?.createdIP || "",
+        updatedByFullName:        category?.updatedBy?.fullName || "",
+        updatedAt:                category?.updatedAt || "",
+        updatedIP:                category?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCategory, category]

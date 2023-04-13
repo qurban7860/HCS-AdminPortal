@@ -64,6 +64,12 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         description:machinestatus?.description || '',
         displayOrderNo: machinestatus?.displayOrderNo || '',
         isActive: machinestatus?.isActive ,
+        createdByFullname:        machinestatus?.createdBy?.name || "",
+        createdAt:                machinestatus?.createdAt || "",
+        createdIP:                machinestatus?.createdIP || "",
+        updatedByFullname:        machinestatus?.updatedBy?.name || "",
+        updatedAt:                machinestatus?.updatedAt || "",
+        updatedIP:                machinestatus?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinestatus, machinestatus]

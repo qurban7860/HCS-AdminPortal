@@ -65,11 +65,11 @@ export default function LicenseViewForm({ currentLicense = null }) {
     () => (
       {
         licenseDetail:            currentLicense?.licenseDetail || "",
+        createdByFullname:        currentLicense?.createdBy?.name || "",
         createdAt:                currentLicense?.createdAt || "",
-        createdByFullname:           currentLicense?.createdBy?.name || "",
         createdIP:                currentLicense?.createdIP || "",
+        updatedByFullname:        currentLicense?.updatedBy?.name || "",
         updatedAt:                currentLicense?.updatedAt || "",
-        updatedByFullname:           currentLicense?.updatedBy?.name || "",
         updatedIP:                currentLicense?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

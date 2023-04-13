@@ -25,17 +25,16 @@ TechParamCategoryViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function TechParamCategoryViewForm({ currentTechparamcategory = null }) {
-
   const [editFlag, setEditFlag] = useState(false);
-
+  
   const toggleEdit = () => {
     navigate(PATH_MACHINE.techParam.techparamcategoryedit(id));
   }
-
+  
   const navigate = useNavigate();
-
+  
   const { enqueueSnackbar } = useSnackbar();
-
+  
   const { techparamcategory } = useSelector((state) => state.techparamcategory);
   // const tool = tools
   const { id } = useParams();
@@ -54,6 +53,12 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
         name:techparamcategory?.name || '',
         description:techparamcategory?.description || '',
         isActive: techparamcategory.isActive ,
+        createdAt:                techparamcategory?.createdAt || "",
+        createdByFullname:        techparamcategory?.createdBy?.name || "",
+        createdIP:                techparamcategory?.createdIP || "",
+        updatedAt:                techparamcategory?.updatedAt || "",
+        updatedByFullname:        techparamcategory?.updatedBy?.name || "",
+        updatedIP:                techparamcategory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTechparamcategory, techparamcategory]
