@@ -225,10 +225,10 @@ export function saveTechparam(params) {
             data.code = params.code;
           }
 
-          if(params.techparamcategory !== ""){
-            data.techparamcategory = params.techparamcategory._id;
+          if(params.category !== ""){
+            data.category = params.category._id;
           }else{
-            data.techparamcategory = null
+            data.category = null
           }
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`, data);

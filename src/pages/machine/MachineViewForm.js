@@ -9,7 +9,7 @@ import { PATH_MACHINE } from '../../routes/paths';
 import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
-
+import Iconify from '../../components/iconify';
 import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
@@ -46,16 +46,6 @@ export default function MachineViewForm() {
   const handleCloseInstallationSite = () => setOpenInstallationSite(false);  
   const handleOpenBillingSite = () => setOpenBilingSite(true);
   const handleCloseBillingSite = () => setOpenBilingSite(false);
-
-  const  buildAudit = (object) => ({
-    createdByFullName:        object?.createdBy?.fullName ,
-    createdAt:                object?.createdAt ,
-    createdIP:                object?.createdIP ,
-    updatedByFullName:        object?.updatedBy?.fullName ,
-    updatedAt:                object?.updatedAt ,
-    updatedIP:                object?.updatedIP ,
-});
-buildAudit(machine);
 
   const defaultValues = useMemo(
     () => ({
@@ -134,7 +124,9 @@ buildAudit(machine);
 
       <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
-          <Typography variant="h3" sx={{px:2}}>Customer </Typography>
+        <Grid sx={{display: "flex"}}>
+          <Typography variant="h3" sx={{px:2}}>Customer </Typography> <Iconify icon="mdi:link-box-variant-outline" sx={{ml: "auto"}}/>
+        </Grid>
           <ViewFormField sm={12} heading="Name"                     param={customer?.name?        customer?.name : ''} />
           <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName? customer?.tradingName : ''} />
           <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone?       customer?.mainSite.phone : ''} />
