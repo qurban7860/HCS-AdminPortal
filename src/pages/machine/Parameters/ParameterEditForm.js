@@ -144,9 +144,7 @@ console.log("default :",defaultValues)
                 renderInput={(params) => <TextField {...params} label="Tech Param Categories" />}
                 ChipProps={{ size: 'small' }}
               />
-              <RHFSwitch name="isActive" labelPlacement="start" label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
-                />
+              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
              </Box>
              
               </Stack>

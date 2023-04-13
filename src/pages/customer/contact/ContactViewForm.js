@@ -19,7 +19,8 @@ import { getContacts, getContact, setContactEditFormVisibility, deleteContact } 
 // Iconify
 import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
-
+import ViewFormAudit from '../../components/ViewFormAudit';
+ 
 // ----------------------------------------------------------------------
 
 ContactViewForm.propTypes = {
@@ -241,18 +242,9 @@ export default function ContactViewForm({ currentContact = null }) {
           </Grid>
             
 
-          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
-            </Grid>
-          </Grid>
+          <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
+        </Grid>
           <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}

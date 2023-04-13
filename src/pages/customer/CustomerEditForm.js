@@ -29,6 +29,7 @@ import FormProvider, {
   RHFSelect,
   RHFMultiSelect,
   RHFTextField,
+  RHFSwitch
 
 } from '../../components/hook-form';
 
@@ -57,6 +58,7 @@ export default function CustomerEditForm() {
     tradingName: Yup.string().min(5).max(40),
     mainSite: Yup.string().nullable(),
     sites: Yup.array().nullable(),
+    isActive: Yup.boolean(),
     contacts: Yup.array().nullable(),
     accountManager: Yup.string().nullable(),
     projectManager: Yup.string().nullable(),
@@ -77,6 +79,7 @@ export default function CustomerEditForm() {
       supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
       primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
       primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id, 
+      isActive: customer?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
@@ -233,6 +236,10 @@ export default function CustomerEditForm() {
                       </option>
                     ))}
                 </RHFSelect>
+                
+                <RHFSwitch name="isActive" labelPlacement="start" label={
+        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+      />
 
               </Box>
 

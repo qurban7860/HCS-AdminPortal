@@ -60,7 +60,7 @@ export default function MachineModel() {
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
     category: Yup.string().required('Category is required'),
   });
 
@@ -68,8 +68,7 @@ export default function MachineModel() {
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
-      createdAt: '',
+      isActive: true,
       category: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -152,7 +151,7 @@ export default function MachineModel() {
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                     <RHFSwitch
-                    name="isDisabled"
+                    name="isActive"
                     labelPlacement="start"
                     
                     label={

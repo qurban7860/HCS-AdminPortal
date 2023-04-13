@@ -492,7 +492,7 @@ const onSubmit = async (data) => {
     </Card>
               <RHFSwitch
               sx={{mt:-3}}
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>

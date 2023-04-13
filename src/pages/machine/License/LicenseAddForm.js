@@ -34,7 +34,7 @@ export default function LicenseAddForm() {
   const AddLicenseSchema = Yup.object().shape({
     licenseKey: Yup.string().max(1000).required('License key is required!') ,
     licenseDetail: Yup.string().max(10000).required('License detail is required!'),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
   });
 
   const toggleCancel = () => 
@@ -46,7 +46,7 @@ export default function LicenseAddForm() {
     () => ({
       licenseKey: '',
       licenseDetail: '',
-    isDisabled : true,
+      isActive : true,
 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -104,7 +104,7 @@ export default function LicenseAddForm() {
                 <RHFTextField name="licenseKey" label="License Key" minRows={8} multiline/>
                 <RHFTextField name="licenseDetail" label="License Detail" minRows={8} multiline />
                 <RHFSwitch
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>

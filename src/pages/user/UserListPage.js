@@ -44,7 +44,7 @@ import {
 import UserTableToolbar from './UserTableToolbar';
 import  UserTableRow  from './UserTableRow';
 import { getUsers, deleteUser , setEditFormVisibility } from '../../redux/slices/user';
-
+import { fDate } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
@@ -61,8 +61,10 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'phone', label: 'Phone Number', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
   { id: '' },
 ];
 
@@ -91,7 +93,7 @@ export default function UserListPage() {
   const dispatch = useDispatch();
 
   const { users, error, responseMessage, initial,editFormVisibility,formVisibility} = useSelector((state) => state.user);
-
+console.log("users", users);
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -392,9 +394,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (securityUser) => securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
+    securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus !== 'all') {

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useCallback, useLayoutEffect, useMemo ,useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Switch ,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../../redux/slices/products/machineNote';
 import ConfirmDialog from '../../../components/confirm-dialog';
@@ -36,6 +36,7 @@ export default function NoteViewForm({currentNote = null}) {
   const defaultValues = useMemo(
     () => ({
       note: currentNote?.note || "",
+      isActive :                currentNote.isActive,
       createdAt:                currentNote?.createdAt || "",
       createdByFname:           currentNote?.createdBy?.firstName || "",
       createdByLname:           currentNote?.createdBy?.lastName || "",
@@ -52,6 +53,9 @@ export default function NoteViewForm({currentNote = null}) {
             <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
           <ViewFormField sm={12} heading="Note" param={defaultValues.note} />
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
+          </Grid>
             <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
     </Grid>

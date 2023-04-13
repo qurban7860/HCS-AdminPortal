@@ -196,7 +196,7 @@ useEffect(()=>{
               >
                 <RHFTextField name="techParamValue" label="Technical Parameter Value" />
                 <RHFSwitch
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>

@@ -157,7 +157,7 @@ export function addCategory(params) {
             data.description = params.description;
           }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`, data);
-        dispatch(slice.actions.getCategoriesSuccess(response.data.Category));
+        dispatch(slice.actions.setResponseMessage(response.data.Category));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));

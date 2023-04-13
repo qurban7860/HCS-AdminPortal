@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import {
+  Switch,
   Stack,
   Avatar,
   Button,
@@ -17,6 +18,7 @@ import Label from '../../components/label';
 import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
+import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +31,7 @@ UserTableRow.propTypes = {
 };
 
 export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, onDeleteRow }) {
-  const { email, name, roles, phone, status, image } = row;
+  const { email, name, roles, phone, status, image , createdAt ,isActive} = row;
   const names = roles.map((a) => a.name);
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -79,7 +81,12 @@ export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, o
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {names ? names.join(" , ") : ""}
+        {roles.map((obj) => obj.name).join(', ')}
+        {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
+        </TableCell>
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell> 
+        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+        {fDate(createdAt)}
         </TableCell>
 
         {/* <TableCell align="center">
