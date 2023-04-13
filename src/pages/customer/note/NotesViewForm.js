@@ -140,6 +140,7 @@ export default function NoteViewForm({currentNote = null}) {
                 {defaultValues.note}
             </Typography>
             <Grid item xs={12} sm={12} >
+            Active
             <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
           </Grid>
           </Grid>
