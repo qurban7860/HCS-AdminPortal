@@ -51,7 +51,7 @@ export default function CustomerViewForm() {
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       isActive: customer?.isActive,
       createdAt:                customer?.createdAt || "",
-      createdByFullname:           customer?.createdBy?.name || "",
+      createdByFullname:           customer?.createdBy?.name ,
       createdIP:                customer?.createdIP || "",
       updatedAt:                customer?.updatedAt || "",
       updatedByFullname:           customer?.updatedBy?.name || "",

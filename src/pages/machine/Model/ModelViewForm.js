@@ -66,6 +66,12 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
         isActive: machinemodel?.isActive,
+        createdByFullname:        machinemodel?.createdBy?.name || "",
+        createdAt:                machinemodel?.createdAt || "",
+        createdIP:                machinemodel?.createdIP || "",
+        updatedByFullname:        machinemodel?.updatedBy?.name || "",
+        updatedAt:                machinemodel?.updatedAt || "",
+        updatedIP:                machinemodel?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinemodel, machinemodel]

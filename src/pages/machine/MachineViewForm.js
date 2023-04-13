@@ -47,6 +47,16 @@ export default function MachineViewForm() {
   const handleOpenBillingSite = () => setOpenBilingSite(true);
   const handleCloseBillingSite = () => setOpenBilingSite(false);
 
+  const  buildAudit = (object) => ({
+    createdByFullName:        object?.createdBy?.fullName ,
+    createdAt:                object?.createdAt ,
+    createdIP:                object?.createdIP ,
+    updatedByFullName:        object?.updatedBy?.fullName ,
+    updatedAt:                object?.updatedAt ,
+    updatedIP:                object?.updatedIP ,
+});
+buildAudit(machine);
+
   const defaultValues = useMemo(
     () => ({
       id:                       machine?._id || "",
@@ -68,18 +78,18 @@ export default function MachineViewForm() {
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
       isActive:                 machine?.isActive,
-      createdAt:                machine?.createdAt || "",
-      createdByFname:           machine?.createdBy?.name || "",
-      createdByLname:           machine?.createdBy?.lastName || "",
-      createdIP:                machine?.createdIP || "",
-      updatedAt:                machine?.updatedAt || "",
-      updatedByFname:           machine?.updatedBy?.name || "",
-      updatedByLname:           machine?.updatedBy?.lastName || "",
-      updatedIP:                machine?.updatedIP || "",
-    }),
+      createdByFullName:        machine?.createdBy?.name ,
+      createdAt:                machine?.createdAt ,
+      createdIP:                machine?.createdIP ,
+      updatedByFullName:        machine?.updatedBy?.name ,
+      updatedAt:                machine?.updatedAt ,
+      updatedIP:                machine?.updatedIP ,
+    }
+    ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
+
   const style = {
     position: 'absolute',
     top: '50%',

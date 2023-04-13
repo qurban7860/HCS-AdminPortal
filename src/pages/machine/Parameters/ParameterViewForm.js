@@ -63,8 +63,12 @@ useLayoutEffect(()=>{
         description:techparam?.description || '',
         category: techparam?.category?.name || '', 
         isActive: techparam?.isActive,
-        createdByFullname: techparam?.createdBy?.name || "",
-        updatedByFullname: techparam?.updatedBy?.name || "",
+        createdByFullname:        techparam?.createdBy?.name || "",
+        createdAt:                techparam?.createdAt || "",
+        createdIP:                techparam?.createdIP || "",
+        updatedByFullname:        techparam?.updatedBy?.name || "",
+        updatedAt:                techparam?.updatedAt || "",
+        updatedIP:                techparam?.updatedIP || "",
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

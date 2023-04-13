@@ -28,7 +28,7 @@ const slice = createSlice({
 
     // SET TOGGLE
     setTechparamcategoryEditFormVisibility(state, action){
-      state.techparamcategoryEditFormFlag = action.payload;
+      state.techparamEditFormFlag = action.payload;
     },
     
     // RESET CUSTOMER
@@ -174,7 +174,7 @@ export function deleteTechparamcategory(id) {
 
 export function saveTechparamcategory(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetTechparam());
+      dispatch(slice.actions.resetTechparamcategory());
       dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */

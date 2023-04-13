@@ -16,6 +16,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , deleteSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormField from '../../components/ViewFormField';
 
 // ----------------------------------------------------------------------
 SettingViewForm.propTypes = {
@@ -77,7 +78,7 @@ export default function SettingViewForm({ currentSetting = null }) {
   );
 
   return (
-    <Grid sx={{ p: 2 }}>
+    <Grid >
       <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button
           onClick={() => handleEdit()}
@@ -100,7 +101,7 @@ export default function SettingViewForm({ currentSetting = null }) {
       </Stack>
       <Grid container>
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+          {/* <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Technical Perameter 
@@ -109,9 +110,10 @@ export default function SettingViewForm({ currentSetting = null }) {
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
             {defaultValues.techParamName ? defaultValues.techParamName : ''}
             </Typography>
-          </Grid>
+          </Grid> */}
+          <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues.techParamName ? defaultValues.techParamName : ''} />
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+          {/* <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Technical Perameter Code
@@ -120,9 +122,10 @@ export default function SettingViewForm({ currentSetting = null }) {
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
             {defaultValues.techParamCode ? defaultValues.techParamCode : ''}
             </Typography>
-          </Grid>
+          </Grid> */}
+          <ViewFormField sm={6} heading="Technical Perameter Code" param={defaultValues.techParamCode ? defaultValues.techParamCode : ''} />
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
+          {/* <Grid item xs={12} sm={6} sx={{  pt:2}}>
             <Grid item xs={12} sm={12} >
               <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Technical Perameter Value
@@ -131,16 +134,14 @@ export default function SettingViewForm({ currentSetting = null }) {
             <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
             {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
             </Typography>
-          </Grid>
+          </Grid> */}
+          <ViewFormField sm={12} heading="Technical Perameter Value" param={defaultValues.techParamValue ? defaultValues.techParamValue  : ''} />
 
           <Grid item xs={12} sm={12} >
             <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
           </Grid>
           
-
-          <Grid container>
-          <ViewFormAudit defaultValues={defaultValues}/>
-        </Grid>
+        
         <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
@@ -153,6 +154,7 @@ export default function SettingViewForm({ currentSetting = null }) {
             }
           />
 
+          <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
     </Grid>
   );
