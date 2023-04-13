@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Switch , TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 
 // slice
@@ -67,7 +67,7 @@ export default function ParameterEditForm() {
         name:techparam?.name || '',
         code: techparam?.code || '',
         description: techparam?.description || '',
-        isDisabled: !techparam.isDisabled,
+        isActive: !techparam.isActive || true,
         createdAt: techparam?.createdAt || '',
         updatedAt: techparam?.updatedAt || '',
       }),
@@ -174,7 +174,7 @@ console.log("default :",defaultValues)
                 ChipProps={{ size: 'small' }}
               />
               <RHFSwitch
-              name="isDisabled"
+              name="isActive"
               labelPlacement="start"
               label={
                 <>

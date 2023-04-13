@@ -58,7 +58,6 @@ export default function MachineParameter() {
     name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().min(2).max(2000),
     isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
     code: Yup.string(),
   });
 

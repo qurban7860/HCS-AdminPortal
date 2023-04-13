@@ -151,10 +151,8 @@ export function saveSite(params) {
         if(params.postcode){
           data.address.postcode = params.postcode;        
         }
-        if(params.country !== "null" && params.country !== null){
+        if(params.country ){
           data.address.country = params.country;        
-        }else{
-          data.address.country = null;
         }
         if(params.primaryBillingContact  !== "null" && params.primaryBillingContact !== null){
           data.primaryBillingContact = params.primaryBillingContact;        
@@ -181,7 +179,7 @@ export function saveSite(params) {
 
 // ----------------------------------------------------------------------
 
-export function updateSite(params) {
+export function updateSite(params, Id) {
   
   return async (dispatch) => {
     dispatch(slice.actions.setEditFormVisibility(false));
@@ -215,7 +213,7 @@ export function updateSite(params) {
         if(params.postcode){
           data.address.postcode = params.postcode;        
         }
-        if(params.country !== "null" && params.country !== null){
+        if(params.country){
           data.address.country = params.country;        
         }
         if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null ){
@@ -228,8 +226,8 @@ export function updateSite(params) {
         }else{
           data.primaryTechnicalContact = null;        
         }
-
-        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites/${params.id}`
+        console.log("Site Slice data : ",data)
+        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites/${Id}`
          , data);
 
       } catch (error) {

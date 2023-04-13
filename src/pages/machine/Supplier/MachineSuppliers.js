@@ -53,7 +53,7 @@ export default function MachineSuppliers() {
 
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required')  ,
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),
     phone: Yup.number(),
@@ -82,7 +82,7 @@ export default function MachineSuppliers() {
       region: '',
       country: '',
       city: '',
-      isDisabled: true,
+      isActive: true,
       
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -245,7 +245,7 @@ export default function MachineSuppliers() {
             
              </Box>
              <RHFSwitch
-              name="isDisabled"
+              name="isActive"
               labelPlacement="start"
               label={
                 <>

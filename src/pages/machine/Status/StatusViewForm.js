@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getMachineStatus, updateMachinestatus } from '../../../redux/slices/products/statuses';
 // paths
@@ -64,7 +64,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
         createdAt: machinestatus?.createdAt || '',
         updatedAt: machinestatus?.updatedAt || '',
         displayOrderNo: machinestatus?.displayOrderNo || '',
-        isDisabled: machinestatus?.isDisabled || '',
+        isActive: machinestatus?.isActive || true,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinestatus, machinestatus]
@@ -118,7 +118,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Active
           </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
+          <Typography variant="body2">{defaultValues.isActive  ? 'No' : 'Yes' }</Typography>
 
         </Grid>
         

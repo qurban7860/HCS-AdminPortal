@@ -44,6 +44,7 @@ import CustomerStepper from './CustomerStepper';
 import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer/customer';
 import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 import { Cover } from '../components/Cover';
+import { fDate } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
@@ -352,7 +353,6 @@ export default function CustomerList() {
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -360,11 +360,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    console.log(filterName)
+    console.log("input Data : ",inputData)
+    inputData = inputData.filter( (customer) => customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    customer?.tradingName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
+    customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {

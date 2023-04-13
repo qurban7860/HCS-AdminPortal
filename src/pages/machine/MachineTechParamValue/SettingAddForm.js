@@ -77,7 +77,7 @@ useEffect(()=>{
   const defaultValues = useMemo(
     () => ({
       techParamValue: '',
-      isDisabled : true,
+      isActive : true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

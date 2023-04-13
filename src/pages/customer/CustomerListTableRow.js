@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import {
+  Switch,
   Stack,
   Button,
   TableRow,
@@ -56,7 +57,13 @@ export default function CustomerListTableRow({
   onViewRow,
 }) {
   const { name, tradingName, mainSite, isDisabled, type, createdAt } = row;
-
+  const address = []
+  if(mainSite?.address?.city){
+    address.push(mainSite?.address?.city)
+  }
+  if( mainSite?.address?.country){
+    address.push(mainSite?.address?.country)
+  }
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -85,40 +92,19 @@ export default function CustomerListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <TableCell align="right">{type==='SP' ? <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled' }} />  : ""}</TableCell>
-
-
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
           </Stack>
         </TableCell>
-
         <TableCell>{tradingName}</TableCell>
-
-        <TableCell>{mainSite?.address?.city}{mainSite?.address?.country ? `, ${mainSite?.address?.country}` : ''}</TableCell>
-
-
+        <TableCell>{address.join(", ")}</TableCell>
         <TableCell align="left">
-          <Label
-            variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
+          <Label variant="soft" color={(isDisabled === true && 'error') || 'success'} sx={{ textTransform: 'capitalize' }} >
             {isDisabled === false ? 'Yes' : 'No'}
-          </Label>
+            </Label>
         </TableCell> 
-
         <TableCell>{fDate(createdAt)}</TableCell>
-
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />

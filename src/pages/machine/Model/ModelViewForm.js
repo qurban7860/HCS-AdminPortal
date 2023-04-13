@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
 // redux
 import { setMachinemodelsEditFormVisibility, updateMachinemodel } from '../../../redux/slices/products/model';
 // paths
@@ -66,7 +66,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         updatedAt: machinemodel?.updatedAt || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
-        isDisabled: machinemodel?.isDisabled || '',
+        isActive: machinemodel?.isActive || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinemodel, machinemodel]
@@ -117,11 +117,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
             
         </Grid>
         <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
-
+         <Switch  checked = { defaultValues.isActive } disabled  />
         </Grid>
         
 

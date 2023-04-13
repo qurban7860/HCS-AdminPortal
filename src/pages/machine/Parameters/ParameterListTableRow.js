@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import {
+  Switch,
   Stack,
   Button,
   TableRow,
@@ -43,7 +44,7 @@ export default function ParameterListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, category, isDisabled, createdAt} = row;
+  const { name, category, isActive, createdAt} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -92,14 +93,7 @@ export default function ParameterListTableRow({
         <TableCell>{category?.name || ''}</TableCell>
         {/* <TableCell>category</TableCell> */}
         <TableCell align="center">
-        <Label
-            variant="soft"
-            // color={(isDisabled === true && 'error') || 'success'}
-            color={isDisabled? 'error' : 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled  ? 'No' : 'Yes' }
-          </Label>
+         <Switch  checked = { isActive } disabled  sx={{my:-1}}/>
         </TableCell> 
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>

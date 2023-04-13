@@ -20,7 +20,7 @@ return (
     
     <LoginLayout title={CONFIG.MESSAGE_LOGIN_USER}>
         <Stack  sx={{ display: 'flex',justifyContent: 'center',alignItems: 'center',whiteSpace: 'nowrap'}}>
-            <Typography variant="h3" sx={{mb:5}}>CLOUDE SERVICES</Typography>
+            <Typography variant="h3" sx={{mb:5}}>CLOUD SERVICES</Typography>
         </Stack>
         <AuthLoginForm />
       

@@ -77,27 +77,12 @@ export default function TechParamListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }}>{name}</Link>
           </Stack>
         </TableCell>
+
         <TableCell align="center">
-        <Label
-            variant="soft"
-            // color={(isDisabled === true && 'error') || 'success'}
-            color={isDisabled? 'error' : 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled  ? 'No' : 'Yes' }
-          </Label>
+          <Label variant="soft" color={isDisabled? 'error' : 'success'} sx={{ textTransform: 'capitalize' }}>{isDisabled  ? 'No' : 'Yes' } </Label>
         </TableCell> 
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>

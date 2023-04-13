@@ -11,9 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
-// global
-
+import { Switch , Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // slice
 import { updateMachinestatus, getMachineStatus, getMachinestatuses } from '../../../redux/slices/products/statuses';
 

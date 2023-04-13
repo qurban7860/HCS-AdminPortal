@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Switch , Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 import FormProvider, {
   RHFSelect,
@@ -54,7 +54,7 @@ export default function SupplierEditForm() {
 
   const EditCategorySchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required')  ,
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),
     phone: Yup.number(),
@@ -84,7 +84,7 @@ export default function SupplierEditForm() {
       country: supplier?.address?.country || 'N/A',
       createdAt: supplier?.createdAt || '',
       updatedAt: supplier?.updatedAt || '',
-      isDisabled: !supplier.isDisabled,
+      isActive: supplier.isActive || true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [supplier]
@@ -235,14 +235,12 @@ export default function SupplierEditForm() {
              </Box>
              
              <RHFSwitch
-              name="isDisabled"
+              name="isActive"
               labelPlacement="start"
               label={
-                <>
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
                     Active
                   </Typography>
-                </>
               } 
             />
              

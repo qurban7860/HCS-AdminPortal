@@ -170,7 +170,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const onSubmit = async (data) => {
       try{
-        if(phone){
+        if(phone.length > 7){
           data.phone = phone ;
         }
         if(customerVal){

@@ -61,7 +61,6 @@ setToolsVal(filteredTool);
   const AddSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),
     isDisabled : Yup.boolean(),
-
   });
 
 const toggleCancel = () => 
