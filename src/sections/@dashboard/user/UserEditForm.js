@@ -51,6 +51,7 @@ export default function UserEditForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const { roles } = useSelector((state) => state.role);
+  const { error, user } = useSelector((state) => state.user);
   const ROLES = [];
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
   const { customers } = useSelector((state) => state.customer);
@@ -61,7 +62,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
   const [phone, setPhone] = useState('')
   
 
-  const { error, user } = useSelector((state) => state.user);
 
   const currentUser = user;
   const dispatch = useDispatch();

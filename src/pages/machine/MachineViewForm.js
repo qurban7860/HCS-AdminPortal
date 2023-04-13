@@ -47,16 +47,6 @@ export default function MachineViewForm() {
   const handleOpenBillingSite = () => setOpenBilingSite(true);
   const handleCloseBillingSite = () => setOpenBilingSite(false);
 
-  const  buildAudit = (object) => ({
-    createdByFullName:        object?.createdBy?.fullName ,
-    createdAt:                object?.createdAt ,
-    createdIP:                object?.createdIP ,
-    updatedByFullName:        object?.updatedBy?.fullName ,
-    updatedAt:                object?.updatedAt ,
-    updatedIP:                object?.updatedIP ,
-});
-buildAudit(machine);
-
   const defaultValues = useMemo(
     () => ({
       id:                       machine?._id || "",
