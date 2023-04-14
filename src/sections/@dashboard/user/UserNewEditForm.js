@@ -172,7 +172,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const onSubmit = async (data) => {
       try{
-        if(phone.length > 7){
+        if(phone && phone.length > 7){
           data.phone = phone ;
         }
         if(customerVal){
@@ -189,7 +189,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
         dispatch(saveUser(data));
         reset();
         enqueueSnackbar('Create success!');
-        dispatch(setFormVisibility(false));
+        dispatch(resetContacts());
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
@@ -339,7 +339,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
-                  <div key={option.id}>
+                  <div key={option._id}>
                     <span>{option.name}</span>
                   </div>
                 )}
@@ -366,7 +366,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
-                  <div key={option.id}>
+                  <div key={option._id}>
                     <span>{`${option.firstName} ${option.lastName}`}</span>
                   </div>
                 )}

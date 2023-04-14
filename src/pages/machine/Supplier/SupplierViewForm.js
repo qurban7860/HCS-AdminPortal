@@ -39,11 +39,10 @@ export default function SupplierViewForm({ currentSupplier = null }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { suppliers } = useSelector((state) => state.supplier);
+  const { supplier } = useSelector((state) => state.supplier);
   const { id } = useParams();
-  const supplier = suppliers;
 
-  // const supplier = suppliers?.find((supp)=>supp?._id === id);
+  // const supplier = supplier?.find((supp)=>supp?._id === id);
   const dispatch = useDispatch()
   useLayoutEffect(() => {
     if(id != null){

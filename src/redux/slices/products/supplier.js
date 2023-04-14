@@ -125,7 +125,7 @@ export function getSupplier(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
-      dispatch(slice.actions.getSuppliersSuccess(response.data));
+      dispatch(slice.actions.getSupplierSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -133,6 +133,7 @@ export function getSupplier(id) {
   };
 }
 
+//------------------------------------------------------------------------------------------
 export function deleteSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());

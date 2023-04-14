@@ -116,14 +116,15 @@ export default function UserListPage() {
   }, [dispatch,editFormVisibility,formVisibility]);
 
   useEffect(() => {
-    if (initial) {
-      if (users && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+    // if (initial) {
+    //   if (users && !error) {
+    //     enqueueSnackbar(responseMessage);
+    //   } 
+    //   if(error) {
+    //     enqueueSnackbar(error, { variant: `error` });
+    //   }
       setTableData(users);
-    }
+    // }
   }, [users, error, enqueueSnackbar, responseMessage, initial]);
 
 
