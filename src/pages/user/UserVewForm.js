@@ -58,7 +58,7 @@ export default function MachineViewForm() {
     [securityUser] );
 
   return (
-    <Grid sx={{p:3}}>
+    <Grid sx={{p:3, mt:-3}}>
         <Card sx={{mb: 3,height: 160,position: 'relative',  }}>
           <Cover name={defaultValues.name} icon="ph:users-light"/>
         </Card>
