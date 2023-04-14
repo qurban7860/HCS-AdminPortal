@@ -143,15 +143,15 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address? customer?.mainSite?.address?.city : ''} />
           <ViewFormField sm={6} heading="Region"                    param={customer?.mainSite?.address? customer?.mainSite?.address?.region : ''} />
           <ViewFormField sm={6} heading="Post Code"                 param={customer?.mainSite?.address? customer?.mainSite?.address?.postcode : ''} />
-          <ViewFormField sm={12} heading="Country"                   param={customer?.mainSite?.address? customer?.mainSite?.address?.country : ''} />
+          <ViewFormField sm={12} heading="Country"                  param={customer?.mainSite?.address? customer?.mainSite?.address?.country : ''} />
           <ViewFormField sm={6} heading="Primary Biling Contact"    param={customer?.primaryBillingContact?   `${customer?.primaryBillingContact?.firstName } ${customer?.primaryBillingContact?.lastName}` : ''} />
           <ViewFormField sm={6} heading="Primary Technical Contact" param={customer?.primaryTechnicalContact? `${customer?.primaryTechnicalContact?.firstName } ${customer?.primaryTechnicalContact?.lastName}`: ''} />
         </Grid>
           <Typography variant="subtitle2" sx={{px:4}}>Howick Resources </Typography>
         <Grid container sx={{px:2,pb:3}}>
-          <ViewFormField sm={6} heading="Account Manager"   param={defaultValues?.accountManager?.firstName || ""}  secondParam={defaultValues?.accountManager?.lastName || ""}/>
-          <ViewFormField sm={6} heading="Project Manager"   param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
-          <ViewFormField sm={6} heading="Suppport Manager"  param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
+          <ViewFormField sm={6} heading="Account Manager"   param={customer?.accountManager?.firstName} secondParam={customer?.accountManager?.lastName}/>
+          <ViewFormField sm={6} heading="Project Manager"   param={customer?.projectManager?.firstName} secondParam={customer?.projectManager?.lastName}/>
+          <ViewFormField sm={6} heading="Suppport Manager"  param={customer?.supportManager?.firstName} secondParam={customer?.supportManager?.lastName}/> 
         </Grid>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to Customer Page</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
