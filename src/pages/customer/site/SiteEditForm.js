@@ -39,7 +39,7 @@ export default function SiteEditForm() {
   const {  customer } = useSelector((state) => state.customer);
 
   const { contacts } = useSelector((state) => state.contact);
-  const [country, setCountryVal] = useState("")
+  const [countryVal, setCountryVal] = useState("")
   const dispatch = useDispatch();
   
   const { enqueueSnackbar } = useSnackbar();
@@ -71,9 +71,12 @@ export default function SiteEditForm() {
   },[site])
 
   const EditSiteSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
+    customer: Yup.string(),
     billingSite: Yup.string(),
+    // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
+    // fax: Yup.string(),
     website: Yup.string(),
     lat: Yup.string().max(25),
     long: Yup.string().max(25),
@@ -82,9 +85,10 @@ export default function SiteEditForm() {
     city: Yup.string(),
     region: Yup.string(),
     postcode: Yup.string(),
+    country: Yup.string().nullable(),
+    // primaryBillingContact: Yup.string().nullable(),
+    // primaryTechnicalContact: Yup.string().nullable(),
     isActive: Yup.boolean(),
-    primaryBillingContact: Yup.string().nullable(),
-    primaryTechnicalContact: Yup.string().nullable(),
   });
 
 
@@ -101,9 +105,10 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
+      country: site?.address?.country || '',
       isActive: site?.isActive ,
-      primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
-      primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
+      // primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
+      // primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
@@ -152,21 +157,21 @@ export default function SiteEditForm() {
   const onSubmit = async (data) => {
     try {
       console.log("site Edit Data : ",data)
-      if(phone.length > 7){
+      if(phone && phone.length > 7){
         data.phone = phone ;
       }
-      if(fax.length > 7){
+      if(fax && fax.length > 7){
         data.fax = fax
       }
-      if(country){
-        data.country = country.label
-      }
+      // if(countryVal){
+      //   data.country = countryVal?.label = ""
+      // }
       console.log("Site Data : ",data)
       await dispatch(updateSite(data,customer._id,site._id));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 
@@ -240,7 +245,7 @@ export default function SiteEditForm() {
                 <RHFAutocomplete
                    id="country-select-demo"
                     options={countries}
-                    value={country || null}
+                    value={countryVal || null}
                     name="country"
                     label="Country"
                     autoHighlight

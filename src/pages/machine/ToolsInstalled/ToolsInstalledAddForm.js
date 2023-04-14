@@ -135,6 +135,7 @@ const toggleCancel = () =>
 
               <Autocomplete
                 // freeSolo
+                required
                 value={ toolVal|| null}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 options={toolsVal}
@@ -149,7 +150,7 @@ const toggleCancel = () =>
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Tool" />}
+                renderInput={(params) => <TextField {...params}  label="Tool" required/>}
                 ChipProps={{ size: 'small' }}
               />
               
@@ -171,7 +172,7 @@ const toggleCancel = () =>
               > 
               
                 <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  New Tool
+                  Add Tool
                 </LoadingButton>
               
                 <Button 

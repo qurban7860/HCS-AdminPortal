@@ -55,10 +55,10 @@ export default function MachineParameter() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddMachineParameterSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required') ,
-    description: Yup.string().min(2).max(2000),
+    name: Yup.string().max(50).required('Name is required') ,
+    description: Yup.string().max(2000),
     isActive : Yup.boolean(),
-    code: Yup.string(),
+    code: Yup.string().required('Code is required') ,
   });
 
   const defaultValues = useMemo(
@@ -91,7 +91,7 @@ export default function MachineParameter() {
 
   const onSubmit = async (data) => {
       try{ 
-        if(paramCategoryVal !== null && paramCategoryVal !== ""){
+        if(paramCategoryVal){
           data.category = paramCategoryVal?._id
         }
         await dispatch(saveTechparam(data));
@@ -136,6 +136,7 @@ export default function MachineParameter() {
               }}
             >
             <Autocomplete
+            required
                 value={paramCategoryVal || null}
                 options={techparamcategories}
                 getOptionLabel={(option) => option.name}
@@ -157,8 +158,8 @@ export default function MachineParameter() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Technical Parameter" required />
-              <RHFTextField name="code" label="Code" required />
+              <RHFTextField name="name" label="Machine Technical Parameter"  />
+              <RHFTextField name="code" label="Code"  />
               </Box>
 
               <Box

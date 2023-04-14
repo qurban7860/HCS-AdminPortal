@@ -144,7 +144,7 @@ export default function MachineModel() {
                         setModelVal(newValue);
                       }}
                       id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Categories" />}
+                      renderInput={(params) => <TextField {...params} label="Category" />}
                       ChipProps={{ size: 'small' }}
                     />
                     <RHFTextField name="name" label="Machine Model" required />

@@ -1,5 +1,5 @@
 export   const AddSiteSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
     customer: Yup.string(),
     billingSite: Yup.string(),
     // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),

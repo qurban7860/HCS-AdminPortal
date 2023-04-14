@@ -99,25 +99,7 @@ export const {
 
 } = slice.actions;
 
-
-// // ----------------------------------------------------------------------
-
-// export function createTechparamcategories (supplyData){
-//   return async (dispatch) =>{
-//     dispatch(slice.actions.startLoading());
-//     try{
-//       const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`,supplyData);
-//       // dispatch(slice.actions)
-//     } catch (e) {
-//       console.log(e);
-//       dispatch(slice.actions.hasError(e.Message))
-
-//     }
-//   }
-// }
-
 // ----------------------------------------------------------------------
-
 
 export function getTechparamcategories (){
   return async (dispatch) =>{
@@ -181,6 +163,7 @@ export function saveTechparamcategory(params) {
         let data = {
           name: params.name,
           tradingName: params.tradingName,
+          description: params.description,
           site: {
             name: params.name,
             address: {},
@@ -190,10 +173,6 @@ export function saveTechparamcategory(params) {
           isActive: params.isActive,
         };
         /* eslint-enable */
-        if(params.description){
-            data.description = params.description;
-          }
-        
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`, data);
 
         dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
@@ -216,12 +195,10 @@ console.log("Params : ",Id,params)
       let data = {
         name: params.name,
         isActive: params.isActive,
+        description: params.description,
         // tradingName: params.tradingName
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`,
         data
       );

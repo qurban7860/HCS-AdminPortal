@@ -65,8 +65,8 @@ export default function ModelEditForm() {
   // console.log("  machinemodel",machinemodel.category)
 
   const EditModelSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required') ,
-    description: Yup.string().min(2).max(2000),
+    name: Yup.string().max(50).required('Name is required') ,
+    description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
   });
 
@@ -169,7 +169,7 @@ export default function ModelEditForm() {
                   }
                 }}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Categories" />}
+                renderInput={(params) => <TextField {...params} label="Category" />}
                 ChipProps={{ size: 'small' }}
               />
 

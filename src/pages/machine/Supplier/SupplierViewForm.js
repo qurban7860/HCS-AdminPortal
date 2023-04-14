@@ -105,7 +105,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ""}</Typography>
 
         </Grid>
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -113,7 +113,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Contact Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.contactName ? defaultValues.contactName : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.contactName ? defaultValues.contactName : ""}</Typography>
 
         </Grid>
 
@@ -122,7 +122,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Contact Title
           </Typography>
 
-          <Typography variant="body2">{defaultValues.contactTitle ? defaultValues.contactTitle : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.contactTitle ? defaultValues.contactTitle : ""}</Typography>
 
         </Grid>
 
@@ -131,7 +131,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : ""}</Typography>
 
         </Grid> 
 
@@ -140,7 +140,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Email
           </Typography>
 
-          <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.email ? defaultValues.email : ""}</Typography>
 
         </Grid>
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -148,7 +148,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : ""}</Typography>
 
         </Grid>
 
@@ -158,7 +158,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Website
           </Typography>
 
-          <Typography variant="body2">{defaultValues.website ? defaultValues.website : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.website ? defaultValues.website : ""}</Typography>
 
         </Grid>
 
@@ -167,7 +167,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.street ? defaultValues.street : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.street }</Typography>
 
         </Grid>
 
@@ -176,7 +176,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.suburb }</Typography>
 
         </Grid>
 
@@ -185,7 +185,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.city ? defaultValues.city : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.city }</Typography>
 
         </Grid>
 
@@ -194,7 +194,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.region ? defaultValues.region : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.region}</Typography>
 
         </Grid>
 
@@ -202,7 +202,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Country
           </Typography>
-          <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.country}</Typography>
         </Grid>
 
         <Grid item xs={12} sm={12} >

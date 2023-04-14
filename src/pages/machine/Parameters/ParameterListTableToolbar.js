@@ -90,7 +90,7 @@ export default function ParameterListTableToolbar({
                 variant="contained"
                 startIcon={ <Iconify icon="eva:plus-fill" /> }
                 >
-                Add TechParameter 
+                Add Technical Parameter 
             </Button>
           </Stack>
         </Grid>

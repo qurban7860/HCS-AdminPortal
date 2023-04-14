@@ -81,7 +81,7 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddAssetSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required')  ,
+    name: Yup.string().min(2).max(40).required('Name is required')  ,
     status: Yup.string(),
     tag: Yup.string(),
     model: Yup.string(),

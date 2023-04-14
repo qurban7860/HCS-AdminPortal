@@ -45,20 +45,20 @@ export default function SiteViewForm({ currentSite = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        id: currentSite ? currentSite._id : site?._id || 'N/A',
-        name: currentSite ? currentSite.name : site?.name || 'N/A',
-        customer: currentSite ? currentSite.name : site?.tradingName || 'N/A',
-        billingSite: currentSite ? currentSite._id : site?.accountManager || 'N/A',
-        phone: currentSite ? currentSite.phone : site?.phone || 'N/A',
-        email: currentSite ? currentSite.email : site?.email || 'N/A',
-        fax: currentSite ? currentSite.fax : site?.fax || 'N/A',
-        website: currentSite ? currentSite.website : site?.website || 'N/A',
+        id: currentSite ? currentSite._id : site?._id || '',
+        name: currentSite ? currentSite.name : site?.name || '',
+        customer: currentSite ? currentSite.name : site?.tradingName || '',
+        billingSite: currentSite ? currentSite._id : site?.accountManager || '',
+        phone: currentSite ? currentSite.phone : site?.phone || '',
+        email: currentSite ? currentSite.email : site?.email || '',
+        fax: currentSite ? currentSite.fax : site?.fax || '',
+        website: currentSite ? currentSite.website : site?.website || '',
 
-        street: currentSite ? currentSite.address?.street : site?.address.street || 'N/A',
-        suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || 'N/A',
-        city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
-        region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
-        country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
+        street: currentSite ? currentSite.address?.street : site?.address.street || '',
+        suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || '',
+        city: currentSite ? currentSite.address?.city : site?.address.city || '',
+        region: currentSite ? currentSite.address?.region : site?.address.region || '',
+        country: currentSite ? currentSite.address?.country : site?.address.country || '',
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSite, site]
@@ -84,7 +84,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
 
         </Grid>
 
@@ -94,7 +94,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : ''}</Typography>
 
         </Grid>
 
@@ -103,7 +103,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : ''}</Typography>
 
         </Grid>
 
@@ -113,7 +113,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Email
           </Typography>
 
-          <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.email ? defaultValues.email : ''}</Typography>
 
         </Grid>
 
@@ -123,7 +123,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Website
           </Typography>
 
-          <Typography variant="body2">{defaultValues.website ? defaultValues.website : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.website ? defaultValues.website : ''}</Typography>
 
         </Grid>
 
@@ -132,7 +132,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.street ? defaultValues.street : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.street ? defaultValues.street : ''}</Typography>
 
         </Grid>
 
@@ -141,7 +141,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : ''}</Typography>
 
         </Grid>
 
@@ -150,7 +150,7 @@ export default function SiteViewForm({ currentSite = null }) {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.city ? defaultValues.city : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.city ? defaultValues.city : ''}</Typography>
 
         </Grid>
 
@@ -159,7 +159,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.region ? defaultValues.region : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.region ? defaultValues.region : ''}</Typography>
 
         </Grid>
 
@@ -168,7 +168,7 @@ export default function SiteViewForm({ currentSite = null }) {
             Country
           </Typography>
 
-          <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.country ? defaultValues.country : ''}</Typography>
 
         </Grid>
 

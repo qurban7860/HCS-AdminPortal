@@ -105,21 +105,6 @@ export const {
 } = slice.actions;
 
 
-// ----------------------------------------------------------------------
-
-// export function saveTool (supplyData){
-//   return async (dispatch) =>{
-//     dispatch(slice.actions.startLoading());
-//     try{
-
-//       const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`,supplyData);
-//       // dispatch(slice.actions)
-//     } catch (e) {
-//       console.log(e);
-//       dispatch(slice.actions.hasError(e.Message))
-//     }
-//   }
-// }
 
 // ----------------------------------------------------------------------
 
@@ -181,12 +166,10 @@ export function saveTool(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isActive: params?.isActive
+          isActive: params?.isActive,
+          description: params.description
         };
         /* eslint-enable */
-        if(params.description){
-            data.description = params.description;
-          }
 
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`, data);

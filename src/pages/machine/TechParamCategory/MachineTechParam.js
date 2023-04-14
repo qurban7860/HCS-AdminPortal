@@ -146,7 +146,7 @@ export default function MachineTechParam() {
               }}
             >
 
-              <RHFTextField name="name" label="Tech Params" required />
+              <RHFTextField name="name" label="Technical Parameter Category"  />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
               name="isActive"

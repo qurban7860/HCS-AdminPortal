@@ -44,7 +44,7 @@ export default function SiteAddForm() {
   const [fax, setFaxVal] = useState('')
 
   const AddSiteSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
     customer: Yup.string(),
     billingSite: Yup.string(),
     // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
@@ -62,7 +62,6 @@ export default function SiteAddForm() {
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
     isActive: Yup.boolean(),
- 
   });
 
   const defaultValues = useMemo(
@@ -128,10 +127,10 @@ export default function SiteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      if(phone.length > 7){
+      if(phone && phone.length > 7){
         data.phone = phone ;
       }
-      if(fax.length > 7){
+      if(fax && fax.length > 7){
         data.fax = fax
       }
       if(country){
@@ -142,7 +141,7 @@ export default function SiteAddForm() {
 
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(err);
+      console.error(err.message);
     }
   };
 
