@@ -32,8 +32,8 @@ import {
 import { SeoIllustration } from '../../assets/illustrations';
 
 import { useDispatch, useSelector } from '../../redux/store';
+import { getCount } from '../../redux/slices/dashboard/count'
 
-import { getSites } from '../../redux/slices/customer/site';
 
 
 // ----------------------------------------------------------------------
@@ -50,14 +50,13 @@ export default function GeneralAppPage() {
     { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
   ];
 
-  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
-
+  const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
   const theme = useTheme();
 
   const { themeStretch } = useSettingsContext();
 
   useLayoutEffect(() => {
-    dispatch(getSites());
+    dispatch(getCount());
   }, [dispatch]);
 
 
@@ -89,13 +88,11 @@ export default function GeneralAppPage() {
           <Grid item xs={12} md={4}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-
           <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Active Users"
-              title2="(Under Construction)"
               // percent={2.6}
-              // total={18765}
+              total={count?.customerCount || 0}
               chart={{
                 colors: [theme.palette.primary.main],
                 series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
@@ -106,9 +103,8 @@ export default function GeneralAppPage() {
           <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Machines"
-              title2="(Under Construction)"
               // percent={0.2}
-              // total={20}
+              total={count?.machineCount || 0}
               chart={{
                 colors: [theme.palette.info.main],
                 series: [10, 6, 4],
@@ -119,9 +115,8 @@ export default function GeneralAppPage() {
           <Grid item xs={12} md={4} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Customers"
-              title2="(Under Construction)"
               // percent={-0.1}
-              // total={678}
+              total={count?.userCount || 0}
               chart={{
                 colors: [theme.palette.warning.main],
                 series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],

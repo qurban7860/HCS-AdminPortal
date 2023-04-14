@@ -48,10 +48,8 @@ export default function SupplierView({editPage}) {
   const [currentComponent, setCurrentComponent] = useState(<SupplierViewForm/>);
 
   const [supplierFlag, setSupplierFlag] = useState(true);
-  const {suppliers} = useSelector((state) => state.supplier);
-  const supplier = suppliers
+  const {supplier} = useSelector((state) => state.supplier);
   
-
   // useLayoutEffect(() => {
   //   dispatch(setSupplierEditFormVisibility(editFlag));
   // }, [dispatch, editFlag]);

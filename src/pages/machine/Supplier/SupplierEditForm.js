@@ -30,9 +30,8 @@ import {Cover} from '../../components/Cover'
 
 export default function SupplierEditForm() {
 
-  const { error, suppliers } = useSelector((state) => state.supplier);
-  const supplier = suppliers
-  
+  const { error, supplier } = useSelector((state) => state.supplier);
+
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
