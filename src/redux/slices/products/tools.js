@@ -192,11 +192,9 @@ export function updateTool(params) {
         id: params.id,
         name: params.name,
         isActive: params.isActive,
+        description: params.description,
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
         data
       );

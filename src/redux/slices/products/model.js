@@ -215,10 +215,6 @@ export function updateMachinemodel(params) {
         description: params.description,
       };
      /* eslint-enable */
-
-      if(params.displayOrderNo){
-        data.displayOrderNo = params.displayOrderNo;
-      }
       if(params.category !== ""){
         data.category = params.category._id;
       }else{
