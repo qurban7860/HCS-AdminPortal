@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
-import axios from '../../utils/axios';
-import { CONFIG } from '../../config-global';
+import axios from '../../../utils/axios';
+import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  counts: [],
+  count: {},
 };
 
 const slice = createSlice({
@@ -30,17 +30,17 @@ const slice = createSlice({
       state.initial = true;
     },
     // RESET USERS
-    resetCounts(state){
-      state.counts = [];
+    resetCount(state){
+      state.count = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
     // GET users
-    getCountsSuccess(state, action) {
+    getCountSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.counts = action.payload;
+      state.count = action.payload;
       state.initial = true;
     },
     // SET RES MESSAGE
@@ -63,14 +63,13 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getCounts() {
+export function getCount() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}dashboard/`);
-      dispatch(slice.actions.getUsersSuccess(response.data));
+      dispatch(slice.actions.getCountSuccess(response.data));
     //   dispatch(slice.actions.setResponseMessage('Counts loaded successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

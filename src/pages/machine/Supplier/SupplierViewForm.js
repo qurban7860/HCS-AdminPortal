@@ -70,7 +70,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         city: supplier?.address?.city || '',
         region: supplier?.address?.region || '',
         country: supplier?.address?.country || '',
-        isActive: supplier.isActive ,
+        isActive: supplier?.isActive ,
         createdByFullname:        supplier?.createdBy?.name || "",
         createdAt:                supplier?.createdAt || "",
         createdIP:                supplier?.createdIP || "",
