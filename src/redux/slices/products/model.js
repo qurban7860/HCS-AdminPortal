@@ -173,6 +173,7 @@ export function saveMachinemodel(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          description: params.description,
         };
         /* eslint-enable */
         if(params.description){
@@ -211,11 +212,9 @@ export function updateMachinemodel(params) {
         id: params.id,
         name: params.name,
         isActive: params.isActive,
+        description: params.description,
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
 
       if(params.displayOrderNo){
         data.displayOrderNo = params.displayOrderNo;

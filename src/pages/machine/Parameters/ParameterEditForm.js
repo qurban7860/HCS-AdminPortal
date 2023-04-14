@@ -46,8 +46,8 @@ export default function ParameterEditForm() {
   const { id } = useParams();
 
   const ParameterEditSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required') ,
-    description: Yup.string().min(2).max(2000),
+    name: Yup.string().max(50).required('Name is required') ,
+    description: Yup.string().max(2000),
     isActive : Yup.boolean(),
     code: Yup.string(),
   });
@@ -128,12 +128,7 @@ console.log("default :",defaultValues)
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
-              <RHFTextField name="name" label="Machine Tech Param" required />
-              <RHFTextField name="code" label="Code" required />
-            </Box>
-            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <Autocomplete
+            <Autocomplete
                 value={paramVal || null}
                 options={techparamcategories}
                 getOptionLabel={(option) => option.name}
@@ -144,6 +139,11 @@ console.log("default :",defaultValues)
                 renderInput={(params) => <TextField {...params} label="Tech Param Categories" />}
                 ChipProps={{ size: 'small' }}
               />
+              <RHFTextField name="name" label="Machine Tech Param" required />
+              <RHFTextField name="code" label="Code" required />
+            </Box>
+            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
+              <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
              </Box>
              

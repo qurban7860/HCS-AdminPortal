@@ -322,7 +322,7 @@ useEffect(() => {
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
-                  <div key={option.id}>
+                  <div key={option._id}>
                     <span>{option.name}</span>
                   </div>
                 )}
@@ -349,7 +349,7 @@ useEffect(() => {
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
-                  <div key={option.id}>
+                  <div key={option._id}>
                     <span>{`${option.firstName} ${option.lastName}`}</span>
                   </div>
                 )}
@@ -418,7 +418,7 @@ useEffect(() => {
               />
             
             </Box>
-            <Grid md={12}>
+            <Grid item md={12}>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
             </Grid>
             <Stack  sx={{ mt: 3 }}>

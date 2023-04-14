@@ -73,14 +73,14 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
         </Grid>
 
         <Grid item xs={12} sm={12} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
-            <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
         </Grid>
         
         <Grid item xs={12} sm={12} >

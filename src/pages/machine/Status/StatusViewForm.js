@@ -98,7 +98,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ""}</Typography>
 
         </Grid>
 
@@ -108,7 +108,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
             Description
           </Typography>
 
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.description ? defaultValues.description : ""}</Typography>
 
         </Grid>
         <Grid item xs={12} sm={12} sx={{ mb: 1 }}>
@@ -116,7 +116,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
             Display Order No
           </Typography>
 
-          <Typography variant="body2">{defaultValues.displayOrderNo ? defaultValues.displayOrderNo : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.displayOrderNo ? defaultValues.displayOrderNo : ""}</Typography>
 
         </Grid>
 

@@ -178,7 +178,6 @@ export function saveMachinestatus(params) {
         if(params.description){
             data.description = params.description;
           }
-          console.log(data)
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
 
@@ -204,14 +203,10 @@ export function updateMachinestatus(params,Id) {
         id: params.id,
         name: params.name,
         displayOrderNo: params.displayOrderNo,
+        description: params.description,
         isActive: params.isActive
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
-
-      console.log(" Patch Data: ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
         data
       );

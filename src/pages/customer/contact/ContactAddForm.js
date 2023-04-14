@@ -136,7 +136,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const onSubmit = async (data) => {
     // console.log(data);
       try{
-        if(phone.length > 7){
+        if(phone && phone.length > 7){
           data.phone = phone ;
         }
         if(country){

@@ -137,6 +137,7 @@ export function saveUser(param) {
       phone:  param.phone,
       roles: param.roles,
       login: param.email,
+      isActive: param.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       dispatch(slice.actions.setResponseMessage('User Saved successfully'));
@@ -161,6 +162,7 @@ export function updateUser(param,id) {
         phone:  param.phone,
         roles: param.roles,
         login: param.email,
+        isActive: param.isActive
         }
         if(param.password === ""){
             data.password = param.password 

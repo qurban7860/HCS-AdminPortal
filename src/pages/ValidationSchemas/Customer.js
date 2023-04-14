@@ -1,5 +1,5 @@
 export   const CustomerSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
     tradingName: Yup.string(),
     mainSite: Yup.string(),
     sites: Yup.array(),

@@ -216,15 +216,10 @@ export function saveTechparam(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          description: params.description,
+          code: params.code
         };
         /* eslint-enable */
-        if(params.description){
-            data.description = params.description;
-          }
-          if(params.code){
-            data.code = params.code;
-          }
-
           if(params.category){
             data.category = params.category;
           }else{
@@ -254,14 +249,11 @@ export function updateTechparam(params,id) {
       let data = {
         name: params.name,
         isActive: params.isActive,
+        description: params.description,
+        code: params.code
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
-      if(params.code){
-        data.code = params.code;
-      }
+
       if(params.category){
         data.category = params.category;
       }else{

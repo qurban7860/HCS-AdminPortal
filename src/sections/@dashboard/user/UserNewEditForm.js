@@ -530,8 +530,10 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                   ChipProps={{ size: 'small' }}
                 /> */}
             </Box>
-            <Grid md={12}>
-              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+            <Grid item md={12}>
+            <RHFSwitch name="isActive" labelPlacement="start" label={
+        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+      />
             </Grid>
             <Stack  sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>

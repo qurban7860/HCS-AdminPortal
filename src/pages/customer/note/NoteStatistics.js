@@ -33,12 +33,12 @@ export default function NoteStatistics({current_note_Statistics = null}) {
 
   const defaultValues = useMemo(
     () => ({
-      created_at: current_note_Statistics?.createdAt || 'N/A',
-      contact_by: current_note_Statistics?.createdBy || 'N/A',
-      contact_by_ip: current_note_Statistics?.createdByIp || 'N/A',
-      updated_at: current_note_Statistics?.updatedAt || 'N/A',
-      updated_by: current_note_Statistics?.updatedBy || 'N/A',
-      updated_by_ip: current_note_Statistics?.updatedByIp || 'N/A',
+      created_at: current_note_Statistics?.createdAt || '',
+      contact_by: current_note_Statistics?.createdBy || '',
+      contact_by_ip: current_note_Statistics?.createdByIp || '',
+      updated_at: current_note_Statistics?.updatedAt || '',
+      updated_by: current_note_Statistics?.updatedBy || '',
+      updated_by_ip: current_note_Statistics?.updatedByIp || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [current_note_Statistics, note]

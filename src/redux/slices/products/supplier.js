@@ -101,51 +101,7 @@ export const {
 
 } = slice.actions;
 
-
-// ----------------------------------------------------------------------
-
-// export function saveSupplier (supplyData){
-//   return async (dispatch) =>{
-//     dispatch(slice.actions.startLoading());
-//     // console.log("supplyData : ",supplyData)
-//     try{
-//       const data ={
-//         name: supplyData.name
-//       }
-//       if(supplyData.address){
-//         data.address = supplyData.address
-//       }
-//       if(supplyData.contactName){
-//         data.contactName = supplyData.contactName
-//       }
-//       if(supplyData.contactTitle){
-//         data.contactTitle = supplyData.contactTitle
-//       }
-//       if(supplyData.email){
-//         data.email = supplyData.email
-//       }
-//       if(supplyData.fax){
-//         data.fax = supplyData.fax
-//       }
-//       if(supplyData.phone){
-//         data.phone = supplyData.phone
-//       }
-//       if(supplyData.website){
-//         data.website = supplyData.website
-//       }
-//       data.isDisabled = !supplyData.isDisabled
-
-//       const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`,data);
-//       // dispatch(slice.actions)
-//     } catch (e) {
-//       console.log(e);
-//       dispatch(slice.actions.hasError(e.Message))
-//     }
-//   }
-// }
-
-// ----------------------------------------------------------------------
-
+//------------------------------------------------------------------------------
 
 export function getSuppliers (){
   return async (dispatch) =>{

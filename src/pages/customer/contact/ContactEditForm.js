@@ -146,7 +146,7 @@
 
     const onSubmit = async (data) => {
       try {
-        if(phone.length > 7){
+        if(phone &&phone.length > 7){
           data.phone = phone ;
         }else{
           data.phone = "";
@@ -161,7 +161,7 @@
         // navigate(PATH_DASHBOARD.contact.list);
       } catch (err) {
         enqueueSnackbar('Saving failed!');
-        console.error(error);
+        console.error(err);
       }
     };
 

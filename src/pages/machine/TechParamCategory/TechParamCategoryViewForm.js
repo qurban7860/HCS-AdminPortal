@@ -50,8 +50,8 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
   const defaultValues = useMemo(
     () => (
       {
-        name:techparamcategory?.name || '',
-        description:techparamcategory?.description || '',
+        name:techparamcategory?.name || "",
+        description:techparamcategory?.description || "",
         isActive: techparamcategory.isActive ,
         createdAt:                techparamcategory?.createdAt || "",
         createdByFullname:        techparamcategory?.createdBy?.name || "",
@@ -88,17 +88,17 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name}</Typography>
 
         </Grid>
 
 
-        <Grid item xs={12} sm={6} sx={{ mb: 1}}>
+        <Grid item xs={12} sm={12} sx={{ mb: 1}}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
 
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.description}</Typography>
 
         </Grid>
 

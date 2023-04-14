@@ -72,7 +72,7 @@ export default function NoteViewForm({currentNote = null}) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentNote?._id || 'N/A',
+      id: currentNote?._id || '',
       site_name:  currentNote.site === null || currentNote.site === undefined ? "" : currentNote.site.name,
       contact_firstName: currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.firstName,
       contact_lastName:  currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.lastName,
@@ -127,7 +127,7 @@ export default function NoteViewForm({currentNote = null}) {
                   Contact
               </Typography>
               <Typography variant="body2">
-                  {defaultValues.contact_firstName} {defaultValues.contact_lastName !== 'N/A' ?defaultValues.contact_lastName:""}
+                  {defaultValues.contact_firstName} {defaultValues.contact_lastName !== '' ?defaultValues.contact_lastName:""}
               </Typography>
             </Grid>
           <Grid item xs={18} sm={12} sx={{  pt:2}}>

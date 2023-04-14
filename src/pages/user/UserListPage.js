@@ -93,7 +93,7 @@ export default function UserListPage() {
   const dispatch = useDispatch();
 
   const { users, error, responseMessage, initial,editFormVisibility,formVisibility} = useSelector((state) => state.user);
-console.log("users", users);
+// console.log("users", users);
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -209,8 +209,8 @@ console.log("users", users);
   };
 
   const handleEditRow = (id) => {
-    console.log('id', id);
-    console.log('edit');
+    // console.log('id', id);
+    // console.log('edit');
     dispatch(setEditFormVisibility(true))
     navigate(PATH_DASHBOARD.user.edit(id));
   };
@@ -257,7 +257,7 @@ console.log("users", users);
           <Cover name='Users List' icon="ph:users-light"/>
         </Card>
         <Card>
-          <Tabs
+          {/* <Tabs
             value={filterStatus}
             onChange={handleFilterStatus}
             sx={{
@@ -270,7 +270,7 @@ console.log("users", users);
             ))}
           </Tabs>
 
-          <Divider />
+          <Divider /> */}
 
           <UserTableToolbar
             isFiltered={isFiltered}

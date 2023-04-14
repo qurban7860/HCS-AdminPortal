@@ -97,7 +97,7 @@ export default function ToolViewForm({ currentTool = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
         </Grid>
 
         <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
@@ -105,7 +105,7 @@ export default function ToolViewForm({ currentTool = null }) {
             Description
           </Typography>
 
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
 
         </Grid>
 

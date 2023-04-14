@@ -175,11 +175,9 @@ export function updateCategory(params,Id) {
       const data = {
         name: params.name,
         isActive: params.isActive,
+        description: params.description,
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );

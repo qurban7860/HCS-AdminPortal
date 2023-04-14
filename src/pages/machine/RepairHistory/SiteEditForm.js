@@ -42,7 +42,7 @@ export default function SiteEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const EditSiteSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
     billingSite: Yup.string(),
     phone: Yup.string(),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
