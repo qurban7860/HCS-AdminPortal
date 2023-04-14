@@ -170,17 +170,13 @@ export function saveTool(params) {
           description: params.description
         };
         /* eslint-enable */
-
-        
         const response = await axios.post(`${CONFIG.SERVER_URL}products/tools`, data);
-
         dispatch(slice.actions.getToolsSuccess(response.data.Tool));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
       }
     };
-
 }
 
 // --------------------------------------------------------------------------

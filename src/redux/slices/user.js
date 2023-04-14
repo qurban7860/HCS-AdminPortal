@@ -141,6 +141,7 @@ export function saveUser(param) {
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       dispatch(slice.actions.setResponseMessage('User Saved successfully'));
+      dispatch(setFormVisibility(false))
 
     } catch (error) {
       console.log(error);
