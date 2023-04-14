@@ -215,6 +215,9 @@ export default function UserListPage() {
     dispatch(setEditFormVisibility(true))
     navigate(PATH_DASHBOARD.user.edit(id));
   };
+  const handleViewRow = (id) => {
+    navigate(PATH_DASHBOARD.user.view(id));
+  };
 
   const handleResetFilter = () => {
     setFilterName('');
@@ -247,14 +250,7 @@ export default function UserListPage() {
             </Button>
           }
         /> */}
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
           <Cover name='Users List' icon="ph:users-light"/>
         </Card>
         <Card>
@@ -332,7 +328,7 @@ export default function UserListPage() {
                         onSelectRow={() => onSelectRow(row._id)}
                         onDeleteRow={() => handleDeleteRow(row._id)}
                         onEditRow={() => handleEditRow(row._id)}
-                        // onViewRow={() => handleViewRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
 
