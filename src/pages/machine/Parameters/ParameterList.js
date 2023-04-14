@@ -109,7 +109,7 @@ export default function StatusList() {
 
   const { techparams, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparam);
 
-  // console.log("tech params : ",techparams)
+  console.log("tech params : ",techparams)
 
   useLayoutEffect( () => {
     // console.log('Testing done')

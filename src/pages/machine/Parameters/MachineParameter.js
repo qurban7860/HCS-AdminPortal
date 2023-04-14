@@ -90,10 +90,10 @@ export default function MachineParameter() {
   const values = watch();
 
   const onSubmit = async (data) => {
-    if(paramCategoryVal !== null && paramCategoryVal !== ""){
-      data.category = paramCategoryVal?._id
-    }
       try{ 
+        if(paramCategoryVal !== null && paramCategoryVal !== ""){
+          data.category = paramCategoryVal?._id
+        }
         await dispatch(saveTechparam(data));
         reset();
         enqueueSnackbar('Create success!');
