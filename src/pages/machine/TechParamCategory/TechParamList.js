@@ -120,9 +120,10 @@ export default function TechParamList() {
     if (initial) {
       if (techparamcategories && !error) {
         enqueueSnackbar(responseMessage); 
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      } 
+      // else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(techparamcategories);
     }
   }, [techparamcategories, error, responseMessage, enqueueSnackbar, initial]);

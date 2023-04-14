@@ -225,8 +225,8 @@ export function saveTechparam(params) {
             data.code = params.code;
           }
 
-          if(params.category !== ""){
-            data.category = params.category._id;
+          if(params.category){
+            data.category = params.category;
           }else{
             data.category = null
           }
