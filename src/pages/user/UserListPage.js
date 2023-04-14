@@ -43,7 +43,7 @@ import {
 // sections
 import UserTableToolbar from './UserTableToolbar';
 import  UserTableRow  from './UserTableRow';
-import { getUsers, deleteUser , setEditFormVisibility } from '../../redux/slices/user';
+import { getUsers,getUser, deleteUser , setEditFormVisibility } from '../../redux/slices/user';
 import { fDate } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 

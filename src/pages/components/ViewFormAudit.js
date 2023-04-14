@@ -14,12 +14,12 @@ const {createdByFullName,createdAt,createdIP,updatedByFullName,updatedAt,updated
         <Grid item md={12}  sx={{  overflowWrap: "break-word",display:'flex'}}>
             <Grid item xs={12} sm={6} >
                 <Typography paragraph variant="body2" sx={{ px:2, color: 'text.disabled' }}>
-                  created by: {created.join(', ')}
+                  created by: {createdByFullName},{fDate(createdAt)},{createdIP}
                 </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
                 <Typography variant="body2" sx={{px:2,  color: 'text.disabled' }}>
-                  updated by: {updated.join(', ')}
+                  updated by: {updatedByFullName},{fDate(updatedAt)},{updatedIP}
                 </Typography>
             </Grid>
         </Grid>
