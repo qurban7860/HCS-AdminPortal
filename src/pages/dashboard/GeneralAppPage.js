@@ -51,6 +51,7 @@ export default function GeneralAppPage() {
   ];
 
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
+  console.log(count)
   const theme = useTheme();
 
   const { themeStretch } = useSettingsContext();
@@ -88,11 +89,11 @@ export default function GeneralAppPage() {
           <Grid item xs={12} md={4}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-          <Grid item xs={12} md={4} sx={{mt: '24px'}}>
+          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Active Users"
               // percent={2.6}
-              total={count?.customerCount || 0}
+              total={count?.userCount || 0}
               chart={{
                 colors: [theme.palette.primary.main],
                 series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
@@ -100,7 +101,7 @@ export default function GeneralAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4} sx={{mt: '24px'}}>
+          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Machines"
               // percent={0.2}
@@ -112,14 +113,26 @@ export default function GeneralAppPage() {
             />
           </Grid>
 
-          <Grid item xs={12} md={4} sx={{mt: '24px'}}>
+          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
             <AppWidgetSummary
               title="Customers"
               // percent={-0.1}
-              total={count?.userCount || 0}
+              total={count?.customerCount || 0}
               chart={{
                 colors: [theme.palette.warning.main],
                 series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+              }}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
+            <AppWidgetSummary
+              title="Sites"
+              // percent={2.6}
+              total={count?.siteCount || 0}
+              chart={{
+                colors: [theme.palette.primary.main],
+                series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
               }}
             />
           </Grid>

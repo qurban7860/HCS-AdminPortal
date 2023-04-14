@@ -54,6 +54,7 @@ export default function UserEditForm() {
   const { error, user } = useSelector((state) => state.user);
   const ROLES = [];
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
+console.log("ROLES : ",ROLES)
   const { customers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
   const { contacts } = useSelector((state) => state.contact);
