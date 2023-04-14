@@ -68,8 +68,8 @@ export default function UserTableRow({ row, selected, onEditRow, onViewRow, onSe
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} >
-              <Avatar alt={name} src={image} />
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer',display:"flex",justifyContent:"center",alignItems:"center" }} >
+              <Avatar alt={name} src={image} sx={{mr:1}}/>
               <Typography variant="subtitle2" noWrap>
                 {`${name}`}
               </Typography>
@@ -88,7 +88,7 @@ export default function UserTableRow({ row, selected, onEditRow, onViewRow, onSe
         {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
         </TableCell>
         <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell> 
-        <TableCell align="center" sx={{ textTransform: 'capitalize' }}>
+        <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
         {fDate(createdAt)}
         </TableCell>
 

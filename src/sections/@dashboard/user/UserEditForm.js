@@ -36,7 +36,6 @@ import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts , resetContacts} from '../../../redux/slices/customer/contact';
 import { getRoles } from '../../../redux/slices/securityUser/role';
 // current user
-import { useAuthContext } from '../../../auth/useAuthContext';
 import AddFormButtons from '../../../pages/components/AddFormButtons';
 
 
@@ -51,20 +50,21 @@ export default function UserEditForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const { roles } = useSelector((state) => state.role);
-  const { error, user } = useSelector((state) => state.user);
+  const { error, securityUser } = useSelector((state) => state.user);
   const ROLES = [];
+  const securityUserRoles = [];
+
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
-console.log("ROLES : ",ROLES)
+securityUser.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
+
   const { customers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
   const { contacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState('');
-  const { userId } = useAuthContext();
   const [phone, setPhone] = useState('')
   
 
 
-  const currentUser = user;
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -83,16 +83,16 @@ useEffect(() => {
 }, [dispatch,customerVal]);
 
   useLayoutEffect(()=>{
-    if(currentUser.customer !== undefined && currentUser.customer !== null){
-      setCustomerVal(currentUser?.customer);
+    if(securityUser.customer !== undefined && securityUser.customer !== null){
+      setCustomerVal(securityUser?.customer);
     }
-    if(currentUser.contact !== undefined && currentUser.contact !== null){
-      setContactVal(currentUser?.contact);
+    if(securityUser.contact !== undefined && securityUser.contact !== null){
+      setContactVal(securityUser?.contact);
     }
-    if(currentUser.phone !== undefined && currentUser.phone !== null){
-      setPhone(currentUser?.phone);
+    if(securityUser.phone !== undefined && securityUser.phone !== null){
+      setPhone(securityUser?.phone);
     }
-  },[currentUser])
+  },[securityUser])
   const phoneRegExp = /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ -]*\d+)*$/
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('First name is required'),
@@ -112,26 +112,25 @@ useEffect(() => {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentUser?._id || '',
-      name: currentUser?.name || '',
-      email: currentUser?.email || '',
-      isActive: currentUser?.isActive,
-      // phone: currentUser?.phone || '',
-      // address: currentUser?.address || '',
-      // country: currentUser?.country || '',
-      // state: currentUser?.state || '',
-      // city: currentUser?.city || '',
-      // zipCode: currentUser?.zipCode || '',
-      // avatarUrl: currentUser?.image || null,
-      // isVerified: currentUser?.isVerified || true,
-      // status: currentUser?.status,
-      roles: currentUser?.roles || [],
-      // addedBy: currentUser?.addedBy || '',
+      id: securityUser?._id || '',
+      name: securityUser?.name || '',
+      email: securityUser?.email || '',
+      isActive: securityUser?.isActive,
+      // phone: securityUser?.phone || '',
+      // address: securityUser?.address || '',
+      // country: securityUser?.country || '',
+      // state: securityUser?.state || '',
+      // city: securityUser?.city || '',
+      // zipCode: securityUser?.zipCode || '',
+      // avatarUrl: securityUser?.image || null,
+      // isVerified: securityUser?.isVerified || true,
+      // status: securityUser?.status,
+      roles: securityUserRoles || [],
+      // addedBy: securityUser?.addedBy || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentUser]
+    [securityUser]
   );
-
   const methods = useForm({
     resolver: yupResolver(NewUserSchema),
     defaultValues,
@@ -149,11 +148,11 @@ useEffect(() => {
   const values = watch();
 
   useEffect(() => {
-    if (currentUser) {
+    if (securityUser) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentUser]);
+  }, [securityUser]);
 
   const handlePhoneChange = (newValue) => {
     matchIsValidTel(newValue)
@@ -166,19 +165,24 @@ useEffect(() => {
     try{
       data.customer = customerVal?._id || null
       data.contact = contactVal?._id || null
-      if(phone.length > 7 ){
+      if(phone && phone.length > 7 ){
         data.phone = phone.length 
       }else{
         data.phone = "" 
       }
-        dispatch(updateUser(data,currentUser._id));
+      // submitSecurityUserRoles.push(role?._id,role.name)
+      const submitSecurityUserRoles = data.roles.filter((role) =>
+      ROLES.some((Role) => Role.value === role)
+      )
+    data.roles = submitSecurityUserRoles;
+        dispatch(updateUser(data,securityUser._id));
         reset();
         enqueueSnackbar('Update success!');
         dispatch(setEditFormVisibility(false))
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
-        console.error(error);
+        console.error(err.message);
       }
   };
 

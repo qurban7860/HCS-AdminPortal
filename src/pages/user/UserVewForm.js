@@ -1,13 +1,12 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useNavigate,useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 // @mui
 import { Switch, Card, Grid, Container, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack} from '@mui/material';
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
 import { getUser,getUsers, deleteUser, setEditFormVisibility } from '../../redux/slices/user';
-
 import Iconify from '../../components/iconify';
 import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
@@ -16,19 +15,22 @@ import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import {Cover} from '../components/Cover';
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
+    const { id } = useParams();
+    const { securityUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.user);
-  console.log("user : " , user)
-
+  useEffect(()=> {
+      dispatch(getUser(id))
+    },[dispatch,id])
   const handleEdit = () => {
     dispatch(setEditFormVisibility(true));
+    navigate(PATH_DASHBOARD.user.edit(securityUser._id));
   }
-  const handleViewCustomer = (id) => {
-    navigate(PATH_DASHBOARD.user.list);
-  };
+//   const handleViewCustomer = (id) => {
+//     navigate(PATH_DASHBOARD.user.list);
+//   };
   const onDelete = async () => {
-    await dispatch(deleteUser(user._id));
+    await dispatch(deleteUser(id));
     dispatch(getUsers());
     navigate(PATH_DASHBOARD.user.list)
   }
@@ -36,27 +38,27 @@ export default function MachineViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      customer:                 user?.customer.name || "",
-      contact:                  user?.contact?.firstName || "",
-      name:                     user?.name || "",
-      phone:                    user?.phone || "",
-      email:                    user?.email || "",
-      login:                    user?.login || "",
-      roles:                    user?.roles ,
-      isActive:                 user?.isActive,
-      createdByFullName:        user?.createdBy?.name ,
-      createdAt:                user?.createdAt ,
-      createdIP:                user?.createdIP ,
-      updatedByFullName:        user?.updatedBy?.name ,
-      updatedAt:                user?.updatedAt ,
-      updatedIP:                user?.updatedIP ,
+      customer:                 securityUser?.customer.name || "",
+      contact:                  securityUser?.contact?.firstName || "",
+      name:                     securityUser?.name || "",
+      phone:                    securityUser?.phone || "",
+      email:                    securityUser?.email || "",
+      login:                    securityUser?.login || "",
+      roles:                    securityUser?.roles ,
+      isActive:                 securityUser?.isActive,
+      createdByFullName:        securityUser?.createdBy?.name ,
+      createdAt:                securityUser?.createdAt ,
+      createdIP:                securityUser?.createdIP ,
+      updatedByFullName:        securityUser?.updatedBy?.name ,
+      updatedAt:                securityUser?.updatedAt ,
+      updatedIP:                securityUser?.updatedIP ,
     }
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [user] );
+    [securityUser] );
 
   return (
-    <Container>
+    <Grid sx={{p:3, mt:-3}}>
         <Card sx={{mb: 3,height: 160,position: 'relative',  }}>
           <Cover name={defaultValues.name} icon="ph:users-light"/>
         </Card>
@@ -76,6 +78,6 @@ export default function MachineViewForm() {
             <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>
         </Card>
-    </Container>
+    </Grid>
   );
 };
