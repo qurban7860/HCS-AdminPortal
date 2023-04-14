@@ -164,7 +164,7 @@ export default function MachineList() {
   };
 
   return (
-    <>
+    <> 
            <Container maxWidth={false}>
         <Grid container spacing={3}>
           {/* <MachineDashboardNavbar/> */}

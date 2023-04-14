@@ -125,7 +125,7 @@ useLayoutEffect(()=>{
          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
-        <Grid container>
+        <Grid item container>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
     </Card>

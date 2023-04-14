@@ -2,9 +2,9 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Switch, Card, Grid, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle} from '@mui/material';
+import { Switch, Card, Grid, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack} from '@mui/material';
 // routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
 import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
@@ -21,6 +21,7 @@ export default function MachineViewForm() {
   const navigate = useNavigate();
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
+  console.log("customer : " , customer)
   const { site } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
@@ -30,7 +31,9 @@ export default function MachineViewForm() {
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
   }
-
+  const handleViewCustomer = (id) => {
+    navigate(PATH_DASHBOARD.customer.view(id));
+  };
   const onDelete = async () => {
     await dispatch(deleteMachine(machine._id));
     dispatch(getMachines());
@@ -46,6 +49,7 @@ export default function MachineViewForm() {
   const handleCloseInstallationSite = () => setOpenInstallationSite(false);  
   const handleOpenBillingSite = () => setOpenBilingSite(true);
   const handleCloseBillingSite = () => setOpenBilingSite(false);
+
 
   const defaultValues = useMemo(
     () => ({
@@ -104,18 +108,18 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues.machineModel? defaultValues.machineModel : ''} />
         <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
         <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
-        <ViewFormField sm={12} heading="Customer" param={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
-        <ViewFormField sm={6} heading="Installation Site" param={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
-        <ViewFormField sm={6} heading="Billing Site" param={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
+        <ViewFormField sm={12} heading="Customer" objectParam={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
+        <ViewFormField sm={6} heading="Installation Site" objectParam={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
+        <ViewFormField sm={6} heading="Billing Site" objectParam={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
         <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
         <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description: ''} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
         <ViewFormSubtitle sm={12} heading="Howick Resources"/>
-        <ViewFormField sm={6} heading="Account Manager"   StasticsParam={defaultValues?.accountManager?.firstName || "" } secondStasticsParam={defaultValues?.accountManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Project Manager"   StasticsParam={defaultValues?.projectManager?.firstName || "" } secondStasticsParam={defaultValues?.projectManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Suppport Manager"  StasticsParam={defaultValues?.supportManager?.firstName || "" } secondStasticsParam={defaultValues?.supportManager?.lastName || ""}/> 
+        <ViewFormField sm={6} heading="Account Manager"   param={defaultValues?.accountManager?.firstName || "" } secondParam={defaultValues?.accountManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Project Manager"   param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Suppport Manager"  param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
       </Grid>
         <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
       <Grid container>
@@ -124,8 +128,8 @@ export default function MachineViewForm() {
 
       <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
-        <Grid sx={{display: "flex"}}>
-          <Typography variant="h3" sx={{px:2}}>Customer </Typography> <Iconify icon="mdi:link-box-variant-outline" sx={{ml: "auto"}}/>
+        <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
+          <Typography variant="h3" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:link-box-variant-outline" /></Link>
         </Grid>
           <ViewFormField sm={12} heading="Name"                     param={customer?.name?        customer?.name : ''} />
           <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName? customer?.tradingName : ''} />

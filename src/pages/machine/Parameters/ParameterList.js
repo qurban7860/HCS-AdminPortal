@@ -70,6 +70,7 @@ const STATUS_OPTIONS = [
 
 
 export default function StatusList() {
+  const [tableData, setTableData] = useState([]);
   const {
     dense,
     page,
@@ -101,7 +102,6 @@ export default function StatusList() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [tableData, setTableData] = useState([]);
 
   const [filterStatus, setFilterStatus] = useState([]);
 
@@ -120,9 +120,10 @@ export default function StatusList() {
     if (initial) {
       if (techparams && !error) {
         enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
       }
+      //  else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(techparams);
     }
   }, [techparams, error, responseMessage, enqueueSnackbar, initial]);
