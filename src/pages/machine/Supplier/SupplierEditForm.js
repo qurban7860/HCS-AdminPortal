@@ -45,14 +45,14 @@ export default function SupplierEditForm() {
     isActive : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),
-    phone: Yup.number(),
-    email: Yup.string(),
-    fax: Yup.number(),
+    phone: Yup.string().nullable(),
+    email: Yup.string().email(),
+    fax: Yup.string().nullable(),
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
     region: Yup.string(),
-    country: Yup.string(),
+    country: Yup.string().nullable(),
   });
 
 
