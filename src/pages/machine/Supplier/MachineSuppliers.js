@@ -56,9 +56,9 @@ export default function MachineSuppliers() {
     isActive : Yup.boolean(),
     Contact_Name: Yup.string(),
     Contact_Title: Yup.string(),
-    phone: Yup.number(),
+    phone: Yup.string().nullable(),
+    fax: Yup.string().nullable(),
     email: Yup.string().email(),
-    fax: Yup.number(),
     website: Yup.string(),
     street: Yup.string(),
     suburb: Yup.string(),
@@ -150,14 +150,7 @@ export default function MachineSuppliers() {
   return (
     <>
     <Container maxWidth={ false }>
-    <Card
-                sx={{
-                  mb: 3,
-                  height: 160,
-                  position: 'relative',
-                  // mt: '24px',
-                }}
-              >
+              <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='New Supplier' icon='material-symbols:inventory-2-rounded' />
               </Card>
     <Helmet>
@@ -180,7 +173,7 @@ export default function MachineSuppliers() {
               }}
             >
 
-              <RHFTextField name="name" label="Name of Supplier" required />
+              <RHFTextField name="name" label="Name of Supplier"  />
               </Box>
               </Stack>
               </Card>

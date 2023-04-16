@@ -26,6 +26,7 @@ import {
   UserCreatePage,
   UserProfilePage,
   UserAccountPage,
+  UserViewFormPage,
   // Asset
   AssetList,
   AssetAdd,
@@ -198,6 +199,7 @@ export default function Router() {
             { path: 'new', element: <UserCreatePage /> },
             { path: ':id/edit', element: <UserEditPage /> },
             { path: 'account', element: <UserEditPage /> },
+            { path: ':id/view', element: <UserViewFormPage /> },
           ],
         },
         {

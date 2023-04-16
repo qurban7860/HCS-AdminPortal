@@ -24,6 +24,7 @@ import FormProvider, {
     RHFTextField,
     RHFSwitch,
   } from '../../../components/hook-form';
+  import ViewFormAudit from '../../components/ViewFormAudit';
 
 
 
@@ -60,13 +61,17 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinemodel?.name || 'N/A',
-        description:machinemodel?.description || 'N/A',
-        createdAt: machinemodel?.createdAt || '',
-        updatedAt: machinemodel?.updatedAt || '',
+        name:machinemodel?.name || '',
+        description:machinemodel?.description || '',
         displayOrderNo: machinemodel?.displayOrderNo || '',
         category: machinemodel?.category || '',
-        isActive: machinemodel?.isActive || '',
+        isActive: machinemodel?.isActive,
+        createdByFullname:        machinemodel?.createdBy?.name || "",
+        createdAt:                machinemodel?.createdAt || "",
+        createdIP:                machinemodel?.createdIP || "",
+        updatedByFullname:        machinemodel?.updatedBy?.name || "",
+        updatedAt:                machinemodel?.updatedAt || "",
+        updatedIP:                machinemodel?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinemodel, machinemodel]
@@ -94,7 +99,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
 
         </Grid>
 
@@ -104,11 +109,11 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
             Description
           </Typography>
 
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
             <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
               Category Name
             </Typography>
@@ -116,22 +121,14 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
             <Typography variant="body2">{defaultValues?.category?.name || " "}</Typography>
             
         </Grid>
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-         <Switch  checked = { defaultValues.isActive } disabled  />
+
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
         
 
-        <Grid container spacing={0} sx={{ mb: 5}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                Created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              Updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
-            </Typography>
-            </Grid>
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
 
       </Grid>

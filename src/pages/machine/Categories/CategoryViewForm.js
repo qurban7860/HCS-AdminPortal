@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
@@ -11,17 +10,12 @@ import { getCategory, getCategories, setEditFormVisibility } from '../../../redu
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
 // Iconify
-
 import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify/Iconify';
-
-
-
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
-
 
 CategoryViewForm.propTypes = {
   currentCategory: PropTypes.object,
@@ -48,9 +42,15 @@ export default function CategoryViewForm({ currentCategory = null }) {
   }, [dispatch, id,editFormVisibility]);
   const defaultValues = useMemo(
     () => ({
-        name:category?.name || 'N/A',
-        description:category?.description || 'N/A',
-        isDisabled: category.isDisabled || false,
+        name:category?.name || '',
+        description:category?.description || '',
+        isActive: category.isActive,
+        createdByFullName:        category?.createdBy?.fullName || "",
+        createdAt:                category?.createdAt || "",
+        createdIP:                category?.createdIP || "",
+        updatedByFullName:        category?.updatedBy?.fullName || "",
+        updatedAt:                category?.updatedAt || "",
+        updatedIP:                category?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCategory, category]
@@ -73,31 +73,22 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
         </Grid>
 
-        <Grid item xs={12} sm={12} sx={{ mb: 2 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
-            <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
         </Grid>
         
         <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:2}} checked = { defaultValues.isDisabled } disabled  />
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
-        <Grid container spacing={0} sx={{ mb: 5}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
-            </Typography>
-            </Grid>
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
 
       </Grid>

@@ -1,30 +1,22 @@
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch , Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getSupplier, getSuppliers, setSupplierEditFormVisibility } from '../../../redux/slices/products/supplier';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
 // Iconify
-
 import { fDate } from '../../../utils/formatTime';
-
 import SupplierEditForm from './SupplierEditForm';
-
 import Iconify from '../../../components/iconify/Iconify';
-
-
-
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
-
 
 SupplierViewForm.propTypes = {
   currentSupplier: PropTypes.object,
@@ -47,11 +39,10 @@ export default function SupplierViewForm({ currentSupplier = null }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { suppliers } = useSelector((state) => state.supplier);
+  const { supplier } = useSelector((state) => state.supplier);
   const { id } = useParams();
-  const supplier = suppliers;
 
-  // const supplier = suppliers?.find((supp)=>supp?._id === id);
+  // const supplier = supplier?.find((supp)=>supp?._id === id);
   const dispatch = useDispatch()
   useLayoutEffect(() => {
     if(id != null){
@@ -67,21 +58,25 @@ export default function SupplierViewForm({ currentSupplier = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:supplier?.name || 'N/A',
-        contactName:supplier?.contactName || 'N/A',
-        contactTitle: supplier?.contactTitle || 'N/A',
-        phone: supplier?.phone || 'N/A',
-        email: supplier?.email || 'N/A',
-        fax: supplier?.fax || 'N/A',
-        website: supplier?.website || 'N/A',
-        street: supplier?.address?.street || 'N/A',
-        suburb: supplier?.address?.suburb || 'N/A',
-        city: supplier?.address?.city || 'N/A',
-        region: supplier?.address?.region || 'N/A',
-        country: supplier?.address?.country || 'N/A',
-        createdAt: supplier?.createdAt || '',
-        updatedAt: supplier?.updatedAt || '',
-        isDisabled: supplier.isDisabled,
+        name:supplier?.name || '',
+        contactName:supplier?.contactName || '',
+        contactTitle: supplier?.contactTitle || '',
+        phone: supplier?.phone || '',
+        email: supplier?.email || '',
+        fax: supplier?.fax || '',
+        website: supplier?.website || '',
+        street: supplier?.address?.street || '',
+        suburb: supplier?.address?.suburb || '',
+        city: supplier?.address?.city || '',
+        region: supplier?.address?.region || '',
+        country: supplier?.address?.country || '',
+        isActive: supplier?.isActive ,
+        createdByFullname:        supplier?.createdBy?.name || "",
+        createdAt:                supplier?.createdAt || "",
+        createdIP:                supplier?.createdIP || "",
+        updatedByFullname:        supplier?.updatedBy?.name || "",
+        updatedAt:                supplier?.updatedAt || "",
+        updatedIP:                supplier?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSupplier, supplier]
@@ -109,7 +104,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ""}</Typography>
 
         </Grid>
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -117,7 +112,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Contact Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.contactName ? defaultValues.contactName : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.contactName ? defaultValues.contactName : ""}</Typography>
 
         </Grid>
 
@@ -126,7 +121,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Contact Title
           </Typography>
 
-          <Typography variant="body2">{defaultValues.contactTitle ? defaultValues.contactTitle : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.contactTitle ? defaultValues.contactTitle : ""}</Typography>
 
         </Grid>
 
@@ -135,7 +130,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Phone
           </Typography>
 
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : ""}</Typography>
 
         </Grid> 
 
@@ -144,7 +139,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Email
           </Typography>
 
-          <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.email ? defaultValues.email : ""}</Typography>
 
         </Grid>
         <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
@@ -152,7 +147,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Fax
           </Typography>
 
-          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : ""}</Typography>
 
         </Grid>
 
@@ -162,7 +157,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Website
           </Typography>
 
-          <Typography variant="body2">{defaultValues.website ? defaultValues.website : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.website ? defaultValues.website : ""}</Typography>
 
         </Grid>
 
@@ -171,7 +166,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Street
           </Typography>
 
-          <Typography variant="body2">{defaultValues.street ? defaultValues.street : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.street }</Typography>
 
         </Grid>
 
@@ -180,7 +175,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Suburb
           </Typography>
 
-          <Typography variant="body2">{defaultValues.suburb ? defaultValues.suburb : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.suburb }</Typography>
 
         </Grid>
 
@@ -189,7 +184,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             City
           </Typography>
 
-          <Typography variant="body2">{defaultValues.city ? defaultValues.city : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.city }</Typography>
 
         </Grid>
 
@@ -198,36 +193,23 @@ export default function SupplierViewForm({ currentSupplier = null }) {
             Region
           </Typography>
 
-          <Typography variant="body2">{defaultValues.region ? defaultValues.region : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.region}</Typography>
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Country
           </Typography>
-
-          <Typography variant="body2">{defaultValues.country ? defaultValues.country : 'N/A'}</Typography>
-
+          <Typography variant="body2">{defaultValues.country}</Typography>
         </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
 
+        <Grid item xs={12} sm={12} >
+          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
-        <Grid container spacing={0} sx={{ mb: 5}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                Created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              Updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
-            </Typography>
-            </Grid>
+
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
 
       </Grid>

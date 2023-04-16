@@ -5,9 +5,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch,Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { deleteSite, getSite, getSites, setEditFormVisibility } from '../../../redux/slices/customer/site';
+import { deleteSite, getSite, getSites, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
 
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -16,6 +16,7 @@ import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 
 import { fDate,fDateTime } from '../../../utils/formatTime';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
 SiteViewForm.propTypes = {
@@ -51,31 +52,31 @@ export default function SiteViewForm({ currentSite = null }) {
 
   const  handleEdit = async () => {
     await dispatch(getSite(customer._id, currentSite._id));
-    dispatch(setEditFormVisibility(true));
+    dispatch(setSiteEditFormVisibility(true));
   };
   const defaultValues = useMemo(
     () => (
       {
-        id: currentSite ? currentSite._id : site?._id || 'N/A',
-        name: currentSite ? currentSite.name : site?.name || 'N/A',
-        customer: currentSite ? currentSite.name : site?.tradingName || 'N/A',
-        billingSite: currentSite ? currentSite._id : site?.accountManager || 'N/A',
-        phone: currentSite ? currentSite.phone : site?.phone || 'N/A',
-        email: currentSite ? currentSite.email : site?.email || 'N/A',
-        fax: currentSite ? currentSite.fax : site?.fax || 'N/A',
-        website: currentSite ? currentSite.website : site?.website || 'N/A',
-        lat: currentSite ? currentSite.lat : site?.lat || 'N/A',
-        long: currentSite ? currentSite.long : site?.long || 'N/A',
+        id: currentSite ? currentSite._id : site?._id || '',
+        name: currentSite ? currentSite.name : site?.name || '',
+        customer: currentSite ? currentSite.name : site?.tradingName || '',
+        billingSite: currentSite ? currentSite._id : site?.accountManager || '',
+        phone: currentSite ? currentSite.phone : site?.phone || '',
+        email: currentSite ? currentSite.email : site?.email || '',
+        fax: currentSite ? currentSite.fax : site?.fax || '',
+        website: currentSite ? currentSite.website : site?.website || '',
+        lat: currentSite ? currentSite.lat : site?.lat || '',
+        long: currentSite ? currentSite.long : site?.long || '',
 
-        street: currentSite ? currentSite.address?.street : site?.address.street || 'N/A',
-        suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || 'N/A',
-        city: currentSite ? currentSite.address?.city : site?.address.city || 'N/A',
-        postcode: currentSite ? currentSite.address?.postcode : site?.address.postcode || 'N/A',
-        region: currentSite ? currentSite.address?.region : site?.address.region || 'N/A',
-        country: currentSite ? currentSite.address?.country : site?.address.country || 'N/A',
+        street: currentSite ? currentSite.address?.street : site?.address.street || '',
+        suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || '',
+        city: currentSite ? currentSite.address?.city : site?.address.city || '',
+        postcode: currentSite ? currentSite.address?.postcode : site?.address.postcode || '',
+        region: currentSite ? currentSite.address?.region : site?.address.region || '',
+        country: currentSite ? currentSite.address?.country : site?.address.country || '',
         primaryBillingContact: currentSite?.primaryBillingContact || null,
         primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
-      
+        isActive: currentSite.isActive,
         createdAt:                currentSite?.createdAt || "",
         createdByFullname:           currentSite?.createdBy?.name || "",
         createdIP:                currentSite?.createdIP || "",
@@ -243,18 +244,11 @@ export default function SiteViewForm({ currentSite = null }) {
               <Typography variant="body2">{defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''}  {defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}</Typography>
             </Grid>
           </Grid>
-
-          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
-            </Grid>
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
+          </Grid>
+          <Grid container>
+            <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>
         <ConfirmDialog
             open={openConfirm}

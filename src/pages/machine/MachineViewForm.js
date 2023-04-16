@@ -2,14 +2,14 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Switch, Card, Grid, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle} from '@mui/material';
+import { Switch, Card, Grid, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack} from '@mui/material';
 // routes
-import { PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
 import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
-
+import Iconify from '../../components/iconify';
 import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
@@ -20,7 +20,9 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
+  console.log("machines", machine)
   const { customer } = useSelector((state) => state.customer);
+  console.log("customer : " , customer)
   const { site } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
@@ -30,7 +32,9 @@ export default function MachineViewForm() {
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
   }
-
+  const handleViewCustomer = (id) => {
+    navigate(PATH_DASHBOARD.customer.view(id));
+  };
   const onDelete = async () => {
     await dispatch(deleteMachine(machine._id));
     dispatch(getMachines());
@@ -46,6 +50,7 @@ export default function MachineViewForm() {
   const handleCloseInstallationSite = () => setOpenInstallationSite(false);  
   const handleOpenBillingSite = () => setOpenBilingSite(true);
   const handleCloseBillingSite = () => setOpenBilingSite(false);
+
 
   const defaultValues = useMemo(
     () => ({
@@ -67,19 +72,19 @@ export default function MachineViewForm() {
       accountManager:           machine?.accountManager || "",
       projectManager:           machine?.projectManager || "",
       supportManager:           machine?.supportManager || "",
-      isAisabled:               machine?.isAisabled,
-      createdAt:                machine?.createdAt || "",
-      createdByFname:           machine?.createdBy?.name || "",
-      createdByLname:           machine?.createdBy?.lastName || "",
-      createdIP:                machine?.createdIP || "",
-      updatedAt:                machine?.updatedAt || "",
-      updatedByFname:           machine?.updatedBy?.name || "",
-      updatedByLname:           machine?.updatedBy?.lastName || "",
-      updatedIP:                machine?.updatedIP || "",
-    }),
+      isActive:                 machine?.isActive,
+      createdByFullName:        machine?.createdBy?.name ,
+      createdAt:                machine?.createdAt ,
+      createdIP:                machine?.createdIP ,
+      updatedByFullName:        machine?.updatedBy?.name ,
+      updatedAt:                machine?.updatedAt ,
+      updatedIP:                machine?.updatedIP ,
+    }
+    ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
+
   const style = {
     position: 'absolute',
     top: '50%',
@@ -104,27 +109,29 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Machine Model" param={defaultValues.machineModel? defaultValues.machineModel : ''} />
         <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
         <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
-        <ViewFormField sm={12} heading="Customer" param={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
-        <ViewFormField sm={6} heading="Installation Site" param={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
-        <ViewFormField sm={6} heading="Nearby Milestone" param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
-        <ViewFormField sm={6} heading="Billing Site" param={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
+        <ViewFormField sm={12} heading="Customer" objectParam={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
+        <ViewFormField sm={6} heading="Installation Site" objectParam={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
+        <ViewFormField sm={6} heading="Billing Site" objectParam={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
+        <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
         <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description: ''} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
         <ViewFormSubtitle sm={12} heading="Howick Resources"/>
-        <ViewFormField sm={6} heading="Account Manager"   StasticsParam={defaultValues?.accountManager?.firstName || "" } secondStasticsParam={defaultValues?.accountManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Project Manager"   StasticsParam={defaultValues?.projectManager?.firstName || "" } secondStasticsParam={defaultValues?.projectManager?.lastName || ""}/>
-        <ViewFormField sm={6} heading="Suppport Manager"  StasticsParam={defaultValues?.supportManager?.firstName || "" } secondStasticsParam={defaultValues?.supportManager?.lastName || ""}/> 
+        <ViewFormField sm={6} heading="Account Manager"   param={defaultValues?.accountManager?.firstName || "" } secondParam={defaultValues?.accountManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Project Manager"   param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
+        <ViewFormField sm={6} heading="Suppport Manager"  param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
       </Grid>
-        <Switch sx={{mt:2}} checked = { !defaultValues.isDisabled } disabled  />
+        <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
 
       <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
-          <Typography variant="h3" sx={{px:2}}>Customer </Typography>
+        <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
+          <Typography variant="h3" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
+        </Grid>
           <ViewFormField sm={12} heading="Name"                     param={customer?.name?        customer?.name : ''} />
           <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName? customer?.tradingName : ''} />
           <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone?       customer?.mainSite.phone : ''} />
@@ -136,21 +143,26 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address? customer?.mainSite?.address?.city : ''} />
           <ViewFormField sm={6} heading="Region"                    param={customer?.mainSite?.address? customer?.mainSite?.address?.region : ''} />
           <ViewFormField sm={6} heading="Post Code"                 param={customer?.mainSite?.address? customer?.mainSite?.address?.postcode : ''} />
-          <ViewFormField sm={12} heading="Country"                   param={customer?.mainSite?.address? customer?.mainSite?.address?.country : ''} />
+          <ViewFormField sm={12} heading="Country"                  param={customer?.mainSite?.address? customer?.mainSite?.address?.country : ''} />
           <ViewFormField sm={6} heading="Primary Biling Contact"    param={customer?.primaryBillingContact?   `${customer?.primaryBillingContact?.firstName } ${customer?.primaryBillingContact?.lastName}` : ''} />
           <ViewFormField sm={6} heading="Primary Technical Contact" param={customer?.primaryTechnicalContact? `${customer?.primaryTechnicalContact?.firstName } ${customer?.primaryTechnicalContact?.lastName}`: ''} />
         </Grid>
           <Typography variant="subtitle2" sx={{px:4}}>Howick Resources </Typography>
         <Grid container sx={{px:2,pb:3}}>
-          <ViewFormField sm={6} heading="Account Manager"   param={defaultValues?.accountManager?.firstName || ""}  secondParam={defaultValues?.accountManager?.lastName || ""}/>
-          <ViewFormField sm={6} heading="Project Manager"   param={defaultValues?.projectManager?.firstName || "" } secondParam={defaultValues?.projectManager?.lastName || ""}/>
-          <ViewFormField sm={6} heading="Suppport Manager"  param={defaultValues?.supportManager?.firstName || "" } secondParam={defaultValues?.supportManager?.lastName || ""}/> 
+          <ViewFormField sm={6} heading="Account Manager"   param={customer?.accountManager?.firstName} secondParam={customer?.accountManager?.lastName}/>
+          <ViewFormField sm={6} heading="Project Manager"   param={customer?.projectManager?.firstName} secondParam={customer?.projectManager?.lastName}/>
+          <ViewFormField sm={6} heading="Suppport Manager"  param={customer?.supportManager?.firstName} secondParam={customer?.supportManager?.lastName}/> 
+        </Grid>
+        <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
+          <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to Customer Page</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
         </Grid>
       </Dialog>
 
       <Dialog open={openInstallationSite} onClose={handleCloseInstallationSite} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{p:2}}>
-          <Typography variant="h3" sx={{px:2}}>Installation Site </Typography>
+        <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
+          <Typography variant="h3" sx={{px:2}}>Installation Site </Typography> <Link onClick={() => handleCloseInstallationSite()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
+        </Grid>
           <ViewFormField sm={12} heading="Name"     param={defaultValues.instalationSite ? defaultValues?.instalationSite?.name : ''} />
           <ViewFormField sm={6} heading="Phone"     param={defaultValues.instalationSite ? defaultValues?.instalationSite?.phone : ''} />
           <ViewFormField sm={6} heading="Fax"       param={defaultValues.instalationSite ? defaultValues?.instalationSite?.fax : ''} /> 
@@ -167,7 +179,10 @@ export default function MachineViewForm() {
 
       <Dialog open={openBilingSite} onClose={handleCloseBillingSite} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{p:2}}>
-          <Typography variant="h3" sx={{px:2}}>Billing Site </Typography>
+          
+          <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
+          <Typography variant="h3" sx={{px:2}}>Billing Site </Typography> <Link onClick={() => handleCloseBillingSite()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
+        </Grid>
           <ViewFormField sm={12} heading="Name"     param={defaultValues.billingSite? defaultValues?.billingSite?.name : ''} />
           <ViewFormField sm={6} heading="Phone"     param={defaultValues.billingSite? defaultValues?.billingSite?.phone : ''} />
           <ViewFormField sm={6} heading="Fax"       param={defaultValues.billingSite? defaultValues?.billingSite?.fax : ''} /> 

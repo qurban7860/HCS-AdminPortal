@@ -27,7 +27,7 @@ import FormProvider, {
   RHFSelect,
   RHFEditor,
   RHFTextField,
-  
+  RHFSwitch,
 
 } from '../../../components/hook-form';
 
@@ -57,6 +57,7 @@ export default function NoteEditForm() {
     customer: Yup.string(),
     editSite: Yup.string().nullable(),
     editContact: Yup.string().nullable(),
+    isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -67,6 +68,7 @@ export default function NoteEditForm() {
       customer: note?.customer || '',
       editSite:  note?.site === null || note?.site === undefined ? null : note.site._id,
       editContact:   note?.contact === null || note?.contact === undefined  ? null : note.contact._id,
+      isActive: note?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [note]
@@ -199,6 +201,7 @@ export default function NoteEditForm() {
                   Save Changes
                 </LoadingButton>
             </Stack> */}
+            <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
 
             
             <Box

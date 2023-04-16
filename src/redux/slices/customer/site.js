@@ -34,12 +34,12 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setFormVisibility(state, action){
+    setSiteFormVisibility(state, action){
       state.siteAddFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setEditFormVisibility(state, action){
+    setSiteEditFormVisibility(state, action){
       state.siteEditFormVisibility = action.payload;
     },
 
@@ -104,8 +104,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setFormVisibility,
-  setEditFormVisibility,
+  setSiteFormVisibility,
+  setSiteEditFormVisibility,
   setResponseMessage,
   resetSite,
   resetSites,
@@ -119,7 +119,7 @@ export const {
 
 export function saveSite(params) {
   return async (dispatch) => {
-    dispatch(slice.actions.setFormVisibility(false));
+    dispatch(slice.actions.setSiteFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -132,6 +132,7 @@ export function saveSite(params) {
           website: params.website,
           lat: params.lat,
           long: params.long,
+          isActive: params.isActive,
           address: {}
         };
 
@@ -167,7 +168,7 @@ export function saveSite(params) {
         
         await axios.post(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites`, data);
         dispatch(slice.actions.setResponseMessage('Site saved successfully'));
-        dispatch(slice.actions.setFormVisibility(false));
+        dispatch(slice.actions.setSiteFormVisibility(false));
 
       } catch (error) {
         console.error(error);
@@ -179,10 +180,10 @@ export function saveSite(params) {
 
 // ----------------------------------------------------------------------
 
-export function updateSite(params, Id) {
+export function updateSite(params,customerId,Id) {
   
   return async (dispatch) => {
-    dispatch(slice.actions.setEditFormVisibility(false));
+    dispatch(slice.actions.setSiteEditFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -195,6 +196,7 @@ export function updateSite(params, Id) {
           website: params.website,
           lat: params.lat,
           long: params.long,
+          isActive: params.isActive,
           address: {}
         };
         /* eslint-enable */
@@ -227,7 +229,7 @@ export function updateSite(params, Id) {
           data.primaryTechnicalContact = null;        
         }
         console.log("Site Slice data : ",data)
-        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.customer}/sites/${Id}`
+        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
          , data);
 
       } catch (error) {

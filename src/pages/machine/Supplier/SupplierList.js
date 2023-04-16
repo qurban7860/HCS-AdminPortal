@@ -70,6 +70,8 @@ const STATUS_OPTIONS = [
 
 
 export default function SupplierList() {
+  const [tableData, setTableData] = useState([]);
+  console.log("tableData",tableData)
   const {
     dense,
     page,
@@ -101,7 +103,6 @@ export default function SupplierList() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [tableData, setTableData] = useState([]);
 
   const [filterStatus, setFilterStatus] = useState([]);
 
@@ -114,15 +115,18 @@ export default function SupplierList() {
     // console.log('Testing done')
       dispatch(getSuppliers());
   }, [dispatch]);
-
+console.log("suppliers: " ,suppliers);
   useEffect(() => {
     if (initial) {
       if (suppliers && !error) {
         enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
+      } 
+      // else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
+      if (suppliers && !error) {
+        setTableData(suppliers);
       }
-      setTableData(suppliers);
     }
   }, [suppliers, error, responseMessage, enqueueSnackbar, initial]);
 
@@ -131,7 +135,7 @@ export default function SupplierList() {
     comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
-  });
+  },[suppliers]);
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -346,7 +350,8 @@ export default function SupplierList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData?.map((el, index) => [el, index]);
+console.log("iput data: " , inputData);
+    const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -357,14 +362,14 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (filterSupplier) => filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
+    filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
-  if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
-  }
 
   return inputData;
 }

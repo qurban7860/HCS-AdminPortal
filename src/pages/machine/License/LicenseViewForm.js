@@ -16,6 +16,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 
 import { fDate,fDateTime } from '../../../utils/formatTime';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
 LicenseViewForm.propTypes = {
@@ -64,11 +65,11 @@ export default function LicenseViewForm({ currentLicense = null }) {
     () => (
       {
         licenseDetail:            currentLicense?.licenseDetail || "",
+        createdByFullname:        currentLicense?.createdBy?.name || "",
         createdAt:                currentLicense?.createdAt || "",
-        createdByFullname:           currentLicense?.createdBy?.name || "",
         createdIP:                currentLicense?.createdIP || "",
+        updatedByFullname:        currentLicense?.updatedBy?.name || "",
         updatedAt:                currentLicense?.updatedAt || "",
-        updatedByFullname:           currentLicense?.updatedBy?.name || "",
         updatedIP:                currentLicense?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,18 +133,9 @@ export default function LicenseViewForm({ currentLicense = null }) {
             </Typography>
           </Grid>
 
-          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
-            </Grid>
-          </Grid>
+          <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
+        </Grid>
         <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}

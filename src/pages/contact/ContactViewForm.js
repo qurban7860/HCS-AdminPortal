@@ -41,12 +41,12 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const defaultValues = useMemo(
     () => ({
-      firstName: currentContact ? currentContact.firstName : contact?.firstName || 'N/A',
-      lastName: currentContact ? currentContact.lastName : contact?.lastName || 'N/A',
-      title: currentContact ? currentContact.title : contact?.title || 'N/A',
+      firstName: currentContact ? currentContact.firstName : contact?.firstName || '',
+      lastName: currentContact ? currentContact.lastName : contact?.lastName || '',
+      title: currentContact ? currentContact.title : contact?.title || '',
       contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
-      phone: currentContact ? currentContact.phone : contact?.phone || 'N/A',
-      email: currentContact ? currentContact.email : contact?.email || 'N/A',
+      phone: currentContact ? currentContact.phone : contact?.phone || '',
+      email: currentContact ? currentContact.email : contact?.email || '',
 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -73,7 +73,7 @@ export default function ContactViewForm({ currentContact = null }) {
               First Name
             </Typography>
 
-            <Typography variant="body2">{defaultValues.firstName ? defaultValues.firstName : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.firstName ? defaultValues.firstName : ''}</Typography>
 
           </Grid>
 
@@ -83,7 +83,7 @@ export default function ContactViewForm({ currentContact = null }) {
               Last Name
             </Typography>
 
-            <Typography variant="body2">{defaultValues.lastName  ? defaultValues.lastName : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.lastName  ? defaultValues.lastName : ''}</Typography>
             
           </Grid>
 
@@ -101,7 +101,7 @@ export default function ContactViewForm({ currentContact = null }) {
               Title
             </Typography>
 
-            <Typography variant="body2">{defaultValues.title ? defaultValues.title : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.title ? defaultValues.title : ''}</Typography>
             
           </Grid>
 
@@ -110,7 +110,7 @@ export default function ContactViewForm({ currentContact = null }) {
               Contact Types
             </Typography>
 
-            <Typography variant="body2">{defaultValues.contactTypes ? defaultValues.contactTypes.toString() : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.contactTypes ? defaultValues.contactTypes.toString() : ''}</Typography>
             
           </Grid>
 
@@ -119,7 +119,7 @@ export default function ContactViewForm({ currentContact = null }) {
              Phone
             </Typography>
 
-            <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : ''}</Typography>
             
           </Grid>
           
@@ -128,7 +128,7 @@ export default function ContactViewForm({ currentContact = null }) {
              Email
             </Typography>
 
-            <Typography variant="body2">{defaultValues.email ? defaultValues.email : 'N/A'}</Typography>
+            <Typography variant="body2">{defaultValues.email ? defaultValues.email : ''}</Typography>
             
           </Grid>
           {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>

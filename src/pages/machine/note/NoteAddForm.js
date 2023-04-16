@@ -13,7 +13,7 @@ import AddFormButtons from '../../components/AddFormButtons';
 import { saveNote, setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {RHFTextField,} from '../../../components/hook-form';
+import FormProvider, {RHFTextField,RHFSwitch} from '../../../components/hook-form';
 import FormHeading from '../../components/FormHeading';
 
 // ----------------------------------------------------------------------
@@ -30,10 +30,12 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
  // a note can be archived.  
   const AddNoteSchema = Yup.object().shape({
     note: Yup.string().max(10000).required("Note Field is required!"),
+    isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
       note: '',
+      isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentNote]
@@ -79,7 +81,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
             <Stack spacing={2}>
                 <FormHeading heading='New Note'/>
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  
           </Card>
         </Grid>

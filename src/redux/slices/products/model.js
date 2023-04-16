@@ -172,8 +172,8 @@ export function saveMachinemodel(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !params.isDisabled,
-         
+          isActive: params.isActive,
+          description: params.description,
         };
         /* eslint-enable */
         if(params.description){
@@ -211,16 +211,10 @@ export function updateMachinemodel(params) {
       let data = {
         id: params.id,
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
+        description: params.description,
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
-
-      if(params.displayOrderNo){
-        data.displayOrderNo = params.displayOrderNo;
-      }
       if(params.category !== ""){
         data.category = params.category._id;
       }else{

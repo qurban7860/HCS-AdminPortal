@@ -9,7 +9,7 @@ import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography,TextField } from '@mui/material';
 // slice
-import { saveSite, setFormVisibility } from '../../../redux/slices/customer/site';
+import { saveSite, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -17,6 +17,7 @@ import { countries } from '../../../assets/data';
 
 
 import FormProvider, {
+  RHFSwitch,
   RHFSelect,
   RHFTextField,
   RHFAutocomplete
@@ -43,7 +44,7 @@ export default function SiteAddForm() {
   const [fax, setFaxVal] = useState('')
 
   const AddSiteSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
     customer: Yup.string(),
     billingSite: Yup.string(),
     // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
@@ -60,7 +61,7 @@ export default function SiteAddForm() {
     // country: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
- 
+    isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -79,6 +80,7 @@ export default function SiteAddForm() {
       postcode: '',
       // country: null,
       isArchived: false,
+      isActive: true,
 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -125,10 +127,10 @@ export default function SiteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      if(phone.length > 7){
+      if(phone && phone.length > 7){
         data.phone = phone ;
       }
-      if(fax.length > 7){
+      if(fax && fax.length > 7){
         data.fax = fax
       }
       if(country){
@@ -139,14 +141,14 @@ export default function SiteAddForm() {
 
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(err);
+      console.error(err.message);
     }
   };
 
 
   const toggleCancel = () => 
   {
-    dispatch(setFormVisibility(false));
+    dispatch(setSiteFormVisibility(false));
   };
 
   return (
@@ -290,7 +292,7 @@ export default function SiteAddForm() {
                   ))}
               </RHFSelect>
               </Box>
-
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <Box
                 rowGap={5}
                 columnGap={4}

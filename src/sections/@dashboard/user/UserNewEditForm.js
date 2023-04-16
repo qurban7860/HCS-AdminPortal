@@ -104,6 +104,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     // phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
     roles: Yup.array().required('Roles are required'),
+    isActive: Yup.boolean()
     // address: Yup.string().required('Address is required'),
     // country: Yup.string().required('Country is required'),
     // state: Yup.string().required('State is required'),
@@ -115,10 +116,11 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const defaultValues = useMemo(
     () => ({
-      name: currentUser?.firstName || '',
-      email: currentUser?.email || '',
-      password: currentUser?.password || '',
-      passwordConfirmation: currentUser?.passwordConfirmation || '',
+      name:  '',
+      email:  '',
+      password:  '',
+      passwordConfirmation:  '',
+      isActive: true,
       // phone: '',
       // address: currentUser?.address || '',
       // country: currentUser?.country || '',
@@ -170,7 +172,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const onSubmit = async (data) => {
       try{
-        if(phone.length > 7){
+        if(phone && phone.length > 7){
           data.phone = phone ;
         }
         if(customerVal){
@@ -187,7 +189,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
         dispatch(saveUser(data));
         reset();
         enqueueSnackbar('Create success!');
-        dispatch(setFormVisibility(false));
+        dispatch(resetContacts());
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
@@ -337,7 +339,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
-                  <div key={option.id}>
+                  <div key={option._id}>
                     <span>{option.name}</span>
                   </div>
                 )}
@@ -364,7 +366,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
-                  <div key={option.id}>
+                  <div key={option._id}>
                     <span>{`${option.firstName} ${option.lastName}`}</span>
                   </div>
                 )}
@@ -528,7 +530,11 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                   ChipProps={{ size: 'small' }}
                 /> */}
             </Box>
-            
+            <Grid item md={12}>
+            <RHFSwitch name="isActive" labelPlacement="start" label={
+        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+      />
+            </Grid>
             <Stack  sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>

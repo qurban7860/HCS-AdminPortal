@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Switch,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // routes
@@ -15,11 +15,12 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 
-import { getContacts, getContact, setEditFormVisibility, deleteContact } from '../../../redux/slices/customer/contact';
+import { getContacts, getContact, setContactEditFormVisibility, deleteContact } from '../../../redux/slices/customer/contact';
 // Iconify
 import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
-
+import ViewFormAudit from '../../components/ViewFormAudit';
+ 
 // ----------------------------------------------------------------------
 
 ContactViewForm.propTypes = {
@@ -56,7 +57,7 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const handleEdit = async () => {
     await dispatch(getContact(customer._id, currentContact._id));
-    dispatch(setEditFormVisibility(true));
+    dispatch(setContactEditFormVisibility(true));
   };
 
   const onDelete = async () => {
@@ -68,20 +69,20 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const defaultValues = useMemo(
     () => ({
-      firstName: currentContact ? currentContact.firstName : contact?.firstName || 'N/A',
-      lastName: currentContact ? currentContact.lastName : contact?.lastName || 'N/A',
-      title: currentContact ? currentContact.title : contact?.title || 'N/A',
+      firstName: currentContact ? currentContact.firstName : contact?.firstName || '',
+      lastName: currentContact ? currentContact.lastName : contact?.lastName || '',
+      title: currentContact ? currentContact.title : contact?.title || '',
       contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
-      phone: currentContact ? currentContact.phone : contact?.phone || 'N/A',
-      email: currentContact ? currentContact.email : contact?.email || 'N/A',
+      phone: currentContact ? currentContact.phone : contact?.phone || '',
+      email: currentContact ? currentContact.email : contact?.email || '',
 
-      street: currentContact ? currentContact.address?.street : contact?.address.street || 'N/A',
-      suburb: currentContact ? currentContact.address?.suburb : contact?.address.suburb || 'N/A',
-      city: currentContact ? currentContact.address?.city : contact?.address.city || 'N/A',
-      postcode: currentContact ? currentContact.address?.postcode : contact?.address.postcode || 'N/A',
-      region: currentContact ? currentContact.address?.region : contact?.address.region || 'N/A',
-      country: currentContact ? currentContact.address?.country : contact?.address.country || 'N/A',
-        
+      street: currentContact ? currentContact.address?.street : contact?.address.street || '',
+      suburb: currentContact ? currentContact.address?.suburb : contact?.address.suburb || '',
+      city: currentContact ? currentContact.address?.city : contact?.address.city || '',
+      postcode: currentContact ? currentContact.address?.postcode : contact?.address.postcode || '',
+      region: currentContact ? currentContact.address?.region : contact?.address.region || '',
+      country: currentContact ? currentContact.address?.country : contact?.address.country || '',
+        isActive: currentContact.isActive,
       createdAt:                currentContact?.createdAt || "",
       createdByFullname:           currentContact?.createdBy?.name || "",
       createdIP:                currentContact?.createdIP || "",
@@ -240,19 +241,12 @@ export default function ContactViewForm({ currentContact = null }) {
             </Typography>
           </Grid>
             
-
-          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
-            </Grid>
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
           </Grid>
+          <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
+        </Grid>
           <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}

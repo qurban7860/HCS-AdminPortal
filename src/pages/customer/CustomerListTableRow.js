@@ -56,7 +56,7 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isDisabled, type, createdAt } = row;
+  const { name, tradingName, mainSite, isActive, type, createdAt } = row;
   const address = []
   if(mainSite?.address?.city){
     address.push(mainSite?.address?.city)
@@ -99,11 +99,7 @@ export default function CustomerListTableRow({
         </TableCell>
         <TableCell>{tradingName}</TableCell>
         <TableCell>{address.join(", ")}</TableCell>
-        <TableCell align="left">
-          <Label variant="soft" color={(isDisabled === true && 'error') || 'success'} sx={{ textTransform: 'capitalize' }} >
-            {isDisabled === false ? 'Yes' : 'No'}
-            </Label>
-        </TableCell> 
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell>  
         <TableCell>{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>

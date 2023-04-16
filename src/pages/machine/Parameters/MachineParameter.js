@@ -55,17 +55,17 @@ export default function MachineParameter() {
   const { enqueueSnackbar } = useSnackbar();
 
   const AddMachineParameterSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required') ,
-    description: Yup.string().min(2).max(2000),
-    isDisabled : Yup.boolean(),
-    code: Yup.string(),
+    name: Yup.string().max(50).required('Name is required') ,
+    description: Yup.string().max(2000),
+    isActive : Yup.boolean(),
+    code: Yup.string().required('Code is required') ,
   });
 
   const defaultValues = useMemo(
     () => ({
       name: ''  ,
       description:'',
-      isDisabled: true,
+      isActive: true,
       createdAt: '',
       code: '',
       
@@ -90,10 +90,10 @@ export default function MachineParameter() {
   const values = watch();
 
   const onSubmit = async (data) => {
-    if(paramCategoryVal !== null && paramCategoryVal !== ""){
-      data.category = paramCategoryVal?._id
-    }
       try{ 
+        if(paramCategoryVal){
+          data.category = paramCategoryVal?._id
+        }
         await dispatch(saveTechparam(data));
         reset();
         enqueueSnackbar('Create success!');
@@ -114,14 +114,7 @@ export default function MachineParameter() {
   return (
     <>
     <Container maxWidth={false }>
-    <Card
-                sx={{
-                  mb: 3,
-                  height: 160,
-                  position: 'relative',
-                  // mt: '24px',
-                }}
-              >
+              <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='New Parameter' icon='ic:round-flare' />
               </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -143,6 +136,7 @@ export default function MachineParameter() {
               }}
             >
             <Autocomplete
+            required
                 value={paramCategoryVal || null}
                 options={techparamcategories}
                 getOptionLabel={(option) => option.name}
@@ -164,8 +158,8 @@ export default function MachineParameter() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Technical Parameter" required />
-              <RHFTextField name="code" label="Code" required />
+              <RHFTextField name="name" label="Machine Technical Parameter"  />
+              <RHFTextField name="code" label="Code"  />
               </Box>
 
               <Box
@@ -181,7 +175,7 @@ export default function MachineParameter() {
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               
               <RHFSwitch
-              name="isDisabled"
+              name="isActive"
               labelPlacement="start"
               label={
                 <>

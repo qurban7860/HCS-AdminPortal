@@ -15,7 +15,7 @@
   // global
   import { CONFIG } from '../../../config-global';
   // slice
-  import { updateContact, setEditFormVisibility } from '../../../redux/slices/customer/contact';
+  import { updateContact, setContactEditFormVisibility } from '../../../redux/slices/customer/contact';
   // routes
   import { PATH_DASHBOARD } from '../../../routes/paths';
   // components
@@ -28,7 +28,7 @@
     RHFMultiSelect,
     RHFUpload,
     RHFTextField,
-
+    RHFSwitch
   } from '../../../components/hook-form';
   // assets
   import { countries } from '../../../assets/data';
@@ -59,8 +59,6 @@
 
     const { enqueueSnackbar } = useSnackbar();
 
-    const numberRegExp = /^[0-9]+$/;
-
     const [phone, setPhone] = useState('')
     const [country, setCountryVal] = useState('')
 
@@ -70,14 +68,16 @@
     }
 
     useEffect(()=>{
-      setPhone(contact.phone)
-      const contactCountry= filtter(countries,{label: contact.address.country})
-      setCountryVal(contactCountry[0])
+      if(contact?.address?.country){
+        setPhone(contact.phone)
+        const contactCountry= filtter(countries,{label: contact.address.country})
+        setCountryVal(contactCountry[0])
+      }
     },[contact])
 
     const EditContactSchema = Yup.object().shape({
       // customer: Yup.string(),
-      firstName: Yup.string(),
+      firstName: Yup.string().required(),
       lastName: Yup.string(),
       title: Yup.string(),
       contactTypes: Yup.array(),
@@ -88,6 +88,7 @@
       city: Yup.string(),
       region: Yup.string(),
       postcode: Yup.string(),
+      isActive: Yup.boolean(),
       // country: Yup.string().nullable()
       // isPrimary: Yup.boolean(),
     });
@@ -108,6 +109,7 @@
         city: contact?.address?.city || '',
         region: contact?.address?.region || '',
         postcode: contact?.address?.postcode || '',
+        isActive: contact?.isActive,
         // country: contact.address?.country === null || contact.address?.country === undefined  ? null : contact.address.country,
       }),
       [contact]
@@ -144,7 +146,7 @@
 
     const onSubmit = async (data) => {
       try {
-        if(phone.length > 7){
+        if(phone &&phone.length > 7){
           data.phone = phone ;
         }else{
           data.phone = "";
@@ -159,13 +161,13 @@
         // navigate(PATH_DASHBOARD.contact.list);
       } catch (err) {
         enqueueSnackbar('Saving failed!');
-        console.error(error);
+        console.error(err);
       }
     };
 
     const toggleCancel = () => 
     {
-      dispatch(setEditFormVisibility(false));
+      dispatch(setContactEditFormVisibility(false));
     };
 
 
@@ -277,6 +279,7 @@
                 />
 
               </Box>
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
 
               <Box
                 rowGap={5}

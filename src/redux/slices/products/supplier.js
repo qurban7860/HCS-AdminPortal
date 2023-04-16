@@ -101,51 +101,7 @@ export const {
 
 } = slice.actions;
 
-
-// ----------------------------------------------------------------------
-
-// export function saveSupplier (supplyData){
-//   return async (dispatch) =>{
-//     dispatch(slice.actions.startLoading());
-//     // console.log("supplyData : ",supplyData)
-//     try{
-//       const data ={
-//         name: supplyData.name
-//       }
-//       if(supplyData.address){
-//         data.address = supplyData.address
-//       }
-//       if(supplyData.contactName){
-//         data.contactName = supplyData.contactName
-//       }
-//       if(supplyData.contactTitle){
-//         data.contactTitle = supplyData.contactTitle
-//       }
-//       if(supplyData.email){
-//         data.email = supplyData.email
-//       }
-//       if(supplyData.fax){
-//         data.fax = supplyData.fax
-//       }
-//       if(supplyData.phone){
-//         data.phone = supplyData.phone
-//       }
-//       if(supplyData.website){
-//         data.website = supplyData.website
-//       }
-//       data.isDisabled = !supplyData.isDisabled
-
-//       const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`,data);
-//       // dispatch(slice.actions)
-//     } catch (e) {
-//       console.log(e);
-//       dispatch(slice.actions.hasError(e.Message))
-//     }
-//   }
-// }
-
-// ----------------------------------------------------------------------
-
+//------------------------------------------------------------------------------
 
 export function getSuppliers (){
   return async (dispatch) =>{
@@ -169,7 +125,7 @@ export function getSupplier(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
-      dispatch(slice.actions.getSuppliersSuccess(response.data));
+      dispatch(slice.actions.getSupplierSuccess(response.data));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -177,6 +133,7 @@ export function getSupplier(id) {
   };
 }
 
+//------------------------------------------------------------------------------------------
 export function deleteSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -204,7 +161,7 @@ export function saveSupplier(params) {
         let data = {
         id: params.id,
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
         };
         /* eslint-enable */
 
@@ -269,48 +226,22 @@ export function updateSupplier(params,Id) {
       let data = {
         id: params.id,
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
+        contactName: params.contactName,
+        contactTitle: params.contactTitle,
+        phone: params.phone,
+        email: params.email,
+        website: params.website,
+        fax: params.fax,
+        address: {
+          street: params.street,
+          suburb: params.suburb,
+          city: params.city,
+          region: params.region,
+          country: params.country,
+        }
       };
      /* eslint-enable */
-
-      if(params.contactName){
-        data.contactName = params.contactName;
-      }
-      if(params.contactTitle){
-        data.contactTitle = params.contactTitle;
-      }
-      if(params.phone){
-        data.phone = params.phone;
-      }
-      if(params.email){
-        data.email = params.email;
-      }
-      if(params.website){
-        data.website = params.website;        
-      }
-      if(params.fax){
-        data.fax = params.fax;        
-      }
-      
-      // if(params.street || params.subrub || params.city || params.region || params.country) {
-        data.address = {}
-      // }
-
-      if(params.street){
-        data.address.street = params.street;        
-      }
-      if(params.suburb){
-        data.address.suburb = params.suburb;        
-      }
-      if(params.city){
-        data.address.city = params.city;        
-      }
-      if(params.region){
-        data.address.region = params.region;        
-      }
-      if(params.country){
-        data.address.country = params.country;        
-      }
       
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
         data

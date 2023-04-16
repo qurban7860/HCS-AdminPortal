@@ -44,8 +44,7 @@ import ParameterListTableRow from './ParameterListTableRow';
 import ParameterListTableToolbar from './ParameterListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
-
-
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -71,6 +70,7 @@ const STATUS_OPTIONS = [
 
 
 export default function StatusList() {
+  const [tableData, setTableData] = useState([]);
   const {
     dense,
     page,
@@ -102,7 +102,6 @@ export default function StatusList() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [tableData, setTableData] = useState([]);
 
   const [filterStatus, setFilterStatus] = useState([]);
 
@@ -110,7 +109,7 @@ export default function StatusList() {
 
   const { techparams, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparam);
 
-  // console.log("tech params : ",techparams)
+  console.log("tech params : ",techparams)
 
   useLayoutEffect( () => {
     // console.log('Testing done')
@@ -121,9 +120,10 @@ export default function StatusList() {
     if (initial) {
       if (techparams && !error) {
         enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
       }
+      //  else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(techparams);
     }
   }, [techparams, error, responseMessage, enqueueSnackbar, initial]);
@@ -360,9 +360,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (filterParameter) => filterParameter?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    filterParameter?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||  
+    // (filterParameter?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(filterParameter?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {

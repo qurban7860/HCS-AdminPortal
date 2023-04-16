@@ -20,6 +20,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, {
+  RHFSwitch,
   RHFSelect,
   RHFAutocomplete,
   RHFTextField,
@@ -86,7 +87,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
 
   const AddCustomerSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
     tradingName: Yup.string(),
     mainSite: Yup.string(),
     sites: Yup.array(),
@@ -103,7 +104,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
-    postcode: Yup.string().matches(numberRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).min(0),
+    postcode: Yup.string(),
     region: Yup.string(),
     // country: Yup.string().nullable(true),
 
@@ -122,6 +123,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     technicalContactTypes: Yup.array(),
     // technicalContactPhone: Yup.string(),
     technicalContactEmail: Yup.string().email('Email must be a valid email address'),
+    isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -133,6 +135,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       projectManager: null,
       supportManager: null,
       type: 'Customer',
+      isActive: true,
       contactFlag,
       loginUser: {
         userId,
@@ -472,7 +475,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </RHFSelect>
 
               </Box>
-
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               </Stack>
 
             <Stack alignItems="flex-start" direction="row" spacing={2} sx={{ mt: 3 }}>

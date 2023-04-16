@@ -78,24 +78,12 @@ export default function ParameterListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
-            <Link
-              noWrap
-              color="inherit"
-              variant="subtitle2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} >{name}</Link>
           </Stack>
         </TableCell>
         <TableCell>{category?.name || ''}</TableCell>
         {/* <TableCell>category</TableCell> */}
-        <TableCell align="center">
-         <Switch  checked = { isActive } disabled  sx={{my:-1}}/>
-        </TableCell> 
-
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" sx={{my:-1}}/> </TableCell> 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
         
        

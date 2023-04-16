@@ -43,8 +43,8 @@ import {
 // sections
 import UserTableToolbar from './UserTableToolbar';
 import  UserTableRow  from './UserTableRow';
-import { getUsers, deleteUser , setEditFormVisibility } from '../../redux/slices/user';
-
+import { getUsers,getUser, deleteUser , setEditFormVisibility } from '../../redux/slices/user';
+import { fDate } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const STATUS_OPTIONS = ['all', 'active', 'banned'];
@@ -61,8 +61,10 @@ const TABLE_HEAD = [
   { id: 'email', label: 'Email', align: 'left' },
   { id: 'phone', label: 'Phone Number', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
+  { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
   { id: '' },
 ];
 
@@ -91,7 +93,7 @@ export default function UserListPage() {
   const dispatch = useDispatch();
 
   const { users, error, responseMessage, initial,editFormVisibility,formVisibility} = useSelector((state) => state.user);
-
+// console.log("users", users);
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -114,14 +116,15 @@ export default function UserListPage() {
   }, [dispatch,editFormVisibility,formVisibility]);
 
   useEffect(() => {
-    if (initial) {
-      if (users && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+    // if (initial) {
+    //   if (users && !error) {
+    //     enqueueSnackbar(responseMessage);
+    //   } 
+    //   if(error) {
+    //     enqueueSnackbar(error, { variant: `error` });
+    //   }
       setTableData(users);
-    }
+    // }
   }, [users, error, enqueueSnackbar, responseMessage, initial]);
 
 
@@ -207,10 +210,13 @@ export default function UserListPage() {
   };
 
   const handleEditRow = (id) => {
-    console.log('id', id);
-    console.log('edit');
+    // console.log('id', id);
+    // console.log('edit');
     dispatch(setEditFormVisibility(true))
     navigate(PATH_DASHBOARD.user.edit(id));
+  };
+  const handleViewRow = (id) => {
+    navigate(PATH_DASHBOARD.user.view(id));
   };
 
   const handleResetFilter = () => {
@@ -244,18 +250,11 @@ export default function UserListPage() {
             </Button>
           }
         /> */}
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
           <Cover name='Users List' icon="ph:users-light"/>
         </Card>
         <Card>
-          <Tabs
+          {/* <Tabs
             value={filterStatus}
             onChange={handleFilterStatus}
             sx={{
@@ -268,7 +267,7 @@ export default function UserListPage() {
             ))}
           </Tabs>
 
-          <Divider />
+          <Divider /> */}
 
           <UserTableToolbar
             isFiltered={isFiltered}
@@ -329,7 +328,7 @@ export default function UserListPage() {
                         onSelectRow={() => onSelectRow(row._id)}
                         onDeleteRow={() => handleDeleteRow(row._id)}
                         onEditRow={() => handleEditRow(row._id)}
-                        // onViewRow={() => handleViewRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
 
@@ -392,9 +391,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (securityUser) => securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
+    securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus !== 'all') {

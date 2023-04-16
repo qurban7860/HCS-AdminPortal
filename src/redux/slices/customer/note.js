@@ -49,7 +49,20 @@ const slice = createSlice({
       state.error = action.payload;
       state.initial = true;
     },
-
+    // RESET NOTE
+    resetNote(state){
+      state.note = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET NOTES
+    resetNotes(state){
+      state.notes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     // GET Notes
     getNotesSuccess(state, action) {
       state.isLoading = false;
@@ -92,8 +105,8 @@ export default slice.reducer;
 export const {
   setNoteFormVisibility,
   setNoteEditFormVisibility,
-  getCart,
-  addToCart,
+  resetNote,
+  resetNotes,
   setResponseMessage,
   gotoStep,
   backStep,
@@ -109,6 +122,7 @@ export function saveNote(customerId,params) {
     try {
       const data = {
         note: params.note,
+        isActive: params.isActive,
       }
       if(params.customer){
         data.customer =  params.customer;
@@ -145,6 +159,7 @@ export function updateNote(customerId,params) {
     try {
       const data = {
         note: params.note,
+        isActive: params.isActive,
       }
       data.note =  params.note;
       if(params.customer){

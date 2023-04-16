@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility , updateToolInstalled ,deleteToolInstalled, saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
 // paths
@@ -14,6 +14,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate,fDateTime } from '../../../utils/formatTime';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
 ToolsInstalledViewForm.propTypes = {
@@ -59,7 +60,7 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
       {
         toolName:                 currentTool?.tool?.name || "",
         toolNote:                 currentTool?.note|| "",
-        isDisabled:               currentTool?.isDisabled,
+        isActive:               currentTool?.isActive,
         createdAt:                currentTool?.createdAt || "",
         createdByFullname:           currentTool?.createdBy?.name || "",
         createdIP:                currentTool?.createdIP || "",
@@ -117,25 +118,13 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
             </Typography>
           </Grid>
 
-          <Grid item xs={12} sm={12} sx={{pt:2}}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Active
-            </Typography>
-            <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
+          <Grid item xs={12} sm={12} >
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
           </Grid>
 
-          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
-            </Grid>
-          </Grid>
+          <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
+        </Grid>
         <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}

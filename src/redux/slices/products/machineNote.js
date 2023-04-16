@@ -110,7 +110,8 @@ export function saveNote(machineId,params) {
         dispatch(slice.actions.startLoading());
         try {
             const data = {
-                note: params.note,
+                note:     params.note,
+                isActive: params.isActive,
             }
             if(params.user){
                 data.user =    params.user;
@@ -133,7 +134,8 @@ export function updateNote(machineId,noteId,params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        note: params.note,
+        note:     params.note,
+        isActive: params.isActive,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));

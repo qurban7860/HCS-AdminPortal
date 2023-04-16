@@ -150,14 +150,14 @@ export function addCategory(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: params.isDisabled,
+          isActive: params.isActive,
         };
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
           }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/categories`, data);
-        dispatch(slice.actions.getCategoriesSuccess(response.data.Category));
+        dispatch(slice.actions.setResponseMessage(response.data.Category));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
@@ -174,12 +174,10 @@ export function updateCategory(params,Id) {
       /* eslint-disable */
       const data = {
         name: params.name,
-        isDisabled: params.isDisabled,
+        isActive: params.isActive,
+        description: params.description,
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );

@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 // @mui
 // import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Switch,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 
 // global
@@ -19,6 +19,7 @@ import { fDate,fDateTime } from '../../../utils/formatTime';
 import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../../redux/slices/customer/note';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Iconify from '../../../components/iconify';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 NoteViewForm.propTypes = {
   currentNote: PropTypes.object,
@@ -71,11 +72,12 @@ export default function NoteViewForm({currentNote = null}) {
 
   const defaultValues = useMemo(
     () => ({
-      id: currentNote?._id || 'N/A',
+      id: currentNote?._id || '',
       site_name:  currentNote.site === null || currentNote.site === undefined ? "" : currentNote.site.name,
       contact_firstName: currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.firstName,
       contact_lastName:  currentNote.contact === undefined || currentNote.contact === null ? ""  : currentNote.contact.lastName,
       note: currentNote?.note || "",
+      isActive: currentNote.isActive,
       createdAt:                currentNote?.createdAt || "",
       createdByFullname:           currentNote?.createdBy?.name || "",
       createdIP:                currentNote?.createdIP || "",
@@ -125,7 +127,7 @@ export default function NoteViewForm({currentNote = null}) {
                   Contact
               </Typography>
               <Typography variant="body2">
-                  {defaultValues.contact_firstName} {defaultValues.contact_lastName !== 'N/A' ?defaultValues.contact_lastName:""}
+                  {defaultValues.contact_firstName} {defaultValues.contact_lastName !== '' ?defaultValues.contact_lastName:""}
               </Typography>
             </Grid>
           <Grid item xs={18} sm={12} sx={{  pt:2}}>
@@ -137,20 +139,14 @@ export default function NoteViewForm({currentNote = null}) {
             <Typography variant="string" sx={{ whiteSpace: 'pre-line'}}>
                 {defaultValues.note}
             </Typography>
-            
+            <Grid item xs={12} sm={12} >
+            Active
+            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
           </Grid>
-          <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-            </Typography>
-            </Grid>
           </Grid>
+          <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
+        </Grid>
 
           <ConfirmDialog
             open={openConfirm}

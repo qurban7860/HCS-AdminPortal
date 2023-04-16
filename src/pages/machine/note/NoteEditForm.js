@@ -4,13 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Card, Grid, Stack } from '@mui/material';
+import {Typography, Card, Grid, Stack } from '@mui/material';
 import UpdateFormButtons from '../../components/UpdateFormButtons';
 // Slice
 import {  updateNote ,setNoteEditFormVisibility} from '../../../redux/slices/products/machineNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch} from '../../../components/hook-form';
 import FormHeading from '../../components/FormHeading';
 
 // ----------------------------------------------------------------------
@@ -21,10 +21,12 @@ export default function NoteEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const EditNoteSchema = Yup.object().shape({
     note: Yup.string().max(10000).required("Note Field is required!"),
+    isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
       note: note?.note || '',
+      isActive: note.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [note]
@@ -69,6 +71,7 @@ export default function NoteEditForm() {
             <Stack spacing={3} sx={{mb:3}}>
               <FormHeading heading='Edit Note'/>
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
+              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
             </Stack>  
             <UpdateFormButtons toggleCancel={toggleCancel} isSubmitting={isSubmitting}/>
           </Card>

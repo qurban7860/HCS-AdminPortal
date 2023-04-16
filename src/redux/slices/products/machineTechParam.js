@@ -215,20 +215,15 @@ export function saveTechparam(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !params.isDisabled,
+          isActive: params.isActive,
+          description: params.description,
+          code: params.code
         };
         /* eslint-enable */
-        if(params.description){
-            data.description = params.description;
-          }
-          if(params.code){
-            data.code = params.code;
-          }
-
-          if(params.techparamcategory !== ""){
-            data.techparamcategory = params.techparamcategory._id;
+          if(params.category){
+            data.category = params.category;
           }else{
-            data.techparamcategory = null
+            data.category = null
           }
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`, data);
@@ -253,15 +248,12 @@ export function updateTechparam(params,id) {
       /* eslint-disable */
       let data = {
         name: params.name,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
+        description: params.description,
+        code: params.code
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
-      if(params.code){
-        data.code = params.code;
-      }
+
       if(params.category){
         data.category = params.category;
       }else{

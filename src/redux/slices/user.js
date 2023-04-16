@@ -17,7 +17,7 @@ const initialState = {
   isLoading: false,
   error: null,
   users: [],
-  user: null,
+  securityUser: null,
   values: {
     firstName: 0,
     lastName: 0,
@@ -69,7 +69,7 @@ const slice = createSlice({
     },
     // RESET USER
     resetUser(state){
-      state.user = {};
+      state.SecurityUser = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -87,7 +87,7 @@ const slice = createSlice({
     getUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.user = action.payload;
+      state.securityUser = action.payload;
       state.initial = true;
     },
 
@@ -137,9 +137,11 @@ export function saveUser(param) {
       phone:  param.phone,
       roles: param.roles,
       login: param.email,
+      isActive: param.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       dispatch(slice.actions.setResponseMessage('User Saved successfully'));
+      dispatch(setFormVisibility(false))
 
     } catch (error) {
       console.log(error);
@@ -161,6 +163,7 @@ export function updateUser(param,id) {
         phone:  param.phone,
         roles: param.roles,
         login: param.email,
+        isActive: param.isActive
         }
         if(param.password === ""){
             data.password = param.password 
@@ -219,7 +222,11 @@ export function deleteUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}security/users/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`,
+      {
+        isArchived: true, 
+      }
+      );
       dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
     } catch (error) {

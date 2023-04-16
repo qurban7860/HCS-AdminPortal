@@ -172,13 +172,12 @@ export function saveMachinestatus(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isDisabled: !params.isDisabled,
+          isActive: params.isActive,
         };
         /* eslint-enable */
         if(params.description){
             data.description = params.description;
           }
-          console.log(data)
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
 
@@ -203,15 +202,11 @@ export function updateMachinestatus(params,Id) {
       let data = {
         id: params.id,
         name: params.name,
-        displayOrderNo: params.displayOrderNo
+        displayOrderNo: params.displayOrderNo,
+        description: params.description,
+        isActive: params.isActive
       };
      /* eslint-enable */
-     if(params.description){
-        data.description = params.description;
-      }
-        data.isDisabled = !params.isDisabled;
-
-      console.log(" Patch Data: ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
         data
       );

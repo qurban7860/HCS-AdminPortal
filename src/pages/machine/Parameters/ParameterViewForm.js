@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getTechparam } from '../../../redux/slices/products/machineTechParam';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // Iconify
 
@@ -60,12 +61,14 @@ useLayoutEffect(()=>{
         name:techparam?.name || '',
         code: techparam?.code || '',
         description:techparam?.description || '',
-        createdAt: techparam?.createdAt || '',
-        updatedAt: techparam?.updatedAt || '',
         category: techparam?.category?.name || '', 
-        isDisabled: techparam?.isActive || true,
-        createdByFullname: techparam?.createdBy?.name || "",
-        updatedByFullname: techparam?.updatedBy?.name || "",
+        isActive: techparam?.isActive,
+        createdByFullname:        techparam?.createdBy?.name || "",
+        createdAt:                techparam?.createdAt || "",
+        createdIP:                techparam?.createdIP || "",
+        updatedByFullname:        techparam?.updatedBy?.name || "",
+        updatedAt:                techparam?.updatedAt || "",
+        updatedIP:                techparam?.updatedIP || "",
        
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -118,26 +121,12 @@ useLayoutEffect(()=>{
           </Grid>
       </Grid>
 
-      <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No'  : 'Yes'   }</Typography>
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
-      <Grid container>
-          <Grid container spacing={0} sx={{  mb: 1,  pt:4}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                updated by: {defaultValues.updatedByFullname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
-              </Typography>
-            </Grid>
-          </Grid>
+        <Grid item container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
     </Card>
   );

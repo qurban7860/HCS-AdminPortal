@@ -5,18 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
-// global
-
 // slice
 import { updateTool, setToolEditFormVisibility, getTool, getTools } from '../../../redux/slices/products/tools';
-
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
 // routes
@@ -25,18 +20,10 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar'
 import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
+import {Cover} from '../../components/Cover'
 
 // ----------------------------------------------------------------------
-
 
 export default function ToolEditForm() {
 
@@ -53,18 +40,14 @@ export default function ToolEditForm() {
   const EditToolSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
-    createdAt: Yup.string(),
+    isActive : Yup.boolean(),
   });
-
 
   const defaultValues = useMemo(
     () => ({
-        name:tool?.name || 'N/A',
-        description:tool?.description || 'N/A',
-        createdAt: tool?.createdAt || '',
-        updatedAt: tool?.updatedAt || '',
-        isDisabled: !tool.isDisabled,
+        name:tool?.name || '',
+        description:tool?.description || '',
+        isActive: tool.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [tool]
@@ -130,17 +113,12 @@ export default function ToolEditForm() {
       <Helmet>
         <title> Machine: Tool | Machine ERP</title>
       </Helmet>
-
-      
-
         <Grid item xs={18} md={12}>
+            <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+                <Cover name='Edit Tool' icon='fa-solid:tools' />
+            </Card>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Edit Tool
-                </Typography>
-              </Stack>
             <Box
               rowGap={2}
               columnGap={2}
@@ -153,17 +131,9 @@ export default function ToolEditForm() {
 
               <RHFTextField name="name" label="Machine Tool" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSwitch
-              name="isDisabled"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                    Active
-                  </Typography>
-                </>
-              } 
-            />
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                />
              </Box>
              
               

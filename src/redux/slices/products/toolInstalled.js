@@ -112,9 +112,8 @@ export function saveToolInstalled(machineId,params) {
             const data = {
                 tool: params.tool,
                 note: params.note,
-                isDisabled: !params.isDisabled,
+                isActive: params.isActive,
             }
-            console.log("Tool Installed", data);
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
     //   dispatch(slice.actions.ToolInstalledFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
@@ -135,9 +134,8 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
       const data = {
         tool: params.tool,
         note: params.note,
-        isDisabled: !params.isDisabled,
+        isActive: params.isActive,
       }
-      console.log(" slice Data : ",data);
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
       dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
       dispatch(setToolInstalledEditFormVisibility (false));

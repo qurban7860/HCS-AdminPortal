@@ -64,7 +64,7 @@ setparamData(filteredsetting);
   
 const AddSettingSchema = Yup.object().shape({
   techParamValue: Yup.string().max(20),
-  isDisabled : Yup.boolean(),
+  isActive : Yup.boolean(),
 });
 
 useEffect(()=>{
@@ -142,6 +142,7 @@ useEffect(()=>{
 
                 <Autocomplete
                 // freeSolo
+                required
                 value={ category || null}
                 options={techparamcategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -157,12 +158,13 @@ useEffect(()=>{
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="category" />}
+                renderInput={(params) => <TextField {...params}  label="category" required />}
                 ChipProps={{ size: 'small' }}
               />
               
               <Autocomplete
                 // freeSolo
+                required
                 value={techParamVal || null}
                 options={paramData}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -177,7 +179,7 @@ useEffect(()=>{
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Technical Parameters" />}
+                renderInput={(params) => <TextField {...params}  label="Technical Parameters" required/>}
                 ChipProps={{ size: 'small' }}
               />
               
@@ -196,7 +198,7 @@ useEffect(()=>{
               >
                 <RHFTextField name="techParamValue" label="Technical Parameter Value" />
                 <RHFSwitch
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>

@@ -6,17 +6,20 @@ ViewFormAudit.propTypes = {
     defaultValues: PropTypes.object,
   };
 export default function ViewFormAudit({defaultValues}) {
+const {createdByFullName,createdAt,createdIP,updatedByFullName,updatedAt,updatedIP} = defaultValues;
+  const created =[createdByFullName,createdAt,createdIP]
+  const updated =[updatedByFullName,updatedAt,updatedIP]
     return (
       <>
-        <Grid container spacing={0} sx={{  mb:-3,  pt:4, overflowWrap: "break-word",}}>
+        <Grid item md={12}  sx={{  overflowWrap: "break-word",display:'flex'}}>
             <Grid item xs={12} sm={6} >
-                <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                  created by: {defaultValues.createdByFname} {defaultValues.createdByLname}, {fDate(defaultValues.createdAt)}, {defaultValues.createdIP}
+                <Typography paragraph variant="body2" sx={{ px:2, color: 'text.disabled' }}>
+                  created by: {createdByFullName},{fDate(createdAt)},{createdIP}
                 </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
-                <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                  updated by: {defaultValues.updatedByFname} {defaultValues.updatedByLname}, {fDate(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+                <Typography variant="body2" sx={{px:2,  color: 'text.disabled' }}>
+                  updated by: {updatedByFullName},{fDate(updatedAt)},{updatedIP}
                 </Typography>
             </Grid>
         </Grid>

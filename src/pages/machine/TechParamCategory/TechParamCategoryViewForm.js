@@ -4,26 +4,19 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getTechparamcategory, updateTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
 // Iconify
-
 import { fDate } from '../../../utils/formatTime';
-
-
 import Iconify from '../../../components/iconify/Iconify';
-
-
-
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
-
 
 TechParamCategoryViewForm.propTypes = {
   currentTechparamcategory: PropTypes.object,
@@ -32,18 +25,16 @@ TechParamCategoryViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function TechParamCategoryViewForm({ currentTechparamcategory = null }) {
-
-
   const [editFlag, setEditFlag] = useState(false);
-
+  
   const toggleEdit = () => {
     navigate(PATH_MACHINE.techParam.techparamcategoryedit(id));
   }
-
+  
   const navigate = useNavigate();
-
+  
   const { enqueueSnackbar } = useSnackbar();
-
+  
   const { techparamcategory } = useSelector((state) => state.techparamcategory);
   // const tool = tools
   const { id } = useParams();
@@ -59,11 +50,15 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
   const defaultValues = useMemo(
     () => (
       {
-        name:techparamcategory?.name || 'N/A',
-        description:techparamcategory?.description || 'N/A',
-        createdAt: techparamcategory?.createdAt || '',
-        updatedAt: techparamcategory?.updatedAt || '',
-        isDisabled: techparamcategory.isDisabled ,
+        name:techparamcategory?.name || "",
+        description:techparamcategory?.description || "",
+        isActive: techparamcategory.isActive ,
+        createdAt:                techparamcategory?.createdAt || "",
+        createdByFullname:        techparamcategory?.createdBy?.name || "",
+        createdIP:                techparamcategory?.createdIP || "",
+        updatedAt:                techparamcategory?.updatedAt || "",
+        updatedByFullname:        techparamcategory?.updatedBy?.name || "",
+        updatedIP:                techparamcategory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTechparamcategory, techparamcategory]
@@ -93,43 +88,27 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
             Name
           </Typography>
 
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.name}</Typography>
 
         </Grid>
 
 
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={12} sx={{ mb: 1}}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
 
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.description}</Typography>
 
         </Grid>
 
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes'}</Typography>
-
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
 
-        
-        <Grid container spacing={0} sx={{ mb: 5}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                Created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              Updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
-            </Typography>
-            </Grid>
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
-
       </Grid>
     </Card>
   );

@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import {
+  Link,
+  Switch,
   Stack,
   Avatar,
   Button,
@@ -17,6 +19,7 @@ import Label from '../../components/label';
 import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
+import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -26,10 +29,11 @@ UserTableRow.propTypes = {
   onEditRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
   onSelectRow: PropTypes.func,
+  onViewRow: PropTypes.func,
 };
 
-export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, onDeleteRow }) {
-  const { email, name, roles, phone, status, image } = row;
+export default function UserTableRow({ row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
+  const { email, name, roles, phone, status, image , createdAt ,isActive} = row;
   const names = roles.map((a) => a.name);
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -64,11 +68,12 @@ export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, o
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Avatar alt={name} src={image} />
-
-            <Typography variant="subtitle2" noWrap>
-              {`${name}`}
-            </Typography>
+            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer',display:"flex",justifyContent:"center",alignItems:"center" }} >
+              <Avatar alt={name} src={image} sx={{mr:1}}/>
+              <Typography variant="subtitle2" noWrap>
+                {`${name}`}
+              </Typography>
+            </Link>
           </Stack>  
         </TableCell>
 
@@ -79,7 +84,12 @@ export default function UserTableRow({ row, selected, onEditRow,  onSelectRow, o
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {names ? names.join(" , ") : ""}
+        {roles.map((obj) => obj.name).join(', ')}
+        {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
+        </TableCell>
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell> 
+        <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
+        {fDate(createdAt)}
         </TableCell>
 
         {/* <TableCell align="center">

@@ -35,12 +35,12 @@ export default function NoteViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id: note?._id || 'N/A',
-      name: note?.name || 'N/A',
-      status: note?.tradingName || 'N/A',
-      accountManager: note?.accountManager || 'N/A',
-      projectManager: note?.projectManager || 'N/A',
-      supportManager: note?.supportManager || 'N/A',
+      id: note?._id || '',
+      name: note?.name || '',
+      status: note?.tradingName || '',
+      accountManager: note?.accountManager || '',
+      projectManager: note?.projectManager || '',
+      supportManager: note?.supportManager || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [note]

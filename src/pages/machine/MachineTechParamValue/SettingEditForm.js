@@ -71,14 +71,14 @@ export default function SettingEditForm() {
   const defaultValues = useMemo(
     () => ({
       techParamValue: setting?.techParamValue || '',
-      isActive : setting?.isActive || true,
+      isActive : setting?.isActive ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
   const EditSettingSchema = Yup.object().shape({
     techParamValue: Yup.string().max(50),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
   });
 
   const methods = useForm({
@@ -190,7 +190,7 @@ export default function SettingEditForm() {
 
               </Box>
               <RHFSwitch
-                name="isDisabled"
+                name="isActive"
                 labelPlacement="start"
                 label={
                   <>

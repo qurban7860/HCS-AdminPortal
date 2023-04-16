@@ -43,12 +43,12 @@ const slice = createSlice({
     },
 
     // SET TOGGLE
-    setFormVisibility(state, action){
+    setContactFormVisibility(state, action){
       state.formVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setEditFormVisibility(state, action){
+    setContactEditFormVisibility(state, action){
       state.contactEditFormVisibility = action.payload;
     },
 
@@ -117,8 +117,8 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setFormVisibility,
-  setEditFormVisibility,
+  setContactFormVisibility,
+  setContactEditFormVisibility,
   resetContact,
   resetContacts,
   getCart,
@@ -146,6 +146,7 @@ export function saveContact(params) {
         contactTypes: params.contactTypes,
         phone: params.phone,
         email: params.email,
+        isActive: params.isActive,
         address: {}
 
       };
@@ -174,7 +175,7 @@ export function saveContact(params) {
         data,
       );
 
-      dispatch(slice.actions.setFormVisibility(false));
+      dispatch(slice.actions.setContactFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Site saved successfully'));
 
     } catch (error) {
@@ -189,7 +190,7 @@ export function saveContact(params) {
 export function updateContact(customerId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    dispatch(slice.actions.setEditFormVisibility(false));
+    dispatch(slice.actions.setContactEditFormVisibility(false));
 
     try {
       /* eslint-disable */
@@ -202,6 +203,7 @@ export function updateContact(customerId,params) {
         contactTypes: params.contactTypes,
         phone: params.phone,
         email: params.email,
+        isActive: params.isActive,
         address: {}
       };
 

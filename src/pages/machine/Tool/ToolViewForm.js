@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate,useParams } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch ,Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
 import { getTool, setToolEditFormVisibility } from '../../../redux/slices/products/tools';
 // paths
@@ -19,6 +19,7 @@ import { fDate } from '../../../utils/formatTime';
 import ToolEditForm from './ToolEditForm';
 
 import Iconify from '../../../components/iconify/Iconify';
+import ViewFormAudit from '../../components/ViewFormAudit';
 
 
 
@@ -61,12 +62,15 @@ export default function ToolViewForm({ currentTool = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:tool?.name || 'N/A',
-        description:tool?.description || 'N/A',
-        createdAt: tool?.createdAt || '',
-        updatedAt: tool?.updatedAt || '',
-        updatedIP: tool?.updatedIP || '',
-        isDisabled: tool.isDisabled ,
+        name:tool?.name || '',
+        description:tool?.description || '',
+        isActive: tool?.isActive ,
+        createdByFullname:        tool?.createdBy?.name || "",
+        createdAt:                tool?.createdAt || "",
+        createdIP:                tool?.createdIP || "",
+        updatedByFullname:        tool?.updatedBy?.name || "",
+        updatedAt:                tool?.updatedAt || "",
+        updatedIP:                tool?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]
@@ -86,7 +90,6 @@ export default function ToolViewForm({ currentTool = null }) {
         >
           Edit
         </Button>
-
       </Stack>
       <Grid container>
 
@@ -94,40 +97,24 @@ export default function ToolViewForm({ currentTool = null }) {
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
           </Typography>
-
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : 'N/A'}</Typography>
-
+          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
         </Grid>
 
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Description
           </Typography>
 
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : 'N/A'}</Typography>
+          <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
 
         </Grid>
 
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Active
-          </Typography>
-          <Typography variant="body2">{defaultValues.isDisabled  ? 'No' : 'Yes' }</Typography>
-
+        <Grid item xs={12} sm={12} >
+         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
         
-        <Grid container spacing={0} sx={{ mb: 5}}>
-            <Grid item xs={12} sm={6} >
-              <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                Created by: Naveed, {fDate(defaultValues.createdAt)}, 192.168.10.101
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-            <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              Updated by: Naveed, {fDate(defaultValues.updatedAt)}, 192.168.10.101
-            </Typography>
-            </Grid>
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
 
       </Grid>

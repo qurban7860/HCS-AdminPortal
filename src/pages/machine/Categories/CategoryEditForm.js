@@ -28,16 +28,16 @@ export default function CategoryEditForm() {
   const { id } = useParams();
 
   const EditCategorySchema = Yup.object().shape({
-    name: Yup.string().min(5).max(50).required('Name is required') ,
+    name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
-    isDisabled : Yup.boolean(),
+    isActive : Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
-        name:category?.name || 'N/A',
-        description:category?.description || 'N/A',
-        isDisabled: category.isDisabled ,
+        name:category?.name || '',
+        description:category?.description || '',
+        isActive: category.isActive ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [category]
@@ -99,7 +99,7 @@ export default function CategoryEditForm() {
               <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
                 <RHFTextField name="name" label="Machine Category" required />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
-                <RHFSwitch name="isDisabled" labelPlacement="start" label={
+                <RHFSwitch name="isActive" labelPlacement="start" label={
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
                 />
               </Box>

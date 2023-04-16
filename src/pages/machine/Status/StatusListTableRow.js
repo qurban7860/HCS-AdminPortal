@@ -2,16 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
-import {
-  Stack,
-  Button,
-  TableRow,
-  Checkbox,
-  MenuItem,
-  TableCell,
-  IconButton,
-  Link,
-} from '@mui/material';
+import { Switch, Stack, Button, TableRow, Checkbox, MenuItem, TableCell, IconButton, Link, } from '@mui/material';
 // utils
 import { fData,fCurrency } from '../../../utils/formatNumber';
 // components
@@ -89,17 +80,8 @@ export default function StatusListTableRow({
             </Link>
           </Stack>
         </TableCell>
-
-        <TableCell align="center">
-        <Label
-            variant="soft"
-            // color={(isDisabled === true && 'error') || 'success'}
-            color={isActive? 'error' : 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isActive ? 'No' : 'Yes' }
-          </Label>
-        </TableCell> 
+ 
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" sx={{my:-1}}/> </TableCell> 
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
         

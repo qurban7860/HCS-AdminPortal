@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { updateSite, setEditFormVisibility } from '../../../redux/slices/customer/site';
+import { updateSite, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -23,6 +23,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 
 import FormProvider, {
+  RHFSwitch,
   RHFSelect,
   RHFTextField,
   RHFAutocomplete
@@ -35,9 +36,10 @@ import { countries } from '../../../assets/data';
 export default function SiteEditForm() {
 
   const { error, site } = useSelector((state) => state.site);
+  const {  customer } = useSelector((state) => state.customer);
 
   const { contacts } = useSelector((state) => state.contact);
-  const [country, setCountryVal] = useState('')
+  const [countryVal, setCountryVal] = useState("")
   const dispatch = useDispatch();
   
   const { enqueueSnackbar } = useSnackbar();
@@ -50,20 +52,27 @@ export default function SiteEditForm() {
   function filtter(data , input) {
     const filteredOutput = data.filter( obj => ( Object.keys(input).every( filterKeys => (
               obj[filterKeys] === input[filterKeys]
-    ))
-    ))
+    ))));
     return filteredOutput
   }
 
   useEffect(()=>{
-    setPhone(site.phone)
-    const siteCountry= filtter(countries,{label: site?.address?.country || ''})
-    setCountryVal(siteCountry[0])
+    if(site?.phone){
+      setPhone(site.phone)
+    }
+    if(site?.address?.country){
+      const siteCountry= filtter(countries,{label: site?.address?.country || ''})
+      setCountryVal(siteCountry[0])
+    }
+    else{
+      setCountryVal("")
+    }
     setFaxVal(site.fax)
   },[site])
 
   const EditSiteSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required'),
+    customer: Yup.string(),
     billingSite: Yup.string(),
     // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
@@ -76,20 +85,18 @@ export default function SiteEditForm() {
     city: Yup.string(),
     region: Yup.string(),
     postcode: Yup.string(),
-    // country: Yup.string().nullable(),
-    primaryBillingContact: Yup.string().nullable(),
-    primaryTechnicalContact: Yup.string().nullable(),
+    country: Yup.string().nullable(),
+    // primaryBillingContact: Yup.string().nullable(),
+    // primaryTechnicalContact: Yup.string().nullable(),
+    isActive: Yup.boolean(),
   });
 
 
   const defaultValues = useMemo(
     () => ({
       name: site?.name || '',
-      customer: site?.customer || '',
       billingSite: site?.billingSite || '',
-      // phone: site?.phone || '',
       email: site?.email || '',
-      // fax: site?.fax || '',
       website: site?.website || '',
       lat: site?.lat || '',
       long: site?.long || '',
@@ -98,9 +105,10 @@ export default function SiteEditForm() {
       city: site?.address?.city || '',
       region: site?.address?.region || '',
       postcode: site?.address?.postcode || '',
-      // country: site.address?.country === null || site.address?.country === undefined  ? null : site.address.country,
-      primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
-      primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
+      country: site?.address?.country || '',
+      isActive: site?.isActive ,
+      // primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
+      // primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
@@ -129,7 +137,7 @@ export default function SiteEditForm() {
 
   const toggleCancel = () => 
   {
-    dispatch(setEditFormVisibility(false));
+    dispatch(setSiteEditFormVisibility(false));
   };
 
   const handlePhoneChange = (newValue) => {
@@ -148,27 +156,22 @@ export default function SiteEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      if(phone.length > 7){
+      console.log("site Edit Data : ",data)
+      if(phone && phone.length > 7){
         data.phone = phone ;
-      }else{
-        data.phone = "" ;
       }
-      if(fax.length > 6){
+      if(fax && fax.length > 7){
         data.fax = fax
-      }else{
-        data.fax = "" ;
       }
-      if(country){
-        data.country = country.label
-      }else{
-        data.country = "";
-      }
+      // if(countryVal){
+      //   data.country = countryVal?.label = ""
+      // }
       console.log("Site Data : ",data)
-      await dispatch(updateSite(data,site._id));
+      await dispatch(updateSite(data,customer._id,site._id));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 
@@ -242,7 +245,7 @@ export default function SiteEditForm() {
                 <RHFAutocomplete
                    id="country-select-demo"
                     options={countries}
-                    value={country || null}
+                    value={countryVal || null}
                     name="country"
                     label="Country"
                     autoHighlight
@@ -314,7 +317,7 @@ export default function SiteEditForm() {
                   ))}
               </RHFSelect>
               </Box>
-
+              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <Box
                 rowGap={5}
                 columnGap={4}
