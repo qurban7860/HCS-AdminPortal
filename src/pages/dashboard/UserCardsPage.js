@@ -18,9 +18,9 @@ export default function UserCardsPage() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> User: Cards | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

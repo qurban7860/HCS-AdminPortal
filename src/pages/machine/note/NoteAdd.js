@@ -11,9 +11,9 @@ export default function NoteAdd() {
   const { themeStretch } = useSettingsContext();
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Note: Create a new Note</title>
-      </Helmet>
+      </Helmet> */}
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <NoteAddForm />
       </Container>

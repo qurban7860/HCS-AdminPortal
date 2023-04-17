@@ -68,9 +68,9 @@ export default function ParameterViewPage({editPage}) {
   
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine Parameter List: Detail | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false }>
         

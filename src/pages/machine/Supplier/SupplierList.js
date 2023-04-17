@@ -221,9 +221,9 @@ console.log("suppliers: " ,suppliers);
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Supplier: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
       <Card

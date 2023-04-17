@@ -32,9 +32,9 @@ export default function ToolsInstalledEdit() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Tools Installed: Edit Page | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
         <ToolsInstalledEditForm />

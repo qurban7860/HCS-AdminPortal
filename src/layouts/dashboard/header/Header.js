@@ -44,7 +44,7 @@ export default function Header({ onOpenNav }) {
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
-          {/* <Typography variant='h2'>{CONFIG.ENV} {CONFIG.Version}</Typography> */}
+          <Typography variant='h4' sx={{color:"black"}}>{CONFIG.ENV} {CONFIG.Version}</Typography>
       {!isDesktop && (
         <IconButton onClick={onOpenNav} sx={{ mr: 1, color: 'text.primary' }}>
           <Iconify icon="eva:menu-2-fill" />
@@ -52,8 +52,8 @@ export default function Header({ onOpenNav }) {
       )}
 
       {/* <Searchbar /> */}
-      {CONFIG.ENV} 
-      {CONFIG.Version}
+      {/* {CONFIG.ENV} 
+      {CONFIG.Version} */}
       
       <Stack
         flexGrow={1}

@@ -201,9 +201,9 @@ export default function ToolsInstalledList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={ false }>
         

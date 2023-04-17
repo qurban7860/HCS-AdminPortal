@@ -36,9 +36,9 @@ export default function TechParamCategoryEdit() {
   
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Tech Param Category: Edit Page | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
       
 
       <Container maxWidth={ false}>

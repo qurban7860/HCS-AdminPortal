@@ -126,9 +126,9 @@ export default function MachineTool() {
               >
                 <Cover name='New Tool' icon='fa-solid:tools' />
               </Card>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine: Tools | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       
         

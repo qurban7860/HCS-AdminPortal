@@ -123,9 +123,9 @@ export default function MachineStatus() {
                 <Cover name='New Status' icon='material-symbols:diversity-1-rounded' />
               </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine: Statuses | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>

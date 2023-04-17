@@ -222,9 +222,9 @@ export default function ModelList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine Models: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
       <Card

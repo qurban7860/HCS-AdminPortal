@@ -139,9 +139,9 @@ export default function CustomerView({editPage}) {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Customer: Information | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
         {/* <CustomBreadcrumbs

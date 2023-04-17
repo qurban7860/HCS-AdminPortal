@@ -63,9 +63,9 @@ export default function SiteViewPage() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: Information | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

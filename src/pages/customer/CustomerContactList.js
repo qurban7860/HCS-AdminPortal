@@ -127,9 +127,9 @@ export default function CustomerContactList() {
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Contact: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
         {!contactEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button  onClick={toggleChecked} variant="contained" startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />} > New Contact </Button>
         </Stack>}

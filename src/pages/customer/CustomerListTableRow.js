@@ -98,7 +98,7 @@ export default function CustomerListTableRow({
           </Stack>
         </TableCell>
         <TableCell>{tradingName}</TableCell>
-        <TableCell>{address.join(", ")}</TableCell>
+        <TableCell>{Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}</TableCell>
         <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell>  
         <TableCell>{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
