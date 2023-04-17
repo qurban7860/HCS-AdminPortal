@@ -2,13 +2,12 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
-import { Box, Stack, Drawer, Slide } from '@mui/material'
-
+import { Box, Stack, Drawer, Slide , Typography,Grid} from '@mui/material'
 // hooks
 import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
 // config
-import { NAV } from '../../../config-global';
+import { CONFIG, NAV  } from '../../../config-global';
 // components
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
@@ -50,7 +49,6 @@ export default function NavVertical({ openNav, onCloseNav }) {
       }}
     >
       <Stack
-        spacing={3}
         sx={{
           pt: 3,
           pb: 2,
@@ -58,8 +56,10 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexShrink: 0,
         }}
       >
-        <Logo sx={{width: '70%', margin: '0 auto', mt: '-30px' }}/>
-
+          <Logo sx={{width: '70%', margin: '0 auto', mt: '-30px' }}/>
+        <Grid sx={{margin: '0 auto', mt:-2, mb:1}}>
+          <Typography variant='body2'>{CONFIG.ENV} {CONFIG.Version}</Typography>
+        </Grid>
         <NavAccount/>
       </Stack>
 

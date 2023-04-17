@@ -1,7 +1,7 @@
 // @mui
-import { Stack, Box } from '@mui/material';
+import { Stack, Box , Typography, Grid} from '@mui/material';
 // config
-import { NAV } from '../../../config-global';
+import { NAV, CONFIG } from '../../../config-global';
 // utils
 import { hideScrollbarX } from '../../../utils/cssStyles';
 // components
@@ -40,7 +40,9 @@ export default function NavMini() {
         }}
       >
         <Logo src="/logo/download.jpg" sx={{  mx: 'auto', my: 2, width: '40px', height: '40px' }} />
-
+        <Grid sx={{margin: '0 auto', mt:-2, mb:1}}>
+          <Typography variant='body2'>{CONFIG.ENV} {CONFIG.Version}</Typography>
+        </Grid>
         <NavSectionMini data={navConfig} />
       </Stack>
     </Box>

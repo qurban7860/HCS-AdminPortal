@@ -9,6 +9,7 @@ export const CONFIG = {
   APP_TITLE: 'Howick Cloud Services',
   APP_NAME: 'Howick Cloud Services Administration Portal',
   ENV: 'dev',
+  Version: 'v 0.0.1',
   APP_DOMAIN_NAME: 'localhost',
   APP_PORT: '5000',
   SSL_Enabled_domain:'' ,
