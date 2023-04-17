@@ -31,7 +31,7 @@ export default function CustomerViewForm() {
   const dispatch = useDispatch();
 
   const { customer } = useSelector((state) => state.customer);
-
+console.log("customer : " , customer)
   const toggleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
   }

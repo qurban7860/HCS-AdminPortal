@@ -35,9 +35,9 @@ export default function SiteEdit() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: Edit Page | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

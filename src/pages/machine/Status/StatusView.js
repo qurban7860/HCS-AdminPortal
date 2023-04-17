@@ -68,9 +68,9 @@ export default function StatusView({editPage}) {
   
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine Statuses List: Detail | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
         

@@ -74,9 +74,9 @@ export default function CategoryView({editPage}) {
   }
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Categories List: Detail | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
       <Container maxWidth={false }>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
           <Cover name={category?.name} setting="setting" backLink={PATH_MACHINE.categories.list}/>

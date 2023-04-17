@@ -17,9 +17,9 @@ export default function UserAdd() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> User: Create a new user | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         {/* <CustomBreadcrumbs

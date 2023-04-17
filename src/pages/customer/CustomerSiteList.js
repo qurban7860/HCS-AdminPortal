@@ -47,7 +47,7 @@ import SiteListTableToolbar from './site/SiteListTableToolbar';
 import { getSites, deleteSite, getSite,setSiteFormVisibility, setSiteEditFormVisibility } from '../../redux/slices/customer/site';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
-
+import CommaJoinField from '../components/CommaJoinField';
 import _mock from '../../_mock';
 import SiteViewForm from './site/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
@@ -174,7 +174,7 @@ export default function CustomerSiteList() {
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-
+// console.log("sites", sites);
 
 
   const dataFiltered = applyFilter({
@@ -194,9 +194,9 @@ export default function CustomerSiteList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
 
         {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
@@ -226,7 +226,7 @@ export default function CustomerSiteList() {
                 { index !==  activeIndex ? 
                 <Grid container spacing={0}>
                   <Grid item xs={12} sm={4} md={4}> <Typography variant="body2" > {site.name} </Typography> </Grid>
-                  {site.address && <Grid item xs={12} sm={8} md={8}> <Typography variant="body2" >{Object.values(site.address)?.join(", ")} </Typography></Grid>}
+                  <CommaJoinField sm={8} objectParam={site.address}/>
                 </Grid>
                 : null }
               </AccordionSummary>

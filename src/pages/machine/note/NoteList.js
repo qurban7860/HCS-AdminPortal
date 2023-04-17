@@ -209,9 +209,9 @@ export default function NoteList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Note: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
 

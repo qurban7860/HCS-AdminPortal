@@ -65,7 +65,7 @@ const TABLE_HEAD = [
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  { id: '' },
+  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -227,9 +227,9 @@ export default function UserListPage() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> User: List | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false }>
         {/* <CustomBreadcrumbs

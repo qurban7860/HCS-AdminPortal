@@ -16,9 +16,9 @@ export default function ToolsInstalledAdd() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: Create a new Site</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false }>
         <ToolsInstalledAddForm />

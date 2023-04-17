@@ -192,9 +192,9 @@ export default function MachineToolsList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
 

@@ -181,9 +181,9 @@ useLayoutEffect(() => {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine Setting: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
 
         {/* {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
