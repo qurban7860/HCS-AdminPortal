@@ -159,10 +159,6 @@ export default function MachineView({editPage}) {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Machine: Information | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
         {/* <CustomBreadcrumbs
           heading="Machine View"

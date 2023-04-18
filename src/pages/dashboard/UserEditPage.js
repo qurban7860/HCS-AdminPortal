@@ -35,9 +35,6 @@ export default function UserEditPage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: Edit user | Machine ERP</title>
-      </Helmet> */}
 
       <Container maxWidth={false}>
         {/* <CustomBreadcrumbs

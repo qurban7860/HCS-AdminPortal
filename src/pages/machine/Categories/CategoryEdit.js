@@ -37,9 +37,6 @@ export default function CategoryEdit() {
   
   return (
     <>
-      {/* <Helmet>
-        <title> Category: Edit Page | Machine ERP</title>
-      </Helmet> */}
       <Container maxWidth={false }>
         <CategoryEditForm/>
       </Container>

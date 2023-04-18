@@ -43,10 +43,6 @@ export default function NoteEdit() {
 
   return (
     <>
-      <Helmet>
-        <title> Note: Edit Page | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Note"

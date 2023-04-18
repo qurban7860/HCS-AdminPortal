@@ -75,10 +75,6 @@ console.log(note)
 
   return (
     <>
-      <Helmet>
-        <title> Note: Information | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Note View"

@@ -153,9 +153,6 @@ export default function MachineSuppliers() {
               <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='New Supplier' icon='material-symbols:inventory-2-rounded' />
               </Card>
-    {/* <Helmet>
-        <title> Machine: Supplier | Machine ERP</title>
-      </Helmet> */}
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       
       

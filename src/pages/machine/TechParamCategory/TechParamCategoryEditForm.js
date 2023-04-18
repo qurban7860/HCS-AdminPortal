@@ -105,9 +105,6 @@ export default function TechParamCategoryEditForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
-      {/* <Helmet>
-        <title> Machine: Tech Param Category | Machine ERP</title>
-      </Helmet> */}
         <Grid item xs={18} md={12}>
             <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='Edit Parameter Category' icon='ic:round-class' />

@@ -67,10 +67,6 @@ export default function SupplierView({editPage}) {
   // console.log( "muzna")
   return (
     <>
-      {/* <Helmet>
-        <title> Supplier List: Detail | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false }>
         
 

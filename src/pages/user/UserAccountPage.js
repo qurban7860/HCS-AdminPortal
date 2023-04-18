@@ -67,9 +67,6 @@ export default function UserAccountPage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: Account Settings | Machine ERP</title>
-      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

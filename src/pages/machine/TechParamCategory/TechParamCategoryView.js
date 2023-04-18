@@ -66,10 +66,6 @@ export default function TechParamCategoryView({editPage}) {
 //   console.log( "muzna")
   return (
     <>
-      {/* <Helmet>
-        <title> Tech param category's List: Detail | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={ false } >
         
 

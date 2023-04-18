@@ -16,9 +16,6 @@ export default function UserCreatePage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: Create a new user | Machine ERP</title>
-      </Helmet> */}
 
       <Container maxWidth={false}>
         <Card

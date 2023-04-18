@@ -16,10 +16,6 @@ export default function SiteAdd() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Site: Create a new Site</title>
-      </Helmet> */}
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Create a new Site"

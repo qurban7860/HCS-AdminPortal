@@ -35,9 +35,6 @@ export default function AssetEdit() {
 
   return (
     <>
-      <Helmet>
-        <title> Asset: Edit Page | Machine ERP</title>
-      </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

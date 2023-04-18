@@ -75,10 +75,6 @@ export default function ContactViewPage() {
 
   return (
     <>
-      <Helmet>
-        <title> Contact: Information | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Contact View"

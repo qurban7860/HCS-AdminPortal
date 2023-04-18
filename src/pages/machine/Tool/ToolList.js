@@ -218,10 +218,6 @@ export default function ToolList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Tool: List | Machine ERP </title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
       <Card
           sx={{

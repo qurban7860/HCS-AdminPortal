@@ -183,7 +183,7 @@ useEffect(() => {
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
-        console.error(err.message);
+        console.error(err.Message);
       }
   };
 

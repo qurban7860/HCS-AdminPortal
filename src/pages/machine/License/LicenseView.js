@@ -63,10 +63,6 @@ export default function LicenseView() {
 
   return (
     <>
-      <Helmet>
-        <title> Setting: Information | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={ false }>
         <CustomBreadcrumbs
           heading="Site View"

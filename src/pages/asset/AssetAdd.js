@@ -16,9 +16,6 @@ export default function AssetAdd() {
 
   return (
     <>
-      <Helmet>
-        <title> Asset: Create a new Asset</title>
-      </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

@@ -205,10 +205,6 @@ export default function ContactList() {
 
   return (
     <>
-      <Helmet>
-        <title> Contact: List | Machine ERP </title>
-      </Helmet>
-
       <Container maxWidth={false}>
       <Grid container spacing={3}>
           <CustomerDashboardNavbar/>

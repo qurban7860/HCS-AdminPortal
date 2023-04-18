@@ -18,9 +18,6 @@ export default function UserCardsPage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: Cards | Machine ERP</title>
-      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

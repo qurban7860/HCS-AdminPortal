@@ -73,10 +73,6 @@ export default function UserProfilePage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: Profile | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Profile"

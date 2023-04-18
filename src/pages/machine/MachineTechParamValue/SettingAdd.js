@@ -16,10 +16,6 @@ export default function SettingAdd() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Site: Create a new Site</title>
-      </Helmet> */}
-
       <Container maxWidth={false }>
         <SettingAddForm />
       </Container>
