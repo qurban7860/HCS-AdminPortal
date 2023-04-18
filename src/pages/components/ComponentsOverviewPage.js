@@ -26,10 +26,10 @@ export default function ComponentsOverviewPage() {
             </Typography>
           </Stack>
 
-        
+
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed', my: 8 }} />
+        <Divider sx={{ borderStyle: 'solid', my: 8 }} />
 
         <Stack spacing={3}>
           <Stack spacing={1}>
@@ -67,9 +67,9 @@ export default function ComponentsOverviewPage() {
           </Grid>
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed', my: 8 }} />
+        <Divider sx={{ borderStyle: 'solid', my: 8 }} />
 
-      
+
       </Container>
     </>
   );

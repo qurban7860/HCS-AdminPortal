@@ -61,9 +61,11 @@ export default function NotificationsPopover() {
         onClick={handleOpenPopover}
         sx={{ width: 40, height: 40 }}
       >
-        <Badge badgeContent={null}
-        // {totalUnRead}
-         color="error">
+        <Badge
+          badgeContent={null}
+          // {totalUnRead}
+          color="error"
+        >
           <Iconify icon="eva:bell-fill" />
         </Badge>
       </IconButtonAnimate>
@@ -87,14 +89,14 @@ export default function NotificationsPopover() {
           )} */}
         </Box>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         <Scrollbar sx={{ height: { xs: 340, sm: 'auto' } }}>
           <List
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                New
+                {!notifications && 'Loading...' ? 'No notifications' : 'NEW' }
               </ListSubheader>
             }
           >
@@ -107,7 +109,7 @@ export default function NotificationsPopover() {
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                Before that
+                {!notifications && 'Loading...' ? 't' : 'OLD' }
               </ListSubheader>
             }
           >
@@ -117,7 +119,7 @@ export default function NotificationsPopover() {
           </List>
         </Scrollbar>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         <Box sx={{ p: 1 }}>
           <Button fullWidth disableRipple>

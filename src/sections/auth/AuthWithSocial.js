@@ -51,7 +51,7 @@ export default function AuthWithSocial() {
           typography: 'overline',
           color: 'text.disabled',
           '&::before, ::after': {
-            borderTopStyle: 'dashed',
+            borderTopStyle: 'solid',
           },
         }}
       >

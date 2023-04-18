@@ -37,7 +37,7 @@ export default function GroupNode({ node, depth, length, sx }) {
 
   return (
     <Stack sx={{ position: 'relative', display: 'inline-flex' }} alignItems="center">
-      {!isLabel && (
+      {/* {!isLabel && (
         <Avatar
           alt={node.name}
           src={node.avatar || ''}
@@ -50,7 +50,7 @@ export default function GroupNode({ node, depth, length, sx }) {
             border: `solid 4px ${theme.palette.background.paper}`,
           }}
         />
-      )}
+      )} */}
 
       <Card
         sx={{

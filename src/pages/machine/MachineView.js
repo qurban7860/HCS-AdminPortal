@@ -48,6 +48,8 @@ import MachineNoteList from './MachineNoteList';
 import MachineSettingList from './MachineSettingList';
 import MachineLicenseList from './MachineLicenseList';
 
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+
 import MachineToolsInstalledList from './MachineToolsInstalledList';
 
 // ----------------------------------------------------------------------
@@ -61,7 +63,7 @@ MachineView.propTypes = {
 
 export default function MachineView({editPage}) {
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const dispatch = useDispatch();
 
@@ -94,7 +96,7 @@ export default function MachineView({editPage}) {
       setCurrentComponent(<MachineEditForm/>);
     }else{
       setMachineFlag(false);
-      setCurrentComponent(<MachineViewForm/>);        
+      setCurrentComponent(<MachineViewForm/>);
     }
     /* eslint-enable */
   }, [dispatch,machineEditFormFlag, machine]);
@@ -174,7 +176,13 @@ export default function MachineView({editPage}) {
             position: 'relative',
           }}
         >
-          <Cover name={machine?.name } serialNo={machine ? machine.serialNo : 'Serial Number'} icon='et:gears' setting="enable" />
+          <Cover
+            photoURL={<LogoAvatar/>}
+            name={machine?.name}
+            serialNo={machine ? machine.serialNo : 'Serial Number'}
+            icon="et:gears"
+            setting="enable"
+          />
 
           <Tabs
             value={currentTab}
@@ -193,7 +201,7 @@ export default function MachineView({editPage}) {
               bgcolor: 'background.paper',
               '& .MuiTabs-flexContainer': {
                 pr: { md: 3 },
-                pl: {lg:2},
+                pl: { lg: 2 },
                 justifyContent: {
                   xl: 'flex-end',
                 },
@@ -201,14 +209,28 @@ export default function MachineView({editPage}) {
             }}
           >
             {TABS.map((tab) => (
-              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+              <Tab
+                disabled={tab.disabled}
+                key={tab.value}
+                value={tab.value}
+                icon={tab.icon}
+                label={tab.label}
+              />
             ))}
           </Tabs>
         </Card>
         {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
+          (tab) =>
+            tab.value === currentTab && (
+              <Box key={tab.value}>
+                {' '}
+                {tab.component ? (
+                  tab.component
+                ) : (
+                  <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
+                )}{' '}
+              </Box>
+            )
         )}
       </Container>
     </>

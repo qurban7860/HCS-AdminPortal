@@ -100,7 +100,7 @@ export default function AuthLoginForm() {
         type="submit"
         variant="contained"
         loading={isSubmitSuccessful || isSubmitting}
-        sx={{ bgcolor: '#10079F', color: 'white' }}
+        sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#0940B2' } }}
       >
         Login
       </LoadingButton>

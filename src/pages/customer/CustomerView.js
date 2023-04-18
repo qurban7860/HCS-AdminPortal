@@ -44,6 +44,7 @@ import CustomerViewForm from './CustomerViewForm';
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 
 
 CustomerView.propTypes = {
@@ -54,7 +55,7 @@ CustomerView.propTypes = {
 
 export default function CustomerView({editPage}) {
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const dispatch = useDispatch();
 
@@ -82,14 +83,14 @@ export default function CustomerView({editPage}) {
   }, [dispatch, id]);
 
   useEffect(() => {
-    
+
     if(customerEditFormFlag){
       setCurrentComponent(<CustomerEditForm/>);
     }else{
       setCustomerFlag(false);
-      setCurrentComponent(<CustomerViewForm/>);        
+      setCurrentComponent(<CustomerViewForm/>);
     }
-   
+
   }, [dispatch, customerEditFormFlag, customer]);
 
 
@@ -154,7 +155,11 @@ export default function CustomerView({editPage}) {
             position: 'relative',
           }}
         >
-          <Cover name={customer ? customer.name : 'New Customer'} icon="ph:users-light"/>
+          <Cover
+            name={customer ? customer.name : 'New Customer'}
+            photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : ''}
+            icon="ph:users-light"
+          />
           <Tabs
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
@@ -178,18 +183,29 @@ export default function CustomerView({editPage}) {
             }}
           >
             {TABS.map((tab) => (
-              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+              <Tab
+                disabled={tab.disabled}
+                key={tab.value}
+                value={tab.value}
+                icon={tab.icon}
+                label={tab.label}
+              />
             ))}
           </Tabs>
         </Card>
         {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
+          (tab) =>
+            tab.value === currentTab && (
+              <Box key={tab.value}>
+                {' '}
+                {tab.component ? (
+                  tab.component
+                ) : (
+                  <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
+                )}{' '}
+              </Box>
+            )
         )}
-        
-
-        
       </Container>
     </>
   );

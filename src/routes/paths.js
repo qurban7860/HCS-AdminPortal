@@ -129,7 +129,7 @@ export const PATH_MACHINE = {
   root: ROOTS_MACHINE,
   permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),
   general: {
-    app: path(ROOTS_MACHINE, '/app'), 
+    app: path(ROOTS_MACHINE, '/app'),
   },
   machine:{
     new: path(ROOTS_MACHINE, '/new'),
@@ -190,12 +190,12 @@ export const PATH_MACHINE = {
     parameteredit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/editform`),
   },
-  
+
 }
 
 export const PATH_DOCS = {
-  root: 'https://docs.minimals.cc',
-  changelog: 'https://docs.minimals.cc/changelog',
+  root: 'https://www.howickltd.com/why-howick',
+  changelog: 'https://www.howickltd.com/why-howick',
 };
 
 export const PATH_ZONE_ON_STORE = 'https://mui.com/store/items/zone-landing-page/';

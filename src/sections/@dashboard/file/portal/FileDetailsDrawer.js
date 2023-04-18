@@ -127,7 +127,7 @@ export default function FileDetailsDrawer({
               {name}
             </Typography>
 
-            <Divider sx={{ borderStyle: 'dashed' }} />
+            <Divider sx={{ borderStyle: 'solid' }} />
 
             <Stack spacing={1}>
               <Panel label="Tags" toggle={toggleTags} onToggle={handleToggleTags} />

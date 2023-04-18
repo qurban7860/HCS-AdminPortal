@@ -36,7 +36,7 @@ export default function NavToggleButton({ sx, ...other }) {
         left: NAV.W_DASHBOARD - 12,
         bgcolor: 'background.default',
         zIndex: (theme) => theme.zIndex.appBar + 1,
-        border: (theme) => `dashed 1px ${theme.palette.divider}`,
+        border: (theme) => `solid 1px ${theme.palette.divider}`,
         '&:hover': {
           bgcolor: 'background.default',
         },

@@ -13,6 +13,7 @@ import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import {Cover} from '../components/Cover';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
     const { id } = useParams();
@@ -58,26 +59,40 @@ export default function MachineViewForm() {
     [securityUser] );
 
   return (
-    <Grid sx={{p:3, mt:-3}}>
-        <Card sx={{mb: 3,height: 160,position: 'relative',  }}>
-          <Cover name={defaultValues.name} icon="ph:users-light"/>
-        </Card>
-        <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete} />
-          <Grid container>
-            <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} />
-            <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} />
-            <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
-            <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
-            <ViewFormField sm={12} heading="email" param={defaultValues.email} />
-            <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
-            <ViewFormField sm={6} heading="Roles" param={defaultValues.roles?.map((obj) => obj.name).join(', ')} />
-          </Grid>
-            <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
-          <Grid container>
-            <ViewFormAudit defaultValues={defaultValues}/>
-          </Grid>
-        </Card>
+    <Grid sx={{ p: 3, mt: -3 }}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover
+          photoURL={
+            securityUser?.customer.name === 'HOWICK LTD.' ? (
+              <LogoAvatar />
+            ) : (
+              'https://source.unsplash.com/random'
+            )
+          }
+          name={defaultValues.name}
+          icon="ph:users-light"
+        />
+      </Card>
+      <Card sx={{ p: 3 }}>
+        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <Grid container>
+          <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} />
+          <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} />
+          <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
+          <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
+          <ViewFormField sm={12} heading="email" param={defaultValues.email} />
+          <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
+          <ViewFormField
+            sm={6}
+            heading="Roles"
+            param={defaultValues.roles?.map((obj) => obj.name).join(', ')}
+          />
+        </Grid>
+        <Switch sx={{ mt: 1 }} checked={defaultValues.isActive} disabled />
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues} />
+        </Grid>
+      </Card>
     </Grid>
   );
 };

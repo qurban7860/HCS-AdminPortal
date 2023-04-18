@@ -31,7 +31,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
   const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
 
-  useEffect(() => {                                    
+  useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
@@ -91,7 +91,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
               zIndex: 0,
               width: NAV.W_DASHBOARD,
               bgcolor: 'transparent',
-              borderRightStyle: 'dashed',
+              borderRightStyle: 'solid',
             },
           }}
         >

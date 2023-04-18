@@ -10,9 +10,10 @@ export const CONFIG = {
   APP_NAME: 'Howick Cloud Services Administration Portal',
   ENV: 'dev',
   APP_DOMAIN_NAME: 'localhost',
-  APP_PORT: '5000',
+  APP_PORT: '5001',
   SSL_Enabled_domain:'' ,
-  SERVER_URL: 'http://localhost:5000/api/1.0.0/',
+  // for local testing, dont merge
+  SERVER_URL: 'http://localhost:5001/api/1.0.0/',
   MESSAGE_REGISTER_USER: 'Welcome to Howick Cloud Services',
   MESSAGE_LOGIN_USER: 'Hi, Welcome to Howick Cloud Services'
 }

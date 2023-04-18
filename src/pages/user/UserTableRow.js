@@ -74,7 +74,7 @@ export default function UserTableRow({ row, selected, onEditRow, onViewRow, onSe
                 {`${name}`}
               </Typography>
             </Link>
-          </Stack>  
+          </Stack>
         </TableCell>
 
         <TableCell align="left">{email}</TableCell>
@@ -87,7 +87,7 @@ export default function UserTableRow({ row, selected, onEditRow, onViewRow, onSe
         {roles.map((obj) => obj.name).join(', ')}
         {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
         </TableCell>
-        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell> 
+        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell>
         <TableCell align="right" sx={{ textTransform: 'capitalize' }}>
         {fDate(createdAt)}
         </TableCell>

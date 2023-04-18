@@ -1,0 +1,23 @@
+<svg version="1.2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 816 816" width="816" height="816">
+	<title>Howick-Icon-Gradient-RGB-ai</title>
+	<defs>
+		<linearGradient id="g1" x1="8.1" y1="808" x2="8.1" y2="4.4" gradientUnits="userSpaceOnUse">
+			<stop offset="0" stop-color="#0084c9"/>
+			<stop offset=".985" stop-color="#10079f"/>
+		</linearGradient>
+	</defs>
+	<style>
+		.s0 { fill: url(#g1) }
+	</style>
+	<g id="Layer 1">
+		<g id="&lt;title&gt;">
+		</g>
+		<g id="&lt;desc&gt;">
+		</g>
+	</g>
+	<g id="Layer 2">
+		<g id="&lt;Group&gt;">
+			<path id="&lt;Compound Path&gt;" fill-rule="evenodd" class="s0" d="m781.1 559.9c-62.2 150.2-208.7 248.1-371.2 248.1-162.6 0-309.1-97.9-371.3-248.1-62.2-150.1-27.8-323 87.1-437.9 156.9-156.9 411.4-156.9 568.3 0 114.9 114.9 149.3 287.8 87.1 437.9zm-376.5-83.1l-66.1-66.1h-188.7l254.8 254.8zm118.5-291.2l-187.5-1.2-186.1 186.1h188.7zm107.7 294l-1.2-187.5-184.7 184.7v188.7z"/>
+		</g>
+	</g>
+</svg>

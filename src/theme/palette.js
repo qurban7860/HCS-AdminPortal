@@ -6,10 +6,10 @@ import { alpha } from '@mui/material/styles';
 
 const GREY = {
   0: '#FFFFFF',
-  100: '#F9FAFB',
-  200: '#F4F6F8',
-  300: '#DFE3E8',
-  400: '#C4CDD5',
+  100: '#F4F4F4',
+  200: '#F5F5F5',
+  300: '#DFDFDF',
+  400: '#DFE3E8',
   500: '#919EAB',
   600: '#637381',
   700: '#454F5B',
@@ -18,20 +18,20 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#C8FACD',
-  light: '#5BE584',
-  main: '#00AB55',
-  dark: '#007B55',
-  darker: '#005249',
+  lighter: '#0084C9',
+  light: '#0084C9',
+  main: '#0940B2',
+  dark: '#10079F',
+  darker: '#10079F',
   contrastText: '#fff',
 };
 
 const SECONDARY = {
-  lighter: '#D6E4FF',
-  light: '#84A9FF',
-  main: '#3366FF',
-  dark: '#1939B7',
-  darker: '#091A7A',
+  lighter: '#FFEA00',
+  light: '#FFC300',
+  main: '#FFA200',
+  dark: '#FFA200',
+  darker: '#FFA200',
   contrastText: '#fff',
 };
 

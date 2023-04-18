@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'category', label: 'Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'left' },
-  
+
 ];
 
 const STATUS_OPTIONS = [
@@ -110,7 +110,7 @@ export default function ModelList() {
 
   const { machinemodels, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinemodel);
 
-  
+
 
   useLayoutEffect( () => {
     // console.log('Testing done')
@@ -167,7 +167,7 @@ export default function ModelList() {
     await dispatch(deleteMachinemodel(id));
     try {
       // console.log(id);
-      
+
       dispatch(getMachinemodels());
       setSelected([]);
 
@@ -202,7 +202,7 @@ export default function ModelList() {
 
   const handleEditRow = async (id) => {
     // console.log(id);
-    
+
     await dispatch(getMachineModel(id));
     navigate(PATH_MACHINE.machineModel.edit(id));
   };
@@ -218,7 +218,7 @@ export default function ModelList() {
     setFilterStatus([]);
   };
 
-  
+
 
   return (
     <>
@@ -237,10 +237,6 @@ export default function ModelList() {
         >
           <Cover name='Model List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
-      
-
-        
-        
         <Card sx={{ mt: 3 }}>
           <ModelListTableToolbar
             filterName={filterName}
@@ -254,7 +250,7 @@ export default function ModelList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -300,7 +296,7 @@ export default function ModelList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -319,10 +315,10 @@ export default function ModelList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-           
+
           />
         </Card>
-        
+
       </Container>
 
       <ConfirmDialog
@@ -365,8 +361,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterModel) => filterModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    filterModel?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    inputData = inputData.filter( (filterModel) => filterModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    filterModel?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
     // (filterModel?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(filterModel?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

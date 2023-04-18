@@ -56,7 +56,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const { id } = useParams();
 
   const dispatch = useDispatch()
-  
+
 
   const defaultValues = useMemo(
     () => (
@@ -82,8 +82,8 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
     <Card sx={{ px: 5 }}>
       <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
         <Button
-          onClick={() => { 
-              toggleEdit(); 
+          onClick={() => {
+              toggleEdit();
           }}
           variant="outlined"
           startIcon={<Iconify icon="eva:edit-fill" />}
@@ -119,13 +119,13 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
             </Typography>
 
             <Typography variant="body2">{defaultValues?.category?.name || " "}</Typography>
-            
+
         </Grid>
 
         <Grid item xs={12} sm={12} >
          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
         </Grid>
-        
+
 
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>

@@ -106,7 +106,7 @@ export default function FileGridView({ table, data, dataFiltered, onDeleteItem, 
           </Box>
         </Collapse>
 
-        <Divider sx={{ my: 5, borderStyle: 'dashed' }} />
+        <Divider sx={{ my: 5, borderStyle: 'solid' }} />
 
         <FilePanel
           title="Files"
