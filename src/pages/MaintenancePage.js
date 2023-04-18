@@ -10,10 +10,6 @@ import { MaintenanceIllustration } from '../assets/illustrations';
 export default function MaintenancePage() {
   return (
     <>
-      <Helmet>
-        <title> Maintenance | Minimal UI</title>
-      </Helmet>
-
       <Stack sx={{ alignItems: 'center' }}>
         <Typography variant="h3" paragraph>
           Website currently under maintenance

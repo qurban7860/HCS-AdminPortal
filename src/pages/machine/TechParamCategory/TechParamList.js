@@ -215,10 +215,6 @@ export default function TechParamList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Technical Parameter Category: List | Machine ERP </title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
         <Card
           sx={{

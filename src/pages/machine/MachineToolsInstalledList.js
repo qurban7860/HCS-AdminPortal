@@ -196,11 +196,6 @@ useLayoutEffect(() => {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Machine Tools Installed: List | Machine ERP </title>
-      </Helmet> */}
-
-
         {!toolInstalledEditFormVisibility && <Stack alignItems="flex-end" sx={{ mb: 3, px:4 }}>
           <Button
               onClick={toggleChecked}

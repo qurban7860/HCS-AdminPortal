@@ -202,10 +202,6 @@ export default function SettingList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Site: List | Machine ERP </title>
-      </Helmet> */}
-
       <Container maxWidth={ false }>
         
 

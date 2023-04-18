@@ -75,9 +75,6 @@ export default function AssetViewPage() {
 
   return (
     <>
-      <Helmet>
-        <title> Asset: Information | Machine ERP</title>
-      </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

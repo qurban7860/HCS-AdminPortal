@@ -55,10 +55,6 @@ export default function CustomerDashboardPage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> General: App | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <CustomerDashboardNavbar/>

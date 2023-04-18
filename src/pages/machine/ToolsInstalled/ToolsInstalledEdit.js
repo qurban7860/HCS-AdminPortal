@@ -32,10 +32,6 @@ export default function ToolsInstalledEdit() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Tools Installed: Edit Page | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
         <ToolsInstalledEditForm />
       </Container>

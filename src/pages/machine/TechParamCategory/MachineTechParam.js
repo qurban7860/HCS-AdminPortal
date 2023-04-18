@@ -114,9 +114,6 @@ export default function MachineTechParam() {
   const { themeStretch } = useSettingsContext();
   return (
     <>
-    {/* <Helmet>
-        <title> Machine: Tech Params | Machine ERP</title>
-      </Helmet> */}
     <Container maxWidth={false }>
     <Card
                 sx={{

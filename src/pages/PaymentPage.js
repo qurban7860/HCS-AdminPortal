@@ -13,9 +13,6 @@ export default function PaymentPage() {
 
   return (
     <>
-      <Helmet>
-        <title> Payment | Machine ERP</title>
-      </Helmet>
 
       <Container
         sx={{

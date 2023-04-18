@@ -16,11 +16,6 @@ export default function CustomerAdd() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Customer: Add Customer</title>
-      </Helmet> */}
-      
-
       <Container maxWidth={false}>
         <CustomerAddForm />
       </Container>

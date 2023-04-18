@@ -87,45 +87,16 @@ const handleCloseConfirm = () => {
           icon="ph:users-light"
         />
       </Card>
-      <Card sx={{ p: 3 }}>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-        <Grid container>
-          <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} />
-          <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} />
-          <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
-          <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
-          <ViewFormField sm={12} heading="email" param={defaultValues.email} />
-          <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
-          <ViewFormField
-            sm={6}
-            heading="Roles"
-            param={defaultValues.roles?.map((obj) => obj.name).join(', ')}
-          />
-        </Grid>
-        <Switch sx={{ mt: 1 }} checked={defaultValues.isActive} disabled />
-        <Grid container>
-          <ViewFormAudit defaultValues={defaultValues} />
-        </Grid>
-      </Card>
-      <Grid sx={{ p: 3, mt: -3 }}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover name={defaultValues.name} icon="ph:users-light" />
-        </Card>
         <Card sx={{ p: 3 }}>
-          <Stack
-            justifyContent="flex-end"
-            direction="row"
-            spacing={2}
-            sx={{ mb: -4, mt: -1, mr: 2 }}
-          >
-            <Button
-              onClick={() => handleEdit()}
-              variant="outlined"
-              startIcon={<Iconify icon="eva:edit-fill" />}
-            >
-              Edit
-            </Button>
-            {user.email !== securityUser.login ? (
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
+              <Button
+                onClick={() => handleEdit()}
+                variant="outlined"
+                startIcon={<Iconify icon="eva:edit-fill" />}
+              >
+                Edit
+              </Button>
+              { user.email !== securityUser.login ?
               <Button
                 onClick={() => {
                   handleOpenConfirm();
@@ -135,10 +106,8 @@ const handleCloseConfirm = () => {
                 startIcon={<Iconify icon="eva:trash-2-fill" />}
               >
                 Delete
-              </Button>
-            ) : (
-              ''
-            )}
+              </Button> : ""
+              }
           </Stack>
           <ConfirmDialog
             open={openConfirm}
@@ -158,19 +127,15 @@ const handleCloseConfirm = () => {
             <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
             <ViewFormField sm={12} heading="email" param={defaultValues.email} />
             <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
-            <ViewFormField
-              sm={6}
-              heading="Roles"
-              param={defaultValues.roles?.map((obj) => obj.name).join(', ')}
-            />
+            <ViewFormField sm={6} heading="Roles" param={defaultValues.roles?.map((obj) => obj.name).join(', ')} />
           </Grid>
-          <Switch sx={{ mt: 1 }} checked={defaultValues.isActive} disabled />
+            <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
           <Grid container>
-            <ViewFormAudit defaultValues={defaultValues} />
+            <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>
         </Card>
-      </Grid>
     </Grid>
+
   );
 }
 

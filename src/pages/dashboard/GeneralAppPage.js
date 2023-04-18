@@ -63,10 +63,6 @@ export default function GeneralAppPage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> General: App | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           {/* <Grid item xs={12} md={8}>

@@ -18,10 +18,6 @@ export default function UserCards() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: Cards | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false }>
         {/* <CustomBreadcrumbs
           heading="User Cards"

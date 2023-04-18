@@ -16,10 +16,6 @@ export default function NoteAdd() {
 
   return (
     <>
-      <Helmet>
-        <title> Note: Create a new Note</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         {/* <CustomBreadcrumbs
           heading="Create a new Note"

@@ -202,10 +202,6 @@ export default function UserList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: List | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false }>
         {/* <CustomBreadcrumbs
           heading="User List"

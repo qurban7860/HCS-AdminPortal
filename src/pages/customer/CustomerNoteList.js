@@ -276,9 +276,6 @@ const toggleChecked = () =>
 
   return (
     <>
-      {/* <Helmet>
-        <title> Note: List | Machine ERP </title>
-      </Helmet> */}
         {!noteEditFormVisibility &&
             <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
                 <Button
