@@ -18,9 +18,9 @@ export default function UserCards() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> User: Cards | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false }>
         {/* <CustomBreadcrumbs

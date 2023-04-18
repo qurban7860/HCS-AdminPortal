@@ -218,9 +218,9 @@ export default function ToolList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Tool: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
       <Card

@@ -114,11 +114,11 @@ export default function UserTableRow({ row, selected, onEditRow, onViewRow, onSe
           </Label>
         </TableCell>  */}
 
-        <TableCell align="right">
+        {/* <TableCell align="right">
           <IconButton color={openPopover ? 'inherit' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
       <MenuPopover

@@ -126,6 +126,7 @@ useEffect(() => {
       // isVerified: securityUser?.isVerified || true,
       // status: securityUser?.status,
       roles: securityUserRoles || [],
+      loginEmail: securityUser?.login,
       // addedBy: securityUser?.addedBy || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -166,7 +167,7 @@ useEffect(() => {
       data.customer = customerVal?._id || null
       data.contact = contactVal?._id || null
       if(phone && phone.length > 7 ){
-        data.phone = phone.length 
+        data.phone = phone
       }else{
         data.phone = "" 
       }
@@ -414,6 +415,9 @@ useEffect(() => {
                   ),
                 }}
               /> */}
+
+              <RHFTextField name="loginEmail" label="Login Email"  disabled/>
+
             <RHFMultiSelect
                 chip
                 checkbox

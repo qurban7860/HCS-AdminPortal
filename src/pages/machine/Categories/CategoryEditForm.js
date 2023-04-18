@@ -86,9 +86,9 @@ export default function CategoryEditForm() {
   };
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine: Edit Category | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
         <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
           <Cover name='Edit Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
         </Card>

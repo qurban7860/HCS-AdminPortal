@@ -223,9 +223,9 @@ export default function CategoryList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Category: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
       <Card

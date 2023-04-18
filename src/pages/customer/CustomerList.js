@@ -104,7 +104,7 @@ export default function CustomerList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
-
+console.log("customers",customers)
   useLayoutEffect(() => {
     dispatch(getCustomers());
     dispatch(resetCustomer())
@@ -216,9 +216,9 @@ export default function CustomerList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Customer: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
         <Card

@@ -202,9 +202,9 @@ export default function SiteList() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: List | Machine ERP </title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         

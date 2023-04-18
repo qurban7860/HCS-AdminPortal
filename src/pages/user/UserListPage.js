@@ -65,7 +65,7 @@ const TABLE_HEAD = [
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  { id: '' },
+  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -227,9 +227,9 @@ export default function UserListPage() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> User: List | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false }>
         {/* <CustomBreadcrumbs
@@ -300,7 +300,7 @@ export default function UserListPage() {
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size='small' sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -345,8 +345,8 @@ export default function UserListPage() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             //
-            dense={dense}
-            onChangeDense={onChangeDense}
+            // dense={dense}
+            // onChangeDense={onChangeDense}
           />
         </Card>
       </Container>

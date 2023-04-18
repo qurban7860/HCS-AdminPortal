@@ -12,8 +12,11 @@ import {
   InputAdornment,
   ClickAwayListener,
   Autocomplete,
+  Typography
 } from '@mui/material';
 // utils
+import { CONFIG } from '../../../config-global';
+
 import { bgBlur } from '../../../utils/cssStyles';
 import flattenArray from '../../../utils/flattenArray';
 // components
@@ -142,6 +145,7 @@ function Searchbar() {
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div>
+        
         {!open && (
           <IconButtonAnimate onClick={handleOpen}>
             <Iconify icon="eva:search-fill" />

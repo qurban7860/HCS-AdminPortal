@@ -119,9 +119,9 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
   return (
     <>
     <Container maxWidth={false}>
-    <Helmet>
+    {/* <Helmet>
         <title> Machine: Categories | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
       <Card
                 sx={{
                   mb: 3,

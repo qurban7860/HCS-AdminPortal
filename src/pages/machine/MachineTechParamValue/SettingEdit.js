@@ -32,9 +32,9 @@ export default function SettingEdit() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Site: Edit Page | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false}>
         <SettingEditForm />

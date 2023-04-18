@@ -156,17 +156,17 @@ export default function SiteEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      console.log("site Edit Data : ",data)
+      // console.log("site Edit Data : ",data)
       if(phone && phone.length > 7){
         data.phone = phone ;
       }
       if(fax && fax.length > 7){
         data.fax = fax
       }
-      // if(countryVal){
-      //   data.country = countryVal?.label = ""
-      // }
-      console.log("Site Data : ",data)
+      if(countryVal){
+        data.country = countryVal?.label
+      }
+      // console.log("Site Data : ",data)
       await dispatch(updateSite(data,customer._id,site._id));
       reset();
     } catch (err) {

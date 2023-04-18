@@ -63,9 +63,9 @@ export default function SettingView() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Setting: Information | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={ false }>
         <CustomBreadcrumbs

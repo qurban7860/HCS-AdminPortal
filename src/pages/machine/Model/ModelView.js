@@ -67,9 +67,14 @@ export default function ModelViewPage({editPage}) {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Machine Models List: Detail | Machine ERP</title>
+<<<<<<< HEAD
       </Helmet>
+=======
+      </Helmet> */}
+
+>>>>>>> 16fa2c0b045ced7a81da986981111c62ea9d51ef
       <Container maxWidth={false }>
         <Card
           sx={{

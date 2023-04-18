@@ -71,9 +71,9 @@ export default function ToolView({editPage}) {
   // console.log( "muzna")
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Tools List: Detail | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={false }>
         

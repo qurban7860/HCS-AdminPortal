@@ -71,9 +71,9 @@ export default function NoteViewPage() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Note: Information | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

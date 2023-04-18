@@ -48,9 +48,9 @@ export default function Machine() {
 
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> General: App | Machine ERP</title>
-      </Helmet>
+      </Helmet> */}
 
      
 
