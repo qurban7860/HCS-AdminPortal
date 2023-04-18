@@ -1,8 +1,10 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate,useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+
 // @mui
-import { Switch, Card, Grid, Container, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack} from '@mui/material';
+import { Switch, Card, Grid, Container, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack,Button} from '@mui/material';
+import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
@@ -13,10 +15,22 @@ import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import {Cover} from '../components/Cover';
+import { useAuthContext } from '../../auth/useAuthContext';
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
+  const [openConfirm, setOpenConfirm] = useState(false);
+const [openPopover, setOpenPopover] = useState(null);
+const handleOpenConfirm = () => {
+  setOpenConfirm(true);
+};
+const handleCloseConfirm = () => {
+  setOpenConfirm(false);
+};
+  const { user } = useAuthContext();
+  console.log("user : " , user)
     const { id } = useParams();
     const { securityUser } = useSelector((state) => state.user);
+    
   const dispatch = useDispatch();
   const navigate = useNavigate();
   useEffect(()=> {
@@ -63,7 +77,38 @@ export default function MachineViewForm() {
           <Cover name={defaultValues.name} icon="ph:users-light"/>
         </Card>
         <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete} />
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
+              <Button
+                onClick={() => handleEdit()}
+                variant="outlined"
+                startIcon={<Iconify icon="eva:edit-fill" />}
+              >
+                Edit
+              </Button>
+              { user.email !== securityUser.login ?
+              <Button
+                onClick={() => {
+                  handleOpenConfirm();
+                }}
+                variant="outlined"
+                color="error"
+                startIcon={<Iconify icon="eva:trash-2-fill" />}
+              >
+                Delete
+              </Button> : ""
+              }
+          </Stack>
+          <ConfirmDialog
+            open={openConfirm}
+            onClose={handleCloseConfirm}
+            title="Delete"
+            content="Are you sure want to delete?"
+            action={
+              <Button variant="contained" color="error" onClick={onDelete}>
+                Delete
+              </Button>
+            }
+          />
           <Grid container>
             <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} />
             <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} />

@@ -116,7 +116,7 @@ export function getMachines() {
         }
       });
       dispatch(slice.actions.getMachinesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

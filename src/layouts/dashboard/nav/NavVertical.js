@@ -58,7 +58,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
       >
           <Logo sx={{width: '70%', margin: '0 auto', mt: '-30px' }}/>
         <Grid sx={{margin: '0 auto', mt:-2, mb:1}}>
-          <Typography variant='body2'>{CONFIG.ENV} {CONFIG.Version}</Typography>
+          <Typography variant='body2'>{CONFIG.Version}</Typography>
         </Grid>
         <NavAccount/>
       </Stack>
