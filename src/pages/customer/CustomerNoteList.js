@@ -278,13 +278,8 @@ const toggleChecked = () =>
     <>
       {/* <Helmet>
         <title> Note: List | Machine ERP </title>
-<<<<<<< HEAD
-      </Helmet>
-        {!noteEditFormVisibility &&
-=======
       </Helmet> */}
-        {!noteEditFormVisibility && 
->>>>>>> 16fa2c0b045ced7a81da986981111c62ea9d51ef
+        {!noteEditFormVisibility &&
             <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
                 <Button
                     onClick={toggleChecked}
@@ -326,7 +321,7 @@ const toggleChecked = () =>
               </AccordionDetails>
             </Accordion>
           )})}
-          {isNotFound  && <EmptyContent title="No notes have been made"/>}
+          {isNotFound  && <EmptyContent title="No saved notes"/>}
         </Card>
         <ConfirmDialog
           open={openConfirm}

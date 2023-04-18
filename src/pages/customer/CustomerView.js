@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, tabsClasses } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, Typography,tabsClasses } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
@@ -201,7 +201,39 @@ export default function CustomerView({editPage}) {
                 {tab.component ? (
                   tab.component
                 ) : (
-                  <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
+                  <>
+                    <Box
+                      sx={{
+                        opacity: '30%',
+                        marginTop: '50px',
+                        height: '40vh',
+                        justifyContent: 'center',
+                        display: 'flex',
+                      }}
+                    >
+                      {/* center image */}
+                      <img
+                        src="/assets/illustrations/characters/character_5.png"
+                        alt="UNDER CONSTRUCTION"
+                        className="img-fluid mx-auto d-block"
+                      />
+                    </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        textAlign: 'center',
+                        width: '100vh',
+                        height: '40vh',
+                        opacity: '50%',
+                        position: 'absolute',
+                      }}
+                      >
+                      {/* <Typography>
+                        <h1>UNDER CONSTRUCTION</h1>
+                      </Typography> */}
+                    </Box>
+                  </>
                 )}{' '}
               </Box>
             )

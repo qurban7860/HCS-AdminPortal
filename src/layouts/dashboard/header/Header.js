@@ -44,7 +44,12 @@ export default function Header({ onOpenNav }) {
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
-          <Typography variant='h4' sx={{color:"black"}}>{CONFIG.ENV} {CONFIG.Version}</Typography>
+      <Typography
+        variant="h4"
+        sx={{ color: theme.palette.black, fontWeight: 'bold' }}
+      >
+        {/* {CONFIG.ENV} {CONFIG.Version} */}
+      </Typography>
       {!isDesktop && (
         <IconButton onClick={onOpenNav} sx={{ mr: 1, color: 'text.primary' }}>
           <Iconify icon="eva:menu-2-fill" />
@@ -52,13 +57,9 @@ export default function Header({ onOpenNav }) {
       )}
 
       {/* <Searchbar /> */}
-<<<<<<< HEAD
-
-=======
-      {/* {CONFIG.ENV} 
+      {/* {CONFIG.ENV}
       {CONFIG.Version} */}
-      
->>>>>>> 16fa2c0b045ced7a81da986981111c62ea9d51ef
+
       <Stack
         flexGrow={1}
         direction="row"
@@ -84,7 +85,7 @@ export default function Header({ onOpenNav }) {
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
         ...bgBlur({
-          color: theme.palette.background.default,
+          color: "#D4D4D4",
         }),
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,

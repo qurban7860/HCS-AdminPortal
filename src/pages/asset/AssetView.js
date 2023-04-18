@@ -36,12 +36,12 @@ export default function AssetViewPage() {
 
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   useLayoutEffect(() => {
     dispatch(getAsset(id));
   }, [dispatch, id]);
-  // 
+  //
 
   const { asset } = useSelector((state) => state.asset);
 
@@ -98,10 +98,7 @@ export default function AssetViewPage() {
             position: 'relative',
           }}
         >
-          <AssetCover name={asset?.name}/>
-
-          
-           
+          <AssetCover name={asset?.name} />
 
           <Tabs
             value={currentTab}
@@ -125,23 +122,29 @@ export default function AssetViewPage() {
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
           </Tabs>
-          
         </Card>
 
-        {/* <Button 
-                  size ="medium" 
-                  color ="secondary" 
-                  variant ="contained" 
+        {/* <Button
+                  size ="medium"
+                  color ="secondary"
+                  variant ="contained"
                   // href = {currentAsset.image === undefined ? '' : `localhost:5000/${currentAsset.image}`}
                   >
                     Edit Asset
           </Button>  */}
         {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
+          (tab) =>
+            tab.value === currentTab && (
+              <Box key={tab.value}>
+                {' '}
+                {tab.component ? (
+                  tab.component
+                ) : (
+                  <img src="/assets/characters/character_5" alt="UNDER CONSTRUCTION" />
+                )}{' '}
+              </Box>
+            )
         )}
-        
       </Container>
     </>
   );

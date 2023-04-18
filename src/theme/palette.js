@@ -71,6 +71,10 @@ const ERROR = {
   contrastText: '#fff',
 };
 
+const BRONZE = {
+  main: '#897A69',
+};
+
 const COMMON = {
   common: { black: '#000', white: '#fff' },
   primary: PRIMARY,
@@ -80,6 +84,7 @@ const COMMON = {
   warning: WARNING,
   error: ERROR,
   grey: GREY,
+  bronze: BRONZE,
   divider: alpha(GREY[500], 0.24),
   action: {
     hover: alpha(GREY[500], 0.08),

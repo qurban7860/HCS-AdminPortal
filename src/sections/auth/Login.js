@@ -17,13 +17,13 @@ import { CONFIG } from '../../config-global';
 export default function Login(){
 return (
     <>
-    
+
     <LoginLayout title={CONFIG.MESSAGE_LOGIN_USER}>
         <Stack  sx={{ display: 'flex',justifyContent: 'center',alignItems: 'center',whiteSpace: 'nowrap'}}>
             <Typography variant="h3" sx={{mb:5}}>CLOUD SERVICES</Typography>
         </Stack>
         <AuthLoginForm />
-      
+
       {/* <Stack direction="row" spacing={0.5} sx={{mt:2}}>
           <Typography variant="body2">New user?</Typography>
           <Link component={RouterLink} to={PATH_AUTH.register} variant="subtitle2">
@@ -33,7 +33,7 @@ return (
 
       {/* <AuthWithSocial /> */}
     </LoginLayout>
-    
+
     </>
   );
 }
