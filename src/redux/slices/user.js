@@ -69,7 +69,7 @@ const slice = createSlice({
     },
     // RESET USER
     resetUser(state){
-      state.SecurityUser = {};
+      state.securityUser = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -162,15 +162,14 @@ export function updateUser(param,id) {
         email: param.email,
         phone:  param.phone,
         roles: param.roles,
-        login: param.email,
         isActive: param.isActive
         }
-        if(param.password === ""){
+        if(param.password !== ""){
             data.password = param.password 
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
       dispatch(slice.actions.setResponseMessage('User updated successfully'));
-
+      dispatch(getUsers());
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -208,7 +207,7 @@ export function getUser(id) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
       dispatch(slice.actions.getUserSuccess(response.data));
-      // dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
+      dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
