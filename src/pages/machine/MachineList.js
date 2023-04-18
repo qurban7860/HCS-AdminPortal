@@ -77,11 +77,12 @@ export default function MachineList() {
 
   useEffect(() => {
     if (initial) {
-      if (machines && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (machines && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } 
+      // else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(machines);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);

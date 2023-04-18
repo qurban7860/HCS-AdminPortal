@@ -12,6 +12,7 @@ import Header from './header';
 import NavMini from './nav/NavMini';
 import NavVertical from './nav/NavVertical';
 import NavHorizontal from './nav/NavHorizontal';
+import { HEADER, NAV,CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
@@ -35,11 +36,11 @@ export default function DashboardLayout() {
   };
 
   const renderNavVertical = <NavVertical openNav={open} onCloseNav={handleClose} />;
-
+  const bgcolor = CONFIG.Background_Color
   if (isNavHorizontal) {
     return (
       <>
-        <Header onOpenNav={handleOpen} />
+        <Header onOpenNav={handleOpen} sx={{backgroundColor: bgcolor}} />
 
         {isDesktop ? <NavHorizontal /> : renderNavVertical}
 
@@ -53,7 +54,7 @@ export default function DashboardLayout() {
   if (isNavMini) {
     return (
       <>
-        <Header onOpenNav={handleOpen} />
+        <Header onOpenNav={handleOpen} sx={{backgroundColor: bgcolor}}/>
 
         <Box
           sx={{

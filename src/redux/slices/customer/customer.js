@@ -126,7 +126,7 @@ export function getCustomers() {
         }
       });
       dispatch(slice.actions.getCustomersSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
+      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
