@@ -348,7 +348,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
               <Autocomplete 
                 // freeSolo
                 value={ contactVal || null}
-                required
                 options={contacts}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
@@ -362,7 +361,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 }}
                 // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} name='contact' label="Contact" required/>}
+                renderInput={(params) => <TextField {...params} name='contact' label="Contact" />}
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (

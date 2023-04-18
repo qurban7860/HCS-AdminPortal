@@ -35,7 +35,6 @@ const Logo = forwardRef(({ disabledLink = false, sx, src="/logo/HowickIcon.svg",
     </Link>
   );
 });
-
 Logo.propTypes = {
   sx: PropTypes.object,
   disabledLink: PropTypes.bool,

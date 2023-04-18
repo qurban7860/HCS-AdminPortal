@@ -124,11 +124,12 @@ console.log("customers",customers)
 
   useEffect(() => {
     if (initial) {
-      if (customers && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (customers && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } 
+      // else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(customers);
     }
   }, [customers, error, responseMessage, enqueueSnackbar, initial]);

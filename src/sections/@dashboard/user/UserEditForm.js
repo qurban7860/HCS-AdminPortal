@@ -333,10 +333,8 @@ useEffect(() => {
                   </div>
                 )}
               </Autocomplete>
-
               <Autocomplete 
                 // freeSolo
-                required
                 value={ contactVal || null}
                 options={contacts}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -351,7 +349,7 @@ useEffect(() => {
                 }}
                 // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Contact" required/>}
+                renderInput={(params) => <TextField {...params} label="Contact"/>}
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
@@ -360,12 +358,9 @@ useEffect(() => {
                   </div>
                 )}
               </Autocomplete>
-
               <RHFTextField name="name" label="Full Name" />
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium" defaultCountry="NZ" onChange={handlePhoneChange} forceCallingCode/>
-
-
               </Box>
             <Box
               rowGap={3}

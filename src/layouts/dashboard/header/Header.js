@@ -40,6 +40,7 @@ export default function Header({ onOpenNav }) {
 
   const isOffset = useOffSetTop(HEADER.H_DASHBOARD_DESKTOP) && !isNavHorizontal;
 
+  const bgcolor = CONFIG.Background_Color
   const renderContent = (
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
@@ -55,7 +56,6 @@ export default function Header({ onOpenNav }) {
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
-
       {/* <Searchbar /> */}
       {/* {CONFIG.ENV}
       {CONFIG.Version} */}
