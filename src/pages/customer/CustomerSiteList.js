@@ -194,11 +194,6 @@ export default function CustomerSiteList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Site: List | Machine ERP </title>
-      </Helmet> */}
-
-
         {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
               // alignItems 

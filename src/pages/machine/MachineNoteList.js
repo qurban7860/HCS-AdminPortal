@@ -266,9 +266,6 @@ const toggleChecked = () =>
 
   return (
     <>
-      {/* <Helmet>
-        <title> Note: List | Machine ERP </title>
-      </Helmet> */}
         {!noteEditFormVisibility && 
            <AddButtonAboveAccordion name="New Note" toggleChecked={toggleChecked} FormVisibility={formVisibility} /> 
         }

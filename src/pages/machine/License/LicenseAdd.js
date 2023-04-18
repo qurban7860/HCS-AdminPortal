@@ -16,10 +16,6 @@ export default function LicenseAdd() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Site: Create a new Site</title>
-      </Helmet> */}
-
       <Container maxWidth={false }>
         <LicenseAddForm />
       </Container>

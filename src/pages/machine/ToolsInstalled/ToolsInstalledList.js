@@ -201,13 +201,7 @@ export default function ToolsInstalledList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Site: List | Machine ERP </title>
-      </Helmet> */}
-
       <Container maxWidth={ false }>
-        
-
         <Grid container spacing={3}>
           <Cover name="Setting List" icon='material-symbols:list-alt-outline' setting="enable" />
           </Grid>

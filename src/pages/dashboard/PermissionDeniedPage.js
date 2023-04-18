@@ -33,10 +33,6 @@ export default function PermissionDeniedPage() {
 
   return (
     <>
-      <Helmet>
-        <title> Other Cases: Permission Denied | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Permission Denied"

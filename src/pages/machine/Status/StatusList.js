@@ -220,10 +220,6 @@ export default function StatusList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Machine Statuses: List | Machine ERP </title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
       <Card
           sx={{

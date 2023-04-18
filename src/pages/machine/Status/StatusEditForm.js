@@ -112,9 +112,6 @@ export default function StatusEditForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
-      {/* <Helmet>
-        <title> Machine: Status | Machine ERP</title>
-      </Helmet> */}
         <Grid item xs={18} md={12}>
             <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='Edit Status' icon='material-symbols:diversity-1-rounded' />

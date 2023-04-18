@@ -16,10 +16,6 @@ import { SentIcon } from '../../assets/icons';
 export default function NewPasswordPage() {
   return (
     <>
-      <Helmet>
-        <title> New Password | Machine ERP</title>
-      </Helmet>
-
       <SentIcon sx={{ mb: 5, height: 96 }} />
 
       <Typography variant="h3" paragraph>

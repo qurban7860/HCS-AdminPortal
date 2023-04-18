@@ -211,9 +211,6 @@ export default function AssetList() {
 
   return (
     <>
-      <Helmet>
-        <title> Asset: List | Machine ERP </title>
-      </Helmet>
 
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs

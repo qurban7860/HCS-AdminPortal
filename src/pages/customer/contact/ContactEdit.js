@@ -35,10 +35,6 @@ export default function ContactEdit() {
 
   return (
     <>
-      <Helmet>
-        <title> Contact: Edit Page | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Contact"

@@ -120,9 +120,9 @@ export default function UserListPage() {
     //   if (users && !error) {
     //     enqueueSnackbar(responseMessage);
     //   } 
-    //   if(error) {
-    //     enqueueSnackbar(error, { variant: `error` });
-    //   }
+      if(error) {
+        enqueueSnackbar(error, { variant: `error` });
+      }
       setTableData(users);
     // }
   }, [users, error, enqueueSnackbar, responseMessage, initial]);
@@ -227,10 +227,6 @@ export default function UserListPage() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> User: List | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={false }>
         {/* <CustomBreadcrumbs
           heading="User List"

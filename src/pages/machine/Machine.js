@@ -48,12 +48,6 @@ export default function Machine() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> General: App | Machine ERP</title>
-      </Helmet> */}
-
-     
-
       <Container maxWidth={false}>
       <Card
           sx={{

@@ -188,11 +188,6 @@ export default function MachineLicenseList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Machine Tools Installed: List | Machine ERP </title>
-      </Helmet> */}
-
-
         {!licenseEditFormVisibility && <Stack alignItems="flex-end" sx={{ mb: 3, px:4 }}>
           <Button
               // alignItems 

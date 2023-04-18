@@ -210,10 +210,6 @@ export default function NoteList() {
 
   return (
     <>
-      <Helmet>
-        <title> Note: List | Machine ERP </title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
 
         <CustomBreadcrumbs

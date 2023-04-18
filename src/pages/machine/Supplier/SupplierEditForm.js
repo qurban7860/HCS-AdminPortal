@@ -127,9 +127,6 @@ export default function SupplierEditForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-      {/* <Helmet>
-        <title> Machine: Supplier | Machine ERP</title>
-      </Helmet> */}
       <Grid item xs={18} md={12}>
           <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
               <Cover  name='Edit Supplier' icon='material-symbols:inventory-2-rounded'  />

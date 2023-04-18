@@ -223,10 +223,6 @@ export default function CategoryList() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Category: List | Machine ERP </title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
       <Card
           sx={{

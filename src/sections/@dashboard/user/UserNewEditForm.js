@@ -193,7 +193,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
         enqueueSnackbar('Saving failed!');
-        console.error(error);
+        console.error(err.Message);
       }
   };
 

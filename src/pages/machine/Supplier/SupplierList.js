@@ -221,10 +221,6 @@ console.log("suppliers: " ,suppliers);
 
   return (
     <>
-      {/* <Helmet>
-        <title> Supplier: List | Machine ERP </title>
-      </Helmet> */}
-
       <Container maxWidth={false}>
       <Card
           sx={{

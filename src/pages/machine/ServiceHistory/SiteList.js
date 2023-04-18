@@ -202,10 +202,6 @@ export default function SiteList() {
 
   return (
     <>
-      <Helmet>
-        <title> Site: List | Machine ERP </title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         
 

@@ -7,6 +7,7 @@ import { Button, Typography } from '@mui/material';
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
 import { PageNotFoundIllustration } from '../assets/illustrations';
+import { CONFIG } from '../config-global';
 
 // ----------------------------------------------------------------------
 
@@ -14,7 +15,7 @@ export default function Page404() {
   return (
     <>
       <Helmet>
-        <title> 404 Page Not Found | Minimal UI</title>
+        <title> 404 Page Not Found | {CONFIG.APP_TITLE} </title>
       </Helmet>
 
       <MotionContainer>

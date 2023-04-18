@@ -10,10 +10,6 @@ import { Container, Typography, Stack, Link, Box, Divider } from '@mui/material'
 export default function ComponentsOverviewPage() {
   return (
     <>
-      <Helmet>
-        <title> Components Overview | Machine ERP</title>
-      </Helmet>
-
       {/* <ComponentHero /> */}
 
       <Container sx={{ pt: 10, pb: 15 }}>

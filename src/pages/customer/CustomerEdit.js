@@ -43,10 +43,6 @@ export default function CustomerEdit() {
 
   return (
     <>
-      {/* <Helmet>
-        <title> Customer: Edit Page | Machine ERP</title>
-      </Helmet> */}
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Customer"

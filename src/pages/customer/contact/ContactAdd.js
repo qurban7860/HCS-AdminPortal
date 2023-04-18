@@ -16,10 +16,6 @@ export default function ContactAdd() {
 
   return (
     <>
-      <Helmet>
-        <title> Contact: Create a new Contact</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Create a new Contact"
