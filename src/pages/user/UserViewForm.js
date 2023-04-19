@@ -10,6 +10,7 @@ import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
 import { getUser,getUsers, deleteUser, setEditFormVisibility } from '../../redux/slices/user';
 import { getCustomer } from '../../redux/slices/customer/customer';
+import { getContact } from '../../redux/slices/customer/contact';
 import Iconify from '../../components/iconify';
 import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
@@ -21,9 +22,13 @@ import { useAuthContext } from '../../auth/useAuthContext';
 export default function MachineViewForm() {
   const { securityUser } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
+  const { contact } = useSelector((state) => state.contact);
 
 const [openConfirm, setOpenConfirm] = useState(false);
 const [openPopover, setOpenPopover] = useState(null);
+const [openContact, setOpenContact] = useState(false);
+  const handleOpenContact = () => setOpenContact(true);
+  const handleCloseContact = () => setOpenContact(false);
 
 const handleViewCustomer = (id) => {
   navigate(PATH_DASHBOARD.customer.view(id));
@@ -46,6 +51,9 @@ const handleCloseConfirm = () => {
     if(id){
       dispatch(getUser(id))
       dispatch(getCustomer(securityUser?.customer?._id))
+    }
+    if(id && securityUser?.contact?._id){
+      dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
     }
     },[dispatch,id,securityUser])
   const handleEdit = () => {
@@ -124,7 +132,8 @@ const handleCloseConfirm = () => {
           <Grid container>
           <ViewFormField sm={6} heading="Billing Site" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
             {/* <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} /> */}
-            <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} />
+            <ViewFormField sm={6} heading="Billing Site" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
+            {/* <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} /> */}
             <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
             <ViewFormField sm={12} heading="email" param={defaultValues.email} />
@@ -139,7 +148,7 @@ const handleCloseConfirm = () => {
         <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
-          <Typography variant="h3" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
+          <Typography variant="h4" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
         </Grid>
           <ViewFormField sm={12} heading="Name"                     param={customer?.name?        customer?.name : ''} />
           <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName? customer?.tradingName : ''} />
@@ -165,6 +174,29 @@ const handleCloseConfirm = () => {
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to customer</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
         </Grid>
+      </Dialog>
+      
+      <Dialog open={openContact} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+        <Grid container sx={{px:2, py:2}}>
+        <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
+          <Typography variant="h4" sx={{px:2}}>Contact </Typography> <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
+        </Grid>
+          <ViewFormField sm={6} heading='First Name'    param={contact?.firstName ?    contact?.firstName : ''}/>
+          <ViewFormField sm={6} heading='Last Name'     param={contact?.lastName  ?    contact?.lastName : ''}/>
+          <ViewFormField sm={6} heading='Title'         param={contact?.title ?        contact?.title : ''}/>
+          <ViewFormField sm={6} heading='Contact Types' param={contact?.contactTypes ? contact?.contactTypes.toString() : ''}/>
+          <ViewFormField sm={6} heading='Phone'         param={contact?.phone ?        contact?.phone : ''}/>
+          <ViewFormField sm={6} heading='Email'         param={contact?.email ?        contact?.email : ''}/>
+          <ViewFormField sm={6} heading='Street'        param={contact?.address?.street ?       contact?.address?.street : ''}/>
+          <ViewFormField sm={6} heading='Suburb'        param={contact?.address?.suburb ?       contact?.address?.suburb : ''}/>
+          <ViewFormField sm={6} heading='City'          param={contact?.address?.city ?         contact?.address?.city : ''}/>
+          <ViewFormField sm={6} heading='Region'        param={contact?.address?.region ?       contact?.address?.region : ''}/>
+          <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode ?     contact?.address?.postcode : ''}/>
+          <ViewFormField sm={6} heading='Country'       param={contact?.address?.country ?      contact?.address?.country : ''}/>
+      </Grid>
+        {/* <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
+          <Link onClick={() => handleViewContact(contact?._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to contact</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
+        </Grid> */}
       </Dialog>
     </Grid>
   );
