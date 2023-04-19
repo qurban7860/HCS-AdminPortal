@@ -103,21 +103,6 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createMachinestatuses (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e.Message))
-    }
-  }
-}
-
-// ----------------------------------------------------------------------
-
 
 export function getMachinestatuses (){
   return async (dispatch) =>{
@@ -149,6 +134,8 @@ export function getMachineStatus(id) {
   };
 }
 
+//----------------------------------------------------------------
+
 export function deleteMachinestatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -164,7 +151,7 @@ export function deleteMachinestatus(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveMachinestatus(params) {
+export function addMachineStatus(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetMachinestatus());
       dispatch(slice.actions.startLoading());
@@ -173,11 +160,9 @@ export function saveMachinestatus(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          description: params.description,
         };
         /* eslint-enable */
-        if(params.description){
-            data.description = params.description;
-          }
         
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
 

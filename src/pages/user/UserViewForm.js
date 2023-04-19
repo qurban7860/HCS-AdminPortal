@@ -52,7 +52,7 @@ const handleCloseConfirm = () => {
 
   const defaultValues = useMemo(
     () => ({
-      customer:                 securityUser?.customer.name || "",
+      customer:                 securityUser?.customer?.name || "",
       contact:                  securityUser?.contact?.firstName || "",
       name:                     securityUser?.name || "",
       phone:                    securityUser?.phone || "",
@@ -85,7 +85,7 @@ const handleCloseConfirm = () => {
               >
                 Edit
               </Button>
-              { user.email !== securityUser.login ?
+              { user?.email !== securityUser?.login ?
               <Button
                 onClick={() => {
                   handleOpenConfirm();

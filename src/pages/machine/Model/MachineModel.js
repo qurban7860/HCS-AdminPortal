@@ -15,7 +15,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography, Container} from '@mui/material';
 // slice
-import { getMachinemodels, createMachinemodels } from '../../../redux/slices/products/model';
+import { addMachineModel } from '../../../redux/slices/products/model';
 import { getCategories } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
@@ -102,7 +102,7 @@ export default function MachineModel() {
 
   const onSubmit = async (data) => {    
       try{
-        await dispatch(createMachinemodels(data));
+        await dispatch(addMachineModel(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.machineModel.list); 

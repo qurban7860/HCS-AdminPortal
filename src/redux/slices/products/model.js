@@ -103,22 +103,6 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function createMachinemodels (supplyData){
-  return async (dispatch) =>{
-    dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/models`,supplyData);
-      // dispatch(slice.actions)
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e.Message))
-    }
-  }
-}
-
-// ----------------------------------------------------------------------
-
-
 export function getMachinemodels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
@@ -134,6 +118,7 @@ export function getMachinemodels (){
     }
   }
 }
+
 // ----------------------------------------------------------------------
  
 export function getMachineModel(id) {
@@ -148,6 +133,7 @@ export function getMachineModel(id) {
     }
   };
 }
+//----------------------------------------------------------------
 
 export function deleteMachinemodel(id) {
   return async (dispatch) => {
@@ -164,7 +150,7 @@ export function deleteMachinemodel(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveMachinemodel(params) {
+export function addMachineModel(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetMachinemodel());
       dispatch(slice.actions.startLoading());

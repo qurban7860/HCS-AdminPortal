@@ -20,15 +20,15 @@ AppWidgetSummary.propTypes = {
 };
 
 export default function AppWidgetSummary({ title, title2, percent, total, chart, sx, ...other }) {
-  const { colors, series, options } = chart;
+  // const { colors, series, options } = chart;
 
   const chartOptions = {
-    colors,
-    chart: {
-      sparkline: {
-        enabled: true,
-      },
-    },
+    // colors,
+    // chart: {
+    //   sparkline: {
+    //     enabled: true,
+    //   },
+    // },
     plotOptions: {
       bar: {
         columnWidth: '68%',
@@ -45,7 +45,7 @@ export default function AppWidgetSummary({ title, title2, percent, total, chart,
       },
       marker: { show: false },
     },
-    ...options,
+    // ...options,
   };
 
   return (
@@ -53,12 +53,12 @@ export default function AppWidgetSummary({ title, title2, percent, total, chart,
       <Box sx={{ flexGrow: 1 }}>
         <Typography variant="subtitle2">{title}</Typography>
         <Typography variant="subtitle2">{title2}</Typography>
-        <TrendingInfo percent={percent} />
+        {/* <TrendingInfo percent={percent} /> */}
 
         <Typography variant="h3">{fNumber(total)}</Typography>
       </Box>
 
-      <Chart type="bar" series={[{ data: series }]} options={chartOptions} width={60} height={36} />
+      {/* <Chart type="bar" series={[{ data: series }]} options={chartOptions} width={60} height={36} /> */}
     </Card>
   );
 }
