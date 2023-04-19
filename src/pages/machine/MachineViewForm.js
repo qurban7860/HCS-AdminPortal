@@ -154,7 +154,7 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="Suppport Manager"  param={customer?.supportManager?.firstName} secondParam={customer?.supportManager?.lastName}/> 
         </Grid>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
-          <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to Customer Page</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
+          <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to customer</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
         </Grid>
       </Dialog>
 
