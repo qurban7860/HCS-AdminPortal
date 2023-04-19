@@ -82,7 +82,7 @@ export default function ProfileCover({ name, role, cover }) {
           <Typography sx={{ opacity: 0.72 }}>{role}</Typography>
         </Box>
       </StyledInfo>
-
+          
       <Image
         alt="cover"
         src={cover}

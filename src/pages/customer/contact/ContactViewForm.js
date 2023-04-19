@@ -20,6 +20,8 @@ import { getContacts, getContact, setContactEditFormVisibility, deleteContact } 
 import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormField from '../../components/ViewFormField';
+
  
 // ----------------------------------------------------------------------
 
@@ -95,158 +97,30 @@ export default function ContactViewForm({ currentContact = null }) {
   );
 
   return (
-    <Grid sx={{ p: 2, mt:-4 }}>
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-
-
-        <Button
-          onClick={() => handleEdit()}
-          variant="outlined"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Edit
-        </Button>
-        <Button
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          variant="outlined"
-          color="error"
-          startIcon={<Iconify icon="eva:trash-2-fill" />}
-        >
-          Delete
-        </Button>
-
+    <Grid sx={{ mt:-4, }} sm={18}>
+      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, pt:2, pr:2  }}>
+        <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >Edit</Button>
+        <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />} > Delete</Button>
       </Stack>
-
-        <Grid container>
-            <Grid item xs={12} sm={6} sx={{pt:2}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                First Name
-              </Typography>
-              <Typography variant="body2">
-              {defaultValues.firstName ? defaultValues.firstName : ''}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} sm={6} sx={{pt:2}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Last Name
-              </Typography>
-              <Typography variant="body2">
-              {defaultValues.lastName  ? defaultValues.lastName : ''}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} sm={6} sx={{pt:2}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Title
-              </Typography>
-              <Typography variant="body2">
-              {defaultValues.title ? defaultValues.title : ''}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} sm={6} sx={{pt:2}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Contact Types
-              </Typography>
-              <Typography variant="body2">
-              {defaultValues.contactTypes ? defaultValues.contactTypes.toString() : ''}
-              </Typography>
-            </Grid>
-
-          <Grid item xs={12} sm={6} sx={{pt:2}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Phone
-              </Typography>
-              <Typography variant="body2">
-              {defaultValues.phone ? defaultValues.phone : ''}
-              </Typography>
-            </Grid>
-          
-            <Grid item xs={12} sm={6} sx={{pt:2}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Email
-              </Typography>
-              <Typography variant="body2">
-              {defaultValues.email ? defaultValues.email : ''}
-              </Typography>
-            </Grid>
-
-            <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Street
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.street ? defaultValues.street : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Suburb
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.suburb ? defaultValues.suburb : ''}
-            </Typography>
-          </Grid>
-
-         <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              City
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.city ? defaultValues.city : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Region
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.region ? defaultValues.region : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Post Code
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.postcode ? defaultValues.postcode : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Country
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.country ? defaultValues.country : ''}
-            </Typography>
-          </Grid>
+      <Grid container>
+          <ViewFormField sm={6} heading='First Name'    param={defaultValues.firstName ?    defaultValues.firstName : ''}/>
+          <ViewFormField sm={6} heading='Last Name'     param={defaultValues.lastName  ?    defaultValues.lastName : ''}/>
+          <ViewFormField sm={6} heading='Title'         param={defaultValues.title ?        defaultValues.title : ''}/>
+          <ViewFormField sm={6} heading='Contact Types' param={defaultValues.contactTypes ? defaultValues.contactTypes.toString() : ''}/>
+          <ViewFormField sm={6} heading='Phone'         param={defaultValues.phone ?        defaultValues.phone : ''}/>
+          <ViewFormField sm={6} heading='Email'         param={defaultValues.email ?        defaultValues.email : ''}/>
+          <ViewFormField sm={6} heading='Street'        param={defaultValues.street ?       defaultValues.street : ''}/>
+          <ViewFormField sm={6} heading='Suburb'        param={defaultValues.suburb ?       defaultValues.suburb : ''}/>
+          <ViewFormField sm={6} heading='City'          param={defaultValues.city ?         defaultValues.city : ''}/>
+          <ViewFormField sm={6} heading='Region'        param={defaultValues.region ?       defaultValues.region : ''}/>
+          <ViewFormField sm={6} heading='Post Code'     param={defaultValues.postcode ?     defaultValues.postcode : ''}/>
+          <ViewFormField sm={6} heading='Country'       param={defaultValues.country ?      defaultValues.country : ''}/>
+      </Grid>
             
-          <Grid item xs={12} sm={12} >
-            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-          </Grid>
-          <Grid container>
+          <Grid item xs={12} sm={12} ><Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  /></Grid>
+          
           <ViewFormAudit defaultValues={defaultValues}/>
-        </Grid>
+          
           <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
@@ -258,8 +132,6 @@ export default function ContactViewForm({ currentContact = null }) {
               </Button>
             }
           />
-
-            </Grid>
-            </Grid>
+      </Grid>
   );
 }

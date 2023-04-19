@@ -82,6 +82,7 @@ export function AuthProvider({ children }) {
 
         // const { user } = localStorage.getItem('activeUser');
         const user = {
+            
             email: localStorage.getItem('email'),
             displayName: localStorage.getItem('name'),
         };
