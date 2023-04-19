@@ -180,7 +180,7 @@ useEffect(() => {
         reset();
         enqueueSnackbar('Update success!');
         dispatch(setEditFormVisibility(false))
-        navigate(PATH_DASHBOARD.user.list);
+        navigate(PATH_DASHBOARD.user.view(defaultValues.id));
       } catch(err){
         enqueueSnackbar('Saving failed!');
         console.error(err.Message);
@@ -203,7 +203,8 @@ useEffect(() => {
   );
 
   const toggleCancel = ()=>{
-    navigate(PATH_DASHBOARD.user.list);
+      navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+
   }
 
   return (
