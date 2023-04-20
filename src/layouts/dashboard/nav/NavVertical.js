@@ -62,7 +62,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
               variant="body2"
               sx={{ margin: '0 auto', mt: -1, mb: 3, color: '#897A69' }}
               >
-            {CONFIG.ENV} {CONFIG.Version}
+           {CONFIG.Version}
           </Typography>
         </Grid>
         <NavAccount />

@@ -75,7 +75,6 @@ export default function UserProfile() {
   ];
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Profile"
@@ -122,6 +121,5 @@ export default function UserProfile() {
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component} </Box>
         )}
       </Container>
-    </>
   );
 }

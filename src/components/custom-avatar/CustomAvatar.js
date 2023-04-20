@@ -7,6 +7,7 @@ import { Badge, Avatar } from '@mui/material';
 // ----------------------------------------------------------------------
 
 const getCharAtName = (name) => name && name.charAt(0).toUpperCase();
+const getCharAtSecondName = (name) => name && name.split(' ')[1]?.charAt(0).toUpperCase();
 
 const getColorByName = (name) => {
   if (['A', 'N', 'H', 'L', 'Q'].includes(getCharAtName(name))) return 'primary';
@@ -22,7 +23,9 @@ const getColorByName = (name) => {
 const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children, sx, ...other }, ref) => {
   const theme = useTheme();
 
-  const charAtName = getCharAtName(name);
+  const charAtName = getCharAtSecondName(name)
+    ? getCharAtName(name) + getCharAtSecondName(name)
+    : getCharAtName(name);
 
   const colorByName = getColorByName(name);
 
@@ -40,7 +43,7 @@ const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children, sx, .
         sx={{
           color: theme.palette[colr]?.contrastText,
           backgroundColor: theme.palette[colr]?.main,
-          fontWeight: theme.typography.fontWeightMedium,
+          fontWeight: theme.typography.fontWeightBold,
           ...sx,
         }}
         {...other}

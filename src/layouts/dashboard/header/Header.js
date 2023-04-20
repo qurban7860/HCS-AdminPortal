@@ -47,8 +47,8 @@ export default function Header({ onOpenNav }) {
 
       <Typography
         variant="h4"
-        sx={{ color: theme.palette.black, fontWeight: 'bold' }}
       >
+        {CONFIG.ENV}
         {/* {CONFIG.ENV} {CONFIG.Version} */}
       </Typography>
       {!isDesktop && (
@@ -85,7 +85,7 @@ export default function Header({ onOpenNav }) {
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
         ...bgBlur({
-          color: "#D4D4D4",
+          color: bgcolor,
         }),
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,
@@ -113,6 +113,7 @@ export default function Header({ onOpenNav }) {
         sx={{
           height: 1,
           px: { lg: 5 },
+          color: 'text.primary',
         }}
       >
         {renderContent}

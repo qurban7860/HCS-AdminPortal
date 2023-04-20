@@ -45,6 +45,7 @@ import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
 
 CustomerView.propTypes = {
@@ -139,8 +140,7 @@ export default function CustomerView({editPage}) {
   ];
 
   return (
-    <>
-      <Container maxWidth={false}>
+    <Container maxWidth={false}>
         {/* <CustomBreadcrumbs
           heading="Customer View"
         /> */}
@@ -153,7 +153,7 @@ export default function CustomerView({editPage}) {
         >
           <Cover
             name={customer ? customer.name : 'New Customer'}
-            photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : ''}
+            photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar/>}
             icon="ph:users-light"
           />
           <Tabs
@@ -235,6 +235,5 @@ export default function CustomerView({editPage}) {
             )
         )}
       </Container>
-    </>
   );
 }

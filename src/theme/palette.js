@@ -36,20 +36,20 @@ const SECONDARY = {
 };
 
 const INFO = {
-  lighter: '#CAFDF5',
-  light: '#61F3F3',
-  main: '#00B8D9',
-  dark: '#006C9C',
-  darker: '#003768',
+  lighter: '#51BFE2',
+  light: '#00A5DB',
+  main: '#0084C9',
+  dark: '#01466F',
+  darker: '#001824',
   contrastText: '#fff',
 };
 
 const SUCCESS = {
-  lighter: '#D8FBDE',
-  light: '#86E8AB',
-  main: '#36B37E',
-  dark: '#1B806A',
-  darker: '#0A5554',
+  lighter: '#897a69',
+  light: '#0940B2',
+  main: '#10079F',
+  dark: '#10079F',
+  darker: '#FFA200',
   contrastText: '#fff',
 };
 
@@ -71,7 +71,23 @@ const ERROR = {
   contrastText: '#fff',
 };
 
-const BRONZE = {
+// const HOWICKGRAY = {
+//   light: '#F4F4F4',
+//   main: '#DFDFDF',
+//   dark: '#DFE3E8',
+// };
+
+const HOWICKBLUE = {
+  light: '#0084C9',
+  main: '#0940B2',
+  dark: '#10079F',
+};
+
+const HOWICKORANGE = {
+  main: '#FFA200',
+};
+
+const HOWICKBRONZE = {
   main: '#897A69',
 };
 
@@ -84,7 +100,9 @@ const COMMON = {
   warning: WARNING,
   error: ERROR,
   grey: GREY,
-  bronze: BRONZE,
+  bronze: HOWICKBRONZE,
+  blue: HOWICKBLUE,
+  orange: HOWICKORANGE,
   divider: alpha(GREY[500], 0.24),
   action: {
     hover: alpha(GREY[500], 0.08),

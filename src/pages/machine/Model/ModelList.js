@@ -366,6 +366,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   if (filterStatus.length) {
     inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
-
   return inputData;
+
 }

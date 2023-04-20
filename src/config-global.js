@@ -1,6 +1,7 @@
 // routes
 import { PATH_DASHBOARD } from './routes/paths';
 
+
 console.log("EEnvirnment", process.env)
 // ----------------------------------------------------------------------
 
@@ -8,17 +9,17 @@ export const CONFIG = {
   APP_CODE: 'hcs-adminportal',
   APP_TITLE: 'Howick Cloud Services',
   APP_NAME: 'Howick Cloud Services Administration Portal',
-  ENV: 'Dev',
+  ENV: 'TEST',
   Version: 'V-0.0.1',
-  Background_Color: '#fff176',
+  Background_Color: '#FFA200',
   APP_DOMAIN_NAME: 'localhost',
   APP_PORT: '5001',
-  SSL_Enabled_domain:'' ,
+  SSL_Enabled_domain: '',
   // for local testing, dont merge
   SERVER_URL: 'http://localhost:5001/api/1.0.0/',
   MESSAGE_REGISTER_USER: 'Welcome to Howick Cloud Services',
-  MESSAGE_LOGIN_USER: 'Hi, Welcome to Howick Cloud Services'
-}
+  MESSAGE_LOGIN_USER: 'Hi, Welcome to Howick Cloud Services',
+};
 
 export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
 // console.log('APP_HOST', HOST_API_KEY);

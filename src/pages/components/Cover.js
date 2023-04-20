@@ -16,6 +16,7 @@ import Image from '../../components/image';
 import { CustomAvatar } from '../../components/custom-avatar';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 
 // ----------------------------------------------------------------------
 
@@ -72,10 +73,10 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
     >
       <StyledInfo
         style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'space-between' }}
-        >
+      >
         {photoURL ? (
           <CustomAvatar
-            src={photoURL}
+            name={name !== 'HOWICK LTD.' ? name : ''}
             alt={name}
             // name={icon === undefined ? name : ''}
             sx={{
@@ -83,32 +84,31 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               borderWidth: 2,
               borderStyle: 'solid',
               borderColor: 'common.white',
-              color: 'black',
-              background: 'orange',
-
-              // background: '#2065d1',
+              color: '#fff',
+              fontSize: '4rem',
               ml: { xs: 3, md: 3 },
               mt: { xs: 1, md: 1 },
               width: { xs: 110, md: 110 },
               height: { xs: 110, md: 110 },
             }}
-          > {!photoURL ? <Iconify icon={icon} sx={{ width: 64, height: 64, color: 'white' }}/> : photoURL }
-            {/* <Iconify icon={icon} sx={{
-                 width: {xs: 48, md: 48 },
-                 height: {xs: 48, md: 48},
-                 color: 'black',
-                }}/> */}
-          </CustomAvatar>) :  ''
-        }
-
+            >
+            {name !== 'HOWICK LTD.' ? (
+                   null
+                  ) : (
+                    <LogoAvatar />
+                  )}
+          </CustomAvatar>
+        ) : (
+           ''
+        )}
 
         {serialNo ? (
           <Typography
             variant="h2"
             sx={{
-              pl: 3,
+              px: 3,
               color: 'common.white',
-              mt: { xs: 5, md: 5 },
+              mt: { xs: 3, md: 5 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
@@ -117,11 +117,11 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
           </Typography>
         ) : (
           <Typography
-            variant="h2"
+            variant={photoURL ? 'h2' : 'h1'}
             sx={{
-              pl: 3,
+              px: 3,
               color: 'common.white',
-              mt: { xs: 5, md: 5 },
+              mt: { xs: 3, md: 5 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}

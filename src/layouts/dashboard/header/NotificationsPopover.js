@@ -66,7 +66,7 @@ export default function NotificationsPopover() {
           // {totalUnRead}
           color="error"
         >
-          <Iconify icon="eva:bell-fill" />
+          <Iconify icon="eva:bell-fill"/>
         </Badge>
       </IconButtonAnimate>
 

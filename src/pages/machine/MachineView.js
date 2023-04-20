@@ -160,7 +160,6 @@ export default function MachineView({editPage}) {
   ];
 
   return (
-    <>
       <Container maxWidth={false}>
         {/* <CustomBreadcrumbs
           heading="Machine View"
@@ -173,7 +172,7 @@ export default function MachineView({editPage}) {
           }}
         >
           <Cover
-            photoURL={<LogoAvatar/>}
+            photoURL={machine.name ? '' : <LogoAvatar/>}
             name={machine?.name}
             serialNo={machine ? machine.serialNo : 'Serial Number'}
             icon="et:gears"
@@ -229,6 +228,5 @@ export default function MachineView({editPage}) {
             )
         )}
       </Container>
-    </>
   );
 }
