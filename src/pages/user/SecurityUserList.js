@@ -1,76 +1,48 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useLayoutEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Tab,
-  Tabs,
-  Card,
-  Table,
-  Button,
-  Tooltip,
-  Divider,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-} from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer, } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
-// _mock_
-import { _userList } from '../../_mock/arrays';
 // components
-import Iconify from '../../components/iconify';
+import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+import {Cover} from '../components/Cover';
+import { useTable, getComparator, TableNoData, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../components/table';
 // sections
-import { UserTableToolbar, UserTableRow } from '../../sections/@dashboard/user/list';
-import { getUsers, deleteUser } from '../../redux/slices/user';
-
+import UserTableToolbar from './SecurityUserTableToolbar';
+import  UserTableRow  from './SecurityUserTableRow';
+import { getSecurityUsers, deleteSecurityUser , setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import { fDate } from '../../utils/formatTime';
 // ----------------------------------------------------------------------
 
-const STATUS_OPTIONS = ['all', 'active', 'banned'];
+// const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
 const ROLE_OPTIONS = [
-  'all',
-  'ux designer',
-  'full stack designer',
-  'backend developer',
-  'project manager',
-  'leader',
-  'ui designer',
-  'ui/ux designer',
-  'front end developer',
-  'full stack developer',
+  'Administrator',
+  'Normal User',
+  'Guest User',
+  'Restriced User',
 ];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'company', label: 'Company', align: 'left' },
+  { id: 'email', label: 'Email', align: 'left' },
+  { id: 'phone', label: 'Phone Number', align: 'left' },
   { id: 'role', label: 'Role', align: 'left' },
-  { id: 'isVerified', label: 'Verified', align: 'center' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: '' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  // { id: 'isVerified', label: 'Verified', align: 'center' },
+  // { id: 'status', label: 'Status', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
+  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function UserList() {
+export default function SecurityUserList() {
   const {
     dense,
     page,
@@ -82,23 +54,22 @@ export default function UserList() {
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable();
 
   const dispatch = useDispatch();
 
-  const { users, isLoading } = useSelector((state) => state.user);
+  const { securityUsers, error, responseMessage, initial,securityUserEditFormVisibility,securityUserFormVisibility} = useSelector((state) => state.user);
+// console.log("securityUsers", securityUsers);
 
-  const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
-  const [tableData, setTableData] = useState(_userList);
+  const [tableData, setTableData] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -108,16 +79,23 @@ export default function UserList() {
 
   const [filterStatus, setFilterStatus] = useState('all');
 
+// console.log("users : ", users)
+  useLayoutEffect(() => {
+    dispatch(getSecurityUsers());
+  }, [dispatch,securityUserEditFormVisibility,securityUserFormVisibility]);
 
   useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (users) {
-      setTableData(users);
+    if (initial) {
+    //   if (users && !error) {
+    //     enqueueSnackbar(responseMessage);
+    //   } 
+      if(error) {
+        enqueueSnackbar(error, { variant: `error` });
+      }
+      setTableData(securityUsers);
     }
-  }, [users]);
+  }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);
+
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -129,8 +107,6 @@ export default function UserList() {
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  const denseHeight = dense ? 52 : 72;
-
   const isFiltered = filterName !== '' || filterRole !== 'all' || filterStatus !== 'all';
 
   const isNotFound =
@@ -138,17 +114,8 @@ export default function UserList() {
     (!dataFiltered.length && !!filterRole) ||
     (!dataFiltered.length && !!filterStatus);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-  };
-
-  const handleFilterStatus = (event, newValue) => {
-    setPage(0);
-    setFilterStatus(newValue);
   };
 
   const handleFilterName = (event) => {
@@ -161,15 +128,25 @@ export default function UserList() {
     setFilterRole(event.target.value);
   };
 
-  const handleDeleteRow = (id) => {
-    const deleteRow = tableData.filter((row) => row.id !== id);
-    setSelected([]);
-    setTableData(deleteRow);
-
-    if (page > 0) {
-      if (dataInPage.length < 2) {
-        setPage(page - 1);
+  const handleDeleteRow = async (id) => {
+    try {
+      try {
+        dispatch(deleteSecurityUser(id));
+        dispatch(getSecurityUsers());
+        setSelected([]);
+  
+        if (page > 0) {
+          if (dataInPage.length < 2) {
+            setPage(page - 1);
+          }
+        }
+      } catch (err) {
+        console.log(err);
       }
+
+      
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -191,7 +168,13 @@ export default function UserList() {
   };
 
   const handleEditRow = (id) => {
-    navigate(PATH_DASHBOARD.user.edit(paramCase(id)));
+    // console.log('id', id);
+    // console.log('edit');
+    dispatch(setSecurityUserEditFormVisibility(true))
+    navigate(PATH_DASHBOARD.user.edit(id));
+  };
+  const handleViewRow = (id) => {
+    navigate(PATH_DASHBOARD.user.view(id));
   };
 
   const handleResetFilter = () => {
@@ -221,9 +204,11 @@ export default function UserList() {
             </Button>
           }
         /> */}
-
+        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+          <Cover name='Users List' icon="ph:users-light"/>
+        </Card>
         <Card>
-          <Tabs
+          {/* <Tabs
             value={filterStatus}
             onChange={handleFilterStatus}
             sx={{
@@ -236,7 +221,7 @@ export default function UserList() {
             ))}
           </Tabs>
 
-          <Divider />
+          <Divider /> */}
 
           <UserTableToolbar
             isFiltered={isFiltered}
@@ -253,56 +238,53 @@ export default function UserList() {
               dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row.id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
+              // onSelectAllRows={(checked) =>
+              //   onSelectAllRows(
+              //     checked,
+              //     tableData.map((row) => row._id)
+              //   )
+              // }
+              // action={
+              //   <Tooltip title="Delete">
+              //     <IconButton color="primary" onClick={handleOpenConfirm}>
+              //       <Iconify icon="eva:trash-2-outline" />
+              //     </IconButton>
+              //   </Tooltip>
+              // }
             />
 
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 800 }}>
+              <Table size='small' sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // rowCount={tableData.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row.id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
+
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
                       <UserTableRow
-                        key={row.id}
+                        key={row._id}
                         row={row}
-                        selected={selected.includes(row.id)}
-                        onSelectRow={() => onSelectRow(row.id)}
-                        onDeleteRow={() => handleDeleteRow(row.id)}
-                        onEditRow={() => handleEditRow(row.name)}
+                        selected={selected.includes(row._id)}
+                        onSelectRow={() => onSelectRow(row._id)}
+                        onDeleteRow={() => handleDeleteRow(row._id)}
+                        onEditRow={() => handleEditRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
@@ -317,8 +299,8 @@ export default function UserList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             //
-            dense={dense}
-            onChangeDense={onChangeDense}
+            // dense={dense}
+            // onChangeDense={onChangeDense}
           />
         </Card>
       </Container>
@@ -363,9 +345,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (user) => user.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (securityUser) => securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
+    securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
+    securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus !== 'all') {

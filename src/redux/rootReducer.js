@@ -3,7 +3,7 @@ import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 // slices
 import assetReducer from './slices/asset';
-import userReducer from './slices/user';
+import userReducer from './slices/securityUser/securityUser';
 import departmentReducer from './slices/department';
 import customerReducer from './slices/customer/customer';
 import siteReducer from './slices/customer/site';

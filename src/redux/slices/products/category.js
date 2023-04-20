@@ -7,8 +7,8 @@ import { CONFIG } from '../../../config-global';
 
 const initialState = {
   intial: false,
-  formVisibility: false,
-  editFormVisibility: false,
+  categoryFormVisibility: false,
+  categoryEditFormVisibility: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -28,12 +28,12 @@ const slice = createSlice({
       state.isLoading = true;
     },
     // SET TOGGLE
-    setEditFormVisibility(state, action){
-      state.editFormVisibility = action.payload;
+    setCategoryEditFormVisibility(state, action){
+      state.categoryEditFormVisibility = action.payload;
     },
     // SET TOGGLE
-    setFormVisibility(state, action){
-      state.formVisibility = action.payload;
+    setCategoryFormVisibility(state, action){
+      state.categoryFormVisibility = action.payload;
     },
     // RESET Category
     resetCategory(state){
@@ -84,8 +84,8 @@ const slice = createSlice({
 export default slice.reducer;
 // Actions
 export const {
-  setFormVisibility,
-  setEditFormVisibility,
+  setCategoryFormVisibility,
+  setCategoryEditFormVisibility,
   resetCategory,
   resetCategories,
   setResponseMessage,

@@ -41,8 +41,6 @@ export default function CustomerEditForm() {
 
   const { error, customer } = useSelector((state) => state.customer);
 
-  const { users } = useSelector((state) => state.user);
-
   const { sites } = useSelector((state) => state.site);
 
   const { contacts, spContacts } = useSelector((state) => state.contact);

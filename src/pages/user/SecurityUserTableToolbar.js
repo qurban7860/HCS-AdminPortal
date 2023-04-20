@@ -5,12 +5,12 @@ import { Stack, InputAdornment, TextField, MenuItem, Button ,Grid} from '@mui/ma
 // components
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD } from '../../routes/paths';
-import { setFormVisibility} from '../../redux/slices/user';
+import { setSecurityUserFormVisibility} from '../../redux/slices/securityUser/securityUser';
 import { useDispatch} from '../../redux/store';
 
 // ----------------------------------------------------------------------
 
-UserTableToolbar.propTypes = {
+SecurityUserTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   filterRole: PropTypes.string,
@@ -20,7 +20,7 @@ UserTableToolbar.propTypes = {
   optionsRole: PropTypes.arrayOf(PropTypes.string),
 };
 
-export default function UserTableToolbar({
+export default function SecurityUserTableToolbar({
   isFiltered,
   filterName,
   filterRole,
@@ -31,7 +31,7 @@ export default function UserTableToolbar({
 }) {
   const dispatch = useDispatch();
   const formVisibleToggle = ()=>{
-    dispatch(setFormVisibility(true));
+    dispatch(setSecurityUserFormVisibility(true));
   }
   return (
     <Stack

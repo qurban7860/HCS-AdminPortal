@@ -1,151 +1,142 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { useNavigate,useParams } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 // @mui
-import { Switch, Card, Grid, Container, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack,Button} from '@mui/material';
-import ConfirmDialog from '../../components/confirm-dialog';
+import { Switch, Card, Grid, Container, Typography, Link ,Dialog, Stack,Button, Tabs} from '@mui/material';
 // routes
-import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
-// slices
-import { getUser,getUsers, deleteUser, setEditFormVisibility } from '../../redux/slices/user';
-import { getCustomer } from '../../redux/slices/customer/customer';
-import { getContact } from '../../redux/slices/customer/contact';
+import { PATH_DASHBOARD } from '../../routes/paths';
+// auth
+import { useAuthContext } from '../../auth/useAuthContext';
+// _mock_
+import { _userAbout} from '../../_mock/arrays';
 import Iconify from '../../components/iconify';
-import ViewFormSubtitle from '../components/ViewFormSubtitle';
+// Redux Slice
+import { getSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+// components
+// import { ProfileCover} from '../../sections/@dashboard/user/profile';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import {Cover} from '../components/Cover';
-import { useAuthContext } from '../../auth/useAuthContext';
+import { getCustomer } from '../../redux/slices/customer/customer';
+import { getContact } from '../../redux/slices/customer/contact';
+import { Cover } from '../components/Cover'
+
 // ----------------------------------------------------------------------
-export default function MachineViewForm() {
-  const { securityUser } = useSelector((state) => state.user);
+
+export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
+  const { securityUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-const [openConfirm, setOpenConfirm] = useState(false);
-const [openPopover, setOpenPopover] = useState(null);
-const [openContact, setOpenContact] = useState(false);
+  const { user, userId } = useAuthContext();
+  const [currentTab, setCurrentTab] = useState('profile');
+  const [openCustomer, setOpenCustomer] = useState(false);
+  const handleOpenCustomer = () => setOpenCustomer(true);
+  const handleCloseCustomer = () => setOpenCustomer(false);
+  const [openContact, setOpenContact] = useState(false);
   const handleOpenContact = () => setOpenContact(true);
   const handleCloseContact = () => setOpenContact(false);
 
-const handleViewCustomer = (id) => {
-  navigate(PATH_DASHBOARD.customer.view(id));
-};
-const [openCustomer, setOpenCustomer] = useState(false);
-const handleOpenCustomer = () => setOpenCustomer(true);
-const handleCloseCustomer = () => setOpenCustomer(false);
-const handleOpenConfirm = () => {
-  setOpenConfirm(true);
-};
-const handleCloseConfirm = () => {
-  setOpenConfirm(false);
-};
-  const { user } = useAuthContext();
-    const { id } = useParams();
-    
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  useEffect(()=> {
-    if(id){
-      dispatch(getUser(id))
-      dispatch(getCustomer(securityUser?.customer?._id))
-    }
-    if(id && securityUser?.contact?._id){
-      dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-    }
-    },[dispatch,id,securityUser])
-  const handleEdit = () => {
-    dispatch(setEditFormVisibility(true));
-    navigate(PATH_DASHBOARD.user.edit(securityUser._id));
-  }
-//   const handleViewCustomer = (id) => {
-//     navigate(PATH_DASHBOARD.user.list);
-//   };
-  const onDelete = async () => {
-    await dispatch(deleteUser(id));
-    dispatch(getUsers());
-    navigate(PATH_DASHBOARD.user.list)
-  }
+    useEffect(()=> {
+      if(userId){
+        dispatch(getSecurityUser(userId))
+      }
+      },[dispatch,userId])
 
+      useEffect(()=> {
+        if(userId && securityUser?.customer?._id){
+          dispatch(getCustomer(securityUser?.customer?._id))
+        }
+        if(userId && securityUser?.contact?._id){
+          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
+        }
+      },[dispatch,userId,securityUser])
 
-  const defaultValues = useMemo(
-    () => ({
-      customer:                 securityUser?.customer?.name || "",
-      contact:                  securityUser?.contact?.firstName || "",
-      name:                     securityUser?.name || "",
-      phone:                    securityUser?.phone || "",
-      email:                    securityUser?.email || "",
-      login:                    securityUser?.login || "",
-      roles:                    securityUser?.roles ,
-      isActive:                 securityUser?.isActive,
-      createdByFullName:        securityUser?.createdBy?.name ,
-      createdAt:                securityUser?.createdAt ,
-      createdIP:                securityUser?.createdIP ,
-      updatedByFullName:        securityUser?.updatedBy?.name ,
-      updatedAt:                securityUser?.updatedAt ,
-      updatedIP:                securityUser?.updatedIP ,
+      const handleViewCustomer = (id) => {
+        navigate(PATH_DASHBOARD.customer.view(id));
+      };
+
+    const handleEdit = () => {
+      dispatch(setSecurityUserEditFormVisibility(true));
+      navigate(PATH_DASHBOARD.user.edit(securityUser._id));
     }
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [securityUser] );
-
+  
+    const defaultValues = useMemo(
+      () => ({
+        customer:                 securityUser?.customer?.name || "",
+        contact:                  securityUser?.contact?.firstName || "",
+        name:                     securityUser?.name || "",
+        phone:                    securityUser?.phone || "",
+        email:                    securityUser?.email || "",
+        login:                    securityUser?.login || "",
+        roles:                    securityUser?.roles ,
+        isActive:                 securityUser?.isActive,
+        createdByFullName:        securityUser?.createdBy?.name ,
+        createdAt:                securityUser?.createdAt ,
+        createdIP:                securityUser?.createdIP ,
+        updatedByFullName:        securityUser?.updatedBy?.name ,
+        updatedAt:                securityUser?.updatedAt ,
+        updatedIP:                securityUser?.updatedIP ,
+      }
+      ),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [securityUser] );
   return (
-    <Grid sx={{p:3, mt:-3}}>
-        <Card sx={{mb: 3,height: 160,position: 'relative',  }}>
-          <Cover name={defaultValues.name} icon="ph:users-light"/>
+    <>
+      <Container maxWidth={ false}>
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+          }}
+        >
+          <Cover name={defaultValues?.name} icon="ph:users-light"/>
+
+          <Tabs
+            value={currentTab}
+            onChange={(event, newValue) => setCurrentTab(newValue)}
+            sx={{
+              width: 1,
+              bottom: 0,
+              zIndex: 9,
+              position: 'absolute',
+              bgcolor: 'background.paper',
+              '& .MuiTabs-flexContainer': {
+                pr: { md: 3 },
+                justifyContent: {
+                  sm: 'center',
+                  md: 'flex-end',
+                },
+              },
+            }}
+          >
+            {/* {TABS.map((tab) => (
+              <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
+            ))} */}
+          </Tabs>
         </Card>
         <Card sx={{ p: 3 }}>
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
-              <Button
-                onClick={() => handleEdit()}
-                variant="outlined"
-                startIcon={<Iconify icon="eva:edit-fill" />}
-              >
-                Edit
-              </Button>
-              { user?.email !== securityUser?.login ?
-              <Button
-                onClick={() => {
-                  handleOpenConfirm();
-                }}
-                variant="outlined"
-                color="error"
-                startIcon={<Iconify icon="eva:trash-2-fill" />}
-              >
-                Delete
-              </Button> : ""
-              }
+              <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >Edit</Button>
           </Stack>
-          <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
-          />
           <Grid container>
-          <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
-            {/* <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} /> */}
-            <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
-            {/* <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} /> */}
+            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : {}} />
+            <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : {}} />
             <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
             <ViewFormField sm={12} heading="email" param={defaultValues.email} />
             <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
             <ViewFormField sm={6} heading="Roles" param={defaultValues.roles?.map((obj) => obj.name).join(', ')} />
           </Grid>
-            <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
+            <Switch sx={{mt:1}} checked = { defaultValues.isActive } name="isActive" disabled  />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>
         </Card>
-        <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+      </Container>
+      <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
@@ -175,7 +166,7 @@ const handleCloseConfirm = () => {
           <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to customer</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
         </Grid>
       </Dialog>
-      
+
       <Dialog open={openContact} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, py:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
@@ -194,10 +185,7 @@ const handleCloseConfirm = () => {
           <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode ?     contact?.address?.postcode : ''}/>
           <ViewFormField sm={6} heading='Country'       param={contact?.address?.country ?      contact?.address?.country : ''}/>
       </Grid>
-        {/* <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
-          <Link onClick={() => handleViewContact(contact?._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to contact</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
-        </Grid> */}
       </Dialog>
-    </Grid>
+    </>
   );
-};
+}

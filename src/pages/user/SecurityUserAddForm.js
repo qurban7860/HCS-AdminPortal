@@ -4,58 +4,45 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Switch, Typography, FormControlLabel, IconButton, InputAdornment ,Autocomplete ,TextField, Checkbox } from '@mui/material';
+import { Box, Card, Grid, Stack,  Typography, IconButton, InputAdornment ,Autocomplete ,TextField} from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // component
-import Iconify from '../../../components/iconify';
-// utils
-import { fData } from '../../../utils/formatNumber';
+import Iconify from '../../components/iconify';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // assets
-import { countries } from '../../../assets/data';
 // components
-import Label from '../../../components/label';
-import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSwitch,
-  RHFTextField,
-  RHFUploadAvatar, 
-  RHFAutocomplete,
-  RHFMultiSelect,
-  RHFSelect,
-} from '../../../components/hook-form';
+import { useSnackbar } from '../../components/snackbar';
+import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../components/hook-form';
 // slice
-import { saveUser, getUsers, setFormVisibility } from '../../../redux/slices/user';
-import { getCustomers } from '../../../redux/slices/customer/customer';
-import { getContacts , resetContacts} from '../../../redux/slices/customer/contact';
-import { getRoles } from '../../../redux/slices/securityUser/role';
+import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
+import { getCustomers } from '../../redux/slices/customer/customer';
+import { getContacts , resetContacts} from '../../redux/slices/customer/contact';
+import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
-import { useAuthContext } from '../../../auth/useAuthContext';
-import AddFormButtons from '../../../pages/components/AddFormButtons';
+import { useAuthContext } from '../../auth/useAuthContext';
+import AddFormButtons from '../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
-UserNewEditForm.propTypes = {
+SecurityUserAddForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
 };
 
-export default function UserNewEditForm({ isEdit = false, currentUser }) {
-  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-  const checkedIcon = <CheckBoxIcon fontSize="small" />;
+export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const [showPassword, setShowPassword] = useState(false);
-
-  const { error } = useSelector((state) => state.user);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const { customers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState("");
   const { contacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState("");
+  console.log("contactVal: " , contactVal)
   const { roles } = useSelector((state) => state.role);
   const [phone, setPhone] = useState('')
 
@@ -75,7 +62,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
   //   }
   //   return 0;
   // })
-  const { userId } = useAuthContext();
   
   const dispatch = useDispatch();
 
@@ -95,43 +81,24 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [dispatch,customerVal]);
- const phoneRegExp = /(?:\(?\+\d{2}\)?\s*)?\d+(?:[ -]*\d+)*$/
  
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required('First name is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    // name: Yup.string().required('First name is required'),
+    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required').min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
-    // phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
     roles: Yup.array().required('Roles are required'),
     isActive: Yup.boolean()
-    // address: Yup.string().required('Address is required'),
-    // country: Yup.string().required('Country is required'),
-    // state: Yup.string().required('State is required'),
-    // city: Yup.string().required('City is required'),
-    // role: Yup.string().required('Role is required').nullable(),
-    // zipCode: Yup.string(),
-    // avatarUrl: Yup.string().nullable(true),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name:  '',
-      email:  '',
+      name:  name || '',
+      email:  email || '',
       password:  '',
       passwordConfirmation:  '',
       isActive: true,
-      // phone: '',
-      // address: currentUser?.address || '',
-      // country: currentUser?.country || '',
-      // state: currentUser?.state || '',
-      // city: currentUser?.city || '',
-      // zipCode: currentUser?.zipCode || '',
-      // avatarUrl: currentUser?.avatarUrl || null,
-      // isVerified: currentUser?.isVerified || true,
-      // status: currentUser?.status,
       roles: currentUser?.roles || [],
-      // addedBy: userId,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentUser]
@@ -151,7 +118,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
 
   useEffect(() => {
     if (isEdit && currentUser) {
@@ -172,6 +138,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const onSubmit = async (data) => {
       try{
+        console.log("data : ", data)
         if(phone && phone.length > 7){
           data.phone = phone ;
         }
@@ -181,12 +148,18 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
         if(contactVal){
           data.contact = contactVal._id;
         }
+        if(name){
+          data.name = name ;
+        }
+        if(email){
+          data.email = email ;
+        }
         if(roleVal){
           const roleId = []
           roleVal.map((role)=>(roleId.push(role?._id)))
           data.roles = roleId;
         }
-        dispatch(saveUser(data));
+        dispatch(addSecurityUser(data));
         reset();
         enqueueSnackbar('Create success!');
         dispatch(resetContacts());
@@ -331,10 +304,14 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                   else{ 
                   setCustomerVal("");
                   setContactVal("");
+                  setName("");
+                  setPhone("")
+                  setEmail("");
                   dispatch(resetContacts());
                   }
                 }}
                 id="controllable-states-demo"
+                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
                 renderInput={(params) => <TextField {...params} name='customer' label="Customer" required/>}
                 ChipProps={{ size: 'small' }}
               >
@@ -354,13 +331,19 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 onChange={(event, newValue) => {
                   if(newValue){
                   setContactVal(newValue);
+                  setName(`${newValue.firstName} ${newValue.lastName}`);
+                  setPhone(newValue.phone)
+                  setEmail(newValue.email);
                   }
                   else{ 
                   setContactVal("");
+                  setName("");
+                  setPhone("")
+                  setEmail("");
                   }
                 }}
-                // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</Box>)}
                 id="controllable-states-demo"
+                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.firstName} {option.lastName}</li>)}
                 renderInput={(params) => <TextField {...params} name='contact' label="Contact" />}
                 ChipProps={{ size: 'small' }}
               >
@@ -371,7 +354,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 )}
               </Autocomplete>
 
-              <RHFTextField name="name" label="Full Name" />
+              <RHFTextField name="name" label="Full Name" onChange={(e) => setName(e.target.value)} value={name} required/>
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium" defaultCountry="NZ" onChange={handlePhoneChange} forceCallingCode/>
 
@@ -385,7 +368,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="email" label="Email Address" sx={{my:3}}/>
+              <RHFTextField name="email" type="email" label="Email Address" sx={{my:3}} onChange={(e) => setEmail(e.target.value)} value={email} required/>
             </Box>
               <Box
               rowGap={3}
@@ -426,19 +409,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 }}
               />
 
-              {/* <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  ChipProps={{ size: 'small' }}
-                /> */}
-
-
-              {/* <RHFTextField name="state" label="State/Region" />
-              <RHFTextField name="city" label="City" />
-              <RHFTextField name="address" label="Address" />
-              <RHFTextField name="zipCode" label="Zip/Code" /> */}
               <RHFMultiSelect
                 chip
                 checkbox
@@ -446,88 +416,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 label="Roles"
                 options={ROLES}
               />
-              {/* <Autocomplete 
-                // freeSolo
-                multiple
-                // value={roleVal}
-                options={roles}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setRoleVal(newValue);
-                  }
-                  else{ 
-                  setRoleVal("");
-                  }
-                }}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Customer" />}
-                ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
-                  <div key={option.id}>
-                    <span>{option.name}</span>
-                  </div>
-                )}
-              </Autocomplete> */}
-
-              {/* <Autocomplete
-                multiple
-                id="checkboxes-tags-demo"
-                // value={ roleVal}
-                options={roles}
-                disableCloseOnSelect
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setRoleVal(newValue);
-                  }
-                  else{ 
-                  setRoleVal([]);
-                  }
-                }}
-                renderOption={(props, option, { selected }) => (
-                  <li {...props}>
-                    <Checkbox
-                      icon={icon}
-                      checkedIcon={checkedIcon}
-                      style={{ marginRight: 8 }}
-                      checked={selected}
-                    />
-                    {option.name}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} label="Roles"  />
-                )}
-              /> */}
-              {/* <RHFMultiSelect
-                chip
-                checkbox
-                name="rolesTypes"
-                label="Roles Types"
-                options={roles}
-              /> */}
-
-              {/* <RHFSelect native name="role" label="Roles">
-                <option value="" disabled/>
-                {roles.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-                </RHFSelect>             */}
-                {/* <RHFAutocomplete
-                  name="role" 
-                  label="Roles"
-                  freeSolo
-                  options={ROLES.map((option) => option.value)}
-                  // getOptionLabel={(option) => option.title}
-                  
-                  ChipProps={{ size: 'small' }}
-                /> */}
             </Box>
             <Grid item md={12}>
             <RHFSwitch name="isActive" labelPlacement="start" label={

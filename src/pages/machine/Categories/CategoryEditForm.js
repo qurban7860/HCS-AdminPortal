@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
 // slice
-import { updateCategory, setEditFormVisibility, getCategory, getCategories } from '../../../redux/slices/products/category';
+import { updateCategory, setCategoryEditFormVisibility, getCategory, getCategories } from '../../../redux/slices/products/category';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -69,14 +69,14 @@ export default function CategoryEditForm() {
   }, [category]);
   const toggleCancel = () => 
     {
-      dispatch(setEditFormVisibility(false));
+      dispatch(setCategoryEditFormVisibility(false));
       navigate(PATH_MACHINE.categories.view(id));
     };
   const onSubmit = async (data) => {
     try {
       await dispatch(updateCategory(data,id));
       reset(); 
-      dispatch(setEditFormVisibility(false))
+      dispatch(setCategoryEditFormVisibility(false))
       enqueueSnackbar('Update success!');
      navigate(PATH_MACHINE.categories.view(id));
     } catch (err) {
