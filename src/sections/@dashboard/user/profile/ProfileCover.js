@@ -66,6 +66,7 @@ export default function ProfileCover({ name, role, cover }) {
             borderColor: 'common.white',
             width: { xs: 80, md: 128 },
             height: { xs: 80, md: 128 },
+            fontSize: { xs: 32, md: 48 },
           }}
         />
 
@@ -82,7 +83,7 @@ export default function ProfileCover({ name, role, cover }) {
           <Typography sx={{ opacity: 0.72 }}>{role}</Typography>
         </Box>
       </StyledInfo>
-          
+
       <Image
         alt="cover"
         src={cover}
