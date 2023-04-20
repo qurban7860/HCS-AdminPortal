@@ -64,7 +64,7 @@ export const UserListPage = Loadable(lazy(() => import('../pages/user/UserListPa
 export const UserAccountPage = Loadable(lazy(() => import('../pages/dashboard/UserAccountPage')));
 export const UserCreatePage = Loadable(lazy(() => import('../pages/dashboard/UserCreatePage')));
 export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')))
-export const UserViewFormPage = Loadable(lazy(() => import('../pages/user/UserVewForm')));
+export const UserViewFormPage = Loadable(lazy(() => import('../pages/user/UserViewForm')));
 
 
 //----------------------------------------------------------------

@@ -20,14 +20,14 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
-  console.log("machines", machine)
   const { customer } = useSelector((state) => state.customer);
-  console.log("customer : " , customer)
   const { site } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false))
-    dispatch(getCustomer(machine?.customer?._id))
+    if(machine?.customer){
+      dispatch(getCustomer(machine?.customer?._id))
+    }
   }, [ dispatch ,machine ])
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
@@ -130,7 +130,7 @@ export default function MachineViewForm() {
       <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
-          <Typography variant="h3" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
+          <Typography variant="h4" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
         </Grid>
           <ViewFormField sm={12} heading="Name"                     param={customer?.name?        customer?.name : ''} />
           <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName? customer?.tradingName : ''} />
@@ -154,14 +154,14 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="Suppport Manager"  param={customer?.supportManager?.firstName} secondParam={customer?.supportManager?.lastName}/> 
         </Grid>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
-          <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to Customer Page</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
+          <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to customer</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
         </Grid>
       </Dialog>
 
       <Dialog open={openInstallationSite} onClose={handleCloseInstallationSite} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{p:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
-          <Typography variant="h3" sx={{px:2}}>Installation Site </Typography> <Link onClick={() => handleCloseInstallationSite()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
+          <Typography variant="h4" sx={{px:2}}>Installation Site </Typography> <Link onClick={() => handleCloseInstallationSite()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
         </Grid>
           <ViewFormField sm={12} heading="Name"     param={defaultValues.instalationSite ? defaultValues?.instalationSite?.name : ''} />
           <ViewFormField sm={6} heading="Phone"     param={defaultValues.instalationSite ? defaultValues?.instalationSite?.phone : ''} />

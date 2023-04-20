@@ -192,7 +192,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
         dispatch(resetContacts());
         navigate(PATH_DASHBOARD.user.list);
       } catch(err){
-        enqueueSnackbar('Saving failed!');
+        enqueueSnackbar(err.Message);
         console.error(err.Message);
       }
   };
