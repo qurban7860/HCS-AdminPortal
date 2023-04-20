@@ -20,14 +20,14 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
-  console.log("machines", machine)
   const { customer } = useSelector((state) => state.customer);
-  console.log("customer : " , customer)
   const { site } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false))
-    dispatch(getCustomer(machine?.customer?._id))
+    if(machine?.customer){
+      dispatch(getCustomer(machine?.customer?._id))
+    }
   }, [ dispatch ,machine ])
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
