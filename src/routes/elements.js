@@ -58,13 +58,11 @@ export const NoteEdit = Loadable(  lazy(() => import('../pages/customer/note/Not
 export const NoteView = Loadable(  lazy(() => import('../pages/customer/note/NoteView')));
 
 // DASHBOARD: USER
-export const UserProfilePage = Loadable(lazy(() => import('../pages/dashboard/UserProfilePage')));
-export const UserCardsPage = Loadable(lazy(() => import('../pages/dashboard/UserCardsPage')));
-export const UserListPage = Loadable(lazy(() => import('../pages/user/UserListPage')));
-export const UserAccountPage = Loadable(lazy(() => import('../pages/dashboard/UserAccountPage')));
-export const UserCreatePage = Loadable(lazy(() => import('../pages/dashboard/UserCreatePage')));
-export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')))
-export const UserViewFormPage = Loadable(lazy(() => import('../pages/user/UserViewForm')));
+export const SecurityUserProfile = Loadable(lazy(() => import('../pages/user/SecurityUserProfile')));
+export const SecurityUserList = Loadable(lazy(() => import('../pages/user/SecurityUserList')));
+export const SecurityUserAdd = Loadable(lazy(() => import('../pages/user/SecurityUserAdd')));
+export const SecurityUserEdit = Loadable(lazy(() => import('../pages/user/SecurityUserEdit')))
+export const SecurityUserViewForm = Loadable(lazy(() => import('../pages/user/SecurityUserViewForm')));
 
 
 //----------------------------------------------------------------

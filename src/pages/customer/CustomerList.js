@@ -104,7 +104,6 @@ export default function CustomerList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
-console.log("customers",customers)
   useLayoutEffect(() => {
     dispatch(getCustomers());
     dispatch(resetCustomer())

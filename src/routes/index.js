@@ -3,7 +3,6 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import AuthGuard from '../auth/AuthGuard';
 import GuestGuard from '../auth/GuestGuard';
 // layouts
-import MainLayout from '../layouts/main';
 import SimpleLayout from '../layouts/simple';
 import CompactLayout from '../layouts/compact';
 import DashboardLayout from '../layouts/dashboard';
@@ -20,13 +19,11 @@ import {
   // Dashboard: General
   GeneralAppPage,
   // User
-  UserListPage,
-  UserEditPage,
-  UserCardsPage,
-  UserCreatePage,
-  UserProfilePage,
-  UserAccountPage,
-  UserViewFormPage,
+  SecurityUserList,
+  SecurityUserEdit,
+  SecurityUserAdd,
+  SecurityUserProfile,
+  SecurityUserViewForm,
   // Asset
   AssetList,
   AssetAdd,
@@ -122,7 +119,6 @@ import {
   Page500,
   Page403,
   Page404,
-  HomePage,
   ComingSoonPage,
   MaintenancePage,
   
@@ -193,13 +189,11 @@ export default function Router() {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
-            { path: 'profile', element: <UserProfilePage /> },
-            { path: 'cards', element: <UserCardsPage /> },
-            { path: 'list', element: <UserListPage /> },
-            { path: 'new', element: <UserCreatePage /> },
-            { path: ':id/edit', element: <UserEditPage /> },
-            { path: 'account', element: <UserEditPage /> },
-            { path: ':id/view', element: <UserViewFormPage /> },
+            { path: 'profile', element: <SecurityUserProfile /> },
+            { path: 'list', element: <SecurityUserList /> },
+            { path: 'new', element: <SecurityUserAdd /> },
+            { path: ':id/edit', element: <SecurityUserEdit /> },
+            { path: ':id/view', element: <SecurityUserViewForm /> },
           ],
         },
         {

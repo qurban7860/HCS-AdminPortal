@@ -7,7 +7,7 @@ import { Container } from '@mui/material';
 import { useDispatch, useSelector } from '../../redux/store';
 // slices
 import { getNote } from '../../redux/slices/customer/note';
-import { getUsers } from '../../redux/slices/user';
+import { getUsers } from '../../redux/slices/securityUser/securityUser';
 import { getSites } from '../../redux/slices/customer/site';
 import { getContacts } from '../../redux/slices/customer/contact';
 
