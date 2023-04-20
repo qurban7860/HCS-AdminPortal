@@ -130,9 +130,9 @@ const handleCloseConfirm = () => {
             }
           />
           <Grid container>
-          <ViewFormField sm={6} heading="Billing Site" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
+          <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
             {/* <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} /> */}
-            <ViewFormField sm={6} heading="Billing Site" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
+            <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
             {/* <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} /> */}
             <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
