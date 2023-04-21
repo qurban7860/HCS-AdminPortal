@@ -22,19 +22,23 @@ export default function LoginLayout({ children, illustration, title }) {
     <StyledRoot>
       <StyledContent>
         <Grid
-          sx={{ display: 'flex', justifyContent: 'center', mb: -3 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            mb: -3 }}
           alignItems="center"
           container
           spacing={2}
         >
-          <Grid item>
+          <Grid
+            item
+            xs={6}>
             <Typography
-              variant="h5"
-              className="z-0"
               sx={{
                 // backgroundColor: '#FFA200',
                 border: '1px solid #FFA200',
                 borderRadius: '3px',
+                textAlign: 'center',
                 p: 1,
                 py: 0.1,
               }}
@@ -45,7 +49,13 @@ export default function LoginLayout({ children, illustration, title }) {
             </Typography>
           </Grid>
           <Grid item>
-            <Logo sx={{ width: { lg: '280px', md: '260px', sm: '225px', xs: '205px', pointerEvents: 'none' }}} />
+            <Logo
+              sx={{
+                width: '280px',
+                pointerEvents: 'none',
+
+              }}
+            />
           </Grid>
         </Grid>
         <Stack sx={{ width: '100%' }}> {children} </Stack>

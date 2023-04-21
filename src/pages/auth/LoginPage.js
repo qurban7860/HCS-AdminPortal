@@ -11,7 +11,6 @@ export default function LoginPage() {
     <>
       <Helmet>
         <title> Login | {CONFIG.APP_TITLE} </title>
-
       </Helmet>
 
       <Login />

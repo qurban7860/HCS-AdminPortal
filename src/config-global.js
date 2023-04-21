@@ -16,7 +16,7 @@ export const CONFIG = {
   APP_PORT: '5001',
   SSL_Enabled_domain: '',
   // for local testing, dont merge
-  SERVER_URL: 'http://localhost:5001/api/1.0.0/',
+  SERVER_URL: 'https://test.frama.server.howickltd.com/api/1.0.0/',
   MESSAGE_REGISTER_USER: 'Welcome to Howick Cloud Services',
   MESSAGE_LOGIN_USER: 'Hi, Welcome to Howick Cloud Services',
 };

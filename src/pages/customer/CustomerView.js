@@ -141,64 +141,66 @@ export default function CustomerView({editPage}) {
 
   return (
     <Container maxWidth={false}>
-        {/* <CustomBreadcrumbs
+      {/* <CustomBreadcrumbs
           heading="Customer View"
         /> */}
-        <Card
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+        }}
+      >
+        <Cover
+          name={customer ? customer.name : 'New Customer'}
+          photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
+          icon="ph:users-light"
+        />
+        <Tabs
+          value={currentTab}
+          onChange={(event, newValue) => setCurrentTab(newValue)}
+          variant="scrollable"
+          aria-label="visible arrows tabs example"
           sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+            width: 1,
+            bottom: 0,
+            zIndex: 9,
+            position: 'absolute',
+            bgcolor: 'background.paper',
+            '& .MuiTabs-flexContainer': {
+              pr: { md: 3 },
+              justifyContent: {
+                md: 'flex-end',
+              },
+            },
           }}
         >
-          <Cover
-            name={customer ? customer.name : 'New Customer'}
-            photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar/>}
-            icon="ph:users-light"
-          />
-          <Tabs
-            value={currentTab}
-            onChange={(event, newValue) => setCurrentTab(newValue)}
-            variant="scrollable"
-            aria-label="visible arrows tabs example"
-            sx={{
-              [`& .${tabsClasses.scrollButtons}`]: {
-                '&.Mui-disabled': { opacity: 0.3 },
-              },
-              width: 1,
-              bottom: 0,
-              zIndex: 9,
-              position: 'absolute',
-              bgcolor: 'background.paper',
-              '& .MuiTabs-flexContainer': {
-                pr: { md: 3 },
-                justifyContent: {
-                  md: 'flex-end',
-                },
-              },
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab
-                disabled={tab.disabled}
-                key={tab.value}
-                value={tab.value}
-                icon={tab.icon}
-                label={tab.label}
-              />
-            ))}
-          </Tabs>
-        </Card>
-        {TABS.map(
-          (tab) =>
-            tab.value === currentTab && (
-              <Box key={tab.value}>
-                {' '}
-                {tab.component ? (
-                  tab.component
-                ) : (
-                  <>
-                    <Box
+          {TABS.map((tab) => (
+            <Tab
+              disabled={tab.disabled}
+              key={tab.value}
+              value={tab.value}
+              icon={tab.icon}
+              label={tab.label}
+            />
+          ))}
+        </Tabs>
+      </Card>
+      {TABS.map(
+        (tab) =>
+          tab.value === currentTab && (
+            <Box key={tab.value}>
+              {' '}
+              {tab.component ? (
+                tab.component
+              ) : (
+
+                  <Grid container >
+                    <Grid
+                      item
                       sx={{
                         opacity: '30%',
                         marginTop: '50px',
@@ -213,8 +215,9 @@ export default function CustomerView({editPage}) {
                         alt="UNDER CONSTRUCTION"
                         className="img-fluid mx-auto d-block"
                       />
-                    </Box>
-                    <Box
+                    </Grid>
+                    <Grid
+                      item
                       sx={{
                         display: 'flex',
                         justifyContent: 'center',
@@ -224,16 +227,17 @@ export default function CustomerView({editPage}) {
                         opacity: '50%',
                         position: 'absolute',
                       }}
-                      >
-                      {/* <Typography>
+                    >
+                      <Typography>
                         <h1>UNDER CONSTRUCTION</h1>
-                      </Typography> */}
-                    </Box>
-                  </>
-                )}{' '}
-              </Box>
-            )
-        )}
-      </Container>
+                      </Typography>
+                    </Grid>
+                  </Grid>
+
+              )}{' '}
+            </Box>
+          )
+      )}
+    </Container>
   );
 }
