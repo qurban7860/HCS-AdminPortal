@@ -17,7 +17,7 @@ import {
   IconButton,
   TableContainer,
   Typography,
-  Accordion, 
+  Accordion,
   AccordionSummary,
   AccordionDetails
 } from '@mui/material';
@@ -38,7 +38,7 @@ import {
   TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction, 
+  TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
 import Iconify from '../../components/iconify';
@@ -121,13 +121,13 @@ export default function MachineNoteList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  
+
   const [openConfirm, setOpenConfirm] = useState(false);
-  
-  
+
+
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  
+
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
     setActiveIndex(null)
@@ -139,7 +139,7 @@ export default function MachineNoteList() {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-  
+
 
   const { notes, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.machinenote);
   const { machine } = useSelector((state) => state.machine);
@@ -149,7 +149,7 @@ export default function MachineNoteList() {
     dispatch(getNotes(machine._id));
     }
   }, [dispatch, machine._id, noteEditFormVisibility, formVisibility ]);
-  
+
   useEffect(() => {
     if (initial) {
       if (notes && !error) {
@@ -210,7 +210,7 @@ export default function MachineNoteList() {
 //   }
 
 // }
-const toggleChecked = () => 
+const toggleChecked = () =>
     {
       setChecked(value => !value);
       dispatch(setNoteFormVisibility(!formVisibility));
@@ -266,18 +266,18 @@ const toggleChecked = () =>
 
   return (
     <>
-        {!noteEditFormVisibility && 
-           <AddButtonAboveAccordion name="New Note" toggleChecked={toggleChecked} FormVisibility={formVisibility} /> 
+        {!noteEditFormVisibility &&
+           <AddButtonAboveAccordion name="New Note" toggleChecked={toggleChecked} FormVisibility={formVisibility} />
         }
         <Card>
           {noteEditFormVisibility && <NoteEditForm/> }
           {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
-          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{ 
+          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)} sx={{ borderTop: borderTopVal}} >
               <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-            { index !==  activeIndex ? 
+            { index !==  activeIndex ?
               <Grid container spacing={0}>
                 <Grid item xs={12} sm={9} md={10}>
                   <Typography variant="body2" >
@@ -287,7 +287,7 @@ const toggleChecked = () =>
                 </Grid>
                 <Grid item xs={12} sm={3} md={2} >
                   <Typography variant="body2" >
-                    {fDate(note.createdAt)}  
+                    {fDate(note.createdAt)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -297,8 +297,8 @@ const toggleChecked = () =>
                 <NotesViewForm currentNote={note} />
               </AccordionDetails>
             </Accordion>
-          )})} 
-          {isNotFound && !noteEditFormVisibility && !formVisibility && <EmptyContent title="No Data"/>}
+          )})}
+          {isNotFound && !noteEditFormVisibility && !formVisibility && <EmptyContent title="No saved notes"/>}
         </Card>
     </>
   );

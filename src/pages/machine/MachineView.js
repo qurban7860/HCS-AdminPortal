@@ -49,6 +49,7 @@ import MachineSettingList from './MachineSettingList';
 import MachineLicenseList from './MachineLicenseList';
 
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
 import MachineToolsInstalledList from './MachineToolsInstalledList';
 
@@ -172,7 +173,7 @@ export default function MachineView({editPage}) {
           }}
         >
           <Cover
-            photoURL={machine.name ? '' : <LogoAvatar/>}
+            photoURL={machine.name ? <CustomAvatar /> : <LogoAvatar/>}
             name={machine?.name}
             serialNo={machine ? machine.serialNo : 'Serial Number'}
             icon="et:gears"

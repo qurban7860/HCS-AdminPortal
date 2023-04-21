@@ -14,6 +14,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
+import theme from '../../theme';
 
 // ----------------------------------------------------------------------
 
@@ -100,7 +101,7 @@ export default function AuthLoginForm() {
         type="submit"
         variant="contained"
         loading={isSubmitSuccessful || isSubmitting}
-        sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#0940B2' } }}
+        sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
       >
         Login
       </LoadingButton>
