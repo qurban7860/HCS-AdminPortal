@@ -17,6 +17,7 @@ import { CustomAvatar } from '../../components/custom-avatar';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import useResponsive from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +45,8 @@ const StyledInfo = styled('div')(({ theme }) => ({
   },
 }));
 
+
+
 // ----------------------------------------------------------------------
 
 Cover.propTypes = {
@@ -65,6 +68,14 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
   const handleBacklink = () => {
     navigate(backLink);
   };
+
+  const isMobile = useResponsive('down', 'sm');
+
+  // this will be used to determine the category of the page
+  const CategoryArr = [ 'Machines', 'Customers', 'Users'];
+  // this will only display the main category names
+  const Category = CategoryArr.includes(name) ? name : null;
+
   return (
     <StyledRoot
       style={{
@@ -91,15 +102,12 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               width: { xs: 110, md: 110 },
               height: { xs: 110, md: 110 },
             }}
-            >
-            {name !== 'HOWICK LTD.' ? (
-                   null
-                  ) : (
-                    <LogoAvatar />
-                  )}
+          >
+          {/* if the page is Howick, will show the howick logo */}
+            {name !== 'HOWICK LTD.' ? null : <LogoAvatar />}
           </CustomAvatar>
         ) : (
-           ''
+          ''
         )}
 
         {serialNo ? (
@@ -108,7 +116,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 3, md: 5 },
+              mt: { xs: 5, md: 5 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
@@ -117,16 +125,16 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
           </Typography>
         ) : (
           <Typography
-            variant={photoURL ? 'h2' : 'h1'}
+            variant={photoURL ? 'h3' : 'h2'}
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 3, md: 5 },
-              mb: 0,
+              mt: { xs: 6, md: 5 },
               display: { xs: 'flex', md: 'block' },
             }}
-          >
-            {name}
+            >
+            {/* if in mobile/device, only the avatar will show up */}
+            {isMobile && name !== Category ? null : name}
           </Typography>
         )}
 

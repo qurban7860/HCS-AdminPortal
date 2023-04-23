@@ -227,7 +227,7 @@ console.log("customers",customers)
           }}
         >
           <Cover
-            name="Customers List"
+            name="Customers"
             icon="ph:users-light"
           />
         </Card>

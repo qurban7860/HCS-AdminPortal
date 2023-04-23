@@ -52,6 +52,7 @@ export default function Main({ children, sx, ...other }) {
         flexGrow: 1,
         background: '#f2f3f5',
         py: `${HEADER.H_MOBILE + SPACING}px`,
+        height: '100vh',
         ...(isDesktop && {
           px: 2,
           py: `${HEADER.H_DASHBOARD_DESKTOP + SPACING}px`,
