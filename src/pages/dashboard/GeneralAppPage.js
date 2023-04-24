@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Stack, Button } from '@mui/material';
+import { Typography, Container, Grid, Stack, Button } from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -61,77 +61,93 @@ export default function GeneralAppPage() {
 
 
   return (
-    <>
-      <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          {/* <Grid item xs={12} md={8}>
-            <AppWelcome
-              title={`Welcome back! \n ${user?.displayName}`}
-              description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
-              img={
-                <SeoIllustration
-                  sx={{
-                    p: 3,
-                    width: 360,
-                    margin: { xs: 'auto', md: 'inherit' },
-                  }}
-                />
-              }
-              action={<Button variant="contained">Go Now</Button>}
-            />
-          </Grid>
+    <Container maxWidth={false}>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={12}>
+          <AppWelcome
+            title={`CUSTOMER \n SERVICE & SUPPORT`}
+            // title={`Welcome back! \n ${user?.displayName}`}
+            description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
+            img={
+              <SeoIllustration
+                sx={{
+                  p: 3,
+                  width: { xs: 360, md: 640 },
+                  margin: { xs: 'auto', md: 'inherit' },
+                  display: { xs: 'none', md: 'block' },
+                }}
+              />
+            }
+            action={
+              <Button
+                variant="contained"
+                href="https://www.howickltd.com/products" target="_blank"
+                >
+                OUR PRODUCTS
+              </Button>
+            }
+          />
+        </Grid>
 
-          <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={12}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
-            <AppWidgetSummary
-              title="Active Users"
-              // percent={2.6}
-              total={count?.userCount || 0}
-              // chart={{
-              //   colors: [theme.palette.primary.main],
-              //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-              // }}
-            />
-          </Grid>
+        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+          <AppWidgetSummary
+            title="Active Users"
+            // percent={2.6}
+            total={count?.userCount || 0}
+            // chart={{
+            //   colors: [theme.palette.primary.main],
+            //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+            // }}
+          />
+        </Grid>
 
-          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
-            <AppWidgetSummary
-              title="Machines"
-              // percent={0.2}
-              total={count?.machineCount || 0}
-              // chart={{
-              //   colors: [theme.palette.info.main],
-              //   series: [10, 6, 4],
-              // }}
-            />
-          </Grid>
+        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+          <AppWidgetSummary
+            title="Machines"
+            // percent={0.2}
+            total={count?.machineCount || 0}
+            // chart={{
+            //   colors: [theme.palette.info.main],
+            //   series: [10, 6, 4],
+            // }}
+          />
+        </Grid>
 
-          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
-            <AppWidgetSummary
-              title="Customers"
-              // percent={-0.1}
-              total={count?.customerCount || 0}
-              // chart={{
-              //   colors: [theme.palette.warning.main],
-              //   series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-              // }}
-            />
-          </Grid>
+        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+          <AppWidgetSummary
+            title="Customers"
+            // percent={-0.1}
+            total={count?.customerCount || 0}
+            // chart={{
+            //   colors: [theme.palette.warning.main],
+            //   series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+            // }}
+          />
+        </Grid>
 
-          <Grid item xs={12} sm={6} md={3} sx={{mt: '24px'}}>
-            <AppWidgetSummary
-              title="Sites"
-              // percent={2.6}
-              total={count?.siteCount || 0}
-              // chart={{
-              //   colors: [theme.palette.primary.main],
-              //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-              // }}
-            />
-          </Grid>
-          {/* <Grid item xs={12} md={6} lg={4}>
+        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+          <AppWidgetSummary
+            title="Sites"
+            // percent={2.6}
+            total={count?.siteCount || 0}
+            // chart={{
+            //   colors: [theme.palette.primary.main],
+            //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+            // }}
+          />
+        </Grid>
+        <Grid item md={12}>
+          {/* widget for typography */}
+
+          {/* <Typography variant="h1" gutterBottom color={theme.palette.bronze.main}>
+           SHAPING THE\n WORLD OF CONSTRUCTION
+
+          </Typography> */}
+        </Grid>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppCurrentDownload
               title="Current Machines"
               chart={{
@@ -150,7 +166,7 @@ export default function GeneralAppPage() {
             />
           </Grid> */}
 
-          {/* <Grid item xs={12} md={6} lg={8}>
+        {/* <Grid item xs={12} md={6} lg={8}>
             <AppAreaInstalled
               title="Sites"
               subheader="(+43%) than last year"
@@ -176,7 +192,7 @@ export default function GeneralAppPage() {
             />
           </Grid> */}
 
-          {/* <Grid item xs={12} lg={8}>
+        {/* <Grid item xs={12} lg={8}>
             <AppNewInvoice
               title="New Site"
               tableData={_appInvoices}
@@ -190,11 +206,11 @@ export default function GeneralAppPage() {
             />
           </Grid> */}
 
-          {/* <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopRelated title="Top Related Applications" list={_appRelated} />
           </Grid> */}
 
-          {/* <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
           </Grid>
 
@@ -224,8 +240,7 @@ export default function GeneralAppPage() {
               />
             </Stack>
           </Grid> */}
-        </Grid>
-      </Container>
-    </>
+      </Grid>
+    </Container>
   );
 }
