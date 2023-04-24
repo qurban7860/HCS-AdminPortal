@@ -47,7 +47,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexDirection: 'column',
         },
       }}
-    >
+      >
       <Stack
         sx={{
           pt: 3,
