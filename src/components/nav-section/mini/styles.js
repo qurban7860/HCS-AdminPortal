@@ -37,7 +37,7 @@ export const StyledItem = styled(ListItemButton, {
     flexDirection: 'column',
     textTransform: 'capitalize',
     padding: theme.spacing(1, 0, 0.5, 0),
-    color: theme.palette.text.secondary,
+    color: 'black',
     borderRadius: theme.shape.borderRadius,
     '&:hover': hoverStyle,
     // Sub item

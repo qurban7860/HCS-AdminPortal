@@ -155,20 +155,12 @@ export default function CustomerView({editPage}) {
           position: 'relative',
         }}
       >
-        {' '}
-        {isMobile ? (
           <Cover
             name={customer ? customer.name : 'New Customer'}
             photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
             icon="ph:users-light"
           />
-        ) : (
-          <Cover
-            name={customer ? customer.name : 'New Customer'}
-            photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
-            icon="ph:users-light"
-          />
-        )}
+
         <Tabs
           value={currentTab}
           onChange={(event, newValue) => setCurrentTab(newValue)}

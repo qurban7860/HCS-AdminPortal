@@ -32,7 +32,7 @@ export const StyledItem = styled(ListItemButton, {
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(1.5),
     marginBottom: theme.spacing(0.5),
-    color: theme.palette.text.secondary,
+    color: 'black',
     borderRadius: theme.shape.borderRadius,
     height: NAV.H_DASHBOARD_ITEM,
     // Sub item

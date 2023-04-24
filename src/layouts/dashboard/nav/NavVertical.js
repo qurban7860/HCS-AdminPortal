@@ -82,6 +82,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
       sx={{
         flexShrink: { lg: 0 },
         width: { lg: NAV.W_DASHBOARD },
+        // background: '#DFDFDF',
       }}
     >
       <NavToggleButton />

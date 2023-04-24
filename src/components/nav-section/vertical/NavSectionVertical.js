@@ -34,6 +34,7 @@ export default function NavSectionVertical({ data, sx, ...other }) {
                 data={list}
                 depth={1}
                 hasChild={!!list.children}
+                sx={{}}
               />
             ))}
           </List>

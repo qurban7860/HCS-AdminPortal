@@ -13,6 +13,7 @@ export function LeftIcon({ icon = 'eva:arrow-ios-forward-fill', isRTL }) {
     <Iconify
       icon={icon}
       sx={{
+        color: 'black',
         width: 20,
         height: 20,
         transform: ' scaleX(-1)',
