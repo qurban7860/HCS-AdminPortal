@@ -154,7 +154,7 @@ export function deleteTechparamcategory(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveTechparamcategory(params) {
+export function addTechparamcategory(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetTechparamcategory());
       dispatch(slice.actions.startLoading());

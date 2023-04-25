@@ -132,7 +132,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function saveContact(params) {
+export function addContact(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

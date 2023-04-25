@@ -1,47 +1,31 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
+
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-// import style from '../../style/style.css'
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
-import { saveSupplier } from '../../../redux/slices/products/supplier';
+import { addSupplier } from '../../../redux/slices/products/supplier';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 // components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // asset
 import { countries } from '../../../assets/data';
 // util
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import {Cover} from '../../components/Cover';
 import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
-export default function MachineSuppliers() {
-
+export default function StatusAddForm() {
 
   const { userId, user } = useAuthContext();
 
@@ -126,7 +110,7 @@ export default function MachineSuppliers() {
     //         country:data.country ,
     //     }
     // }
-      await dispatch(saveSupplier(data));
+      await dispatch(addSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.supplier.list); 

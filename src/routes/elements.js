@@ -76,7 +76,7 @@ export const MachineEdit = Loadable(lazy(()=> import('../pages/machine/MachineEd
 
 
 // Supplier
-export const MachineSupplier = Loadable(lazy(()=> import('../pages/machine/Supplier/MachineSuppliers')));
+export const SupplierAddForm = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierAddForm')));
 export const SupplierList = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierList')));
 export const SupplierView = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierView')));
 export const SupplierViewForm = Loadable(lazy(()=> import('../pages/machine/Supplier/SupplierViewForm')));
@@ -96,7 +96,7 @@ export const CategoryEditForm = Loadable(lazy(()=> import('../pages/machine/Cate
 
 
 // Machine Parameters
-export const MachineParameter = Loadable(lazy(()=> import('../pages/machine/Parameters/MachineParameter')));
+export const ParameterAddForm = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterAddForm')));
 export const ParameterList = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterList')));
 export const ParameterView = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterView')));
 export const ParameterViewForm = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterViewForm')));
@@ -104,7 +104,7 @@ export const ParameterEdit = Loadable(lazy(()=> import('../pages/machine/Paramet
 export const ParameterEditForm = Loadable(lazy(()=> import('../pages/machine/Parameters/ParameterEditForm')));
 
 // Machine Tools
-export const MachineTool = Loadable(lazy(()=> import('../pages/machine/Tool/MachineTool')));
+export const ToolAddForm = Loadable(lazy(()=> import('../pages/machine/Tool/ToolAddForm')));
 export const ToolList = Loadable(lazy(()=> import('../pages/machine/Tool/ToolList')));
 export const ToolView = Loadable(lazy(()=> import('../pages/machine/Tool/ToolView')));
 export const ToolViewForm = Loadable(lazy(()=> import('../pages/machine/Tool/ToolViewForm')));
@@ -112,7 +112,7 @@ export const ToolEdit = Loadable(lazy(()=> import('../pages/machine/Tool/ToolEdi
 export const ToolEditForm = Loadable(lazy(()=> import('../pages/machine/Tool/ToolEditForm')));
 
 // MachineTechParam
-export const MachineTechParam = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/MachineTechParam')));
+export const TechParamCategoryAddForm = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryAddForm')));
 export const TechParamList = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamList')));
 export const TechParamCategoryViewForm = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryViewForm')));
 export const TechParamCategoryView = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryView')));
@@ -120,7 +120,7 @@ export const TechParamCategoryEdit = Loadable(lazy(()=> import('../pages/machine
 export const TechParamCategoryEditForm = Loadable(lazy(()=> import('../pages/machine/TechParamCategory/TechParamCategoryEditForm')));
 
 // Machine Statuses
-export const MachineStatus = Loadable(lazy(()=> import('../pages/machine/Status/MachineStatus')));
+export const StatusAddForm = Loadable(lazy(()=> import('../pages/machine/Status/StatusAddForm')));
 export const StatusList = Loadable(lazy(()=> import('../pages/machine/Status/StatusList')));
 export const StatusViewForm = Loadable(lazy(()=> import('../pages/machine/Status/StatusViewForm')));
 export const StatusView = Loadable(lazy(()=> import('../pages/machine/Status/StatusView')));
@@ -128,7 +128,7 @@ export const StatusEditForm = Loadable(lazy(()=> import('../pages/machine/Status
 export const StatusEdit = Loadable(lazy(()=> import('../pages/machine/Status/StatusEdit')));
 
 // Machine Model
-export const MachineModel = Loadable(lazy(()=> import('../pages/machine/Model/MachineModel')));
+export const ModelAddForm = Loadable(lazy(()=> import('../pages/machine/Model/ModelAddForm')));
 export const ModelList = Loadable(lazy(()=> import('../pages/machine/Model/ModelList')));
 export const ModelViewForm = Loadable(lazy(()=> import('../pages/machine/Model/ModelViewForm')));
 export const ModelView = Loadable(lazy(()=> import('../pages/machine/Model/ModelView')));

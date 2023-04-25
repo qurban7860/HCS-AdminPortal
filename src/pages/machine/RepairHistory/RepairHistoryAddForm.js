@@ -23,7 +23,7 @@ import FormProvider, {
 
 // ----------------------------------------------------------------------
 
-export default function SiteAddForm() {
+export default function RepairHistoryAddForm() {
 
   const { siteAddFormVisibility } = useSelector((state) => state.site);
 

@@ -111,7 +111,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function saveLicense (machineId, supplyData){
+export function addLicense (machineId, supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{

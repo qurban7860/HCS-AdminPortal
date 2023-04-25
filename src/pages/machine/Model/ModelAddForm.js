@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import axios from 'axios';
 import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
@@ -21,30 +19,17 @@ import { getCategories } from '../../../redux/slices/products/category';
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 // components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
-// asset
-import { countries } from '../../../assets/data';
 // util
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import {Cover} from '../../components/Cover';
 import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-export default function MachineModel() {
-
+export default function ModelAddForm() {
 
   const { userId, user } = useAuthContext();
 
@@ -57,7 +42,7 @@ export default function MachineModel() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const AddMachineSchema = Yup.object().shape({
+  const ModelAddSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
@@ -76,7 +61,7 @@ export default function MachineModel() {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddMachineSchema),
+    resolver: yupResolver(ModelAddSchema),
     defaultValues,
   });
 
@@ -117,8 +102,6 @@ export default function MachineModel() {
   {
     navigate(PATH_MACHINE.machineModel.list);
   };
-
-  
 
   const { themeStretch } = useSettingsContext();
   return (

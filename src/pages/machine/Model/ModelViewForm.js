@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
 // redux
-import { setMachinemodelsEditFormVisibility, updateMachinemodel } from '../../../redux/slices/products/model';
+import { setMachinemodelsEditFormVisibility, updateMachineModel } from '../../../redux/slices/products/model';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components

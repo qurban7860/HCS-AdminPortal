@@ -12,7 +12,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import SiteEditForm from './SiteEditForm';
+import SiteEditForm from './ServiceHistoryEditForm';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +35,6 @@ export default function SiteEdit() {
 
   return (
     <>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Site"

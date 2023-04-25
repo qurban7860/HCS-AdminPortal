@@ -1,6 +1,3 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
@@ -176,7 +173,7 @@ export function deleteCustomer(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveCustomer(params) {
+export function addCustomer(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());

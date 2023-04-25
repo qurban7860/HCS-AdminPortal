@@ -26,7 +26,7 @@ import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
-SiteListTableRow.propTypes = {
+RepairHistoryListTableRow.propTypes = {
   row: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
@@ -35,7 +35,7 @@ SiteListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-export default function SiteListTableRow({
+export default function RepairHistoryListTableRow({
   row,
   selected,
   onSelectRow,

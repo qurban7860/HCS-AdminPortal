@@ -7,11 +7,11 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 // sections
-import SiteAddForm from './SiteAddForm';
+import SiteAddForm from './RepairHistoryAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function SiteAdd() {
+export default function RepairHistoryAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (

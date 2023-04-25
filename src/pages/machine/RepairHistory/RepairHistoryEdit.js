@@ -12,11 +12,11 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import SiteEditForm from './SiteEditForm';
+import RepairHistoryEditForm from './RepairHistoryEditForm';
 
 // ----------------------------------------------------------------------
 
-export default function SiteEdit() {
+export default function RepairHistoryEdit() {
   const { themeStretch } = useSettingsContext();
 
   const dispatch = useDispatch();
@@ -35,6 +35,7 @@ export default function SiteEdit() {
 
   return (
     <>
+
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Site"

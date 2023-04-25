@@ -18,7 +18,6 @@ export default function UserCardsPage() {
 
   return (
     <>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="User Cards"

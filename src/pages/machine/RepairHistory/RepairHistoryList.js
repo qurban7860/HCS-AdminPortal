@@ -64,7 +64,7 @@ const STATUS_OPTIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function SiteList() {
+export default function RepairHistoryList() {
   const {
     dense,
     page,

@@ -158,7 +158,7 @@ export function deleteTool(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveTool(params) {
+export function addTool(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetTool());
       dispatch(slice.actions.startLoading());

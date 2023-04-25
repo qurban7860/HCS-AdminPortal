@@ -116,7 +116,7 @@ export const {
 
 // ----------------------------Save Note------------------------------------------
 
-export function saveNote(customerId,params) {
+export function addNote(customerId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

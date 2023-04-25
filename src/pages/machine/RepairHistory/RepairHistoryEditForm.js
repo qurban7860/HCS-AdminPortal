@@ -31,7 +31,7 @@ import { countries } from '../../../assets/data';
 
 // ----------------------------------------------------------------------
 
-export default function SiteEditForm() {
+export default function RepairHistoryEditForm() {
 
   const { error, site } = useSelector((state) => state.site);
 

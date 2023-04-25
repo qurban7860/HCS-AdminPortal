@@ -6,11 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment,TextField } from '@mui/material';
 import AddFormButtons from '../../components/AddFormButtons';
 // slice
-import { saveNote, setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
+import { addNote, setNoteFormVisibility } from '../../../redux/slices/products/machineNote';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {RHFTextField,RHFSwitch} from '../../../components/hook-form';
@@ -61,7 +60,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const onSubmit = async (data) => {
       try{
-        await dispatch(saveNote(machine._id,data));
+        await dispatch(addNote(machine._id,data));
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');

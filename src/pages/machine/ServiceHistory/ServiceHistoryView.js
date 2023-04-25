@@ -17,10 +17,10 @@ import {
   SiteCover
 } from './util';
 
-import SiteViewForm from './SiteViewForm'
+import ServiceHistoryViewForm from './ServiceHistoryViewForm'
 // ----------------------------------------------------------------------
 
-export default function SiteViewPage() {
+export default function ServiceHistoryViewPage() {
 
   const dispatch = useDispatch();
 

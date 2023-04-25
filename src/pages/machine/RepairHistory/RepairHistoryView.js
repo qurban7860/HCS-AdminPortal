@@ -13,14 +13,11 @@ import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import {
-  SiteCover
-} from './util';
 
-import SiteViewForm from './SiteViewForm'
+import RepairHistoryViewForm from './RepairHistoryViewForm'
 // ----------------------------------------------------------------------
 
-export default function SiteView() {
+export default function RepairHistoryView() {
 
   const dispatch = useDispatch();
 

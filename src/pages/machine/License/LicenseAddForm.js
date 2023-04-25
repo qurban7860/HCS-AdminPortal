@@ -8,11 +8,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // slice
-import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , addLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
-
 
 import FormProvider, {
   RHFSelect,

@@ -117,7 +117,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function saveSite(params) {
+export function addSite(params) {
   return async (dispatch) => {
     dispatch(slice.actions.setSiteFormVisibility(false));
     dispatch(slice.actions.startLoading());

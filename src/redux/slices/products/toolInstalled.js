@@ -105,7 +105,7 @@ export const {
 
 // ----------------------------Save Note------------------------------------------
 
-export function saveToolInstalled(machineId,params) {
+export function addToolInstalled(machineId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {

@@ -13,33 +13,24 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import { getTechparamcategories, saveTechparamcategory} from '../../../redux/slices/products/machineTechParamCategory';
+import { getTechparamcategories, addTechparamcategory} from '../../../redux/slices/products/machineTechParamCategory';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 // components
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
-// asset
-import { countries } from '../../../assets/data';
+
 // util
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import {Cover} from '../../components/Cover';
 import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
-export default function MachineTechParam() {
+export default function TechParamCategoryAddForm() {
 
 
   const { userId, user } = useAuthContext();
@@ -91,7 +82,7 @@ export default function MachineTechParam() {
   const onSubmit = async (data) => {
     
       try{ 
-        await dispatch(saveTechparamcategory(data));
+        await dispatch(addTechparamcategory(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.techParam.list); 

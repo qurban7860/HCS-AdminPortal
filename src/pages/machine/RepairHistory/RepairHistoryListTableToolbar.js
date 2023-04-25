@@ -18,7 +18,7 @@ import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
 
-SiteListTableToolbar.propTypes = {
+RepairHistoryListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -28,7 +28,7 @@ SiteListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function SiteListTableToolbar({
+export default function RepairHistoryListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

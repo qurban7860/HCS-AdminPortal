@@ -13,29 +13,19 @@ import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment, TextField } from '@mui/material';
 // slice
-// import { getSPContacts } from '../../redux/slices/contact';
-import { saveCustomer } from '../../redux/slices/customer/customer';
+import { addCustomer } from '../../redux/slices/customer/customer';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSwitch,
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFMultiSelect
-} from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFSelect, RHFAutocomplete, RHFTextField } from '../../components/hook-form';
 import { MotionContainer, varBounce } from '../../components/animate';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset
 import { countries } from '../../assets/data';
 // util
-import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 import { Cover } from '../components/Cover';
-
 
 // ----------------------------------------------------------------------
 
@@ -51,25 +41,16 @@ const CONTACT_TYPES = [
   { value: 'support', label: 'Support' },
 ];
 
-const types = [
-  { value: 'technical', label: 'Technical' },
-  { value: 'financial', label: 'Financial' },
-  { value: 'support', label: 'Support' },
-];
-
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const { userId, user } = useAuthContext();
 
   const { spContacts } = useSelector((state) => state.contact);
 
-  const { customer, customerSaveSuccess } = useSelector((state) => state.customer);
-
   const [contactFlag, setCheckboxFlag] = useState(false);
 
   const toggleCheckboxFlag = () => setCheckboxFlag(value => !value);
 
-  // console.log('checked ------> ', contactFlag);
 
   const dispatch = useDispatch();
   
@@ -212,7 +193,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         if(technicalContactPhone){
           data.technicalContactPhone = technicalContactPhone
         }
-        dispatch(saveCustomer(data));
+        dispatch(addCustomer(data));
         reset();
         enqueueSnackbar('Create success!');
         navigate(PATH_DASHBOARD.customer.view(null));

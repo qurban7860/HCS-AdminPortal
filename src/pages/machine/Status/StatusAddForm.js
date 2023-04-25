@@ -40,7 +40,7 @@ import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-export default function MachineStatus() {
+export default function StatusAddForm() {
 
 
   const { userId, user } = useAuthContext();
