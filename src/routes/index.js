@@ -24,11 +24,6 @@ import {
   SecurityUserAdd,
   SecurityUserProfile,
   SecurityUserViewForm,
-  // Asset
-  AssetList,
-  AssetAdd,
-  AssetEdit,
-  AssetView,
   // Customer
   CustomerDashboard,
   CustomerList,
@@ -176,15 +171,6 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
-        {
-          path: 'asset',
-          children: [
-            { path: 'list', element: <AssetList /> },
-            { path: 'new', element: <AssetAdd /> },
-            { path: ':id/edit', element: <AssetEdit />},
-            { path: 'view', element: <AssetView />}
-          ],
-        },
         {
           path: 'user',
           children: [

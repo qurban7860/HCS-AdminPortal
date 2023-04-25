@@ -8,7 +8,6 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 import { getNotes, getNote } from '../../../redux/slices/customer/note';
-import { getDepartments } from '../../../redux/slices/department';
 
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
