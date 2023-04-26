@@ -38,7 +38,7 @@ export default function NavDocs() {
       </div>
 
       <Button href={PATH_DOCS.root} target="_blank" rel="noopener" variant="contained">
-        WHY HOWICK?
+        SEE HOWICK
       </Button>
     </Stack>
   );

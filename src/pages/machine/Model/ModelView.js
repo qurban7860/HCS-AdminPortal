@@ -66,7 +66,6 @@ export default function ModelViewPage({editPage}) {
 
 
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
@@ -85,6 +84,5 @@ export default function ModelViewPage({editPage}) {
         </Card>
         <ModelViewForm />
       </Container>
-    </>
   );
 }

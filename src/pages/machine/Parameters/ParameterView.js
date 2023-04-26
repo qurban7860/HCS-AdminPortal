@@ -69,7 +69,6 @@ export default function ParameterViewPage({editPage}) {
 
 
   return (
-    <>
       <Container maxWidth={false}>
         <Card
           sx={{
@@ -88,6 +87,5 @@ export default function ParameterViewPage({editPage}) {
 
         <ParameterViewForm />
       </Container>
-    </>
   );
 }

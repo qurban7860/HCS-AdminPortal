@@ -243,7 +243,7 @@ useLayoutEffect(() => {
 
           )})}
 
-          {isNotFound && <EmptyContent title="No installed tool listed here"/>}
+          {isNotFound && <EmptyContent title="No installed tool listed here" sx={{color: "#DFDFDF"}}/>}
 
 
         </Card>

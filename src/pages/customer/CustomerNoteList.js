@@ -61,6 +61,7 @@ import { getContacts } from '../../redux/slices/customer/contact';
 
 
 
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -318,7 +319,7 @@ const toggleChecked = () =>
               </AccordionDetails>
             </Accordion>
           )})}
-          {isNotFound  && <EmptyContent title="No saved notes"/>}
+          {isNotFound  && <EmptyContent title="No saved notes" sx={{color: '#DFDFDF'}}/>}
         </Card>
         <ConfirmDialog
           open={openConfirm}

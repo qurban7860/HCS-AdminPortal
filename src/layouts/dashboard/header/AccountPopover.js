@@ -12,6 +12,11 @@ import { CustomAvatar } from '../../../components/custom-avatar';
 import { useSnackbar } from '../../../components/snackbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
+// import Drawer
+import Drawer from '../../../components/settings/drawer/SettingsDrawer';
+import ToggleButton from '../../../components/settings/drawer/ToggleButton';
+import { useSettingsContext } from '../../../components/settings';
+
 
 // ----------------------------------------------------------------------
 
@@ -24,9 +29,14 @@ const OPTIONS = [
     label: 'Profile',
     linkTo: PATH_DASHBOARD.user.profile,
   },
+  {
+    label: 'Settings',
+    linkTo: PATH_DASHBOARD.user.account,
+  },
   // {
-  //   label: 'Settings',
-  //   linkTo: PATH_DASHBOARD.user.account,
+  //   label: 'Customize',
+  //   // link to settings drawer
+
   // },
 ];
 
@@ -59,6 +69,17 @@ export default function AccountPopover() {
       enqueueSnackbar('Unable to logout!', { variant: 'error' });
     }
   };
+
+// for settings drawer
+  // const [open, setOpen] = useState(false);
+
+  // const handleToggle = () => {
+  //   setOpen(!open);
+  // };
+
+  //   const handleClose = () => {
+  //     setOpen(false);
+  //   };
 
   const handleClickItem = (path) => {
     handleClosePopover();
@@ -106,8 +127,16 @@ export default function AccountPopover() {
               {option.label}
             </MenuItem>
           ))}
+          <MenuItem
+            // onClick={() => {
+            //   handleToggle();
+            // }}
+          >
+            <Typography variant="body2" noWrap>
+              Customize
+            </Typography>
+          </MenuItem>
         </Stack>
-
         <Divider sx={{ borderStyle: 'solid' }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
