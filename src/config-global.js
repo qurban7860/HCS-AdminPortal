@@ -12,6 +12,7 @@ export const CONFIG = {
   ENV: 'TEST',
   Version: 'V-0.0.1',
   Background_Color: '#D1ED18',
+  Border_Style: '1px solid #D1ED18',
   APP_DOMAIN_NAME: 'localhost',
   APP_PORT: '5001',
   SSL_Enabled_domain: '',

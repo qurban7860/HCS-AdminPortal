@@ -8,6 +8,7 @@ import Image from '../../components/image';
 import { CONFIG } from '../../config-global';
 //
 import { StyledRoot, StyledSectionBg, StyledSection, StyledContent } from './styles';
+import theme from '../../theme';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,7 @@ LoginLayout.propTypes = {
 };
 
 export default function LoginLayout({ children, illustration, title }) {
+
   return (
     <StyledRoot>
       <StyledContent>
@@ -25,20 +27,19 @@ export default function LoginLayout({ children, illustration, title }) {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            mb: -3 }}
+            mb: -3,
+          }}
           alignItems="center"
           container
           spacing={2}
         >
-          <Grid
-            item
-            xs={6}>
+          <Grid item xs={6}>
             <Typography
               sx={{
-                // backgroundColor: '#FFA200',
-                border: '1px solid #FFA200',
-                borderRadius: '3px',
+                backgroundColor: CONFIG.Background_Color,
+                borderRadius: '2px',
                 textAlign: 'center',
+                fontWeight: 'bold',
                 p: 1,
                 py: 0.1,
               }}
@@ -51,9 +52,8 @@ export default function LoginLayout({ children, illustration, title }) {
           <Grid item>
             <Logo
               sx={{
-                width: '280px',
+                width: { lg: '280px', md: '260px', sm: '255px', xs: '250px' },
                 pointerEvents: 'none',
-
               }}
             />
           </Grid>

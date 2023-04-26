@@ -155,12 +155,12 @@ export default function CustomerView({editPage}) {
           position: 'relative',
         }}
       >
-          <Cover
-            customer={customer}
-            name={customer ? customer.name : 'New Customer'}
-            photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
-            icon="ph:users-light"
-          />
+        <Cover
+          customer={customer}
+          name={customer ? customer.name : 'New Customer'}
+          photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
+          icon="ph:users-light"
+        />
 
         <Tabs
           value={currentTab}
@@ -198,42 +198,46 @@ export default function CustomerView({editPage}) {
       {TABS.map(
         (tab) =>
           tab.value === currentTab && (
-            <Box key={tab.value}>
+            <Box key={tab.value} height='100vh'>
               {' '}
               {tab.component ? (
                 tab.component
               ) : (
-                <Grid container>
+                <Grid container sx={{ justifyContent: 'center' }}>
                   <Grid
                     item
                     sx={{
                       opacity: '30%',
                       marginTop: '50px',
                       height: '40vh',
-                      justifyContent: 'center',
                       display: 'flex',
                     }}
                   >
                     <img
                       src="/assets/illustrations/characters/character_5.png"
                       alt="UNDER CONSTRUCTION"
-                      className="img-fluid mx-auto d-block"
                     />
                   </Grid>
                   <Grid
                     item
                     sx={{
-                      display: 'flex',
+                      display: 'block',
                       justifyContent: 'center',
                       textAlign: 'center',
-                      width: '100vh',
+                      width: '50%',
                       height: '40vh',
-                      opacity: '50%',
-                      position: 'absolute',
+                      opacity: '30%',
+                      position: 'relative',
+                      margin: '20px',
                     }}
                   >
-                    <Typography>
-                      <h1>UNDER CONSTRUCTION</h1>
+                    <Typography variant="h1">UNDER DEVELOPMENT..</Typography>
+                    <Typography variant="body1" >
+                      While we are still working on completing our website, we invite you to check
+                      back soon for updates. In the meantime, please feel free to contact us
+                      directly if you have any questions or concerns. We appreciate your patience
+                      and understanding during this time, and we look forward to serving you better
+                      through our new website. Thank you for your interest in our company.
                     </Typography>
                   </Grid>
                 </Grid>

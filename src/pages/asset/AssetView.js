@@ -74,8 +74,6 @@ export default function AssetViewPage() {
   ];
 
   return (
-    <>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Asset View"
@@ -143,6 +141,5 @@ export default function AssetViewPage() {
             )
         )}
       </Container>
-    </>
   );
 }

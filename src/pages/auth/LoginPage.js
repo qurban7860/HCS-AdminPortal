@@ -13,7 +13,7 @@ export default function LoginPage() {
         <title> Login | {CONFIG.APP_TITLE} </title>
       </Helmet>
 
-      <Login />
+      <Login/>
     </>
   );
 }

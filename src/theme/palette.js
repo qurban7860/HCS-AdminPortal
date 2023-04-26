@@ -91,6 +91,10 @@ const HOWICKBRONZE = {
   main: '#897A69',
 };
 
+const HOWICKBURNIN = {
+  main: '#D1ED18',
+};
+
 const COMMON = {
   common: { black: '#000', white: '#fff' },
   primary: PRIMARY,
@@ -103,6 +107,7 @@ const COMMON = {
   bronze: HOWICKBRONZE,
   blue: HOWICKBLUE,
   orange: HOWICKORANGE,
+  burnIn: HOWICKBURNIN,
   divider: alpha(GREY[500], 0.24),
   action: {
     hover: alpha(GREY[500], 0.08),

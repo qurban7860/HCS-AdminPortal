@@ -37,7 +37,7 @@ const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children, sx, .
         ref={ref}
         sx={{
           color: theme.palette[colr]?.contrastText,
-          backgroundColor: theme.palette[colr]?.main,
+          backgroundColor: theme.palette.primary.light,
           fontWeight: theme.typography.fontWeightBold,
           ...sx,
         }}

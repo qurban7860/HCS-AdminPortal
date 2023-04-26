@@ -75,41 +75,6 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
 
   const isMobile = useResponsive('down', 'sm');
 
-  // this will be used to determine the category of the page
-  // const CategoryArr = [
-  //   'Machines',
-  //   'Customers',
-  //   'Users',
-  //   'New Machine',
-  //   'New Customer',
-  //   'Categories',
-  //   'Models',
-  //   'Suppliers',
-  //   'Statuses',
-  //   'Settings',
-  //   'New Category',
-  //   'New Model',
-  //   'New Supplier',
-  //   'Edit Supplier',
-  //   'Edit Status',
-  //   'Procurement Initiated',
-  //   'New Status',
-  //   'Technical Parameter Categories',
-  //   'New Parameter Category',
-  //   'Ready for Shipment',
-  //   'In Operation',
-  //   'In Production',
-  //   'Order Accepted',
-  //   'New Parameter',
-  //   'Technical Parameters',
-  //   'Edit Parameter',
-  //   'Tools',
-  //   'New Tool',
-  //   'Edit Parameter Category',
-  // ];
-  // // this will only display the main category names
-  // const Category = CategoryArr.includes(name) ? name : null;
-
   return (
     <StyledRoot
       style={{
@@ -163,7 +128,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 7, md: 7 },
+              mt: { xs: 6, md: 7 },
               display: { xs: 'flex', md: 'block' },
             }}
           >
