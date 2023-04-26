@@ -11,7 +11,7 @@ export const CONFIG = {
   APP_NAME: 'Howick Cloud Services Administration Portal',
   ENV: 'TEST',
   Version: 'V-0.0.1',
-  Background_Color: '#FFA200',
+  Background_Color: '#D1ED18',
   APP_DOMAIN_NAME: 'localhost',
   APP_PORT: '5001',
   SSL_Enabled_domain: '',

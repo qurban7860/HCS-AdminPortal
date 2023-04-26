@@ -66,7 +66,7 @@ export default function NotificationsPopover() {
           // {totalUnRead}
           color="error"
         >
-          <Iconify icon="eva:bell-fill"/>
+          <Iconify icon="eva:bell-fill" />
         </Badge>
       </IconButtonAnimate>
 
@@ -96,7 +96,7 @@ export default function NotificationsPopover() {
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {!notifications && 'Loading...' ? 'No notifications' : 'NEW' }
+                {!notifications && 'Loading...' ? 'No notifications' : 'NEW'}
               </ListSubheader>
             }
           >
@@ -109,7 +109,7 @@ export default function NotificationsPopover() {
             disablePadding
             subheader={
               <ListSubheader disableSticky sx={{ py: 1, px: 2.5, typography: 'overline' }}>
-                {!notifications && 'Loading...' ? '' : 'OLD' }
+                {!notifications && 'Loading...' ? '' : 'OLD'}
               </ListSubheader>
             }
           >
@@ -121,11 +121,14 @@ export default function NotificationsPopover() {
 
         <Divider sx={{ borderStyle: 'solid' }} />
 
-        <Box sx={{ p: 1 }}>
-          <Button fullWidth disableRipple>
-            View All
-          </Button>
-        </Box>
+        {!notifications && 'Loading...' ? (
+          ''  ) : (
+           <Box sx={{ p: 1 }}>
+            <Button fullWidth disableRipple>
+              View All
+            </Button>
+          </Box>
+            )}
       </MenuPopover>
     </>
   );

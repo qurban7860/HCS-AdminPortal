@@ -119,7 +119,7 @@ export default function UserListPage() {
     // if (initial) {
     //   if (users && !error) {
     //     enqueueSnackbar(responseMessage);
-    //   } 
+    //   }
       if(error) {
         enqueueSnackbar(error, { variant: `error` });
       }
@@ -176,7 +176,7 @@ export default function UserListPage() {
         dispatch(deleteUser(id));
         dispatch(getUsers());
         setSelected([]);
-  
+
         if (page > 0) {
           if (dataInPage.length < 2) {
             setPage(page - 1);
@@ -186,7 +186,7 @@ export default function UserListPage() {
         console.log(err);
       }
 
-      
+
     } catch (err) {
       console.log(err);
     }
@@ -247,7 +247,10 @@ export default function UserListPage() {
           }
         /> */}
         <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-          <Cover name='Users List' icon="ph:users-light"/>
+          <Cover
+              name='Users'
+              icon="ph:users-light"
+              />
         </Card>
         <Card>
           {/* <Tabs
@@ -387,10 +390,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (securityUser) => securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-    securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
-    securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    inputData = inputData.filter( (securityUser) => securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
+    securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

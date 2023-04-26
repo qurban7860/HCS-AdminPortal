@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Typography ,Button, Grid, Link} from '@mui/material';
@@ -17,6 +18,7 @@ import { CustomAvatar } from '../../components/custom-avatar';
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import useResponsive from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +46,8 @@ const StyledInfo = styled('div')(({ theme }) => ({
   },
 }));
 
+
+
 // ----------------------------------------------------------------------
 
 Cover.propTypes = {
@@ -56,15 +60,56 @@ Cover.propTypes = {
   icon: PropTypes.string,
   serialNo: PropTypes.string,
   backLink: PropTypes.string,
+  model: PropTypes.string,
+  customer: PropTypes.string,
 };
-export function Cover({ tradingName, cover, name, serialNo, role, setting, photoURL, icon, backLink }) {
+export function Cover({ tradingName, cover, name, serialNo, role, setting, photoURL, icon, backLink, model, customer }) {
   const navigate = useNavigate();
+  const { techparamcategory } = useSelector((state) => state.techparamcategory);
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
   };
   const handleBacklink = () => {
     navigate(backLink);
   };
+
+  const isMobile = useResponsive('down', 'sm');
+
+  // this will be used to determine the category of the page
+  // const CategoryArr = [
+  //   'Machines',
+  //   'Customers',
+  //   'Users',
+  //   'New Machine',
+  //   'New Customer',
+  //   'Categories',
+  //   'Models',
+  //   'Suppliers',
+  //   'Statuses',
+  //   'Settings',
+  //   'New Category',
+  //   'New Model',
+  //   'New Supplier',
+  //   'Edit Supplier',
+  //   'Edit Status',
+  //   'Procurement Initiated',
+  //   'New Status',
+  //   'Technical Parameter Categories',
+  //   'New Parameter Category',
+  //   'Ready for Shipment',
+  //   'In Operation',
+  //   'In Production',
+  //   'Order Accepted',
+  //   'New Parameter',
+  //   'Technical Parameters',
+  //   'Edit Parameter',
+  //   'Tools',
+  //   'New Tool',
+  //   'Edit Parameter Category',
+  // ];
+  // // this will only display the main category names
+  // const Category = CategoryArr.includes(name) ? name : null;
+
   return (
     <StyledRoot
       style={{
@@ -91,15 +136,12 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               width: { xs: 110, md: 110 },
               height: { xs: 110, md: 110 },
             }}
-            >
-            {name !== 'HOWICK LTD.' ? (
-                   null
-                  ) : (
-                    <LogoAvatar />
-                  )}
+          >
+            {/* if the page is Howick, will show the howick logo */}
+            {name !== 'HOWICK LTD.' ? null : <LogoAvatar />}
           </CustomAvatar>
         ) : (
-           ''
+          ''
         )}
 
         {serialNo ? (
@@ -108,7 +150,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 3, md: 5 },
+              mt: { xs: 7, md: 7 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
@@ -117,16 +159,17 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
           </Typography>
         ) : (
           <Typography
-            variant={photoURL ? 'h2' : 'h1'}
+            variant={photoURL ? 'h3' : 'h2'}
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 3, md: 5 },
-              mb: 0,
+              mt: { xs: 7, md: 7 },
               display: { xs: 'flex', md: 'block' },
             }}
           >
-            {name}
+            {/* if in mobile/device, only the avatar will show up for customer */}
+
+            {isMobile && customer ? '' : name}
           </Typography>
         )}
 
@@ -138,7 +181,6 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
                 ml: 'auto',
                 mt: 'auto',
                 color: 'common.white',
-                mb: 3,
               }}
               component="button"
               variant="body2"
@@ -156,7 +198,6 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
                 cursor: 'hover',
                 mt: 'auto',
                 color: 'common.white',
-                mb: 3,
                 mx: 2,
               }}
               component="button"

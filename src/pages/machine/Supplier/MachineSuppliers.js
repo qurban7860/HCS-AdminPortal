@@ -46,7 +46,7 @@ export default function MachineSuppliers() {
   const { userId, user } = useAuthContext();
 
   const dispatch = useDispatch();
-  
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -65,7 +65,7 @@ export default function MachineSuppliers() {
     region: Yup.string(),
     country: Yup.string(),
     city: Yup.string(),
-    
+
   });
 
   const defaultValues = useMemo(
@@ -83,7 +83,7 @@ export default function MachineSuppliers() {
       country: '',
       city: '',
       isActive: true,
-      
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -109,7 +109,7 @@ export default function MachineSuppliers() {
   // }, [dispatch]);
 
   const onSubmit = async (data) => {
-    try{ 
+    try{
     //   const finaldata= {
     //     name: data.name,
     //     contactName:data.Contact_Name,
@@ -129,7 +129,7 @@ export default function MachineSuppliers() {
       await dispatch(saveSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.supplier.list); 
+      navigate(PATH_MACHINE.supplier.list);
       // console.log(PATH_MACHINE.tool.list)
     } catch(error){
       // enqueueSnackbar('Saving failed!');
@@ -138,25 +138,22 @@ export default function MachineSuppliers() {
     }
 };
 
-      const toggleCancel = () => 
+      const toggleCancel = () =>
       {
         navigate(PATH_MACHINE.supplier.list);
       };
 
-  
-  
+
+
 
   const { themeStretch } = useSettingsContext();
   return (
-    <>
+
     <Container maxWidth={ false }>
               <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='New Supplier' icon='material-symbols:inventory-2-rounded' />
               </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      
-      
-
         <Grid item xs={18} md={12} sx={{mt: 3}}>
             <Card sx={{ p: 3, mt: 3}}>
             <Stack spacing={3}>
@@ -168,14 +165,11 @@ export default function MachineSuppliers() {
                 xs: 'repeat(1, 1fr)',
                 sm: 'repeat(1, 1fr)',
               }}
-            >
-
+              >
               <RHFTextField name="name" label="Name of Supplier"  />
               </Box>
               </Stack>
               </Card>
-
-
               <Card sx={{ p: 3, mt: 3}}>
               <Stack spacing={3}>
               <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
@@ -189,7 +183,7 @@ export default function MachineSuppliers() {
                 xs: 'repeat(2, 1fr)',
                 sm: 'repeat(2, 1fr)',
               }}
-            >
+              >
               {/* / //contact / */}
               <RHFTextField name="Contact_Name" label="Contact Name"/>
               <RHFTextField name="contactTitle" label="Contact Title"/>
@@ -215,7 +209,7 @@ export default function MachineSuppliers() {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-            
+
               <RHFTextField name="street" label="Street"/>
               <RHFTextField name="suburb" label="Suburb" />
               <RHFTextField name="city" label="City" />
@@ -226,40 +220,37 @@ export default function MachineSuppliers() {
                   freeSolo
                   options={countries.map((country) => country.label)}
                   // getOptionLabel={(option) => option.title}
-                  
+
                   ChipProps={{ size: 'small' }}
-                /> 
+                />
 
 
-              
-            
+
+
              </Box>
              <RHFSwitch
               name="isActive"
               labelPlacement="start"
               label={
-                <>
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
                     Active
                   </Typography>
-                </>
-              } 
+              }
             />
-             
-              
-             
+
+
+
              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
               </Stack>
               </Card>
 
-            
-                        
-            
-          
+
+
+
+
           </Grid>
-        
+
     </FormProvider>
     </Container>
-    </>
   );
 }

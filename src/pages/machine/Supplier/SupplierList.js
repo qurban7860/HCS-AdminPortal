@@ -54,7 +54,7 @@ const TABLE_HEAD = [
   { id: 'country', label: 'Country', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  
+
 ];
 
 const STATUS_OPTIONS = [
@@ -120,7 +120,7 @@ console.log("suppliers: " ,suppliers);
     if (initial) {
       if (suppliers && !error) {
         enqueueSnackbar(responseMessage);
-      } 
+      }
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -230,9 +230,9 @@ console.log("suppliers: " ,suppliers);
             // mt: '24px',
           }}
         >
-          <Cover name='Supplier List' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name='Suppliers' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
-      
+
         <Card sx={{ mt: 3 }}>
           <SupplierListTableToolbar
             filterName={filterName}
@@ -246,7 +246,7 @@ console.log("suppliers: " ,suppliers);
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -292,7 +292,7 @@ console.log("suppliers: " ,suppliers);
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -311,10 +311,10 @@ console.log("suppliers: " ,suppliers);
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-           
+
           />
         </Card>
-        
+
       </Container>
 
       <ConfirmDialog
@@ -358,10 +358,10 @@ console.log("iput data: " , inputData);
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterSupplier) => filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-    filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
-    filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    inputData = inputData.filter( (filterSupplier) => filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
+    filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

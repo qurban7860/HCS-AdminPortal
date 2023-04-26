@@ -96,11 +96,12 @@ const handleCloseConfirm = () => {
     <Grid sx={{ p: 3, mt: -3 }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
         <Cover
+          // will show the howick logo if the user is Howick, if not use the default avatar
           photoURL={
             securityUser?.customer.name === 'HOWICK LTD.' ? (
               <LogoAvatar />
             ) : (
-              'https://source.unsplash.com/random'
+              ''
             )
           }
           name={defaultValues.name}

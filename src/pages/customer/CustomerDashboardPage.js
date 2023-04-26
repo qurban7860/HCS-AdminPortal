@@ -54,7 +54,7 @@ export default function CustomerDashboardPage() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
+
       <Container maxWidth={false}>
         <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
@@ -159,6 +159,5 @@ export default function CustomerDashboardPage() {
           </Grid>
         </Grid>
       </Container>
-    </>
   );
 }

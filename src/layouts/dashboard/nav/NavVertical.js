@@ -47,7 +47,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexDirection: 'column',
         },
       }}
-    >
+      >
       <Stack
         sx={{
           pt: 3,
@@ -82,6 +82,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
       sx={{
         flexShrink: { lg: 0 },
         width: { lg: NAV.W_DASHBOARD },
+        // background: '#DFDFDF',
       }}
     >
       <NavToggleButton />

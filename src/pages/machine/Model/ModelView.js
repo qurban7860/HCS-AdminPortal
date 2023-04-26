@@ -67,8 +67,7 @@ export default function ModelViewPage({editPage}) {
 
   return (
     <>
-
-      <Container maxWidth={false }>
+      <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
@@ -76,10 +75,15 @@ export default function ModelViewPage({editPage}) {
             position: 'relative',
             // mt: '24px',
           }}
-          >
-          <Cover photoURL={<LogoAvatar/>} name={machinemodel?.name} setting="enable" backLink={PATH_MACHINE.machineModel.list}/>
+        >
+          <Cover
+            model={machinemodel?.name}
+            name={machinemodel?.name}
+            setting="enable"
+            backLink={PATH_MACHINE.machineModel.list}
+          />
         </Card>
-        <ModelViewForm/>
+        <ModelViewForm />
       </Container>
     </>
   );

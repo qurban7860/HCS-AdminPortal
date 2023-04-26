@@ -167,7 +167,7 @@ export default function StatusList() {
     await dispatch(deleteTechparams(id));
     try {
       // console.log(id);
-      
+
       dispatch(getTechparams());
       setSelected([]);
 
@@ -202,7 +202,7 @@ export default function StatusList() {
 
   const handleEditRow = async (id) => {
     // console.log(id);
-    
+
     await dispatch(getTechparam(id));
     navigate(PATH_MACHINE.parameters.edit(id));
   };
@@ -212,7 +212,7 @@ export default function StatusList() {
     await dispatch(getTechparam(id));
     navigate(PATH_MACHINE.parameters.view(id));
   };
- 
+
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
@@ -230,9 +230,9 @@ export default function StatusList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Technical Parameter List' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name='Technical Parameters' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
-            
+
         <Card sx={{ mt: 3 }}>
           <ParameterListTableToolbar
             filterName={filterName}
@@ -246,7 +246,7 @@ export default function StatusList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -292,7 +292,7 @@ export default function StatusList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -311,10 +311,10 @@ export default function StatusList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          
+
           />
         </Card>
-        
+
       </Container>
 
       <ConfirmDialog
@@ -357,8 +357,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterParameter) => filterParameter?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    filterParameter?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||  
+    inputData = inputData.filter( (filterParameter) => filterParameter?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    filterParameter?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
     // (filterParameter?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(filterParameter?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

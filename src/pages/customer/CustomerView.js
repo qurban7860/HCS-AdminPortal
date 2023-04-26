@@ -39,6 +39,7 @@ import CustomerNoteList from './CustomerNoteList';
 
 
 import CustomerViewForm from './CustomerViewForm';
+import useResponsive from '../../hooks/useResponsive';
 
 
 import CustomerEditForm from './CustomerEditForm';
@@ -71,9 +72,12 @@ export default function CustomerView({editPage}) {
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
 
+
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
 
   const [customerFlag, setCustomerFlag] = useState(true);
+
+  const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     if(id !== 'null'){
@@ -151,11 +155,13 @@ export default function CustomerView({editPage}) {
           position: 'relative',
         }}
       >
-        <Cover
-          name={customer ? customer.name : 'New Customer'}
-          photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
-          icon="ph:users-light"
-        />
+          <Cover
+            customer={customer}
+            name={customer ? customer.name : 'New Customer'}
+            photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
+            icon="ph:users-light"
+          />
+
         <Tabs
           value={currentTab}
           onChange={(event, newValue) => setCurrentTab(newValue)}
@@ -197,43 +203,40 @@ export default function CustomerView({editPage}) {
               {tab.component ? (
                 tab.component
               ) : (
-
-                  <Grid container >
-                    <Grid
-                      item
-                      sx={{
-                        opacity: '30%',
-                        marginTop: '50px',
-                        height: '40vh',
-                        justifyContent: 'center',
-                        display: 'flex',
-                      }}
-                    >
-                      {/* center image */}
-                      <img
-                        src="/assets/illustrations/characters/character_5.png"
-                        alt="UNDER CONSTRUCTION"
-                        className="img-fluid mx-auto d-block"
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        textAlign: 'center',
-                        width: '100vh',
-                        height: '40vh',
-                        opacity: '50%',
-                        position: 'absolute',
-                      }}
-                    >
-                      <Typography>
-                        <h1>UNDER CONSTRUCTION</h1>
-                      </Typography>
-                    </Grid>
+                <Grid container>
+                  <Grid
+                    item
+                    sx={{
+                      opacity: '30%',
+                      marginTop: '50px',
+                      height: '40vh',
+                      justifyContent: 'center',
+                      display: 'flex',
+                    }}
+                  >
+                    <img
+                      src="/assets/illustrations/characters/character_5.png"
+                      alt="UNDER CONSTRUCTION"
+                      className="img-fluid mx-auto d-block"
+                    />
                   </Grid>
-
+                  <Grid
+                    item
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      width: '100vh',
+                      height: '40vh',
+                      opacity: '50%',
+                      position: 'absolute',
+                    }}
+                  >
+                    <Typography>
+                      <h1>UNDER CONSTRUCTION</h1>
+                    </Typography>
+                  </Grid>
+                </Grid>
               )}{' '}
             </Box>
           )

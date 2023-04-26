@@ -161,73 +161,73 @@ export default function MachineView({editPage}) {
   ];
 
   return (
-      <Container maxWidth={false}>
-        {/* <CustomBreadcrumbs
+    <Container maxWidth={false}>
+      {/* <CustomBreadcrumbs
           heading="Machine View"
         /> */}
-        <Card
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+        }}
+      >
+        <Cover
+          photoURL={machine.name ? '' : <LogoAvatar />}
+          name={machine?.name}
+          serialNo={machine ? machine.serialNo : 'Serial Number'}
+          icon="et:gears"
+          setting="enable"
+        />
+
+        <Tabs
+          value={currentTab}
+          onChange={(event, newValue) => setCurrentTab(newValue)}
+          variant="scrollable"
+          allowScrollButtonsMobile
+          aria-label="scrollable force tabs example"
           sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+            width: 1,
+            bottom: 0,
+            zIndex: 9,
+            position: 'absolute',
+            bgcolor: 'background.paper',
+            '& .MuiTabs-flexContainer': {
+              pr: { md: 3 },
+              pl: { lg: 2 },
+              justifyContent: {
+                xl: 'flex-end',
+              },
+            },
           }}
         >
-          <Cover
-            photoURL={machine.name ? <CustomAvatar /> : <LogoAvatar/>}
-            name={machine?.name}
-            serialNo={machine ? machine.serialNo : 'Serial Number'}
-            icon="et:gears"
-            setting="enable"
-          />
-
-          <Tabs
-            value={currentTab}
-            onChange={(event, newValue) => setCurrentTab(newValue)}
-            variant="scrollable"
-            allowScrollButtonsMobile
-            aria-label="scrollable force tabs example"
-            sx={{
-              [`& .${tabsClasses.scrollButtons}`]: {
-                '&.Mui-disabled': { opacity: 0.3 },
-              },
-              width: 1,
-              bottom: 0,
-              zIndex: 9,
-              position: 'absolute',
-              bgcolor: 'background.paper',
-              '& .MuiTabs-flexContainer': {
-                pr: { md: 3 },
-                pl: { lg: 2 },
-                justifyContent: {
-                  xl: 'flex-end',
-                },
-              },
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab
-                disabled={tab.disabled}
-                key={tab.value}
-                value={tab.value}
-                icon={tab.icon}
-                label={tab.label}
-              />
-            ))}
-          </Tabs>
-        </Card>
-        {TABS.map(
-          (tab) =>
-            tab.value === currentTab && (
-              <Box key={tab.value}>
-                {' '}
-                {tab.component ? (
-                  tab.component
-                ) : (
-                  <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-                )}{' '}
-              </Box>
-            )
-        )}
-      </Container>
+          {TABS.map((tab) => (
+            <Tab
+              disabled={tab.disabled}
+              key={tab.value}
+              value={tab.value}
+              icon={tab.icon}
+              label={tab.label}
+            />
+          ))}
+        </Tabs>
+      </Card>
+      {TABS.map(
+        (tab) =>
+          tab.value === currentTab && (
+            <Box key={tab.value}>
+              {' '}
+              {tab.component ? (
+                tab.component
+              ) : (
+                <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
+              )}{' '}
+            </Box>
+          )
+      )}
+    </Container>
   );
 }

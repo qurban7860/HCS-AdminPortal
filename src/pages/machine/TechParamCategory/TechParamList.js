@@ -50,7 +50,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  
+
 ];
 
 const STATUS_OPTIONS = [
@@ -119,8 +119,8 @@ export default function TechParamList() {
   useEffect(() => {
     if (initial) {
       if (techparamcategories && !error) {
-        enqueueSnackbar(responseMessage); 
-      } 
+        enqueueSnackbar(responseMessage);
+      }
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -224,7 +224,7 @@ export default function TechParamList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Technical Parameter Category List' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name='Technical Parameter Categories' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
         <Card sx={{mt: 3 }}>
           <TechParamListTableToolbar
@@ -239,7 +239,7 @@ export default function TechParamList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -285,7 +285,7 @@ export default function TechParamList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -304,10 +304,10 @@ export default function TechParamList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
+
           />
         </Card>
-        
+
       </Container>
 
       <ConfirmDialog
@@ -350,7 +350,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (produc) => produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    inputData = inputData.filter( (produc) => produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (produc?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(produc?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

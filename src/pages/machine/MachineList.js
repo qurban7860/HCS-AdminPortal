@@ -79,7 +79,7 @@ export default function MachineList() {
     if (initial) {
       // if (machines && !error) {
       //   enqueueSnackbar(responseMessage);
-      // } 
+      // }
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -178,7 +178,12 @@ export default function MachineList() {
             mt: '24px',
           }}
         >
-          <Cover name='Machines List' icon='arcticons:materialistic' setting="enable" />
+          <Cover
+            title='Machines'
+            name='Machines'
+            icon='arcticons:materialistic'
+            setting="enable"
+            />
         </Card>
         {/* <CustomBreadcrumbs
           heading="Machines"

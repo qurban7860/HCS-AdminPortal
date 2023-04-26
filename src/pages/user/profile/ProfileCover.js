@@ -8,7 +8,7 @@ import { bgBlur } from '../../../../utils/cssStyles';
 import { useAuthContext } from '../../../../auth/useAuthContext';
 // components
 import Image from '../../../../components/image';
-import { CustomAvatar } from '../../../../components/custom-avatar';
+import { CustomAvatar } from '../../../components/custom-avatar';
 
 // ----------------------------------------------------------------------
 
@@ -67,7 +67,7 @@ export default function ProfileCover({ name, role, cover }) {
             width: { xs: 80, md: 128 },
             height: { xs: 80, md: 128 },
           }}
-        />
+          />
 
         <Box
           sx={{

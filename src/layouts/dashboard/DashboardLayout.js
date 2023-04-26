@@ -36,7 +36,7 @@ export default function DashboardLayout() {
   };
 
   const renderNavVertical = <NavVertical openNav={open} onCloseNav={handleClose} />;
-  const bgcolor = CONFIG.Background_Color
+  const bgcolor = CONFIG.Background_Color;
   if (isNavHorizontal) {
     return (
       <>

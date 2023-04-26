@@ -33,7 +33,16 @@ const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children, sx, .
 
   const renderContent =
     colr === 'default' ? (
-      <Avatar ref={ref} sx={sx} {...other}>
+      <Avatar
+        ref={ref}
+        sx={{
+          color: theme.palette[colr]?.contrastText,
+          backgroundColor: theme.palette[colr]?.main,
+          fontWeight: theme.typography.fontWeightBold,
+          ...sx,
+        }}
+        {...other}
+      >
         {name && charAtName}
         {children}
       </Avatar>

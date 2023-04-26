@@ -231,7 +231,7 @@ export default function ModelList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Model List' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name='Models' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
         <Card sx={{ mt: 3 }}>
           <ModelListTableToolbar
