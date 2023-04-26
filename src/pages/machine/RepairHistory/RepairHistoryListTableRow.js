@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import {
-  Switch,
   Stack,
   Button,
   TableRow,
@@ -14,22 +13,21 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { styled } from '@mui/system';
-import { fDate } from '../../utils/formatTime';
-import { fCurrency } from '../../utils/formatNumber';
+import { fDate } from '../../../utils/formatTime';
+import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../components/iconify';
-import MenuPopover from '../../components/menu-popover';
-import ConfirmDialog from '../../components/confirm-dialog';
-import Label from '../../components/label';
+import Iconify from '../../../components/iconify';
+import MenuPopover from '../../../components/menu-popover';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import Label from '../../../components/label';
 
-import { useSelector } from '../../redux/store';
+import { useSelector } from '../../../redux/store';
+
 
 // ----------------------------------------------------------------------
 
-CustomerListTableRow.propTypes = {
+RepairHistoryListTableRow.propTypes = {
   row: PropTypes.object,
-  style: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
@@ -37,35 +35,21 @@ CustomerListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: "white",
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: "#f4f6f866",
-  },
-}));
-
-export default function CustomerListTableRow({
+export default function RepairHistoryListTableRow({
   row,
-  style,
   selected,
   onSelectRow,
   onDeleteRow,
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isActive, type, createdAt } = row;
-  const address = []
-  if(mainSite?.address?.city){
-    address.push(mainSite?.address?.city)
-  }
-  if( mainSite?.address?.country){
-    address.push(mainSite?.address?.country)
-  }
+  const { name, email, website, isDisabled, createdAt } = row;
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
+
+  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -85,29 +69,50 @@ export default function CustomerListTableRow({
 
   return (
     <>
-      <StyledTableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
+      <TableRow hover selected={selected}>
+        <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
-        {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell align="right">{type==='SP' ? <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled',mr:-2  }} width="15px"/>  : ""}</TableCell>
+        </TableCell>
+
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
+
+            <Link
+              noWrap
+              color="inherit"
+              variant="subtitle2"
+              onClick={onViewRow}
+              sx={{ cursor: 'pointer' }}
+            >
+              {name}
+            </Link>
           </Stack>
         </TableCell>
-        <TableCell>{tradingName}</TableCell>
-        <TableCell>{Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}</TableCell>
-        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell>  
+
+        <TableCell>{email}</TableCell>
+
+        <TableCell>{website}</TableCell>
+
+        <TableCell align="false">
+          <Label
+            variant="soft"
+            color={(isDisabled === true && 'error') || 'success'}
+            sx={{ textTransform: 'capitalize' }}
+          >
+            {isDisabled === false ? 'false' : true}
+          </Label>
+        </TableCell>
+
         <TableCell>{fDate(createdAt)}</TableCell>
-        {/* <TableCell align="center">
+
+        <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>   */}
-      </StyledTableRow> 
+        </TableCell>
+      </TableRow>
 
-      {/* <MenuPopover
+      <MenuPopover
         open={openPopover}
         onClose={handleClosePopover}
         arrow="right-top"
@@ -133,9 +138,9 @@ export default function CustomerListTableRow({
           <Iconify icon="eva:edit-fill" />
           Edit
         </MenuItem>
-      </MenuPopover> */}
+      </MenuPopover>
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Delete"
@@ -145,7 +150,7 @@ export default function CustomerListTableRow({
             Delete
           </Button>
         }
-      /> */}
+      />
     </>
   );
 }

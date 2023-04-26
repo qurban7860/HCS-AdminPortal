@@ -206,7 +206,7 @@ export function deleteTechparams(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveTechparam(params) {
+export function addTechparam(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetTechparam());
       dispatch(slice.actions.startLoading());

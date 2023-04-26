@@ -11,10 +11,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
-// global
 
 // slice
-import { updateMachinemodel, getMachineModel, getMachinemodels } from '../../../redux/slices/products/model';
+import { updateMachineModel, getMachineModel, getMachineModels } from '../../../redux/slices/products/model';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
@@ -40,7 +39,7 @@ import {Cover} from '../../components/Cover';
 
 export default function ModelEditForm() {
 
-  const { error, machinemodel } = useSelector((state) => state.machinemodel);
+  const { error, machineModel } = useSelector((state) => state.machinemodel);
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const [category, setCategory] = useState("")
@@ -55,17 +54,15 @@ export default function ModelEditForm() {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (machinemodel) {
+    if (machineModel) {
       reset(defaultValues);
-      setCategory(machinemodel.category);
+      setCategory(machineModel.category);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }}, [machinemodel])
+  }}, [machineModel])
 
-
-  // console.log("  machinemodel",machinemodel.category)
 
   const EditModelSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('Name is required') ,
+    name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
   });
@@ -74,14 +71,14 @@ export default function ModelEditForm() {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinemodel?.name || '',
-        description:machinemodel?.description || '',
-        displayOrderNo: machinemodel?.displayOrderNo || '',
-        // category: machinemodel?.category || '',
-        isActive: machinemodel?.isActive,
+        name:             machineModel?.name || '',
+        description:      machineModel?.description || '',
+        displayOrderNo:   machineModel?.displayOrderNo || '',
+        // category:      machineModel?.category || '',
+        isActive:         machineModel?.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machinemodel]
+    [machineModel]
     );
 
   const { themeStretch } = useSettingsContext();
@@ -104,7 +101,7 @@ export default function ModelEditForm() {
  
   const toggleCancel = () => 
     {
-      dispatch(updateMachinemodel(false));
+      dispatch(updateMachineModel(false));
       navigate(PATH_MACHINE.machineModel.view(id))
     };
 
@@ -115,7 +112,7 @@ export default function ModelEditForm() {
         data.category = category
       }
       console.log("Data : ",data);
-      await dispatch(updateMachinemodel({...data,id}));
+      await dispatch(updateMachineModel({...data,id}));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.machineModel.view(id));
@@ -170,7 +167,7 @@ export default function ModelEditForm() {
                 ChipProps={{ size: 'small' }}
               />
 
-              <RHFTextField name="name" label="Machine Model" required />
+              <RHFTextField name="name" label="Model Name" />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch name="isActive" labelPlacement="start" label={
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 

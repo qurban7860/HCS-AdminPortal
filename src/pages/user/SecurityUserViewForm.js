@@ -178,7 +178,7 @@ const handleCloseConfirm = () => {
         </Grid>
       </Dialog>
       
-      <Dialog open={openContact} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+      <Dialog open={openContact} onClose={handleCloseContact} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, py:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Contact </Typography> <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>

@@ -16,7 +16,7 @@ import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers} from '../../redux/slices/customer/customer';
 import { getSites } from '../../redux/slices/customer/site';
 import { getMachinestatuses } from '../../redux/slices/products/statuses';
-import { getMachinemodels} from '../../redux/slices/products/model';
+import { getMachineModels} from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
 // global
 import { CONFIG } from '../../config-global';
@@ -56,7 +56,7 @@ export default function MachineEditForm() {
   const { spContacts } = useSelector((state) => state.contact);
   const { machines} = useSelector((state) => state.machine);
   const { suppliers} = useSelector((state) => state.supplier);
-  const { machinemodels} = useSelector((state) => state.machinemodel);
+  const { machineModels} = useSelector((state) => state.machinemodel);
   const { machinestatuses } = useSelector((state) => state.machinestatus);
   const { customers } = useSelector((state) => state.customer);
   const { sites} = useSelector((state) => state.site);
@@ -79,7 +79,7 @@ export default function MachineEditForm() {
   dispatch(getCustomers());
   dispatch(getMachines());
   dispatch(getMachinestatuses());
-  dispatch(getMachinemodels());
+  dispatch(getMachineModels());
   dispatch(getSuppliers());
   dispatch(getSPContacts());
 
@@ -340,7 +340,7 @@ const handleKeyPress = (e) => {
               <Autocomplete
                 // freeSolo
                 value={modelVal || null}
-                options={machinemodels}
+                options={machineModels}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                  

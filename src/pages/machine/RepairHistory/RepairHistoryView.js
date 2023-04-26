@@ -1,59 +1,45 @@
 import { Helmet } from 'react-helmet-async';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import { getContacts, getContact } from '../../../redux/slices/customer/contact';
-
-// auth
-import { useAuthContext } from '../../../auth/useAuthContext';
-// _mock_
-import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from '../../../_mock/arrays';
+import { getSite } from '../../../redux/slices/customer/site';
 // components
 import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import {
-  ContactCover
-} from './util';
 
-import ContactViewForm from './ContactViewForm'
+import RepairHistoryViewForm from './RepairHistoryViewForm'
 // ----------------------------------------------------------------------
 
-export default function ContactViewPage() {
+export default function RepairHistoryView() {
 
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
 
   useLayoutEffect(() => {
-    dispatch(getContact(id));
+    dispatch(getSite(id));
   }, [dispatch, id]);
   // 
 
-  const { contact } = useSelector((state) => state.contact);
+  const { site } = useSelector((state) => state.site);
 
   const { themeStretch } = useSettingsContext();
 
-  const [currentTab, setCurrentTab] = useState('contact-edit');
+  const [currentTab, setCurrentTab] = useState('site-edit');
 
   const TABS = [
     {
-      value: 'contact-edit',
+      value: 'site-edit',
       label: 'Basic Info',
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <ContactViewForm/>,
+      component: <SiteViewForm/>,
     },
     {
       value: 'configuration',
@@ -76,12 +62,12 @@ export default function ContactViewPage() {
     <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
-          heading="Contact View"
+          heading="Site View"
           links={[
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
-              name: 'Contact',
-              href: PATH_DASHBOARD.contact.list,
+              name: 'Site',
+              href: PATH_DASHBOARD.site.list,
             },
             { name: 'View' },
           ]}
@@ -93,10 +79,7 @@ export default function ContactViewPage() {
             position: 'relative',
           }}
         >
-          <ContactCover name={contact?.name}/>
-
-          
-           
+          <SiteCover name={site?.name}/>
 
           <Tabs
             value={currentTab}
@@ -122,15 +105,7 @@ export default function ContactViewPage() {
           </Tabs>
           
         </Card>
-
-        {/* <Button 
-                  size ="medium" 
-                  color ="secondary" 
-                  variant ="contained" 
-                  // href = {currentContact.image === undefined ? '' : `localhost:5000/${currentContact.image}`}
-                  >
-                    Edit Contact
-          </Button>  */}
+        
         {TABS.map(
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
             tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />

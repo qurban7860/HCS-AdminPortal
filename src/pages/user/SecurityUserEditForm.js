@@ -91,6 +91,10 @@ useEffect(() => {
     isActive: Yup.boolean(),
   });
 
+  const userLogin = Yup.object({
+    email: Yup.string().email("Enter valid Email").required("This field is Required")
+  });
+
   const defaultValues = useMemo(
     () => ({
       id: securityUser?._id || '',
@@ -165,7 +169,11 @@ useEffect(() => {
 
   const toggleCancel = ()=>{
       navigate(PATH_DASHBOARD.user.view(defaultValues.id));
-
+  }
+  const handleInputEmail = (e) => {
+    const trimmedEmail = e.target.value.trim();
+    console.log(trimmedEmail)
+    setEmail(trimmedEmail);
   }
 
   return (
@@ -287,7 +295,6 @@ useEffect(() => {
                   dispatch(resetContacts());
                   }
                 }}
-                // renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
                 id="controllable-states-demo"
                 renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
                 renderInput={(params) => <TextField {...params} label="Customer" required/>}
@@ -342,7 +349,7 @@ useEffect(() => {
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="email" type="email" label="Email Address" sx={{my:3}} onChange={(e) => setEmail(e.target.value)} value={email} required/>
+              <RHFTextField name="email" label="Email Address" sx={{my:3}} onChange={handleInputEmail} value={email} required/>
             </Box>
               <Box
               rowGap={3}

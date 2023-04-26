@@ -1,44 +1,45 @@
+import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useMemo, useState} from 'react';
+import axios from 'axios';
+import { useLayoutEffect, useMemo, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
 // slice
-import AddFormButtons from '../../components/AddFormButtons';
-import { addCategory } from '../../../redux/slices/products/category';
+import {  addTool } from '../../../redux/slices/products/tools';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
-// asset
-import { countries } from '../../../assets/data';
 // util
-import {Cover} from '../../components/Cover';
-
+import {Cover} from '../../components/Cover'
+import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
-export default function CategoryAddForm() {
+export default function ToolAddForm() {
 
-  
-console.log("Machine Category : ",PATH_MACHINE.categories.list)
+
+  const { userId, user } = useAuthContext();
 
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
-  const [open, setOpen] = useState(false);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required'),
+    name: Yup.string().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
   });
@@ -48,11 +49,12 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
       name: ''  ,
       description:'',
       isActive: true,
+      createdAt: '',
+      
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  
 
   const methods = useForm({
     resolver: yupResolver(AddMachineSchema),
@@ -66,21 +68,23 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-  
-  const toggleCancel = () => 
-  {
-    navigate(PATH_MACHINE.categories.list);
-  };
-  
+
+  const values = watch();
+
+  // useLayoutEffect(() => {
+  //   dispatch(getSPContacts());
+  // }, [dispatch]);
 
 
   const onSubmit = async (data) => {
+
+    
       try{ 
-        await dispatch(addCategory(data));
+        await dispatch(addTool(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.categories.list); 
-        // console.log(PATH_MACHINE.supplier.list)
+        navigate(PATH_MACHINE.tool.list); 
+        // console.log(PATH_MACHINE.tool.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
         enqueueSnackbar(error?.message)
@@ -88,14 +92,19 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
       }
   };
 
+  const toggleCancel = () => 
+      {
+        navigate(PATH_MACHINE.tool.list);
+      };
+
   
 
   const { themeStretch } = useSettingsContext();
   return (
     <>
-    <Container maxWidth={false}>
-
-      <Card
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <Container maxWidth={false }>
+    <Card
                 sx={{
                   mb: 3,
                   height: 160,
@@ -103,12 +112,10 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
                   // mt: '24px',
                 }}
               >
-                <Cover name='New Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
+                <Cover name='New Tool' icon='fa-solid:tools' />
               </Card>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      
         <Grid item xs={18} md={12} sx={{mt: 3}}>
-          <Card sx={{ p: 3}}>
+          <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
             
             <Box
@@ -121,37 +128,30 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
               }}
             >
 
-              <RHFTextField name="name" label="Machine Category" />
+              <RHFTextField name="name" label="Machine Tools" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
                 label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                      Active
-                    </Typography>
-                  </>
-                } 
-              />
+                <>
+                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                    Active
+                  </Typography>
+                </>
+              } 
+            />
              </Box>
-             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-             
              
               </Stack>
-              
 
-            
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
                         
             </Card>
-            
-
           
           </Grid>
-          
-        
+          </Container>
     </FormProvider>
-    </Container>
     </>
   );
 }

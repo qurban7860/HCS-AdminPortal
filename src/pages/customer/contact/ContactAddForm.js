@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo , useState} from 'react';
+import { useEffect, useMemo , useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -10,29 +9,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Button, Typography, DialogTitle, Dialog, InputAdornment , TextField} from '@mui/material';
+import { Box, Card, Grid, Stack, Button, Typography, TextField} from '@mui/material';
 // slice
-import { getCustomers } from '../../../redux/slices/customer/customer';
-
-import { saveContact, setContactFormVisibility } from '../../../redux/slices/customer/contact';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { addContact, setContactFormVisibility } from '../../../redux/slices/customer/contact';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
 import { useAuthContext } from '../../../auth/useAuthContext';
-
-import FormProvider, {
-  RHFSelect,
-  RHFMultiSelect,
-  RHFUpload,
-  RHFTextField,
-  RHFAutocomplete,
-  RHFSwitch
-} from '../../../components/hook-form';
+import FormProvider, { RHFMultiSelect, RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
-
 
 // ----------------------------------------------------------------------
 
@@ -142,7 +127,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
         if(country){
           data.country = country.label
         }
-        await dispatch(saveContact(data));
+        await dispatch(addContact(data));
         reset();
       } catch(error){
         enqueueSnackbar('Saving failed!');

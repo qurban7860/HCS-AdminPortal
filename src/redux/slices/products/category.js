@@ -146,7 +146,7 @@ export function addCategory(params) {
       dispatch(slice.actions.resetCategory());
       dispatch(slice.actions.startLoading());
       try {
-        
+
         /* eslint-disable */
         let data = {
           name: params.name,

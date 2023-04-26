@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // slice
-import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
+import { setSettingEditFormVisibility , setSettingFormVisibility , addSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import { getTechparams , getTechparamsByCategory , resetTechparamByCategory } from '../../../redux/slices/products/machineTechParam';
 // components
@@ -105,7 +105,7 @@ useEffect(()=>{
         data.techParam = techParamVal;
       }
       console.log('params',data);
-      await dispatch(saveSetting(machine._id,data));
+      await dispatch(addSetting(machine._id,data));
       reset();
       // setCategory("")
       setTechParamVal("")

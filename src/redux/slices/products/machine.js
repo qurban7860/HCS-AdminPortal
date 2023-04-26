@@ -160,7 +160,7 @@ export function deleteMachine(id) {
 
 // --------------------------------------------------------------------------
  
-export function saveMachine(params) {
+export function addMachine(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetMachine());
       dispatch(slice.actions.startLoading());

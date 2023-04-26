@@ -1,35 +1,19 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo ,useState} from 'react';
+import { useEffect, useMemo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment,TextField } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography,} from '@mui/material';
 // slice
-// import { getUsers } from '../../../redux/slices/user';
-// import { getSites } from '../../../redux/slices/site';
-// import { getContacts } from '../../../redux/slices/contact';
-// import { getCustomers } from '../../../redux/slices/customer';
-import { saveNote, setNoteFormVisibility } from '../../../redux/slices/customer/note';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/note';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
-import { useAuthContext } from '../../../auth/useAuthContext';
-
-
-import FormProvider, {
-  RHFSwitch,
-  RHFSelect,
-  RHFEditor,
-  RHFTextField,
-} from '../../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFSelect, RHFTextField, } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -111,7 +95,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const onSubmit = async (data) => {
     console.log("Form Submited",data);
       try{
-        await dispatch(saveNote(customer._id,data));
+        await dispatch(addNote(customer._id,data));
         reset();
       } catch(error){
         enqueueSnackbar('Saving failed!');

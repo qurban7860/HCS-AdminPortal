@@ -1,7 +1,6 @@
 // routes
 import { PATH_DASHBOARD } from './routes/paths';
 
-// console.log("EEnvirnment", process.env)
 // ----------------------------------------------------------------------
 
 export const CONFIG = {
@@ -11,13 +10,12 @@ export const CONFIG = {
   ENV: process.env.REACT_APP_ENV,
   Version: process.env.REACT_APP_VERSION,
   Background_Color: process.env.REACT_APP_BG_COLOR,
-  APP_DOMAIN_NAME: process.env.REACT_APP_HOST_NAME,
-  APP_PORT: process.env.REACT_APP_PORT,
-  SSL_Enabled_domain:process.env.REACT_APP_SSL_Enabled_domain,
   SERVER_URL: process.env.REACT_APP_SERVER_URL,
   MESSAGE_REGISTER_USER: process.env.REACT_APP_MESSAGE_REGISTER_USER,
   MESSAGE_LOGIN_USER: process.env.REACT_APP_MESSAGE_LOGIN_USER
 }
+
+console.log(CONFIG);
 
 export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
 // console.log('APP_HOST', HOST_API_KEY);
