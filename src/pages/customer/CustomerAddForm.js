@@ -35,11 +35,11 @@ CustomerAddForm.propTypes = {
   currentCustomer: PropTypes.object,
 };
 
-const CONTACT_TYPES = [
-  { value: 'technical', label: 'Technical' },
-  { value: 'financial', label: 'Financial' },
-  { value: 'support', label: 'Support' },
-];
+// const CONTACT_TYPES = [
+//   { value: 'technical', label: 'Technical' },
+//   { value: 'financial', label: 'Financial' },
+//   { value: 'support', label: 'Support' },
+// ];
 
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
@@ -61,8 +61,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const numberRegExp = /^[0-9]+$/;
 
   const [phone, setPhone] = useState('')
-  const [country, setCountryVal] = useState('')
   const [fax, setFaxVal] = useState('')
+  const [country, setCountryVal] = useState('')
   const [billingContactPhone, setBillingContactPhone] = useState('')
   const [technicalContactPhone, setTechnicalContactPhone] = useState('')
 

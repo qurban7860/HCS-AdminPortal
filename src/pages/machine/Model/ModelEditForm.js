@@ -62,7 +62,7 @@ export default function ModelEditForm() {
 
 
   const EditModelSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('Name is required') ,
+    name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isDisabled : Yup.boolean(),
   });
@@ -167,7 +167,7 @@ export default function ModelEditForm() {
                 ChipProps={{ size: 'small' }}
               />
 
-              <RHFTextField name="name" label="Machine Model" required />
+              <RHFTextField name="name" label="Model Name" />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch name="isActive" labelPlacement="start" label={
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 

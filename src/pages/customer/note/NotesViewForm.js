@@ -27,10 +27,6 @@ NoteViewForm.propTypes = {
 };
 export default function NoteViewForm({currentNote = null}) {
   const { note } = useSelector((state) => state.note);
-  // console.log("Note : ",note)
-  // console.log("Current note : ",currentNote)
-  // const navigate = useNavigate();
-  // const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const { customer } = useSelector((state) => state.customer);
 
@@ -59,16 +55,7 @@ export default function NoteViewForm({currentNote = null}) {
     await dispatch(deleteNote(customer._id,currentNote._id));
     handleCloseConfirm();
     dispatch(getNotes(customer._id));
-    // dispatch(getContacts());
   };
-
-//   const dateFormat = async (date) => {
-//     const month = date.getMonth();
-//     const day = date.getDate();
-//     const monthString = month >= 10 ? month : `0${month}`;
-//     const dayString = day >= 10 ? day : `0${day}`;
-//     return `${date.getFullYear()}-${monthString}-${dayString}`;
-// }
 
   const defaultValues = useMemo(
     () => ({
@@ -84,35 +71,19 @@ export default function NoteViewForm({currentNote = null}) {
       updatedAt:                currentNote?.updatedAt || "",
       updatedByFullname:           currentNote?.updatedBy?.name || "",
       updatedIP:                currentNote?.updatedIP || "",
-
-      
     }),
     [currentNote]
   );
   return (
-    <Grid sx={{ p: 2 }}>
-             <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-            <Button
-              onClick={() => handleEdit()}
-              variant="outlined"
-              startIcon={<Iconify icon="eva:edit-fill" />}
-            >
-              Edit
-            </Button>
-            <Button
-              onClick={() => {
-                handleOpenConfirm();
-                handleClosePopover();
-              }}
-              variant="outlined"
-              color="error"
-              startIcon={<Iconify icon="eva:trash-2-fill" />}
-            >
-              Delete
-            </Button>
-            
-            </Stack>
-
+      <Grid sx={{ p: 2 }}>
+        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+          <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />}>
+            Edit
+          </Button>
+          <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />}>
+            Delete
+          </Button>
+        </Stack>
         <Grid container>
             <Grid item xs={12} sm={6} >
               <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
@@ -140,26 +111,15 @@ export default function NoteViewForm({currentNote = null}) {
                 {defaultValues.note}
             </Typography>
             <Grid item xs={12} sm={12} >
-            Active
+              Active
             <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-          </Grid>
+            </Grid>
           </Grid>
           <Grid container>
-          <ViewFormAudit defaultValues={defaultValues}/>
+            <ViewFormAudit defaultValues={defaultValues}/>
+          </Grid>
+          <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?" action={<Button variant="contained" color="error" onClick={onDelete}>Delete</Button> } />
         </Grid>
-
-          <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
-          />
       </Grid>
-    </Grid>
   );
 }

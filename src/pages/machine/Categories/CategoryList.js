@@ -132,7 +132,7 @@ export default function CategoryList() {
 
   const dataFiltered = applyFilter({
     inputData: tableData,
-    comparator: getComparator(order, orderBy),
+    comparator: getComparator(order,orderBy),
     filterName,
     filterStatus,
   });

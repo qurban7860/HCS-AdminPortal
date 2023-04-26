@@ -25,7 +25,6 @@ import Label from '../../components/label';
 
 import { useSelector } from '../../redux/store';
 
-
 // ----------------------------------------------------------------------
 
 CustomerListTableRow.propTypes = {

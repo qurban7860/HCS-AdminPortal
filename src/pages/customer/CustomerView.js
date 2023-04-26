@@ -9,7 +9,7 @@ import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, tabsClasses } fro
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import {  getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import { getSites } from '../../redux/slices/customer/site';
 import { getContacts } from '../../redux/slices/customer/contact';
 
@@ -30,27 +30,15 @@ import { useSettingsContext } from '../../components/settings';
 // sections
 import { Cover } from '../components/Cover';
 
-import CustomerAddForm from './CustomerAddForm'
-import SiteAddForm from './site/SiteAddForm';
-import SiteList from './site/SiteList';
-import ContactAddForm from './contact/ContactAddForm';
-import CustomerStepper from './CustomerStepper';
 import CustomerNoteList from './CustomerNoteList';
-
-
 import CustomerViewForm from './CustomerViewForm';
-
-
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
 
-
 CustomerView.propTypes = {
   editPage: PropTypes.bool,
 };
-
-
 
 export default function CustomerView({editPage}) {
 
@@ -82,16 +70,13 @@ export default function CustomerView({editPage}) {
   }, [dispatch, id]);
 
   useEffect(() => {
-    
     if(customerEditFormFlag){
       setCurrentComponent(<CustomerEditForm/>);
     }else{
       setCustomerFlag(false);
       setCurrentComponent(<CustomerViewForm/>);        
     }
-   
   }, [dispatch, customerEditFormFlag, customer]);
-
 
   const TABS = [
     {
@@ -143,13 +128,7 @@ export default function CustomerView({editPage}) {
         {/* <CustomBreadcrumbs
           heading="Customer View"
         /> */}
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
+        <Card sx={{ mb: 3, height: 160, position: 'relative', }}>
           <Cover name={customer ? customer.name : 'New Customer'} icon="ph:users-light"/>
           <Tabs
             value={currentTab}

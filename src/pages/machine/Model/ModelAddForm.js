@@ -43,7 +43,7 @@ export default function ModelAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const ModelAddSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('Name is required') ,
+    name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
     category: Yup.string().required('Category is required'),
@@ -128,7 +128,7 @@ export default function ModelAddForm() {
                       renderInput={(params) => <TextField {...params} label="Category" />}
                       ChipProps={{ size: 'small' }}
                     />
-                    <RHFTextField name="name" label="Machine Model" required />
+                    <RHFTextField name="name" label="Model Name"  />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                     <RHFSwitch

@@ -71,7 +71,6 @@ const STATUS_OPTIONS = [
 
 export default function SupplierList() {
   const [tableData, setTableData] = useState([]);
-  console.log("tableData",tableData)
   const {
     dense,
     page,
@@ -115,12 +114,11 @@ export default function SupplierList() {
     // console.log('Testing done')
       dispatch(getSuppliers());
   }, [dispatch]);
-console.log("suppliers: " ,suppliers);
   useEffect(() => {
     if (initial) {
-      if (suppliers && !error) {
-        enqueueSnackbar(responseMessage);
-      } 
+      // if (suppliers && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } 
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -346,7 +344,6 @@ console.log("suppliers: " ,suppliers);
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-console.log("iput data: " , inputData);
     const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {

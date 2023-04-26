@@ -1,42 +1,26 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
+import { useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
-// import style from '../../style/style.css'
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Container,Checkbox, DialogTitle, Dialog, InputAdornment } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/AddFormButtons';
-import { getCategories, addCategory } from '../../../redux/slices/products/category';
+import { addCategory } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
 // components
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // asset
 import { countries } from '../../../assets/data';
 // util
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import {Cover} from '../../components/Cover';
 
 // ----------------------------------------------------------------------
@@ -46,8 +30,6 @@ export default function CategoryAddForm() {
   
 console.log("Machine Category : ",PATH_MACHINE.categories.list)
 
-  const { userId, user } = useAuthContext();
-
   const dispatch = useDispatch();
   
   const navigate = useNavigate();
@@ -56,7 +38,7 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
   const { enqueueSnackbar } = useSnackbar();
 
   const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('Name is required') ,
+    name: Yup.string().min(2).max(50).required('Name is required'),
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
   });
@@ -84,13 +66,6 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const values = watch();
-
-  // useLayoutEffect(() => {
-  //   dispatch(getSPContacts());
-  // }, [dispatch]);
-
   
   const toggleCancel = () => 
   {
@@ -146,7 +121,7 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
               }}
             >
 
-              <RHFTextField name="name" label="Machine Category" required />
+              <RHFTextField name="name" label="Machine Category" />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
                 name="isActive"

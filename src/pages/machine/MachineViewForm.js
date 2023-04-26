@@ -101,19 +101,19 @@ export default function MachineViewForm() {
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete} />
       <Grid container>
-        <ViewFormField sm={6} heading="Serial No" param={defaultValues.serialNo ? defaultValues.serialNo : ''} />
-        <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
-        <ViewFormField sm={6} heading="Previous Machine Serial No" param={defaultValues.parentSerialNo? defaultValues.parentSerialNo : ''} />
-        <ViewFormField sm={6} heading="Previous Machine" param={defaultValues.parentMachine ? defaultValues.parentMachine : ''} />
-        <ViewFormField sm={6} heading="Supplier" param={defaultValues.supplier? defaultValues.supplier : ''} />
-        <ViewFormField sm={6} heading="Machine Model" param={defaultValues.machineModel? defaultValues.machineModel : ''} />
-        <ViewFormField sm={6} heading="Status" param={defaultValues.status? defaultValues.status : ''} />
+        <ViewFormField sm={6} heading="Serial No"                   param={defaultValues.serialNo ? defaultValues.serialNo : ''} />
+        <ViewFormField sm={6} heading="Name"                        param={defaultValues.name} />
+        <ViewFormField sm={6} heading="Previous Machine Serial No"  param={defaultValues.parentSerialNo? defaultValues.parentSerialNo : ''} />
+        <ViewFormField sm={6} heading="Previous Machine"            param={defaultValues.parentMachine ? defaultValues.parentMachine : ''} />
+        <ViewFormField sm={6} heading="Supplier"                    param={defaultValues.supplier? defaultValues.supplier : ''} />
+        <ViewFormField sm={6} heading="Machine Model"               param={defaultValues.machineModel? defaultValues.machineModel : ''} />
+        <ViewFormField sm={6} heading="Status"                      param={defaultValues.status? defaultValues.status : ''} />
         <ViewFormField sm={6} heading="Work Order / Perchase Order" param={defaultValues.workOrderRef? defaultValues.workOrderRef : ''} />
-        <ViewFormField sm={12} heading="Customer" objectParam={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
-        <ViewFormField sm={6} heading="Installation Site" objectParam={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
-        <ViewFormField sm={6} heading="Billing Site" objectParam={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
-        <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues.description? defaultValues.description: ''} />
+        <ViewFormField sm={12} heading="Customer"                   objectParam={defaultValues.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{defaultValues.customer?.name}</Link> : '' } />
+        <ViewFormField sm={6} heading="Installation Site"           objectParam={defaultValues.instalationSite? <Link onClick={handleOpenInstallationSite} href="#" underline="none" >{defaultValues.instalationSite?.name}</Link> : ''} />
+        <ViewFormField sm={6} heading="Billing Site"                objectParam={defaultValues.billingSite? <Link onClick={handleOpenBillingSite} href="#" underline="none" >{ defaultValues.billingSite?.name}</Link> : ''} />
+        <ViewFormField sm={12} heading="Nearby Milestone"           param={defaultValues.siteMilestone? defaultValues?.siteMilestone : ''} />
+        <ViewFormField sm={12} heading="Description"                param={defaultValues.description? defaultValues.description: ''} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>

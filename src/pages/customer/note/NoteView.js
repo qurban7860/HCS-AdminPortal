@@ -23,29 +23,20 @@ import {
 import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
-// sections
-import {
-  NoteCover
-} from './util';
-
+import { Cover } from '../../components/Cover';
 import NoteViewForm from './NotesViewForm'
 // ----------------------------------------------------------------------
 
 export default function NoteViewPage() {
 
   const dispatch = useDispatch();
-
   const { id } = useParams(); 
 
   useLayoutEffect(() => {
     dispatch(getNote(id));
   }, [dispatch, id]);
-  // 
-
   const { note } = useSelector((state) => state.note);
-console.log(note)
   const { themeStretch } = useSettingsContext();
-
   const [currentTab, setCurrentTab] = useState('note-edit');
 
   const TABS = [
@@ -93,7 +84,7 @@ console.log(note)
             position: 'relative',
           }}
         >
-          <NoteCover name={note?.name}/>
+          <Cover name={note?.name}/>
 
           
            

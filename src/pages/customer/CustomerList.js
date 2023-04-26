@@ -46,7 +46,6 @@ import { getCustomers, deleteCustomer, getCustomer ,resetCustomer,resetCustomers
 import { resetSite,resetSites, setSiteEditFormVisibility, setSiteFormVisibility     } from '../../redux/slices/customer/site';
 import { resetContact,resetContacts, setContactEditFormVisibility,setContactFormVisibility} from '../../redux/slices/customer/contact';
 import { resetNote,resetNotes ,setNoteEditFormVisibility,setNoteFormVisibility } from '../../redux/slices/customer/note';
-import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
 import { Cover } from '../components/Cover';
 import { fDate } from '../../utils/formatTime';
 
