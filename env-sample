@@ -1,12 +1,14 @@
-APP_CODE=hcs-adminportal
-APP_NAME=Howick Cloud Services Administration Portal
-ENV=dev
-HOST_NAME=localhost
-PORT=3000
-SSL_Enabled_domain=
+REACT_APP_CODE=hcs-adminportal
+REACT_APP_TITLE=Howick Cloud Services
+REACT_APP_NAME=Howick Cloud Services Administration Portal
+REACT_APP_VERSION='V-0.0.1'
+REACT_APP_ENV=Dev
+REACT_APP_BG_COLOR='#fff176'
+REACT_APP_MESSAGE_REGISTER_USER='Welcome to Howick Cloud Services'
+REACT_APP_MESSAGE_LOGIN_USER='Hi, Welcome to Howick Cloud Services'
 
 #back-end server configuration
-SERVER_URL=http://localhost:3001/api/1.0.0/
+REACT_APP_SERVER_URL=http://localhost:5000/api/1.0.0/
 
 
-LOG_TO_CONSOLE=true
+REACT_APP_LOG_TO_CONSOLE=true
