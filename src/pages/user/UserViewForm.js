@@ -328,7 +328,7 @@ const handleCloseConfirm = () => {
             <Typography variant="body" sx={{ px: 2 }}>
               Go to customer
             </Typography>
-            <Iconify icon="mdi:link-box-variant-outline" />
+            <Iconify icon="mdi:share" />
           </Link>
         </Grid>
       </Dialog>

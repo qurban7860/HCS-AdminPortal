@@ -78,12 +78,12 @@ export default function UserProfilePage() {
       const handleViewContact = (id) => {
         navigate(PATH_DASHBOARD.contact.view(id));
       };
-     
+
     const handleEdit = () => {
       dispatch(setEditFormVisibility(true));
       navigate(PATH_DASHBOARD.user.edit(securityUser._id));
     }
-  
+
     const defaultValues = useMemo(
       () => ({
         customer:                 securityUser?.customer?.name || "",
@@ -104,7 +104,7 @@ export default function UserProfilePage() {
       ),
       // eslint-disable-next-line react-hooks/exhaustive-deps
       [securityUser] );
-  
+
   // const TABS = [
   //   {
   //     value: 'profile',
@@ -206,7 +206,7 @@ export default function UserProfilePage() {
           <ViewFormField sm={12} heading="Name"                     param={customer?.name?        customer?.name : ''} />
           <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName? customer?.tradingName : ''} />
           <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone?       customer?.mainSite.phone : ''} />
-          <ViewFormField sm={6} heading="Fax"                       param={customer?.mainSite?.fax?         customer?.mainSite.fax : ''} /> 
+          <ViewFormField sm={6} heading="Fax"                       param={customer?.mainSite?.fax?         customer?.mainSite.fax : ''} />
           <ViewFormField sm={6} heading="Email"                     param={customer?.mainSite?.email?       customer?.mainSite.email : ''} />
           <ViewFormField sm={6} heading="Site Name"                 param={customer?.mainSite?.address? customer?.mainSite?.address?.street : ''} />
           <ViewFormField sm={6} heading="Street"                    param={customer?.mainSite?.address? customer?.mainSite?.address?.street : ''} />
@@ -222,10 +222,10 @@ export default function UserProfilePage() {
         <Grid container sx={{px:2,pb:3}}>
           <ViewFormField sm={6} heading="Account Manager"   param={customer?.accountManager?.firstName} secondParam={customer?.accountManager?.lastName}/>
           <ViewFormField sm={6} heading="Project Manager"   param={customer?.projectManager?.firstName} secondParam={customer?.projectManager?.lastName}/>
-          <ViewFormField sm={6} heading="Suppport Manager"  param={customer?.supportManager?.firstName} secondParam={customer?.supportManager?.lastName}/> 
+          <ViewFormField sm={6} heading="Suppport Manager"  param={customer?.supportManager?.firstName} secondParam={customer?.supportManager?.lastName}/>
         </Grid>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
-          <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to customer</Typography><Iconify icon="mdi:link-box-variant-outline" /></Link>
+          <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to customer</Typography><Iconify icon="mdi:share"/></Link>
         </Grid>
       </Dialog>
 

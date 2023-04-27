@@ -108,42 +108,42 @@ export default function MachineView({editPage}) {
     //   disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'Machine-info',
       label: 'Machine Info',
-      icon: <Iconify icon="ic:round-account-box" />,
+      icon: <Iconify icon="mdi:window-open-variant" />,
       component: currentComponent
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'settings',
       label: 'Settings',
-      icon: <Iconify icon="eva:settings-2-outline" />,
+      icon: <Iconify icon="mdi:cogs" />,
       component: <MachineSettingList/>
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'license',
       label: 'License',
-      icon: <Iconify icon="mdi:license" />,
+      icon: <Iconify icon="mdi:book-cog-outline" />,
       component: <MachineLicenseList/>,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'toolsInstalled',
       label: 'Tools Installed',
-      icon: <Iconify icon="iconoir:tools" />,
+      icon: <Iconify icon="mdi:folder-wrench" />,
       component: <MachineToolsInstalledList/>,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'notes',
       label: 'Notes',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="mdi:note-multiple" />,
       component: <MachineNoteList/>
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'documents',
       label: 'Documents',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="mdi:folder-open" />,
       // component: <MachineViewForm/>
     },
     {
@@ -156,7 +156,7 @@ export default function MachineView({editPage}) {
       // disabled: setMachineEditFormVisibility,
       value: 'serviceHistory',
       label: 'Service History',
-      icon: <Iconify icon="ic:round-manage-history" />,
+      icon: <Iconify icon="mdi:clipboard-text-clock" />,
     }
   ];
 

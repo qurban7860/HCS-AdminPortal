@@ -104,41 +104,41 @@ export default function CustomerView({editPage}) {
       disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'customer-info',
       label: 'Customer Info',
-      icon: <Iconify icon="ic:round-account-box" />,
+      icon: <Iconify icon="mdi:badge-account" />,
       component: currentComponent
     },
     {
       disabled: customerEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
       value: 'sites',
       label: 'Sites',
-      icon: <Iconify icon="eva:navigation-2-outline" />,
+      icon: <Iconify icon="mdi:map-legend" />,
       component: <CustomerSiteList/>,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
-      icon: <Iconify icon="eva:people-outline" />,
+      icon: <Iconify icon="mdi:account-multiple" />,
       component: <CustomerContactList/>,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'notes',
       label: 'Notes',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="mdi:note-multiple" />,
       component: <CustomerNoteList/>
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'documents',
       label: 'Documents',
-      icon: <Iconify icon="eva:book-fill" />,
+      icon: <Iconify icon="mdi:folder-open" />,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'machines',
       label: 'Machines',
-      icon: <Iconify icon="eva:settings-2-outline" />,
+      icon: <Iconify icon="mdi:greenhouse" />,
     }
 
   ];

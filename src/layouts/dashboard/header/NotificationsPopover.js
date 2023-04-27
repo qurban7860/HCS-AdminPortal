@@ -66,7 +66,8 @@ export default function NotificationsPopover() {
           // {totalUnRead}
           color="error"
         >
-          <Iconify icon="eva:bell-fill" />
+          <Iconify icon={openPopover ? 'mdi:bell-ring' : 'mdi:bell'} />
+
         </Badge>
       </IconButtonAnimate>
 
@@ -122,13 +123,14 @@ export default function NotificationsPopover() {
         <Divider sx={{ borderStyle: 'solid' }} />
 
         {!notifications && 'Loading...' ? (
-          ''  ) : (
-           <Box sx={{ p: 1 }}>
+          ''
+        ) : (
+          <Box sx={{ p: 1 }}>
             <Button fullWidth disableRipple>
               View All
             </Button>
           </Box>
-            )}
+        )}
       </MenuPopover>
     </>
   );

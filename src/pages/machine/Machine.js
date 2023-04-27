@@ -18,6 +18,7 @@ import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE } from '../../routes/paths';
 import { useDispatch } from '../../redux/store';
 import { Cover } from '../components/Cover';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -98,28 +99,28 @@ export default function Machine() {
               >
                 <ListItemButton onClick={linkCategory} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <CategoryIcon />
+                    <Iconify icon="mdi:shape-plus" />
                   </ListItemIcon>
                   <ListItemText primary="Machine Categories" />
                 </ListItemButton>
 
                 <ListItemButton onClick={linkModel} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <ModelTrainingIcon />
+                    <Iconify icon="mdi:cube-outline" />
                   </ListItemIcon>
                   <ListItemText primary="Machines Models" />
                 </ListItemButton>
 
                 <ListItemButton onClick={linkSupplier} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <InventoryIcon />
+                    <Iconify icon="mdi:circle-opacity" />
                   </ListItemIcon>
                   <ListItemText primary="Machine Suppliers" />
                 </ListItemButton>
 
                 <ListItemButton onClick={linkStatus} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <Diversity1Icon />
+                    <Iconify icon="mdi:list-status" />
                   </ListItemIcon>
                   <ListItemText primary="Machine Status" />
                 </ListItemButton>
@@ -141,14 +142,14 @@ export default function Machine() {
               >
                 <ListItemButton onClick={linktpCategory} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <ClassIcon />
+                    <Iconify icon="mdi:table-cog" />
                   </ListItemIcon>
                   <ListItemText primary="Setting Categories" />
                 </ListItemButton>
 
                 <ListItemButton onClick={linkTechParam} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <FlareIcon />
+                    <Iconify icon="mdi:abacus" />
                   </ListItemIcon>
                   <ListItemText primary="Parameters" />
                 </ListItemButton>
@@ -166,7 +167,7 @@ export default function Machine() {
               >
                 <ListItemButton onClick={linkTool} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <BuildCircleIcon />
+                    <Iconify icon="mdi:tools" />
                   </ListItemIcon>
                   <ListItemText primary="Tools" />
                 </ListItemButton>

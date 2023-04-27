@@ -169,7 +169,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               variant="body2"
               onClick={handleNavigate}
             >
-              <Iconify icon="eva:settings-2-outline" />
+              <Iconify icon="mdi:cog" />
             </Link>
           ) : (
             ' '
