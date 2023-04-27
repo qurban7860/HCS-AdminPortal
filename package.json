@@ -1,7 +1,7 @@
 {
-  "name": "@minimal/minimal-kit-react",
-  "author": "Minimals UI",
-  "version": "4.1.0",
+  "name": "howick_cs_ui",
+  "author": "HOWICK DEV",
+  "version": "0.0.1",
   "description": "Javascript Version",
   "private": true,
   "scripts": {
