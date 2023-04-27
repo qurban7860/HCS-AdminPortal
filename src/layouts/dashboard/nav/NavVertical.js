@@ -85,7 +85,11 @@ export default function NavVertical({ openNav, onCloseNav }) {
         // background: '#DFDFDF',
       }}
     >
-      <NavToggleButton />
+      <NavToggleButton
+        sx={{
+          top: 22
+        }}
+      />
 
       {isDesktop ? (
         <Drawer

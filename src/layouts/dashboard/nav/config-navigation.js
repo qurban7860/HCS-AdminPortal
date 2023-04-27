@@ -35,7 +35,7 @@ const ICONS = {
   asset: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: <Iconify icon="mdi:view-dashboard" />,
-  map: icon('ic_location'),
+  map: <Iconify icon="mdi:map-legend" />,
   machines: <Iconify icon="mdi:gate-open" />,
   users: <Iconify icon="mdi:account-group" />,
 };
