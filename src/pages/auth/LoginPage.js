@@ -9,10 +9,10 @@ import { CONFIG } from '../../config-global';
 export default function LoginPage() {
   return (
     <>
-      <Helmet>
-        <title> Login | {CONFIG.APP_TITLE} </title>
-      </Helmet>
-
+      {/* <Helmet>
+        <meta charSet="utf-8" />
+        <title> Login | {process.env.REACT_APP_TITLE}</title>
+      </Helmet> */}
       <Login />
     </>
   );

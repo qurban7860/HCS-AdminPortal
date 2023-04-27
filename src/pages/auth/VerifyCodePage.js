@@ -17,9 +17,9 @@ import { CONFIG } from '../../config-global';
 export default function VerifyCodePage() {
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Verify Code | {CONFIG.APP_TITLE} </title>
-      </Helmet>
+      </Helmet> */}
 
       <EmailInboxIcon sx={{ mb: 5, height: 96 }} />
 

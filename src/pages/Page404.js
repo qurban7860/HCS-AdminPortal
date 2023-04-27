@@ -14,9 +14,9 @@ import { CONFIG } from '../config-global';
 export default function Page404() {
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> 404 Page Not Found | {CONFIG.APP_TITLE} </title>
-      </Helmet>
+      </Helmet> */}
 
       <MotionContainer>
         <m.div variants={varBounce().in}>

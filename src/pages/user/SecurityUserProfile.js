@@ -26,6 +26,7 @@ export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
   const { securityUser } = useSelector((state) => state.user);
+  console.log("securityUser : ",securityUser," contact : ", contact , " getCustomer  : ", getCustomer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
 

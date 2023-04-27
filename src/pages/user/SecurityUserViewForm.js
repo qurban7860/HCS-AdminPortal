@@ -20,57 +20,60 @@ import {Cover} from '../components/Cover';
 import { useAuthContext } from '../../auth/useAuthContext';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../components/hook-form';
 
+
 // ----------------------------------------------------------------------
 export default function SecurityUserViewForm() {
-  const { securityUser } = useSelector((state) => state.user);
+  const { securityUser , initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
-
-const [openConfirm, setOpenConfirm] = useState(false);
-const [openPopover, setOpenPopover] = useState(null);
-const [openContact, setOpenContact] = useState(false);
+  console.log("user View")
+  const [openContact, setOpenContact] = useState(false);
   const handleOpenContact = () => setOpenContact(true);
   const handleCloseContact = () => setOpenContact(false);
+  
+  const [openCustomer, setOpenCustomer] = useState(false);
+  const handleOpenCustomer = () => setOpenCustomer(true);
+  const handleCloseCustomer = () => setOpenCustomer(false);
+  
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const handleOpenConfirm = () => setOpenConfirm(true);
+  const handleCloseConfirm = () => setOpenConfirm(false);
 
-const handleViewCustomer = (id) => {
-  navigate(PATH_DASHBOARD.customer.view(id));
-};
-const [openCustomer, setOpenCustomer] = useState(false);
-const handleOpenCustomer = () => setOpenCustomer(true);
-const handleCloseCustomer = () => setOpenCustomer(false);
-const handleOpenConfirm = () => {
-  setOpenConfirm(true);
-};
-const handleCloseConfirm = () => {
-  setOpenConfirm(false);
-};
   const { user } = useAuthContext();
-    const { id } = useParams();
-    
+  const { id } = useParams();
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   useEffect(()=> {
-    if(id){
-      dispatch(getSecurityUser(id))
-      dispatch(getCustomer(securityUser?.customer?._id))
+      if (initial) {
+    
+      if(id){
+        dispatch(getSecurityUser(id))
+        dispatch(getCustomer(securityUser?.customer?._id))
+      }
+      if(id){
+        if(securityUser?.contact?._id){
+          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
+        }
+      }
     }
-    if(id && securityUser?.contact?._id){
-      dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-    }
-    },[dispatch,id,securityUser])
+    },[dispatch,id,initial,securityUser])
+    
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_DASHBOARD.user.edit(securityUser._id));
   }
-//   const handleViewCustomer = (id) => {
-//     navigate(PATH_DASHBOARD.user.list);
-//   };
+
   const onDelete = async () => {
     await dispatch(deleteSecurityUser(id));
     dispatch(getSecurityUsers());
     navigate(PATH_DASHBOARD.user.list)
   }
 
+  const handleViewCustomer = (Id) => {
+    navigate(PATH_DASHBOARD.customer.view(Id));
+  };
 
   const defaultValues = useMemo(
     () => ({
@@ -120,19 +123,13 @@ const handleCloseConfirm = () => {
               </Button> : ""
               }
           </Stack>
-          <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
+          <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?" action={
               <Button variant="contained" color="error" onClick={onDelete}>
                 Delete
-              </Button>
-            }
-          />
+              </Button> }/>
+
           <Grid container>
-          <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
+            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
             {/* <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} /> */}
             <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
             {/* <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} /> */}
@@ -142,6 +139,7 @@ const handleCloseConfirm = () => {
             <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
             <ViewFormField sm={6} heading="Roles" param={defaultValues.roles?.map((obj) => obj.name).join(', ')} />
           </Grid>
+          
           <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
