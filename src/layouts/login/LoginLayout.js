@@ -33,6 +33,7 @@ export default function LoginLayout({ children, illustration, title }) {
           container
           spacing={2}
         >
+        {/* will be removed after checking the UI change */}
           {/* <Grid item xs={6}>
             <Typography
               sx={{
