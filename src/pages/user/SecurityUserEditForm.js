@@ -46,13 +46,15 @@ securityUser.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
   const [ customerVal, setCustomerVal ] = useState('');
   const { contacts } = useSelector((state) => state.contact);
   const [ contactVal, setContactVal ] = useState('');
+  const [ valid, setValid ] = useState(true);
   const [phone, setPhone] = useState('')
   
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
+
+  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }}
+
 useEffect(() => {
     dispatch(getCustomers());
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -171,7 +173,9 @@ useEffect(() => {
       navigate(PATH_DASHBOARD.user.view(defaultValues.id));
   }
   const handleInputEmail = (e) => {
-    const trimmedEmail = e.target.value.trim();
+    const emailRegEx =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+      const trimmedEmail = e.target.value.trim();
+      // trimmedEmail.match(emailRegEx) ? setValid(true) : setValid(false);
     console.log(trimmedEmail)
     setEmail(trimmedEmail);
   }
@@ -187,8 +191,6 @@ useEffect(() => {
               >
                 {values.status}
               </Label>
-
-
             <Box sx={{ mb: 5 }}>
               <RHFUploadAvatar
                 name="avatarUrl"
@@ -297,7 +299,7 @@ useEffect(() => {
                 }}
                 id="controllable-states-demo"
                 renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
-                renderInput={(params) => <TextField {...params} label="Customer" required/>}
+                renderInput={(params) => <TextField {...params} label="Customer" required disabled/>}
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
@@ -349,7 +351,7 @@ useEffect(() => {
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="email" label="Email Address" sx={{my:3}} onChange={handleInputEmail} value={email} required/>
+              <RHFTextField name="email" type="email" label="Email Address"  sx={{my:3 }} onChange={handleInputEmail} value={email} required/>
             </Box>
               <Box
               rowGap={3}

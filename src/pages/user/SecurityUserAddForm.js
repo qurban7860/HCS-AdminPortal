@@ -170,21 +170,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
       }
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-
-      if (file) {
-        setValue('avatarUrl', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
-
   const toggleCancel = ()=>{
     navigate(PATH_DASHBOARD.user.list);
   }

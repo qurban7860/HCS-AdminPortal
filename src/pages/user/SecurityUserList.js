@@ -79,9 +79,9 @@ export default function SecurityUserList() {
 
   const [filterStatus, setFilterStatus] = useState('all');
 
-// console.log("users : ", users)
   useLayoutEffect(() => {
     dispatch(getSecurityUsers());
+    console.log("users : ")
   }, [dispatch,securityUserEditFormVisibility,securityUserFormVisibility]);
 
   useEffect(() => {

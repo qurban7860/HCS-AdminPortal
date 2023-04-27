@@ -192,9 +192,6 @@ export default function MachineRepairHistoryList() {
 
   return (
     <>
-      <Helmet>
-        <title> Site: List | Machine ERP </title>
-      </Helmet>
 
       <Container maxWidth={false}>
 

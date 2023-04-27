@@ -192,10 +192,6 @@ export default function MachineServiceHistoryList() {
 
   return (
     <>
-      <Helmet>
-        <title> Site: List | Machine ERP </title>
-      </Helmet>
-
       <Container maxWidth={false}>
 
         {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
