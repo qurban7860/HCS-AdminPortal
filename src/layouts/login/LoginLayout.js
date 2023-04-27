@@ -33,7 +33,7 @@ export default function LoginLayout({ children, illustration, title }) {
           container
           spacing={2}
         >
-          <Grid item xs={6}>
+          {/* <Grid item xs={6}>
             <Typography
               sx={{
                 backgroundColor: CONFIG.Background_Color,
@@ -48,7 +48,7 @@ export default function LoginLayout({ children, illustration, title }) {
               {'  '}
               {CONFIG.Version}
             </Typography>
-          </Grid>
+          </Grid> */}
           <Grid item>
             <Logo
               sx={{
