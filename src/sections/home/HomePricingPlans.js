@@ -75,7 +75,7 @@ function Content() {
     <Box
       display="grid"
       gridTemplateColumns="repeat(3, 1fr)"
-      sx={{ borderRadius: 2, border: (theme) => `dashed 1px ${theme.palette.divider}` }}
+      sx={{ borderRadius: 2, border: (theme) => `solid 1px ${theme.palette.divider}` }}
     >
       {_homePlans.map((plan) => (
         <m.div key={plan.license} variants={varFade().in}>
@@ -98,7 +98,7 @@ function Content() {
       <Box
         sx={{
           borderRadius: 2,
-          border: (theme) => `dashed 1px ${theme.palette.divider}`,
+          border: (theme) => `solid 1px ${theme.palette.divider}`,
         }}
       >
         {_homePlans.map(
@@ -107,7 +107,7 @@ function Content() {
               <PlanCard
                 key={tab.license}
                 plan={tab}
-                sx={{ borderLeft: (theme) => `dashed 1px ${theme.palette.divider}` }}
+                sx={{ borderLeft: (theme) => `solid 1px ${theme.palette.divider}` }}
               />
             )
         )}
@@ -188,8 +188,8 @@ function PlanCard({ plan, sx, ...other }) {
         p: 5,
         pt: 10,
         ...(plus && {
-          borderLeft: (theme) => `dashed 1px ${theme.palette.divider}`,
-          borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+          borderLeft: (theme) => `solid 1px ${theme.palette.divider}`,
+          borderRight: (theme) => `solid 1px ${theme.palette.divider}`,
           ...sx,
         }),
       }}
@@ -236,7 +236,7 @@ function PlanCard({ plan, sx, ...other }) {
           </Stack>
         ))}
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         {options.map((option, optionIndex) => {
           const disabled =

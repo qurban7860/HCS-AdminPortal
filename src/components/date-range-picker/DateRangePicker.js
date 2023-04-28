@@ -89,14 +89,14 @@ export default function DateRangePicker({
             <>
               <Paper
                 variant="outlined"
-                sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'dashed' }}
+                sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'solid' }}
               >
                 <CalendarPicker date={startDate} onChange={onChangeStartDate} />
               </Paper>
 
               <Paper
                 variant="outlined"
-                sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'dashed' }}
+                sx={{ borderRadius: 2, borderColor: 'divider', borderStyle: 'solid' }}
               >
                 <CalendarPicker date={endDate} onChange={onChangeEndDate} />
               </Paper>

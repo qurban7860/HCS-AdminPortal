@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack  ,tabsClasses } from '@mui/material';
+import { Typography, Tab, Card, Tabs, Container, Box, Button, Grid, Stack  ,tabsClasses } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 
@@ -48,6 +48,9 @@ import MachineNoteList from './MachineNoteList';
 import MachineSettingList from './MachineSettingList';
 import MachineLicenseList from './MachineLicenseList';
 
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+
 import MachineToolsInstalledList from './MachineToolsInstalledList';
 
 // ----------------------------------------------------------------------
@@ -61,7 +64,7 @@ MachineView.propTypes = {
 
 export default function MachineView({editPage}) {
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const dispatch = useDispatch();
 
@@ -94,7 +97,7 @@ export default function MachineView({editPage}) {
       setCurrentComponent(<MachineEditForm/>);
     }else{
       setMachineFlag(false);
-      setCurrentComponent(<MachineViewForm/>);        
+      setCurrentComponent(<MachineViewForm/>);
     }
     /* eslint-enable */
   }, [dispatch,machineEditFormFlag, machine]);
@@ -105,42 +108,42 @@ export default function MachineView({editPage}) {
     //   disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'Machine-info',
       label: 'Machine Info',
-      icon: <Iconify icon="ic:round-account-box" />,
+      icon: <Iconify icon="mdi:window-open-variant" />,
       component: currentComponent
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'settings',
       label: 'Settings',
-      icon: <Iconify icon="eva:settings-2-outline" />,
+      icon: <Iconify icon="mdi:cogs" />,
       component: <MachineSettingList/>
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'license',
       label: 'License',
-      icon: <Iconify icon="mdi:license" />,
+      icon: <Iconify icon="mdi:book-cog-outline" />,
       component: <MachineLicenseList/>,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'toolsInstalled',
       label: 'Tools Installed',
-      icon: <Iconify icon="iconoir:tools" />,
+      icon: <Iconify icon="mdi:folder-wrench" />,
       component: <MachineToolsInstalledList/>,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'notes',
       label: 'Notes',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="mdi:note-multiple" />,
       component: <MachineNoteList/>
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'documents',
       label: 'Documents',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="mdi:folder-open" />,
       // component: <MachineViewForm/>
     },
     {
@@ -153,60 +156,115 @@ export default function MachineView({editPage}) {
       // disabled: setMachineEditFormVisibility,
       value: 'serviceHistory',
       label: 'Service History',
-      icon: <Iconify icon="ic:round-manage-history" />,
+      icon: <Iconify icon="mdi:clipboard-text-clock" />,
     }
   ];
 
   return (
-    <>
-      <Container maxWidth={false}>
-        {/* <CustomBreadcrumbs
+    <Container maxWidth={false}>
+      {/* <CustomBreadcrumbs
           heading="Machine View"
         /> */}
-        <Card
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+        }}
+      >
+        <Cover
+          photoURL={machine.name ? '' : <LogoAvatar />}
+          name={machine?.name}
+          serialNo={machine ? machine.serialNo : 'Serial Number'}
+          icon="et:gears"
+          setting="enable"
+        />
+
+        <Tabs
+          value={currentTab}
+          onChange={(event, newValue) => setCurrentTab(newValue)}
+          variant="scrollable"
+          allowScrollButtonsMobile
+          aria-label="scrollable force tabs example"
           sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+            width: 1,
+            bottom: 0,
+            zIndex: 9,
+            position: 'absolute',
+            bgcolor: 'background.paper',
+            '& .MuiTabs-flexContainer': {
+              pr: { md: 3 },
+              pl: { lg: 2 },
+              justifyContent: {
+                xl: 'flex-end',
+              },
+            },
           }}
         >
-          <Cover name={machine?.name } serialNo={machine ? machine.serialNo : 'Serial Number'} icon='et:gears' setting="enable" />
-
-          <Tabs
-            value={currentTab}
-            onChange={(event, newValue) => setCurrentTab(newValue)}
-            variant="scrollable"
-            allowScrollButtonsMobile
-            aria-label="scrollable force tabs example"
-            sx={{
-              [`& .${tabsClasses.scrollButtons}`]: {
-                '&.Mui-disabled': { opacity: 0.3 },
-              },
-              width: 1,
-              bottom: 0,
-              zIndex: 9,
-              position: 'absolute',
-              bgcolor: 'background.paper',
-              '& .MuiTabs-flexContainer': {
-                pr: { md: 3 },
-                pl: {lg:2},
-                justifyContent: {
-                  xl: 'flex-end',
-                },
-              },
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
-            ))}
-          </Tabs>
-        </Card>
-        {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
-        )}
-      </Container>
-    </>
+          {TABS.map((tab) => (
+            <Tab
+              disabled={tab.disabled}
+              key={tab.value}
+              value={tab.value}
+              icon={tab.icon}
+              label={tab.label}
+            />
+          ))}
+        </Tabs>
+      </Card>
+      {TABS.map(
+        (tab) =>
+          tab.value === currentTab && (
+            <Box key={tab.value}>
+              {' '}
+              {tab.component ? (
+                tab.component
+              ) : (
+                <Grid container sx={{ justifyContent: 'center' }}>
+                  <Grid
+                    item
+                    sx={{
+                      opacity: '30%',
+                      marginTop: '50px',
+                      height: '40vh',
+                      display: 'flex',
+                    }}
+                  >
+                    <img
+                      src="/assets/illustrations/characters/character_5.png"
+                      alt="UNDER CONSTRUCTION"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    sx={{
+                      display: 'block',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      width: '50%',
+                      height: '40vh',
+                      opacity: '30%',
+                      position: 'relative',
+                      margin: '20px',
+                    }}
+                  >
+                    <Typography variant="h1">UNDER DEVELOPMENT..</Typography>
+                    <Typography variant="body1">
+                      While we are still working on completing our website, we invite you to check
+                      back soon for updates. In the meantime, please feel free to contact us
+                      directly if you have any questions or concerns. We appreciate your patience
+                      and understanding during this time, and we look forward to serving you better
+                      through our new website. Thank you for your interest in our company.
+                    </Typography>
+                  </Grid>
+                </Grid>
+              )}{' '}
+            </Box>
+          )
+      )}
+    </Container>
   );
 }

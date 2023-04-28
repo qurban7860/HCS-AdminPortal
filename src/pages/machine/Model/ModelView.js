@@ -24,6 +24,8 @@ import ModelViewForm from './ModelViewForm';
 import { Cover } from '../../components/Cover';
 import ModelEditForm from './ModelEditForm';
 
+import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
+
 ModelViewPage.propTypes = {
   editPage: PropTypes.bool,
 };
@@ -33,14 +35,14 @@ ModelViewPage.propTypes = {
 export default function ModelViewPage({editPage}) {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const { themeStretch } = useSettingsContext();
 
   const { machinemodelEditFormFlag } = useSelector((state) => state.machinemodel);
 
   const { machinemodelEditFormVisibility } = useSelector((state) => state.machinemodel);
-  
+
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
 
@@ -48,7 +50,7 @@ export default function ModelViewPage({editPage}) {
 
   const [machinemodelFlag, setMachinemodelFlag] = useState(true);
   const {machinemodel} = useSelector((state) => state.machinemodel);
-  
+
   useLayoutEffect(() => {
     dispatch(setMachinemodelsEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
@@ -58,17 +60,13 @@ export default function ModelViewPage({editPage}) {
       setCurrentComponent(<ModelEditForm/>);
     }else{
       setMachinemodelFlag(false);
-      setCurrentComponent(<ModelViewForm/>);        
+      setCurrentComponent(<ModelViewForm/>);
     }
   }, [editPage, machinemodelEditFormFlag, machinemodel]);
 
-  
+
   return (
-    <>
-
-      <Container maxWidth={false }>
-        
-
+      <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
@@ -77,11 +75,14 @@ export default function ModelViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={machinemodel?.name} setting="enabble" backLink={PATH_MACHINE.machineModel.list}/> 
+          <Cover
+            model={machinemodel?.name}
+            name={machinemodel?.name}
+            setting="enable"
+            backLink={PATH_MACHINE.machineModel.list}
+          />
         </Card>
-        
-        <ModelViewForm/>
+        <ModelViewForm />
       </Container>
-    </>
   );
 }

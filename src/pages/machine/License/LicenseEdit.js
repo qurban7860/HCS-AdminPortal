@@ -6,7 +6,7 @@ import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // Slice
-import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicenses , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense ,  getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components

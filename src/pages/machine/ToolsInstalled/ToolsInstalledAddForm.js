@@ -42,8 +42,8 @@ const filterTool = [];
 toolsInstalled.map((toolInstalled)=>(filterTool.push(toolInstalled?.tool?._id)))
 const filteredTool = tools.filter(item => !filterTool.includes(item._id));
 filteredTool.sort((a, b) =>{
-  const nameA = a.name.toUpperCase(); 
-  const nameB = b.name.toUpperCase(); 
+  const nameA = a.name.toUpperCase();
+  const nameB = b.name.toUpperCase();
   if (nameA < nameB) {
     return -1;
   }
@@ -63,7 +63,7 @@ setToolsVal(filteredTool);
     isActive : Yup.boolean(),
   });
 
-const toggleCancel = () => 
+const toggleCancel = () =>
 {
   dispatch(setToolInstalledFormVisibility(false));
 };
@@ -141,7 +141,7 @@ const toggleCancel = () =>
                   if(newValue){
                   setToolVal(newValue);
                   }
-                  else{ 
+                  else{
                   setToolVal("");
                   }
                 }}
@@ -149,13 +149,13 @@ const toggleCancel = () =>
                 renderInput={(params) => <TextField {...params}  label="Tool" required/>}
                 ChipProps={{ size: 'small' }}
               />
-              
+
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
 
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography>} />
 
               </Box>
-              
+
 
               <Box
                 rowGap={5}
@@ -165,23 +165,23 @@ const toggleCancel = () =>
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(4, 1fr)',
                 }}
-              > 
-              
+              >
+
                 <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
                   Add Tool
                 </LoadingButton>
-              
-                <Button 
+
+                <Button
                   onClick={toggleCancel}
-                  variant="outlined" 
+                  variant="outlined"
                   size="large">
                     Cancel
                 </Button>
               </Box>
-              
+
             </Stack>
 
-            
+
 
           </Card>
 

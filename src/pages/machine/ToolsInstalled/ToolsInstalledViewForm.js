@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility , updateToolInstalled ,deleteToolInstalled, saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
+import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility , updateToolInstalled ,deleteToolInstalled, getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components

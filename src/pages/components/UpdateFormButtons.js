@@ -24,37 +24,39 @@ const onConfirm = () => {
 }
     return (
       <>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} >
-          <Grid item md={4} sm={6} xs={12} >
-            <Stack justifyContent="flex-end" direction="row" spacing={2} >
-              <Grid item  sm={6} >
-                <LoadingButton type="submit" variant="contained" size="large" fullWidth loading={isSubmitting}>
-                  {saveButtonName || "Save"}
+        <Stack justifyContent="flex-end" direction="row" spacing={2}>
+          <Grid item md={4} sm={6} xs={12}>
+            <Stack justifyContent="flex-end" direction="row" spacing={2}>
+              <Grid item sm={6}>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  size="large"
+                  fullWidth
+                  loading={isSubmitting}
+                >
+                  {saveButtonName || 'Save'}
                 </LoadingButton>
               </Grid>
-              <Grid item  sm={6} >
-                <Button 
-                  onClick={handleOpenConfirm}
-                  fullWidth
-                  variant="outlined" 
-                  size="large">
-                    {cancelButtonName  || "Cancel"}
+              <Grid item sm={6}>
+                <Button onClick={handleOpenConfirm} fullWidth variant="outlined" size="large">
+                  {cancelButtonName || 'Cancel'}
                 </Button>
               </Grid>
             </Stack>
           </Grid>
         </Stack>
         <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Cancel"
-            content="Are you sure want to discard Changes?"
-            action={
-              <Button variant="contained" color="error" onClick={onConfirm}>
-                Confirm
-              </Button>
-            }
-          />
+          open={openConfirm}
+          onClose={handleCloseConfirm}
+          title="Cancel"
+          content="Are you sure want to discard Changes?"
+          action={
+            <Button variant="contained" color="error" onClick={onConfirm}>
+              Confirm
+            </Button>
+          }
+        />
       </>
-    )
+    );
 }

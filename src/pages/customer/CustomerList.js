@@ -124,7 +124,7 @@ export default function CustomerList() {
     if (initial) {
       // if (customers && !error) {
       //   enqueueSnackbar(responseMessage);
-      // } 
+      // }
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -216,9 +216,7 @@ export default function CustomerList() {
   return (
     <>
       <Container maxWidth={false}>
-
-
-      <Card
+        <Card
           sx={{
             mb: 3,
             height: 160,
@@ -226,11 +224,13 @@ export default function CustomerList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Customers List' icon="ph:users-light"/>
+          <Cover
+            name="Customers"
+            icon="ph:users-light"
+          />
         </Card>
-        
-      
-        <Card sx={{mt: 3 }}>
+
+        <Card sx={{ mt: 3 }}>
           <CustomerListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -260,7 +260,7 @@ export default function CustomerList() {
             />
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960}}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -357,10 +357,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (customer) => customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    customer?.tradingName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-    customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
-    customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    inputData = inputData.filter( (customer) => customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    customer?.tradingName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
+    customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

@@ -26,9 +26,7 @@ export default function Register() {
           </Link>
         </Stack>
       </Stack>
-
       <AuthRegisterForm />
-
       <Typography
         component="div"
         sx={{ color: 'text.secondary', mt: 3, typography: 'caption', textAlign: 'center' }}

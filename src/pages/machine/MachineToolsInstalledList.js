@@ -15,7 +15,7 @@ import {
   IconButton,
   TableContainer,
   DialogTitle,
-  Dialog, 
+  Dialog,
   Typography,
   Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
@@ -43,7 +43,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 
-import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../redux/slices/products/toolInstalled';
+import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , getToolsInstalled , getToolInstalled } from '../../redux/slices/products/toolInstalled';
 import { getTools } from '../../redux/slices/products/tools';
 
 import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm'
@@ -128,9 +128,9 @@ export default function MachineToolsInstalledList() {
   const { tools } = useSelector((state) => state.tool);
   const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
   const { machine } = useSelector((state) => state.machine);
-  const toggleChecked = async () => 
+  const toggleChecked = async () =>
     {
-      dispatch(setToolInstalledFormVisibility (!formVisibility));    
+      dispatch(setToolInstalledFormVisibility (!formVisibility));
     };
 
   const { themeStretch } = useSettingsContext();
@@ -165,14 +165,14 @@ useLayoutEffect(() => {
     setExpanded(isExpanded ? panel : false);
   };
 
- 
+
   useEffect(() => {
     if (initial) {
       if (toolsInstalled && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
-      }   
+      }
       setTableData(toolsInstalled);
     }
   }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial]);
@@ -205,18 +205,18 @@ useLayoutEffect(() => {
             New Tool
             </Button>
         </Stack>}
-        
+
         <Card sx={{mt:3}}>
           {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm/>}
           {toolInstalledEditFormVisibility && <ToolsInstalledEditForm/>}
-          {!formVisibility && !toolInstalledEditFormVisibility && toolsInstalled.map((tool, index) => { 
+          {!formVisibility && !toolInstalledEditFormVisibility && toolsInstalled.map((tool, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
+                { index !==  activeIndex ?
                 <Grid container spacing={0}>
-                  
+
                   <Grid item xs={12} sm={3} md={2}>
                     {tool?.tool?.name || "" }
                   </Grid>
@@ -240,11 +240,11 @@ useLayoutEffect(() => {
                 />
               </AccordionDetails>
             </Accordion>
-            
-          )})} 
 
-          {isNotFound && <EmptyContent title="No Data"/>}
-            
+          )})}
+
+          {isNotFound && <EmptyContent title="No installed tool listed here" sx={{color: "#DFDFDF"}}/>}
+
 
         </Card>
 

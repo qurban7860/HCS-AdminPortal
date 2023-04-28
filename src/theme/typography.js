@@ -24,11 +24,14 @@ export function responsiveFontSizes({ sm, md, lg }) {
 
 // ----------------------------------------------------------------------
 
-const FONT_PRIMARY = 'Public Sans, sans-serif'; // Google Font
-// const FONT_SECONDARY = 'CircularStd, sans-serif'; // Local Font
+// const FONT_PRIMARY = 'Public Sans, sans-serif'; // Google Font
+const FONT_PRIMARY = 'Yantramanav, Arimo, Calibri'; // Official Howick Fonts
+// const FONT_PRIMARY = 'Arimo'; // Local Font
+// const FONT_SECONDARY = 'Calibri, sans-serif'; // Local Font
 
 const typography = {
   fontFamily: FONT_PRIMARY,
+  fontWeightLight: 200,
   fontWeightRegular: 400,
   fontWeightMedium: 600,
   fontWeightBold: 700,

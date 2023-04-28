@@ -17,7 +17,7 @@ import {
   IconButton,
   TableContainer,
   Typography,
-  Accordion, 
+  Accordion,
   AccordionSummary,
   AccordionDetails
 } from '@mui/material';
@@ -38,7 +38,7 @@ import {
   TableSkeleton,
   TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction, 
+  TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
 import Iconify from '../../components/iconify';
@@ -58,6 +58,7 @@ import NoteAddForm from './note/NoteAddForm';
 import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/customer/note';
 import { getSites } from '../../redux/slices/customer/site';
 import { getContacts } from '../../redux/slices/customer/contact';
+
 
 
 
@@ -123,13 +124,13 @@ export default function CustomerNoteList() {
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  
+
   const [openConfirm, setOpenConfirm] = useState(false);
-  
-  
+
+
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  
+
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
     setActiveIndex(null)
@@ -142,7 +143,7 @@ export default function CustomerNoteList() {
     setExpanded(isExpanded ? panel : false);
     // console.log("Expended : ",expanded)
   };
-  
+
 
   const { notes, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.note);
   const { customer } = useSelector((state) => state.customer);
@@ -217,7 +218,7 @@ export default function CustomerNoteList() {
 //   }
 
 // }
-const toggleChecked = () => 
+const toggleChecked = () =>
     {
       setChecked(value => !value);
       dispatch(setNoteFormVisibility(!formVisibility));
@@ -276,28 +277,28 @@ const toggleChecked = () =>
 
   return (
     <>
-        {!noteEditFormVisibility && 
+        {!noteEditFormVisibility &&
             <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
                 <Button
                     onClick={toggleChecked}
                     variant="contained"
                     startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
                     >
-                    New Note 
+                    New Note
                 </Button>
             </Stack>
         }
         <Card>
           {noteEditFormVisibility && <NoteEditForm/> }
           {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
-          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{ 
+          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  sx={{borderTop: borderTopVal}}>
               <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-            { index !==  activeIndex ? 
+            { index !==  activeIndex ?
               <Grid container spacing={0}>
-                
+
                 <Grid item xs={12} sm={9} md={10}>
                   <Typography variant="body2" >
                       {note.note.length > 100 ? note.note.substring(0, 150) :note.note}
@@ -307,7 +308,7 @@ const toggleChecked = () =>
 
                 <Grid item xs={12} sm={3} md={2} >
                   <Typography variant="body2" >
-                    {fDate(note.createdAt)}  
+                    {fDate(note.createdAt)}
                   </Typography>
                 </Grid>
               </Grid>
@@ -317,8 +318,8 @@ const toggleChecked = () =>
                 <NotesViewForm currentNote={note} />
               </AccordionDetails>
             </Accordion>
-          )})} 
-          {isNotFound  && <EmptyContent title="No Data"/>}
+          )})}
+          {isNotFound  && <EmptyContent title="No saved notes" sx={{color: '#DFDFDF'}}/>}
         </Card>
         <ConfirmDialog
           open={openConfirm}

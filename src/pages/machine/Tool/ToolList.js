@@ -12,8 +12,7 @@ import {
   TableBody,
   Container,
   IconButton,
-  TableContainer,
-  Stack,
+  TableContainer
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -227,11 +226,11 @@ export default function ToolList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Tool List' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name='Tools' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
-       
-        
-        
+
+
+
         <Card sx={{ mt: 3 }}>
           <ToolListTableToolbar
             filterName={filterName}
@@ -245,7 +244,7 @@ export default function ToolList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -291,7 +290,7 @@ export default function ToolList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -310,10 +309,10 @@ export default function ToolList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
+
           />
         </Card>
-        
+
       </Container>
 
       <ConfirmDialog
@@ -356,7 +355,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filtertool) => filtertool?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    inputData = inputData.filter( (filtertool) => filtertool?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (filtertool?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(filtertool?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

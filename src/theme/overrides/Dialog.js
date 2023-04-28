@@ -43,7 +43,7 @@ export default function Dialog(theme) {
         },
         dividers: {
           borderTop: 0,
-          borderBottomStyle: 'dashed',
+          borderBottomStyle: 'solid',
           paddingBottom: theme.spacing(3),
         },
       },

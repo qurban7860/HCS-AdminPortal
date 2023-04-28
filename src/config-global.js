@@ -12,8 +12,8 @@ export const CONFIG = {
   Background_Color: process.env.REACT_APP_BG_COLOR,
   SERVER_URL: process.env.REACT_APP_SERVER_URL,
   MESSAGE_REGISTER_USER: process.env.REACT_APP_MESSAGE_REGISTER_USER,
-  MESSAGE_LOGIN_USER: process.env.REACT_APP_MESSAGE_LOGIN_USER
-}
+  MESSAGE_LOGIN_USER: process.env.REACT_APP_MESSAGE_LOGIN_USER,
+};
 
 console.log(CONFIG);
 
@@ -51,7 +51,7 @@ export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app; // as '/dashboard/ap
 export const HEADER = {
   H_MOBILE: 64,
   H_MAIN_DESKTOP: 88,
-  H_DASHBOARD_DESKTOP: 92,
+  H_DASHBOARD_DESKTOP: 65,
   H_DASHBOARD_DESKTOP_OFFSET: 92 - 32,
 };
 

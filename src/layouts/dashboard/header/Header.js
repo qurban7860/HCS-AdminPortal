@@ -44,15 +44,22 @@ export default function Header({ onOpenNav }) {
   const renderContent = (
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
-      <Typography variant='h4' sx={{color:"black"}}>{CONFIG.ENV}</Typography>
+
+      <Typography
+        variant="h4"
+      >
+        {CONFIG.ENV}
+        {/* {CONFIG.ENV} {CONFIG.Version} */}
+      </Typography>
       {!isDesktop && (
         <IconButton onClick={onOpenNav} sx={{ mr: 1, color: 'text.primary' }}>
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
       {/* <Searchbar /> */}
-      {/* {CONFIG.ENV} 
+      {/* {CONFIG.ENV}
       {CONFIG.Version} */}
+
       <Stack
         flexGrow={1}
         direction="row"
@@ -93,7 +100,7 @@ export default function Header({ onOpenNav }) {
             width: 1,
             bgcolor: 'background.default',
             height: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
-            borderBottom: `dashed 1px ${theme.palette.divider}`,
+            borderBottom: `solid 1px ${theme.palette.divider}`,
           }),
           ...(isNavMini && {
             width: `calc(100% - ${NAV.W_DASHBOARD_MINI + 1}px)`,
@@ -101,11 +108,12 @@ export default function Header({ onOpenNav }) {
         }),
       }}
     >
-    
+
       <Toolbar
         sx={{
           height: 1,
           px: { lg: 5 },
+          color: 'text.primary',
         }}
       >
         {renderContent}

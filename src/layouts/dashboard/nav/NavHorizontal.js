@@ -24,6 +24,7 @@ function NavHorizontal() {
       sx={{
         boxShadow: 0,
         top: HEADER.H_DASHBOARD_DESKTOP_OFFSET,
+
       }}
     >
       <Toolbar

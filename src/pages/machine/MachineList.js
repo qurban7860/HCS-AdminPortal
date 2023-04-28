@@ -79,7 +79,7 @@ export default function MachineList() {
     if (initial) {
       // if (machines && !error) {
       //   enqueueSnackbar(responseMessage);
-      // } 
+      // }
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -165,8 +165,8 @@ export default function MachineList() {
   };
 
   return (
-    <> 
-           <Container maxWidth={false}>
+    <>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           {/* <MachineDashboardNavbar/> */}
         </Grid>
@@ -178,7 +178,12 @@ export default function MachineList() {
             mt: '24px',
           }}
         >
-          <Cover name='Machines List' icon='arcticons:materialistic' setting="enable" />
+          <Cover
+            title='Machines'
+            name='Machines'
+            icon='arcticons:materialistic'
+            setting="enable"
+            />
         </Card>
         {/* <CustomBreadcrumbs
           heading="Machines"
@@ -199,7 +204,7 @@ export default function MachineList() {
           {/* {selected.length > 1 ? "" :
 
             <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -272,8 +277,8 @@ export default function MachineList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             //
-            
-          /> 
+
+          />
         </Card>
       </Container>
 
@@ -314,12 +319,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (product) => product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 || 
-    product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  || 
-    product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    inputData = inputData.filter( (product) => product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
+    product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

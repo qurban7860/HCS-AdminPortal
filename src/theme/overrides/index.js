@@ -14,7 +14,7 @@ import Input from './Input';
 import Radio from './Radio';
 import Drawer from './Drawer';
 import Dialog from './Dialog';
-import Avatar from './Avatar';
+// import Avatar from './Avatar';
 import Rating from './Rating';
 import Slider from './Slider';
 import Button from './Button';
@@ -63,7 +63,7 @@ export default function ComponentsOverrides(theme) {
     Button(theme),
     Rating(theme),
     Dialog(theme),
-    Avatar(theme),
+    // Avatar(theme),
     Slider(theme),
     Drawer(theme),
     Stepper(theme),

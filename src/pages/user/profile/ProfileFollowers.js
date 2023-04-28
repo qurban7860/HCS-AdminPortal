@@ -59,7 +59,7 @@ function FollowerCard({ follower }) {
         alignItems: 'center',
       }}
     >
-      <Avatar alt={name} src={avatarUrl} sx={{ width: 48, height: 48 }} />
+      {/* <Avatar alt={name} src={avatarUrl} sx={{ width: 48, height: 48 }} /> */}
 
       <Box
         sx={{

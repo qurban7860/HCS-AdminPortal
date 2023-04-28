@@ -140,7 +140,7 @@ export default function FileGeneralRecentCard({ file, onDelete, sx, ...other }) 
         </Stack>
 
         {isDesktop && (
-          <AvatarGroup
+          {/* <AvatarGroup
             max={4}
             sx={{
               mx: 1.5,
@@ -156,7 +156,7 @@ export default function FileGeneralRecentCard({ file, onDelete, sx, ...other }) 
             {file?.shared?.map((person) => (
               <Avatar key={person.id} alt={person.name} src={person.avatar} />
             ))}
-          </AvatarGroup>
+          </AvatarGroup> */}
         )}
 
         <Box
@@ -211,7 +211,7 @@ export default function FileGeneralRecentCard({ file, onDelete, sx, ...other }) 
           Share
         </MenuItem>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         <MenuItem
           onClick={() => {
