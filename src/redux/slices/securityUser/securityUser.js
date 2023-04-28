@@ -110,6 +110,7 @@ export const {
 export function addSecurityUser(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    dispatch(resetSecurityUser())
       const data = {
       customer: param.customer,
       contact: param.contact,
@@ -124,7 +125,6 @@ export function addSecurityUser(param) {
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       if(regEx.test(response.status)){
         dispatch(setSecurityUserFormVisibility(false))
-        dispatch(resetSecurityUser())
         dispatch(getSecurityUsers());
       }
     return response;
@@ -135,6 +135,7 @@ export function addSecurityUser(param) {
 
 export function updateSecurityUser(param,id) {
   return async (dispatch) => {
+    dispatch(resetSecurityUser())
     dispatch(slice.actions.startLoading());
       const data = {
         customer: param.customer,
@@ -153,7 +154,6 @@ export function updateSecurityUser(param,id) {
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage('User updated successfully'));
         dispatch(getSecurityUsers());
-        dispatch(resetSecurityUser())
       }
       return response;
   };
@@ -174,7 +174,6 @@ export function getSecurityUsers() {
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Users loaded successfully'));
-        dispatch(resetSecurityUser())
       }
       return response;
     }

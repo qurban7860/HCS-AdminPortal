@@ -146,7 +146,7 @@
 
     const onSubmit = async (data) => {
       try {
-        if(phone &&phone.length > 7){
+        if(phone && phone.length > 7){
           data.phone = phone ;
         }else{
           data.phone = "";
