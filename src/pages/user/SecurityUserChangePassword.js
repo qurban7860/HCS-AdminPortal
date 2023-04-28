@@ -20,7 +20,9 @@ import { useAuthContext } from '../../auth/useAuthContext';
 export default function SecurityUserChangePassword() {
   const { userId, user } = useAuthContext();
   console.log("userId : " , userId)
-  const [showPassword, setShowPassword] = useState(false);
+  const [showOldPassword, setShowOldPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const ChangePassWordSchema = Yup.object().shape({
@@ -52,9 +54,9 @@ export default function SecurityUserChangePassword() {
     try {
       if(userId){
         await dispatch(SecurityUserPasswordUpdate(data,userId));
+        reset();
+        enqueueSnackbar('Update success!');
       }
-      reset();
-      enqueueSnackbar('Update success!');
       console.log('DATA', data);
     } catch (error) {
       console.error(error);
@@ -72,12 +74,12 @@ export default function SecurityUserChangePassword() {
           <RHFTextField
           name="oldPassword"
           label="Old Password"
-          type={showPassword ? 'text' : 'password'}
+          type={showOldPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                <IconButton onClick={() => setShowOldPassword(!showOldPassword)} edge="end">
+                  <Iconify icon={showOldPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -88,12 +90,12 @@ export default function SecurityUserChangePassword() {
         <RHFTextField
           name="newPassword"
           label="New Password"
-          type={showPassword ? 'text' : 'password'}
+          type={showNewPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
+                  <Iconify icon={showNewPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
             ),
@@ -103,12 +105,12 @@ export default function SecurityUserChangePassword() {
         <RHFTextField
           name="confirmNewPassword"
           label="Confirm New Password" 
-          type={showPassword ? 'text' : 'password'}
+          type={showConfirmPassword ? 'text' : 'password'}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                  <Iconify icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                 </IconButton>
               </InputAdornment>
             ),
