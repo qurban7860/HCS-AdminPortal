@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate,useParams } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector,batch } from 'react-redux';
 
 // @mui
 import { Switch, Card, Grid, Container, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack,Button} from '@mui/material';
@@ -26,7 +26,6 @@ export default function SecurityUserViewForm() {
   const { securityUser , initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
-  console.log("user View")
   const [openContact, setOpenContact] = useState(false);
   const handleOpenContact = () => setOpenContact(true);
   const handleCloseContact = () => setOpenContact(false);
@@ -46,19 +45,24 @@ export default function SecurityUserViewForm() {
   const navigate = useNavigate();
 
   useEffect(()=> {
-      if (initial) {
-    
+    if(initial){
       if(id){
         dispatch(getSecurityUser(id))
-        dispatch(getCustomer(securityUser?.customer?._id))
-      }
-      if(id){
-        if(securityUser?.contact?._id){
-          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-        }
+        console.log("user : ")
       }
     }
-    },[dispatch,id,initial,securityUser])
+    },[dispatch,id,initial])
+
+    useEffect(()=>{
+      batch(() => {
+        if( securityUser?.contact?._id){
+          dispatch(getCustomer(securityUser?.customer?._id))
+          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
+          console.log("user Contact : ")
+        }
+      });
+    },[dispatch,initial,securityUser])
+
     
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));

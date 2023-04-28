@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
 import { Switch, Card, Grid, Container, Typography, Link ,Dialog, Stack,Button, Tabs} from '@mui/material';
 // routes
@@ -25,8 +25,8 @@ import { Cover } from '../components/Cover'
 export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
-  const { securityUser } = useSelector((state) => state.user);
-  console.log("securityUser : ",securityUser," contact : ", contact , " getCustomer  : ", getCustomer  )
+  const { securityUser , initial} = useSelector((state) => state.user);
+  console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,18 +40,20 @@ export default function SecurityUserProfile() {
   const handleCloseContact = () => setOpenContact(false);
 
     useEffect(()=> {
-      if(userId){
+      if(userId && initial){
         dispatch(getSecurityUser(userId))
       }
-      },[dispatch,userId])
+      },[dispatch,userId, initial])
 
       useEffect(()=> {
+        batch(() => {
         if(userId && securityUser?.customer?._id){
           dispatch(getCustomer(securityUser?.customer?._id))
         }
         if(userId && securityUser?.contact?._id){
           dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
         }
+        });
       },[dispatch,userId,securityUser])
 
       const handleViewCustomer = (id) => {

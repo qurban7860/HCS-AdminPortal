@@ -26,7 +26,6 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
     },
-
     // SET TOGGLE
     setMachinemodelsEditFormVisibility(state, action){
       state.machinemodelEditFormFlag = action.payload;
@@ -38,7 +37,6 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-
     },
 
     // HAS ERROR
@@ -58,13 +56,11 @@ const slice = createSlice({
 
     // GET Customer
     getMachinemodelSuccess(state, action) {
-      
       state.isLoading = false;
       state.success = true;
       state.machinemodel = action.payload;
       state.initial = true;
     },
-
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -72,12 +68,9 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
-
     nextStep(state) {
       state.checkout.activeStep += 1;
     },
@@ -97,7 +90,6 @@ export const {
   gotoStep,
   backStep,
   nextStep,
-
 } = slice.actions;
 
 
@@ -108,10 +100,8 @@ export function getMachineModels (){
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
-
       dispatch(slice.actions.getMachineModelsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('model loaded successfully'));
-      // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message))
@@ -173,16 +163,13 @@ export function addMachineModel(params) {
           }else{
             data.category = null
           }
-
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
-
         dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
       }
     };
-
 }
 
 // --------------------------------------------------------------------------
@@ -191,7 +178,6 @@ export function updateMachineModel(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
       const formData = new FormData();
       /* eslint-disable */
       let data = {
@@ -206,18 +192,14 @@ export function updateMachineModel(params) {
       }else{
         data.category = null
       }
-      
-      
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${params.id}`,
         data
       );
       dispatch(getMachineModel(params.id));
       dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
-
     } catch (error) {
       console.error(error,"from model");
       dispatch(slice.actions.hasError(error.Message));
     }
   };
-
 }

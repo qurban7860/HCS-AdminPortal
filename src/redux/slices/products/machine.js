@@ -218,7 +218,6 @@ export function addMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
-        console.log(data)
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
@@ -259,7 +258,6 @@ export function updateMachine(params) {
         isActive: params.isActive,
       };
      /* eslint-enable */
-console.log(data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data
       );

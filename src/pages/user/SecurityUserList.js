@@ -81,7 +81,6 @@ export default function SecurityUserList() {
 
   useLayoutEffect(() => {
     dispatch(getSecurityUsers());
-    console.log("users : ")
   }, [dispatch,securityUserEditFormVisibility,securityUserFormVisibility]);
 
   useEffect(() => {
@@ -89,9 +88,9 @@ export default function SecurityUserList() {
     //   if (users && !error) {
     //     enqueueSnackbar(responseMessage);
     //   } 
-      if(error) {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if(error) {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(securityUsers);
     }
   }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);

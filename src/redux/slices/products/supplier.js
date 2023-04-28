@@ -15,7 +15,6 @@ const initialState = {
   suppliers: [],
   supplier: {},
   supplierParams: {
-
   }
 };
 
@@ -39,7 +38,6 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-
     },
 
     // HAS ERROR
@@ -66,7 +64,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -74,11 +71,9 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
-
     nextStep(state) {
       state.checkout.activeStep += 1;
     },
@@ -108,10 +103,8 @@ export function getSuppliers (){
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`);
-
       dispatch(slice.actions.getSuppliersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
-      // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message))
@@ -139,10 +132,7 @@ export function deleteSupplier(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
-      // get again suppliers //search
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -164,7 +154,6 @@ export function addSupplier(params) {
         isActive: params.isActive,
         };
         /* eslint-enable */
-
         if(params.contactName){
           data.contactName = params.contactName;
         }
@@ -186,7 +175,6 @@ export function addSupplier(params) {
         if(params.street || params.subrub || params.city || params.region || params.country) {
           data.address = {}
         }
-        
         if(params.street){
           data.address.street = params.street;        
         }
@@ -202,10 +190,7 @@ export function addSupplier(params) {
         if(params.country){
           data.address.country = params.country;        
         }
-        
-
         const response = await axios.post(`${CONFIG.SERVER_URL}products/suppliers`, data);
-
         dispatch(slice.actions.getSupplierSuccess(response.data.Supplier));
       } catch (error) {
         console.error(error);
@@ -221,7 +206,6 @@ export function updateSupplier(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
       /* eslint-disable */
       let data = {
         id: params.id,
@@ -242,20 +226,13 @@ export function updateSupplier(params,Id) {
         }
       };
      /* eslint-enable */
-      
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
         data
       );
-
       dispatch(getSupplier(Id));
-      // dispatch(slice.actions.setSupplierEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
-
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
     }
   };
-
 }

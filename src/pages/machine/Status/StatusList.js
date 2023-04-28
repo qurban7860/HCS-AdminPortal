@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Grid,
@@ -17,32 +17,19 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
-import { getMachine } from '../../../redux/slices/products/machine';
 // routes
 import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/products/statuses';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../../components/table';
+import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../../components/table';
 import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import StatusListTableRow from './StatusListTableRow';
 import StatusListTableToolbar from './StatusListTableToolbar';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
 
@@ -52,7 +39,6 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  
 ];
 
 const STATUS_OPTIONS = [
@@ -165,11 +151,8 @@ export default function StatusList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteMachinestatus(id));
     try {
-      // console.log(id)
-      
       dispatch(getMachinestatuses());
       setSelected([]);
-
       if (page > 0) {
         if (dataInPage.length < 2) {
           setPage(page - 1);
@@ -183,9 +166,8 @@ export default function StatusList() {
   const handleDeleteRows = async (selectedRows,handleClose) => {
     // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
+      setSelected([]);
+      setTableData(deleteRows);
     if (page > 0) {
       if (selectedRows.length === dataInPage.length) {
         setPage(page - 1);
@@ -200,18 +182,14 @@ export default function StatusList() {
   };
 
   const handleEditRow = async (id) => {
-    // console.log(id);
-    
     await dispatch(getMachineStatus(id));
     navigate(PATH_MACHINE.machineStatus.edit(id));
   };
 
   const handleViewRow = async (id) => {
-    // console.log(id)
     await dispatch(getMachineStatus(id));
     navigate(PATH_MACHINE.machineStatus.view(id));
   };
-
 
   const handleResetFilter = () => {
     setFilterName('');
@@ -221,18 +199,9 @@ export default function StatusList() {
   return (
     <>
       <Container maxWidth={false}>
-      <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
           <Cover name='Status List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
-
-        
         <Card sx={{ mt: 3 }}>
           <StatusListTableToolbar
             filterName={filterName}
@@ -246,7 +215,6 @@ export default function StatusList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -305,16 +273,8 @@ export default function StatusList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          
-          />
+          <TablePaginationCustom count={dataFiltered.length} page={page} rowsPerPage={rowsPerPage} onPageChange={onChangePage} onRowsPerPageChange={onChangeRowsPerPage} />
         </Card>
-        
       </Container>
 
       <ConfirmDialog

@@ -1,17 +1,12 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
-import { Switch, Stack, Button, TableRow, Checkbox, MenuItem, TableCell, IconButton, Link, } from '@mui/material';
-// utils
-import { fData,fCurrency } from '../../../utils/formatNumber';
+import { Switch, Stack, Button, TableRow, MenuItem, TableCell, Link, } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -73,45 +68,24 @@ export default function TechParamListTableRow({
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow> 
 
-      <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
+      <MenuPopover open={openPopover} onClose={handleClosePopover} arrow="right-top" sx={{ width: 140 }} >
+        <MenuItem onClick={() => { handleOpenConfirm(); handleClosePopover(); }} sx={{ color: 'error.main' }} >
           <Iconify icon="eva:trash-2-outline" />
-          Delete
+            Delete
         </MenuItem>
 
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
+        <MenuItem onClick={() => { onEditRow(); handleClosePopover(); }} >
           <Iconify icon="eva:edit-fill" />
-          Edit
+            Edit
         </MenuItem>
       </MenuPopover>
 
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
+      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?"
         action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
             Delete
           </Button>
-        }
-      />
+        }/>
     </>
   );
 }

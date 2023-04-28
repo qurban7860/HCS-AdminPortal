@@ -45,7 +45,7 @@ export default function ParameterViewForm() {
   const navigate = useNavigate();
 
   const toggleEdit = () => {
-    navigate(PATH_MACHINE.parameters.parameteredit(true));
+    navigate(PATH_MACHINE.parameters.parameteredit(techparam._id));
   }
 
 useLayoutEffect(()=>{

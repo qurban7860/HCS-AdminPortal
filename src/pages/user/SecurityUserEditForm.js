@@ -33,11 +33,11 @@ import AddFormButtons from '../components/AddFormButtons';
 
 
 export default function SecurityUserEditForm() {
+  const regEx = /^[2][0-9][0-9]$/
   const { roles } = useSelector((state) => state.role);
   const { error, securityUser } = useSelector((state) => state.user);
   const ROLES = [];
   const securityUserRoles = [];
-
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 securityUser.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
   const [ name, setName ] = useState("");
@@ -139,7 +139,7 @@ useEffect(() => {
   
   const onSubmit = async (data) => {
     console.log("data : " , data)
-    try{
+
       data.customer = customerVal?._id || null
       data.contact = contactVal?._id || null
       if(phone && phone.length > 7 ){
@@ -158,15 +158,26 @@ useEffect(() => {
       ROLES.some((Role) => Role.value === role)
       )
     data.roles = submitSecurityUserRoles;
-        dispatch(updateSecurityUser(data,securityUser._id));
-        reset();
-        enqueueSnackbar('Update success!');
-        dispatch(setSecurityUserEditFormVisibility(false))
-        navigate(PATH_DASHBOARD.user.view(defaultValues.id));
-      } catch(err){
-        enqueueSnackbar('Saving failed!');
-        console.error(err.Message);
-      }
+        dispatch(updateSecurityUser(data,securityUser._id))
+        .then(res => {
+        console.log("res : " , res)
+        if(regEx.test(res.status)){ 
+          reset();
+          enqueueSnackbar(res.statusText)
+          dispatch(setSecurityUserEditFormVisibility(false))
+          navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+        }else{
+          enqueueSnackbar(res.statusText,{ variant: `error` })
+        }
+      }).catch(err => {
+        if(err.Message){
+          enqueueSnackbar(err.Message,{ variant: `error` })
+        }else if(err.message){
+          enqueueSnackbar(err.message,{ variant: `error` })
+        }else{
+          enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        }
+    });
   };
 
   const toggleCancel = ()=>{

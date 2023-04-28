@@ -1,13 +1,7 @@
-// import sum from 'lodash/sum';
-// import uniq from 'lodash/uniq';
-// import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
-
-
-
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +16,6 @@ const initialState = {
   settings: [],
   setting: null,
   settingParams: {
-
   }
 };
 
@@ -34,7 +27,6 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
       state.error = null;
-
     },
     // SET TOGGLE
     setSettingFormVisibility(state, action){
@@ -68,14 +60,12 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
       state.success = true;
       state.initial = true;
     },
-
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -161,7 +151,6 @@ export function getSettings(id) {
       );
       dispatch(slice.actions.getSettingsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Setting loaded successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

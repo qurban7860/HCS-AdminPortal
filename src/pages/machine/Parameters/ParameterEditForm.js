@@ -15,7 +15,7 @@ import { Switch , TextField, Autocomplete, Box, Card, Container, Grid, Stack, Ty
 // global
 
 // slice
-import { updateTechparam, getTechparam } from '../../../redux/slices/products/machineTechParam';
+import { updateTechparam, } from '../../../redux/slices/products/machineTechParam';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
@@ -64,9 +64,7 @@ export default function ParameterEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
     );
-console.log("default :",defaultValues)
   const { themeStretch } = useSettingsContext();
-  
   const methods = useForm({
     resolver: yupResolver(ParameterEditSchema),
     defaultValues,
@@ -104,19 +102,17 @@ console.log("default :",defaultValues)
       if(paramVal  !== null && paramVal  !== ""){
         data.category = paramVal?._id
       }
-      // console.log("Submit Data : ",data)
+      console.log("Submit Data : ",data)
       await dispatch(updateTechparam(data,techparam._id));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.parameters.view(id));
     } catch (err) {
+      console.log(err)
       enqueueSnackbar('Saving failed!');
       // console.error(error);
     }
   };
-
-
-
 
   return (
     // <Container maxWidth={false }>

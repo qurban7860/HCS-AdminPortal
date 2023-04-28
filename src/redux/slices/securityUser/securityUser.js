@@ -4,7 +4,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
+const regEx = /^[2][0-9][0-9]$/
 const initialState = {
   securityUserFormVisibility: false,
   securityUserEditFormVisibility: false,
@@ -110,7 +110,6 @@ export const {
 export function addSecurityUser(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
       const data = {
       customer: param.customer,
       contact: param.contact,
@@ -123,21 +122,19 @@ export function addSecurityUser(param) {
       isActive: param.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
-      dispatch(slice.actions.setResponseMessage('User Saved successfully'));
-      dispatch(setSecurityUserFormVisibility(false))
-      dispatch(getSecurityUsers());
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      if(regEx.test(response.status)){
+        dispatch(setSecurityUserFormVisibility(false))
+        dispatch(getSecurityUsers());
+      }
+    return response;
   };
 }
+
 // ----------------------------------------------------------------------
 
 export function updateSecurityUser(param,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
       const data = {
         customer: param.customer,
         contact: param.contact,
@@ -152,20 +149,19 @@ export function updateSecurityUser(param,id) {
             data.password = param.password 
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
-      dispatch(slice.actions.setResponseMessage('User updated successfully'));
-      dispatch(getSecurityUsers());
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage('User updated successfully'));
+        dispatch(getSecurityUsers());
+      }
+      return response;
   };
 }
+
 // ----------------------------------------------------------------------
 
 export function getSecurityUsers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
       {
         params: {
@@ -173,14 +169,12 @@ export function getSecurityUsers() {
         }
       }
       );
-      dispatch(slice.actions.getSecurityUsersSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Users loaded successfully'));
-
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getSecurityUsersSuccess(response.data));
+        dispatch(slice.actions.setResponseMessage('Users loaded successfully'));
+      }
+      return response;
     }
-  };
 }
 
 // ----------------------------------------------------------------------
@@ -188,14 +182,12 @@ export function getSecurityUsers() {
 export function getSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
-      dispatch(slice.actions.getSecurityUserSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getSecurityUserSuccess(response.data));
+        dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
+      }
+      return response;
   };
 }
 
@@ -204,17 +196,15 @@ export function getSecurityUser(id) {
 export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`,
       {
         isArchived: true, 
       }
       );
-      dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+      }
+      return response;
   };
 }
