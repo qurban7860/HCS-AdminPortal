@@ -117,9 +117,8 @@ export default function SecurityUserChangePassword() {
           }}
           autoComplete="current-password"
         />
-
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Save Changes
+            Change Password
           </LoadingButton>
         </Stack>
       </Card>
