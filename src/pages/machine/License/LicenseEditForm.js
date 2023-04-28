@@ -28,7 +28,6 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 
-
 // ----------------------------------------------------------------------
 
 export default function LicenseEditForm() {

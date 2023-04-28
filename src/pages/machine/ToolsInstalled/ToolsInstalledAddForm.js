@@ -13,7 +13,6 @@ import { getTools } from '../../../redux/slices/products/tools';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
-
 import FormProvider, {
   RHFSelect,
   RHFTextField,

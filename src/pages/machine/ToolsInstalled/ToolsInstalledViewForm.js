@@ -15,7 +15,6 @@ import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
-
 // ----------------------------------------------------------------------
 ToolsInstalledViewForm.propTypes = {
   currentTool: PropTypes.object,

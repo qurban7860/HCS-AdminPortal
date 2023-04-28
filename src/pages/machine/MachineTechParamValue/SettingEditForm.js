@@ -19,7 +19,6 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
-
 import FormProvider, {
   RHFSelect,
   RHFTextField,
