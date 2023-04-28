@@ -1,20 +1,28 @@
 import * as Yup from 'yup';
+import { useState } from 'react';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
 // @mui
-import { Stack, Card,Container } from '@mui/material';
+import { Stack, Card,Container,IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { Cover } from '../components/Cover'
+import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/securityUser';
+import { useAuthContext } from '../../auth/useAuthContext';
+
 // ----------------------------------------------------------------------
 
 export default function SecurityUserChangePassword() {
+  const { userId, user } = useAuthContext();
+  console.log("userId : " , userId)
+  const [showPassword, setShowPassword] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-
+  const dispatch = useDispatch();
   const ChangePassWordSchema = Yup.object().shape({
     oldPassword: Yup.string().required('Old Password is required'),
     newPassword: Yup.string()
@@ -42,7 +50,9 @@ export default function SecurityUserChangePassword() {
 
   const onSubmit = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      if(userId){
+        await dispatch(SecurityUserPasswordUpdate(data,userId));
+      }
       reset();
       enqueueSnackbar('Update success!');
       console.log('DATA', data);
@@ -59,21 +69,52 @@ export default function SecurityUserChangePassword() {
         </Card>
       <Card>
         <Stack spacing={3} alignItems="flex-end" sx={{ p: 3 }}>
-          <RHFTextField name="oldPassword" type="password" label="Old Password" />
-
           <RHFTextField
-            name="newPassword"
-            type="password"
-            label="New Password"
-            helperText={
-              <Stack component="span" direction="row" alignItems="center">
-                <Iconify icon="eva:info-fill" width={16} sx={{ mr: 0.5 }} /> Password must be
-                minimum 6+
-              </Stack>
-            }
-          />
+          name="oldPassword"
+          label="Old Password"
+          type={showPassword ? 'text' : 'password'}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          autoComplete="current-password"
+        />
 
-          <RHFTextField name="confirmNewPassword" type="password" label="Confirm New Password" />
+        <RHFTextField
+          name="newPassword"
+          label="New Password"
+          type={showPassword ? 'text' : 'password'}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          autoComplete="current-password"
+        />
+        <RHFTextField
+          name="confirmNewPassword"
+          label="Confirm New Password" 
+          type={showPassword ? 'text' : 'password'}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          autoComplete="current-password"
+        />
 
           <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
             Save Changes
