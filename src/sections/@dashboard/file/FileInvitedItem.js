@@ -115,7 +115,7 @@ export default function FileInvitedItem({ person }) {
             Can edit
           </MenuItem>
 
-          <Divider sx={{ borderStyle: 'dashed' }} />
+          <Divider sx={{ borderStyle: 'solid' }} />
 
           <MenuItem
             onClick={() => {

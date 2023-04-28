@@ -19,7 +19,7 @@ const StyledDropZone = styled('div')(({ theme }) => ({
   margin: theme.spacing(0.5),
   color: theme.palette.text.disabled,
   borderRadius: theme.shape.borderRadius,
-  border: `dashed 1px ${theme.palette.divider}`,
+  border: `solid 1px ${theme.palette.divider}`,
   backgroundColor: alpha(theme.palette.grey[500], 0.08),
   '&:hover': {
     opacity: 0.72,

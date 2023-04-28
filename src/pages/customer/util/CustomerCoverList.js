@@ -71,13 +71,13 @@ export function CustomerCoverList({ name, role, cover }) {
           }}
         >
             <PersonIcon sx={{
-                 width: {xs: 32, md: 48 }, 
+                 width: {xs: 32, md: 48 },
                  height: {xs: 32, md: 48},
                  color: 'white'
-                }}  
+                }}
             />
         </CustomAvatar>
-        
+
 
         <Box
           sx={{
@@ -104,7 +104,7 @@ export function CustomerCoverList({ name, role, cover }) {
           position: 'absolute',
         }}
       />
-      
+
     </StyledRoot>
   );
 }

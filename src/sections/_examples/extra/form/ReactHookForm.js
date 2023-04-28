@@ -262,7 +262,7 @@ export default function ReactHookForm({ debug }) {
               <Block label="RHFSelect">
                 <RHFSelect name="singleSelect" label="Single select">
                   <MenuItem value="">None</MenuItem>
-                  <Divider sx={{ borderStyle: 'dashed' }} />
+                  <Divider sx={{ borderStyle: 'solid' }} />
                   {OPTIONS.map((option) => (
                     <MenuItem key={option.value} value={option.label}>
                       {option.label}

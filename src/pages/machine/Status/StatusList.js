@@ -52,7 +52,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  
+
 ];
 
 const STATUS_OPTIONS = [
@@ -109,7 +109,7 @@ export default function StatusList() {
 
   const { machinestatuses, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinestatus);
 
-  
+
 
   useLayoutEffect( () => {
     // console.log('Testing done')
@@ -166,7 +166,7 @@ export default function StatusList() {
     await dispatch(deleteMachinestatus(id));
     try {
       // console.log(id)
-      
+
       dispatch(getMachinestatuses());
       setSelected([]);
 
@@ -201,7 +201,7 @@ export default function StatusList() {
 
   const handleEditRow = async (id) => {
     // console.log(id);
-    
+
     await dispatch(getMachineStatus(id));
     navigate(PATH_MACHINE.machineStatus.edit(id));
   };
@@ -229,10 +229,10 @@ export default function StatusList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Status List' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name='Statuses' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
 
-        
+
         <Card sx={{ mt: 3 }}>
           <StatusListTableToolbar
             filterName={filterName}
@@ -246,7 +246,7 @@ export default function StatusList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -292,7 +292,7 @@ export default function StatusList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -311,10 +311,10 @@ export default function StatusList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          
+
           />
         </Card>
-        
+
       </Container>
 
       <ConfirmDialog
@@ -357,7 +357,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterstatus) => filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
+    inputData = inputData.filter( (filterstatus) => filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (filterstatus?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

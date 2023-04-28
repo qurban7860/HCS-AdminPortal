@@ -216,7 +216,7 @@ export default function FileFolderCard({ folder, selected, onSelect, onDelete, s
           Edit
         </MenuItem>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         <MenuItem
           onClick={() => {

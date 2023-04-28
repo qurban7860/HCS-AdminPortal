@@ -24,12 +24,12 @@ export default function ServiceHistoryViewPage() {
 
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   useLayoutEffect(() => {
     dispatch(getSite(id));
   }, [dispatch, id]);
-  // 
+  //
 
   const { site } = useSelector((state) => state.site);
 
@@ -62,7 +62,10 @@ export default function ServiceHistoryViewPage() {
   ];
 
   return (
+<<<<<<< HEAD:src/pages/asset/AssetView.js
+=======
     <>
+>>>>>>> origin/development:src/pages/machine/ServiceHistory/ServiceHistoryView.js
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Site View"
@@ -82,7 +85,11 @@ export default function ServiceHistoryViewPage() {
             position: 'relative',
           }}
         >
+<<<<<<< HEAD:src/pages/asset/AssetView.js
+          <AssetCover name={asset?.name} />
+=======
           <SiteCover name={site?.name}/>
+>>>>>>> origin/development:src/pages/machine/ServiceHistory/ServiceHistoryView.js
 
           <Tabs
             value={currentTab}
@@ -106,16 +113,33 @@ export default function ServiceHistoryViewPage() {
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
           </Tabs>
-          
         </Card>
+<<<<<<< HEAD:src/pages/asset/AssetView.js
+
+        {/* <Button
+                  size ="medium"
+                  color ="secondary"
+                  variant ="contained"
+                  // href = {currentAsset.image === undefined ? '' : `localhost:5000/${currentAsset.image}`}
+                  >
+                    Edit Asset
+          </Button>  */}
+=======
         
+>>>>>>> origin/development:src/pages/machine/ServiceHistory/ServiceHistoryView.js
         {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
+          (tab) =>
+            tab.value === currentTab && (
+              <Box key={tab.value}>
+                {' '}
+                {tab.component ? (
+                  tab.component
+                ) : (
+                  <img src="/assets/characters/character_5" alt="UNDER CONSTRUCTION" />
+                )}{' '}
+              </Box>
+            )
         )}
-        
       </Container>
-    </>
   );
 }

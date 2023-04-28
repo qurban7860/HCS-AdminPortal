@@ -74,7 +74,7 @@ export function MachineCover({ name, role, cover }) {
         <Box
           sx={{
             ml: { md: 3 },
-            mt: { xs: 1, md: 0 },
+            mt: { xs: 0, md: 0 },
             color: 'common.white',
             textAlign: { xs: 'center', md: 'left' },
           }}
@@ -82,14 +82,13 @@ export function MachineCover({ name, role, cover }) {
           <Typography variant="h4">{name}</Typography>
           {/* <Typography variant="h4">setting</Typography> */}
 
-
           <Typography sx={{ opacity: 0.72 }}>{role}</Typography>
         </Box>
       </StyledInfo>
 
       <Image
         alt="cover"
-        src={cover}
+        src="https://www.howickltd.com/img/site/logos/howick-gradient.svg"
         sx={{
           top: 0,
           left: 0,

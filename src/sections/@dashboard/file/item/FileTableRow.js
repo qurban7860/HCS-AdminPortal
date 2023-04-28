@@ -244,7 +244,7 @@ export default function FileTableRow({ row, selected, onSelectRow, onDeleteRow }
           Share
         </MenuItem>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         <MenuItem
           onClick={() => {

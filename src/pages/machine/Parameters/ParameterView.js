@@ -23,7 +23,7 @@ import ParameterList from './ParameterList';
 import ParameterViewForm from './ParameterViewForm';
 import { Cover } from '../../components/Cover';
 import ParameterEditForm from './ParameterEditForm';
-
+import useResponsive from '../../../hooks/useResponsive';
 
 
 
@@ -36,14 +36,14 @@ ParameterViewPage.propTypes = {
 export default function ParameterViewPage({editPage}) {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const { themeStretch } = useSettingsContext();
 
   const { techparamEditFormFlag } = useSelector((state) => state.techparam);
 
   const { TechparamEditFormVisibility } = useSelector((state) => state.techparam);
-  
+
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
 
@@ -51,7 +51,9 @@ export default function ParameterViewPage({editPage}) {
 
   const [techparamFlag, setTechparamFlag] = useState(true);
   const {techparam} = useSelector((state) => state.techparam);
-  
+
+  const isMobile = useResponsive('down', 'sm');
+
   useLayoutEffect(() => {
     dispatch(setTechparamEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
@@ -61,16 +63,13 @@ export default function ParameterViewPage({editPage}) {
       setCurrentComponent(<ParameterEditForm/>);
     }else{
       setTechparamFlag(false);
-      setCurrentComponent(<ParameterViewForm/>);        
+      setCurrentComponent(<ParameterViewForm/>);
     }
   }, [editPage, techparamEditFormFlag, techparam]);
 
-  
-  return (
-    <>
-      <Container maxWidth={false }>
-        
 
+  return (
+      <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
@@ -79,11 +78,14 @@ export default function ParameterViewPage({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={techparam?.name} setting="enable" backLink={PATH_MACHINE.parameters.list}/> 
+          <Cover
+            name={isMobile && techparam?.name. length > 15 ? ('\u200B'): techparam?.name}
+            setting="enable"
+            backLink={PATH_MACHINE.parameters.list}
+          />
         </Card>
-        
-        <ParameterViewForm/>
+
+        <ParameterViewForm />
       </Container>
-    </>
   );
 }

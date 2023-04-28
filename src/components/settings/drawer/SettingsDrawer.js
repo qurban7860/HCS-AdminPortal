@@ -60,7 +60,7 @@ export default function SettingsDrawer() {
 
   return (
     <>
-      {!open && <ToggleButton open={open} notDefault={notDefault} onToggle={handleToggle} />}
+      {/* {!open && <ToggleButton open={open} notDefault={notDefault} onToggle={handleToggle} />} */}
 
       <Drawer
         anchor="right"
@@ -102,7 +102,7 @@ export default function SettingsDrawer() {
           </IconButton>
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         <Scrollbar sx={{ p: SPACING, pb: 0 }}>
           <Block title="Mode">

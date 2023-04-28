@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, tabsClasses } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, Typography,tabsClasses } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
@@ -32,9 +32,14 @@ import { Cover } from '../components/Cover';
 
 import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
+import useResponsive from '../../hooks/useResponsive';
+
+
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
 CustomerView.propTypes = {
   editPage: PropTypes.bool,
@@ -42,7 +47,7 @@ CustomerView.propTypes = {
 
 export default function CustomerView({editPage}) {
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const dispatch = useDispatch();
 
@@ -57,9 +62,12 @@ export default function CustomerView({editPage}) {
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
 
+
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
 
   const [customerFlag, setCustomerFlag] = useState(true);
+
+  const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
     if(id !== 'null'){
@@ -74,7 +82,7 @@ export default function CustomerView({editPage}) {
       setCurrentComponent(<CustomerEditForm/>);
     }else{
       setCustomerFlag(false);
-      setCurrentComponent(<CustomerViewForm/>);        
+      setCurrentComponent(<CustomerViewForm/>);
     }
   }, [dispatch, customerEditFormFlag, customer]);
 
@@ -83,89 +91,147 @@ export default function CustomerView({editPage}) {
       disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'customer-info',
       label: 'Customer Info',
-      icon: <Iconify icon="ic:round-account-box" />,
+      icon: <Iconify icon="mdi:badge-account" />,
       component: currentComponent
     },
     {
       disabled: customerEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
       value: 'sites',
       label: 'Sites',
-      icon: <Iconify icon="eva:navigation-2-outline" />,
+      icon: <Iconify icon="mdi:map-legend" />,
       component: <CustomerSiteList/>,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
-      icon: <Iconify icon="eva:people-outline" />,
+      icon: <Iconify icon="mdi:account-multiple" />,
       component: <CustomerContactList/>,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'notes',
       label: 'Notes',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="mdi:note-multiple" />,
       component: <CustomerNoteList/>
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'documents',
       label: 'Documents',
-      icon: <Iconify icon="eva:book-fill" />,
+      icon: <Iconify icon="mdi:folder-open" />,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'machines',
       label: 'Machines',
-      icon: <Iconify icon="eva:settings-2-outline" />,
+      icon: <Iconify icon="mdi:greenhouse" />,
     }
 
   ];
 
   return (
-    <>
-      <Container maxWidth={false}>
-        {/* <CustomBreadcrumbs
+    <Container maxWidth={false}>
+      {/* <CustomBreadcrumbs
           heading="Customer View"
         /> */}
-        <Card sx={{ mb: 3, height: 160, position: 'relative', }}>
-          <Cover name={customer ? customer.name : 'New Customer'} icon="ph:users-light"/>
-          <Tabs
-            value={currentTab}
-            onChange={(event, newValue) => setCurrentTab(newValue)}
-            variant="scrollable"
-            aria-label="visible arrows tabs example"
-            sx={{
-              [`& .${tabsClasses.scrollButtons}`]: {
-                '&.Mui-disabled': { opacity: 0.3 },
-              },
-              width: 1,
-              bottom: 0,
-              zIndex: 9,
-              position: 'absolute',
-              bgcolor: 'background.paper',
-              '& .MuiTabs-flexContainer': {
-                pr: { md: 3 },
-                justifyContent: {
-                  md: 'flex-end',
-                },
-              },
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
-            ))}
-          </Tabs>
-        </Card>
-        {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
-        )}
-        
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+        }}
+      >
+        <Cover
+          customer={customer}
+          name={customer ? customer.name : 'New Customer'}
+          photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
+          icon="ph:users-light"
+        />
 
-        
-      </Container>
-    </>
+        <Tabs
+          value={currentTab}
+          onChange={(event, newValue) => setCurrentTab(newValue)}
+          variant="scrollable"
+          aria-label="visible arrows tabs example"
+          sx={{
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+            width: 1,
+            bottom: 0,
+            zIndex: 9,
+            position: 'absolute',
+            bgcolor: 'background.paper',
+            '& .MuiTabs-flexContainer': {
+              pr: { md: 3 },
+              justifyContent: {
+                md: 'flex-end',
+              },
+            },
+          }}
+        >
+          {TABS.map((tab) => (
+            <Tab
+              disabled={tab.disabled}
+              key={tab.value}
+              value={tab.value}
+              icon={tab.icon}
+              label={tab.label}
+            />
+          ))}
+        </Tabs>
+      </Card>
+      {TABS.map(
+        (tab) =>
+          tab.value === currentTab && (
+            <Box key={tab.value} height='100vh'>
+              {' '}
+              {tab.component ? (
+                tab.component
+              ) : (
+                <Grid container sx={{ justifyContent: 'center' }}>
+                  <Grid
+                    item
+                    sx={{
+                      opacity: '30%',
+                      marginTop: '50px',
+                      height: '40vh',
+                      display: 'flex',
+                    }}
+                  >
+                    <img
+                      src="/assets/illustrations/characters/character_5.png"
+                      alt="UNDER CONSTRUCTION"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    sx={{
+                      display: 'block',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      width: '50%',
+                      height: '40vh',
+                      opacity: '30%',
+                      position: 'relative',
+                      margin: '20px',
+                    }}
+                  >
+                    <Typography variant="h1">UNDER DEVELOPMENT..</Typography>
+                    <Typography variant="body1" >
+                      While we are still working on completing our website, we invite you to check
+                      back soon for updates. In the meantime, please feel free to contact us
+                      directly if you have any questions or concerns. We appreciate your patience
+                      and understanding during this time, and we look forward to serving you better
+                      through our new website. Thank you for your interest in our company.
+                    </Typography>
+                  </Grid>
+                </Grid>
+              )}{' '}
+            </Box>
+          )
+      )}
+    </Container>
   );
 }

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { useLayoutEffect, useMemo, useCallback } from 'react';
+import { useLayoutEffect, useMemo, useCallback, Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +36,7 @@ export default function TechParamCategoryAddForm() {
   const { userId, user } = useAuthContext();
 
   const dispatch = useDispatch();
-  
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -53,7 +53,7 @@ export default function TechParamCategoryAddForm() {
       description:'',
       isActive: true,
       createdAt: '',
-      
+
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -80,12 +80,12 @@ export default function TechParamCategoryAddForm() {
 
 
   const onSubmit = async (data) => {
-    
-      try{ 
+
+      try{
         await dispatch(addTechparamcategory(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.techParam.list); 
+        navigate(PATH_MACHINE.techParam.list);
         // console.log(PATH_MACHINE.tool.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
@@ -95,16 +95,16 @@ export default function TechParamCategoryAddForm() {
         console.error(error);
       }
   };
-      const toggleCancel = () => 
+      const toggleCancel = () =>
       {
         navigate(PATH_MACHINE.techParam.list);
       };
 
-  
+
 
   const { themeStretch } = useSettingsContext();
   return (
-    <>
+
     <Container maxWidth={false }>
     <Card
                 sx={{
@@ -117,13 +117,11 @@ export default function TechParamCategoryAddForm() {
                 <Cover name='New Parameter Category' icon='ic:round-class' />
               </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      
-      
-
+      <> key={themeStretch}
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
-           
+
             <Box
               rowGap={2}
               columnGap={2}
@@ -140,25 +138,23 @@ export default function TechParamCategoryAddForm() {
               name="isActive"
               labelPlacement="start"
               label={
-                <>
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
                     Active
                   </Typography>
-                </>
-              } 
+              }
             />
              </Box>
-             
+
               </Stack>
 
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-                        
+
             </Card>
-          
+
           </Grid>
-        
+      </>
     </FormProvider>
     </Container>
-    </>
+
   );
 }

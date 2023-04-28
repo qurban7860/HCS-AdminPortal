@@ -26,7 +26,7 @@ export default function StretchOptions() {
       >
         <Iconify icon={themeStretch ? 'eva:arrow-ios-back-fill' : 'eva:arrow-ios-forward-fill'} />
 
-        <Box sx={{ flexGrow: 1, borderBottom: `dashed 1.5px currentcolor` }} />
+        <Box sx={{ flexGrow: 1, borderBottom: `solid 1.5px currentcolor` }} />
 
         <Iconify icon={themeStretch ? 'eva:arrow-ios-forward-fill' : 'eva:arrow-ios-back-fill'} />
       </Stack>

@@ -36,14 +36,14 @@ TechParamCategoryView.propTypes = {
 export default function TechParamCategoryView({editPage}) {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const { themeStretch } = useSettingsContext();
 
   const { techparamcategoryEditFormFlag } = useSelector((state) => state.techparamcategory);
 
   const { techparamcategoryEditFormVisibility } = useSelector((state) => state.techparamcategory);
-  
+
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
 
@@ -52,23 +52,21 @@ export default function TechParamCategoryView({editPage}) {
   const [techparamcategoryFlag, setTechparamcategoryFlag] = useState(true);
   const {techparamcategory} = useSelector((state) => state.techparamcategory);
   // const tool = tools
-  
 
-  
+
+
 //   useEffect(() => {
 //     if(toolEditFormFlag){
 //       setCurrentComponent(<ToolEditForm/>);
 //     }else{
 //       setToolFlag(false);
-//       setCurrentComponent(<ToolViewForm/>);        
+//       setCurrentComponent(<ToolViewForm/>);
 //     }
 //   }, [editPage, toolEditFormFlag, tool]);
 //   console.log( "muzna")
   return (
     <>
       <Container maxWidth={ false } >
-        
-
         <Card
           sx={{
             mb: 3,
@@ -76,10 +74,10 @@ export default function TechParamCategoryView({editPage}) {
             position: 'relative',
             // mt: '24px',
           }}
-        >
-          <Cover name={techparamcategory?.name} setting="enable" backLink={PATH_MACHINE.techParam.list} /> 
+          >
+          <Cover name={techparamcategory?.name} setting="enable" backLink={PATH_MACHINE.techParam.list} />
         </Card>
-        
+
         <TechParamCategoryViewForm/>
       </Container>
     </>

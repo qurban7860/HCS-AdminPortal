@@ -18,6 +18,7 @@ import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE } from '../../routes/paths';
 import { useDispatch } from '../../redux/store';
 import { Cover } from '../components/Cover';
+import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +27,7 @@ export default function Machine() {
   const theme = useTheme();
   const navigate = useNavigate();
 
-  
+
 
   const MACHINES = [
     { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
@@ -42,29 +43,28 @@ export default function Machine() {
    const linkTechParam = () => { navigate(PATH_MACHINE.parameters.list); };
    const linktpCategory = () => { navigate(PATH_MACHINE.techParam.list); };
    const linkTool = () => { navigate(PATH_MACHINE.tool.list); };
-   
 
-  
+
+
 
   return (
-    <>
-      <Container maxWidth={false}>
+    <Container maxWidth={false}>
       <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name='Settings' icon='material-symbols:list-alt-outline' />
-        </Card>
-        <Grid container spacing={3}>
-          {/* Navigation Bar */}
-          {/* <MachineDashboardNavbar/> */}
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+          // mt: '24px',
+        }}
+      >
+        <Cover name="Settings" icon="material-symbols:list-alt-outline" />
+      </Card>
+      <Grid container spacing={3}>
+        {/* Navigation Bar */}
+        {/* <MachineDashboardNavbar/> */}
 
-          {/* Grid for displaying machine related information */}
-          <Grid container spacing={2}>
+        {/* Grid for displaying machine related information */}
+        <Grid container spacing={2}>
           {/* <Grid item xs={12} md={6} lg={4} sx={{mt: 3}}>
             <AppCurrentDownload
               title="Current Machines"
@@ -83,104 +83,99 @@ export default function Machine() {
               }}
             />
           </Grid> */}
-          
-          
-            <Grid item xs={12} md={6} lg={4} sx={{ml: '22px'}}>
-              <Card sx={{height: '234px', mt: '14px'}}>
-                <List
-                  // sx={{fontSize: '0.7em'}}
-                  // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={
-                    <ListSubheader
-                    component="div" id="nested-list-subheader">
-                      Common Settings
-                    </ListSubheader>
-                  }
-                >
-                  <ListItemButton onClick={linkCategory} sx={{color: 'text.disabled'}}>
-                    <ListItemIcon>
-                      <CategoryIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Machine Categories" />
-                  </ListItemButton>
 
-                  <ListItemButton onClick={linkModel} sx={{color: 'text.disabled'}}>
-                    <ListItemIcon>
-                      <ModelTrainingIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Machines Models" />
-                  </ListItemButton>
+          <Grid item xs={12} md={6} lg={4} sx={{ ml: '22px' }}>
+            <Card sx={{ height: '234px', mt: '14px' }}>
+              <List
+                // sx={{fontSize: '0.7em'}}
+                // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Common Settings
+                  </ListSubheader>
+                }
+              >
+                <ListItemButton onClick={linkCategory} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="mdi:shape-plus" />
+                  </ListItemIcon>
+                  <ListItemText primary="Machine Categories" />
+                </ListItemButton>
 
-                  <ListItemButton onClick={linkSupplier} sx={{color: 'text.disabled'}}>
-                    <ListItemIcon>
-                      <InventoryIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Machine Suppliers" />
-                  </ListItemButton>
+                <ListItemButton onClick={linkModel} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="mdi:cube-outline" />
+                  </ListItemIcon>
+                  <ListItemText primary="Machines Models" />
+                </ListItemButton>
 
-                  <ListItemButton onClick={linkStatus} sx={{color: 'text.disabled'}}>
-                    <ListItemIcon>
-                      <Diversity1Icon />
-                    </ListItemIcon>
-                    <ListItemText primary="Machine Status" />
-                  </ListItemButton>
-                </List>
-              </Card>
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <Card sx={{height: '234px', mt: '14px'}}>
-                <List
-                  sx={{fontSize: '0.7em'}}
-                  // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={
-                    <ListSubheader component="div" id="nested-list-subheader">
-                      Technical Settings
-                    </ListSubheader>
-                  }
-                >
-                  <ListItemButton onClick={linktpCategory} sx={{color: 'text.disabled'}}>
-                    <ListItemIcon>
-                      <ClassIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Setting Categories" />
-                  </ListItemButton>
+                <ListItemButton onClick={linkSupplier} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="mdi:circle-opacity" />
+                  </ListItemIcon>
+                  <ListItemText primary="Machine Suppliers" />
+                </ListItemButton>
 
-                  <ListItemButton onClick={linkTechParam} sx={{color: 'text.disabled'}}>
-                    <ListItemIcon>
-                      <FlareIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Parameters" />
-                  </ListItemButton>
-
-                </List>
-                <List
-                  sx={{fontSize: '0.7em'}}
-                  // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
-                  component="nav"
-                  aria-labelledby="nested-list-subheader"
-                  subheader={
-                    <ListSubheader component="div" id="nested-list-subheader">
-                      Tools Information
-                    </ListSubheader>
-                  }
-                >
-                  <ListItemButton onClick={linkTool} sx={{color: 'text.disabled'}}>
-                    <ListItemIcon>
-                      <BuildCircleIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="Tools" />
-                  </ListItemButton>
-                </List>
-              </Card>
-            </Grid>
+                <ListItemButton onClick={linkStatus} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="mdi:list-status" />
+                  </ListItemIcon>
+                  <ListItemText primary="Machine Status" />
+                </ListItemButton>
+              </List>
+            </Card>
           </Grid>
+          <Grid item xs={12} md={6} lg={4} sx={{ ml: '22px' }}>
+            <Card sx={{ height: '234px', mt: '14px' }}>
+              <List
+                sx={{ fontSize: '0.7em' }}
+                // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Technical Settings
+                  </ListSubheader>
+                }
+              >
+                <ListItemButton onClick={linktpCategory} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="mdi:table-cog" />
+                  </ListItemIcon>
+                  <ListItemText primary="Setting Categories" />
+                </ListItemButton>
 
+                <ListItemButton onClick={linkTechParam} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="mdi:abacus" />
+                  </ListItemIcon>
+                  <ListItemText primary="Parameters" />
+                </ListItemButton>
+              </List>
+              <List
+                sx={{ fontSize: '0.7em' }}
+                // sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Tools Information
+                  </ListSubheader>
+                }
+              >
+                <ListItemButton onClick={linkTool} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="mdi:tools" />
+                  </ListItemIcon>
+                  <ListItemText primary="Tools" />
+                </ListItemButton>
+              </List>
+            </Card>
+          </Grid>
         </Grid>
-      </Container>
-    </>
+      </Grid>
+    </Container>
   );
 }

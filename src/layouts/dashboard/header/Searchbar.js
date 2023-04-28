@@ -75,7 +75,7 @@ const StyledPopper = styled((props) => <Popper {...props} />)(({ theme }) => ({
       padding: theme.spacing(0.5, 2),
       margin: 0,
       display: 'block',
-      border: `dashed 1px transparent`,
+      border: `solid 1px transparent`,
       borderBottomColor: theme.palette.divider,
       '&:last-of-type': {
         borderBottomColor: 'transparent',

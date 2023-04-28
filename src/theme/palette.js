@@ -6,10 +6,10 @@ import { alpha } from '@mui/material/styles';
 
 const GREY = {
   0: '#FFFFFF',
-  100: '#F9FAFB',
-  200: '#F4F6F8',
-  300: '#DFE3E8',
-  400: '#C4CDD5',
+  100: '#F4F4F4',
+  200: '#F5F5F5',
+  300: '#DFDFDF',
+  400: '#DFE3E8',
   500: '#919EAB',
   600: '#637381',
   700: '#454F5B',
@@ -18,38 +18,38 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#C8FACD',
-  light: '#5BE584',
-  main: '#00AB55',
-  dark: '#007B55',
-  darker: '#005249',
+  lighter: '#0084C9',
+  light: '#0084C9',
+  main: '#0940B2',
+  dark: '#10079F',
+  darker: '#10079F',
   contrastText: '#fff',
 };
 
 const SECONDARY = {
-  lighter: '#D6E4FF',
-  light: '#84A9FF',
-  main: '#3366FF',
-  dark: '#1939B7',
-  darker: '#091A7A',
+  lighter: '#FFEA00',
+  light: '#FFC300',
+  main: '#FFA200',
+  dark: '#FFA200',
+  darker: '#FFA200',
   contrastText: '#fff',
 };
 
 const INFO = {
-  lighter: '#CAFDF5',
-  light: '#61F3F3',
-  main: '#00B8D9',
-  dark: '#006C9C',
-  darker: '#003768',
+  lighter: '#51BFE2',
+  light: '#00A5DB',
+  main: '#0084C9',
+  dark: '#01466F',
+  darker: '#001824',
   contrastText: '#fff',
 };
 
 const SUCCESS = {
-  lighter: '#D8FBDE',
-  light: '#86E8AB',
-  main: '#36B37E',
-  dark: '#1B806A',
-  darker: '#0A5554',
+  lighter: '#897a69',
+  light: '#0940B2',
+  main: '#10079F',
+  dark: '#10079F',
+  darker: '#FFA200',
   contrastText: '#fff',
 };
 
@@ -71,6 +71,30 @@ const ERROR = {
   contrastText: '#fff',
 };
 
+// const HOWICKGRAY = {
+//   light: '#F4F4F4',
+//   main: '#DFDFDF',
+//   dark: '#DFE3E8',
+// };
+
+const HOWICKBLUE = {
+  light: '#0084C9',
+  main: '#0940B2',
+  dark: '#10079F',
+};
+
+const HOWICKORANGE = {
+  main: '#FFA200',
+};
+
+const HOWICKBRONZE = {
+  main: '#897A69',
+};
+
+const HOWICKBURNIN = {
+  main: '#D1ED18',
+};
+
 const COMMON = {
   common: { black: '#000', white: '#fff' },
   primary: PRIMARY,
@@ -80,6 +104,10 @@ const COMMON = {
   warning: WARNING,
   error: ERROR,
   grey: GREY,
+  bronze: HOWICKBRONZE,
+  blue: HOWICKBLUE,
+  orange: HOWICKORANGE,
+  burnIn: HOWICKBURNIN,
   divider: alpha(GREY[500], 0.24),
   action: {
     hover: alpha(GREY[500], 0.08),

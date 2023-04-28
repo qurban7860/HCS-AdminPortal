@@ -8,7 +8,7 @@ export default function Card(theme) {
           position: 'relative',
           boxShadow: theme.customShadows.card,
           borderRadius: Number(theme.shape.borderRadius) * 2,
-          zIndex: 0, // Fix Safari overflow: hidden with border radius
+          zIndex: 0, // Fix Safari overflow: hidden with border radius,
         },
       },
     },
@@ -27,7 +27,7 @@ export default function Card(theme) {
       styleOverrides: {
         root: {
           padding: theme.spacing(3),
-        },
+        }
       },
     },
   };

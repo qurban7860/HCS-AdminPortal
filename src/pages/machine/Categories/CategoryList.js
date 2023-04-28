@@ -53,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'description', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  
+
 ];
 
 const STATUS_OPTIONS = [
@@ -232,10 +232,10 @@ export default function CategoryList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Category List' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name='Categories' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
-        
-        
+
+
         <Card sx={{mt: 3 }}>
           <CategoryListTableToolbar
             filterName={filterName}
@@ -249,7 +249,7 @@ export default function CategoryList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -295,7 +295,7 @@ export default function CategoryList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -314,10 +314,10 @@ export default function CategoryList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
+
           />
         </Card>
-        
+
       </Container>
 
       <ConfirmDialog
@@ -354,15 +354,15 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
-    
+
     return a[1] - b[1];
   });
-  
+
 
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (category) => category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
+    inputData = inputData.filter( (category) => category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

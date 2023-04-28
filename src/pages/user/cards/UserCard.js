@@ -94,7 +94,7 @@ export default function UserCard({ user }) {
         ))}
       </Stack>
 
-      <Divider sx={{ borderStyle: 'dashed' }} />
+      <Divider sx={{ borderStyle: 'solid' }} />
 
       <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" sx={{ py: 3 }}>
         <div>

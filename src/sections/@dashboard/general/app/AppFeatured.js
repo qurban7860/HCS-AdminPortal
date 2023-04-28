@@ -35,7 +35,7 @@ export default function AppFeatured({ list, ...other }) {
   const [currentIndex, setCurrentIndex] = useState(theme.direction === 'rtl' ? list.length - 1 : 0);
 
   const carouselSettings = {
-    speed: 800,
+    speed: 3000,
     dots: true,
     arrows: false,
     autoplay: true,
@@ -105,16 +105,16 @@ function CarouselItem({ item, isActive }) {
           color: 'common.white',
         }}
       >
-        <m.div variants={varFade().inRight}>
+        {/* <m.div variants={varFade().inRight}>
           <Typography variant="overline" component="div" sx={{ opacity: 0.48 }}>
             Featured App
           </Typography>
-        </m.div>
+        </m.div> */}
 
         <m.div variants={varFade().inRight}>
           <Link color="inherit" underline="none">
-            <Typography variant="h5" noWrap>
-              {title}
+            <Typography variant="h2" noWrap>
+            FRAMA™ 3200
             </Typography>
           </Link>
         </m.div>

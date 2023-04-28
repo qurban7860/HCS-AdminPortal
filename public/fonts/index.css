@@ -1,4 +1,4 @@
-@font-face {
+/* @font-face {
   font-family: 'CircularStd';
   font-weight: 400;
   font-style: normal;
@@ -17,6 +17,47 @@
   font-weight: 700;
   font-style: normal;
   src: local('CircularStd'), url('CircularStd-Bold.otf') format('opentype');
+} */
+
+@font-face {
+  font-family: 'Arimo';
+  font-weight: 200;
+  font-style: light;
+  src: local('Arimo'), url('Arimo/static/Arimo-Regular.ttf') format('TrueType');
 }
 
- 
+@font-face {
+  font-family: 'Arimo';
+  font-weight: 300;
+  font-style: normal;
+  src: local('Arimo'), url('Arimo/Arimo-VariableFont_wght.ttf') format('TrueType');
+}
+
+@font-face {
+  font-family: 'Arimo';
+  font-weight: 300;
+  font-style: italic;
+  src: local('Arimo'), url('Arimo/Arimo-Italic-VariableFont_wght.ttf') format('TrueType');
+}
+
+@font-face {
+font-family: 'Yantramanav';
+font-weight: 400;
+font-style: normal;
+src: local('Yantramanav'), url('Yantramanav/Yantramanav-Regular.ttf') format('TrueType');
+}
+
+@font-face {
+font-family: 'Yantramanav';
+font-weight: 600;
+font-style: normal;
+src: local('Yantramanav'), url('Yantramanav/Yantramanav-Medium.ttf') format('TrueType');
+}
+
+@font-face {
+font-family: 'Yantramanav';
+font-weight: 700;
+font-style: bold;
+src: local('Yantramanav'), url('Yantramanav/Yantramanav-Black.ttf') format('TrueType');
+}
+
