@@ -14,9 +14,9 @@ import { CONFIG } from '../config-global';
 export default function Page500() {
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> 500 Internal Server Error | {CONFIG.APP_TITLE} </title>
-      </Helmet>
+      </Helmet> */}
 
       <MotionContainer>
         <m.div variants={varBounce().in}>

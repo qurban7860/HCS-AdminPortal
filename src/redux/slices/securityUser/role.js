@@ -1,6 +1,3 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
@@ -39,12 +36,12 @@ const slice = createSlice({
     },
 
     // SET VISIBILITY
-    setFormVisibility(state, action){
+    setRoleFormVisibility(state, action){
       state.formVisibility = action.payload;
     },
 
     // SET VISIBILITY
-    setEditFormVisibility(state, action){
+    setRoleEditFormVisibility(state, action){
       state.editFormVisibility = action.payload;
     },
 
@@ -112,7 +109,7 @@ export const {
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function saveRole(params) {
+export function addRole(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

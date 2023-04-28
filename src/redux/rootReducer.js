@@ -2,9 +2,7 @@ import { combineReducers } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 // slices
-import assetReducer from './slices/asset';
-import userReducer from './slices/user';
-import departmentReducer from './slices/department';
+import userReducer from './slices/securityUser/securityUser';
 import customerReducer from './slices/customer/customer';
 import siteReducer from './slices/customer/site';
 import contactReducer from './slices/customer/contact';
@@ -38,14 +36,6 @@ export const assetPersistConfig = {
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
-};
-
-export const departmentPersistConfig = {
-  key: 'department',
-  storage,
-  keyPrefix: 'redux-',
-  whitelist: ['departments'],
-
 };
 
 export const userPersistConfig = {
@@ -164,8 +154,6 @@ export const countPersistConfig = {
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
-  asset: persistReducer(assetPersistConfig, assetReducer),
-  department: persistReducer(departmentPersistConfig, departmentReducer),
   customer: persistReducer(customerPersistConfig, customerReducer),
   site: persistReducer(sitePersistConfig, siteReducer),
   contact: persistReducer(contactPersistConfig, contactReducer),

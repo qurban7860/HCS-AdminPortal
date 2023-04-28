@@ -9,7 +9,7 @@ import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography,TextField } from '@mui/material';
 // slice
-import { saveSite, setSiteFormVisibility } from '../../../redux/slices/customer/site';
+import { addSite, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -136,7 +136,7 @@ export default function SiteAddForm() {
       if(country){
         data.country = country.label
       }
-      await dispatch(saveSite(data));
+      await dispatch(addSite(data));
       reset();
 
     } catch (err) {

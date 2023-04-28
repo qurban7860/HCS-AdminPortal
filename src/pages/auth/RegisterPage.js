@@ -8,9 +8,9 @@ import { CONFIG } from '../../config-global';
 export default function RegisterPage() {
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Register | {CONFIG.APP_TITLE} </title>
-      </Helmet>
+      </Helmet> */}
 
       <Register />
     </>

@@ -12,8 +12,8 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  machinemodels: [],
-  machinemodel: {},
+  machineModels: [],
+  machineModel: {},
   machinemodelParams: {
   }
 };
@@ -49,10 +49,10 @@ const slice = createSlice({
     },
 
     // GET Customers
-    getMachinemodelsSuccess(state, action) {
+    getMachineModelsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machinemodels = action.payload;
+      state.machineModels = action.payload;
       state.initial = true;
     },
 
@@ -103,13 +103,13 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getMachinemodels (){
+export function getMachineModels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
 
-      dispatch(slice.actions.getMachinemodelsSuccess(response.data));
+      dispatch(slice.actions.getMachineModelsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('model loaded successfully'));
       // dispatch(slice.actions)
     } catch (error) {
@@ -135,7 +135,7 @@ export function getMachineModel(id) {
 }
 //----------------------------------------------------------------
 
-export function deleteMachinemodel(id) {
+export function deleteMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -176,7 +176,7 @@ export function addMachineModel(params) {
 
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
 
-        dispatch(slice.actions.getMachinemodelsSuccess(response.data.Machinemodel));
+        dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
@@ -187,7 +187,7 @@ export function addMachineModel(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachinemodel(params) {
+export function updateMachineModel(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

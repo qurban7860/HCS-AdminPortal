@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useCallback,  useState, useEffect  } from 'react';
+import { useLayoutEffect, useMemo,  useState  } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -13,9 +13,9 @@ import { Box, Card, styled, Grid,Container, Stack,TextField,Autocomplete,Select,
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers} from '../../redux/slices/customer/customer';
 import { getSites , resetSites } from '../../redux/slices/customer/site';
-import { saveMachine,   getMachines } from '../../redux/slices/products/machine';
+import { addMachine,   getMachines } from '../../redux/slices/products/machine';
 import { getMachinestatuses } from '../../redux/slices/products/statuses';
-import { getMachinemodels} from '../../redux/slices/products/model';
+import { getMachineModels} from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
 import { Cover } from '../components/Cover';
 
@@ -44,7 +44,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { spContacts } = useSelector((state) => state.contact);
   const { machines} = useSelector((state) => state.machine);
   const { suppliers} = useSelector((state) => state.supplier);
-  const { machinemodels} = useSelector((state) => state.machinemodel);
+  const { machineModels} = useSelector((state) => state.machinemodel);
   const { machinestatuses } = useSelector((state) => state.machinestatus);
   const { customers } = useSelector((state) => state.customer);
   const { sites} = useSelector((state) => state.site);
@@ -68,7 +68,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   dispatch(getCustomers());
   dispatch(getMachines());
   dispatch(getMachinestatuses());
-  dispatch(getMachinemodels());
+  dispatch(getMachineModels());
   dispatch(getSuppliers());
   dispatch(getSPContacts());
   
@@ -165,7 +165,7 @@ const onSubmit = async (data) => {
   // data.customerTags = chipData
 
     try{
-      await dispatch(saveMachine(data));
+      await dispatch(addMachine(data));
       setParMachineVal('');
       setParMachSerVal('');
       setSupplierVal('');
@@ -303,7 +303,7 @@ const onSubmit = async (data) => {
               <Autocomplete
                 // freeSolo
                 value={modelVal || null}
-                options={machinemodels}
+                options={machineModels}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {

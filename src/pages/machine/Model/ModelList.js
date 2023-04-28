@@ -19,7 +19,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getMachinemodels, getMachineModel, deleteMachinemodel } from '../../../redux/slices/products/model';
+import { getMachineModels, getMachineModel, deleteMachineModel } from '../../../redux/slices/products/model';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -108,25 +108,25 @@ export default function ModelList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { machinemodels, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinemodel);
+  const { machineModels, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinemodel);
 
 
 
   useLayoutEffect( () => {
     // console.log('Testing done')
-     dispatch(getMachinemodels());
+     dispatch(getMachineModels());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (machinemodels && !error) {
+      if (machineModels && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
       }
-      setTableData(machinemodels);
+      setTableData(machineModels);
     }
-  }, [machinemodels, error, responseMessage, enqueueSnackbar, initial]);
+  }, [machineModels, error, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -164,11 +164,11 @@ export default function ModelList() {
   };
 
   const handleDeleteRow = async (id) => {
-    await dispatch(deleteMachinemodel(id));
+    await dispatch(deleteMachineModel(id));
     try {
       // console.log(id);
 
-      dispatch(getMachinemodels());
+      dispatch(getMachineModels());
       setSelected([]);
 
       if (page > 0) {

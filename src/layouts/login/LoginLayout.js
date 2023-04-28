@@ -30,26 +30,9 @@ export default function LoginLayout({ children, illustration, title }) {
             mb: -3,
           }}
           alignItems="center"
-          container
           spacing={2}
-        >
-        {/* will be removed after checking the UI change */}
-          {/* <Grid item xs={6}>
-            <Typography
-              sx={{
-                backgroundColor: CONFIG.Background_Color,
-                borderRadius: '2px',
-                textAlign: 'center',
-                fontWeight: 'bold',
-                p: 1,
-                py: 0.1,
-              }}
-            >
-              {CONFIG.ENV}
-              {'  '}
-              {CONFIG.Version}
-            </Typography>
-          </Grid> */}
+          container
+          >
           <Grid item>
             <Logo
               sx={{

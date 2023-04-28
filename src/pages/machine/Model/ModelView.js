@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getMachinemodels, updateMachinemodel, setMachinemodelsEditFormVisibility } from '../../../redux/slices/products/model';
+import { getMachineModels, updateMachineModel, setMachinemodelsEditFormVisibility } from '../../../redux/slices/products/model';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components

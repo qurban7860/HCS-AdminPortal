@@ -3,7 +3,6 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import AuthGuard from '../auth/AuthGuard';
 import GuestGuard from '../auth/GuestGuard';
 // layouts
-import MainLayout from '../layouts/main';
 import SimpleLayout from '../layouts/simple';
 import CompactLayout from '../layouts/compact';
 import DashboardLayout from '../layouts/dashboard';
@@ -20,18 +19,11 @@ import {
   // Dashboard: General
   GeneralAppPage,
   // User
-  UserListPage,
-  UserEditPage,
-  UserCardsPage,
-  UserCreatePage,
-  UserProfilePage,
-  UserAccountPage,
-  UserViewFormPage,
-  // Asset
-  AssetList,
-  AssetAdd,
-  AssetEdit,
-  AssetView,
+  SecurityUserList,
+  SecurityUserEdit,
+  SecurityUserAdd,
+  SecurityUserProfile,
+  SecurityUserViewForm,
   // Customer
   CustomerDashboard,
   CustomerList,
@@ -45,7 +37,7 @@ import {
   MachineView,
   MachineEdit,
   // Supplier
-  MachineSupplier,
+  SupplierAddForm,
   SupplierList,
   SupplierView,
   SupplierViewForm,
@@ -63,7 +55,7 @@ import {
   CategoryEdit,
 
   // Parameters
-  MachineParameter,
+  ParameterAddForm,
   ParameterList,
   ParameterView,
   ParameterViewForm,
@@ -71,28 +63,28 @@ import {
   ParameterEdit,
 
   // Tool
-  MachineTool,
+  ToolAddForm,
   ToolList,
   ToolView,
   ToolViewForm,
   ToolEdit,
   ToolEditForm,
   // MachineTechParamCategory
-  MachineTechParam,
+  TechParamCategoryAddForm,
   TechParamList,
   TechParamCategoryViewForm,
   TechParamCategoryView,
   TechParamCategoryEdit,
   TechParamCategoryEditForm,
   // Status
-  MachineStatus,
+  StatusAddForm,
   StatusViewForm,
   StatusView,
   StatusEdit,
   StatusEditForm,
   StatusList,
   // Model
-  MachineModel,
+  ModelAddForm,
   ModelList,
   ModelViewForm,
   ModelView,
@@ -122,7 +114,6 @@ import {
   Page500,
   Page403,
   Page404,
-  HomePage,
   ComingSoonPage,
   MaintenancePage,
   
@@ -181,25 +172,14 @@ export default function Router() {
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
         {
-          path: 'asset',
-          children: [
-            { path: 'list', element: <AssetList /> },
-            { path: 'new', element: <AssetAdd /> },
-            { path: ':id/edit', element: <AssetEdit />},
-            { path: 'view', element: <AssetView />}
-          ],
-        },
-        {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
-            { path: 'profile', element: <UserProfilePage /> },
-            { path: 'cards', element: <UserCardsPage /> },
-            { path: 'list', element: <UserListPage /> },
-            { path: 'new', element: <UserCreatePage /> },
-            { path: ':id/edit', element: <UserEditPage /> },
-            { path: 'account', element: <UserEditPage /> },
-            { path: ':id/view', element: <UserViewFormPage /> },
+            { path: 'profile', element: <SecurityUserProfile /> },
+            { path: 'list', element: <SecurityUserList /> },
+            { path: 'new', element: <SecurityUserAdd /> },
+            { path: ':id/edit', element: <SecurityUserEdit /> },
+            { path: ':id/view', element: <SecurityUserViewForm /> },
           ],
         },
         {
@@ -308,7 +288,7 @@ export default function Router() {
         {
           path : 'supplier',
           children:[
-            { path: 'supplier', element: <MachineSupplier /> },
+            { path: 'supplier', element: <SupplierAddForm /> },
             { path: 'list', element: <SupplierList/>}, 
             { path: ':id/view', element: <SupplierView/>},
             { path: 'viewform', element: <SupplierViewForm/>},
@@ -337,7 +317,7 @@ export default function Router() {
         {
           path: 'machine-parameters',
           children:[
-            {path: 'params', element: <MachineParameter/>},
+            {path: 'params', element: <ParameterAddForm/>},
             {path: 'list', element: <ParameterList/>},
             {path: ':id/view', element: <ParameterView/>},
             {path: 'viewform', element: <ParameterViewForm/>},
@@ -348,7 +328,7 @@ export default function Router() {
         {
           path: 'tool',
           children:[
-            {path: 'tool', element: <MachineTool/>},
+            {path: 'tool', element: <ToolAddForm/>},
             {path: 'list', element: <ToolList/>},
             {path: ':id/view', element: <ToolView/>},
             {path: 'viewform', element: <ToolViewForm/>},
@@ -359,7 +339,7 @@ export default function Router() {
         {
           path: 'machine-tech',
           children:[
-            {path: 'params', element: <MachineTechParam/>},
+            {path: 'params', element: <TechParamCategoryAddForm/>},
             {path: 'list', element: <TechParamList/>},
             {path: 'viewform', element: <TechParamCategoryViewForm/>},
             {path: ':id/view', element: <TechParamCategoryView/>},
@@ -370,7 +350,7 @@ export default function Router() {
         {
           path: 'machine-status',
           children:[
-            {path: 'status', element: <MachineStatus/>},
+            {path: 'status', element: <StatusAddForm/>},
             {path: 'list', element: <StatusList/>},
             {path: 'viewform', element: <StatusViewForm/>},
             {path: ':id/view', element: <StatusView/>},
@@ -381,7 +361,7 @@ export default function Router() {
         {
           path: 'machine-model',
           children:[
-            {path: 'model', element: <MachineModel/>},
+            {path: 'model', element: <ModelAddForm/>},
             {path: 'list', element: <ModelList/>},
             {path: 'viewform', element: <ModelViewForm/>},
             {path: ':id/view', element: <ModelView/>},

@@ -103,9 +103,9 @@ export const {
 
 } = slice.actions;
 
-// ----------------------------Save Note------------------------------------------
+// ----------------------------Add Note------------------------------------------
 
-export function saveSetting(machineId,params) {
+export function addSetting(machineId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {

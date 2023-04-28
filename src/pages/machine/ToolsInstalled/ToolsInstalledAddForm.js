@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // slice
-import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
+import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , addToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
 import { getTools } from '../../../redux/slices/products/tools';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -89,17 +89,13 @@ const toggleCancel = () =>
     formState: { isSubmitting },
   } = methods;
 
-  const onChange = (event) => {
-    const value = event.target.value;
-  };
-
   const onSubmit = async (data) => {
     try {
       if(toolVal !== ""){
         data.tool = toolVal._id;
       }
       // console.log("Data", data);
-      await dispatch(saveToolInstalled(machine._id,data));
+      await dispatch(addToolInstalled(machine._id,data));
       reset();
       setToolVal("")
   dispatch(setToolInstalledFormVisibility(false));

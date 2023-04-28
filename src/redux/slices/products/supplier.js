@@ -152,7 +152,7 @@ export function deleteSupplier(id) {
 
 // --------------------------------------------------------------------------
 
-export function saveSupplier(params) {
+export function addSupplier(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetSupplier());
       dispatch(slice.actions.startLoading());

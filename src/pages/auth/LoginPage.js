@@ -10,10 +10,10 @@ export default function LoginPage() {
   return (
     <>
       <Helmet>
-        <title> Login | {CONFIG.APP_TITLE} </title>
+        <meta charSet="utf-8" />
+        <title> Login | {process.env.REACT_APP_TITLE}</title>
       </Helmet>
-
-      <Login/>
+      <Login />
     </>
   );
 }

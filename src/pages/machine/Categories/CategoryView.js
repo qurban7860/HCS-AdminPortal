@@ -9,14 +9,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
-
-import { getCategory, getCategories, setEditFormVisibility } from '../../../redux/slices/products/category';
-// auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+import { setCategoryEditFormVisibility } from '../../../redux/slices/products/category';
 // components
 
 import Iconify from '../../../components/iconify/Iconify';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
 
@@ -25,8 +21,6 @@ import CategoryViewForm from './CategoryViewForm';
 import { Cover } from '../../components/Cover';
 import CategoryEditForm from './CategoryEditForm';
 /* eslint-disable */
-
-
 
 CategoryView.propTypes = {
   editPage: PropTypes.bool,
@@ -37,15 +31,11 @@ CategoryView.propTypes = {
 export default function CategoryView({editPage}) {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
-
-  const { themeStretch } = useSettingsContext();
   const navigate = useNavigate();
 
   const { editFormVisibility } = useSelector((state) => state.category);
   
   const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
 
   const [currentComponent, setCurrentComponent] = useState(<CategoryViewForm/>);
 
@@ -54,7 +44,7 @@ export default function CategoryView({editPage}) {
   
   
   useLayoutEffect(() => {
-    dispatch(setEditFormVisibility(editFlag));
+    dispatch(setCategoryEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
 
   useEffect(() => {
@@ -64,22 +54,18 @@ export default function CategoryView({editPage}) {
       setCategoryFlag(false);
       setCurrentComponent(<CategoryViewForm/>);        
     }
-  }, [editPage, editFormVisibility, category]);
-
-  // const clickback = () => { navigate(PATH_MACHINE.categories.list); };
+  }, [editPage, category]);
   
   function handleBackClick() {
     navigate(PATH_MACHINE.categories.list);
     // Add code here to handle the click event
   }
   return (
-    <>
       <Container maxWidth={false }>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
           <Cover name={category?.name} setting="setting" backLink={PATH_MACHINE.categories.list}/>
         </Card>
         <CategoryViewForm/>
       </Container>
-    </>
   );
 }

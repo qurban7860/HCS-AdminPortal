@@ -17,9 +17,9 @@ import { CONFIG } from '../../config-global';
 export default function ResetPasswordPage() {
   return (
     <>
-      <Helmet>
+      {/* <Helmet>
         <title> Reset Password Login | {CONFIG.APP_TITLE} </title>
-      </Helmet>
+      </Helmet> */}
 
       <PasswordIcon sx={{ mb: 5, height: 96 }} />
 

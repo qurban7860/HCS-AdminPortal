@@ -5,14 +5,12 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
 // redux
-import { getCategory, getCategories, setEditFormVisibility } from '../../../redux/slices/products/category';
+import { getCategory, setCategoryEditFormVisibility } from '../../../redux/slices/products/category';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
-// components
-import { useSnackbar } from '../../../components/snackbar';
 // Iconify
-import { fDate } from '../../../utils/formatTime';
 import Iconify from '../../../components/iconify/Iconify';
+//  components
 import ViewFormAudit from '../../components/ViewFormAudit';
 
 // ----------------------------------------------------------------------
@@ -26,7 +24,7 @@ CategoryViewForm.propTypes = {
 export default function CategoryViewForm({ currentCategory = null }) {
 
   const toggleEdit = () => {
-    dispatch(setEditFormVisibility(true));
+    dispatch(setCategoryEditFormVisibility(true));
     navigate(PATH_MACHINE.categories.categoryedit(id));
   }
 
