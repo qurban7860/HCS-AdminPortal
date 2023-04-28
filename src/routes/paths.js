@@ -44,6 +44,7 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),
+    password: path(ROOTS_DASHBOARD, '/user/password'),
     account: path(ROOTS_DASHBOARD, '/user/account'),
     view: (id) => path(ROOTS_DASHBOARD, `/user/${id}/view`),
     edit: (id) => path(ROOTS_DASHBOARD, `/user/${id}/edit`),

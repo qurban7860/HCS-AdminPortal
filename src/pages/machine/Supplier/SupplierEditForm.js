@@ -101,7 +101,7 @@ export default function SupplierEditForm() {
     if (supplier) {
       setPhone(supplier.phone);
       setFaxVal(supplier.fax);
-      const supplierCountry= filtter(countries,{label: supplier.address.country})
+      const supplierCountry= filtter(countries,{label: supplier?.address?.country || ''})
       setCountryVal(supplierCountry[0])
     }
   }, [supplier]);

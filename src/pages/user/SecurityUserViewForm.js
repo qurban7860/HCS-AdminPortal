@@ -19,10 +19,13 @@ import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import {Cover} from '../components/Cover';
 import { useAuthContext } from '../../auth/useAuthContext';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../components/hook-form';
-
+import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
+
+
 export default function SecurityUserViewForm() {
+  const regEx = /^[2][0-9][0-9]$/
   const { securityUser , initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
@@ -43,15 +46,31 @@ export default function SecurityUserViewForm() {
   
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { enqueueSnackbar } = useSnackbar();
   useEffect(()=> {
-    if(initial){
-      if(id){
-        dispatch(getSecurityUser(id))
-        console.log("user : ")
-      }
+    if(id){
+      const getResponse = () => {
+      dispatch(getSecurityUser(id)).then(res => {
+          console.log("res : " , res)
+          if(regEx.test(res.status)){ 
+            enqueueSnackbar(res.statusText)
+          }else{
+            enqueueSnackbar(res.statusText,{ variant: `error` })
+          }
+        }).catch(err => {
+          if(err.Message){
+            enqueueSnackbar(err.Message,{ variant: `error` })
+          }else if(err.message){
+            enqueueSnackbar(err.message,{ variant: `error` })
+          }else{
+            enqueueSnackbar("Something went wrong!",{ variant: `error` })
+          }
+        });
     }
-    },[dispatch,id,initial])
+    getResponse();
+  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[id,dispatch])
 
     useEffect(()=>{
       batch(() => {
@@ -97,7 +116,6 @@ export default function SecurityUserViewForm() {
       updatedIP:                securityUser?.updatedIP ,
     }
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [securityUser] );
 
   return (

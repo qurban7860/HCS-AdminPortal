@@ -56,6 +56,10 @@ const OPTIONS = [
     label: 'Settings',
     linkTo: PATH_DASHBOARD.user.account,
   },
+  {
+    label: 'Change Password',
+    linkTo: PATH_DASHBOARD.user.password,
+  },
   // {
   //   label: 'Customize',
   //   // link to settings drawer
