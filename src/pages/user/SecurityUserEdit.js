@@ -15,9 +15,10 @@ export default function SecurityUserEdit() {
 
   const dispatch = useDispatch();
   const { id } = useParams(); 
-  useLayoutEffect(() => {
-    dispatch(getSecurityUser(id));
-  }, [dispatch, id]);
+  // useLayoutEffect(() => {
+  //   dispatch(getSecurityUser(id))
+    
+  // }, [dispatch, id]);
   return (
       <Container maxWidth={false}>
         <Card sx={{mb: 3,height: 160,position: 'relative',}}>

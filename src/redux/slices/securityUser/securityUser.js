@@ -99,8 +99,8 @@ export default slice.reducer;
 export const {
   setSecurityUserFormVisibility,
   setSecurityUserEditFormVisibility,
-  resetUsers,
-  resetUser,
+  resetSecurityUsers,
+  resetSecurityUser,
   gotoStep,
   backStep,
   nextStep,
@@ -124,6 +124,7 @@ export function addSecurityUser(param) {
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       if(regEx.test(response.status)){
         dispatch(setSecurityUserFormVisibility(false))
+        dispatch(resetSecurityUser())
         dispatch(getSecurityUsers());
       }
     return response;
@@ -152,6 +153,7 @@ export function updateSecurityUser(param,id) {
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage('User updated successfully'));
         dispatch(getSecurityUsers());
+        dispatch(resetSecurityUser())
       }
       return response;
   };
@@ -172,6 +174,7 @@ export function getSecurityUsers() {
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Users loaded successfully'));
+        dispatch(resetSecurityUser())
       }
       return response;
     }
@@ -204,6 +207,7 @@ export function deleteSecurityUser(id) {
       // state.responseMessage = response.data;
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage(response.data));
+        dispatch(resetSecurityUser())
       }
       return response;
   };

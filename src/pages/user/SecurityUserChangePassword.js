@@ -3,13 +3,13 @@ import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
-import { Stack, Card } from '@mui/material';
+import { Stack, Card,Container } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
-
+import { Cover } from '../components/Cover'
 // ----------------------------------------------------------------------
 
 export default function SecurityUserChangePassword() {
@@ -53,6 +53,10 @@ export default function SecurityUserChangePassword() {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <Container maxWidth={false}>
+        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+          <Cover name="Change Password" icon='mdi:user-circle'/>
+        </Card>
       <Card>
         <Stack spacing={3} alignItems="flex-end" sx={{ p: 3 }}>
           <RHFTextField name="oldPassword" type="password" label="Old Password" />
@@ -76,6 +80,7 @@ export default function SecurityUserChangePassword() {
           </LoadingButton>
         </Stack>
       </Card>
+    </Container>
     </FormProvider>
   );
 }

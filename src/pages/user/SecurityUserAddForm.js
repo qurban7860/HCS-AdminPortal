@@ -36,15 +36,15 @@ SecurityUserAddForm.propTypes = {
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const regEx = /^[2][0-9][0-9]$/
-  const [showPassword, setShowPassword] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [ showPassword, setShowPassword] = useState(false);
+  const [ name, setName] = useState("");
+  const [ email, setEmail] = useState("");
   const { customers } = useSelector((state) => state.customer);
-  const [customerVal, setCustomerVal] = useState("");
+  const [ customerVal, setCustomerVal] = useState("");
   const { contacts } = useSelector((state) => state.contact);
-  const [contactVal, setContactVal] = useState("");
+  const [ contactVal, setContactVal] = useState("");
   const { roles } = useSelector((state) => state.role);
-  const [phone, setPhone] = useState('')
+  const [ phone, setPhone] = useState('')
 
 const ROLES = [];
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
@@ -157,14 +157,15 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
           roleVal.map((role)=>(roleId.push(role?._id)))
           data.roles = roleId;
         }
+        // console.log("data : " , data);
       dispatch(addSecurityUser(data))
       .then(res => {
-        console.log("res : " , res)
+        // console.log("res res.data.user._id : " , res.data.user._id)
         if(regEx.test(res.status)){ 
-          enqueueSnackbar(res.statusText)
+          // enqueueSnackbar(res.statusText)
           dispatch(resetContacts())
           reset()
-          navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+          navigate(PATH_DASHBOARD.user.view(res.data.user._id));
         }else{
           enqueueSnackbar(res.statusText,{ variant: `error` })
         }
