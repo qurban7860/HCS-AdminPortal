@@ -15,7 +15,6 @@ const initialState = {
   tools: [],
   tool: {},
   toolParams: {
-
   }
 };
 
@@ -30,7 +29,6 @@ const slice = createSlice({
 
     // SET TOGGLE
     setToolEditFormVisibility(state, action){
-      console.log('toggle', action.payload);
       state.toolEditFormFlag = action.payload;
     },
     
@@ -40,7 +38,6 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-
     },
 
     // HAS ERROR
@@ -60,15 +57,11 @@ const slice = createSlice({
 
     // GET Customer
     getToolSuccess(state, action) {
-      
       state.isLoading = false;
       state.success = true;
-      console.log("IM DONE",action.payload)
       state.tool = action.payload;
       state.initial = true;
-      console.log('toolSuccessSlice', state.tool);
     },
-
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -76,7 +69,6 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -101,23 +93,17 @@ export const {
   gotoStep,
   backStep,
   nextStep,
-
 } = slice.actions;
 
-
-
 // ----------------------------------------------------------------------
-
 
 export function getTools (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`);
-
       dispatch(slice.actions.getToolsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
-      // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message))
@@ -144,11 +130,7 @@ export function deleteTool(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/tools/${id}`);
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
-      // get again suppliers //search
-      
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -199,8 +181,6 @@ export function updateTool(params) {
         data
       );
       dispatch(getTool(params.id));
-      // dispatch(slice.actions.setToolsEditFormVisibility(false));
-
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

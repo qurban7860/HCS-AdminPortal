@@ -19,14 +19,13 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
-
 import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
   RHFSwitch
 } from '../../../components/hook-form';
-import { setSettingEditFormVisibility , setSettingFormVisibility , saveSetting , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
+import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
 

@@ -20,7 +20,7 @@ import theme from '../../theme';
 
 export default function AuthLoginForm() {
   const { login } = useAuthContext();
-
+  const regEx = /^[4][0-9][0-9]$/
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -47,14 +47,21 @@ export default function AuthLoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
+    const response =   await login(data.email, data.password);
     } catch (error) {
-      console.error(error);
-      reset();
+      console.error("error : ",error);
+      if(regEx.test(error.MessageCode)){
+        reset();
+        setError('afterSubmit', {
+          ...error,
+          message: error.Message,
+        });
+    }else{
       setError('afterSubmit', {
         ...error,
-        message: error.Message,
+        message: "Something went wrong",
       });
+    }
     }
   };
 

@@ -1,13 +1,7 @@
-// import sum from 'lodash/sum';
-// import uniq from 'lodash/uniq';
-// import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
-
-
-
 
 // ----------------------------------------------------------------------
 
@@ -20,7 +14,6 @@ const initialState = {
   notes: [],
   note: null,
   noteParams: {
-
   }
 };
 
@@ -36,13 +29,11 @@ const slice = createSlice({
     },
     // SET TOGGLE
     setNoteFormVisibility(state, action){
-      // console.log('toggle', action.payload);
       state.formVisibility = action.payload;
     },
 
     // SET TOGGLE
     setNoteEditFormVisibility(state, action){
-      // console.log('setEditFormVisibility', action.payload);
       state.noteEditFormVisibility = action.payload;
     },
     // HAS ERROR
@@ -68,14 +59,12 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
       state.success = true;
       state.initial = true;
     },
-
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -100,7 +89,6 @@ export const {
   gotoStep,
   backStep,
   nextStep,
-
 } = slice.actions;
 
 // ----------------------------Save Note------------------------------------------
@@ -119,7 +107,6 @@ export function addNote(machineId,params) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -177,7 +164,6 @@ export function getNote(machineId,noteId) {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`);
       dispatch(slice.actions.getNoteSuccess(response.data));
-      // dispatch(slice.actions.setResponseMessage('Note Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -191,13 +177,11 @@ export function deleteNote(machineId,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`,
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${id}` , 
       {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

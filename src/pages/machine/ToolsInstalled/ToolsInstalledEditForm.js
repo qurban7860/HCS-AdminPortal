@@ -14,14 +14,13 @@ import { Switch ,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../../redux/slices/products/toolInstalled';
+import { setToolInstalledEditFormVisibility , updateToolInstalled } from '../../../redux/slices/products/toolInstalled';
 import { getTools } from '../../../redux/slices/products/tools';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
-
 import FormProvider, {
   RHFSelect,
   RHFTextField,
@@ -58,7 +57,7 @@ export default function ToolsInstalledEditForm() {
     () => ({
       // tool: toolInstalled?.tool || '',
       note: toolInstalled?.note || '',
-      sisActive : toolInstalled.isActive,
+      isActive : toolInstalled.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

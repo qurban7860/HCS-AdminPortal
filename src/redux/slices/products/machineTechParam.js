@@ -81,13 +81,11 @@ const slice = createSlice({
 
     // GET Customer
     getTechparamSuccess(state, action) {
-      
       state.isLoading = false;
       state.success = true;
       state.techparam = action.payload;
       state.initial = true;
     },
-
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -95,7 +93,6 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -122,13 +119,9 @@ export const {
   gotoStep,
   backStep,
   nextStep,
-
 } = slice.actions;
 
-
-
 // ----------------------------------------------------------------------
-
 
 export function getTechparams (){
   return async (dispatch) =>{
@@ -141,10 +134,8 @@ export function getTechparams (){
         }
       }
       );
-
       dispatch(slice.actions.getTechparamsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Techparams loaded successfully'));
-      // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message))
@@ -168,7 +159,6 @@ export function getTechparamsByCategory (cateegoryId){
       );
       dispatch(slice.actions.getTechparamsByCategorySuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Techparams loaded successfully'));
-      // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message))
@@ -194,9 +184,7 @@ export function deleteTechparams(id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparams/${id}`);
-     
       dispatch(slice.actions.setResponseMessage(response.data));
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -225,9 +213,7 @@ export function addTechparam(params) {
           }else{
             data.category = null
           }
-        
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparams`, data);
-
         dispatch(slice.actions.getTechparamsSuccess(response.data.Techparam));
       } catch (error) {
         console.error(error);
@@ -243,8 +229,6 @@ export function updateTechparam(params,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         name: params.name,
@@ -259,14 +243,11 @@ export function updateTechparam(params,id) {
       }else{
         data.category = null
       }
+      console.log("data : ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}`,
         data
       );
-
-      // dispatch(slice.actions.setTechparamEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
-
+      console.log("response : ",response)
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

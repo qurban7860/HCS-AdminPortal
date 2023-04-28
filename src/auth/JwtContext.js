@@ -128,7 +128,8 @@ export function AuthProvider({ children }) {
     const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, {
       email,
       password,
-    });
+    })
+
     const { accessToken, user, userId } = response.data;
 
     localStorage.setItem('email', user.email);

@@ -159,13 +159,12 @@ export function addMachineStatus(params) {
         /* eslint-disable */
         let data = {
           name: params.name,
-          isActive: params.isActive,
           description: params.description,
+          displayOrderNo: params.displayOrderNo,
+          isActive: params.isActive,
         };
         /* eslint-enable */
-        
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
-
         dispatch(slice.actions.getMachinestatusesSuccess(response.data.Machinestatus));
       } catch (error) {
         console.error(error);
@@ -185,7 +184,6 @@ export function updateMachinestatus(params,Id) {
       const formData = new FormData();
       /* eslint-disable */
       let data = {
-        id: params.id,
         name: params.name,
         displayOrderNo: params.displayOrderNo,
         description: params.description,

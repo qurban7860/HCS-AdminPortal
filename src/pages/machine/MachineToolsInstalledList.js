@@ -42,8 +42,7 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-
-import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , saveToolInstalled , getToolsInstalled , getToolInstalled } from '../../redux/slices/products/toolInstalled';
+import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , getToolsInstalled , getToolInstalled } from '../../redux/slices/products/toolInstalled';
 import { getTools } from '../../redux/slices/products/tools';
 
 import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm'

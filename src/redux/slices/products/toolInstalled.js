@@ -68,14 +68,12 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
       state.success = true;
       state.initial = true;
     },
-
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -100,7 +98,6 @@ export const {
   gotoStep,
   backStep,
   nextStep,
-
 } = slice.actions;
 
 // ----------------------------Save Note------------------------------------------
@@ -115,9 +112,7 @@ export function addToolInstalled(machineId,params) {
                 isActive: params.isActive,
             }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
-    //   dispatch(slice.actions.ToolInstalledFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
-      // dispatch(getToolInstalled(machineId));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -161,7 +156,6 @@ export function getToolsInstalled(machineId) {
       );
       dispatch(slice.actions.getToolsInstalledSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Installed Tools loaded successfully'));
-
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -191,13 +185,11 @@ export function deleteToolInstalled(machineId,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const response = await axios.delete(`${CONFIG.SERVER_URL}customers/notes/${id}`,
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${id}` , 
       {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
-      // state.responseMessage = response.data;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

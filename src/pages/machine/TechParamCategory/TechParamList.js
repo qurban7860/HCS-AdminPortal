@@ -1,20 +1,7 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Grid,
-  Card,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  Stack,
-  TableContainer,
-} from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer, } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
@@ -22,7 +9,6 @@ import { getTechparamcategories, getTechparamcategory, deleteTechparamcategory }
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -34,14 +20,11 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import TechParamListTableRow from './TechParamListTableRow';
 import TechParamListTableToolbar from './TechParamListTableToolbar';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
@@ -50,7 +33,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-
+  
 ];
 
 const STATUS_OPTIONS = [
@@ -62,10 +45,7 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
 // ----------------------------------------------------------------------
-
-
 
 export default function TechParamList() {
   const {
@@ -91,8 +71,6 @@ export default function TechParamList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
@@ -107,11 +85,6 @@ export default function TechParamList() {
 
   const { techparamcategories, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparamcategory);
 
-  // const a= useSelector((state) => state.techparamcategory);
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
-
   useLayoutEffect( () => {
      dispatch(getTechparamcategories());
   }, [dispatch]);
@@ -119,8 +92,8 @@ export default function TechParamList() {
   useEffect(() => {
     if (initial) {
       if (techparamcategories && !error) {
-        enqueueSnackbar(responseMessage);
-      }
+        enqueueSnackbar(responseMessage); 
+      } 
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -162,9 +135,8 @@ export default function TechParamList() {
   };
 
   const handleDeleteRow = async (id) => {
-    await dispatch(deleteTechparamcategory(id));
     try {
-      // await dispatch(deleteSupplier(id));
+      await dispatch(deleteTechparamcategory(id));
       dispatch(getTechparamcategories());
       setSelected([]);
 
@@ -197,7 +169,6 @@ export default function TechParamList() {
   };
 
   const handleEditRow = async (id) => {
-    // dispatch(getTool(id));
     await dispatch(getTechparamcategory(id));
     navigate(PATH_MACHINE.techParam.edit(id));
   };
@@ -216,15 +187,8 @@ export default function TechParamList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name='Technical Parameter Categories' icon='material-symbols:list-alt-outline' setting="enable" />
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
+          <Cover name='Technical Parameter Category List' icon='material-symbols:list-alt-outline' setting="enable" />
         </Card>
         <Card sx={{mt: 3 }}>
           <TechParamListTableToolbar
@@ -239,7 +203,7 @@ export default function TechParamList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-
+              
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -285,7 +249,7 @@ export default function TechParamList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
+                          // onEditRow={() => handleEditRow(row._id)} 
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -304,10 +268,10 @@ export default function TechParamList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
+            
           />
         </Card>
-
+        
       </Container>
 
       <ConfirmDialog
@@ -350,7 +314,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (produc) => produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    inputData = inputData.filter( (produc) => produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
     // (produc?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
     fDate(produc?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }

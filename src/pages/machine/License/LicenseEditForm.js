@@ -26,8 +26,7 @@ import FormProvider, {
   RHFAutocomplete,
   RHFSwitch
 } from '../../../components/hook-form';
-import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
-
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 
 // ----------------------------------------------------------------------
 

@@ -39,13 +39,12 @@ const slice = createSlice({
       state.formVisibility = action.payload;
     },
 
-    // RESET CUSTOMER
+    // RESET License
     resetLicense(state){
       state.license = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-
     },
 
     // HAS ERROR
@@ -55,7 +54,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  License
     getLicensesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -63,15 +62,13 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET License
     getLicenseSuccess(state, action) {
-      
       state.isLoading = false;
       state.success = true;
       state.license = action.payload;
       state.initial = true;
     },
-
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -79,7 +76,6 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-
 
     backStep(state) {
       state.checkout.activeStep -= 1;
@@ -105,7 +101,6 @@ export const {
   gotoStep,
   backStep,
   nextStep,
-
 } = slice.actions;
 
 
@@ -115,8 +110,6 @@ export function addLicense (machineId, supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      // isDisabled: !params.isDisabled,
-
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
     } catch (e) {
       console.log(e);
@@ -138,7 +131,6 @@ export function getLicenses (machineId){
           isArchived: false
         }
       });
-
       dispatch(slice.actions.getLicensesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Licenses loaded successfully'));
     } catch (error) {

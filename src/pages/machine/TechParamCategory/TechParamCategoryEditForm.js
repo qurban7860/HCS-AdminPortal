@@ -1,28 +1,21 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // slice
-import { updateTechparamcategory, getTechparamcategory, getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
+import { updateTechparamcategory, getTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
 import { useSettingsContext } from '../../../components/settings';
-import {CONFIG} from '../../../config-global';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
-import {useSnackbar} from '../../../components/snackbar'
-import Iconify from '../../../components/iconify/Iconify';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
+import {useSnackbar} from '../../../components/snackbar';
+import FormProvider, {  RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import {Cover} from '../../components/Cover'
 
 // ----------------------------------------------------------------------
@@ -53,8 +46,6 @@ export default function TechParamCategoryEditForm() {
     [techparamcategory]
   );
 
-  const { themeStretch } = useSettingsContext();
-  
   const methods = useForm({
     resolver: yupResolver(EditToolSchema),
     defaultValues,
@@ -68,13 +59,8 @@ export default function TechParamCategoryEditForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
-
   useLayoutEffect(() => {
     dispatch(getTechparamcategory(id));
-    // dispatch(getSites(customer._id));
-    // dispatch(getSPContacts());
-
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -84,10 +70,7 @@ export default function TechParamCategoryEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [techparamcategory]);
 
-  const toggleCancel = () => 
-    {
-      navigate(PATH_MACHINE.techParam.view(id));
-    };
+  const toggleCancel = () =>  { navigate(PATH_MACHINE.techParam.view(id)); };
 
   const onSubmit = async (data) => {
     try {
@@ -111,57 +94,21 @@ export default function TechParamCategoryEditForm() {
             </Card>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Box
-              rowGap={2}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
-
-              <RHFTextField name="name" label="Technical Parameter Category"  />
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSwitch name="isActive" labelPlacement="start" label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
-                />
-             </Box>
-             
-              
-             
-              </Stack>
-
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
-                }}
-              > 
-
-                <LoadingButton 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
-                  loading={isSubmitting}>
-                    Save Changes
-                </LoadingButton>
-
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
+              <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
+                <RHFTextField name="name" label="Technical Parameter Category"  />
+                <RHFTextField name="description" label="Description" minRows={7} multiline />
+                <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+              </Box>
+            </Stack>
+            <Box rowGap={5} columnGap={4} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(5, 1fr)', }} > 
+              <LoadingButton  type="submit"  variant="contained"  size="large"  loading={isSubmitting}>
+                  Save Changes
+              </LoadingButton>
+              <Button  onClick={toggleCancel} variant="outlined"  size="large">   Cancel </Button>
             </Box>  
-            </Card>
-          
-          </Grid>
+          </Card>
         </Grid>
+      </Grid>
     </FormProvider>
   );
 }

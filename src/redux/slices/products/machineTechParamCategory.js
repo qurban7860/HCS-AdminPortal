@@ -190,7 +190,6 @@ export function updateTechparamcategory(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-console.log("Params : ",Id,params)
       /* eslint-disable */
       let data = {
         name: params.name,

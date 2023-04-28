@@ -35,6 +35,7 @@ SecurityUserAddForm.propTypes = {
 };
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
+  const regEx = /^[2][0-9][0-9]$/
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -42,7 +43,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const [customerVal, setCustomerVal] = useState("");
   const { contacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState("");
-  console.log("contactVal: " , contactVal)
   const { roles } = useSelector((state) => state.role);
   const [phone, setPhone] = useState('')
 
@@ -137,8 +137,6 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
   }
 
   const onSubmit = async (data) => {
-      try{
-        console.log("data : ", data)
         if(phone && phone.length > 7){
           data.phone = phone ;
         }
@@ -159,15 +157,27 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
           roleVal.map((role)=>(roleId.push(role?._id)))
           data.roles = roleId;
         }
-        dispatch(addSecurityUser(data));
-        reset();
-        enqueueSnackbar('Create success!');
-        dispatch(resetContacts());
-        navigate(PATH_DASHBOARD.user.list);
-      } catch(err){
-        enqueueSnackbar(err.Message);
-        console.error(err.Message);
-      }
+      dispatch(addSecurityUser(data))
+      .then(res => {
+        console.log("res : " , res)
+        if(regEx.test(res.status)){ 
+          enqueueSnackbar(res.statusText)
+          dispatch(resetContacts())
+          reset()
+          navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+        }else{
+          enqueueSnackbar(res.statusText,{ variant: `error` })
+        }
+      }).catch(err => {
+        if(err.Message){
+          enqueueSnackbar(err.Message,{ variant: `error` })
+        }else if(err.message){
+          enqueueSnackbar(err.message,{ variant: `error` })
+        }else{
+          enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        }
+      });
+
   };
 
   const toggleCancel = ()=>{

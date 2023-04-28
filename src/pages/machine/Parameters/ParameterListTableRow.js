@@ -50,7 +50,6 @@ export default function ParameterListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);

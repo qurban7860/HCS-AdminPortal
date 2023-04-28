@@ -1,31 +1,19 @@
-import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
+import { Card, Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
-
-import { getMachinestatuses, setMachinestatusesEditFormVisibility } from '../../../redux/slices/products/statuses';
-// auth
-import { useAuthContext } from '../../../auth/useAuthContext';
+import { setMachinestatusesEditFormVisibility } from '../../../redux/slices/products/statuses';
 // components
-
-import Iconify from '../../../components/iconify/Iconify';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-
-import StatusList from './StatusList';
 import StatusViewForm from './StatusViewForm';
 import { Cover } from '../../components/Cover';
 import StatusEditForm from './StatusEditForm';
-
-
-
 
 StatusView.propTypes = {
   editPage: PropTypes.bool,
@@ -36,14 +24,8 @@ StatusView.propTypes = {
 export default function StatusView({editPage}) {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
-
-  const { themeStretch } = useSettingsContext();
-
   const { machinestatusEditFormFlag } = useSelector((state) => state.machinestatus);
 
-  const { machinestatusEditFormVisibility } = useSelector((state) => state.machinestatus);
-  
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
 
@@ -67,23 +49,11 @@ export default function StatusView({editPage}) {
 
   
   return (
-    <>
-      <Container maxWidth={false}>
-        
-
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name={machinestatus?.name} setting="enable" backLink={PATH_MACHINE.machineStatus.list}/> 
-        </Card>
-        
-        <StatusViewForm/>
-      </Container>
-    </>
+    <Container maxWidth={false}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+        <Cover name={machinestatus?.name} setting="enable" backLink={PATH_MACHINE.machineStatus.list}/> 
+      </Card>
+      <StatusViewForm/>
+    </Container>
   );
 }
