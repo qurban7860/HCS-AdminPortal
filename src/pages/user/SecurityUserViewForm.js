@@ -74,13 +74,11 @@ export default function SecurityUserViewForm() {
 
     useEffect(()=>{
       batch(() => {
-        if( securityUser?.contact?._id){
           dispatch(getCustomer(securityUser?.customer?._id))
-          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-          console.log("user Contact : ")
-        }
-      });
-    },[dispatch,initial,securityUser])
+          if(securityUser && securityUser?.contact && securityUser?.contact?._id){
+            dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
+          }})
+    },[dispatch,securityUser])
 
     
   const handleEdit = () => {

@@ -39,7 +39,9 @@ export default function SecurityUserEditForm() {
   const ROLES = [];
   const securityUserRoles = [];
 roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
-securityUser.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
+if(securityUser?.roles){
+  securityUser?.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
+}
   const [ name, setName ] = useState("");
   const [ email, setEmail ] = useState("");
   const { customers } = useSelector((state) => state.customer);

@@ -178,10 +178,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const onSubmit = async (data) => {
       try{
-        if(phone.length > 7){
+        if(phone && phone.length > 7){
           data.phone = phone ;
         }
-        if(fax.length > 7){
+        if(fax && fax.length > 7){
           data.fax = fax
         }
         if(country){
