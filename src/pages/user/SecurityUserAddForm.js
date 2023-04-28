@@ -162,7 +162,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
       .then(res => {
         // console.log("res res.data.user._id : " , res.data.user._id)
         if(regEx.test(res.status)){ 
-          // enqueueSnackbar(res.statusText)
+          enqueueSnackbar(res.statusText)
           dispatch(resetContacts())
           reset()
           navigate(PATH_DASHBOARD.user.view(res.data.user._id));

@@ -53,7 +53,7 @@ export default function SecurityUserViewForm() {
       dispatch(getSecurityUser(id)).then(res => {
           console.log("res : " , res)
           if(regEx.test(res.status)){ 
-            enqueueSnackbar(res.statusText)
+            // enqueueSnackbar(res.statusText)
           }else{
             enqueueSnackbar(res.statusText,{ variant: `error` })
           }
