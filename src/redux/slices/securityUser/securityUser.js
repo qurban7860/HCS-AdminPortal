@@ -212,3 +212,17 @@ export function deleteSecurityUser(id) {
       return response;
   };
 }
+//------------------------------------------------------------------------------
+
+export function SecurityUserPasswordUpdate(data,id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${id}`,
+      data
+      );
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+      }
+      return response;
+  };
+}
