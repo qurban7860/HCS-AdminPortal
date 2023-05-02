@@ -47,6 +47,7 @@ export default function StatusAddForm() {
     region: Yup.string(),
     // country: Yup.string(),
     city: Yup.string(),
+    postcode: Yup.string(),
   });
 
   const defaultValues = useMemo(
@@ -63,6 +64,7 @@ export default function StatusAddForm() {
       region: '',
       // country: '',
       city: '',
+      postcode: '' ,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -165,6 +167,7 @@ export default function StatusAddForm() {
                   <RHFTextField name="street" label="Street"/>
                   <RHFTextField name="suburb" label="Suburb" />
                   <RHFTextField name="city" label="City" />
+                  <RHFTextField name="postcode" label="Post Code" />
                   <RHFTextField name="region" label="Region" />
                   <RHFAutocomplete
                      id="country-select-demo"

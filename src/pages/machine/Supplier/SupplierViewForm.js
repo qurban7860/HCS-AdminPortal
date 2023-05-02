@@ -68,6 +68,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         street: supplier?.address?.street || '',
         suburb: supplier?.address?.suburb || '',
         city: supplier?.address?.city || '',
+        postcode: supplier?.address?.postcode || '',
         region: supplier?.address?.region || '',
         country: supplier?.address?.country || '',
         isActive: supplier?.isActive ,
@@ -185,6 +186,15 @@ export default function SupplierViewForm({ currentSupplier = null }) {
           </Typography>
 
           <Typography variant="body2">{defaultValues.city }</Typography>
+
+        </Grid>
+
+        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
+          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+            Post Code
+          </Typography>
+
+          <Typography variant="body2">{defaultValues.postcode }</Typography>
 
         </Grid>
 

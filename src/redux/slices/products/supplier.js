@@ -184,6 +184,9 @@ export function addSupplier(params) {
         if(params.city){
           data.address.city = params.city;        
         }
+        if(params.postcode){
+          data.address.postcode = params.postcode;        
+        }
         if(params.region){
           data.address.region = params.region;        
         }
@@ -221,6 +224,7 @@ export function updateSupplier(params,Id) {
           street: params.street,
           suburb: params.suburb,
           city: params.city,
+          postcode: params.postcode,
           region: params.region,
           country: params.country,
         }
