@@ -50,6 +50,8 @@ export default function SupplierEditForm() {
     street: Yup.string(),
     suburb: Yup.string(),
     region: Yup.string(),
+    city: Yup.string(),
+    postcode: Yup.string(),
     // country: Yup.string().nullable(),
   });
 
@@ -66,6 +68,7 @@ export default function SupplierEditForm() {
       street: supplier?.address?.street || '',
       suburb: supplier?.address?.suburb || '',
       city: supplier?.address?.city || '',
+      postcode: supplier?.address?.postcode || '',
       region: supplier?.address?.region || '',
       // country: supplier?.address?.country || '',
       isActive: supplier.isActive || true,
@@ -199,6 +202,7 @@ export default function SupplierEditForm() {
                   <RHFTextField name="street" label="Street"/>
                   <RHFTextField name="suburb" label="Suburb" />
                   <RHFTextField name="city" label="City" />
+                  <RHFTextField name="postcode" label="Post Code" />
                   <RHFTextField name="region" label="Region" />
                     <RHFAutocomplete
                      id="country-select-demo"

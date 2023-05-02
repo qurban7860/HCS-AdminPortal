@@ -64,6 +64,7 @@ export default function MachineSuppliers() {
     suburb: Yup.string(),
     region: Yup.string(),
     country: Yup.string(),
+    postcode: Yup.string(),
     city: Yup.string(),
 
   });
@@ -82,6 +83,7 @@ export default function MachineSuppliers() {
       region: '',
       country: '',
       city: '',
+      postcode: '',
       isActive: true,
 
     }),
@@ -213,6 +215,7 @@ export default function MachineSuppliers() {
               <RHFTextField name="street" label="Street"/>
               <RHFTextField name="suburb" label="Suburb" />
               <RHFTextField name="city" label="City" />
+              <RHFTextField name="postcode" label="Post Code" />
               <RHFTextField name="region" label="Region" />
               <RHFAutocomplete
                   name="country"
@@ -223,9 +226,6 @@ export default function MachineSuppliers() {
 
                   ChipProps={{ size: 'small' }}
                 />
-
-
-
 
              </Box>
              <RHFSwitch

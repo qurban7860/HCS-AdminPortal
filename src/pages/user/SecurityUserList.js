@@ -204,7 +204,7 @@ export default function SecurityUserList() {
           }
         /> */}
         <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-          <Cover name='Users List' icon="ph:users-light"/>
+          <Cover name='Users' icon="ph:users-light"/>
         </Card>
         <Card>
           {/* <Tabs
