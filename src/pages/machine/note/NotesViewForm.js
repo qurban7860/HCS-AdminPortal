@@ -37,10 +37,10 @@ export default function NoteViewForm({currentNote = null}) {
     () => ({
       note: currentNote?.note || "",
       isActive :                currentNote.isActive,
-      createdByFullname:        currentNote?.createdBy?.name || "",
+      createdByFullName:        currentNote?.createdBy?.name || "",
       createdAt:                currentNote?.createdAt || "",
       createdIP:                currentNote?.createdIP || "",
-      updatedByFullname:        currentNote?.updatedBy?.name || "",
+      updatedByFullName:        currentNote?.updatedBy?.name || "",
       updatedAt:                currentNote?.updatedAt || "",
       updatedIP:                currentNote?.updatedIP || "",
     }),

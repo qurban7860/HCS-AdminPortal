@@ -17,6 +17,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormField from '../../components/ViewFormField';
 
 // ----------------------------------------------------------------------
 SiteViewForm.propTypes = {
@@ -78,10 +79,10 @@ export default function SiteViewForm({ currentSite = null }) {
         primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
         isActive: currentSite.isActive,
         createdAt:                currentSite?.createdAt || "",
-        createdByFullname:           currentSite?.createdBy?.name || "",
+        createdByFullName:           currentSite?.createdBy?.name || "",
         createdIP:                currentSite?.createdIP || "",
         updatedAt:                currentSite?.updatedAt || "",
-        updatedByFullname:           currentSite?.updatedBy?.name || "",
+        updatedByFullName:           currentSite?.updatedBy?.name || "",
         updatedIP:                currentSite?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

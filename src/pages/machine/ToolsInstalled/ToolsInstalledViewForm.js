@@ -61,10 +61,10 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
         toolNote:                 currentTool?.note|| "",
         isActive:               currentTool?.isActive,
         createdAt:                currentTool?.createdAt || "",
-        createdByFullname:           currentTool?.createdBy?.name || "",
+        createdByFullName:           currentTool?.createdBy?.name || "",
         createdIP:                currentTool?.createdIP || "",
         updatedAt:                currentTool?.updatedAt || "",
-        updatedByFullname:           currentTool?.updatedBy?.name || "",
+        updatedByFullName:           currentTool?.updatedBy?.name || "",
         updatedIP:                currentTool?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

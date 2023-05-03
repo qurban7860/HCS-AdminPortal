@@ -63,10 +63,10 @@ useLayoutEffect(()=>{
         description:techparam?.description || '',
         category: techparam?.category?.name || '', 
         isActive: techparam?.isActive,
-        createdByFullname:        techparam?.createdBy?.name || "",
+        createdByFullName:        techparam?.createdBy?.name || "",
         createdAt:                techparam?.createdAt || "",
         createdIP:                techparam?.createdIP || "",
-        updatedByFullname:        techparam?.updatedBy?.name || "",
+        updatedByFullName:        techparam?.updatedBy?.name || "",
         updatedAt:                techparam?.updatedAt || "",
         updatedIP:                techparam?.updatedIP || "",
        

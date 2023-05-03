@@ -39,10 +39,10 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
         description:              techparamcategory?.description || "",
         isActive:                 techparamcategory.isActive ,
         createdAt:                techparamcategory?.createdAt || "",
-        createdByFullname:        techparamcategory?.createdBy?.name || "",
+        createdByFullName:        techparamcategory?.createdBy?.name || "",
         createdIP:                techparamcategory?.createdIP || "",
         updatedAt:                techparamcategory?.updatedAt || "",
-        updatedByFullname:        techparamcategory?.updatedBy?.name || "",
+        updatedByFullName:        techparamcategory?.updatedBy?.name || "",
         updatedIP:                techparamcategory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

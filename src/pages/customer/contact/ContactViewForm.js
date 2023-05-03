@@ -21,6 +21,7 @@ import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
  
 // ----------------------------------------------------------------------
@@ -71,25 +72,24 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const defaultValues = useMemo(
     () => ({
-      firstName: currentContact ? currentContact.firstName : contact?.firstName || '',
-      lastName: currentContact ? currentContact.lastName : contact?.lastName || '',
-      title: currentContact ? currentContact.title : contact?.title || '',
-      contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
-      phone: currentContact ? currentContact.phone : contact?.phone || '',
-      email: currentContact ? currentContact.email : contact?.email || '',
-
-      street: currentContact ? currentContact.address?.street : contact?.address.street || '',
-      suburb: currentContact ? currentContact.address?.suburb : contact?.address.suburb || '',
-      city: currentContact ? currentContact.address?.city : contact?.address.city || '',
-      postcode: currentContact ? currentContact.address?.postcode : contact?.address.postcode || '',
-      region: currentContact ? currentContact.address?.region : contact?.address.region || '',
-      country: currentContact ? currentContact.address?.country : contact?.address.country || '',
-        isActive: currentContact.isActive,
+      firstName:                currentContact ? currentContact.firstName : contact?.firstName || '',
+      lastName:                 currentContact ? currentContact.lastName : contact?.lastName || '',
+      title:                    currentContact ? currentContact.title : contact?.title || '',
+      contactTypes:             currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
+      phone:                    currentContact ? currentContact.phone : contact?.phone || '',
+      email:                    currentContact ? currentContact.email : contact?.email || '',
+      street:                   currentContact ? currentContact.address?.street : contact?.address.street || '',
+      suburb:                   currentContact ? currentContact.address?.suburb : contact?.address.suburb || '',
+      city:                     currentContact ? currentContact.address?.city : contact?.address.city || '',
+      postcode:                 currentContact ? currentContact.address?.postcode : contact?.address.postcode || '',
+      region:                   currentContact ? currentContact.address?.region : contact?.address.region || '',
+      country:                  currentContact ? currentContact.address?.country : contact?.address.country || '',
+      isActive:                 currentContact.isActive,
       createdAt:                currentContact?.createdAt || "",
-      createdByFullname:           currentContact?.createdBy?.name || "",
+      createdByFullName:        currentContact?.createdBy?.name || "",
       createdIP:                currentContact?.createdIP || "",
       updatedAt:                currentContact?.updatedAt || "",
-      updatedByFullname:           currentContact?.updatedBy?.name || "",
+      updatedByFullName:        currentContact?.updatedBy?.name || "",
       updatedIP:                currentContact?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,12 +97,10 @@ export default function ContactViewForm({ currentContact = null }) {
   );
 
   return (
-    <Grid sx={{ mt:-4, }} sm={18}>
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, pt:2, pr:2  }}>
-        <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >Edit</Button>
-        <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />} > Delete</Button>
-      </Stack>
-      <Grid container>
+    <Grid >
+
+          <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+          <Grid container >
           <ViewFormField sm={6} heading='First Name'    param={defaultValues.firstName ?    defaultValues.firstName : ''}/>
           <ViewFormField sm={6} heading='Last Name'     param={defaultValues.lastName  ?    defaultValues.lastName : ''}/>
           <ViewFormField sm={6} heading='Title'         param={defaultValues.title ?        defaultValues.title : ''}/>
@@ -115,23 +113,11 @@ export default function ContactViewForm({ currentContact = null }) {
           <ViewFormField sm={6} heading='Region'        param={defaultValues.region ?       defaultValues.region : ''}/>
           <ViewFormField sm={6} heading='Post Code'     param={defaultValues.postcode ?     defaultValues.postcode : ''}/>
           <ViewFormField sm={6} heading='Country'       param={defaultValues.country ?      defaultValues.country : ''}/>
-      </Grid>
-            
+          </Grid>
           <Grid item xs={12} sm={12} ><Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  /></Grid>
           
           <ViewFormAudit defaultValues={defaultValues}/>
-          
-          <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
-          />
+ 
       </Grid>
   );
 }

@@ -11,7 +11,7 @@ const {createdByFullName,createdAt,createdIP,updatedByFullName,updatedAt,updated
   const updated =[updatedByFullName,updatedAt,updatedIP]
     return (
       <>
-        <Grid item md={12}  sx={{  overflowWrap: "break-word",display:'flex'}}>
+        <Grid container item md={12}  sx={{  overflowWrap: "break-word",display:'flex'}}>
             <Grid item xs={12} sm={6} >
                 <Typography paragraph variant="body2" sx={{ px:2, color: 'text.disabled' }}>
                   created by: {createdByFullName},{fDate(createdAt)},{createdIP}
