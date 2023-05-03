@@ -78,22 +78,13 @@ export default function NoteViewForm({currentNote = null}) {
   );
   return (
       <Grid >
-        {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mr:2 }}>
-          <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />}>
-            Edit
-          </Button>
-          <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />}>
-            Delete
-          </Button>
-        </Stack> */}
             <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
 
-            <ViewFormField sm={6} heading='Site'       param={defaultValues.site_name ?           defaultValues.site_name : ''}/>
-            <ViewFormField sm={6} heading='Contact'    param={defaultValues.contact_firstName ?   defaultValues.contact_firstName : ''} secondParam={defaultValues.contact_lastName !== '' ? defaultValues.contact_lastName:""}/>
-            <ViewFormField sm={12} heading='Note'       param={defaultValues.note ?                defaultValues.note : ''}/>
+            <ViewFormField sm={6}   heading='Site'       param={defaultValues.site_name ?           defaultValues.site_name : ''}/>
+            <ViewFormField sm={6}   heading='Contact'    param={defaultValues.contact_firstName ?   defaultValues.contact_firstName : ''} secondParam={defaultValues.contact_lastName !== '' ? defaultValues.contact_lastName:""}/>
+            <ViewFormField sm={12}  heading='Note'       param={defaultValues.note ?                defaultValues.note : ''}/>
             
             <ViewFormAudit defaultValues={defaultValues}/>
-            <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?" action={<Button variant="contained" color="error" onClick={onDelete}>Delete</Button> } />
       </Grid>
   );
 }
