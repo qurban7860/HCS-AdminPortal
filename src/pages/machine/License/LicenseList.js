@@ -165,7 +165,7 @@ export default function LicenseList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 

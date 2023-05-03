@@ -160,7 +160,7 @@ export default function SupplierEditForm() {
       navigate(PATH_MACHINE.supplier.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(err);
+      console.error(err.message);
     }
   };
 

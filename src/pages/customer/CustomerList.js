@@ -178,7 +178,7 @@ export default function CustomerList() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err.message);
     }
   };
 

@@ -173,7 +173,7 @@ export default function NoteList() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err.message);
     }
   };
 

@@ -84,7 +84,7 @@ export default function StatusEditForm() {
       navigate(PATH_MACHINE.machineStatus.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(err);
+      console.error(err.message);
     }
   };
 

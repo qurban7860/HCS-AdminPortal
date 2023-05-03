@@ -161,7 +161,7 @@
         // navigate(PATH_DASHBOARD.contact.list);
       } catch (err) {
         enqueueSnackbar('Saving failed!');
-        console.error(err);
+        console.error(err.message);
       }
     };
 

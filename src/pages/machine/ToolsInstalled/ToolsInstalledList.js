@@ -164,7 +164,7 @@ export default function ToolsInstalledList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 

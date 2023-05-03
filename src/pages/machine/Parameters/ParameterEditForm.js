@@ -110,7 +110,7 @@ export default function ParameterEditForm() {
     } catch (err) {
       console.log(err)
       enqueueSnackbar('Saving failed!');
-      // console.error(error);
+      console.error(err.message);
     }
   };
 

@@ -100,7 +100,7 @@ export default function ToolEditForm() {
       navigate(PATH_MACHINE.tool.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 

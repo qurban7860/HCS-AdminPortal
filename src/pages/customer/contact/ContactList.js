@@ -168,7 +168,7 @@ export default function ContactList() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err.message);
     }
   };
 

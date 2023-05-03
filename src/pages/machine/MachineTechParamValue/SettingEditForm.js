@@ -115,7 +115,7 @@ export default function SettingEditForm() {
       setTechParam("")
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 
