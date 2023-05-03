@@ -165,7 +165,7 @@ export default function SiteList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 

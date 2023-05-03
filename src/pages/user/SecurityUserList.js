@@ -145,7 +145,7 @@ export default function SecurityUserList() {
 
       
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 

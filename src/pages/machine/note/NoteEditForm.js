@@ -60,7 +60,7 @@ export default function NoteEditForm() {
       // navigate(PATH_DASHBOARD.note.list);
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
   return (

@@ -177,7 +177,7 @@ export default function CategoryList() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err.message);
     }
   };
 

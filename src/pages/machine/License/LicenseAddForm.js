@@ -74,7 +74,7 @@ export default function LicenseAddForm() {
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(err);
+      console.error(err.message);
     }
   };
 

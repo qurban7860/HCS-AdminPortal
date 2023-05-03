@@ -81,7 +81,7 @@ export default function TechParamCategoryEditForm() {
       navigate(PATH_MACHINE.techParam.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 

@@ -165,7 +165,7 @@ export default function SettingList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 

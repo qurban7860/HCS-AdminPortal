@@ -52,7 +52,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const { machinemodel } = useSelector((state) => state.machinemodel);
-
+console.log("machinemodel : ", machinemodel)
   const { id } = useParams();
 
   const dispatch = useDispatch()
@@ -61,11 +61,11 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:machinemodel?.name || '',
-        description:machinemodel?.description || '',
-        displayOrderNo: machinemodel?.displayOrderNo || '',
-        category: machinemodel?.category || '',
-        isActive: machinemodel?.isActive,
+        name:                     machinemodel?.name || '',
+        description:              machinemodel?.description || '',
+        displayOrderNo:           machinemodel?.displayOrderNo || '',
+        category:                 machinemodel?.category || '',
+        isActive:                 machinemodel?.isActive,
         createdByFullname:        machinemodel?.createdBy?.name || "",
         createdAt:                machinemodel?.createdAt || "",
         createdIP:                machinemodel?.createdIP || "",

@@ -173,7 +173,7 @@ export default function ToolList() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err.message);
     }
   };
 

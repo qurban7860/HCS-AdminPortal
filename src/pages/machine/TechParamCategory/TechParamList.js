@@ -146,7 +146,7 @@ export default function TechParamList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 

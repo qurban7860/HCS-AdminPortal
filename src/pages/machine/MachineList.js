@@ -131,7 +131,7 @@ export default function MachineList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 

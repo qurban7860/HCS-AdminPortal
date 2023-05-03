@@ -85,7 +85,8 @@ export default function ModelAddForm() {
   }, [modelVal, setValue])
 
 
-  const onSubmit = async (data) => {    
+  const onSubmit = async (data) => {   
+    console.log("data : ",data) 
       try{
         await dispatch(addMachineModel(data));
         reset();

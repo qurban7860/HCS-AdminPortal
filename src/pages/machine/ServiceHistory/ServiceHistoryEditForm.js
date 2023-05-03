@@ -113,7 +113,7 @@ export default function SiteEditForm() {
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 

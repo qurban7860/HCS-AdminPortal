@@ -39,12 +39,12 @@ import {Cover} from '../../components/Cover';
 
 export default function ModelEditForm() {
 
-  const { error, machineModel } = useSelector((state) => state.machinemodel);
+  const { machinemodel } = useSelector((state) => state.machinemodel);
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const [category, setCategory] = useState("")
   const navigate = useNavigate();
-  // console.log(navigate, 'test')
+  console.log("machineModel : ", machinemodel)
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -54,11 +54,11 @@ export default function ModelEditForm() {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if (machineModel) {
+    if (machinemodel) {
       reset(defaultValues);
-      setCategory(machineModel.category);
+      setCategory(machinemodel.category);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }}, [machineModel])
+  }}, [machinemodel])
 
 
   const EditModelSchema = Yup.object().shape({
@@ -71,14 +71,14 @@ export default function ModelEditForm() {
   const defaultValues = useMemo(
     () => (
       {
-        name:             machineModel?.name || '',
-        description:      machineModel?.description || '',
-        displayOrderNo:   machineModel?.displayOrderNo || '',
-        // category:      machineModel?.category || '',
-        isActive:         machineModel?.isActive,
+        name:             machinemodel?.name || '',
+        description:      machinemodel?.description || '',
+        displayOrderNo:   machinemodel?.displayOrderNo || '',
+        // category:      machinemodel?.category || '',
+        isActive:         machinemodel?.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machineModel]
+    [machinemodel]
     );
 
   const { themeStretch } = useSettingsContext();
@@ -101,7 +101,6 @@ export default function ModelEditForm() {
  
   const toggleCancel = () => 
     {
-      dispatch(updateMachineModel(false));
       navigate(PATH_MACHINE.machineModel.view(id))
     };
 
@@ -118,7 +117,7 @@ export default function ModelEditForm() {
       navigate(PATH_MACHINE.machineModel.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 

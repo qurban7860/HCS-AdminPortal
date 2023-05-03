@@ -89,7 +89,7 @@ export default function LicenseEditForm() {
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
-      console.error(error);
+      console.error(err.message);
     }
   };
 

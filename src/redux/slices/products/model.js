@@ -152,17 +152,12 @@ export function addMachineModel(params) {
           description: params.description,
         };
         /* eslint-enable */
-        if(params.description){
-            data.description = params.description;
-          }
-          if(params.displayOrderNo){
-            data.displayOrderNo = params.displayOrderNo;
-          }
           if(params.category !== ""){
-            data.category = params.category._id;
+            data.category = params.category;
           }else{
             data.category = null
           }
+          console.log("data : ",data);
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
         dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
       } catch (error) {

@@ -175,7 +175,7 @@ export default function SupplierList() {
         }
       }
     } catch (err) {
-      // console.log(err);
+      console.log(err.message);
     }
   };
 
