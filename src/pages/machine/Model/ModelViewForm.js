@@ -66,10 +66,10 @@ console.log("machinemodel : ", machinemodel)
         displayOrderNo:           machinemodel?.displayOrderNo || '',
         category:                 machinemodel?.category || '',
         isActive:                 machinemodel?.isActive,
-        createdByFullname:        machinemodel?.createdBy?.name || "",
+        createdByFullName:        machinemodel?.createdBy?.name || "",
         createdAt:                machinemodel?.createdAt || "",
         createdIP:                machinemodel?.createdIP || "",
-        updatedByFullname:        machinemodel?.updatedBy?.name || "",
+        updatedByFullName:        machinemodel?.updatedBy?.name || "",
         updatedAt:                machinemodel?.updatedAt || "",
         updatedIP:                machinemodel?.updatedIP || "",
       }),
@@ -94,6 +94,14 @@ console.log("machinemodel : ", machinemodel)
       </Stack>
       <Grid container>
 
+      <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
+            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
+              Category Name
+            </Typography>
+
+            <Typography variant="body2">{defaultValues?.category?.name || " "}</Typography>
+        </Grid>
+
         <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
           <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
             Name
@@ -113,14 +121,6 @@ console.log("machinemodel : ", machinemodel)
 
         </Grid>
 
-        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Category Name
-            </Typography>
-
-            <Typography variant="body2">{defaultValues?.category?.name || " "}</Typography>
-
-        </Grid>
 
         <Grid item xs={12} sm={12} >
          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />

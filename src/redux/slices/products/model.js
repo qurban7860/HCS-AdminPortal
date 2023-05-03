@@ -182,7 +182,7 @@ export function updateMachineModel(params) {
         description: params.description,
       };
      /* eslint-enable */
-      if(params.category !== ""){
+      if(params.category !== null && params.category !== undefined){
         data.category = params.category._id;
       }else{
         data.category = null

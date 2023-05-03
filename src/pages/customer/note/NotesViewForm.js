@@ -20,6 +20,8 @@ import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../.
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Iconify from '../../../components/iconify';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormField from '../../components/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 NoteViewForm.propTypes = {
   currentNote: PropTypes.object,
@@ -66,60 +68,32 @@ export default function NoteViewForm({currentNote = null}) {
       note: currentNote?.note || "",
       isActive: currentNote.isActive,
       createdAt:                currentNote?.createdAt || "",
-      createdByFullname:           currentNote?.createdBy?.name || "",
+      createdByFullName:           currentNote?.createdBy?.name || "",
       createdIP:                currentNote?.createdIP || "",
       updatedAt:                currentNote?.updatedAt || "",
-      updatedByFullname:           currentNote?.updatedBy?.name || "",
+      updatedByFullName:           currentNote?.updatedBy?.name || "",
       updatedIP:                currentNote?.updatedIP || "",
     }),
     [currentNote]
   );
   return (
-      <Grid sx={{ p: 2 }}>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+      <Grid >
+        {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mr:2 }}>
           <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />}>
             Edit
           </Button>
           <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />}>
             Delete
           </Button>
-        </Stack>
-        <Grid container>
-            <Grid item xs={12} sm={6} >
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                Site
-              </Typography>
-              <Typography variant="body2">
-                  {defaultValues.site_name}
-              </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                  Contact
-              </Typography>
-              <Typography variant="body2">
-                  {defaultValues.contact_firstName} {defaultValues.contact_lastName !== '' ?defaultValues.contact_lastName:""}
-              </Typography>
-            </Grid>
-          <Grid item xs={18} sm={12} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-                  Note
-              </Typography>
-            </Grid>
-            <Typography variant="string" sx={{ whiteSpace: 'pre-line'}}>
-                {defaultValues.note}
-            </Typography>
-            <Grid item xs={12} sm={12} >
-              Active
-            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-            </Grid>
-          </Grid>
-          <Grid container>
+        </Stack> */}
+            <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+
+            <ViewFormField sm={6} heading='Site'       param={defaultValues.site_name ?           defaultValues.site_name : ''}/>
+            <ViewFormField sm={6} heading='Contact'    param={defaultValues.contact_firstName ?   defaultValues.contact_firstName : ''} secondParam={defaultValues.contact_lastName !== '' ? defaultValues.contact_lastName:""}/>
+            <ViewFormField sm={12} heading='Note'       param={defaultValues.note ?                defaultValues.note : ''}/>
+            
             <ViewFormAudit defaultValues={defaultValues}/>
-          </Grid>
-          <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?" action={<Button variant="contained" color="error" onClick={onDelete}>Delete</Button> } />
-        </Grid>
+            <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?" action={<Button variant="contained" color="error" onClick={onDelete}>Delete</Button> } />
       </Grid>
   );
 }

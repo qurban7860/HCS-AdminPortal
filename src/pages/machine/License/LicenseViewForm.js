@@ -64,10 +64,10 @@ export default function LicenseViewForm({ currentLicense = null }) {
     () => (
       {
         licenseDetail:            currentLicense?.licenseDetail || "",
-        createdByFullname:        currentLicense?.createdBy?.name || "",
+        createdByFullName:        currentLicense?.createdBy?.name || "",
         createdAt:                currentLicense?.createdAt || "",
         createdIP:                currentLicense?.createdIP || "",
-        updatedByFullname:        currentLicense?.updatedBy?.name || "",
+        updatedByFullName:        currentLicense?.updatedBy?.name || "",
         updatedAt:                currentLicense?.updatedAt || "",
         updatedIP:                currentLicense?.updatedIP || "",
       }),

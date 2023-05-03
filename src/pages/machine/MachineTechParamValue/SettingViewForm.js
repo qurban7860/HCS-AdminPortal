@@ -66,10 +66,10 @@ export default function SettingViewForm({ currentSetting = null }) {
         techParamValue:           currentSetting?.techParamValue || "",
         isActive:                 currentSetting?.isActive,
         createdAt:                currentSetting?.createdAt || "",
-        createdByFullname:        currentSetting?.createdBy?.name || "",
+        createdByFullName:        currentSetting?.createdBy?.name || "",
         createdIP:                currentSetting?.createdIP || "",
         updatedAt:                currentSetting?.updatedAt || "",
-        updatedByFullname:        currentSetting?.updatedBy?.name || "",
+        updatedByFullName:        currentSetting?.updatedBy?.name || "",
         updatedIP:                currentSetting?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -41,6 +41,7 @@ import {
 
 import { fDateTime } from '../../utils/formatTime';
 import ViewFormAudit from '../components/ViewFormAudit';
+import ViewFormField from '../components/ViewFormField';
 
 // ----------------------------------------------------------------------
 
@@ -67,10 +68,10 @@ export default function CustomerViewForm() {
       primaryTechnicalContact: customer?.primaryTechnicalContact || null,
       isActive: customer?.isActive,
       createdAt: customer?.createdAt || '',
-      createdByFullname: customer?.createdBy?.name || '',
+      createdByFullName: customer?.createdBy?.name || '',
       createdIP: customer?.createdIP || '',
       updatedAt: customer?.updatedAt || '',
-      updatedByFullname: customer?.updatedBy?.name || '',
+      updatedByFullName: customer?.updatedBy?.name || '',
       updatedIP: customer?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

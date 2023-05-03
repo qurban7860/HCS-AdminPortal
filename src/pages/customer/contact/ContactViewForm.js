@@ -86,10 +86,10 @@ export default function ContactViewForm({ currentContact = null }) {
       country: currentContact ? currentContact.address?.country : contact?.address.country || '',
         isActive: currentContact.isActive,
       createdAt:                currentContact?.createdAt || "",
-      createdByFullname:           currentContact?.createdBy?.name || "",
+      createdByFullName:           currentContact?.createdBy?.name || "",
       createdIP:                currentContact?.createdIP || "",
       updatedAt:                currentContact?.updatedAt || "",
-      updatedByFullname:           currentContact?.updatedBy?.name || "",
+      updatedByFullName:           currentContact?.updatedBy?.name || "",
       updatedIP:                currentContact?.updatedIP || "",
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -97,7 +97,7 @@ export default function ContactViewForm({ currentContact = null }) {
   );
 
   return (
-    <Grid sx={{ mt:-4, }} sm={18}>
+    <Grid item sx={{ mt:-4, }} sm={18}>
       <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, pt:2, pr:2  }}>
         <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >Edit</Button>
         <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />} > Delete</Button>

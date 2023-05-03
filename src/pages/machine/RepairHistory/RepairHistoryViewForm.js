@@ -79,10 +79,10 @@ export default function RepairHistoryViewForm({ currentSite = null }) {
         region: currentSite ? currentSite.address?.region : site?.address.region || '',
         country: currentSite ? currentSite.address?.country : site?.address.country || '',
         createdAt:                currentSite?.createdAt || "",
-        createdByFullname:           currentSite?.createdBy?.name || "",
+        createdByFullName:           currentSite?.createdBy?.name || "",
         createdIP:                currentSite?.createdIP || "",
         updatedAt:                currentSite?.updatedAt || "",
-        updatedByFullname:           currentSite?.updatedBy?.firstNsame || "",
+        updatedByFullName:           currentSite?.updatedBy?.firstNsame || "",
         updatedIP:                currentSite?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -227,12 +227,12 @@ updatedByFname         <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}
           <Grid container spacing={0} sx={{ mb:-3,  pt:4}}>
             <Grid item xs={12} sm={6} >
               <Typography paragraph variant="body2" sx={{ color: 'text.disabled' }}>
-                created by: {defaultValues.createdByFullname} {defaultValues.createdByLname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
+                created by: {defaultValues.createdByFullName} {defaultValues.createdByLname}, {fDateTime(defaultValues.createdAt)}, {defaultValues.createdIP}
               </Typography>
             </Grid>
             <Grid item xs={12} sm={6} >
             <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-              updated by: {defaultValues.updatedByFullname} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
+              updated by: {defaultValues.updatedByFullName} {defaultValues.updatedByLname}, {fDateTime(defaultValues.updatedAt)}, {defaultValues.updatedIP}
             </Typography>
             </Grid>
           </Grid>

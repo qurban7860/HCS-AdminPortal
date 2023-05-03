@@ -43,10 +43,10 @@ export default function ModelAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const ModelAddSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required') ,
+    name: Yup.string().trim().max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
-    category: Yup.string().required('Category is required'),
+    // category: Yup.string().required('Category is required'),
   });
 
   const defaultValues = useMemo(
@@ -54,7 +54,7 @@ export default function ModelAddForm() {
       name: ''  ,
       description:'',
       isActive: true,
-      category: '',
+      // category: '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

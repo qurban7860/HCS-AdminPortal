@@ -109,6 +109,8 @@ export default function ModelEditForm() {
     try {
       if(category){
         data.category = category
+      }else{
+        data.category = null;
       }
       console.log("Data : ",data);
       await dispatch(updateMachineModel({...data,id}));
