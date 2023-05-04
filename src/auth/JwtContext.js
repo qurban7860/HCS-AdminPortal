@@ -171,8 +171,6 @@ export function AuthProvider({ children }) {
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
     const response = await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
-      console.log("response : ",response)
-
     setSession(null);
     dispatch({
       type: 'LOGOUT',
