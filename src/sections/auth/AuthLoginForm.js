@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment, Card } from '@mui/material';
+import { Link, Stack, Alert, IconButton, InputAdornment, Checkbox, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
@@ -13,7 +13,7 @@ import { PATH_AUTH } from '../../routes/paths';
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
-import FormProvider, { RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
 import theme from '../../theme';
 
 // ----------------------------------------------------------------------
@@ -22,15 +22,29 @@ export default function AuthLoginForm() {
   const { login } = useAuthContext();
   const regEx = /^[4][0-9][0-9]$/
   const [showPassword, setShowPassword] = useState(false);
+  const [uemail, setEmail] = useState("");
+  const [upassword, setPassword] = useState("");
+  const [uremember, setRemember] = useState(false);
+  
+  useEffect(() => {
+    const storedEmail =       localStorage.getItem("email");
+    const storedPassword =    localStorage.getItem("password");
+    const storedRemember =    localStorage.getItem("remember");
+    if (storedEmail && storedPassword) {
+      setEmail(storedEmail);
+      setPassword(storedPassword);
+      setRemember(true);
+    }
+  }, []);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    password: Yup.string().required('Password is required'),
+    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    // password: Yup.string().required('Password is required'),
   });
 
   const defaultValues = {
-    email: '',
-    password: '',
+    email: uemail,
+    password: upassword,
   };
 
   const methods = useForm({
@@ -46,7 +60,22 @@ export default function AuthLoginForm() {
   } = methods;
 
   const onSubmit = async (data) => {
+    if(uemail){
+      data.email = uemail;
+    }
+    if(upassword){
+      data.password = upassword;
+    }
     try {
+      if (uremember) {
+        localStorage.setItem("email", data.email);
+        localStorage.setItem("password", data.password);
+        localStorage.setItem("remember", data.remember);
+      } else {
+        localStorage.removeItem("email");
+        localStorage.removeItem("password");
+        localStorage.removeItem("remember");
+      }
     const response =   await login(data.email, data.password);
     } catch (error) {
       console.error("error : ",error);
@@ -69,11 +98,14 @@ export default function AuthLoginForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
-
-        <RHFTextField name="email" label="Email address" autoComplete="username" />
+          
+        <RHFTextField type="email" name="email" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Email address"  autoComplete="username" required/>
 
         <RHFTextField
           name="password"
+          id="password"
+          value={upassword}
+          onChange={(e) => setPassword(e.target.value)}
           label="Password"
           type={showPassword ? 'text' : 'password'}
           InputProps={{
@@ -86,21 +118,23 @@ export default function AuthLoginForm() {
             ),
           }}
           autoComplete="current-password"
+          required
         />
       </Stack>
 
-      <Stack alignItems="flex-end" sx={{ my: 2 }}>
-        <Link
-          component={RouterLink}
-          to={PATH_AUTH.resetPassword}
-          variant="body2"
-          color="inherit"
-          underline="always"
-        >
-          Forgot password?
-        </Link>
-      </Stack>
+      <FormControlLabel
+        control={
+            <Checkbox
+                name="remember"
+                checked={uremember}
+                onChange={() => setRemember(!uremember)}
+                variant="soft"
+            />
+        }
+        label="Remember Me" 
+        />
 
+      {/* <RHFCheckbox name="remember"  label="Remember Me" variant="soft" value={uremember} Checked/> */}
       <LoadingButton
         fullWidth
         color="inherit"
@@ -112,6 +146,17 @@ export default function AuthLoginForm() {
       >
         Login
       </LoadingButton>
+      <Stack alignItems="flex-end" sx={{ my: 2 }}>
+        <Link
+          component={RouterLink}
+          to={PATH_AUTH.resetPassword}
+          variant="body2"
+          color="inherit"
+          underline="always"
+        >
+          Forgot password?
+        </Link>
+      </Stack>
     </FormProvider>
   );
 

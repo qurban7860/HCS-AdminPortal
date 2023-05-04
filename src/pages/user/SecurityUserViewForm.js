@@ -74,10 +74,12 @@ export default function SecurityUserViewForm() {
 
     useEffect(()=>{
       batch(() => {
+        if(securityUser && securityUser?.customer && securityUser?.customer?._id){
           dispatch(getCustomer(securityUser?.customer?._id))
-          if(securityUser && securityUser?.contact && securityUser?.contact?._id){
-            dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-          }})
+        }
+        if(securityUser && securityUser?.contact && securityUser?.contact?._id){
+          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
+        }})
     },[dispatch,securityUser])
 
     
