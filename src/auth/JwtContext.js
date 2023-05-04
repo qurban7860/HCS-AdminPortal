@@ -68,7 +68,6 @@ AuthProvider.propTypes = {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const storageAvailable = localStorageAvailable();
 
   const initialize = useCallback(async () => {
@@ -169,7 +168,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   // LOGOUT
-  const logout = useCallback(() => {
+  const logout = useCallback( async () => {
+    const userId  = localStorage.getItem("userId")
+    const response = await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
+      console.log("response : ",response)
+
     setSession(null);
     dispatch({
       type: 'LOGOUT',
