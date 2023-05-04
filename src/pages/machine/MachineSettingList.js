@@ -16,7 +16,9 @@ import {
   TableContainer,
   DialogTitle,
   Dialog, 
+  TextField,
   Typography,
+  InputAdornment,
   Accordion, AccordionSummary, AccordionDetails, Divider
 } from '@mui/material';
 // redux
@@ -43,7 +45,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 
-import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting , saveSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
+import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
 import { getTechparams } from '../../redux/slices/products/machineTechParam';
 
@@ -115,10 +117,11 @@ export default function MachineSettingList() {
 
   const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
   const { machine } = useSelector((state) => state.machine);
-  // const toggleChecked = async () => 
-  //   {
-  //     dispatch(setFormVisibility(!siteAddFormVisibility));    
-  //   };
+  // console.log("settings : ",settings)
+  const toggleChecked = async () => 
+    {
+      dispatch(setSettingFormVisibility(!formVisibility));    
+    };
   const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -143,27 +146,17 @@ export default function MachineSettingList() {
 
 
 useLayoutEffect(() => {
-  // if(!formVisibility && !settingEditFormVisibility){
   dispatch(getSettings(machine._id));
-  // }
 }, [dispatch, machine._id, settingEditFormVisibility ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
  
   useEffect(() => {
-    if (initial) {
-      if (settings && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }   
-      setTableData(settings);
-    }
-  }, [settings, error, responseMessage, enqueueSnackbar, initial]);
-
+ 
+    setTableData(settings);
+  }, [settings, error, responseMessage ]);
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -179,27 +172,43 @@ useLayoutEffect(() => {
 
   const isNotFound = !settings.length && !formVisibility && !settingEditFormVisibility;
 
+  const handleFilterName = (event) => {
+    setFilterName(event.target.value);
+  };
+
+  const handleResetFilter = () => {
+    setFilterName('');
+    setFilterStatus([]);
+  };
+
+
   return (
     <>
-        {/* {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-          <Button
-              // alignItems 
-              onClick={toggleChecked}
 
-              variant="contained"
-              startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-            >
-              New Setting
-            </Button>
-
-        </Stack>} */}
-        {/* <SettingAddForm/> */}
+        <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{  py: 2 }} >
+          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
+              <Grid item xs={12} sm={8}>
+                {!formVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                </InputAdornment> ),}}/>}
+              </Grid>
+              {isFiltered && (<Button color="error" sx={{ flexShrink: 0 , ml:1}} onClick={handleResetFilter} startIcon={<Iconify icon="eva:trash-2-outline" />} > Clear </Button>)}
+            </Grid>
+            <Grid item xs={8} sm={3}>
+              <Stack alignItems="flex-end" sx={{my: "auto" }}> 
+                <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Setting</Button>
+              </Stack>
+            </Grid>
+          </Grid>
+        </Stack>
         
+                  {!settingEditFormVisibility && formVisibility && <SettingAddForm/>}
 
-          {!settingEditFormVisibility && <SettingAddForm/>}
           {settingEditFormVisibility && <SettingEditForm/>}
-        <Card sx={{mt:3}}>
-          {!formVisibility && !settingEditFormVisibility && settings.map((setting, index) => { 
+        <Card sx={{mt:2}}>
+          {!settingEditFormVisibility && dataFiltered.map((setting, index) => { 
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
@@ -269,7 +278,7 @@ useLayoutEffect(() => {
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-
+// console.log(filterName)
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -279,13 +288,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    inputData = inputData.filter((setting) => setting?.techParam?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    setting?.techParam?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    setting?.techParamValue?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    // (setting?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
     );
-  }
-
-  if (filterStatus.length) {
-    inputData = inputData.filter((site) => filterStatus.includes(site.status));
   }
 
   return inputData;

@@ -123,11 +123,11 @@ useEffect(()=>{
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
+            {/* <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Create a new Setting
+                New Setting
                 </Typography>
-              </Stack>
+              </Stack> */}
               <Grid item md={12} xs={18} display="flex">
               <Grid item md={9} xs={12}>
               <Box

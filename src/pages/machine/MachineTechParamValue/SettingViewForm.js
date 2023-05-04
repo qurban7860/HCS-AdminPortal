@@ -78,7 +78,7 @@ export default function SettingViewForm({ currentSetting = null }) {
 
   return (
     <Grid >
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, pr: 3}}>
         <Button
           onClick={() => handleEdit()}
           variant="outlined"
@@ -100,40 +100,10 @@ export default function SettingViewForm({ currentSetting = null }) {
       </Stack>
       <Grid container>
 
-          {/* <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Technical Perameter 
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.techParamName ? defaultValues.techParamName : ''}
-            </Typography>
-          </Grid> */}
           <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues.techParamName ? defaultValues.techParamName : ''} />
 
-          {/* <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Technical Perameter Code
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.techParamCode ? defaultValues.techParamCode : ''}
-            </Typography>
-          </Grid> */}
           <ViewFormField sm={6} heading="Technical Perameter Code" param={defaultValues.techParamCode ? defaultValues.techParamCode : ''} />
 
-          {/* <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Technical Perameter Value
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
-            </Typography>
-          </Grid> */}
           <ViewFormField sm={12} heading="Technical Perameter Value" param={defaultValues.techParamValue ? defaultValues.techParamValue  : ''} />
 
           <Grid item xs={12} sm={12} >
