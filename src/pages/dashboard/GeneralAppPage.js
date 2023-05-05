@@ -82,7 +82,7 @@ export default function GeneralAppPage() {
     },
     series: [
       {
-        name: "series-7",
+        name: "Machine Models",
         data: modelWiseMachineNumber
       }
     ]
@@ -99,7 +99,7 @@ export default function GeneralAppPage() {
     },
     series: [
       {
-        name: "series-7",
+        name: "Customers",
         data: countryWiseCustomerCountNumber
       }
     ]
@@ -116,7 +116,7 @@ export default function GeneralAppPage() {
     },
     series: [
       {
-        name: "series-7",
+        name: "Sites",
         data: countryWiseSiteCountNumber
       }
     ]
