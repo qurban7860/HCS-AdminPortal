@@ -25,8 +25,7 @@ import FormProvider, {
     RHFSwitch,
   } from '../../../components/hook-form';
   import ViewFormAudit from '../../components/ViewFormAudit';
-
-
+  import { dispatchReq, dispatchReqAndNavToView, dispatchReqNavToList } from '../../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +51,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const { machinemodel } = useSelector((state) => state.machinemodel);
-console.log("machinemodel : ", machinemodel)
+// console.log("machinemodel : ", machinemodel)
   const { id } = useParams();
 
   const dispatch = useDispatch()

@@ -152,7 +152,6 @@ export function updateSecurityUser(param,id) {
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
       if(regEx.test(response.status)){
-        dispatch(slice.actions.setResponseMessage('User updated successfully'));
         dispatch(getSecurityUsers());
       }
       return response;
@@ -173,7 +172,6 @@ export function getSecurityUsers() {
       );
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
-        dispatch(slice.actions.setResponseMessage('Users loaded successfully'));
       }
       return response;
     }
@@ -187,7 +185,6 @@ export function getSecurityUser(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUserSuccess(response.data));
-        dispatch(slice.actions.setResponseMessage('User Loaded Successfuly'));
       }
       return response;
   };

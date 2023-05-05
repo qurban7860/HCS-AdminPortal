@@ -45,6 +45,7 @@ import ModelListTableToolbar from './ModelListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
+import { dispatchReq, dispatchReqAndNavToView, dispatchReqNavToList } from '../../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -52,7 +53,7 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'category', label: 'Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'left' },
+  { id: 'createdAt', label: 'Created At', align: 'right' },
 
 ];
 
@@ -71,6 +72,7 @@ const STATUS_OPTIONS = [
 
 
 export default function ModelList() {
+  const [tableData, setTableData] = useState([]);
   const {
     dense,
     page,
@@ -102,8 +104,6 @@ export default function ModelList() {
 
   const [filterName, setFilterName] = useState('');
 
-  const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -114,16 +114,13 @@ export default function ModelList() {
 
   useLayoutEffect( () => {
     // console.log('Testing done')
-     dispatch(getMachineModels());
+    dispatchReq(dispatch, getMachineModels(), enqueueSnackbar)
+    //  dispatch(getMachineModels());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (machineModels && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(machineModels);
     }
   }, [machineModels, error, responseMessage, enqueueSnackbar, initial]);
@@ -166,11 +163,8 @@ export default function ModelList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteMachineModel(id));
     try {
-      // console.log(id);
-
       dispatch(getMachineModels());
       setSelected([]);
-
       if (page > 0) {
         if (dataInPage.length < 2) {
           setPage(page - 1);
@@ -209,7 +203,8 @@ export default function ModelList() {
 
   const handleViewRow = async (id) => {
     // console.log(id)
-    await dispatch(getMachineModel(id));
+    await dispatchReq(dispatch, getMachineModel(id), enqueueSnackbar)
+    // await  dispatch(getMachineModel(id));
     navigate(PATH_MACHINE.machineModel.view(id));
   };
 

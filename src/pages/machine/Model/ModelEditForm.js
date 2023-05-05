@@ -33,9 +33,9 @@ import FormProvider, {
   RHFUpload,
 } from '../../../components/hook-form';
 import {Cover} from '../../components/Cover';
+import { dispatchReq, dispatchReqEditAndView, dispatchReqNavToList } from '../../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
-
 
 export default function ModelEditForm() {
 
@@ -44,14 +44,14 @@ export default function ModelEditForm() {
   const dispatch = useDispatch();
   const [category, setCategory] = useState("")
   const navigate = useNavigate();
-  console.log("machineModel : ", machinemodel)
+  // console.log("machineModel : ", machinemodel)
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  useLayoutEffect(() => {
-    dispatch(getMachineModel(id));
-  }, [dispatch, id]);
+  // useLayoutEffect(() => {
+  //   dispatch(getMachineModel(id));
+  // }, [dispatch, id]);
 
   useEffect(() => {
     if (machinemodel) {
@@ -59,7 +59,6 @@ export default function ModelEditForm() {
       setCategory(machinemodel.category);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }}, [machinemodel])
-
 
   const EditModelSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required') ,
@@ -106,25 +105,18 @@ export default function ModelEditForm() {
 
   const onSubmit = async (data) => {
    
-    try {
+   
       if(category){
         data.category = category
       }else{
         data.category = null;
       }
-      console.log("Data : ",data);
-      await dispatch(updateMachineModel({...data,id}));
-      reset();
-      enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machineModel.view(id));
-    } catch (err) {
-      enqueueSnackbar('Saving failed!');
-      console.error(err.message);
-    }
+      // console.log("Data : ",data);
+      await dispatchReqEditAndView(dispatch, updateMachineModel(data,id),  reset(), navigate, PATH_MACHINE.machineModel, id, enqueueSnackbar)
+      // await dispatch(updateMachineModel(data,id));
+      // navigate(PATH_MACHINE.machineModel.view(id));
+
   };
-
-
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

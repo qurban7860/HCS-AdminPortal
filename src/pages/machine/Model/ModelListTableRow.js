@@ -94,7 +94,7 @@ export default function ModelListTableRow({
 
         <TableCell align="center"> <Switch  checked = { isActive } disabled  sx={{my:-1}}/> </TableCell> 
 
-        <TableCell align="left">{fDate(createdAt)}</TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
         
        
       </TableRow> 
