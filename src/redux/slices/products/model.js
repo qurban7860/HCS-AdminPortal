@@ -139,7 +139,6 @@ export function addMachineModel(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetMachinemodel());
       dispatch(slice.actions.startLoading());
-  
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -152,7 +151,6 @@ export function addMachineModel(params) {
           }else{
             data.category = null
           }
-          console.log("data : ",data);
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
