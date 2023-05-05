@@ -178,6 +178,7 @@ export function addCustomer(params) {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
+        console.log('params------>', params);
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -296,6 +297,7 @@ export function addCustomer(params) {
         if(!_.isEmpty(billingContact)){
           data.billingContact = billingContact;
           if(params.sameContactFlag){
+            console.log('same contact');
             data.technicalContact = billingContact;
           }
         }    

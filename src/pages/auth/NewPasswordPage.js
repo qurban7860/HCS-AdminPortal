@@ -22,18 +22,18 @@ export default function NewPasswordPage() {
         Request sent successfully!
       </Typography>
 
-      <Typography sx={{ color: 'text.secondary', mb: 5 }}>
+      {/* <Typography sx={{ color: 'text.secondary', mb: 5 }}>
         We&apos;ve sent a 6-digit confirmation email to your email.
         <br />
         Please enter the code in below box to verify your email.
-      </Typography>
+      </Typography> */}
 
       <AuthNewPasswordForm />
 
-      <Typography variant="body2" sx={{ my: 3 }}>
+      {/* <Typography variant="body2" sx={{ my: 3 }}>
         Don’t have a code? &nbsp;
         <Link variant="subtitle2">Resend code</Link>
-      </Typography>
+      </Typography> */}
 
       <Link
         component={RouterLink}
@@ -41,6 +41,7 @@ export default function NewPasswordPage() {
         color="inherit"
         variant="subtitle2"
         sx={{
+          mt: 2,
           mx: 'auto',
           alignItems: 'center',
           display: 'inline-flex',
