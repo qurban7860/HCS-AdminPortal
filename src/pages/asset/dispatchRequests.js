@@ -27,6 +27,30 @@ export const dispatchReqAddAndView = (dispatch, dispatchAction,  reset, navigate
       });
 }
 
+export const dispatchReqAddAndList = (dispatch, dispatchAction,  reset, navigate, navigatePath, enqueueSnackbar) =>{
+  dispatch(dispatchAction).then(res => {
+      if(regEx.test(res.status)){ 
+        enqueueSnackbar(res.statusText)
+        if(reset){
+          reset()
+        }
+        if(navigatePath){
+          navigate(navigatePath);
+        }
+      }else{
+        enqueueSnackbar(res.statusText,{ variant: `error` })
+      }
+    }).catch(err => {
+      if(err.Message){
+        enqueueSnackbar(err.Message,{ variant: `error` })
+      }else if(err.message){
+        enqueueSnackbar(err.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+    });
+}
+
 export const dispatchReqEditAndView = (dispatch, dispatchAction,  reset, navigate, navigatePath, id, enqueueSnackbar) =>{
   dispatch(dispatchAction).then(res => {
     console.log("res : ", res);
