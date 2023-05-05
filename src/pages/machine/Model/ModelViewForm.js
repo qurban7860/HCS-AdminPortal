@@ -25,7 +25,6 @@ import FormProvider, {
     RHFSwitch,
   } from '../../../components/hook-form';
   import ViewFormAudit from '../../components/ViewFormAudit';
-  import { dispatchReq, dispatchReqAndNavToView, dispatchReqNavToList } from '../../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -76,7 +75,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
     [currentMachinemodel, machinemodel]
     );
 
-
+console.log("defaultValues : ",defaultValues , "machinemodel : ",machinemodel)
   return (
     <Card sx={{ px: 5 }}>
       <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>

@@ -1,8 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
+import Chart from "react-apexcharts";
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Typography, Container, Grid, Stack, Button } from '@mui/material';
+import { Typography, Container, Grid, Stack, Button, Card   } from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -44,21 +45,86 @@ export default function GeneralAppPage() {
 
   const { user } = useAuthContext();
 
-  const MACHINES = [
-    { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
-    { group: 'Decoiler', classify: ['0.5T Decoiler', '1.0T Decoiler', '1.5T Decoiler', '3.0T Decoiler', '5.0T Decoiler', '6.0T Decoiler'] },
-    { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
-  ];
-
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
-  const theme = useTheme();
 
-  const { themeStretch } = useSettingsContext();
+  const modelWiseMachineNumber=[]
+  const modelWiseMachineModel = []
+  count.modelWiseMachineCount.map((model) => {
+    modelWiseMachineNumber.push(model.count)
+    modelWiseMachineModel.push(model._id)
+    return null;
+  })
+
+  const countryWiseCustomerCountNumber=[]
+  const countryWiseCustomerCountCountries = []
+  count.countryWiseCustomerCount.map((customer) => {
+    countryWiseCustomerCountNumber.push(customer.count)
+    countryWiseCustomerCountCountries.push(customer._id)
+    return null;
+  })
+
+  const countryWiseSiteCountNumber=[]
+  const countryWiseSiteCountCountries = []
+  count.countryWiseSiteCount.map((site) => {
+    countryWiseSiteCountNumber.push(site.count)
+    countryWiseSiteCountCountries.push(site._id)
+    return null;
+  })
+
+ const ModelData = {
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: modelWiseMachineModel
+      }
+    },
+    series: [
+      {
+        name: "Machine Models",
+        data: modelWiseMachineNumber
+      }
+    ]
+  };
+
+  const CustomerData = {
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: countryWiseCustomerCountCountries
+      }
+    },
+    series: [
+      {
+        name: "Customers",
+        data: countryWiseCustomerCountNumber
+      }
+    ]
+  };
+
+  const SiteData = {
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: countryWiseSiteCountCountries
+      }
+    },
+    series: [
+      {
+        name: "Sites",
+        data: countryWiseSiteCountNumber
+      }
+    ]
+  };
 
   useLayoutEffect(() => {
     dispatch(getCount());
   }, [dispatch]);
-
 
   return (
     <Container maxWidth={false}>
@@ -166,7 +232,48 @@ export default function GeneralAppPage() {
               }}
             />
           </Grid> */}
-
+          <Grid  item xs={12} md={6} lg={6}>
+            <Card sx={{px:3 ,mb:3}}>
+              <Stack sx={{pt:2}}>
+                <Typography variant="subtitle2">Customers</Typography>
+              </Stack>
+              <Chart
+                options={CustomerData.options}
+                series={CustomerData.series}
+                type="bar"
+                height="300px"
+                width="100%"
+              />
+            </Card>
+          </Grid>
+          <Grid  item xs={12} md={6} lg={6}>
+            <Card sx={{px:3 ,mb:3}}>
+              <Stack sx={{pt:2}}>
+                <Typography variant="subtitle2">Sites</Typography>
+              </Stack>
+              <Chart
+                options={SiteData.options}
+                series={SiteData.series}
+                type="bar"
+                height="300px"
+                width="100%"
+              />
+            </Card>
+          </Grid>
+          <Grid  item xs={12} md={6} lg={6}>
+            <Card sx={{px:3 ,mb:3}}>
+              <Stack sx={{pt:2}}>
+                <Typography variant="subtitle2">Machine Models</Typography>
+              </Stack>
+              <Chart
+                options={ModelData.options}
+                series={ModelData.series}
+                type="bar"
+                height="300px"
+                width="100%"
+              />
+            </Card>
+          </Grid>
         {/* <Grid item xs={12} md={6} lg={8}>
             <AppAreaInstalled
               title="Sites"
@@ -211,15 +318,15 @@ export default function GeneralAppPage() {
             <AppTopRelated title="Top Related Applications" list={_appRelated} />
           </Grid> */}
 
-        {/* <Grid item xs={12} md={6} lg={4}>
+         {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopAuthors title="Top Authors" list={_appAuthors} />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <Stack spacing={3}>
               <AppWidget
                 title="Conversion"
