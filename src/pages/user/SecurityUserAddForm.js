@@ -27,6 +27,7 @@ import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/AddFormButtons';
+import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList } from '../asset/dispatchRequests';
 // ----------------------------------------------------------------------
 
 SecurityUserAddForm.propTypes = {
@@ -157,27 +158,25 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
           roleVal.map((role)=>(roleId.push(role?._id)))
           data.roles = roleId;
         }
-        // console.log("data : " , data);
-      dispatch(addSecurityUser(data))
-      .then(res => {
-        // console.log("res res.data.user._id : " , res.data.user._id)
-        if(regEx.test(res.status)){ 
-          enqueueSnackbar(res.statusText)
-          dispatch(resetContacts())
-          reset()
-          navigate(PATH_DASHBOARD.user.view(res.data.user._id));
-        }else{
-          enqueueSnackbar(res.statusText,{ variant: `error` })
-        }
-      }).catch(err => {
-        if(err.Message){
-          enqueueSnackbar(err.Message,{ variant: `error` })
-        }else if(err.message){
-          enqueueSnackbar(err.message,{ variant: `error` })
-        }else{
-          enqueueSnackbar("Something went wrong!",{ variant: `error` })
-        }
-      });
+        dispatchReqAddAndView(dispatch, addSecurityUser(data), resetContacts() , reset, navigate, PATH_DASHBOARD.user, 'user', enqueueSnackbar)
+      // dispatch(addSecurityUser(data)).then(res => {
+      //   if(regEx.test(res.status)){ 
+      //     enqueueSnackbar(res.statusText)
+      //     dispatch(resetContacts())
+      //     reset()
+      //     navigate(PATH_DASHBOARD.user.view(res.data.user._id));
+      //   }else{
+      //     enqueueSnackbar(res.statusText,{ variant: `error` })
+      //   }
+      // }).catch(err => {
+      //   if(err.Message){
+      //     enqueueSnackbar(err.Message,{ variant: `error` })
+      //   }else if(err.message){
+      //     enqueueSnackbar(err.message,{ variant: `error` })
+      //   }else{
+      //     enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      //   }
+      // });
 
   };
 

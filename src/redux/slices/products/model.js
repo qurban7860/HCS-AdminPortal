@@ -5,6 +5,7 @@ import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
 
+const regEx = /^[2][0-9][0-9]$/
 const initialState = {
   intial: false,
   machinemodelEditFormFlag: false,
@@ -98,14 +99,12 @@ export const {
 export function getMachineModels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-    try{
+
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
-      dispatch(slice.actions.getMachineModelsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('model loaded successfully'));
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
-    }
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getMachineModelsSuccess(response.data));
+      }
+      return response;
   }
 }
 
@@ -114,13 +113,12 @@ export function getMachineModels (){
 export function getMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
+
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models/${id}`);
-      dispatch(slice.actions.getMachinemodelSuccess(response.data));
-    } catch (error) {
-      console.error(error,"Slice Error");
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getMachinemodelSuccess(response.data));
+      }
+      return response;
   };
 }
 //----------------------------------------------------------------
@@ -128,13 +126,10 @@ export function getMachineModel(id) {
 export function deleteMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
+
       const response = await axios.delete(`${CONFIG.SERVER_URL}products/models/${id}`);
-      dispatch(slice.actions.setResponseMessage(response.data));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+
+      return response
   };
 }
 
@@ -144,7 +139,7 @@ export function addMachineModel(params) {
     return async (dispatch) => {
       dispatch(slice.actions.resetMachinemodel());
       dispatch(slice.actions.startLoading());
-      try {
+  
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -159,24 +154,21 @@ export function addMachineModel(params) {
           }
           console.log("data : ",data);
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
+      if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
-      } catch (error) {
-        console.error(error);
-        dispatch(slice.actions.hasError(error.Message));
       }
+     return response
     };
 }
 
 // --------------------------------------------------------------------------
 
-export function updateMachineModel(params) {
+export function updateMachineModel(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const formData = new FormData();
+    
       /* eslint-disable */
       let data = {
-        id: params.id,
         name: params.name,
         isActive: params.isActive,
         description: params.description,
@@ -187,14 +179,13 @@ export function updateMachineModel(params) {
       }else{
         data.category = null
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${Id}`,
         data
       );
-      dispatch(getMachineModel(params.id));
-      dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
-    } catch (error) {
-      console.error(error,"from model");
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      if(regEx.test(response.status)){
+        dispatch(getMachineModel(Id));
+        dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
+      }
+    return response;
   };
 }
