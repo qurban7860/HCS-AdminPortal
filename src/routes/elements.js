@@ -54,6 +54,7 @@ export const NoteView = Loadable(  lazy(() => import('../pages/customer/note/Not
 // DASHBOARD: USER
 export const SecurityUserProfile = Loadable(lazy(() => import('../pages/user/SecurityUserProfile')));
 export const SecurityUserChangePassword = Loadable(lazy(() => import('../pages/user/SecurityUserChangePassword')));
+export const SecurityUserChangePasswordByAdmin = Loadable(lazy(() => import('../pages/user/SecurityUserChangePasswordByAdmin')));
 export const SecurityUserList = Loadable(lazy(() => import('../pages/user/SecurityUserList')));
 export const SecurityUserAdd = Loadable(lazy(() => import('../pages/user/SecurityUserAdd')));
 export const SecurityUserEdit = Loadable(lazy(() => import('../pages/user/SecurityUserEdit')))
