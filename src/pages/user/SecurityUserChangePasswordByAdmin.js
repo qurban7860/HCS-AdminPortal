@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 // @mui
-import { Stack, Card,Container,IconButton, InputAdornment } from '@mui/material';
+import { Stack, Card,Container,IconButton, InputAdornment, Grid } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../components/iconify';
@@ -14,12 +16,16 @@ import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { Cover } from '../components/Cover'
 import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/securityUser';
 import { useAuthContext } from '../../auth/useAuthContext';
+import AddFormButtons from '../components/AddFormButtons';
+import { PATH_DASHBOARD } from '../../routes/paths';
+
 
 // ----------------------------------------------------------------------
 
 export default function SecurityUserChangePassword() {
   const { userId, user } = useAuthContext();
-  console.log("userId : " , userId)
+  const navigate = useNavigate();
+  // console.log("userId : " , userId)
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -50,6 +56,9 @@ export default function SecurityUserChangePassword() {
     formState: { isSubmitting },
   } = methods;
 
+  const toggleCancel = ()=>{
+    navigate(PATH_DASHBOARD.general.app);
+}
   const onSubmit = async (data) => {
     try {
       if(userId){
@@ -69,50 +78,55 @@ export default function SecurityUserChangePassword() {
         <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
           <Cover name="Change User Password" icon='mdi:user-circle'/>
         </Card>
-      <Card>
-        <Stack spacing={3} alignItems="flex-end" sx={{ p: 3 }}>
-          <RHFTextField
-          name="email"
-          label="Email"
-          type="email"
-          autoComplete="email"
-        />
+        <Grid  container spacing={2} sx={{justifyContent:"center", allignItem: "center"}} >
+          <Grid item xs={12} md={8} >
+              <Card sx={{ p: 3 }}>
+                <Stack spacing={3} alignItems="flex-end" sx={{ pb: 3 }}>
+                  <RHFTextField
+                  name="email"
+                  label="Email"
+                  type="email"
+                  autoComplete="email"
+                />
 
-        <RHFTextField
-          name="newPassword"
-          label="New Password"
-          type={showNewPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
-                  <Iconify icon={showNewPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          autoComplete="current-password"
-        />
-        <RHFTextField
-          name="confirmNewPassword"
-          label="Confirm New Password" 
-          type={showConfirmPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
-                  <Iconify icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          autoComplete="current-password"
-        />
-          <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
-            Change Password
-          </LoadingButton>
-        </Stack>
-      </Card>
+                <RHFTextField
+                  name="newPassword"
+                  label="New Password"
+                  type={showNewPassword ? 'text' : 'password'}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={() => setShowNewPassword(!showNewPassword)} edge="end">
+                          <Iconify icon={showNewPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  autoComplete="current-password"
+                />
+                <RHFTextField
+                  name="confirmNewPassword"
+                  label="Confirm New Password" 
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton onClick={() => setShowConfirmPassword(!showConfirmPassword)} edge="end">
+                          <Iconify icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                        </IconButton>
+                      </InputAdornment>
+                    ),
+                  }}
+                  autoComplete="current-password"
+                />
+                  {/* <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
+                    Change Password
+                  </LoadingButton> */}
+                </Stack>
+                <AddFormButtons isSubmitting={isSubmitting} saveButtonName="Change" toggleCancel={toggleCancel} />
+              </Card>
+        </Grid>
+      </Grid>
     </Container>
     </FormProvider>
   );

@@ -4,7 +4,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[2][0-9][0-9]$/
+const regEx = /^[^2]*/
 const initialState = {
   securityUserFormVisibility: false,
   securityUserEditFormVisibility: false,

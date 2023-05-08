@@ -159,29 +159,7 @@ export default function GeneralAppPage() {
         {/* <Grid item xs={12} md={12}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-          <AppWidgetSummary
-            title="Active Users"
-            // percent={2.6}
-            total={count?.userCount || 0}
-            // chart={{
-            //   colors: [theme.palette.primary.main],
-            //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-            // }}
-          />
-        </Grid>
 
-        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-          <AppWidgetSummary
-            title="Machines"
-            // percent={0.2}
-            total={count?.machineCount || 0}
-            // chart={{
-            //   colors: [theme.palette.info.main],
-            //   series: [10, 6, 4],
-            // }}
-          />
-        </Grid>
 
         <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
           <AppWidgetSummary
@@ -206,6 +184,35 @@ export default function GeneralAppPage() {
             // }}
           />
         </Grid>
+
+        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+          <AppWidgetSummary
+            title="Machines"
+            // percent={0.2}
+            total={count?.machineCount || 0}
+            // chart={{
+            //   colors: [theme.palette.info.main],
+            //   series: [10, 6, 4],
+            // }}
+          />
+        </Grid>
+
+
+
+        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+          <AppWidgetSummary
+            title="Active Users"
+            // percent={2.6}
+            total={count?.userCount || 0}
+            // chart={{
+            //   colors: [theme.palette.primary.main],
+            //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+            // }}
+          />
+        </Grid>
+
+
+
         <Grid item md={12}>
           {/* widget for typography */}
 

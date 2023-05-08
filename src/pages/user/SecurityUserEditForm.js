@@ -26,6 +26,7 @@ import { getContacts , resetContacts} from '../../redux/slices/customer/contact'
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import AddFormButtons from '../components/AddFormButtons';
+import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 
 
 // ----------------------------------------------------------------------
@@ -159,27 +160,28 @@ useEffect(() => {
       const submitSecurityUserRoles = data.roles.filter((role) =>
       ROLES.some((Role) => Role.value === role)
       )
-    data.roles = submitSecurityUserRoles;
-        dispatch(updateSecurityUser(data,securityUser._id))
-        .then(res => {
-        console.log("res : " , res)
-        if(regEx.test(res.status)){ 
-          reset();
-          enqueueSnackbar(res.statusText)
-          dispatch(setSecurityUserEditFormVisibility(false))
-          navigate(PATH_DASHBOARD.user.view(defaultValues.id));
-        }else{
-          enqueueSnackbar(res.statusText,{ variant: `error` })
-        }
-      }).catch(err => {
-        if(err.Message){
-          enqueueSnackbar(err.Message,{ variant: `error` })
-        }else if(err.message){
-          enqueueSnackbar(err.message,{ variant: `error` })
-        }else{
-          enqueueSnackbar("Something went wrong!",{ variant: `error` })
-        }
-    });
+      data.roles = submitSecurityUserRoles;
+      dispatchReq(dispatch, updateSecurityUser(data,securityUser._id), enqueueSnackbar)
+            navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+    //     dispatch(updateSecurityUser(data,securityUser._id))
+    //     .then(res => {
+    //     console.log("res : " , res)
+    //     if(regEx.test(res.status)){ 
+    //       reset();
+    //       enqueueSnackbar(res.statusText)
+    //       dispatch(setSecurityUserEditFormVisibility(false))
+    //     }else{
+    //       enqueueSnackbar(res.statusText,{ variant: `error` })
+    //     }
+    //   }).catch(err => {
+    //     if(err.Message){
+    //       enqueueSnackbar(err.Message,{ variant: `error` })
+    //     }else if(err.message){
+    //       enqueueSnackbar(err.message,{ variant: `error` })
+    //     }else{
+    //       enqueueSnackbar("Something went wrong!",{ variant: `error` })
+    //     }
+    // });
   };
 
   const toggleCancel = ()=>{

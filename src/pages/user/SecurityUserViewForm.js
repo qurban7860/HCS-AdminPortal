@@ -20,12 +20,13 @@ import {Cover} from '../components/Cover';
 import { useAuthContext } from '../../auth/useAuthContext';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../components/hook-form';
 import { useSnackbar } from '../../components/snackbar';
+import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
 
 export default function SecurityUserViewForm() {
-  const regEx = /^[2][0-9][0-9]$/
+  const regEx = /^[^2]*/
   const { securityUser , initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
@@ -49,25 +50,7 @@ export default function SecurityUserViewForm() {
   const { enqueueSnackbar } = useSnackbar();
   useEffect(()=> {
     if(id){
-      const getResponse = () => {
-      dispatch(getSecurityUser(id)).then(res => {
-          console.log("res : " , res)
-          if(regEx.test(res.status)){ 
-            // enqueueSnackbar(res.statusText)
-          }else{
-            enqueueSnackbar(res.statusText,{ variant: `error` })
-          }
-        }).catch(err => {
-          if(err.Message){
-            enqueueSnackbar(err.Message,{ variant: `error` })
-          }else if(err.message){
-            enqueueSnackbar(err.message,{ variant: `error` })
-          }else{
-            enqueueSnackbar("Something went wrong!",{ variant: `error` })
-          }
-        });
-    }
-    getResponse();
+      dispatchReqNoMsg(dispatch,getSecurityUser(id),enqueueSnackbar)
   }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[id,dispatch])
@@ -80,6 +63,7 @@ export default function SecurityUserViewForm() {
         if(securityUser && securityUser?.contact && securityUser?.contact?._id){
           dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
         }})
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dispatch,securityUser])
 
     

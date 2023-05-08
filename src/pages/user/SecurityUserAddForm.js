@@ -27,7 +27,7 @@ import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/AddFormButtons';
-import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList } from '../asset/dispatchRequests';
+import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 // ----------------------------------------------------------------------
 
 SecurityUserAddForm.propTypes = {
@@ -36,7 +36,7 @@ SecurityUserAddForm.propTypes = {
 };
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
-  const regEx = /^[2][0-9][0-9]$/
+  const regEx = /^[^2]*$/
   const [ showPassword, setShowPassword] = useState(false);
   const [ name, setName] = useState("");
   const [ email, setEmail] = useState("");
@@ -158,7 +158,8 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
           roleVal.map((role)=>(roleId.push(role?._id)))
           data.roles = roleId;
         }
-        dispatchReqAddAndView(dispatch, addSecurityUser(data), resetContacts() , reset, navigate, PATH_DASHBOARD.user, 'user', enqueueSnackbar)
+        dispatchReqAddAndView(dispatch, addSecurityUser(data) , reset, navigate, PATH_DASHBOARD.user, 'user', enqueueSnackbar)
+        dispatch(resetContacts())
       // dispatch(addSecurityUser(data)).then(res => {
       //   if(regEx.test(res.status)){ 
       //     enqueueSnackbar(res.statusText)
