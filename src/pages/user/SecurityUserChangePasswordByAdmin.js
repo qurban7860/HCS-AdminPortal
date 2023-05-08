@@ -18,7 +18,7 @@ import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/secu
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/AddFormButtons';
 import { PATH_DASHBOARD } from '../../routes/paths';
-
+import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -59,17 +59,12 @@ export default function SecurityUserChangePassword() {
   const toggleCancel = ()=>{
     navigate(PATH_DASHBOARD.general.app);
 }
+
   const onSubmit = async (data) => {
-    try {
       if(userId){
-        await dispatch(SecurityUserPasswordUpdate(data,userId));
+        await dispatchReq(dispatch, SecurityUserPasswordUpdate(data,userId), enqueueSnackbar);
         reset();
-        enqueueSnackbar('Update success!');
       }
-      console.log('DATA', data);
-    } catch (error) {
-      console.error(error);
-    }
   };
 
   return (
