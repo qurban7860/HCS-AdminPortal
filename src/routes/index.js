@@ -155,7 +155,7 @@ export default function Router() {
           element: <CompactLayout />,
           children: [
             { path: 'reset-password', element: <ResetPasswordPage /> },
-            { path: 'new-password', element: <NewPasswordPage /> },
+            { path: 'new-password/:token/:userId', element: <NewPasswordPage /> }, 
             { path: 'verify', element: <VerifyCodePage /> },
           ],
         },
