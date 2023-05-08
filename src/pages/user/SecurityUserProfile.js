@@ -28,7 +28,7 @@ export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
   const { securityUser , initial} = useSelector((state) => state.user);
-  console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
+  // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -46,11 +46,11 @@ export default function SecurityUserProfile() {
         dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
         // dispatch(getSecurityUser(userId))
       }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-      },[dispatch,userId, initial])
-
-      useEffect(()=> {
-        batch(() => {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    },[dispatch,userId, initial])
+    
+    useEffect(()=> {
+      batch(() => {
         if(userId && securityUser?.customer?._id){
           dispatch(getCustomer(securityUser?.customer?._id))
         }
@@ -143,7 +143,7 @@ export default function SecurityUserProfile() {
           </Grid>
         </Card>
       </Container>
-      {/* <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+      <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
@@ -174,7 +174,7 @@ export default function SecurityUserProfile() {
         </Grid>
       </Dialog>
 
-      <Dialog open={openContact} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+      <Dialog open={openContact} onClose={handleCloseContact} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, py:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Contact </Typography> <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
@@ -192,7 +192,7 @@ export default function SecurityUserProfile() {
           <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode ?     contact?.address?.postcode : ''}/>
           <ViewFormField sm={6} heading='Country'       param={contact?.address?.country ?      contact?.address?.country : ''}/>
       </Grid>
-      </Dialog> */}
+      </Dialog>
     </>
   );
 }
