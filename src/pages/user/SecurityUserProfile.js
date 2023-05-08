@@ -42,7 +42,7 @@ export default function SecurityUserProfile() {
   const handleCloseContact = () => setOpenContact(false);
 
     useEffect(()=> {
-      if(userId && initial){
+      if(userId ){
         dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
         // dispatch(getSecurityUser(userId))
       }
@@ -77,14 +77,14 @@ export default function SecurityUserProfile() {
         phone:                    securityUser?.phone || "",
         email:                    securityUser?.email || "",
         login:                    securityUser?.login || "",
-        roles:                    securityUser?.roles ,
+        roles:                    securityUser?.roles || [] ,
         isActive:                 securityUser?.isActive,
-        createdByFullName:        securityUser?.createdBy?.name ,
-        createdAt:                securityUser?.createdAt ,
-        createdIP:                securityUser?.createdIP ,
-        updatedByFullName:        securityUser?.updatedBy?.name ,
-        updatedAt:                securityUser?.updatedAt ,
-        updatedIP:                securityUser?.updatedIP ,
+        createdByFullName:        securityUser?.createdBy?.name || "",
+        createdAt:                securityUser?.createdAt || "",
+        createdIP:                securityUser?.createdIP || "",
+        updatedByFullName:        securityUser?.updatedBy?.name || "",
+        updatedAt:                securityUser?.updatedAt || "",
+        updatedIP:                securityUser?.updatedIP || "",
       }
       ),
       // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -183,6 +183,7 @@ export function getSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
+      console.log("response: " ,response);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUserSuccess(response.data));
       }
