@@ -14,11 +14,13 @@ import Iconify from '../../components/iconify';
 import { getSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
 // components
 // import { ProfileCover} from '../../sections/@dashboard/user/profile';
+import { useSnackbar } from '../../components/snackbar';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
 import { Cover } from '../components/Cover'
+import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -26,10 +28,10 @@ export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
   const { securityUser , initial} = useSelector((state) => state.user);
-  console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
+  // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { enqueueSnackbar } = useSnackbar();
   const { user, userId } = useAuthContext();
   const [currentTab, setCurrentTab] = useState('profile');
   const [openCustomer, setOpenCustomer] = useState(false);
@@ -41,8 +43,10 @@ export default function SecurityUserProfile() {
 
     useEffect(()=> {
       if(userId && initial){
-        dispatch(getSecurityUser(userId))
+        dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
+        // dispatch(getSecurityUser(userId))
       }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
       },[dispatch,userId, initial])
 
       useEffect(()=> {
