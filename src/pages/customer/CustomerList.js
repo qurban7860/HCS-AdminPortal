@@ -265,8 +265,8 @@ export default function CustomerList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // rowCount={tableData.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
                   // onSelectAllRows={(checked) =>
                   //   onSelectAllRows(
