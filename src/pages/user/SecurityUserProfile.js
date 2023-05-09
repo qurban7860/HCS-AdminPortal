@@ -28,12 +28,13 @@ export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
   const { securityUser , initial} = useSelector((state) => state.user);
-  console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
+  // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { user, userId } = useAuthContext();
-  console.log("user, userId : ",user, userId)
+  const { user } = useAuthContext();
+  const userId = localStorage.getItem("userId");
+  // console.log("user, userId : ",user, userId)
   const [currentTab, setCurrentTab] = useState('profile');
   const [openCustomer, setOpenCustomer] = useState(false);
   const handleOpenCustomer = () => setOpenCustomer(true);
@@ -44,8 +45,8 @@ export default function SecurityUserProfile() {
 
     useEffect(()=> {
       if(userId ){
-        // dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
-        dispatch(getSecurityUser(userId))
+        dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
+        // dispatch(getSecurityUser(userId))
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dispatch,userId, initial])
