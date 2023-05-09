@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // @mui
@@ -33,26 +32,27 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 
 // slices
-import {
-  getCustomers,
-  getCustomer,
-  setCustomerEditFormVisibility,
-} from '../../redux/slices/customer/customer';
+import { getCustomers, getCustomer, setCustomerEditFormVisibility, deleteCustomer } from '../../redux/slices/customer/customer';
 import FormProvider, { RHFSwitch } from '../../components/hook-form';
 import { fDateTime } from '../../utils/formatTime';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
+import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerViewForm() {
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { customer } = useSelector((state) => state.customer);
   // console.log("customer : ",customer)
   const toggleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
   };
+const onDelete = async () => {
+  await dispatch(deleteCustomer(customer._id));
+  navigate(PATH_DASHBOARD.customer.list)
+}
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -81,8 +81,9 @@ export default function CustomerViewForm() {
 
   return (
     <Card sx={{ p: 2 }}>
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       {/* <Grid item xs={12} sm={12} > */}
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+      {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button
           onClick={() => {
             toggleEdit();
@@ -93,7 +94,7 @@ export default function CustomerViewForm() {
         >
           Edit Customer
         </Button>
-      </Stack>
+      </Stack> */}
       {/* </Grid> */}
 
       <Grid container>

@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
-import { Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack,Link } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 
@@ -22,22 +22,18 @@ const handleCloseConfirm = () => {
       <>
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
               <Button
-                onClick={() => handleEdit()}
+                onClick={() => {
+                  handleEdit();
+                }}
                 variant="outlined"
-                startIcon={<Iconify icon="eva:edit-fill" />}
-              >
-                Edit
-              </Button>
+              ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
               <Button
                 onClick={() => {
                   handleOpenConfirm();
                 }}
                 variant="outlined"
                 color="error"
-                startIcon={<Iconify icon="eva:trash-2-fill" />}
-              >
-                Delete
-              </Button>
+              ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:trash-2-fill" /></Button>
           </Stack>
           <ConfirmDialog
             open={openConfirm}

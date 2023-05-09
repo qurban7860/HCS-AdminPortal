@@ -18,6 +18,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 SiteViewForm.propTypes = {
@@ -91,14 +92,16 @@ export default function SiteViewForm({ currentSite = null }) {
 
   return (
     <Grid >
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
+            <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+
+      {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
           Edit
         </Button>
         <Button onClick={() => { handleOpenConfirm(); handleClosePopover(); }} variant="outlined" color="error" startIcon={<Iconify icon="eva:trash-2-fill" />} >
           Delete
         </Button>
-      </Stack>
+      </Stack> */}
       <Grid container>
         <ViewFormField sm={6}   heading='Name'       param={defaultValues.name ? defaultValues.name : ''} />
         <ViewFormField sm={6}   heading='Phone'       param={defaultValues.phone ? defaultValues.phone : ''} />

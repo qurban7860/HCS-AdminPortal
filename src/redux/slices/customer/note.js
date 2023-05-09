@@ -160,12 +160,8 @@ export function updateNote(customerId,params) {
       const data = {
         note: params.note,
         isActive: params.isActive,
-      }
-      if(params.site  !== "null" && params.site  !== null){
-          data.site =params.site;
-      }
-      if(params.contact !== "null" && params.contact !== null){
-          data.contact = params.contact;
+        contact: params.contact,
+        site: params.site
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
