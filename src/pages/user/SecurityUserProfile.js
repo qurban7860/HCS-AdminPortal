@@ -33,6 +33,7 @@ export default function SecurityUserProfile() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user, userId } = useAuthContext();
+  console.log("user, userId : ",user, userId)
   const [currentTab, setCurrentTab] = useState('profile');
   const [openCustomer, setOpenCustomer] = useState(false);
   const handleOpenCustomer = () => setOpenCustomer(true);
@@ -43,8 +44,8 @@ export default function SecurityUserProfile() {
 
     useEffect(()=> {
       if(userId ){
-        dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
-        // dispatch(getSecurityUser(userId))
+        // dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
+        dispatch(getSecurityUser(userId))
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dispatch,userId, initial])
@@ -78,16 +79,16 @@ export default function SecurityUserProfile() {
         email:                    securityUser?.email || "",
         login:                    securityUser?.login || "",
         roles:                    securityUser?.roles || [] ,
-        isActive:                 securityUser?.isActive,
+        isActive:                 securityUser?.isActive || false,
         createdByFullName:        securityUser?.createdBy?.name || "",
         createdAt:                securityUser?.createdAt || "",
         createdIP:                securityUser?.createdIP || "",
         updatedByFullName:        securityUser?.updatedBy?.name || "",
         updatedAt:                securityUser?.updatedAt || "",
         updatedIP:                securityUser?.updatedIP || "",
+        // eslint-disable-next-line react-hooks/exhaustive-deps
       }
       ),
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       [securityUser] );
   return (
     <>
@@ -129,13 +130,13 @@ export default function SecurityUserProfile() {
               <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >Edit</Button>
           </Stack>
           <Grid container>
-            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : {}} />
-            <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : {}} />
-            <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
-            <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
-            <ViewFormField sm={12} heading="email" param={defaultValues.email} />
-            <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
-            <ViewFormField sm={6} heading="Roles" param={defaultValues.roles?.map((obj) => obj.name).join(', ')} />
+            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer ? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
+            <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact ? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
+            <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
+            <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
+            <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
+            <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
+            <ViewFormField sm={6} heading="Roles" param={defaultValues?.roles?.map((obj) => obj?.name).join(', ')} />
           </Grid>
             <Switch sx={{mt:1}} checked = { defaultValues.isActive } name="isActive" disabled  />
           <Grid container>
@@ -143,7 +144,7 @@ export default function SecurityUserProfile() {
           </Grid>
         </Card>
       </Container>
-      {/* <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+      <Dialog open={openCustomer} onClose={handleCloseCustomer} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, pt:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
@@ -172,9 +173,9 @@ export default function SecurityUserProfile() {
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Link onClick={() => handleViewCustomer(customer._id)} href="#" underline="none" sx={{ml: "auto",display: "flex", justifyContent:"center", alignItems:"center", px:3, pb:3}}> <Typography variant="body" sx={{px:2}}>Go to customer</Typography><Iconify icon="mdi:share"/></Link>
         </Grid>
-      </Dialog> */}
+      </Dialog>
 
-      {/* <Dialog open={openContact} onClose={handleCloseContact} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
+      <Dialog open={openContact} onClose={handleCloseContact} aria-labelledby="keep-mounted-modal-title" aria-describedby="keep-mounted-modal-description" >
         <Grid container sx={{px:2, py:2}}>
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Contact </Typography> <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
@@ -192,7 +193,7 @@ export default function SecurityUserProfile() {
           <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode ?     contact?.address?.postcode : ''}/>
           <ViewFormField sm={6} heading='Country'       param={contact?.address?.country ?      contact?.address?.country : ''}/>
       </Grid>
-      </Dialog> */}
+      </Dialog>
     </>
   );
 }
