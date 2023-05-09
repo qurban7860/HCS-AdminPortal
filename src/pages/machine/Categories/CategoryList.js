@@ -273,7 +273,7 @@ export default function CategoryList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
+                  // rowCount={tableData.length}
                   // numSelected={selected.length}
                   onSort={onSort}
                   // onSelectAllRows={(checked) =>

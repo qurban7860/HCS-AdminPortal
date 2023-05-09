@@ -102,7 +102,6 @@ export default function SecurityUserProfile() {
           }}
         >
           <Cover name={defaultValues?.name} icon="ph:users-light"/>
-
           <Tabs
             value={currentTab}
             onChange={(event, newValue) => setCurrentTab(newValue)}
