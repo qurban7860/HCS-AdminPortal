@@ -1,18 +1,13 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
+import jwtDecode from 'jwt-decode';
 // import { ROOT_CONFIG } from 'src/config-global';
 import { CONFIG } from '../config-global';
-
 // utils
 import axios from '../utils/axios';
 import localStorageAvailable from '../utils/localStorageAvailable';
 //
 import { isValidToken, setSession } from './utils';
-// ----------------------------------------------------------------------
-
-// NOTE:
-// We only build demo at basic level.
-// Customer will need to do some extra handling yourself if you want to extend the logic and other features...
 
 // ----------------------------------------------------------------------
 
@@ -20,40 +15,49 @@ const initialState = {
   isInitialized: false,
   isAuthenticated: false,
   user: null,
+  resetTokenTime: null,
 };
 
 const reducer = (state, action) => {
-  if (action.type === 'INITIAL') {
-    return {
-      isInitialized: true,
-      isAuthenticated: action.payload.isAuthenticated,
-      user: action.payload.user,
-    };
+  switch (action.type) {
+    case 'INITIAL': {
+      return {
+        ...state,
+        isInitialized: true,
+        isAuthenticated: action.payload.isAuthenticated,
+        user: action.payload.user,
+        resetTokenTime: action.payload.resetTokenTime, // keeps track to avoid repeating the request
+      };
+    }
+    case 'LOGIN': {
+      const { user, userId } = action.payload;
+      return {
+        ...state,
+        isAuthenticated: true,
+        user,
+        userId,
+      };
+    }
+    case 'REGISTER': {
+      const { user } = action.payload;
+      return {
+        ...state,
+        isAuthenticated: true,
+        user,
+      };
+    }
+    case 'LOGOUT': {
+      return {
+        ...state,
+        isAuthenticated: false,
+        user: null,
+        resetTokenTime: null, // reset the timeout ID when logging out
+      };
+    }
+    default: {
+      return state;
+    }
   }
-  if (action.type === 'LOGIN') {
-    return {
-      ...state,
-      isAuthenticated: true,
-      user: action.payload.user,
-      userId: action.payload.userId,
-    };
-  }
-  if (action.type === 'REGISTER') {
-    return {
-      ...state,
-      isAuthenticated: true,
-      user: action.payload.user,
-    };
-  }
-  if (action.type === 'LOGOUT') {
-    return {
-      ...state,
-      isAuthenticated: false,
-      user: null,
-    };
-  }
-
-  return state;
 };
 
 // ----------------------------------------------------------------------
@@ -68,7 +72,7 @@ AuthProvider.propTypes = {
 
 export function AuthProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const storageAvailable = localStorageAvailable();
+  const storageAvailable = useMemo(() => localStorageAvailable(), []);
 
   const initialize = useCallback(async () => {
     try {
@@ -77,24 +81,37 @@ export function AuthProvider({ children }) {
       if (accessToken && isValidToken(accessToken)) {
         setSession(accessToken);
 
-        // const response = await axios.get('/api/account/my-account');
-
-        // const { user } = localStorage.getItem('activeUser');
         const user = {
-            
-            email: localStorage.getItem('email'),
-            displayName: localStorage.getItem('name'),
+          email: localStorage.getItem('email'),
+          displayName: localStorage.getItem('name'),
         };
+        const userId = localStorage.getItem('userId');
 
-        const userID = localStorage.getItem('userId');
+        const tokenExpTime = jwtDecode(accessToken).exp * 1000;
+        const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
+        const resetTokenTime = setTimeout(async () => {
+          try {
+            const response = await axios.post(`${CONFIG.SERVER_URL}security/refreshToken`, {
+              userID: userId,
+            });
+            const newAccessToken = response.data.accessToken;
+
+            localStorage.setItem('accessToken', newAccessToken);
+
+            initialize();
+          } catch (error) {
+            console.error(error);
+          }
+        }, tokenRefreshTime - Date.now() + 30 * 1000);
 
         dispatch({
           type: 'INITIAL',
           payload: {
             isAuthenticated: true,
             user,
-            userID
-          },
+            userId,
+            resetTokenTime, // added the timeout ID to the payload
+           },
         });
       } else {
         dispatch({
@@ -102,6 +119,7 @@ export function AuthProvider({ children }) {
           payload: {
             isAuthenticated: false,
             user: null,
+            resetTokenTime: null, // reset the timeout ID when not authenticated
           },
         });
       }
@@ -112,10 +130,11 @@ export function AuthProvider({ children }) {
         payload: {
           isAuthenticated: false,
           user: null,
+          resetTokenTime: null,
         },
       });
     }
-  }, [storageAvailable]);
+  }, [storageAvailable, dispatch]);
 
   useEffect(() => {
     initialize();
@@ -130,7 +149,6 @@ export function AuthProvider({ children }) {
     })
 
     const { accessToken, user, userId } = response.data;
-
     localStorage.setItem('email', user.email);
     localStorage.setItem('name', user.displayName);
     localStorage.setItem('userId', userId);
