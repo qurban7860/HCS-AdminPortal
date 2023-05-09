@@ -77,14 +77,23 @@ export default function NoteViewForm({currentNote = null}) {
     [currentNote]
   );
   return (
-      <Grid >
+    <>
             <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-
+      <Grid container >
             <ViewFormField sm={6}   heading='Site'       param={defaultValues.site_name ?           defaultValues.site_name : ''}/>
             <ViewFormField sm={6}   heading='Contact'    param={defaultValues.contact_firstName ?   defaultValues.contact_firstName : ''} secondParam={defaultValues.contact_lastName !== '' ? defaultValues.contact_lastName:""}/>
             <ViewFormField sm={12}  heading='Note'       param={defaultValues.note ?                defaultValues.note : ''}/>
+            <Grid item xs={12} sm={12} sx={{pt: 3,display:'flex', }}>
+             <Typography variant="overline" sx={{ pl:2,pb:1, color: 'text.disabled',display:'flex', alignItems:'center' }}>
+                  Active
+                </Typography>
+              <Switch sx={{ mb: 1 }} checked={defaultValues.isActive} disabled />
+            </Grid>
+            <Grid container>
+              <ViewFormAudit defaultValues={defaultValues}/>
+            </Grid>
             
-            <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
+    </>
   );
 }

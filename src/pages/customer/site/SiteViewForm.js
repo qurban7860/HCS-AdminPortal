@@ -90,7 +90,7 @@ export default function SiteViewForm({ currentSite = null }) {
   );
 
   return (
-    <Grid sx={{ p: 2 }}>
+    <Grid >
       <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
           Edit
@@ -100,150 +100,26 @@ export default function SiteViewForm({ currentSite = null }) {
         </Button>
       </Stack>
       <Grid container>
-
-          <Grid item xs={12} sm={12} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Name
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.name ? defaultValues.name : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Phone
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.phone ? defaultValues.phone : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Fax
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.fax ? defaultValues.fax : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Email
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.email ? defaultValues.email : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Website
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.website ? defaultValues.website : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Street
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.street ? defaultValues.street : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Suburb
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.suburb ? defaultValues.suburb : ''}
-            </Typography>
-          </Grid>
-
-         <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              City
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.city ? defaultValues.city : ''}
-            </Typography>
-          </Grid>
-
-        <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Region
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.region ? defaultValues.region : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Post Code
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.postcode ? defaultValues.postcode : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Country
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.country ? defaultValues.country : ''}
-            </Typography>
-          </Grid>
+        <ViewFormField sm={6}   heading='Name'       param={defaultValues.name ? defaultValues.name : ''} />
+        <ViewFormField sm={6}   heading='Phone'       param={defaultValues.phone ? defaultValues.phone : ''} />
+        <ViewFormField sm={6}   heading='Fax'       param={defaultValues.fax ? defaultValues.fax : ''} />
+        <ViewFormField sm={6}   heading='Email'       param={defaultValues.email ? defaultValues.email : ''} />
+        <ViewFormField sm={6}   heading='Website'       param={defaultValues.website ? defaultValues.website : ''} />
+        <ViewFormField sm={6}   heading='Street'       param={defaultValues.street ? defaultValues.street : ''} />
+        <ViewFormField sm={6}   heading='Suburb'       param={defaultValues.suburb ? defaultValues.suburb : ''} />
+        <ViewFormField sm={6}   heading='City'       param={defaultValues.city ? defaultValues.city : ''} />
+        <ViewFormField sm={6}   heading='Region'       param={defaultValues.region ? defaultValues.region : ''} />
+        <ViewFormField sm={6}   heading='Post Code'       param={defaultValues.postcode ? defaultValues.postcode : ''} />
+        <ViewFormField sm={6}   heading='Country'       param={defaultValues.country ? defaultValues.country : ''} />
 
           <Grid container>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Latitude</Typography>
-              <Typography variant="body2">{defaultValues.lat ? defaultValues.lat : ''}</Typography>
-            </Grid>
-
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Longitude</Typography>
-              <Typography variant="body2">{defaultValues.long ? defaultValues.long : ''}</Typography>
-            </Grid>
+            <ViewFormField sm={6}   heading='Latitude'       param={defaultValues.lat ? defaultValues.lat : ''}/>
+            <ViewFormField sm={6}   heading='Longitude'       param={defaultValues.long ? defaultValues.long : ''} />
           </Grid>
 
            <Grid container>
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Primary Billing Contact</Typography>
-              <Typography variant="body2">{defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} {defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}</Typography>
-            </Grid>
-            
-            <Grid item xs={12} sm={6} sx={{ pt:2 }}>
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>Primary Technical Contact</Typography>
-              <Typography variant="body2">{defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''}  {defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}</Typography>
-            </Grid>
+            <ViewFormField sm={6}   heading='Primary Billing Contact'       param={defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} secondParam={defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}/>
+            <ViewFormField sm={6}   heading='Primary Technical Contact'       param={defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''} secondParam={defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}/>
           </Grid>
           <Grid item xs={12} sm={12} >
             <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />

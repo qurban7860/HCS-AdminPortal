@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography,TextField } from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography,TextField, Autocomplete } from '@mui/material';
 // slice
 import { addSite, setSiteFormVisibility } from '../../../redux/slices/customer/site';
 // components
@@ -42,7 +42,12 @@ export default function SiteAddForm() {
   const [phone, setPhone] = useState('')
   const [country, setCountryVal] = useState('')
   const [fax, setFaxVal] = useState('')
-
+  const [billingContactVal , setBillingContactVal] = useState('')
+  const [technicalContactVal, setTechnicalContactVal] = useState('')
+useEffect(()=>{
+  // primaryBillingContact: Yup.string().nullable(),
+  // primaryTechnicalContact: Yup.string().nullable(),
+},[])
   const AddSiteSchema = Yup.object().shape({
     name: Yup.string().min(2).max(40).required('Name is required'),
     customer: Yup.string(),
@@ -59,8 +64,8 @@ export default function SiteAddForm() {
     region: Yup.string(),
     postcode: Yup.string(),
     // country: Yup.string().nullable(),
-    primaryBillingContact: Yup.string().nullable(),
-    primaryTechnicalContact: Yup.string().nullable(),
+    // primaryBillingContact: Yup.string().nullable(),
+    // primaryTechnicalContact: Yup.string().nullable(),
     isActive: Yup.boolean(),
   });
 
@@ -135,6 +140,11 @@ export default function SiteAddForm() {
       }
       if(country){
         data.country = country.label
+      }
+      if(billingContactVal){
+        data.primaryBillingContact = billingContactVal._id;
+      }if(technicalContactVal){
+        data.primaryTechnicalContact= technicalContactVal._id;
       }
       await dispatch(addSite(data));
       reset();
@@ -272,25 +282,46 @@ export default function SiteAddForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-              <RHFSelect onChange={onChange} native name="primaryBillingContact" label="Primary Billing Contact">
-                    <option defaultValue value="null" selected >No Primary Billing Contact Selected</option>
-                    { 
-                    contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
+                <Autocomplete 
+                // freeSolo
+                value={billingContactVal || null}
+                options={contacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setBillingContactVal(newValue);
+                  }
+                  else{ 
+                    setBillingContactVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Primary Billing Contact" />}
+                ChipProps={{ size: 'small' }}
+                />
+  
+                <Autocomplete 
+                // freeSolo
+                value={technicalContactVal || null}
+                options={contacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setTechnicalContactVal(newValue);
+                  }
+                  else{ 
+                    setTechnicalContactVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Primary Technical Contact" />}
+                ChipProps={{ size: 'small' }}
+              />
 
-              <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
-                    <option defaultValue value="null" selected >No Primary Technical Contact Selected</option>
-                    { 
-                    contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
               </Box>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <Box

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link, Autocomplete , TextField} from '@mui/material';
 // global
 import { CONFIG } from '../../config-global';
 // slice
@@ -44,6 +44,9 @@ export default function CustomerEditForm() {
   const { sites } = useSelector((state) => state.site);
 
   const { contacts, spContacts } = useSelector((state) => state.contact);
+  const [accountManVal, setAccountManVal] = useState('')
+  const [supportManVal, setSupportManVal] = useState('')
+  const [projectManVal, setProjectManVal] = useState('')
 
   const dispatch = useDispatch();
 
@@ -58,9 +61,9 @@ export default function CustomerEditForm() {
     sites: Yup.array().nullable(),
     isActive: Yup.boolean(),
     contacts: Yup.array().nullable(),
-    accountManager: Yup.string().nullable(),
-    projectManager: Yup.string().nullable(),
-    supportManager: Yup.string().nullable(),
+    // accountManager: Yup.string().nullable(),
+    // projectManager: Yup.string().nullable(),
+    // supportManager: Yup.string().nullable(),
     primaryBillingContact: Yup.string().nullable(),
     primaryTechnicalContact: Yup.string().nullable(),
   });
@@ -72,9 +75,9 @@ export default function CustomerEditForm() {
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
       mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
-      accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
-      projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id, 
-      supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
+      // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
+      // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id, 
+      // supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
       primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
       primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id, 
       isActive: customer?.isActive,
@@ -102,6 +105,9 @@ export default function CustomerEditForm() {
     dispatch(getContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
+    setAccountManVal(customer?.accountManager)
+    setSupportManVal(customer?.supportManager)
+    setProjectManVal(customer?.projectManager)
 
   }, [dispatch, customer]);
 
@@ -118,7 +124,22 @@ export default function CustomerEditForm() {
     };
 
   const onSubmit = async (data) => {
-    console.log("customer : ",data);
+    // console.log("customer : ",data);
+    if(accountManVal){
+      data.accountManager = accountManVal._id
+    }else{
+      data.accountManager = null;
+    }
+    if(projectManVal){
+      data.projectManager = projectManVal._id
+    }else{
+      data.projectManager = null;
+    }
+    if(supportManVal){
+      data.supportManager = supportManVal._id
+    }else{
+      data.supportManager = null;
+    }
     try {
       dispatch(updateCustomer(data));
       reset();
@@ -205,7 +226,65 @@ export default function CustomerEditForm() {
                 }}
               >
 
-                <RHFSelect native name="accountManager" label="Account Manager">
+              <Autocomplete 
+                // freeSolo
+                value={accountManVal || null}
+                options={spContacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setAccountManVal(newValue);
+                  }
+                  else{ 
+                    setAccountManVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={projectManVal || null}
+                options={spContacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setProjectManVal(newValue);
+                  }
+                  else{ 
+                    setProjectManVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={supportManVal || null}
+                options={spContacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setSupportManVal(newValue);
+                  }
+                  else{ 
+                    setSupportManVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+
+                {/* <RHFSelect native name="accountManager" label="Account Manager">
                   <option defaultValue value="null" selected >No Account Manager Selected</option>
                   {
                     spContacts.length > 0 && spContacts.map((option) => (
@@ -233,7 +312,7 @@ export default function CustomerEditForm() {
                         {option.firstName} {option.lastName}
                       </option>
                     ))}
-                </RHFSelect>
+                </RHFSelect> */}
               </Box>
                 <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <Box

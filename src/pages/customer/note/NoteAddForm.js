@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo} from 'react';
+import { useEffect, useMemo, useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography,} from '@mui/material';
+import { Box, Button, Card, Grid, Stack, Typography,TextField, Autocomplete} from '@mui/material';
 // slice
 import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/note';
 // components
@@ -33,6 +33,8 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
   const { customer } = useSelector((state) => state.customer);
 
+const [siteVal, setSiteVal]= useState("");
+const [contactVal, setContactVal]= useState("");
 
   const dispatch = useDispatch();
   
@@ -45,18 +47,17 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   const AddNoteSchema = Yup.object().shape({
     note: Yup.string().max(2000).required("Note Field is required!"),
     // customer: Yup.string().nullable(),
-    site: Yup.string().nullable(),
+    // site: Yup.string().nullable(),
     // user: Yup.string(),
-    contact: Yup.string().nullable(),
+    // contact: Yup.string().nullable(),
     isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
       note: '',
-      site: null,
-      contact: null,
-      customer: customer._id,
+      // site: null,
+      // contact: null,
       isActive: true,
       // user: '',
     }),
@@ -93,7 +94,12 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
 
 
   const onSubmit = async (data) => {
-    console.log("Form Submited",data);
+    if(siteVal){
+      data.site = siteVal
+    }
+    if(contactVal){
+      data.contact = contactVal
+    }
       try{
         await dispatch(addNote(customer._id,data));
         reset();
@@ -145,51 +151,46 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-              {/* <RHFSelect native name="against" id="against" label="Please select Notes Against" onChange={handleChange} >
-                    <option value="" defaultValue="Please select Notes Against"/>
+              <Autocomplete 
+                // freeSolo
+                value={siteVal|| null}
+                options={sites}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => `${option.name ? option.name :''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setSiteVal(newValue);
+                  }
+                  else{ 
+                    setSiteVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name ? option.name :''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Site" />}
+                ChipProps={{ size: 'small' }}
+                />
 
-                    <option key={1} value='site'>Site</option>
-                    <option key={2} value='contact'>Contact</option>
+                <Autocomplete 
+                // freeSolo
+                value={contactVal || null}
+                options={contacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setContactVal(newValue);
+                  }
+                  else{ 
+                    setContactVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Contact" />}
+                ChipProps={{ size: 'small' }}
+                />
 
-              </RHFSelect> */}
-
-              {/* <RHFSelect native name="customer" label="Customer">
-                    <option value="" defaultValue="please select option" />
-                    { 
-                    customers.length > 0 && customers.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect> */}
-              <RHFSelect native name="site" label="Select Site" className="visible" >
-                    <option defaultValue value="null" selected >No Site Selected</option>
-                    { 
-                    sites.length > 0 && sites.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.name}
-                    </option>
-                  ))}
-              </RHFSelect>
-              <RHFSelect native  name="contact" label="Select Contact" className="visible" >
-                    <option defaultValue value="null" selected >No Contact Selected</option>
-                    { 
-                    contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              {/* <RHFSelect native name="user" label="User" >
-                    <option value="" defaultValue="please select option"/>
-                    { 
-                    users.length > 0 && users.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect> */}
 
               </Box>
               {/* <RHFEditor simple name="note"  /> */}

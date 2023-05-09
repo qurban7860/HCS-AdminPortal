@@ -115,9 +115,7 @@ export default function ContactViewForm({ currentContact = null }) {
           <ViewFormField sm={6} heading='Country'       param={defaultValues.country ?      defaultValues.country : ''}/>
           </Grid>
           <Grid item xs={12} sm={12} ><Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  /></Grid>
-          
-          <ViewFormAudit defaultValues={defaultValues}/>
- 
+            <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
   );
 }
