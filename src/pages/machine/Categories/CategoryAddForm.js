@@ -27,8 +27,6 @@ import {Cover} from '../../components/Cover';
 
 export default function CategoryAddForm() {
 
-  
-console.log("Machine Category : ",PATH_MACHINE.categories.list)
 
   const dispatch = useDispatch();
   
@@ -95,16 +93,9 @@ console.log("Machine Category : ",PATH_MACHINE.categories.list)
     <>
     <Container maxWidth={false}>
 
-      <Card
-                sx={{
-                  mb: 3,
-                  height: 160,
-                  position: 'relative',
-                  // mt: '24px',
-                }}
-              >
-                <Cover name='New Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
-              </Card>
+      <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
+        <Cover name='New Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
+      </Card>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       
         <Grid item xs={18} md={12} sx={{mt: 3}}>
