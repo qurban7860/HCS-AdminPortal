@@ -49,27 +49,33 @@ export default function GeneralAppPage() {
 
   const modelWiseMachineNumber=[]
   const modelWiseMachineModel = []
-  count.modelWiseMachineCount.map((model) => {
-    modelWiseMachineNumber.push(model.count)
-    modelWiseMachineModel.push(model._id)
-    return null;
-  })
+  if(count && count?.modelWiseMachineCount){
+    count.modelWiseMachineCount.map((model) => {
+      modelWiseMachineNumber.push(model.count)
+      modelWiseMachineModel.push(model._id)
+      return null;
+    })
+  }
 
   const countryWiseCustomerCountNumber=[]
   const countryWiseCustomerCountCountries = []
-  count.countryWiseCustomerCount.map((customer) => {
-    countryWiseCustomerCountNumber.push(customer.count)
-    countryWiseCustomerCountCountries.push(customer._id)
-    return null;
-  })
+  if(count && count.countryWiseCustomerCount){
+    count.countryWiseCustomerCount.map((customer) => {
+      countryWiseCustomerCountNumber.push(customer.count)
+      countryWiseCustomerCountCountries.push(customer._id)
+      return null;
+    })
+  }
 
   const countryWiseSiteCountNumber=[]
   const countryWiseSiteCountCountries = []
-  count.countryWiseSiteCount.map((site) => {
-    countryWiseSiteCountNumber.push(site.count)
-    countryWiseSiteCountCountries.push(site._id)
-    return null;
-  })
+  if(count && count.countryWiseSiteCount){
+    count.countryWiseSiteCount.map((site) => {
+      countryWiseSiteCountNumber.push(site.count)
+      countryWiseSiteCountCountries.push(site._id)
+      return null;
+    })
+  }
 
  const ModelData = {
     options: {
