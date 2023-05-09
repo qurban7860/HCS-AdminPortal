@@ -123,7 +123,7 @@ console.log("Note : " , note)
     if(contactVal){
       data.contact = contactVal
     }else{
-      data.site = null
+      data.contact = null
     }
     try {
       await dispatch(updateNote(customer._id,data));

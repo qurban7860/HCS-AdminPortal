@@ -143,7 +143,8 @@ useEffect(()=>{
       }
       if(billingContactVal){
         data.primaryBillingContact = billingContactVal._id;
-      }if(technicalContactVal){
+      }
+      if(technicalContactVal){
         data.primaryTechnicalContact= technicalContactVal._id;
       }
       await dispatch(addSite(data));
@@ -301,7 +302,7 @@ useEffect(()=>{
                 renderInput={(params) => <TextField {...params} label="Primary Billing Contact" />}
                 ChipProps={{ size: 'small' }}
                 />
-  
+
                 <Autocomplete 
                 // freeSolo
                 value={technicalContactVal || null}

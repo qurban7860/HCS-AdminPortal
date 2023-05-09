@@ -40,13 +40,15 @@ import FormProvider, {
 export default function CustomerEditForm() {
 
   const { error, customer } = useSelector((state) => state.customer);
-
+console.log("customer  : ", customer);
   const { sites } = useSelector((state) => state.site);
 
   const { contacts, spContacts } = useSelector((state) => state.contact);
   const [accountManVal, setAccountManVal] = useState('')
   const [supportManVal, setSupportManVal] = useState('')
   const [projectManVal, setProjectManVal] = useState('')
+  const [billingContactVal , setBillingContactVal] = useState('')
+  const [technicalContactVal, setTechnicalContactVal] = useState('')
 
   const dispatch = useDispatch();
 
@@ -58,14 +60,14 @@ export default function CustomerEditForm() {
     name: Yup.string().min(2).max(40).required('Name is required'),
     tradingName: Yup.string().max(40),
     mainSite: Yup.string().nullable(),
-    sites: Yup.array().nullable(),
+    // sites: Yup.array().nullable(),
     isActive: Yup.boolean(),
-    contacts: Yup.array().nullable(),
+    // contacts: Yup.array().nullable(),
     // accountManager: Yup.string().nullable(),
     // projectManager: Yup.string().nullable(),
     // supportManager: Yup.string().nullable(),
-    primaryBillingContact: Yup.string().nullable(),
-    primaryTechnicalContact: Yup.string().nullable(),
+    // primaryBillingContact: Yup.string().nullable(),
+    // primaryTechnicalContact: Yup.string().nullable(),
   });
 
 
@@ -78,8 +80,8 @@ export default function CustomerEditForm() {
       // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
       // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id, 
       // supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
-      primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
-      primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id, 
+      // primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
+      // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id, 
       isActive: customer?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -108,7 +110,8 @@ export default function CustomerEditForm() {
     setAccountManVal(customer?.accountManager)
     setSupportManVal(customer?.supportManager)
     setProjectManVal(customer?.projectManager)
-
+    setBillingContactVal(customer?.primaryBillingContact)
+    setTechnicalContactVal(customer?.primaryTechnicalContact)
   }, [dispatch, customer]);
 
   useEffect(() => {
@@ -139,6 +142,16 @@ export default function CustomerEditForm() {
       data.supportManager = supportManVal._id
     }else{
       data.supportManager = null;
+    }
+    if(billingContactVal){
+      data.primaryBillingContact = billingContactVal._id;
+    }else{
+      data.primaryBillingContact = null;
+    }
+    if(technicalContactVal){
+      data.primaryTechnicalContact= technicalContactVal._id;
+    }else{
+      data.primaryTechnicalContact= null;
     }
     try {
       dispatch(updateCustomer(data));
@@ -190,29 +203,47 @@ export default function CustomerEditForm() {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
-              >
+              > 
+              
+              <Autocomplete 
+                  // freeSolo
+                  value={billingContactVal || null}
+                  options={contacts}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                  onChange={(event, newValue) => {
+                    if(newValue){
+                      setBillingContactVal(newValue);
+                    }
+                    else{ 
+                      setBillingContactVal("");
+                    }
+                  }}
+                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Primary Billing Contact" />}
+                  ChipProps={{ size: 'small' }}
+                />
 
-
-              <RHFSelect native name="primaryBillingContact" label="Primary Billing Contact">
-                    <option defaultValue value="null" selected >No Primary Billing Contact Selected</option>
-                    { 
-                    contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="primaryTechnicalContact" label="Primary Technical Contact">
-                    <option defaultValue value="null" selected >No Primary Technical Contact Selected</option>
-                    { 
-                    contacts.length > 0 && contacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
+                <Autocomplete 
+                  // freeSolo
+                  value={technicalContactVal || null}
+                  options={contacts}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                  onChange={(event, newValue) => {
+                    if(newValue){
+                      setTechnicalContactVal(newValue);
+                    }
+                    else{ 
+                      setTechnicalContactVal("");
+                    }
+                  }}
+                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Primary Technical Contact" />}
+                  ChipProps={{ size: 'small' }}
+                />
 
               </Box>
 
