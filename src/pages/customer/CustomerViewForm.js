@@ -141,8 +141,14 @@ export default function CustomerViewForm() {
         <ViewFormField sm={6}   heading='Project Manager'       param={defaultValues.projectManager.firstName ?  defaultValues.projectManager.firstName : ''} secondParam={defaultValues.projectManager.lastName ? defaultValues.projectManager.lastName : ''}/>
         <ViewFormField sm={6}   heading='Suppport Manager'      param={defaultValues.supportManager.firstName ?  defaultValues.supportManager.firstName : ''} secondParam={defaultValues.supportManager.lastName ? defaultValues.supportManager.lastName : ''}/>
         
-        <Grid item xs={12} sm={12} sx={{display: 'flex',pt: 3}}>
-         <Typography variant="subtitle" sx={{ text: 'disabled' }}>
+        {/* <Grid item xs={12} sm={12} sx={{pt: 3,display:'flex', flexDirection:'column' }}>
+         <Typography variant="overline" sx={{ px:2, color: 'text.disabled' }}>
+              Active
+            </Typography>
+          <Switch sx={{ mb: 1 }} checked={defaultValues.isActive} disabled />
+        </Grid> */}
+        <Grid item xs={12} sm={12} sx={{pt: 3,display:'flex', }}>
+         <Typography variant="overline" sx={{ pl:2,pb:1, color: 'text.disabled',display:'flex', alignItems:'center' }}>
               Active
             </Typography>
           <Switch sx={{ mb: 1 }} checked={defaultValues.isActive} disabled />

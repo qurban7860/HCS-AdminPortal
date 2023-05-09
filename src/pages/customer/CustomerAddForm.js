@@ -11,7 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Checkbox,Container , FormControlLabel,Autocomplete, DialogTitle, Dialog, InputAdornment, TextField} from '@mui/material';
 // slice
 import { addCustomer } from '../../redux/slices/customer/customer';
 // routes
@@ -65,6 +65,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const [country, setCountryVal] = useState('')
   const [billingContactPhone, setBillingContactPhone] = useState('')
   const [technicalContactPhone, setTechnicalContactPhone] = useState('')
+  const [accountManVal, setAccountManVal] = useState('')
+  const [supportManVal, setSupportManVal] = useState('')
+  const [projectManVal, setProjectManVal] = useState('')
 
 
   const AddCustomerSchema = Yup.object().shape({
@@ -112,9 +115,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       name: '',
       mainSite: '',
       tradingName: '',
-      accountManager: null,
-      projectManager: null,
-      supportManager: null,
+      // accountManager: null,
+      // projectManager: null,
+      // supportManager: null,
       type: 'Customer',
       isActive: true,
       contactFlag,
@@ -193,6 +196,16 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         if(technicalContactPhone){
           data.technicalContactPhone = technicalContactPhone
         }
+        if(accountManVal){
+          data.accountManager = accountManVal._id
+        }
+        if(projectManVal){
+          data.projectManager = projectManVal._id
+        }
+        if(supportManVal){
+          data.supportManager = supportManVal._id
+        }
+        console.log("customer : ",data)
         dispatch(addCustomer(data));
         reset();
         enqueueSnackbar('Create success!');
@@ -424,36 +437,63 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-
-              <RHFSelect native name="accountManager" label="Account Manager">
-                    <option defaultValue value="null" selected >No Account Manager Selected</option>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="projectManager" label="Project Manager">
-                    <option defaultValue value="null" selected >No Project Manager Selected</option>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
-
-              <RHFSelect native name="supportManager" label="Support Manager">
-                    <option defaultValue value="null" selected >No Support Manager Selected</option>
-                    { 
-                    spContacts.length > 0 && spContacts.map((option) => (
-                    <option key={option._id} value={option._id}>
-                      {option.firstName} {option.lastName}
-                    </option>
-                  ))}
-              </RHFSelect>
+              <Autocomplete 
+                // freeSolo
+                value={accountManVal || null}
+                options={spContacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setAccountManVal(newValue);
+                  }
+                  else{ 
+                    setAccountManVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={projectManVal || null}
+                options={spContacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setProjectManVal(newValue);
+                  }
+                  else{ 
+                    setProjectManVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
+              <Autocomplete 
+                // freeSolo
+                value={supportManVal || null}
+                options={spContacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setSupportManVal(newValue);
+                  }
+                  else{ 
+                    setSupportManVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                ChipProps={{ size: 'small' }}
+              />
 
               </Box>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />

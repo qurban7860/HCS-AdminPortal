@@ -143,7 +143,6 @@ export default function CustomerView({editPage}) {
         }}
       >
         <Cover
-          customer={customer}
           name={customer ? customer.name : 'New Customer'}
           photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
           icon="ph:users-light"

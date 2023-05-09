@@ -161,22 +161,11 @@ export function updateNote(customerId,params) {
         note: params.note,
         isActive: params.isActive,
       }
-      data.note =  params.note;
-      if(params.customer){
-        data.customer = params.customer;
+      if(params.site  !== "null" && params.site  !== null){
+          data.site =params.site;
       }
-      if(params.editSite  !== "null" && params.editSite  !== null){
-          data.site =params.editSite;
-      }else{
-        data.site =  null
-      }
-      if(params.editContact !== "null" && params.editContact !== null){
-          data.contact = params.editContact;
-      }else{
-        data.contact = null
-      }
-      if(params.user){
-        data.user = params.user;
+      if(params.contact !== "null" && params.contact !== null){
+          data.contact = params.contact;
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
