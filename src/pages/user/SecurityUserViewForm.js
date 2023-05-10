@@ -205,7 +205,7 @@ export default function SecurityUserViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-        >
+          >
           <Typography variant="h4" sx={{ px: 2 }}>
             Customer{' '}
           </Typography>{' '}
@@ -295,7 +295,7 @@ export default function SecurityUserViewForm() {
           <Grid
             sx={{
               backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`
             }}>
             <Typography variant="h6" sx={{ px: 2, color: 'primary.contrastText' }}>
               Howick Resources{' '}

@@ -53,7 +53,6 @@ export default function Alert(theme) {
           error: <ErrorIcon />,
         },
       },
-
       styleOverrides: {
         root: ({ ownerState }) => rootStyle(ownerState),
         icon: {
