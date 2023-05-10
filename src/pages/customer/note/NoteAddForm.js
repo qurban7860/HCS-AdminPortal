@@ -14,7 +14,7 @@ import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/n
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFSelect, RHFTextField, } from '../../../components/hook-form';
-
+import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
 NoteAddForm.propTypes = {
@@ -115,20 +115,6 @@ const [contactVal, setContactVal]= useState("");
     dispatch(setNoteFormVisibility(false));
   };
 
-  // const [visibilityAgainst, setVisibilityAgainst]= useState(0);
-  // const handleChange = event => {
-  //   const { value } = event.target
-  //   console.log(value)
-  //   event.stopPropagation()
-  //   // document.querySelectorAll([".visible"])
-  //   // document.getElementsByClassName('visible')
-  //   setVisibilityAgainst(value)
-  // }
-  // const visibilitydocument = document.getElementsByName('site').value
-  // const visibilitydocument2 = document.getElementsByName('contact').value
-
-  // console.log(visibilitydocument,visibilitydocument2)
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -190,25 +176,10 @@ const [contactVal, setContactVal]= useState("");
                 renderInput={(params) => <TextField {...params} label="Contact" />}
                 ChipProps={{ size: 'small' }}
                 />
-
-
               </Box>
-              {/* <RHFEditor simple name="note"  /> */}
               <RHFTextField name="note" label="Note*" minRows={8} multiline />
-              {/* <TextField name="note" label="Note*" minRows={8} multiline /> */}
 
-              {/* <RHFSwitch
-              name="isArchived"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    isArchived
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-              /> */}
+             
 
             <Box
                 rowGap={5}
@@ -220,26 +191,10 @@ const [contactVal, setContactVal]= useState("");
                 }}
               > 
                 <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-              
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Save Note
-                </LoadingButton>
-              
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-
             </Box>
-
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  
-
-            
           </Card>
-          
         </Grid>
       </Grid>
     </FormProvider>

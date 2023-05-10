@@ -18,7 +18,7 @@ import {
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getCategories, getCategory, deleteCategories } from '../../../redux/slices/products/category';
+import { getCategories, getCategory, deleteCategory } from '../../../redux/slices/products/category';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -164,7 +164,7 @@ export default function CategoryList() {
   };
 
   const handleDeleteRow = async (id) => {
-    await dispatch(deleteCategories(id));
+    await dispatch(deleteCategory(id));
     try {
       // console.log(id);
       // await dispatch(deleteSupplier(id));

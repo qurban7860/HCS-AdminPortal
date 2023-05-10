@@ -38,7 +38,7 @@ import FormProvider, {
   RHFTextField,
   RHFSwitch
 } from '../../components/hook-form';
-
+import AddFormButtons from '../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -310,7 +310,7 @@ const handleKeyPress = (e) => {
                 }}
                 // id="controllable-states-demo"
                 renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
-                renderInput={(params) => <TextField {...params}  label="Previous Machine" />}
+                renderInput={(params) => <TextField {...params}  label="Previous Machine" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
                 ChipProps={{ size: 'small' }}
               />
               
@@ -515,59 +515,31 @@ const handleKeyPress = (e) => {
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
                 <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ my:-3}}/>
               </Box>
-{/* -------------------------start add chips------------------------- */}
+                {/* -------------------------start add chips------------------------- */}
 
-{/* <Card
-      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
-      {chipData.map((data,index) => 
-          <ListItem key={index}>
-            <Chip
-              label={data}
-              onDelete={()=>handleDelete(data,index)}
-            />
-          </ListItem>
-       )}
-       <TextField name="tag" sx={{p:1}}   variant="standard"  
-        InputProps={{disableUnderline: true,}} 
-        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
-    </Card> */}
-
-    <RHFSwitch name="isActive" labelPlacement="start" label={
-        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
-      />
-{/* -------------------------end add chips------------------------- */}
-<Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
-                }}
-              > 
-
-                <LoadingButton 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
-                  loading={isSubmitting}>
-                    Save Changes
-                </LoadingButton>
-
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-            </Box>
+                {/* <Card
+                      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
+                      {chipData.map((data,index) => 
+                          <ListItem key={index}>
+                            <Chip
+                              label={data}
+                              onDelete={()=>handleDelete(data,index)}
+                            />
+                          </ListItem>
+                       )}
+                       <TextField name="tag" sx={{p:1}}   variant="standard"  
+                        InputProps={{disableUnderline: true,}} 
+                        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
+                    </Card> */}
+                  
+                    <RHFSwitch name="isActive" labelPlacement="start" label={
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                      />
+                {/* -------------------------end add chips------------------------- */}
+                
               </Stack>
-
-            
-            
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
-
         </Grid>
       </Grid>
     </FormProvider>

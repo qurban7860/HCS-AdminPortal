@@ -17,6 +17,8 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar'
 import FormProvider, {  RHFTextField, RHFSwitch} from '../../../components/hook-form';
 import {Cover} from '../../components/Cover'
+import AddFormButtons from '../../components/AddFormButtons';
+
 // ----------------------------------------------------------------------
 
 export default function CategoryEditForm() {
@@ -90,6 +92,7 @@ export default function CategoryEditForm() {
           <Cover name='Edit Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
         </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
@@ -101,11 +104,9 @@ export default function CategoryEditForm() {
                 />
               </Box>
             </Stack>
-              <Box rowGap={5} columnGap={4} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(5, 1fr)', }} > 
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>Save Changes</LoadingButton>
-                <Button  onClick={toggleCancel} variant="outlined"  size="large">Cancel</Button>
-              </Box>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
+        </Grid>
         </Grid>
       </FormProvider>
     </>
