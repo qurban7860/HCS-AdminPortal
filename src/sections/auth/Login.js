@@ -18,15 +18,6 @@ export default function Login(){
 return (
   <LoginLayout title={CONFIG.MESSAGE_LOGIN_USER}>
     <Grid item xs={6}>
-      <Stack
-        sx={{
-          alignItems: 'center',
-        }}
-      >
-        <Typography variant="h2" sx={{ mb: 5, mt: 1 }}>
-          CLOUD SERVICES
-        </Typography>
-      </Stack>
       <Typography
         sx={{
           backgroundColor: CONFIG.Background_Color,
@@ -45,10 +36,10 @@ return (
     </Grid>
     <AuthLoginForm />
 
-    <Stack direction="row" spacing={0.5} sx={{ mt: 2 }}>
-      <Typography variant="body2">New user?</Typography>
-      <Link component={RouterLink} to={PATH_AUTH.register} variant="subtitle2">
-        Create an account
+    <Stack direction="row" spacing={0.5} sx={{ mt: 2, justifyContent: 'center' }}>
+      <Typography variant="body2">Need an account?</Typography>
+      <Link component={RouterLink} to={PATH_AUTH.register} variant="subtitle">
+        Create an account here
       </Link>
     </Stack>
 

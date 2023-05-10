@@ -41,6 +41,15 @@ export default function LoginLayout({ children, illustration, title }) {
                 pointerEvents: 'none',
               }}
             />
+            <Stack
+              sx={{
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="h2" sx={{ mb: 6, mt: -2 }}>
+                CLOUD SERVICES
+              </Typography>
+            </Stack>
           </Grid>
         </Grid>
         <Stack sx={{ width: '100%' }}> {children} </Stack>
