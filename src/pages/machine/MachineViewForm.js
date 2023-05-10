@@ -177,12 +177,25 @@ export default function MachineViewForm() {
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
-        <Grid item xs={12} sm={12} sx={{ pt: 2 }}>
-          <Divider>
-            <Typography variant="subtitle" sm={12}>
+        <Grid
+          container
+          sx={{
+            py: '2rem',
+          }}
+        >
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            sx={{
+              backgroundImage: (theme) =>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+          >
+            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
               Howick Resources
             </Typography>
-          </Divider>
+          </Grid>
         </Grid>
         <Grid item sm={6}>
           <ViewFormField
@@ -216,25 +229,26 @@ export default function MachineViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            Customer{' '}
+          </Typography>{' '}
+          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
+            {' '}
+            <Iconify icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
         <Grid container sx={{ px: 2, pt: 2 }}>
-          <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
-          >
-            <Typography variant="h4" sx={{ px: 2 }}>
-              Customer{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseCustomer()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
           <ViewFormField sm={12} heading="Name" param={customer?.name ? customer?.name : ''} />
           <ViewFormField
             sm={6}
@@ -310,9 +324,22 @@ export default function MachineViewForm() {
             }
           />
         </Grid>
-        <Typography variant="subtitle2" sx={{ px: 4 }}>
-          Howick Resources{' '}
-        </Typography>
+        <Grid
+          sx={{
+            p: '2rem'
+          }}
+          >
+          <Grid
+            sx={{
+              backgroundImage: (theme) =>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+            >
+              <Typography variant="h6" sx={{ px: 2, color: 'primary.contrastText' }}>
+                Howick Resources{' '}
+              </Typography>
+          </Grid>
+        </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
           <ViewFormField
             sm={6}
@@ -362,25 +389,31 @@ export default function MachineViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid container sx={{ p: 2 }}>
-          <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            Installation Site{' '}
+          </Typography>{' '}
+          <Link
+            onClick={() => handleCloseInstallationSite()}
+            href="#"
+            underline="none"
+            sx={{ ml: 'auto' }}
           >
-            <Typography variant="h4" sx={{ px: 2 }}>
-              Installation Site{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseInstallationSite()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
+            {' '}
+            <Iconify icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
+        <Grid container sx={{ p: 2 }}>
           <ViewFormField
             sm={12}
             heading="Name"
@@ -469,25 +502,31 @@ export default function MachineViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid container sx={{ p: 2 }}>
-          <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            Billing Site{' '}
+          </Typography>{' '}
+          <Link
+            onClick={() => handleCloseBillingSite()}
+            href="#"
+            underline="none"
+            sx={{ ml: 'auto' }}
           >
-            <Typography variant="h3" sx={{ px: 2 }}>
-              Billing Site{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseBillingSite()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
+            {' '}
+            <Iconify icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
+        <Grid container sx={{ p: 2 }}>
           <ViewFormField
             sm={12}
             heading="Name"
