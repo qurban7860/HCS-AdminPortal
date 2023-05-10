@@ -1,7 +1,7 @@
 import { blue } from '@mui/material/colors';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
@@ -37,6 +37,7 @@ import FormProvider, { RHFSwitch } from '../../components/hook-form';
 import { fDateTime } from '../../utils/formatTime';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
+import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -53,6 +54,7 @@ const onDelete = async () => {
   await dispatch(deleteCustomer(customer._id));
   navigate(PATH_DASHBOARD.customer.list)
 }
+
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -78,7 +80,6 @@ const onDelete = async () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
@@ -141,21 +142,8 @@ const onDelete = async () => {
         <ViewFormField sm={6}   heading='Account Manager'       param={defaultValues.accountManager.firstName ?  defaultValues.accountManager.firstName : ''} secondParam={defaultValues.accountManager.lastName ? defaultValues.accountManager.lastName : ''}/>
         <ViewFormField sm={6}   heading='Project Manager'       param={defaultValues.projectManager.firstName ?  defaultValues.projectManager.firstName : ''} secondParam={defaultValues.projectManager.lastName ? defaultValues.projectManager.lastName : ''}/>
         <ViewFormField sm={6}   heading='Suppport Manager'      param={defaultValues.supportManager.firstName ?  defaultValues.supportManager.firstName : ''} secondParam={defaultValues.supportManager.lastName ? defaultValues.supportManager.lastName : ''}/>
-        
-        {/* <Grid item xs={12} sm={12} sx={{pt: 3,display:'flex', flexDirection:'column' }}>
-         <Typography variant="overline" sx={{ px:2, color: 'text.disabled' }}>
-              Active
-            </Typography>
-          <Switch sx={{ mb: 1 }} checked={defaultValues.isActive} disabled />
-        </Grid> */}
-        <Grid item xs={12} sm={12} sx={{pt: 3,display:'flex', }}>
-         <Typography variant="overline" sx={{ pl:2,pb:1, color: 'text.disabled',display:'flex', alignItems:'center' }}>
-              Active
-            </Typography>
-          <Switch sx={{ mb: 1 }} checked={defaultValues.isActive} disabled />
-        </Grid>
+        <ViewFormSwitch isActive={defaultValues.isActive}/>
       </Grid>
-
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

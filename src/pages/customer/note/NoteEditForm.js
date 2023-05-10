@@ -39,7 +39,6 @@ import FormProvider, {
 export default function NoteEditForm() {
 
   const { error, note } = useSelector((state) => state.note);
-console.log("Note : " , note)
   const { users } = useSelector((state) => state.user);
 
   const { sites } = useSelector((state) => state.site);

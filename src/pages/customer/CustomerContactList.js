@@ -140,12 +140,12 @@ export default function CustomerContactList() {
             <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
-              <Grid container spacing={0}>
-                <Grid item xs={12} sm={6} md={3} >{contact?.firstName} {contact.lastName} </Grid>
-                <Grid item xs={12} sm={6} md={3}>{contact?.email && <Typography variant="body2" >{contact.email}</Typography>}</Grid>
-                <Grid item xs={12} sm={9} md={2} display={{ sm:"none", md:"block"}}>{contact?.phone && <Typography variant="body2" >{contact.phone}</Typography>}</Grid>
-                <Grid item xs={12} sm={9} md={2} display={{ sm:"none", md:"none", lg:"block"}}>{contact?.title && <Typography variant="body2" >{contact.title}</Typography>}</Grid>
-                <Grid item xs={12} sm={9} md={2} display={{ sm:"none", md:"none",  lg:"block"}}>{contact?.contactTypes && <Typography variant="body2" >{Object.values(contact.contactTypes)?.join(", ")}</Typography>}</Grid>
+              <Grid container >
+                <Grid item xs={12} sm={6} md={3} sx={{ overflowWrap: "break-word", px:1 }} >{contact?.firstName} {contact.lastName} </Grid>
+                <Grid item xs={12} sm={6} md={3} sx={{ overflowWrap: "break-word", px:1 }} >{contact?.email && <Typography variant="body2" >{contact.email}</Typography>}</Grid>
+                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"block"}}>{contact?.phone && <Typography variant="body2" >{contact.phone}</Typography>}</Grid>
+                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"none", lg:"block"}}>{contact?.title && <Typography variant="body2" >{contact.title}</Typography>}</Grid>
+                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"none",  lg:"block"}}>{contact?.contactTypes && <Typography variant="body2" >{Object.values(contact.contactTypes)?.join(", ")}</Typography>}</Grid>
               </Grid>
             : null }
               </AccordionSummary>
