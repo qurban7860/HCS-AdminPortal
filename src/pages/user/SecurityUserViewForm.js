@@ -82,6 +82,9 @@ export default function SecurityUserViewForm() {
   const handleViewCustomer = (Id) => {
     navigate(PATH_DASHBOARD.customer.view(Id));
   };
+  const handlePassword = () => {
+    navigate(PATH_DASHBOARD.user.userPassword)
+  }
 
   const defaultValues = useMemo(
     () => ({
@@ -110,12 +113,23 @@ export default function SecurityUserViewForm() {
         </Card>
         <Card sx={{ p: 3 }}>
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
+        { user?.email !== securityUser?.login ?
+              <Button
+                onClick={() => {
+                  handlePassword();
+                }}
+                variant="outlined"
+              >
+                <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:password-alert" />
+              </Button> : ""
+              }
               <Button
                 onClick={() => handleEdit()}
                 variant="outlined"
               >
                 <Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" />
               </Button>
+              
               { user?.email !== securityUser?.login ?
               <Button
                 onClick={() => {
