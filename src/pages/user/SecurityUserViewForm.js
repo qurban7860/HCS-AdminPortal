@@ -205,7 +205,7 @@ export default function SecurityUserViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-          >
+        >
           <Typography variant="h4" sx={{ px: 2 }}>
             Customer{' '}
           </Typography>{' '}
@@ -290,13 +290,13 @@ export default function SecurityUserViewForm() {
             }
           />
         </Grid>
-        <Grid
-          sx={{p: '2rem'}}>
+        <Grid sx={{ p: '2rem' }}>
           <Grid
             sx={{
               backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`
-            }}>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+          >
             <Typography variant="h6" sx={{ px: 2, color: 'primary.contrastText' }}>
               Howick Resources{' '}
             </Typography>
@@ -351,8 +351,27 @@ export default function SecurityUserViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            Contact{' '}
+          </Typography>{' '}
+          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
+            {' '}
+            <Iconify icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
         <Grid container sx={{ px: 2, py: 2 }}>
-          <Grid
+          {/* <Grid
             item
             sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             sm={12}
@@ -369,7 +388,7 @@ export default function SecurityUserViewForm() {
               {' '}
               <Iconify icon="mdi:close-box-outline" />
             </Link>
-          </Grid>
+          </Grid> */}
           <ViewFormField
             sm={6}
             heading="First Name"
