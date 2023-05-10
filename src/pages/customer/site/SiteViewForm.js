@@ -18,6 +18,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
+import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -56,6 +57,7 @@ export default function SiteViewForm({ currentSite = null }) {
     await dispatch(getSite(customer._id, currentSite._id));
     dispatch(setSiteEditFormVisibility(true));
   };
+  
   const defaultValues = useMemo(
     () => (
       {
@@ -124,9 +126,7 @@ export default function SiteViewForm({ currentSite = null }) {
             <ViewFormField sm={6}   heading='Primary Billing Contact'       param={defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} secondParam={defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}/>
             <ViewFormField sm={6}   heading='Primary Technical Contact'       param={defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''} secondParam={defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}/>
           </Grid>
-          <Grid item xs={12} sm={12} >
-            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-          </Grid>
+            <ViewFormSwitch isActive={defaultValues.isActive}/>
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>
