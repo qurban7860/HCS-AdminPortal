@@ -113,7 +113,7 @@ export default function ModelAddForm() {
                   <Cover name='New Model' icon='material-symbols:model-training-outline-rounded' />
               </Card>
           <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-       
+            <Grid container>
               <Grid item xs={18} md={12} sx={{mt: 3}}>
                 <Card sx={{ p: 3}}>
                   <Stack spacing={3}>
@@ -147,17 +147,11 @@ export default function ModelAddForm() {
                   />
                   </Box>
                   <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-                  
-                  
                     </Stack>
-                    
-
-                  
-                              
                   </Card>
                 
                 </Grid>
-              
+            </Grid>
           </FormProvider>
     </Container>
     </>

@@ -14,7 +14,10 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate,fDateTime } from '../../../utils/formatTime';
+import ViewFormField from '../../components/ViewFormField';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormSwitch from '../../components/ViewFormSwitch';
 // ----------------------------------------------------------------------
 ToolsInstalledViewForm.propTypes = {
   currentTool: PropTypes.object,
@@ -44,7 +47,6 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
 
   const onDelete = async () => {
     await dispatch(deleteToolInstalled(machine._id, currentTool._id));
-    handleCloseConfirm();
     dispatch(getToolsInstalled(machine._id));
   };
 
@@ -72,70 +74,16 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
   );
 
   return (
-    <Grid sx={{ p: 2 }}>
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-        <Button
-          onClick={() => handleEdit()}
-          variant="outlined"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Edit
-        </Button>
-        <Button
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          variant="outlined"
-          color="error"
-          startIcon={<Iconify icon="eva:trash-2-fill" />}
-        >
-          Delete
-        </Button>
-      </Stack>
+    <Grid >
+      
+      <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
       <Grid container>
+          <ViewFormField  sm={12} heading="Tool" param={defaultValues.toolName ? defaultValues.toolName : ''} />
+          <ViewFormField  sm={12} heading="Note" param={defaultValues.toolNote ? defaultValues.toolNote : ''} />
 
-          <Grid item xs={12} sm={12} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Tool 
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.toolName ? defaultValues.toolName : ''}
-            </Typography>
-          </Grid>
+          <ViewFormSwitch isActive={defaultValues.isActive} />
 
-          <Grid item xs={12} sm={12} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-                Note
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.toolNote ? defaultValues.toolNote : ''}
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={12} >
-            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-          </Grid>
-
-          <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>
-        </Grid>
-        <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
-          />
-
       </Grid>
     </Grid>
   );

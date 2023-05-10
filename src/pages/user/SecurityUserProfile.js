@@ -21,7 +21,7 @@ import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
 import { Cover } from '../components/Cover'
 import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
-
+import ViewFormSWitch from '../components/ViewFormSwitch';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfile() {
@@ -127,7 +127,7 @@ export default function SecurityUserProfile() {
         </Card>
         <Card sx={{ p: 3 }}>
           <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
-              <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >Edit</Button>
+              <Button onClick={() => handleEdit()} variant="outlined" ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
           </Stack>
           <Grid container>
             <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer ? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
@@ -138,7 +138,7 @@ export default function SecurityUserProfile() {
             <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
             <ViewFormField sm={6} heading="Roles" param={defaultValues?.roles?.map((obj) => obj?.name).join(', ')} />
           </Grid>
-            <Switch sx={{mt:1}} checked = { defaultValues.isActive } name="isActive" disabled  />
+            <ViewFormSWitch isActive={defaultValues.isActive} />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>

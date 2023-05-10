@@ -27,6 +27,8 @@ import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
 import {Cover} from '../../components/Cover'
+import AddFormButtons from '../../components/AddFormButtons';
+
 // ----------------------------------------------------------------------
 
 
@@ -117,10 +119,11 @@ export default function ParameterEditForm() {
   return (
     // <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid item xs={18} md={12} sx={{mt: 3}}>
             <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
                 <Cover name='Edit Parameter' icon='ic:round-flare' />
             </Card>
+      <Grid container>
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
@@ -144,27 +147,9 @@ export default function ParameterEditForm() {
              </Box>
              
               </Stack>
-              <Box rowGap={5} columnGap={4} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(4, 1fr)', }} > 
-
-              <LoadingButton 
-                type="submit"
-                variant="contained"
-                size="large"
-                loading={isSubmitting}>
-                  Save Changes
-              </LoadingButton>
-
-              <Button 
-                onClick={toggleCancel}
-                variant="outlined" 
-                size="large">
-                  Cancel
-              </Button>
-
-            </Box>
-                        
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>         
             </Card>
-          
+          </Grid>
           </Grid>
         
     </FormProvider>

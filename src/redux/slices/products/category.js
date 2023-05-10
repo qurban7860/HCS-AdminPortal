@@ -125,7 +125,7 @@ export function getCategory(id) {
 
 //------------------------------------------------------------------------------
 
-export function deleteCategories(id) {
+export function deleteCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

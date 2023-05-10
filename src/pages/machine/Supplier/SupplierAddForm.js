@@ -158,6 +158,8 @@ export default function StatusAddForm() {
                 </Box>
               </Stack>
             </Card>
+            <Grid container spacing={3}>
+            <Grid item xs={18} md={12}>
             <Card sx={{ p: 3, mt: 3}}>
               <Stack spacing={3}>
                 <Typography variant="subtitle1" sx={{ color: 'text.secondary' }}>
@@ -210,6 +212,8 @@ export default function StatusAddForm() {
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
               </Stack>
             </Card>
+            </Grid>
+            </Grid>
           </Grid>
         </FormProvider>
       </Container>

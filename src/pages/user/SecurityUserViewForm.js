@@ -21,6 +21,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../components/hook-form';
 import { useSnackbar } from '../../components/snackbar';
 import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import ViewFormSWitch from '../components/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -112,9 +113,8 @@ export default function SecurityUserViewForm() {
               <Button
                 onClick={() => handleEdit()}
                 variant="outlined"
-                startIcon={<Iconify icon="eva:edit-fill" />}
               >
-                Edit
+                <Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" />
               </Button>
               { user?.email !== securityUser?.login ?
               <Button
@@ -123,9 +123,8 @@ export default function SecurityUserViewForm() {
                 }}
                 variant="outlined"
                 color="error"
-                startIcon={<Iconify icon="eva:trash-2-fill" />}
               >
-                Delete
+                <Iconify sx={{height: '24px',width: '24px' }} icon="eva:trash-2-fill" />
               </Button> : ""
               }
           </Stack>
@@ -145,8 +144,7 @@ export default function SecurityUserViewForm() {
             <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
             <ViewFormField sm={6} heading="Roles" param={defaultValues.roles?.map((obj) => obj.name).join(', ')} />
           </Grid>
-          
-          <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
+            <ViewFormSWitch isActive={defaultValues.isActive} />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>

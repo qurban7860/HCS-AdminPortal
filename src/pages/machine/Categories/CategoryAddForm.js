@@ -97,7 +97,7 @@ export default function CategoryAddForm() {
         <Cover name='New Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
       </Card>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      
+        <Grid container >
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={2}>
@@ -137,9 +137,8 @@ export default function CategoryAddForm() {
             </Card>
             
 
-          
+          </Grid> 
           </Grid>
-          
         
     </FormProvider>
     </Container>

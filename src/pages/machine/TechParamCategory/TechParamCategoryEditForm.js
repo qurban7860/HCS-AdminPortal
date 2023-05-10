@@ -17,6 +17,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import {useSnackbar} from '../../../components/snackbar';
 import FormProvider, {  RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import {Cover} from '../../components/Cover'
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -100,12 +101,7 @@ export default function TechParamCategoryEditForm() {
                 <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               </Box>
             </Stack>
-            <Box rowGap={5} columnGap={4} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(5, 1fr)', }} > 
-              <LoadingButton  type="submit"  variant="contained"  size="large"  loading={isSubmitting}>
-                  Save Changes
-              </LoadingButton>
-              <Button  onClick={toggleCancel} variant="outlined"  size="large">   Cancel </Button>
-            </Box>  
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
         </Grid>
       </Grid>

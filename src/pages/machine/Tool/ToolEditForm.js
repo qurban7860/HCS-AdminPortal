@@ -22,6 +22,7 @@ import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
 import {Cover} from '../../components/Cover'
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -136,34 +137,7 @@ export default function ToolEditForm() {
               
              
               </Stack>
-
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
-                }}
-              > 
-
-                <LoadingButton 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
-                  loading={isSubmitting}>
-                    Save Changes
-                </LoadingButton>
-
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-            </Box>
-                        
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Card>
           
           </Grid>

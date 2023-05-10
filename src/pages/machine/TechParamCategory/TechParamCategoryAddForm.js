@@ -84,6 +84,7 @@ export default function TechParamCategoryAddForm() {
         <Cover name='New Parameter Category' icon='ic:round-class' />
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container>
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
@@ -95,6 +96,7 @@ export default function TechParamCategoryAddForm() {
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
+        </Grid>
         </Grid>
       </FormProvider>
     </Container>

@@ -114,6 +114,7 @@ export default function ToolAddForm() {
               >
                 <Cover name='New Tool' icon='fa-solid:tools' />
               </Card>
+        <Grid container >
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={2}>
@@ -149,6 +150,7 @@ export default function ToolAddForm() {
                         
             </Card>
           
+          </Grid>
           </Grid>
           </Container>
     </FormProvider>

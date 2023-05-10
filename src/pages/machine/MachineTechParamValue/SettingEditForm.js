@@ -28,7 +28,7 @@ import FormProvider, {
 import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
-
+import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function SettingEditForm() {
@@ -159,7 +159,7 @@ export default function SettingEditForm() {
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="category" />}
+                renderInput={(params) => <TextField {...params}  label="category" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
                 ChipProps={{ size: 'small' }}
               />
               
@@ -180,7 +180,7 @@ export default function SettingEditForm() {
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Technical Parameters" />}
+                renderInput={(params) => <TextField {...params}  label="Technical Parameters" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
                 ChipProps={{ size: 'small' }}
               />
 
@@ -200,35 +200,8 @@ export default function SettingEditForm() {
                 } 
               />
 
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
-
-              <LoadingButton 
-                type="submit"
-                variant="contained"
-                size="large"
-                loading={isSubmitting}>
-                  Save Changes
-              </LoadingButton>
-
-              <Button 
-                onClick={toggleCancel}
-                variant="outlined" 
-                size="large">
-                  Cancel
-              </Button>
-
-            </Box>
-
             </Stack>
-
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
 
         </Grid>

@@ -29,6 +29,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
+import AddFormButtons from '../components/AddFormButtons';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -209,6 +210,7 @@ const onSubmit = async (data) => {
   const handleChange = (e) => {
 		setCurrTag(e.target.value);
   };
+  const toggleCancel = () => { navigate(PATH_MACHINE.machine.list); };
 
   const { themeStretch } = useSettingsContext();
 
@@ -219,7 +221,8 @@ const onSubmit = async (data) => {
       <Card sx={{ mb: 3, height: 150, position: 'relative', mt: '24px', }} >
           <Cover name='New Machine' icon='material-symbols:list-alt-outline' setting="enable"/>
         </Card>
-      <Grid item xs={18} md={12} sx={{mt: 3}}>
+        <Grid container >
+        <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={6}>
             <Box sx={{mb:-3}} rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
@@ -473,56 +476,52 @@ const onSubmit = async (data) => {
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} sx={{ mb:-3}} >
                 <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ mt:-3}}/>
               </Box>
-{/* -------------------------start add chips------------------------- */}
-{/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
+                {/* -------------------------start add chips------------------------- */}
+                {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
 
-{/* <Card
-      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
-      {chipData.map((data,index) => 
-          <ListItem key={index}>
-            <Chip
-              label={data}
-              onDelete={()=>handleDelete(data,index)}
-            />
-          </ListItem>
-       )}
-       <TextField name="tag" sx={{p:1}}   variant="standard"  
-        InputProps={{disableUnderline: true,}} 
-        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
-    </Card>
+                {/* <Card 
+                      sx={{ di  splay: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
+                      {chipDat  a.map((data,index) => 
+                          <Lis  tItem key={index}>
+                            <C  hip
+                                label={data}
+                                onDelete={()=>handleDelete(data,index)}
+                            />  
+                          </Li  stItem>
+                       )} 
+                       <TextFi  eld name="tag" sx={{p:1}}   variant="standard"  
+                        InputP  rops={{disableUnderline: true,}} 
+                        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
+                    </Card>
+                <RHFSwitch
+                sx={{mt:-3}}
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                    <>
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                        Active
+                      </Typography>
+                    </>
+                  } 
+                /> */}
+                {/* -------------------------end add chips------------------------- */}
               <RHFSwitch
-              sx={{mt:-3}}
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                      Active
-                    </Typography>
-                  </>
-                } 
-              /> */}
-{/* -------------------------end add chips------------------------- */}
-<RHFSwitch
-    sx={{my:-3}}
-      name="isActive"
-      labelPlacement="start"
-      label={
-          <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-            Active
-          </Typography>
-      } 
-    />
+                sx={{my:-3}}
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                        Active
+                      </Typography>
+                  } 
+                />
               </Stack>
 
-            <Stack alignItems="flex-start" sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Machine
-              </LoadingButton>
-            </Stack>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Card>
           </Grid>
-        {/* </Grid> */}
+        </Grid>
     </FormProvider>
     </Container>
     </>

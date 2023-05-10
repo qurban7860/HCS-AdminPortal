@@ -26,7 +26,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { countries } from '../../assets/data';
 // util
 import { Cover } from '../components/Cover';
-
+import AddFormButtons from '../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
 CustomerAddForm.propTypes = {
@@ -178,6 +178,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       setTechnicalContactPhone(newValue)
     }
   }
+  const toggleCancel = () => { navigate(PATH_DASHBOARD.customer.list); };
 
   const onSubmit = async (data) => {
       try{
@@ -219,7 +220,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-    {/* <Container maxWidth={false}> */}
       {/* <Grid container spacing={3}>
         <CustomerDashboardNavbar/>
       </Grid> */}
@@ -237,7 +237,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         >
           <Cover name='New Customer' icon="mdi:user"/>
         </Card>
-      <Grid item xs={18} md={12} sx={{mt: 3}}>
+      <Grid  sx={{mt: 3}}>
           <Card sx={{ p: 3, mb: 3 }}>
             <Stack spacing={3}>
             <Box
@@ -420,7 +420,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </Stack>
               </m.div>
             </Card>
-
+          <Grid container spacing={3}>
+            <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
 
@@ -498,17 +499,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </Box>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
 
-            <Stack alignItems="flex-start" direction="row" spacing={2} sx={{ mt: 3 }}>
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Customer
-              </LoadingButton>
-            </Stack>
-                        
             </Card>
-          
+            </Grid>
           </Grid>
-      {/* </Container>  */}
+          </Grid>
     </FormProvider>
   );
 }
