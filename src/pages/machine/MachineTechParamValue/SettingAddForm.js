@@ -109,6 +109,7 @@ useEffect(()=>{
       reset();
       // setCategory("")
       setTechParamVal("")
+      enqueueSnackbar('Create success!');
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(err.message);
@@ -213,7 +214,7 @@ useEffect(()=>{
 
                 <Grid item xs={18} md={3} style={{width: "100%"}} display="flex">
                 
-                    <Button  sx={{ m: 'auto',}} variant="contained" type="submit" size="large" loading={isSubmitting} >
+                    <Button  sx={{ m: 'auto',}} variant="contained" type="submit" size="large" loading={isSubmitting} disabled={!techParamVal}>
                       Add Setting
                     </Button>
                 </Grid>
