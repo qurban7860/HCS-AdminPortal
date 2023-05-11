@@ -13,6 +13,7 @@ import Iconify from '../../components/iconify';
 import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
+import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -205,7 +206,7 @@ export default function MachineViewForm() {
           />
         </Grid>
       </Grid>
-      <Switch sx={{ mt: 1 }} checked={defaultValues.isActive} disabled />
+      <ViewFormSwitch isActive={defaultValues.isActive} />
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
