@@ -26,6 +26,7 @@ const handleCloseConfirm = () => {
                   handleEdit();
                 }}
                 variant="outlined"
+                title="Edit"
               ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
               <Button
                 onClick={() => {
@@ -33,6 +34,7 @@ const handleCloseConfirm = () => {
                 }}
                 variant="outlined"
                 color="error"
+                title="Delete"
               ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:trash-2-fill" /></Button>
           </Stack>
           <ConfirmDialog
