@@ -119,6 +119,7 @@ export default function SecurityUserViewForm() {
                   handlePassword();
                 }}
                 variant="outlined"
+                title="Change Password"
               >
                 <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:password-alert" />
               </Button> : ""
@@ -126,6 +127,7 @@ export default function SecurityUserViewForm() {
               <Button
                 onClick={() => handleEdit()}
                 variant="outlined"
+                title="Edit"
               >
                 <Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" />
               </Button>
@@ -137,6 +139,7 @@ export default function SecurityUserViewForm() {
                 }}
                 variant="outlined"
                 color="error"
+                title="Delete"
               >
                 <Iconify sx={{height: '24px',width: '24px' }} icon="eva:trash-2-fill" />
               </Button> : ""

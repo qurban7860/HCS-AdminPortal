@@ -29,6 +29,7 @@ export default function SecurityUserChangePassword() {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { securityUser } = useSelector((state) => state.user);
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const ChangePassWordSchema = Yup.object().shape({
@@ -38,6 +39,7 @@ export default function SecurityUserChangePassword() {
       .required('New Password is required'),
     confirmNewPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Passwords must match'),
   });
+  
 
   const defaultValues = {
     oldPassword: '',
@@ -56,9 +58,10 @@ export default function SecurityUserChangePassword() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = ()=>{
-    navigate(PATH_DASHBOARD.general.app);
-}
+  const toggleCancel = (id)=>{
+    navigate(PATH_DASHBOARD.user.view(id));
+  }
+
 
   const onSubmit = async (data) => {
       if(userId){
@@ -77,11 +80,23 @@ export default function SecurityUserChangePassword() {
           <Grid item xs={12} md={8} >
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3} alignItems="flex-end" sx={{ pb: 3 }}>
+
+                <RHFTextField
+                  name="name"
+                  label="Name"
+                  type="name"
+                  autoComplete="name"
+                  value={securityUser.name}
+                  disabled
+                />
+                  
                   <RHFTextField
                   name="email"
                   label="Email"
                   type="email"
                   autoComplete="email"
+                  value={securityUser.login}
+                  disabled
                 />
 
                 <RHFTextField
