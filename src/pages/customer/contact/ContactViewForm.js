@@ -105,7 +105,7 @@ export default function ContactViewForm({ currentContact = null }) {
           <ViewFormField sm={6} heading='First Name'    param={defaultValues?.firstName} isActive={defaultValues.isActive}/>
           <ViewFormField sm={6} heading='Last Name'     param={defaultValues?.lastName}/>
           <ViewFormField sm={6} heading='Title'         param={defaultValues?.title}/>
-          <ViewFormField sm={6} heading='Contact Types' param={defaultValues?.contactTypes}/>
+          <ViewFormField sm={6} heading='Contact Types' param={defaultValues?.contactTypes.toString()}/>
           <ViewFormField sm={6} heading='Phone'         param={defaultValues?.phone}/>
           <ViewFormField sm={6} heading='Email'         param={defaultValues?.email}/>
           <ViewFormField sm={6} heading='Street'        param={defaultValues?.street}/>
