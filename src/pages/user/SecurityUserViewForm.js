@@ -176,7 +176,7 @@ export default function SecurityUserViewForm() {
           <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone} />
           <ViewFormField sm={6} heading="Fax"                       param={customer?.mainSite?.fax} /> 
           <ViewFormField sm={6} heading="Email"                     param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name"                 param={customer?.mainSite?.address?.street} />
+          <ViewFormField sm={6} heading="Site Name"                 param={customer?.mainSite?.name} />
           <ViewFormField sm={6} heading="Street"                    param={customer?.mainSite?.address?.street} />
           <ViewFormField sm={6} heading="Suburb"                    param={customer?.mainSite?.address?.suburb} />
           <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address?.city} />
