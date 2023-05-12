@@ -121,7 +121,7 @@ const handleCloseConfirm = () => {
             }
           />
           <Grid container>
-            <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} />
+            <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} isActive={defaultValues.isActive}/>
             <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} />
             <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />

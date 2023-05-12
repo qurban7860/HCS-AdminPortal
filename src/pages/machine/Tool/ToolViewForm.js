@@ -87,7 +87,7 @@ export default function ToolViewForm({ currentTool = null }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
       <Grid container>
-        <ViewFormField  sm={12} heading="Name" param={defaultValues.name ? defaultValues.name : ''} />
+        <ViewFormField  sm={12} heading="Name" param={defaultValues.name ? defaultValues.name : ''} isActive={defaultValues.isActive}/>
         <ViewFormField  sm={12} heading="Description" param={defaultValues.description ? defaultValues.description : ''} />
         <ViewFormSwitch isActive={defaultValues.isActive} />
         <Grid container>

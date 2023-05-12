@@ -93,7 +93,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField sm={6}   heading='Name'                param={defaultValues.name ? defaultValues.name : ""}/>
+        <ViewFormField sm={6}   heading='Name'                param={defaultValues.name ? defaultValues.name : ""} isActive={defaultValues.isActive}/>
         <ViewFormField sm={6}   heading='Contact Name'        param={defaultValues.contactName ? defaultValues.contactName : ""}/>
         <ViewFormField sm={6}   heading='Contact Title'       param={defaultValues.contactTitle ? defaultValues.contactTitle : ""}/>
         <ViewFormField sm={6}   heading='Phone'               param={defaultValues.phone ? defaultValues.phone : ""}/>
