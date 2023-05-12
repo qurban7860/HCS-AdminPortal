@@ -121,13 +121,13 @@ const handleCloseConfirm = () => {
             }
           />
           <Grid container>
-            <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} isActive={defaultValues.isActive}/>
-            <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} />
-            <ViewFormField sm={6} heading="Full Name" param={defaultValues.name} />
-            <ViewFormField sm={6} heading="Phone" param={defaultValues.phone} />
-            <ViewFormField sm={12} heading="email" param={defaultValues.email} />
-            <ViewFormField sm={6} heading="Login" param={defaultValues.login} />
-            <ViewFormField sm={6} heading="Roles" param={defaultValues.roles?.map((obj) => obj.name).join(', ')} />
+            <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} isActive={defaultValues.isActive}/>
+            <ViewFormField sm={6} heading="Contact" param={defaultValues?.contact} />
+            <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
+            <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
+            <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
+            <ViewFormField sm={6} heading="Login" param={defaultValues?.login} />
+            <ViewFormField sm={6} heading="Roles" param={defaultValues?.roles?.map((obj) => obj.name).join(', ')} />
           </Grid>
             <Switch sx={{mt:1}} checked = { defaultValues.isActive } disabled  />
           <Grid container>

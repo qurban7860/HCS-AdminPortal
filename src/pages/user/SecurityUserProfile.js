@@ -149,18 +149,18 @@ export default function SecurityUserProfile() {
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Customer </Typography> <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
         </Grid>
-          <ViewFormField sm={12} heading="Name"                     param={customer?.name?                  customer?.name : ''} />
-          <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName?           customer?.tradingName : ''} />
-          <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone?       customer?.mainSite.phone : ''} />
-          <ViewFormField sm={6} heading="Fax"                       param={customer?.mainSite?.fax?         customer?.mainSite.fax : ''} />
-          <ViewFormField sm={6} heading="Email"                     param={customer?.mainSite?.email?       customer?.mainSite.email : ''} />
-          <ViewFormField sm={6} heading="Site Name"                 param={customer?.mainSite?.address?     customer?.mainSite?.address?.street : ''} />
-          <ViewFormField sm={6} heading="Street"                    param={customer?.mainSite?.address?     customer?.mainSite?.address?.street : ''} />
-          <ViewFormField sm={6} heading="Suburb"                    param={customer?.mainSite?.address?     customer?.mainSite?.address?.suburb : ''} />
-          <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address?     customer?.mainSite?.address?.city : ''} />
-          <ViewFormField sm={6} heading="Region"                    param={customer?.mainSite?.address?     customer?.mainSite?.address?.region : ''} />
-          <ViewFormField sm={6} heading="Post Code"                 param={customer?.mainSite?.address?     customer?.mainSite?.address?.postcode : ''} />
-          <ViewFormField sm={12} heading="Country"                  param={customer?.mainSite?.address?     customer?.mainSite?.address?.country : ''} />
+          <ViewFormField sm={12} heading="Name"                     param={customer?.name} />
+          <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName} />
+          <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone} />
+          <ViewFormField sm={6} heading="Fax"                       param={customer?.mainSite?.fax} />
+          <ViewFormField sm={6} heading="Email"                     param={customer?.mainSite?.email} />
+          <ViewFormField sm={6} heading="Site Name"                 param={customer?.mainSite?.address?.street} />
+          <ViewFormField sm={6} heading="Street"                    param={customer?.mainSite?.address?.street} />
+          <ViewFormField sm={6} heading="Suburb"                    param={customer?.mainSite?.address?.suburb} />
+          <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address?.city} />
+          <ViewFormField sm={6} heading="Region"                    param={customer?.mainSite?.address?.region} />
+          <ViewFormField sm={6} heading="Post Code"                 param={customer?.mainSite?.address?.postcode} />
+          <ViewFormField sm={12} heading="Country"                  param={customer?.mainSite?.address?.country} />
           <ViewFormField sm={6} heading="Primary Biling Contact"    param={customer?.primaryBillingContact?   `${customer?.primaryBillingContact?.firstName } ${customer?.primaryBillingContact?.lastName}` : ''} />
           <ViewFormField sm={6} heading="Primary Technical Contact" param={customer?.primaryTechnicalContact? `${customer?.primaryTechnicalContact?.firstName } ${customer?.primaryTechnicalContact?.lastName}`: ''} />
         </Grid>
@@ -180,18 +180,18 @@ export default function SecurityUserProfile() {
         <Grid item sx={{display: "flex", justifyContent:"center", alignItems:"center" }} sm={12}>
           <Typography variant="h4" sx={{px:2}}>Contact </Typography> <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ml: "auto"}}> <Iconify icon="mdi:close-box-outline" /></Link>
         </Grid>
-          <ViewFormField sm={6} heading='First Name'    param={contact?.firstName ?             contact?.firstName : ''}/>
-          <ViewFormField sm={6} heading='Last Name'     param={contact?.lastName  ?             contact?.lastName : ''}/>
-          <ViewFormField sm={6} heading='Title'         param={contact?.title ?                 contact?.title : ''}/>
-          <ViewFormField sm={6} heading='Contact Types' param={contact?.contactTypes ?          contact?.contactTypes.toString() : ''}/>
-          <ViewFormField sm={6} heading='Phone'         param={contact?.phone ?                 contact?.phone : ''}/>
-          <ViewFormField sm={6} heading='Email'         param={contact?.email ?                 contact?.email : ''}/>
-          <ViewFormField sm={6} heading='Street'        param={contact?.address?.street ?       contact?.address?.street : ''}/>
-          <ViewFormField sm={6} heading='Suburb'        param={contact?.address?.suburb ?       contact?.address?.suburb : ''}/>
-          <ViewFormField sm={6} heading='City'          param={contact?.address?.city ?         contact?.address?.city : ''}/>
-          <ViewFormField sm={6} heading='Region'        param={contact?.address?.region ?       contact?.address?.region : ''}/>
-          <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode ?     contact?.address?.postcode : ''}/>
-          <ViewFormField sm={6} heading='Country'       param={contact?.address?.country ?      contact?.address?.country : ''}/>
+          <ViewFormField sm={6} heading='First Name'    param={contact?.firstName }/>
+          <ViewFormField sm={6} heading='Last Name'     param={contact?.lastName  }/>
+          <ViewFormField sm={6} heading='Title'         param={contact?.title }/>
+          <ViewFormField sm={6} heading='Contact Types' param={contact?.contactTypes}/>
+          <ViewFormField sm={6} heading='Phone'         param={contact?.phone }/>
+          <ViewFormField sm={6} heading='Email'         param={contact?.email }/>
+          <ViewFormField sm={6} heading='Street'        param={contact?.address?.street}/>
+          <ViewFormField sm={6} heading='Suburb'        param={contact?.address?.suburb}/>
+          <ViewFormField sm={6} heading='City'          param={contact?.address?.city}/>
+          <ViewFormField sm={6} heading='Region'        param={contact?.address?.region}/>
+          <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode}/>
+          <ViewFormField sm={6} heading='Country'       param={contact?.address?.country}/>
       </Grid>
       </Dialog>
     </>

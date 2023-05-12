@@ -105,26 +105,26 @@ export default function SiteViewForm({ currentSite = null }) {
         </Button>
       </Stack> */}
       <Grid container>
-        <ViewFormField sm={6}   heading='Name'       param={defaultValues.name ? defaultValues.name : ''}     isActive={defaultValues.isActive}/>
-        <ViewFormField sm={6}   heading='Phone'       param={defaultValues.phone ? defaultValues.phone : ''} />
-        <ViewFormField sm={6}   heading='Fax'       param={defaultValues.fax ? defaultValues.fax : ''} />
-        <ViewFormField sm={6}   heading='Email'       param={defaultValues.email ? defaultValues.email : ''} />
-        <ViewFormField sm={6}   heading='Website'       param={defaultValues.website ? defaultValues.website : ''} />
-        <ViewFormField sm={6}   heading='Street'       param={defaultValues.street ? defaultValues.street : ''} />
-        <ViewFormField sm={6}   heading='Suburb'       param={defaultValues.suburb ? defaultValues.suburb : ''} />
-        <ViewFormField sm={6}   heading='City'       param={defaultValues.city ? defaultValues.city : ''} />
-        <ViewFormField sm={6}   heading='Region'       param={defaultValues.region ? defaultValues.region : ''} />
-        <ViewFormField sm={6}   heading='Post Code'       param={defaultValues.postcode ? defaultValues.postcode : ''} />
-        <ViewFormField sm={6}   heading='Country'       param={defaultValues.country ? defaultValues.country : ''} />
+        <ViewFormField sm={6}   heading='Name'       param={defaultValues?.name}     isActive={defaultValues.isActive}/>
+        <ViewFormField sm={6}   heading='Phone'       param={defaultValues?.phone} />
+        <ViewFormField sm={6}   heading='Fax'       param={defaultValues?.fax} />
+        <ViewFormField sm={6}   heading='Email'       param={defaultValues?.email} />
+        <ViewFormField sm={6}   heading='Website'       param={defaultValues?.website} />
+        <ViewFormField sm={6}   heading='Street'       param={defaultValues?.street} />
+        <ViewFormField sm={6}   heading='Suburb'       param={defaultValues?.suburb} />
+        <ViewFormField sm={6}   heading='City'       param={defaultValues?.city} />
+        <ViewFormField sm={6}   heading='Region'       param={defaultValues?.region} />
+        <ViewFormField sm={6}   heading='Post Code'       param={defaultValues?.postcode} />
+        <ViewFormField sm={6}   heading='Country'       param={defaultValues?.country} />
 
           <Grid container>
-            <ViewFormField sm={6}   heading='Latitude'       param={defaultValues.lat ? defaultValues.lat : ''}/>
-            <ViewFormField sm={6}   heading='Longitude'       param={defaultValues.long ? defaultValues.long : ''} />
+            <ViewFormField sm={6}   heading='Latitude'       param={defaultValues?.lat}/>
+            <ViewFormField sm={6}   heading='Longitude'       param={defaultValues?.long} />
           </Grid>
 
            <Grid container>
-            <ViewFormField sm={6}   heading='Primary Billing Contact'       param={defaultValues.primaryBillingContact?.firstName ? defaultValues.primaryBillingContact.firstName : ''} secondParam={defaultValues.primaryBillingContact?.lastName ? defaultValues.primaryBillingContact.lastName : ''}/>
-            <ViewFormField sm={6}   heading='Primary Technical Contact'       param={defaultValues.primaryTechnicalContact?.firstName ? defaultValues.primaryTechnicalContact.firstName : ''} secondParam={defaultValues.primaryTechnicalContact?.lastName ? defaultValues.primaryTechnicalContact.lastName : ''}/>
+            <ViewFormField sm={6}   heading='Primary Billing Contact'       param={defaultValues?.primaryBillingContact?.firstName} secondparam={defaultValues?.primaryBillingContact?.lastName}/>
+            <ViewFormField sm={6}   heading='Primary Technical Contact'       param={defaultValues?.primaryTechnicalContact?.firstName} secondparam={defaultValues?.primaryTechnicalContact?.lastName}/>
           </Grid>
             <ViewFormSwitch isActive={defaultValues.isActive}/>
           <Grid container>

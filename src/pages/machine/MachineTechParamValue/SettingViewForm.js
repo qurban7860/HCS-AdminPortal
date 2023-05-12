@@ -81,9 +81,9 @@ export default function SettingViewForm({ currentSetting = null }) {
     <Grid >
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
       <Grid container>
-          <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues.techParamName ? defaultValues.techParamName : ''} isActive={defaultValues.isActive}/>
-          <ViewFormField sm={6} heading="Technical Perameter Code" param={defaultValues.techParamCode ? defaultValues.techParamCode : ''} />
-          <ViewFormField sm={12} heading="Technical Perameter Value" param={defaultValues.techParamValue ? defaultValues.techParamValue  : ''} />
+          <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues?.techParamName} isActive={defaultValues.isActive}/>
+          <ViewFormField sm={6} heading="Technical Perameter Code" param={defaultValues?.techParamCode} />
+          <ViewFormField sm={12} heading="Technical Perameter Value" param={defaultValues?.techParamValue} />
           <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>

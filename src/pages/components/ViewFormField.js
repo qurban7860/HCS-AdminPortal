@@ -29,7 +29,11 @@ export default function ViewFormField({heading,param, secondParam ,objectParam,s
                       style={{ color: isActive ? "green" : "red", fontSize: '24px', marginRight: '8px' }}
                     />
                   )}
-                  {param || ''} {secondParam || ''} {objectParam || ''} {secondObjectParam || ''} {numberParam || ''}
+                  {param && param.trim().length > 0 ? param : ''}
+                  {secondParam && secondParam.trim().length > 0 ? secondParam : ''}
+                  {objectParam || ''} 
+                  {secondObjectParam || ''} 
+                  {numberParam || ''}
                 </Typography>
 
             </Grid>
