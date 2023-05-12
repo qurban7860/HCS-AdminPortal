@@ -8,6 +8,7 @@ import { Stack, Button, Select, MenuItem, Checkbox, TextField, InputLabel, FormC
 import Iconify from '../../components/iconify';
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 
+
 // ----------------------------------------------------------------------
 
 MachineListTableToolbar.propTypes = {
@@ -76,23 +77,49 @@ export default function MachineListTableToolbar({
         </Select>
       </FormControl> */}
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
+        <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
           <Grid item xs={12} sm={8}>
-            <TextField fullWidth value={filterName} onChange={onFilterName} placeholder="Search..." InputProps={{ startAdornment: (
-            <InputAdornment position="start">
-              <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-            </InputAdornment> ),}}/>
+            <TextField
+              fullWidth
+              value={filterName}
+              onChange={onFilterName}
+              placeholder="Search..."
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                  </InputAdornment>
+                ),
+              }}
+            />
           </Grid>
-          {isFiltered && (<Button color="error" sx={{ flexShrink: 0 , ml:1}} onClick={onResetFilter} startIcon={<Iconify icon="eva:trash-2-outline" />} > Clear </Button>)}
+          {isFiltered && (
+            <Button
+              color="error"
+              sx={{ flexShrink: 0, ml: 1 }}
+              onClick={onResetFilter}
+              startIcon={<Iconify icon="eva:trash-2-outline" />}
+            >
+              {' '}
+              Clear{' '}
+            </Button>
+          )}
         </Grid>
         <Grid item xs={8} sm={3}>
-          <Stack alignItems="flex-end" > 
-            <Button sx={{p:2}} variant="contained" onClick={handleMachineAdd} startIcon={ <Iconify icon="eva:plus-fill" /> } >Add Machine </Button>
+          <Stack alignItems="flex-end">
+            {/* on dashboard? disable button */}
+            <Button
+              sx={{ p: 2 }}
+              variant="contained"
+              onClick={handleMachineAdd}
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              
+              >
+              Add Machine
+            </Button>
           </Stack>
         </Grid>
       </Grid>
-      
-      
     </Stack>
   );
 }

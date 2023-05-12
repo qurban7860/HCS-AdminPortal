@@ -15,7 +15,7 @@ import {
   IconButton,
   TableContainer,
   DialogTitle,
-  Dialog, 
+  Dialog,
   Typography,
   Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
@@ -127,9 +127,9 @@ export default function MachineToolsList() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const toggleChecked = async () => 
+  const toggleChecked = async () =>
     {
-      dispatch(setFormVisibility(!siteAddFormVisibility));    
+      dispatch(setFormVisibility(!siteAddFormVisibility));
     };
 
   const { themeStretch } = useSettingsContext();
@@ -168,7 +168,7 @@ export default function MachineToolsList() {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
-      }   
+      }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
@@ -193,57 +193,69 @@ export default function MachineToolsList() {
   return (
     <>
       <Container maxWidth={false}>
-
-        {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-          <Button
-              // alignItems 
+        {!siteEditFormVisibility && (
+          <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+            <Button
+              // alignItems
               onClick={toggleChecked}
-
               variant="contained"
-              startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
+              startIcon={
+                !siteAddFormVisibility ? (
+                  <Iconify icon="eva:plus-fill" />
+                ) : (
+                  <Iconify icon="eva:minus-fill" />
+                )
+              }
             >
               New Site
             </Button>
+          </Stack>
+        )}
 
-        </Stack>}
-        
         <Card>
+          {siteEditFormVisibility && <SiteEditForm />}
 
-          {siteEditFormVisibility && <SiteEditForm/>}
+          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
 
-          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm/>}
+          {!siteAddFormVisibility &&
+            !siteEditFormVisibility &&
+            sites.map((site, index) => {
+              const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+              return (
+                <Accordion
+                  key={site._id}
+                  expanded={expanded === index}
+                  onChange={handleChange(index)}
+                  sx={{ borderTop: borderTopVal }}
+                >
+                  <AccordionSummary
+                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                    onClick={() => handleAccordianClick(index)}
+                  >
+                    {index !== activeIndex ? (
+                      <Grid container spacing={0}>
+                        <Grid item xs={12} sm={4}>
+                          <Typography variant="body2">{site.name}</Typography>
+                        </Grid>
+                        {site.address && (
+                          <Grid item xs={12} sm={8}>
+                            <Typography variant="body2">
+                              {Object.values(site.address)?.join(', ')}
+                            </Typography>
+                          </Grid>
+                        )}
+                      </Grid>
+                    ) : null}
+                  </AccordionSummary>
+                  <AccordionDetails sx={{ mt: -5 }}>
+                    <SiteViewForm currentSite={site} />
+                  </AccordionDetails>
+                </Accordion>
+              );
+            })}
 
-          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index) => { 
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
-                <Grid container spacing={0}>
-                  <Grid item xs={12} sm={4} >
-                    <Typography variant="body2" >
-                    {site.name} 
-                    </Typography>
-                  </Grid>
-                  {site.address && <Grid item xs={12} sm={8}>
-                    <Typography variant="body2" >
-                    {Object.values(site.address)?.join(", ")}
-                    </Typography>
-                  </Grid>}
-                </Grid>
-                : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{mt:-5}}>
-                <SiteViewForm
-                currentSite={site}
-                />
-              </AccordionDetails>
-            </Accordion>
-            
-          )})} 
+          {isNotFound && <EmptyContent title="No machine tool saved" sx={{ color: '#DFDFDF' }} />}
 
-          {isNotFound && <EmptyContent title="No Data"/>}
-            
           {/* </Block> */}
           {/* <Block title="Controlled">
             {_accordions.map((item, index) => (
@@ -266,8 +278,7 @@ export default function MachineToolsList() {
             ))}
           </Block> */}
 
-
-           {/* <SiteListTableToolbar
+          {/* <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}

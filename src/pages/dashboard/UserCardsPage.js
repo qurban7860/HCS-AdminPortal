@@ -17,7 +17,6 @@ export default function UserCardsPage() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="User Cards"
@@ -42,6 +41,5 @@ export default function UserCardsPage() {
           ))}
         </Box>
       </Container>
-    </>
   );
 }

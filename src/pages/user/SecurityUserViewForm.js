@@ -22,6 +22,8 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../co
 import { useSnackbar } from '../../components/snackbar';
 import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 import palette from '../../theme';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
 // ----------------------------------------------------------------------
 
@@ -106,7 +108,11 @@ export default function SecurityUserViewForm() {
   return (
     <Grid sx={{ p: 3, mt: -3 }}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-        <Cover name={defaultValues.name} icon="ph:users-light" />
+        <Cover
+          name={defaultValues.name}
+          photoURL={defaultValues.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
+          icon="ph:users-light"
+        />
       </Card>
       <Card sx={{ p: 3 }}>
         <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt: -1, mr: 2 }}>
@@ -371,24 +377,6 @@ export default function SecurityUserViewForm() {
           </Link>
         </Grid>
         <Grid container sx={{ px: 2, py: 2 }}>
-          {/* <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
-          >
-            <Typography variant="h4" sx={{ px: 2 }}>
-              Contact{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseContact()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify icon="mdi:close-box-outline" />
-            </Link>
-          </Grid> */}
           <ViewFormField
             sm={6}
             heading="First Name"

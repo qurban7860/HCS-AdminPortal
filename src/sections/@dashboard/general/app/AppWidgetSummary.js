@@ -7,6 +7,7 @@ import { fNumber, fPercent } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/iconify';
 import Chart from '../../../../components/chart';
+import palette from '../../../../theme';
 
 // ----------------------------------------------------------------------
 
@@ -51,13 +52,16 @@ export default function AppWidgetSummary({ title, title2, percent, total, chart,
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3, ...sx }} {...other}>
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2">{title}</Typography>
+        <Typography variant="h5" sx={{color: 'grey.500'}}>
+          {title}
+        </Typography>
         <Typography variant="subtitle2">{title2}</Typography>
-        {/* <TrendingInfo percent={percent} /> */}
 
         <Typography variant="h3">{fNumber(total)}</Typography>
       </Box>
-
+      <Box>
+        <TrendingInfo percent={percent} />
+      </Box>
       {/* <Chart type="bar" series={[{ data: series }]} options={chartOptions} width={60} height={36} /> */}
     </Card>
   );

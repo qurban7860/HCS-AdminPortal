@@ -185,10 +185,6 @@ export default function MachineList() {
             setting="enable"
             />
         </Card>
-        {/* <CustomBreadcrumbs
-          heading="Machines"
-          sx={{ mb: -3, mt: 3 }}
-        /> */}
         <Card sx={{mt: 3 }}>
           <MachineListTableToolbar
             filterName={filterName}
@@ -199,7 +195,6 @@ export default function MachineList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           {/* {selected.length > 1 ? "" :
 
