@@ -151,7 +151,7 @@ export default function SecurityUserViewForm() {
               </Button> }/>
 
           <Grid container>
-            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
+            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} isActive={defaultValues.isActive}/>
             {/* <ViewFormField sm={6} heading="Customer" param={defaultValues.customer} /> */}
             <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
             {/* <ViewFormField sm={6} heading="Contact" param={defaultValues.contact} /> */}

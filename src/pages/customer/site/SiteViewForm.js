@@ -105,7 +105,7 @@ export default function SiteViewForm({ currentSite = null }) {
         </Button>
       </Stack> */}
       <Grid container>
-        <ViewFormField sm={6}   heading='Name'       param={defaultValues.name ? defaultValues.name : ''} />
+        <ViewFormField sm={6}   heading='Name'       param={defaultValues.name ? defaultValues.name : ''}     isActive={defaultValues.isActive}/>
         <ViewFormField sm={6}   heading='Phone'       param={defaultValues.phone ? defaultValues.phone : ''} />
         <ViewFormField sm={6}   heading='Fax'       param={defaultValues.fax ? defaultValues.fax : ''} />
         <ViewFormField sm={6}   heading='Email'       param={defaultValues.email ? defaultValues.email : ''} />

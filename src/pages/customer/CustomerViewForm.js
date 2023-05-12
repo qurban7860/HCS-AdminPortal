@@ -99,7 +99,7 @@ const onDelete = async () => {
       {/* </Grid> */}
 
       <Grid container>
-        <ViewFormField sm={6}   heading='Name'               param={defaultValues.name ?              defaultValues.name : ''}/>
+        <ViewFormField sm={6}   heading='Name'               param={defaultValues.name ?              defaultValues.name : ''} isActive={defaultValues.isActive}/>
         <ViewFormField sm={6}   heading='Trading Name'       param={defaultValues.tradingName ?       defaultValues.tradingName : ''}/>
         <ViewFormField sm={6}   heading='Phone'              param={defaultValues.mainSite?.phone ?   defaultValues.mainSite.phone : ''}/>
         <ViewFormField sm={6}   heading='Fax'                param={defaultValues.mainSite?.fax ?     defaultValues.mainSite.fax : ''}/>

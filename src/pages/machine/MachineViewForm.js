@@ -94,6 +94,7 @@ export default function MachineViewForm() {
           sm={6}
           heading="Serial No"
           param={defaultValues.serialNo ? defaultValues.serialNo : ''}
+          isActive={defaultValues.isActive}
         />
         <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
         <ViewFormField

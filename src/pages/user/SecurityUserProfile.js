@@ -130,7 +130,7 @@ export default function SecurityUserProfile() {
               <Button onClick={() => handleEdit()} variant="outlined" ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
           </Stack>
           <Grid container>
-            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer ? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} />
+            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer ? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} isActive={defaultValues.isActive}/>
             <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact ? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
             <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
