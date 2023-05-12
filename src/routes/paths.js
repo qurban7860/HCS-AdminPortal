@@ -8,6 +8,8 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_CUSTOMER = '/customer';
 const ROOTS_MACHINE = '/machine';
+const ROOTS_DOCUMENT = '/document';
+
 // ----------------------------------------------------------------------
 
 export const PATH_AUTH = {
@@ -196,6 +198,28 @@ export const PATH_MACHINE = {
   },
 
 }
+
+export const PATH_DOCUMENT = {
+  root: ROOTS_DOCUMENT,
+  permissionDenied: path(ROOTS_DOCUMENT, '/permission-denied'),
+  dashboard: path(ROOTS_DOCUMENT, '/document/dashboard'),
+  list: path(ROOTS_DOCUMENT, '/document/list'),
+  new: path(ROOTS_DOCUMENT, '/document/new'),
+  view: path(ROOTS_DOCUMENT, `/document/view`),
+  edit: (id) => path(ROOTS_DOCUMENT, `/document/${id}/edit`),
+  documentName: {
+    list: path(ROOTS_DOCUMENT, '/documentName/list'),
+    new: path(ROOTS_DOCUMENT, '/documentName/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/edit`),
+  },
+  fileCategory: {
+    list: path(ROOTS_DOCUMENT, '/fileCategory/list'),
+    new: path(ROOTS_DOCUMENT, '/fileCategory/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/edit`),
+  }
+};
 
 export const PATH_DOCS = {
   root: 'https://www.howickltd.com/why-howick',

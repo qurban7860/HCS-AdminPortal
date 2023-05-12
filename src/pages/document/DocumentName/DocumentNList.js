@@ -22,12 +22,12 @@ import {
   Accordion, AccordionSummary, AccordionDetails, Divider
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_CUSTOMER, PATH_MACHINE } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
+import { useSnackbar } from '../../../components/snackbar';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -38,24 +38,22 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../components/table';
-import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 
-import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
-import { getTechparams } from '../../redux/slices/products/machineTechParam';
+import documentName, { setDocumentNameEditFormVisibility , setDocumentNameFormVisibility , updateDocumentName , getDocumentNames , getDocumentName } from '../../../redux/slices/document/documentName';
 
-import SettingAddForm  from './MachineTechParamValue/SettingAddForm'
-import SettingEditForm from './MachineTechParamValue/SettingEditForm';
+import DocumentNameAddForm  from './DocumentNameAddForm'
+import DocumentNameEditForm from './DocumentNameEditForm'
 
-import _mock from '../../_mock';
-import SettingViewForm from './MachineTechParamValue/SettingViewForm';
-import EmptyContent from '../../components/empty-content';
-import { fDate,fDateTime } from '../../utils/formatTime';
+import _mock from '../../../_mock';
+import DocumentViewForm from './DocumentNameViewForm';
+import EmptyContent from '../../../components/empty-content';
+import { fDate,fDateTime } from '../../../utils/formatTime';
 
 
 
@@ -111,16 +109,11 @@ export default function MachineSettingList() {
   };
   const dispatch = useDispatch();
 
-  const { techparamsByCategory } = useSelector((state) => state.techparam);
-
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-
-  const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
-  const { machine } = useSelector((state) => state.machine);
+  const { initial,error, responseMessage , documentNames, documentNameFormVisibility,documentNameEditFormVisibility} = useSelector((state) => state.documentName);
   // console.log("settings : ",settings)
   const toggleChecked = async () => 
     {
-      dispatch(setSettingFormVisibility(!formVisibility));    
+      dispatch(setDocumentNameFormVisibility(!documentNameFormVisibility));    
     };
   const { themeStretch } = useSettingsContext();
 
@@ -144,19 +137,18 @@ export default function MachineSettingList() {
    }
   };
 
-
 useLayoutEffect(() => {
-  dispatch(getSettings(machine._id));
-}, [dispatch, machine._id, settingEditFormVisibility ]);
+  dispatch(getDocumentNames());
+}, [dispatch,  ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
  
   useEffect(() => {
- 
-    setTableData(settings);
-  }, [settings, error, responseMessage ]);
+    setTableData(documentNames);
+  }, [documentNames, error, responseMessage ]);
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -170,7 +162,7 @@ useLayoutEffect(() => {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !settings.length && !formVisibility && !settingEditFormVisibility;
+  const isNotFound = !documentNames.length && !documentNameFormVisibility && !documentNameEditFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);

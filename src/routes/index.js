@@ -110,7 +110,27 @@ import {
   NoteAdd,
   NoteEdit,
   NoteView,
-  // 
+  // Customer document
+  CustomerDocumentAddForm  ,
+  CustomerDocumentList     ,
+  CustomerDocumentViewForm ,
+  CustomerDocumentEditForm ,
+//  machine document
+  MachineDocumentAddForm  ,
+  MachineDocumentList     ,
+  MachineDocumentViewForm ,
+  MachineDocumentEditForm ,
+// Document Name
+  DocumentNameAddForm  ,
+  DocumentNameList     ,
+  DocumentNameViewForm ,
+  DocumentNameEditForm ,
+// File Category
+  FileCategoryAddForm  ,
+  FileCategoryList     ,
+  FileCategoryViewForm ,
+  FileCategoryEditForm ,
+//
   BlankPage,
   PermissionDeniedPage,
   //
@@ -375,6 +395,41 @@ export default function Router() {
           ]
         },
       ]
+    },
+    {
+      path: 'document',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: 'list', element: <DocumentNameList /> },
+        { path: 'new', element: <DocumentNameAddForm /> },
+        { path: ':id/edit', element: <DocumentNameEditForm />},
+        { path: ':id/view', element: <DocumentNameViewForm />}, 
+        {
+          path: 'fileCategory',
+          children: [
+            { path: 'list', element: <FileCategoryList /> },
+            { path: 'new', element: <FileCategoryAddForm /> },
+            { path: ':id/edit', element: <FileCategoryEditForm />},
+            { path: ':id/view', element: <FileCategoryViewForm />}
+          ],
+        },
+        {
+          path: 'documentName',
+          children: [
+            { path: 'list', element: <DocumentNameList /> },
+            { path: 'new', element: <DocumentNameAddForm /> },
+            { path: ':id/edit', element: <DocumentNameEditForm />},
+            { path: ':id/view', element: <DocumentNameViewForm />}
+          ],
+        },
+        { path: 'permission-denied', element: <PermissionDeniedPage /> },
+        { path: 'blank', element: <BlankPage /> },
+      ],
     },
 
     // Main Routes

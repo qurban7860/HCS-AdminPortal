@@ -1,0 +1,192 @@
+import { createSlice } from '@reduxjs/toolkit';
+// utils
+import axios from '../../../utils/axios';
+import { CONFIG } from '../../../config-global';
+
+// ----------------------------------------------------------------------
+
+const initialState = {
+  documentNameFormVisibility: false,
+  documentNameEditFormVisibility: false,
+  intial: false,
+  responseMessage: null,
+  success: false,
+  isLoading: false,
+  error: null,
+  documentNames: [],
+  documentName: null,
+};
+
+const slice = createSlice({
+  name: 'documentName',
+  initialState,
+  reducers: {
+    // START LOADING
+    startLoading(state) {
+      state.isLoading = true;
+      state.error = null;
+    },
+    // SET TOGGLE
+    setDocumentNameFormVisibility(state, action){
+      state.documentNameFormVisibility = action.payload;
+    },
+
+    // SET TOGGLE
+    setDocumentNameEditFormVisibility(state, action){
+      state.documentNameEditFormVisibility = action.payload;
+    },
+    // HAS ERROR
+    hasError(state, action) {
+      state.isLoading = false;
+      state.error = action.payload;
+      state.initial = true;
+    },
+
+    // GET Setting
+    getDocumentNamesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.documentNames = action.payload;
+      state.initial = true;
+    },
+
+    // GET Setting
+    getDocumentNameSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.documentName = action.payload;
+      state.initial = true;
+    },
+
+    setResponseMessage(state, action) {
+      state.responseMessage = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
+
+    backStep(state) {
+      state.checkout.activeStep -= 1;
+    },
+
+    nextStep(state) {
+      state.checkout.activeStep += 1;
+    },
+  },
+});
+
+// Reducer
+export default slice.reducer;
+
+// Actions
+export const {
+  setDocumentNameFormVisibility,
+  setDocumentNameEditFormVisibility,
+  getCart,
+  addToCart,
+  setResponseMessage,
+  gotoStep,
+  backStep,
+  nextStep,
+
+} = slice.actions;
+
+// ----------------------------Add Document Name------------------------------------------
+
+export function addDocumentName(machineId,params) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const data = {
+                techParam: params.techParam,
+                techParamValue: params.techParamValue,
+                isActive: params.isActive,
+            }
+      // const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
+      dispatch(slice.actions.setResponseMessage('Document Name saved successfully'));
+      dispatch(getDocumentNames(machineId));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ---------------------------------Update Document Name-------------------------------------
+
+export function updateDocumentName(machineId,settingId,params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        techParam: params.techParam,
+        techParamValue: params.techParamValue,
+        isActive: params.isActive,
+      }
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
+      dispatch(slice.actions.setResponseMessage('Document Name updated successfully'));
+      dispatch(setDocumentNameEditFormVisibility (false));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// -----------------------------------Get Document Names-----------------------------------
+
+export function getDocumentNames(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
+      {
+        params: {
+          isArchived: false
+        }
+      }
+      );
+      dispatch(slice.actions.getDocumentNamesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Name loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// -------------------------------get Document Name---------------------------------------
+
+export function getDocumentName(machineId,settingId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`);
+      dispatch(slice.actions.getDocumentNameSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Name Loaded Successfuly'));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ---------------------------------archive Document Name-------------------------------------
+
+export function deleteDocumentName(machineId,id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${id}` , 
+      {
+          isArchived: true, 
+      });
+      dispatch(slice.actions.setResponseMessage(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+

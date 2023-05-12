@@ -131,6 +131,39 @@ export const ModelView = Loadable(lazy(()=> import('../pages/machine/Model/Model
 export const ModelEditForm = Loadable(lazy(()=> import('../pages/machine/Model/ModelEditForm')));
 export const ModelEdit = Loadable(lazy(()=> import('../pages/machine/Model/ModelEdit')));
 
+// Customer Documents
+export const CustomerDocumentAddForm  = Loadable(lazy(()=>   import('../pages/document/customer/DocumentAddForm')));
+export const CustomerDocumentList     = Loadable(lazy(()=>      import('../pages/document/customer/DocumentList')));
+export const CustomerDocumentViewForm = Loadable(lazy(()=>  import('../pages/document/customer/DocumentViewForm')));
+export const CustomerDocumentEditForm = Loadable(lazy(()=>  import('../pages/document/customer/DocumentEditForm')));
+// export const customerDocumentView     = Loadable(lazy(()=>      import('../pages/')));
+// export const customerDocumentEdit     = Loadable(lazy(()=>      import('../pages/')));
+
+// Machine Documents
+export const MachineDocumentAddForm   = Loadable(lazy(()=>  import('../pages/document/machine/DocumentAddForm')));
+export const MachineDocumentList      = Loadable(lazy(()=>     import('../pages/document/machine/DocumentList')));
+export const MachineDocumentViewForm  = Loadable(lazy(()=> import('../pages/document/machine/DocumentViewForm')));
+export const MachineDocumentEditForm  = Loadable(lazy(()=> import('../pages/document/machine/DocumentEditForm')));
+// export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
+// export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
+
+// Document Name
+export const DocumentNameAddForm      = Loadable(lazy(()=>   import('../pages/document/DocumentName/DocumentNameAddForm')));
+export const DocumentNameList         = Loadable(lazy(()=>      import('../pages/document/DocumentName/DocumentNameList')));
+export const DocumentNameViewForm     = Loadable(lazy(()=>  import('../pages/document/DocumentName/DocumentNameViewForm')));
+export const DocumentNameEditForm     = Loadable(lazy(()=>  import('../pages/document/DocumentName/DocumentNameEditForm')));
+// export const documentNameView = Loadable(lazy(()=>      import('../pages/document/DocumentName/')));
+// export const documentNameEdit = Loadable(lazy(()=>      import('../pages/document/DocumentName/')));
+
+// Fime Category
+export const FileCategoryAddForm      = Loadable(lazy(()=>  import('../pages/document/FileCategory/FileCategoryAddForm')));
+export const FileCategoryList         = Loadable(lazy(()=>     import('../pages/document/FileCategory/FileCategoryList')));
+export const FileCategoryViewForm     = Loadable(lazy(()=> import('../pages/document/FileCategory/FileCategoryViewForm')));
+export const FileCategoryEditForm     = Loadable(lazy(()=> import('../pages/document/FileCategory/FileCategoryEditForm')));
+// export const fileCategoryView = Loadable(lazy(()=>     import('../pages/')));
+// export const fileCategoryEdit = Loadable(lazy(()=>     import('../pages/')));
+
+
 
 // TEST RENDER PAGE BY ROLE
 export const PermissionDeniedPage = Loadable(
