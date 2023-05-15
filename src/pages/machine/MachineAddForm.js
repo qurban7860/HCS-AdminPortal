@@ -250,7 +250,7 @@ const onSubmit = async (data) => {
                     setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
                 renderInput={(params) => <TextField {...params}  label="Previous Machine Serial No." />}
                 ChipProps={{ size: 'small' }}
               />
@@ -275,7 +275,7 @@ const onSubmit = async (data) => {
                     setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Previous Machine" />}
                 ChipProps={{ size: 'small' }}
@@ -297,7 +297,7 @@ const onSubmit = async (data) => {
                   setSupplierVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Supplier" />}
                 ChipProps={{ size: 'small' }}
@@ -317,7 +317,7 @@ const onSubmit = async (data) => {
                   setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
@@ -337,7 +337,7 @@ const onSubmit = async (data) => {
                   setStatusVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Status" />}
                 ChipProps={{ size: 'small' }}
@@ -359,7 +359,7 @@ const onSubmit = async (data) => {
                   dispatch(resetSites());
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
@@ -382,7 +382,7 @@ const onSubmit = async (data) => {
                   setInstallVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
@@ -403,7 +403,7 @@ const onSubmit = async (data) => {
                   setBillingVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
@@ -428,7 +428,7 @@ const onSubmit = async (data) => {
                   setAccoManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -447,7 +447,7 @@ const onSubmit = async (data) => {
                   setProjManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -466,7 +466,7 @@ const onSubmit = async (data) => {
                   setSuppManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Support Manager" />}
                 ChipProps={{ size: 'small' }}

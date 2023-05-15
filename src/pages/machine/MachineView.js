@@ -36,7 +36,7 @@ import { Cover } from '../components/Cover';
 // import SiteList from './site/SiteList';
 // import ContactAddForm from './contact/ContactAddForm';
 // import CustomerStepper from './CustomerStepper';
-// import CustomerNoteList from './CustomerNoteList';
+import DocumentList from '../document/machine/DocumentList';
 
 /* eslint-disable */
 
@@ -144,7 +144,7 @@ export default function MachineView({editPage}) {
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
-      // component: <MachineViewForm/>
+      component: <DocumentList/>
     },
     {
       // disabled: setMachineEditFormVisibility,

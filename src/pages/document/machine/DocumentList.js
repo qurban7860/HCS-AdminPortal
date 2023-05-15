@@ -3,73 +3,40 @@ import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Stack,
-  Card,
-  Grid,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
-  Dialog, 
-  TextField,
-  Typography,
-  InputAdornment,
-  Accordion, AccordionSummary, AccordionDetails, Divider
+import { Stack, Card, Grid, Table, Button, Tooltip, TableBody, Container, IconButton, TableContainer, DialogTitle, Dialog,  TextField, Typography, InputAdornment, Accordion, AccordionSummary, AccordionDetails, Divider
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
-import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
+import { useSnackbar } from '../../../components/snackbar';
+import { useSettingsContext } from '../../../components/settings';
+import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom,
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
+import { addMachineDocument, getMachineDocuments, getMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
+import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 
-import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
-import { getTechparams } from '../../redux/slices/products/machineTechParam';
+import DocumentAddForm from './DocumentAddForm'
+import DocumentEditForm from './DocumentEditForm';
+import DocumentViewForm from './DocumentViewForm';
+import DocumentNameAddForm from '../DocumentName/DocumentNameAddForm';
+import FileCategoryAddForm from '../FileCategory/FileCategoryAddForm';
 
-import SettingAddForm  from './MachineTechParamValue/SettingAddForm'
-import SettingEditForm from './MachineTechParamValue/SettingEditForm';
 
-import _mock from '../../_mock';
-import SettingViewForm from './MachineTechParamValue/SettingViewForm';
-import EmptyContent from '../../components/empty-content';
-import { fDate,fDateTime } from '../../utils/formatTime';
+import _mock from '../../../_mock';
+import EmptyContent from '../../../components/empty-content';
+import { fDate,fDateTime } from '../../../utils/formatTime';
 
 
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
-
-];
 
 const _accordions = [...Array(8)].map((_, index) => ({
   id: _mock.id(index),
@@ -111,16 +78,13 @@ export default function MachineSettingList() {
   };
   const dispatch = useDispatch();
 
-  const { techparamsByCategory } = useSelector((state) => state.techparam);
-
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-
-  const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
+  const { initial,error, responseMessage , machineDocuments, machineDocumentEditFormVisibility, machineDocumentFormVisibility } = useSelector((state) => state.machineDocument);
+  const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
+  const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
   const { machine } = useSelector((state) => state.machine);
-  // console.log("settings : ",settings)
   const toggleChecked = async () => 
     {
-      dispatch(setSettingFormVisibility(!formVisibility));    
+      dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility));    
     };
   const { themeStretch } = useSettingsContext();
 
@@ -143,20 +107,22 @@ export default function MachineSettingList() {
     setActiveIndex(accordianIndex)
    }
   };
-
-
 useLayoutEffect(() => {
-  dispatch(getSettings(machine._id));
-}, [dispatch, machine._id, settingEditFormVisibility ]);
+  dispatch(getMachineDocuments(machine._id));
+    dispatch(setMachineDocumentEditFormVisibility(false))
+    dispatch(setMachineDocumentFormVisibility(false))
+    dispatch(setFileCategoryFormVisibility(false))
+    dispatch(setDocumentNameFormVisibility(false))
+}, [dispatch, machine._id, machineDocumentEditFormVisibility ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
  
   useEffect(() => {
- 
-    setTableData(settings);
-  }, [settings, error, responseMessage ]);
+    setTableData(machineDocuments);
+  }, [machineDocuments, error, responseMessage ]);
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -170,7 +136,7 @@ useLayoutEffect(() => {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !settings.length && !formVisibility && !settingEditFormVisibility;
+  const isNotFound = !machineDocuments.length && !machineDocumentFormVisibility && !machineDocumentEditFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
@@ -189,7 +155,7 @@ useLayoutEffect(() => {
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
               <Grid item xs={12} sm={8}>
-                {!formVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
+                {!machineDocumentFormVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
                 <InputAdornment position="start">
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment> ),}}/>}
@@ -198,17 +164,19 @@ useLayoutEffect(() => {
             </Grid>
             <Grid item xs={8} sm={3}>
               <Stack alignItems="flex-end" sx={{my: "auto" }}> 
-                <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Setting</Button>
+                <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!machineDocumentFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Machine Document</Button>
               </Stack>
             </Grid>
           </Grid>
         </Stack>
         
-                  {!settingEditFormVisibility && formVisibility && <SettingAddForm/>}
+                  {!machineDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && machineDocumentFormVisibility && <DocumentAddForm/>}
+                  {!machineDocumentEditFormVisibility && !documentNameFormVisibility && fileCategoryFormVisibility && !machineDocumentFormVisibility && <FileCategoryAddForm/>}
+                  {!machineDocumentEditFormVisibility && documentNameFormVisibility && !fileCategoryFormVisibility && !machineDocumentFormVisibility && <DocumentNameAddForm/>}
 
-          {settingEditFormVisibility && <SettingEditForm/>}
+          {machineDocumentEditFormVisibility  && <DocumentEditForm/>}
         <Card sx={{mt:2}}>
-          {!settingEditFormVisibility && dataFiltered.map((setting, index) => { 
+          {!machineDocumentEditFormVisibility && !machineDocumentFormVisibility&& !fileCategoryFormVisibility && !documentNameFormVisibility && dataFiltered.map((setting, index) => { 
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
@@ -216,7 +184,8 @@ useLayoutEffect(() => {
                 { index !==  activeIndex ? 
                 
                 <Grid container spacing={0}>
-                  <Grid item xs={12} sm={3} md={3}>
+                <Typography> Machine Documents</Typography>                 
+                {/* <Grid item xs={12} sm={3} md={3}>
                     {setting?.techParam?.category?.name || ""}
                   </Grid>
                   <Grid item xs={12} sm={3} md={3}>
@@ -230,12 +199,12 @@ useLayoutEffect(() => {
                     {fDate(setting?.createdAt || "")}
                     </Typography>
                   </Grid>
-                <Divider />
+                <Divider /> */}
                 </Grid>
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5, }}>
-                <SettingViewForm
+                <DocumentViewForm
                 currentSetting={setting}
                 />
               </AccordionDetails>

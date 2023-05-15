@@ -21,6 +21,12 @@ import machineSettingReducer from './slices/products/machineTechParamValue';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
 import countReducer from './slices/dashboard/count';
+import documentNameReducer from './slices/document/documentName';
+import fileCategoryReducer from './slices/document/fileCategory';
+import customerDocumentReducer from './slices/document/customerDocument';
+import machineDocumentReducer from './slices/document/machineDocument';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -151,6 +157,30 @@ export const countPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const documentNamePersistConfig = {
+  key: 'documentName',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const fileCategoryPersistConfig = {
+  key: 'fileCategory',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const machineDocumentPersistConfig = {
+  key: 'machineDocument',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
+export const customerDocumentPersistConfig = {
+  key: 'customerDocument',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -172,6 +202,10 @@ const rootReducer = combineReducers({
   toolInstalled: persistReducer(machineToolInstalledPersistConfig, toolInstalledReducer),
   role: persistReducer(userRolesPersistConfig, roleReducer),
   count: persistReducer(countPersistConfig, countReducer),
+  documentName: persistReducer(documentNamePersistConfig, documentNameReducer),
+  fileCategory: persistReducer(fileCategoryPersistConfig, fileCategoryReducer),
+  customerDocument: persistReducer(customerDocumentPersistConfig, customerDocumentReducer),
+  machineDocument: persistReducer(machineDocumentPersistConfig, machineDocumentReducer),
 });
 
 export default rootReducer;

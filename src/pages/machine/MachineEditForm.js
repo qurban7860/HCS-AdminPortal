@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box,Button, Card, styled, Grid,Container, Stack,TextField,Autocomplete,Select, Chip, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
@@ -24,8 +22,6 @@ import { CONFIG } from '../../config-global';
 import { getMachines,updateMachine, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 // import { getContacts } from '../../redux/slices/customer/contact';
 // import { getSites } from '../../redux/slices/customer/site';
-
-
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -279,7 +275,7 @@ const handleKeyPress = (e) => {
                   }
                 }}
                 id="controllable-states-demo"
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.serialNo}</Box>)}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option._id}>{option.serialNo}</Box>)}
                 renderInput={(params) => <TextField {...params}  label="Previous Machine Serial No." />}
                 ChipProps={{ size: 'small' }}
               />
@@ -309,7 +305,7 @@ const handleKeyPress = (e) => {
                   }
                 }}
                 // id="controllable-states-demo"
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 renderInput={(params) => <TextField {...params}  label="Previous Machine" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
                 ChipProps={{ size: 'small' }}
               />
@@ -331,7 +327,7 @@ const handleKeyPress = (e) => {
                   setSupplierVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Supplier" />}
                 ChipProps={{ size: 'small' }}
@@ -352,7 +348,7 @@ const handleKeyPress = (e) => {
                   setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
@@ -373,7 +369,7 @@ const handleKeyPress = (e) => {
                   setStatusVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Status" />}
                 ChipProps={{ size: 'small' }}
@@ -395,7 +391,7 @@ const handleKeyPress = (e) => {
                   setCustomerVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
@@ -418,7 +414,7 @@ const handleKeyPress = (e) => {
                   setInstallVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
@@ -438,7 +434,7 @@ const handleKeyPress = (e) => {
                   setBillingVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
@@ -465,7 +461,7 @@ const handleKeyPress = (e) => {
                   setAccoManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -485,7 +481,7 @@ const handleKeyPress = (e) => {
                   setProjManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -505,7 +501,7 @@ const handleKeyPress = (e) => {
                   setSuppManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Support Manager" />}
                 ChipProps={{ size: 'small' }}

@@ -3,31 +3,14 @@ import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Stack,
-  Card,
-  Grid,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
-  Dialog, 
-  TextField,
-  Typography,
-  InputAdornment,
-  Accordion, AccordionSummary, AccordionDetails, Divider
-} from '@mui/material';
+import { Stack, Card, Grid, Button, TextField, Typography, InputAdornment, Accordion, AccordionSummary, AccordionDetails, Divider } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
+import { useSnackbar } from '../../../components/snackbar';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -38,38 +21,35 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../components/table';
-import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 
-import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting , getSettings , getSetting } from '../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
-import { getTechparams } from '../../redux/slices/products/machineTechParam';
+import { setCustomerDocumentFormVisibility , setCustomerDocumentEditFormVisibility , updateCustomerDocument , getCustomerDocument, getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
+import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
+import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 
-import SettingAddForm  from './MachineTechParamValue/SettingAddForm'
-import SettingEditForm from './MachineTechParamValue/SettingEditForm';
+import { getMachines } from '../../../redux/slices/products/machine'
+import { getCustomers } from '../../../redux/slices/customer/customer'
 
-import _mock from '../../_mock';
-import SettingViewForm from './MachineTechParamValue/SettingViewForm';
-import EmptyContent from '../../components/empty-content';
-import { fDate,fDateTime } from '../../utils/formatTime';
+import DocumentAddForm from './DocumentAddForm'
+import DocumentEditForm from './DocumentEditForm';
+import DocumentViewForm from './DocumentViewForm';
+import DocumentNameAddForm from '../DocumentName/DocumentNameAddForm';
+import FileCategoryAddForm from '../FileCategory/FileCategoryAddForm';
+
+import _mock from '../../../_mock';
+import EmptyContent from '../../../components/empty-content';
+import { fDate,fDateTime } from '../../../utils/formatTime';
 
 
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
 
-];
 
 const _accordions = [...Array(8)].map((_, index) => ({
   id: _mock.id(index),
@@ -104,23 +84,17 @@ export default function MachineSettingList() {
   });
 
 
-  const [controlled, setControlled] = useState(false);
-
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
   const dispatch = useDispatch();
 
-  const { techparamsByCategory } = useSelector((state) => state.techparam);
-
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-
-  const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
-  const { machine } = useSelector((state) => state.machine);
-  // console.log("settings : ",settings)
+  const { error, responseMessage , customerDocuments, customerDocument, customerDocumentEditFormVisibility, customerDocumentFormVisibility } = useSelector((state) => state.customerDocument);
+  const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
+  const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
+  const { customer } = useSelector((state) => state.customer);
+// console.log("customerDocuments : ",customerDocuments)
+// console.log("customerDocumentEditFormVisibility : ",customerDocumentEditFormVisibility, "documentNameFormVisibility : ",documentNameFormVisibility, "fileCategoryFormVisibility : ",fileCategoryFormVisibility, " customerDocumentFormVisibility : ", customerDocumentFormVisibility)
   const toggleChecked = async () => 
     {
-      dispatch(setSettingFormVisibility(!formVisibility));    
+      dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));    
     };
   const { themeStretch } = useSettingsContext();
 
@@ -144,19 +118,23 @@ export default function MachineSettingList() {
    }
   };
 
-
+useEffect(()=>{
+setCustomerDocumentEditFormVisibility(false)
+setCustomerDocumentFormVisibility(false)
+setFileCategoryFormVisibility(false)
+setDocumentNameFormVisibility(false)
+},[customer])
 useLayoutEffect(() => {
-  dispatch(getSettings(machine._id));
-}, [dispatch, machine._id, settingEditFormVisibility ]);
+  dispatch(getCustomerDocuments());
+}, [dispatch, customer._id ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
  
   useEffect(() => {
- 
-    setTableData(settings);
-  }, [settings, error, responseMessage ]);
+    setTableData(customerDocuments);
+  }, [customerDocuments, error, responseMessage ]);
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -170,7 +148,7 @@ useLayoutEffect(() => {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !settings.length && !formVisibility && !settingEditFormVisibility;
+  const isNotFound = !customerDocuments.length && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
@@ -189,7 +167,7 @@ useLayoutEffect(() => {
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
               <Grid item xs={12} sm={8}>
-                {!formVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
+                {!customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
                 <InputAdornment position="start">
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment> ),}}/>}
@@ -198,36 +176,37 @@ useLayoutEffect(() => {
             </Grid>
             <Grid item xs={8} sm={3}>
               <Stack alignItems="flex-end" sx={{my: "auto" }}> 
-                <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Setting</Button>
+                <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!customerDocumentFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Document</Button>
               </Stack>
             </Grid>
           </Grid>
         </Stack>
         
-                  {!settingEditFormVisibility && formVisibility && <SettingAddForm/>}
-
-          {settingEditFormVisibility && <SettingEditForm/>}
+                  {!customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility &&  customerDocumentFormVisibility && <DocumentAddForm/>}
+                  {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && fileCategoryFormVisibility && <FileCategoryAddForm/>}
+                  {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && documentNameFormVisibility && !fileCategoryFormVisibility && <DocumentNameAddForm/>}
+          {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
         <Card sx={{mt:2}}>
-          {!settingEditFormVisibility && dataFiltered.map((setting, index) => { 
+          {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && dataFiltered.map((document, index) => { 
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
-            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
+            <Accordion key={document._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 
                 <Grid container spacing={0}>
-                  <Grid item xs={12} sm={3} md={3}>
-                    {setting?.techParam?.category?.name || ""}
+                <Grid item xs={12} sm={3} md={3}>
+                    {document?.name || "" }
                   </Grid>
                   <Grid item xs={12} sm={3} md={3}>
-                    {setting?.techParam?.name || "" }
+                    {document?.category?.name || ""}
                   </Grid>
                   <Grid item xs={12} sm={3} md={4}>
-                    {setting?.techParamValue || "" }
+                    {document?.documentName?.name || "" }
                   </Grid>
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
-                    {fDate(setting?.createdAt || "")}
+                    {fDate(document?.createdAt || "")}
                     </Typography>
                   </Grid>
                 <Divider />
@@ -235,9 +214,7 @@ useLayoutEffect(() => {
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5, }}>
-                <SettingViewForm
-                currentSetting={setting}
-                />
+                <DocumentViewForm currentCustomerDocument={document} />
               </AccordionDetails>
             </Accordion>
             
@@ -288,11 +265,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter((setting) => setting?.techParam?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    setting?.techParam?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    setting?.techParamValue?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (setting?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
+    inputData = inputData.filter((document) => document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
     );
   }
 
