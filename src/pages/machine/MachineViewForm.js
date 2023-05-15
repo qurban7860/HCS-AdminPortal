@@ -93,39 +93,39 @@ export default function MachineViewForm() {
         <ViewFormField
           sm={6}
           heading="Serial No"
-          param={defaultValues.serialNo ? defaultValues.serialNo : ''}
+          param={defaultValues?.serialNo}
           isActive={defaultValues.isActive}
         />
-        <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField
           sm={6}
           heading="Previous Machine Serial No"
-          param={defaultValues.parentSerialNo ? defaultValues.parentSerialNo : ''}
+          param={defaultValues?.parentSerialNo}
         />
         <ViewFormField
           sm={6}
           heading="Previous Machine"
-          param={defaultValues.parentMachine ? defaultValues.parentMachine : ''}
+          param={defaultValues?.parentMachine}
         />
         <ViewFormField
           sm={6}
           heading="Supplier"
-          param={defaultValues.supplier ? defaultValues.supplier : ''}
+          param={defaultValues?.supplier}
         />
         <ViewFormField
           sm={6}
           heading="Machine Model"
-          param={defaultValues.machineModel ? defaultValues.machineModel : ''}
+          param={defaultValues?.machineModel}
         />
         <ViewFormField
           sm={6}
           heading="Status"
-          param={defaultValues.status ? defaultValues.status : ''}
+          param={defaultValues?.status}
         />
         <ViewFormField
           sm={6}
           heading="Work Order / Perchase Order"
-          param={defaultValues.workOrderRef ? defaultValues.workOrderRef : ''}
+          param={defaultValues?.workOrderRef}
         />
         <ViewFormField
           sm={12}
@@ -169,14 +169,14 @@ export default function MachineViewForm() {
         <ViewFormField
           sm={12}
           heading="Nearby Milestone"
-          param={defaultValues.siteMilestone ? defaultValues?.siteMilestone : ''}
+          param={defaultValues?.siteMilestone}
         />
         <ViewFormField
           sm={12}
           heading="Description"
-          param={defaultValues.description ? defaultValues.description : ''}
+          param={defaultValues?.description}
         />
-        {/* <ViewFormField sm={6} heading="Tags" param={defaultValues.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
+        {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
         <Grid item xs={12} sm={12} sx={{ pt: 2 }}>
@@ -190,20 +190,20 @@ export default function MachineViewForm() {
           <ViewFormField
             sm={6}
             heading="Account Manager"
-            param={defaultValues?.accountManager?.firstName || ''}
-            secondParam={defaultValues?.accountManager?.lastName || ''}
+            param={defaultValues?.accountManager?.firstName}
+            secondParam={defaultValues?.accountManager?.lastName}
           />
           <ViewFormField
             sm={6}
             heading="Project Manager"
-            param={defaultValues?.projectManager?.firstName || ''}
-            secondParam={defaultValues?.projectManager?.lastName || ''}
+            param={defaultValues?.projectManager?.firstName}
+            secondParam={defaultValues?.projectManager?.lastName}
           />
           <ViewFormField
             sm={6}
             heading="Suppport Manager"
-            param={defaultValues?.supportManager?.firstName || ''}
-            secondParam={defaultValues?.supportManager?.lastName || ''}
+            param={defaultValues?.supportManager?.firstName}
+            secondParam={defaultValues?.supportManager?.lastName}
           />
         </Grid>
       </Grid>
@@ -237,61 +237,61 @@ export default function MachineViewForm() {
               <Iconify icon="mdi:close-box-outline" />
             </Link>
           </Grid>
-          <ViewFormField sm={12} heading="Name" param={customer?.name ? customer?.name : ''} />
+          <ViewFormField sm={12} heading="Name" param={customer?.name} />
           <ViewFormField
             sm={6}
             heading="Trading Name"
-            param={customer?.tradingName ? customer?.tradingName : ''}
+            param={customer?.tradingName}
           />
           <ViewFormField
             sm={6}
             heading="Phone"
-            param={customer?.mainSite?.phone ? customer?.mainSite.phone : ''}
+            param={customer?.mainSite?.phone}
           />
           <ViewFormField
             sm={6}
             heading="Fax"
-            param={customer?.mainSite?.fax ? customer?.mainSite.fax : ''}
+            param={customer?.mainSite?.fax}
           />
           <ViewFormField
             sm={6}
             heading="Email"
-            param={customer?.mainSite?.email ? customer?.mainSite.email : ''}
+            param={customer?.mainSite?.email}
           />
           <ViewFormField
             sm={6}
             heading="Site Name"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.street : ''}
+            param={customer?.mainSite?.name}
           />
           <ViewFormField
             sm={6}
             heading="Street"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.street : ''}
+            param={customer?.mainSite?.address.street}
           />
           <ViewFormField
             sm={6}
             heading="Suburb"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.suburb : ''}
+            param={customer?.mainSite?.address.suburb}
           />
           <ViewFormField
             sm={6}
             heading="City"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.city : ''}
+            param={customer?.mainSite?.address.city}
           />
           <ViewFormField
             sm={6}
             heading="Region"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.region : ''}
+            param={customer?.mainSite?.address.region}
           />
           <ViewFormField
             sm={6}
             heading="Post Code"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.postcode : ''}
+            param={customer?.mainSite?.address.postcode}
           />
           <ViewFormField
             sm={12}
             heading="Country"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.country : ''}
+            param={customer?.mainSite?.address.country}
           />
           <ViewFormField
             sm={6}
@@ -386,81 +386,58 @@ export default function MachineViewForm() {
           <ViewFormField
             sm={12}
             heading="Name"
-            param={defaultValues.instalationSite ? defaultValues?.instalationSite?.name : ''}
+            param={defaultValues?.instalationSite?.name}
           />
           <ViewFormField
             sm={6}
             heading="Phone"
-            param={defaultValues.instalationSite ? defaultValues?.instalationSite?.phone : ''}
+            param={defaultValues?.instalationSite?.phone}
           />
           <ViewFormField
             sm={6}
             heading="Fax"
-            param={defaultValues.instalationSite ? defaultValues?.instalationSite?.fax : ''}
+            param={defaultValues?.instalationSite?.fax}
           />
           <ViewFormField
             sm={6}
             heading="Email"
-            param={defaultValues.instalationSite ? defaultValues?.instalationSite?.email : ''}
+            param={defaultValues?.instalationSite?.email}
           />
           <ViewFormField
             sm={6}
             heading="Website"
-            param={defaultValues.instalationSite ? defaultValues?.instalationSite?.website : ''}
+            param={defaultValues?.instalationSite?.website}
           />
           <ViewFormField
             sm={6}
             heading="Street"
-            param={
-              defaultValues.instalationSite?.address
-                ? defaultValues?.instalationSite?.address?.street
-                : ''
-            }
+            param={defaultValues?.instalationSite?.address?.street}
           />
           <ViewFormField
             sm={6}
             heading="Suburb"
-            param={
-              defaultValues.instalationSite?.address
-                ? defaultValues?.instalationSite?.address?.suburb
-                : ''
-            }
+            param={defaultValues?.instalationSite?.address?.suburb}
           />
           <ViewFormField
             sm={6}
             heading="City"
-            param={
-              defaultValues.instalationSite?.address
-                ? defaultValues?.instalationSite?.address?.city
-                : ''
-            }
+            param={defaultValues?.instalationSite?.address?.city}
           />
           <ViewFormField
             sm={6}
             heading="Region"
-            param={
-              defaultValues.instalationSite?.address
-                ? defaultValues?.instalationSite?.address?.region
-                : ''
-            }
+            param={defaultValues?.instalationSite?.address?.region}
           />
           <ViewFormField
             sm={6}
             heading="Post Code"
-            param={
-              defaultValues.instalationSite?.address
-                ? defaultValues?.instalationSite?.address?.postcode
-                : ''
-            }
+            param={defaultValues?.instalationSite?.address?.postcode}
           />
           <ViewFormField
             sm={6}
             heading="Country"
             param={
-              defaultValues.instalationSite?.address
-                ? defaultValues?.instalationSite?.address?.country
-                : ''
-            }
+              defaultValues.instalationSite?.address?.country}
           />
         </Grid>
       </Dialog>
@@ -493,69 +470,60 @@ export default function MachineViewForm() {
           <ViewFormField
             sm={12}
             heading="Name"
-            param={defaultValues.billingSite ? defaultValues?.billingSite?.name : ''}
+            param={defaultValues?.billingSite?.name}
           />
           <ViewFormField
             sm={6}
             heading="Phone"
-            param={defaultValues.billingSite ? defaultValues?.billingSite?.phone : ''}
+            param={defaultValues?.billingSite?.phone}
           />
           <ViewFormField
             sm={6}
             heading="Fax"
-            param={defaultValues.billingSite ? defaultValues?.billingSite?.fax : ''}
+            param={defaultValues?.billingSite?.fax}
           />
           <ViewFormField
             sm={6}
             heading="Email"
-            param={defaultValues.billingSite ? defaultValues?.billingSite?.email : ''}
+            param={defaultValues?.billingSite?.email}
           />
           <ViewFormField
             sm={6}
             heading="Website"
-            param={defaultValues.billingSite ? defaultValues?.billingSite?.website : ''}
+            param={defaultValues?.billingSite?.website}
           />
           <ViewFormField
             sm={6}
             heading="Street"
             param={
-              defaultValues.billingSite?.address ? defaultValues.billingSite?.address?.street : ''
+              defaultValues.billingSite?.address?.street
             }
           />
           <ViewFormField
             sm={6}
             heading="Suburb"
             param={
-              defaultValues.billingSite?.address ? defaultValues.billingSite?.address?.suburb : ''
-            }
+              defaultValues.billingSite?.address?.suburb}
           />
           <ViewFormField
             sm={6}
             heading="City"
-            param={
-              defaultValues.billingSite?.address ? defaultValues.billingSite?.address?.city : ''
-            }
+            param={defaultValues?.billingSite?.address?.city}
           />
           <ViewFormField
             sm={6}
             heading="Region"
-            param={
-              defaultValues.billingSite?.address ? defaultValues.billingSite?.address?.region : ''
-            }
+            param={defaultValues?.billingSite?.address?.region}
           />
           <ViewFormField
             sm={6}
             heading="Post Code"
-            param={
-              defaultValues.billingSite?.address ? defaultValues.billingSite?.address?.postcode : ''
-            }
+            param={defaultValues?.billingSite?.address?.postcode}
           />
           <ViewFormField
             sm={6}
             heading="Country"
-            param={
-              defaultValues.billingSite?.address ? defaultValues.billingSite?.address?.country : ''
-            }
+            param={defaultValues?.billingSite?.address?.country}
           />
         </Grid>
       </Dialog>
