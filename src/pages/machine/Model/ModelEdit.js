@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 // @mui
 import { useDispatch,useSelector } from 'react-redux';
 import { Container } from '@mui/material';
-import { getMachinemodels, getMachineModel} from '../../../redux/slices/products/model';
+import { getMachineModel} from '../../../redux/slices/products/model';
 import ModelEditForm from './ModelEditForm';
 // redux
 
