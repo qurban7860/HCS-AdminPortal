@@ -43,7 +43,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 
-import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , saveLicense , getLicenses , getLicense, deleteLicense } from '../../redux/slices/products/license';
+import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , getLicenses , getLicense, deleteLicense } from '../../redux/slices/products/license';
 import LicenseAddForm from './License/LicenseAddForm'
 import LicenseEditForm from './License/LicenseEditForm';
 import LicenseViewForm from './License/LicenseViewForm';

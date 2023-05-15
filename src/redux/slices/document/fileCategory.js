@@ -146,7 +146,6 @@ export function getFileCategories() {
         }
       }
       );
-      console.log("getFileCategories : ",response);
       dispatch(slice.actions.getFileCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('File Categories loaded successfully'));
     } catch (error) {

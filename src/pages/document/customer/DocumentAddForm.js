@@ -67,16 +67,25 @@ export default function DocumentAddForm({currentDocument}) {
     fileCategory =  true 
   }
 
+
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
- // a note can be archived.  
+  useEffect(()=>{
+    dispatch(getDocumentNames())
+    dispatch(getFileCategories())
+  },[dispatch,customer])
+  
   const AddCustomerDocumentSchema = Yup.object().shape({
-    note: Yup.string().max(10000).required("Note Field is required!"),
+    name: Yup.string().min(2).required("Name Field is required!"),
+    description: Yup.string().max(10000).required("Description Field is required!"),
+    image: Yup.string().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
-      note: '',
+      name: '',
+      description: '',
+      image: null,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -103,7 +112,16 @@ export default function DocumentAddForm({currentDocument}) {
 
   const onSubmit = async (data) => {
       try{
-        await dispatch(addCustomerDocument(customerVal._id,data));
+        data.customer = customer._id
+        if(fileCategoryVal){
+          data.category = fileCategoryVal._id
+        }
+        if(documentNameVal){
+          data.documentName = documentNameVal._id
+        }
+        await dispatch(addCustomerDocument(customer._id,data));
+        setFileCategoryVal("")
+        setDocumentNameVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -123,18 +141,18 @@ export default function DocumentAddForm({currentDocument}) {
     dispatch(setDocumentNameFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(false));
   }
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const newFiles = acceptedFiles.map((file) =>
-        Object.assign(file, {
-          preview: URL.createObjectURL(file),
-        })
-      );
+  // const handleDrop = useCallback(
+  //   (acceptedFiles) => {
+  //     const newFiles = acceptedFiles.map((file) =>
+  //       Object.assign(file, {
+  //         preview: URL.createObjectURL(file),
+  //       })
+  //     );
 
-      setFiles([...files, ...newFiles]);
-    },
-    [files]
-  );
+  //     setFiles([...files, ...newFiles]);
+  //   },
+  //   [files]
+  // );
 
   const handleUpload = () => {
     console.log('ON UPLOAD');
@@ -149,6 +167,20 @@ export default function DocumentAddForm({currentDocument}) {
     setFiles([]);
   };
 
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('image', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* <Cover name="New Customer Document"/> */}
@@ -181,7 +213,7 @@ export default function DocumentAddForm({currentDocument}) {
                 renderInput={(params) => <TextField {...params}  label="Document Name" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} >Not Available! <Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
+              <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} ><Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
               <Grid>
               <Autocomplete
@@ -204,7 +236,7 @@ export default function DocumentAddForm({currentDocument}) {
                 renderInput={(params) => <TextField {...params}  label="File Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage} >Not Available! <Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
+              <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage} ><Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
               {/* <Autocomplete
                 // freeSolo
@@ -286,19 +318,19 @@ export default function DocumentAddForm({currentDocument}) {
               /> */}
               </Box>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              {/* <RHFUpload
-                  multiple
-                  thumbnail
-                  name="images"
+              <RHFUpload
+                  // multiple
+                  // thumbnail
+                  name="image"
                   maxSize={3145728}
                   onDrop={handleDrop}
-                  onRemove={handleRemoveFile}
-                  onRemoveAll={handleRemoveAllFiles}
-                  onUpload={() => console.log('ON UPLOAD')}
-                  onDelete={handleRemoveFile}
+                  onRemove={handleDrop}
+                  // onRemoveAll={handleRemoveAllFiles}
                   // onUpload={() => console.log('ON UPLOAD')}
-                /> */}
-              <Upload files={files} name="document"  onDrop={handleDrop} onDelete={handleRemoveFile} />
+                  // onDelete={handleRemoveFile}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                />
+              {/* <Upload files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} /> */}
               {/* {!!files.length && (
           <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
             Remove all

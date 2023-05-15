@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
+import FormData from 'form-data';
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
@@ -91,15 +92,37 @@ export const {
 
 } = slice.actions;
 
+
 // ----------------------------Add Customer Document------------------------------------------
 
 export function addCustomerDocument(customerId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-            const data = {
-            }
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, data);
+
+          const formData = new FormData();
+          if(params?.customer){
+            formData.append('customer', params?.customer);
+          }
+          // if(params?.name){
+          //   formData.append('name', params?.name);
+          // }
+          // if(params?.description){
+          //   formData.append('description', params?.description);
+          // }
+          if(params?.category){
+            formData.append('category', params?.category);
+          }
+          // if(params?.documentName){
+          //   formData.append('documentName', params?.documentName);
+          // }
+          if(params?.image){
+            formData.append('image', params?.image);
+          }
+
+console.log("formData : ",formData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData);
+
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getCustomerDocuments(customerId));
     } catch (error) {
@@ -133,6 +156,7 @@ export function getCustomerDocuments(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
+      
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
       {
         params: {
