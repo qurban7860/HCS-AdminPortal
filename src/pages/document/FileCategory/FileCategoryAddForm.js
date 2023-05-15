@@ -12,8 +12,9 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , C
 // ROUTES
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility  } from '../../../redux/slices/document/fileCategory';
+import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility , getFileCategories } from '../../../redux/slices/document/fileCategory';
 import { addMachineDocument, getMachineDocuments, getMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { setCustomerDocumentFormVisibility } from '../../../redux/slices/document/customerDocument';
 
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -34,8 +35,8 @@ export default function DocumentNameAddForm({currentDocument}) {
   const { enqueueSnackbar } = useSnackbar();
  // a note can be archived.  
   const AddDocumentNameSchema = Yup.object().shape({
-    name: Yup.string().max(10000).required("Note Field is required!"),
-    description: Yup.string().max(10000).required("Note Field is required!"),
+    name: Yup.string().min(2).required("Name Field is required!"),
+    description: Yup.string().max(10000).required("Description Field is required!"),
     isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
@@ -69,6 +70,7 @@ export default function DocumentNameAddForm({currentDocument}) {
   const onSubmit = async (data) => {
       try{
         await dispatch(addFileCategory(data));
+        // dispatch(getFileCategories());
         dispatch(setFileCategoryFormVisibility(false))
         dispatch(setMachineDocumentFormVisibility(true));
         reset();
@@ -83,6 +85,7 @@ export default function DocumentNameAddForm({currentDocument}) {
     // navigate(PATH_DOCUMENT.documentName.list);
     dispatch(setFileCategoryFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(true));
+    dispatch(setCustomerDocumentFormVisibility(true));
   };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>

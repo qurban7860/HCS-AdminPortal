@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -13,8 +13,8 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Li
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addCustomerDocument, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
-import documentName, { getDocumentNames } from '../../../redux/slices/document/documentName';
-import { getFileCategories } from '../../../redux/slices/document/fileCategory';
+import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
+import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -24,7 +24,8 @@ import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
-import FormProvider, {RHFTextField,RHFSwitch} from '../../../components/hook-form';
+import FormProvider, {RHFTextField,RHFSwitch, RHFUpload} from '../../../components/hook-form';
+import { Upload } from '../../../components/upload';
 import Cover from '../../components/Cover';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
@@ -36,6 +37,7 @@ DocumentAddForm.propTypes = {
 export default function DocumentAddForm({currentDocument}) {
   const { documentNames } = useSelector((state) => state.documentName);
   const { fileCategories } = useSelector((state) => state.fileCategory);
+  console.log("fileCategories : ", fileCategories, " documentNames : ", documentNames)
   const { machines } = useSelector((state) => state.machine);
   const { customer, customers } = useSelector((state) => state.customer);
   const { contacts } = useSelector((state) => state.contact); 
@@ -43,6 +45,7 @@ export default function DocumentAddForm({currentDocument}) {
 
   const [ documentNameVal, setDocumentNameVal] = useState('')
   const [ fileCategoryVal, setFileCategoryVal] = useState('')
+  const [files, setFiles] = useState([]);
   const [ machineVal, setMachineVal] = useState('')
   const [ customerVal, setCustomerVal] = useState('')
   const [ siteVal, setSiteVal] = useState('')
@@ -112,6 +115,40 @@ export default function DocumentAddForm({currentDocument}) {
   {
     dispatch(setCustomerDocumentFormVisibility(false));
   };
+  const togleCategoryPage = ()=>{
+    dispatch(setFileCategoryFormVisibility(true))
+    dispatch(setCustomerDocumentFormVisibility(false));
+  }
+  const togleDocumentNamePage = ()=>{
+    dispatch(setDocumentNameFormVisibility(true))
+    dispatch(setCustomerDocumentFormVisibility(false));
+  }
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const newFiles = acceptedFiles.map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      );
+
+      setFiles([...files, ...newFiles]);
+    },
+    [files]
+  );
+
+  const handleUpload = () => {
+    console.log('ON UPLOAD');
+  };
+
+  const handleRemoveFile = (inputFile) => {
+    const filtered = files.filter((file) => file !== inputFile);
+    setFiles(filtered);
+  };
+
+  const handleRemoveAllFiles = () => {
+    setFiles([]);
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* <Cover name="New Customer Document"/> */}
@@ -122,11 +159,11 @@ export default function DocumentAddForm({currentDocument}) {
               <FormHeading heading='New Document'/>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
-              <RHFTextField name="displayName" label="Display Name" />
+              <RHFTextField name="name" label="Name" />
               <Grid>
               <Autocomplete
                 // freeSolo
-                disabled={documentAvailable}
+                // disabled={documentAvailable}
                 value={documentNameVal || null}
                 options={documentNames}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -139,17 +176,17 @@ export default function DocumentAddForm({currentDocument}) {
                     setDocumentNameVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Document Name" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Document Name"  sx={{ color: 'red' }}  component="button"  variant="body2"  onClick={()=>{ navigate(PATH_DOCUMENT.documentName.list)}} >Not Available! <Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
+              <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} >Not Available! <Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
               <Grid>
               <Autocomplete
                 // freeSolo
-                disabled={fileCategory}
+                // disabled={fileCategory}
                 value={fileCategoryVal || null}
                 options={fileCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -162,14 +199,14 @@ export default function DocumentAddForm({currentDocument}) {
                     setFileCategoryVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="File Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Category"  sx={{ color: 'red' }}  component="button"  variant="body2"  onClick={()=>{ navigate(PATH_DOCUMENT.fileCategory.new)}}>Not Available! <Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
+              <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage} >Not Available! <Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
-              <Autocomplete
+              {/* <Autocomplete
                 // freeSolo
                 value={machineVal || null}
                 options={machines}
@@ -187,9 +224,9 @@ export default function DocumentAddForm({currentDocument}) {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Machine" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
               
-              <Autocomplete 
+              {/* <Autocomplete 
                 value={customerVal || null}
                 options={customers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -206,9 +243,9 @@ export default function DocumentAddForm({currentDocument}) {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
 
-              <Autocomplete 
+              {/* <Autocomplete 
                 // freeSolo
                 value={siteVal || null}
                 options={sites}
@@ -246,9 +283,27 @@ export default function DocumentAddForm({currentDocument}) {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Contact" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
               </Box>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
+              {/* <RHFUpload
+                  multiple
+                  thumbnail
+                  name="images"
+                  maxSize={3145728}
+                  onDrop={handleDrop}
+                  onRemove={handleRemoveFile}
+                  onRemoveAll={handleRemoveAllFiles}
+                  onUpload={() => console.log('ON UPLOAD')}
+                  onDelete={handleRemoveFile}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                /> */}
+              <Upload files={files} name="document"  onDrop={handleDrop} onDelete={handleRemoveFile} />
+              {/* {!!files.length && (
+          <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
+            Remove all
+          </Button>
+        )} */}
               <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  

@@ -20,6 +20,9 @@ import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import { addMachineDocument, getMachineDocuments, getMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
+import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
+
 import DocumentAddForm from './DocumentAddForm'
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
@@ -77,7 +80,6 @@ export default function MachineSettingList() {
 
   const { initial,error, responseMessage , machineDocuments, machineDocumentEditFormVisibility, machineDocumentFormVisibility } = useSelector((state) => state.machineDocument);
   const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
-  console.log("fileCategoryFormVisibility : ",fileCategoryFormVisibility)
   const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
   const { machine } = useSelector((state) => state.machine);
   const toggleChecked = async () => 
@@ -105,9 +107,12 @@ export default function MachineSettingList() {
     setActiveIndex(accordianIndex)
    }
   };
-
 useLayoutEffect(() => {
   dispatch(getMachineDocuments(machine._id));
+    dispatch(setMachineDocumentEditFormVisibility(false))
+    dispatch(setMachineDocumentFormVisibility(false))
+    dispatch(setFileCategoryFormVisibility(false))
+    dispatch(setDocumentNameFormVisibility(false))
 }, [dispatch, machine._id, machineDocumentEditFormVisibility ]);
 
   const handleChange = (panel) => (event, isExpanded) => {

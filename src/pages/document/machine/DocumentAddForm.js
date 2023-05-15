@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Link } from '@mui/material';
@@ -16,11 +15,11 @@ import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/pa
 import { addMachineDocument, setMachineDocumentFormVisibility  } from '../../../redux/slices/document/machineDocument';
 import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility  } from '../../../redux/slices/document/fileCategory';
 import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility  } from '../../../redux/slices/document/documentName';
+import { setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
 import { getSites } from '../../../redux/slices/customer/site';
-
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
@@ -128,6 +127,26 @@ export default function DocumentAddForm({currentDocument}) {
     dispatch(setDocumentNameFormVisibility(true))
     dispatch(setMachineDocumentFormVisibility(false));
   }
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('cover', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
+
+  const handleRemoveFile = () => {
+    setValue('cover', null);
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -136,7 +155,7 @@ export default function DocumentAddForm({currentDocument}) {
             <Stack spacing={2}>
               {/* <FormHeading heading='New Note'/> */}
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
-              <RHFTextField name="displayName" label="Display Name" />
+              <RHFTextField name="name" label="Name" />
               <Grid>
               <Autocomplete
                 // freeSolo
@@ -183,7 +202,7 @@ export default function DocumentAddForm({currentDocument}) {
               />
               <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage}>Not Available! <Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
-              <Autocomplete
+              {/* <Autocomplete
                 // freeSolo
                 value={machineVal || null}
                 options={machines}
@@ -201,9 +220,9 @@ export default function DocumentAddForm({currentDocument}) {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Machine" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
               
-              <Autocomplete 
+              {/* <Autocomplete 
                 value={customerVal || null}
                 options={customers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -220,9 +239,9 @@ export default function DocumentAddForm({currentDocument}) {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
 
-              <Autocomplete 
+              {/* <Autocomplete 
                 // freeSolo
                 value={siteVal || null}
                 options={sites}
@@ -260,10 +279,10 @@ export default function DocumentAddForm({currentDocument}) {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Contact" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
               </Box>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFUpload name="Document"/>
+              <RHFUpload name="document" maxSize={3145728} onDrop={handleDrop} onDelete={handleRemoveFile} />
               <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  

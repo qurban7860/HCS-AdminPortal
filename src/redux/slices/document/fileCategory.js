@@ -98,8 +98,11 @@ export function addFileCategory(params) {
         dispatch(slice.actions.startLoading());
         try {
             const data = {
+              name: params.name,
+              description: params.description,
+              isActive: params.isActive
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/techparamvalues/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}files/categories/`, data);
       dispatch(slice.actions.setResponseMessage('Document Name saved successfully'));
       dispatch(getFileCategories());
     } catch (error) {
@@ -132,19 +135,20 @@ export function updateFileCategory(machineId,settingId,params) {
 
 // -----------------------------------Get File Categories-----------------------------------
 
-export function getFileCategories(id) {
+export function getFileCategories() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}files/categories/` , 
       {
         params: {
           isArchived: false
         }
       }
       );
+      console.log("getFileCategories : ",response);
       dispatch(slice.actions.getFileCategoriesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('File Category loaded successfully'));
+      dispatch(slice.actions.setResponseMessage('File Categories loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

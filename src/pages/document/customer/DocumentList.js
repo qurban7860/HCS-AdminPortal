@@ -29,12 +29,17 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 
 import { setCustomerDocumentFormVisibility , setCustomerDocumentEditFormVisibility , updateCustomerDocument , getCustomerDocument, getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
+import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
+import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
+
 import { getMachines } from '../../../redux/slices/products/machine'
 import { getCustomers } from '../../../redux/slices/customer/customer'
 
 import DocumentAddForm from './DocumentAddForm'
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
+import DocumentNameAddForm from '../DocumentName/DocumentNameAddForm';
+import FileCategoryAddForm from '../FileCategory/FileCategoryAddForm';
 
 import _mock from '../../../_mock';
 import EmptyContent from '../../../components/empty-content';
@@ -82,7 +87,11 @@ export default function MachineSettingList() {
   const dispatch = useDispatch();
 
   const { error, responseMessage , customerDocuments, customerDocument, customerDocumentEditFormVisibility, customerDocumentFormVisibility } = useSelector((state) => state.customerDocument);
+  const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
+  const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
+  const { customer } = useSelector((state) => state.customer);
 
+// console.log("customerDocumentEditFormVisibility : ",customerDocumentEditFormVisibility, "documentNameFormVisibility : ",documentNameFormVisibility, "fileCategoryFormVisibility : ",fileCategoryFormVisibility, " customerDocumentFormVisibility : ", customerDocumentFormVisibility)
   const toggleChecked = async () => 
     {
       dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));    
@@ -109,7 +118,12 @@ export default function MachineSettingList() {
    }
   };
 
-
+useEffect(()=>{
+setCustomerDocumentEditFormVisibility(false)
+setCustomerDocumentFormVisibility(false)
+setFileCategoryFormVisibility(false)
+setDocumentNameFormVisibility(false)
+},[customer])
 // useLayoutEffect(() => {
 //   dispatch(getSettings(machine._id));
 // }, [dispatch, machine._id, settingEditFormVisibility ]);
@@ -134,7 +148,7 @@ export default function MachineSettingList() {
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !customerDocuments.length && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility;
+  const isNotFound = !customerDocuments.length && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
@@ -153,7 +167,7 @@ export default function MachineSettingList() {
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
               <Grid item xs={12} sm={8}>
-                {!customerDocumentFormVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
+                {!customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
                 <InputAdornment position="start">
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment> ),}}/>}
@@ -168,11 +182,12 @@ export default function MachineSettingList() {
           </Grid>
         </Stack>
         
-                  {!customerDocumentEditFormVisibility && customerDocumentFormVisibility && <DocumentAddForm/>}
-
+                  {!customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility &&  customerDocumentFormVisibility && <DocumentAddForm/>}
+                  {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && fileCategoryFormVisibility && <FileCategoryAddForm/>}
+                  {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && documentNameFormVisibility && !fileCategoryFormVisibility && <DocumentNameAddForm/>}
           {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
         <Card sx={{mt:2}}>
-          {!customerDocumentEditFormVisibility && dataFiltered.map((setting, index) => { 
+          {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && dataFiltered.map((setting, index) => { 
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>

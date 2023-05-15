@@ -93,18 +93,18 @@ export const {
 
 // ----------------------------Add Document Name------------------------------------------
 
-export function addDocumentName(machineId,params) {
+export function addDocumentName(params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
             const data = {
-                techParam: params.techParam,
-                techParamValue: params.techParamValue,
+                name: params.name,
+                description: params.description,
                 isActive: params.isActive,
             }
-      // const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}files/documentNames/`, data);
       dispatch(slice.actions.setResponseMessage('Document Name saved successfully'));
-      dispatch(getDocumentNames(machineId));
+      dispatch(getDocumentNames());
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -135,11 +135,11 @@ export function updateDocumentName(machineId,settingId,params) {
 
 // -----------------------------------Get Document Names-----------------------------------
 
-export function getDocumentNames(id) {
+export function getDocumentNames() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}files/documentNames/` , 
       {
         params: {
           isArchived: false
