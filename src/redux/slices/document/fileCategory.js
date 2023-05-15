@@ -102,7 +102,7 @@ export function addFileCategory(params) {
               description: params.description,
               isActive: params.isActive
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}files/categories/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/categories/`, data);
       dispatch(slice.actions.setResponseMessage('Document Name saved successfully'));
       dispatch(getFileCategories());
     } catch (error) {
@@ -139,7 +139,7 @@ export function getFileCategories() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}files/categories/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/categories/` , 
       {
         params: {
           isArchived: false

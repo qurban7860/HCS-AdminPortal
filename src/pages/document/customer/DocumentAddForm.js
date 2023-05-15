@@ -37,7 +37,7 @@ DocumentAddForm.propTypes = {
 export default function DocumentAddForm({currentDocument}) {
   const { documentNames } = useSelector((state) => state.documentName);
   const { fileCategories } = useSelector((state) => state.fileCategory);
-  console.log("fileCategories : ", fileCategories, " documentNames : ", documentNames)
+  // console.log("fileCategories : ", fileCategories, " documentNames : ", documentNames)
   const { machines } = useSelector((state) => state.machine);
   const { customer, customers } = useSelector((state) => state.customer);
   const { contacts } = useSelector((state) => state.contact); 

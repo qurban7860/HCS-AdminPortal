@@ -24,7 +24,7 @@ DocumentViewForm.propTypes = {
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
-
+// console.log(currentCustomerDocument)
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
@@ -42,6 +42,12 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const defaultValues = useMemo(
     () => (
       {
+        name:                     currentCustomerDocument?.name || "",
+        category:                 currentCustomerDocument?.category?.name || "",
+        documentName:             currentCustomerDocument?.documentName?.name || "",
+        // customer:                 currentCustomerDocument?.customer?.name,
+        description:                 currentCustomerDocument?.description,
+        customer:                 currentCustomerDocument?.customer?.name,
         isActive:                 currentCustomerDocument?.isActive,
         createdAt:                currentCustomerDocument?.createdAt || "",
         createdByFullName:        currentCustomerDocument?.createdBy?.name || "",
@@ -57,16 +63,17 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   return (
     <>
     {/* <Cover name={currentCustomerDocument?.name}/> */}
-    <Card>
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
-            <ViewFormField sm={6} heading="Name" param="Document Name" />
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+            <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
+            <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             <ViewFormSWitch isActive={defaultValues.isActive}/>
             <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
       </Grid>
-    </Card>
     </>
   );
 }

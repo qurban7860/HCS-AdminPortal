@@ -99,7 +99,7 @@ export function addCustomerDocument(customerId,params) {
         try {
             const data = {
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${customerId}/techparamvalues/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, data);
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getCustomerDocuments(customerId));
     } catch (error) {
@@ -133,7 +133,7 @@ export function getCustomerDocuments(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
       {
         params: {
           isArchived: false

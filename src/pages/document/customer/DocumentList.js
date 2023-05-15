@@ -90,7 +90,7 @@ export default function MachineSettingList() {
   const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
   const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
   const { customer } = useSelector((state) => state.customer);
-
+// console.log("customerDocuments : ",customerDocuments)
 // console.log("customerDocumentEditFormVisibility : ",customerDocumentEditFormVisibility, "documentNameFormVisibility : ",documentNameFormVisibility, "fileCategoryFormVisibility : ",fileCategoryFormVisibility, " customerDocumentFormVisibility : ", customerDocumentFormVisibility)
   const toggleChecked = async () => 
     {
@@ -124,9 +124,9 @@ setCustomerDocumentFormVisibility(false)
 setFileCategoryFormVisibility(false)
 setDocumentNameFormVisibility(false)
 },[customer])
-// useLayoutEffect(() => {
-//   dispatch(getSettings(machine._id));
-// }, [dispatch, machine._id, settingEditFormVisibility ]);
+useLayoutEffect(() => {
+  dispatch(getCustomerDocuments());
+}, [dispatch, customer._id ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -187,36 +187,34 @@ setDocumentNameFormVisibility(false)
                   {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && documentNameFormVisibility && !fileCategoryFormVisibility && <DocumentNameAddForm/>}
           {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
         <Card sx={{mt:2}}>
-          {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && dataFiltered.map((setting, index) => { 
+          {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && dataFiltered.map((document, index) => { 
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
-            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
+            <Accordion key={document._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 
                 <Grid container spacing={0}>
-                  {/* <Grid item xs={12} sm={3} md={3}>
-                    {setting?.techParam?.category?.name || ""}
+                <Grid item xs={12} sm={3} md={3}>
+                    {document?.name || "" }
                   </Grid>
                   <Grid item xs={12} sm={3} md={3}>
-                    {setting?.techParam?.name || "" }
+                    {document?.category?.name || ""}
                   </Grid>
                   <Grid item xs={12} sm={3} md={4}>
-                    {setting?.techParamValue || "" }
+                    {document?.documentName?.name || "" }
                   </Grid>
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
-                    {fDate(setting?.createdAt || "")}
+                    {fDate(document?.createdAt || "")}
                     </Typography>
-                  </Grid> */}
+                  </Grid>
                 <Divider />
                 </Grid>
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5, }}>
-                <DocumentViewForm
-                currentCustomerDocument={customerDocument}
-                />
+                <DocumentViewForm currentCustomerDocument={document} />
               </AccordionDetails>
             </Accordion>
             
@@ -267,11 +265,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter((setting) => setting?.techParam?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    setting?.techParam?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    setting?.techParamValue?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (setting?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
+    inputData = inputData.filter((document) => document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
     );
   }
 
