@@ -115,7 +115,7 @@ export function addMachineDocument(customerId , machineId , params) {
           if(params?.image){
             formData.append('image', params?.image);
           }
-          console.log("formData", formData);
+          // console.log("formData", formData);
       const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getMachineDocuments(machineId));

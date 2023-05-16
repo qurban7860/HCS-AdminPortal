@@ -82,7 +82,7 @@ export default function DocumentAddForm({currentDocument}) {
   const AddCustomerDocumentSchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
     description: Yup.string().max(10000).required("Description Field is required!"),
-    image: Yup.string().required("Image Field is required!"),
+    image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
