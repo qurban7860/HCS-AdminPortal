@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button , Box} from '@mui/material';
 // redux
 import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument} from '../../../redux/slices/document/machineDocument';
 // paths
@@ -24,6 +24,7 @@ DocumentViewForm.propTypes = {
 export default function DocumentViewForm({ currentMachineDocument = null }) {
   const { machineDocument } = useSelector((state) => state.machineDocument);
 // console.log(machineDocument)
+console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
@@ -67,6 +68,19 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
           <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
           <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+          {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ? 
+          <Box
+        component="img"
+        sx={{
+          m:2,
+          height: 233,
+          width: 350,
+          maxHeight: { xs: 233, md: 167 },
+          maxWidth: { xs: 350, md: 250 },
+        }}
+        alt={defaultValues?.name}
+        src={currentMachineDocument?.path}
+      />:""}
           <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

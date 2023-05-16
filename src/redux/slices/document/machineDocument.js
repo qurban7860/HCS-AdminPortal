@@ -100,6 +100,7 @@ export function addMachineDocument(customerId , machineId , params) {
           const formData = new FormData();
             formData.append('customer', customerId);
             formData.append('machine', machineId);
+            formData.append('customerAccess', params.customerAccess);
           if(params?.name){
             formData.append('name', params?.name);
           }

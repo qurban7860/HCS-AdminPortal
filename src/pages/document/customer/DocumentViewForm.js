@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button ,Box} from '@mui/material';
 // redux
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
 // paths
@@ -24,10 +24,12 @@ DocumentViewForm.propTypes = {
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
+  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
   const onDelete = async () => {
-    console.log("currentCustomerDocument._id : ",currentCustomerDocument._id)
+    console.log("currentCustomerDocument : ",currentCustomerDocument)
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
     dispatch(getCustomerDocuments())
   };
@@ -68,6 +70,19 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+            { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
+          <Box
+        component="img"
+        sx={{
+          m:2,
+          height: 233,
+          width: 350,
+          maxHeight: { xs: 233, md: 167 },
+          maxWidth: { xs: 350, md: 250 },
+        }}
+        alt={defaultValues?.name}
+        src={currentCustomerDocument?.path}
+      />:""}
             <ViewFormSWitch isActive={defaultValues.isActive}/>
             <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

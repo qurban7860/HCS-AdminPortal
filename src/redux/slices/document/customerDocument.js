@@ -101,9 +101,10 @@ export function addCustomerDocument(customerId,params) {
         try {
 
           const formData = new FormData();
-          if(params?.customer){
-            formData.append('customer', customerId);
-          }
+          formData.append('customer', customerId);
+          // if(params?.customerAccess){
+            formData.append('customerAccess', params.customerAccess);
+          // }
           if(params?.name){
             formData.append('name', params?.name);
           }
