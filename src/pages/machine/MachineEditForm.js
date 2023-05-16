@@ -2,12 +2,10 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box,Button, Card, styled, Grid,Container, Stack,TextField,Autocomplete,Select, Chip, Typography, DialogTitle, Dialog, InputAdornment } from '@mui/material';
@@ -24,8 +22,6 @@ import { CONFIG } from '../../config-global';
 import { getMachines,updateMachine, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
 // import { getContacts } from '../../redux/slices/customer/contact';
 // import { getSites } from '../../redux/slices/customer/site';
-
-
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -38,7 +34,7 @@ import FormProvider, {
   RHFTextField,
   RHFSwitch
 } from '../../components/hook-form';
-
+import AddFormButtons from '../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -279,7 +275,7 @@ const handleKeyPress = (e) => {
                   }
                 }}
                 id="controllable-states-demo"
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.serialNo}</Box>)}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option._id}>{option.serialNo}</Box>)}
                 renderInput={(params) => <TextField {...params}  label="Previous Machine Serial No." />}
                 ChipProps={{ size: 'small' }}
               />
@@ -309,8 +305,8 @@ const handleKeyPress = (e) => {
                   }
                 }}
                 // id="controllable-states-demo"
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
-                renderInput={(params) => <TextField {...params}  label="Previous Machine" />}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderInput={(params) => <TextField {...params}  label="Previous Machine" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
                 ChipProps={{ size: 'small' }}
               />
               
@@ -331,7 +327,7 @@ const handleKeyPress = (e) => {
                   setSupplierVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Supplier" />}
                 ChipProps={{ size: 'small' }}
@@ -352,7 +348,7 @@ const handleKeyPress = (e) => {
                   setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
@@ -373,7 +369,7 @@ const handleKeyPress = (e) => {
                   setStatusVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Status" />}
                 ChipProps={{ size: 'small' }}
@@ -395,7 +391,7 @@ const handleKeyPress = (e) => {
                   setCustomerVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
@@ -418,7 +414,7 @@ const handleKeyPress = (e) => {
                   setInstallVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
@@ -438,7 +434,7 @@ const handleKeyPress = (e) => {
                   setBillingVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
@@ -465,7 +461,7 @@ const handleKeyPress = (e) => {
                   setAccoManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -485,7 +481,7 @@ const handleKeyPress = (e) => {
                   setProjManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -505,7 +501,7 @@ const handleKeyPress = (e) => {
                   setSuppManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Support Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -515,59 +511,31 @@ const handleKeyPress = (e) => {
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
                 <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ my:-3}}/>
               </Box>
-{/* -------------------------start add chips------------------------- */}
+                {/* -------------------------start add chips------------------------- */}
 
-{/* <Card
-      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
-      {chipData.map((data,index) => 
-          <ListItem key={index}>
-            <Chip
-              label={data}
-              onDelete={()=>handleDelete(data,index)}
-            />
-          </ListItem>
-       )}
-       <TextField name="tag" sx={{p:1}}   variant="standard"  
-        InputProps={{disableUnderline: true,}} 
-        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
-    </Card> */}
-
-    <RHFSwitch name="isActive" labelPlacement="start" label={
-        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
-      />
-{/* -------------------------end add chips------------------------- */}
-<Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
-                }}
-              > 
-
-                <LoadingButton 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
-                  loading={isSubmitting}>
-                    Save Changes
-                </LoadingButton>
-
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-            </Box>
+                {/* <Card
+                      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
+                      {chipData.map((data,index) => 
+                          <ListItem key={index}>
+                            <Chip
+                              label={data}
+                              onDelete={()=>handleDelete(data,index)}
+                            />
+                          </ListItem>
+                       )}
+                       <TextField name="tag" sx={{p:1}}   variant="standard"  
+                        InputProps={{disableUnderline: true,}} 
+                        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
+                    </Card> */}
+                  
+                    <RHFSwitch name="isActive" labelPlacement="start" label={
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
+                      />
+                {/* -------------------------end add chips------------------------- */}
+                
               </Stack>
-
-            
-            
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
-
         </Grid>
       </Grid>
     </FormProvider>

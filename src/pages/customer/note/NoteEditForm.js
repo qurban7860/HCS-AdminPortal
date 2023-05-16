@@ -23,15 +23,9 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 
-import FormProvider, {
-  RHFSelect,
-  RHFEditor,
-  RHFTextField,
-  RHFSwitch,
+import FormProvider, { RHFSelect, RHFEditor, RHFTextField, RHFSwitch, } from '../../../components/hook-form';
 
-} from '../../../components/hook-form';
-
-
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -39,7 +33,6 @@ import FormProvider, {
 export default function NoteEditForm() {
 
   const { error, note } = useSelector((state) => state.note);
-console.log("Note : " , note)
   const { users } = useSelector((state) => state.user);
 
   const { sites } = useSelector((state) => state.site);
@@ -225,33 +218,7 @@ console.log("Note : " , note)
             </Stack>  
             <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
 
-            
-            <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
-
-              <LoadingButton 
-                type="submit"
-                variant="contained"
-                size="large"
-                loading={isSubmitting}>
-                  Save Changes
-              </LoadingButton>
-
-              <Button 
-                onClick={toggleCancel}
-                variant="outlined" 
-                size="large">
-                  Cancel
-              </Button>
-
-            </Box>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             
           </Card>
           

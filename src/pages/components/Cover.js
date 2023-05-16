@@ -56,7 +56,7 @@ Cover.propTypes = {
   name: PropTypes.string,
   role: PropTypes.string,
   setting: PropTypes.string,
-  photoURL:PropTypes.string,
+  photoURL:PropTypes.object,
   icon: PropTypes.string,
   serialNo: PropTypes.string,
   backLink: PropTypes.string,

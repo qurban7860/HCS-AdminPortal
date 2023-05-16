@@ -11,11 +11,12 @@ import { setSettingEditFormVisibility , setSettingFormVisibility , deleteSetting
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Iconify from '../../../components/iconify';
-import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
+import ViewFormSWitch from '../../components/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+
 
 // ----------------------------------------------------------------------
 SettingViewForm.propTypes = {
@@ -78,51 +79,12 @@ export default function SettingViewForm({ currentSetting = null }) {
 
   return (
     <Grid >
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, pr: 3}}>
-        <Button
-          onClick={() => handleEdit()}
-          variant="outlined"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Edit
-        </Button>
-        <Button
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          variant="outlined"
-          color="error"
-          startIcon={<Iconify icon="eva:trash-2-fill" />}
-        >
-          Delete
-        </Button>
-      </Stack>
+      <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
       <Grid container>
-
-          <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues.techParamName ? defaultValues.techParamName : ''} />
-
-          <ViewFormField sm={6} heading="Technical Perameter Code" param={defaultValues.techParamCode ? defaultValues.techParamCode : ''} />
-
-          <ViewFormField sm={12} heading="Technical Perameter Value" param={defaultValues.techParamValue ? defaultValues.techParamValue  : ''} />
-
-          <Grid item xs={12} sm={12} >
-            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-          </Grid>
-          
-        
-        <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
-          />
-
+          <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues?.techParamName} isActive={defaultValues.isActive}/>
+          <ViewFormField sm={6} heading="Technical Perameter Code" param={defaultValues?.techParamCode} />
+          <ViewFormField sm={12} heading="Technical Perameter Value" param={defaultValues?.techParamValue} />
+          <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
     </Grid>

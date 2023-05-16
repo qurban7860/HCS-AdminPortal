@@ -24,7 +24,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Iconify from '../../components/iconify';
-
+import AddFormButtons from '../components/AddFormButtons';
 import FormProvider, {
   RHFSelect,
   RHFMultiSelect,
@@ -40,7 +40,6 @@ import FormProvider, {
 export default function CustomerEditForm() {
 
   const { error, customer } = useSelector((state) => state.customer);
-console.log("customer  : ", customer);
   const { sites } = useSelector((state) => state.site);
 
   const { contacts, spContacts } = useSelector((state) => state.contact);
@@ -49,6 +48,7 @@ console.log("customer  : ", customer);
   const [projectManVal, setProjectManVal] = useState('')
   const [billingContactVal , setBillingContactVal] = useState('')
   const [technicalContactVal, setTechnicalContactVal] = useState('')
+  const [siteVal, setSiteVal] = useState('')
 
   const dispatch = useDispatch();
 
@@ -59,7 +59,7 @@ console.log("customer  : ", customer);
   const EditCustomerSchema = Yup.object().shape({
     name: Yup.string().min(2).max(40).required('Name is required'),
     tradingName: Yup.string().max(40),
-    mainSite: Yup.string().nullable(),
+    // mainSite: Yup.string().nullable(),
     // sites: Yup.array().nullable(),
     isActive: Yup.boolean(),
     // contacts: Yup.array().nullable(),
@@ -76,7 +76,7 @@ console.log("customer  : ", customer);
       id: customer?._id || '',
       name: customer?.name || '',
       tradingName: customer?.tradingName || '',
-      mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
+      // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
       // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
       // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id, 
       // supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
@@ -107,6 +107,7 @@ console.log("customer  : ", customer);
     dispatch(getContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
+    setSiteVal(customer?.mainSite)
     setAccountManVal(customer?.accountManager)
     setSupportManVal(customer?.supportManager)
     setProjectManVal(customer?.projectManager)
@@ -128,6 +129,11 @@ console.log("customer  : ", customer);
 
   const onSubmit = async (data) => {
     // console.log("customer : ",data);
+    if(siteVal){
+      data.mainSite = siteVal._id
+    }else{
+      data.mainSite = null;
+    }
     if(accountManVal){
       data.accountManager = accountManVal._id
     }else{
@@ -184,15 +190,25 @@ console.log("customer  : ", customer);
 
                 <RHFTextField name="tradingName" label="Trading Name" />
 
-                <RHFSelect native name="mainSite" label="Main Site">
-                  <option defaultValue value="null" selected >No Main Site Selected</option>
-                  {
-                    sites.length > 0 && sites.map((option) => (
-                      <option key={option._id} value={option._id}>
-                        {option.name}
-                      </option>
-                    ))}
-                </RHFSelect>
+                <Autocomplete 
+                  // freeSolo
+                  value={siteVal || null}
+                  options={sites}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  getOptionLabel={(option) => `${option.name ? option.name :''}`}
+                  onChange={(event, newValue) => {
+                    if(newValue){
+                      setSiteVal(newValue);
+                    }
+                    else{ 
+                      setSiteVal("");
+                    }
+                  }}
+                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name ? option.name :''}</li>)}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Main Site" />}
+                  ChipProps={{ size: 'small' }}
+                />
 
               </Box>  
               <Box
@@ -346,30 +362,9 @@ console.log("customer  : ", customer);
                 </RHFSelect> */}
               </Box>
                 <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(2, 1fr)',
-                  sm: 'repeat(5, 1fr)',
-                }}
-              > 
-                <LoadingButton 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
-                  loading={isSubmitting}>
-                    Save Changes
-                </LoadingButton>
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-            </Box>
+              
             </Stack>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
         </Grid>
       </Grid>

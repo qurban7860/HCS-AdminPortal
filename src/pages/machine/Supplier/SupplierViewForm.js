@@ -5,7 +5,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Switch , Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getSupplier, getSuppliers, setSupplierEditFormVisibility } from '../../../redux/slices/products/supplier';
+import { getSupplier, getSuppliers, setSupplierEditFormVisibility, deleteSupplier } from '../../../redux/slices/products/supplier';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -15,6 +15,9 @@ import { fDate } from '../../../utils/formatTime';
 import SupplierEditForm from './SupplierEditForm';
 import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormField from '../../components/ViewFormField';
+import ViewFormSWitch from '../../components/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -82,142 +85,29 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSupplier, supplier]
     );
-    
+    const onDelete = () => {
+      dispatch(deleteSupplier(id))
+      navigate(PATH_MACHINE.supplier.list)
+    }
   return (
-    <Card sx={{ px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
-        <Button
-          onClick={() => { 
-              toggleEdit(); 
-          }}
-          variant="outlined"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Edit
-        </Button>
-
-      </Stack>
-      
+    <Card sx={{ p: 2 }}>
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
+        <ViewFormField sm={6}   heading='Name'                param={defaultValues?.name} isActive={defaultValues.isActive}/>
+        <ViewFormField sm={6}   heading='Contact Name'        param={defaultValues?.contactName}/>
+        <ViewFormField sm={6}   heading='Contact Title'       param={defaultValues?.contactTitle}/>
+        <ViewFormField sm={6}   heading='Phone'               param={defaultValues?.phone}/>
+        <ViewFormField sm={6}   heading='Email'               param={defaultValues?.email}/>
+        <ViewFormField sm={6}   heading='Fax'                 param={defaultValues?.fax}/>
+        <ViewFormField sm={6}   heading='Website'             param={defaultValues?.website}/>
+        <ViewFormField sm={6}   heading='Street'              param={defaultValues?.street}/>
+        <ViewFormField sm={6}   heading='Suburb'              param={defaultValues?.suburb}/>
+        <ViewFormField sm={6}   heading='City'                param={defaultValues?.city}/>
+        <ViewFormField sm={6}   heading='Post Code'           param={defaultValues?.postcode}/>
+        <ViewFormField sm={6}   heading='Region'              param={defaultValues?.region}/>
+        <ViewFormField sm={6}   heading='Country'             param={defaultValues?.country}/>
 
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Name
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ""}</Typography>
-
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Contact Name
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.contactName ? defaultValues.contactName : ""}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Contact Title
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.contactTitle ? defaultValues.contactTitle : ""}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Phone
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.phone ? defaultValues.phone : ""}</Typography>
-
-        </Grid> 
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Email
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.email ? defaultValues.email : ""}</Typography>
-
-        </Grid>
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Fax
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.fax ? defaultValues.fax : ""}</Typography>
-
-        </Grid>
-
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Website
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.website ? defaultValues.website : ""}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Street
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.street }</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Suburb
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.suburb }</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            City
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.city }</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Post Code
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.postcode }</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Region
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.region}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Country
-          </Typography>
-          <Typography variant="body2">{defaultValues.country}</Typography>
-        </Grid>
-
-        <Grid item xs={12} sm={12} >
-          <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-        </Grid>
-
+        <ViewFormSWitch isActive={defaultValues.isActive} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

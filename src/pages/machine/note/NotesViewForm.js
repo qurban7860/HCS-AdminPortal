@@ -7,6 +7,7 @@ import { getNotes, deleteNote, getNote ,setNoteEditFormVisibility} from '../../.
 import ConfirmDialog from '../../../components/confirm-dialog';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import Iconify from '../../../components/iconify';
 
@@ -50,10 +51,8 @@ export default function NoteViewForm({currentNote = null}) {
     <Grid sx={{ px: 2 }}>
             <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
-          <ViewFormField sm={12} heading="Note" param={defaultValues.note} />
-          <Grid item xs={12} sm={12} >
-            <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-          </Grid>
+          <ViewFormField sm={12} heading="Note" param={defaultValues?.note} isActive={defaultValues.isActive}/>
+          <ViewFormSwitch isActive={defaultValues.isActive} />
             <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
     </Grid>

@@ -252,8 +252,36 @@ export default function CustomerSiteList() {
 
         {isNotFound && <EmptyContent title="No site information saved" sx={{ color: '#DFDFDF' }} />}
 
+<<<<<<< HEAD
         {/* </Block> */}
         {/* <Block title="Controlled">
+=======
+          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index)=>{ 
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return(
+            <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
+                { index !==  activeIndex ? 
+                <Grid container spacing={1}>
+                  <Grid item xs={12} sm={4} md={4} sx={{ overflowWrap: "break-word", }}> <Typography variant="body2" > {site.name} </Typography> </Grid>
+                  <CommaJoinField display={{ sm:"none", md:"block"}} sm={8} objectParam={site.address} sx={{ overflowWrap: "break-word", }}/>
+                </Grid>
+                : null }
+              </AccordionSummary>
+              <AccordionDetails sx={{mt:-5}}>
+                <SiteViewForm
+                currentSite={site}
+                />
+              </AccordionDetails>
+            </Accordion>
+            
+          )})} 
+
+          {isNotFound && <EmptyContent title="No Data"/>}
+            
+          {/* </Block> */}
+          {/* <Block title="Controlled">
+>>>>>>> 7c7588c463c131c5511368995003169515fe36be
             {_accordions.map((item, index) => (
               <Accordion
                 key={item.value}

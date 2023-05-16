@@ -6,7 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Switch ,Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getTool, setToolEditFormVisibility } from '../../../redux/slices/products/tools';
+import { getTool, setToolEditFormVisibility , deleteTool } from '../../../redux/slices/products/tools';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -20,7 +20,9 @@ import ToolEditForm from './ToolEditForm';
 
 import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewFormAudit';
-
+import ViewFormField from '../../components/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormSwitch from '../../components/ViewFormSwitch';
 
 
 
@@ -38,7 +40,7 @@ export default function ToolViewForm({ currentTool = null }) {
 
   const [editFlag, setEditFlag] = useState(false);
 
-  const toggleEdit = () => {
+  const handleEdit = () => {
     // dispatch(setToolEditFormVisibility(true));
     navigate(PATH_MACHINE.tool.tooledit(id));
   }
@@ -76,43 +78,18 @@ export default function ToolViewForm({ currentTool = null }) {
     [currentTool, tool]
     );
 
-    console.log(tool, "test")
+    const onDelete = () => {
+      dispatch(deleteTool(id))
+      navigate(PATH_MACHINE.tool.list)
+    }
 
   return (
-    <Card sx={{ px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
-        <Button
-          onClick={() => { 
-              toggleEdit(); 
-          }}
-          variant="outlined"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Edit
-        </Button>
-      </Stack>
+    <Card sx={{ p: 2 }}>
+      <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
       <Grid container>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Name
-          </Typography>
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 1 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Description
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-        </Grid>
-        
+        <ViewFormField  sm={12} heading="Name" param={defaultValues?.name} isActive={defaultValues.isActive}/>
+        <ViewFormField  sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormSwitch isActive={defaultValues.isActive} />
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

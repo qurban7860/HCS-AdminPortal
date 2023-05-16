@@ -21,6 +21,7 @@ import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
+import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
  
@@ -101,20 +102,20 @@ export default function ContactViewForm({ currentContact = null }) {
 
           <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
           <Grid container >
-          <ViewFormField sm={6} heading='First Name'    param={defaultValues.firstName ?    defaultValues.firstName : ''}/>
-          <ViewFormField sm={6} heading='Last Name'     param={defaultValues.lastName  ?    defaultValues.lastName : ''}/>
-          <ViewFormField sm={6} heading='Title'         param={defaultValues.title ?        defaultValues.title : ''}/>
-          <ViewFormField sm={6} heading='Contact Types' param={defaultValues.contactTypes ? defaultValues.contactTypes.toString() : ''}/>
-          <ViewFormField sm={6} heading='Phone'         param={defaultValues.phone ?        defaultValues.phone : ''}/>
-          <ViewFormField sm={6} heading='Email'         param={defaultValues.email ?        defaultValues.email : ''}/>
-          <ViewFormField sm={6} heading='Street'        param={defaultValues.street ?       defaultValues.street : ''}/>
-          <ViewFormField sm={6} heading='Suburb'        param={defaultValues.suburb ?       defaultValues.suburb : ''}/>
-          <ViewFormField sm={6} heading='City'          param={defaultValues.city ?         defaultValues.city : ''}/>
-          <ViewFormField sm={6} heading='Region'        param={defaultValues.region ?       defaultValues.region : ''}/>
-          <ViewFormField sm={6} heading='Post Code'     param={defaultValues.postcode ?     defaultValues.postcode : ''}/>
-          <ViewFormField sm={6} heading='Country'       param={defaultValues.country ?      defaultValues.country : ''}/>
+          <ViewFormField sm={6} heading='First Name'    param={defaultValues?.firstName} isActive={defaultValues.isActive}/>
+          <ViewFormField sm={6} heading='Last Name'     param={defaultValues?.lastName}/>
+          <ViewFormField sm={6} heading='Title'         param={defaultValues?.title}/>
+          <ViewFormField sm={6} heading='Contact Types' param={defaultValues?.contactTypes.toString()}/>
+          <ViewFormField sm={6} heading='Phone'         param={defaultValues?.phone}/>
+          <ViewFormField sm={6} heading='Email'         param={defaultValues?.email}/>
+          <ViewFormField sm={6} heading='Street'        param={defaultValues?.street}/>
+          <ViewFormField sm={6} heading='Suburb'        param={defaultValues?.suburb}/>
+          <ViewFormField sm={6} heading='City'          param={defaultValues?.city}/>
+          <ViewFormField sm={6} heading='Region'        param={defaultValues?.region}/>
+          <ViewFormField sm={6} heading='Post Code'     param={defaultValues?.postcode}/>
+          <ViewFormField sm={6} heading='Country'       param={defaultValues?.country}/>
           </Grid>
-          <Grid item xs={12} sm={12} ><Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  /></Grid>
+          <ViewFormSwitch isActive={defaultValues.isActive}/>
             <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
   );

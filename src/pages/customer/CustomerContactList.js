@@ -149,6 +149,7 @@ export default function CustomerContactList() {
           !contactEditFormVisibility &&
           contacts.map((contact, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+<<<<<<< HEAD
             return (
               <Accordion
                 key={contact._id}
@@ -204,6 +205,30 @@ export default function CustomerContactList() {
           })}
         {isNotFound && <EmptyContent title="No contacts saved" sx={{ color: '#DFDFDF' }} />}
       </Card>
+=======
+            return(
+            <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
+              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
+                { index !==  activeIndex ? 
+              <Grid container >
+                <Grid item xs={12} sm={6} md={3} sx={{ overflowWrap: "break-word", px:1 }} >{contact?.firstName} {contact.lastName} </Grid>
+                <Grid item xs={12} sm={6} md={3} sx={{ overflowWrap: "break-word", px:1 }} >{contact?.email && <Typography variant="body2" >{contact.email}</Typography>}</Grid>
+                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"block"}}>{contact?.phone && <Typography variant="body2" >{contact.phone}</Typography>}</Grid>
+                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"none", lg:"block"}}>{contact?.title && <Typography variant="body2" >{contact.title}</Typography>}</Grid>
+                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"none",  lg:"block"}}>{contact?.contactTypes && <Typography variant="body2" >{Object.values(contact.contactTypes)?.join(", ")}</Typography>}</Grid>
+              </Grid>
+            : null }
+              </AccordionSummary>
+              <AccordionDetails  sx={{ mt:-5 }}>
+                <ContactViewForm
+                currentContact={contact}
+                />
+              </AccordionDetails>
+            </Accordion>
+          )})} 
+          {isNotFound && <EmptyContent title="No Data"/>}
+        </Card>
+>>>>>>> 7c7588c463c131c5511368995003169515fe36be
     </>
   );
 }

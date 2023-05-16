@@ -22,9 +22,9 @@ import { useSettingsContext } from '../../../components/settings';
 import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import {useSnackbar} from '../../../components/snackbar'
-import { countries } from '../../../assets/data';
+import { countries } from '../../../assets/data'
 import {Cover} from '../../components/Cover'
-
+import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function SupplierEditForm() {
@@ -245,22 +245,7 @@ export default function SupplierEditForm() {
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
                 />
               </Stack>
-              <Box sx={{ mt: 3 }} rowGap={5} columnGap={4} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(5, 1fr)', }} > 
-                <LoadingButton 
-                  type="submit" 
-                  variant="contained" 
-                  size="large" 
-                  loading={isSubmitting}>
-                    Save Changes
-                </LoadingButton>
-
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-            </Box>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
               </Card>
           </Grid>
         </Grid>

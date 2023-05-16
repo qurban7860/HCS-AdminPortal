@@ -49,7 +49,7 @@ import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting
 import { getTechparamcategories } from '../../redux/slices/products/machineTechParamCategory';
 import { getTechparams } from '../../redux/slices/products/machineTechParam';
 
-import SettingAddForm from './MachineTechParamValue/SettingAddForm'
+import SettingAddForm  from './MachineTechParamValue/SettingAddForm'
 import SettingEditForm from './MachineTechParamValue/SettingEditForm';
 
 import _mock from '../../_mock';

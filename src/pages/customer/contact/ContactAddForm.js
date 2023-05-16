@@ -18,6 +18,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import FormProvider, { RHFMultiSelect, RHFTextField, RHFAutocomplete, RHFSwitch } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -142,6 +143,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+     <Grid container spacing={3}>
       <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
@@ -248,33 +250,11 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
               </Box>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
 
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
-              
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Save Contact
-                </LoadingButton>
-              
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-
-            </Box>
-
             </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             
           </Card>
+        </Grid>
       </Grid>
     </FormProvider>
   );

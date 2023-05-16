@@ -14,7 +14,7 @@ import { addSite, setSiteFormVisibility } from '../../../redux/slices/customer/s
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
-
+import AddFormButtons from '../../components/AddFormButtons';
 
 import FormProvider, {
   RHFSwitch,
@@ -325,30 +325,9 @@ useEffect(()=>{
 
               </Box>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              > 
               
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Save Site
-                </LoadingButton>
-              
-                <Button 
-                  onClick={toggleCancel}
-                  variant="outlined" 
-                  size="large">
-                    Cancel
-                </Button>
-
-
-            </Box>
             </Stack>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
 
             
 

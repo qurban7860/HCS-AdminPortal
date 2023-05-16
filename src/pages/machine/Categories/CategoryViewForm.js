@@ -5,13 +5,16 @@ import { useNavigate,useParams } from 'react-router-dom';
 // @mui
 import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
 // redux
-import { getCategory, setCategoryEditFormVisibility } from '../../../redux/slices/products/category';
+import { getCategory, setCategoryEditFormVisibility, deleteCategory } from '../../../redux/slices/products/category';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // Iconify
 import Iconify from '../../../components/iconify/Iconify';
 //  components
-import ViewFormAudit from '../../components/ViewFormAudit';
+import ViewFormAudit from   '../../components/ViewFormAudit';
+import ViewFormField from   '../../components/ViewFormField';
+import ViewFormSwitch from  '../../components/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +34,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
   const navigate = useNavigate();
   const { category , editFormVisibility } = useSelector((state) => state.category);
   const { id } = useParams();
-
+  
   const dispatch = useDispatch()
     useLayoutEffect(() => {
     if(id != null){
@@ -54,42 +57,23 @@ export default function CategoryViewForm({ currentCategory = null }) {
     [currentCategory, category]
     );
 
+    const onDelete= async () => {
+      await dispatch(deleteCategory(id));
+    }
   return (
-    <Card sx={{ px: 5 }}>
-      <Stack alignItems="flex-end" sx={{ mt: 2, mb: -4 }}>
-        <Button
-          onClick={() => { 
-              toggleEdit(); 
-          }}
-          variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
-          Edit
-        </Button>
-      </Stack>
-      <Grid container>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Name
-          </Typography>
-          <Typography variant="body2">{defaultValues.name ? defaultValues.name : ''}</Typography>
-        </Grid>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 1 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Description
-          </Typography>
-            <Typography variant="body2">{defaultValues.description ? defaultValues.description : ''}</Typography>
-        </Grid>
-        
-        <Grid item xs={12} sm={12} >
-         <Switch sx={{mb:1}} checked = { defaultValues.isActive } disabled  />
-        </Grid>
-
+    <Card sx={{p:2}}>
+            <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
         <Grid container>
-          <ViewFormAudit defaultValues={defaultValues}/>
-        </Grid>
+          <ViewFormField sm={6}   heading='Name'          param={defaultValues?.name}      isActive={defaultValues.isActive}/>
+          <ViewFormField sm={6}   heading='Description'   param={defaultValues?.description}/>
 
-      </Grid>
+          <Grid item xs={12} sm={12} >
+            <ViewFormSwitch isActive={defaultValues.isActive}/>
+          </Grid>
+          <Grid container>
+            <ViewFormAudit defaultValues={defaultValues}/>
+          </Grid>
+        </Grid>
     </Card>
   );
 }

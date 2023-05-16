@@ -85,6 +85,7 @@ export default function StatusAddForm() {
         <Cover name='New Status' icon='material-symbols:diversity-1-rounded' />
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Grid container>
         <Grid item xs={18} md={12} sx={{mt: 3}}>
           <Card sx={{ p: 3}}>
             <Stack spacing={3}>
@@ -100,6 +101,7 @@ export default function StatusAddForm() {
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Card>
+          </Grid>
           </Grid>
     </FormProvider>
     </Container>

@@ -38,6 +38,7 @@ import useResponsive from '../../hooks/useResponsive';
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
+import DocumentList from '../document/customer/DocumentList';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
@@ -120,6 +121,7 @@ export default function CustomerView({editPage}) {
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
+      component: <DocumentList/>
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,

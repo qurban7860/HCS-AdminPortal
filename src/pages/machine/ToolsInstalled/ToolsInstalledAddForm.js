@@ -19,6 +19,7 @@ import FormProvider, {
   RHFAutocomplete,
   RHFSwitch
 } from '../../../components/hook-form';
+import AddFormButtons from '../../components/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -155,35 +156,9 @@ const toggleCancel = () =>
 
               </Box>
 
-
-              <Box
-                rowGap={5}
-                columnGap={4}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(4, 1fr)',
-                }}
-              >
-
-                <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                  Add Tool
-                </LoadingButton>
-
-                <Button
-                  onClick={toggleCancel}
-                  variant="outlined"
-                  size="large">
-                    Cancel
-                </Button>
-              </Box>
-
             </Stack>
-
-
-
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
-
         </Grid>
       </Grid>
     </FormProvider>
