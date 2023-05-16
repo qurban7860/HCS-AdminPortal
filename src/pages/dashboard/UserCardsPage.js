@@ -9,7 +9,7 @@ import { _userCards } from '../../_mock/arrays';
 import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-import { UserCard } from '../../sections/@dashboard/user/cards';
+import UserCard from '../../sections/@dashboard/user/cards/UserCard';
 
 // ----------------------------------------------------------------------
 

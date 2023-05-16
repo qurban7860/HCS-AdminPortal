@@ -147,20 +147,16 @@ export default function GeneralAppPage() {
         backgroundSize: 'auto 90%',
         backgroundOpacity: 0.1,
         backgroundAttachment: 'fixed',
-        height: '100%',
-        width: '100%',
-        overflow: 'hidden',
-        position: 'relative',
+        // height: '100%',
+        // width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        // remove margin and padding
         padding: 0,
-        margin: 0,
       }}
     >
-      <Grid container spacing={3}>
+      <Grid container spacing={3} m={3}>
         <Grid container xs={12} md={20} lg={20} spacing={3}>
           <Grid
             item
@@ -169,6 +165,7 @@ export default function GeneralAppPage() {
             lg={6}
             sx={{
               height: { xs: 360, md: 400 },
+              marginTop: { xs: -10, md: 0 },
             }}
             mb={-13}
           >
@@ -176,26 +173,6 @@ export default function GeneralAppPage() {
               title={`CUSTOMER \n SERVICE & SUPPORT`}
               // title={`Welcome back! \n ${user?.displayName}`}
               description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
-              // img={
-              //   <SeoIllustration
-              //     sx={{
-              //       p: 3,
-              //       pt: { xs: 0, md: 10 },
-              //       width: { xs: 360, md: 640 },
-              //       margin: { xs: 'auto', md: 'inherit' },
-              //       display: { xs: 'none', md: 'block' },
-              //     }}
-              //   />
-              // }
-              // action={
-              //   <Button
-              //     variant="contained"
-              //     href="https://www.howickltd.com/products" target="_blank"
-              //     >
-              //     {/* we can create a shortcut here to reports for the customers */}
-              //     OUR PRODUCTS
-              //   </Button>
-              // }
             />
           </Grid>
         </Grid>
@@ -203,9 +180,9 @@ export default function GeneralAppPage() {
         {/* <Grid item xs={12} md={12}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-        <Grid container xs={12} md={16} ml={3}>
+        <Grid container xs={12} md={16} m={3}>
           <Grid container xs={12} md={16} spacing={3}>
-            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+            <Grid item xs={12} sm={6} md={3}>
               <AppWidgetSummary
                 title="Customers"
                 percent={-0.1}
@@ -216,7 +193,7 @@ export default function GeneralAppPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+            <Grid item xs={12} sm={6} md={3}>
               <AppWidgetSummary
                 title="Sites"
                 percent={2.6}
@@ -234,7 +211,7 @@ export default function GeneralAppPage() {
                 title="Machines"
                 // percent={0.2}
                 total={count?.machineCount || 0}
-                />
+              />
             </Grid>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
               <AppWidgetSummary
@@ -248,35 +225,38 @@ export default function GeneralAppPage() {
               />
             </Grid>
           </Grid>
+          <Grid container xs={12} md={16} spacing={3} mt={2}>
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ px: 3, mb: 3 }}>
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="subtitle2">Customers</Typography>
+                </Stack>
+                <Chart
+                  options={CustomerData.options}
+                  series={CustomerData.series}
+                  type="bar"
+                  height="300px"
+                  width="100%"
+                />
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ px: 3, mb: 3 }}>
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="subtitle2">Machine Models</Typography>
+                </Stack>
+                <Chart
+                  options={ModelData.options}
+                  series={ModelData.series}
+                  type="bar"
+                  height="300px"
+                  width="100%"
+                />
+              </Card>
+            </Grid>
+          </Grid>
         </Grid>
-        <Grid item xs={12} md={6} lg={6}>
-          <Card sx={{ px: 3, mb: 3 }}>
-            <Stack sx={{ pt: 2 }}>
-              <Typography variant="subtitle2">Customers</Typography>
-            </Stack>
-            <Chart
-              options={CustomerData.options}
-              series={CustomerData.series}
-              type="bar"
-              height="300px"
-              width="100%"
-            />
-          </Card>
-        </Grid>
-        <Grid item xs={12} md={6} lg={6}>
-          <Card sx={{ px: 3, mb: 3 }}>
-            <Stack sx={{ pt: 2 }}>
-              <Typography variant="subtitle2">Machine Models</Typography>
-            </Stack>
-            <Chart
-              options={ModelData.options}
-              series={ModelData.series}
-              type="bar"
-              height="300px"
-              width="100%"
-            />
-          </Card>
-        </Grid>
+
         {/* <Grid item xs={12} md={6} lg={8}>
             <AppAreaInstalled
               title="Sites"
