@@ -126,7 +126,7 @@ export default function DocumentAddForm({currentDocument}) {
         }else{
           data.documentName = null;
         }
-        await dispatch(addMachineDocument(machine.customer._id, machine._id,data));
+        await dispatch(addMachineDocument(machine.customer._id, machine._id ,data));
         setFileCategoryVal("")
         setDocumentNameVal("")
         reset();

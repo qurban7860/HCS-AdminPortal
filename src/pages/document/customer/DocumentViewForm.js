@@ -24,18 +24,17 @@ DocumentViewForm.propTypes = {
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
-// console.log(currentCustomerDocument)
   const navigate = useNavigate();
-
   const dispatch = useDispatch(); 
-
   const onDelete = async () => {
-    await dispatch(deleteCustomerDocument(customerDocument._id));
-    dispatch(getCustomerDocument(customerDocument._id));
+    console.log("currentCustomerDocument._id : ",currentCustomerDocument._id)
+    await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
+    dispatch(getCustomerDocuments())
   };
-
+  
   const  handleEdit = async () => {
-    await dispatch(getCustomerDocument(customerDocument._id));
+    await dispatch(getCustomerDocument(currentCustomerDocument._id));
+    dispatch(getCustomerDocument(currentCustomerDocument._id));
     dispatch(setCustomerDocumentEditFormVisibility(true));
   };
 

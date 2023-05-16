@@ -113,11 +113,11 @@ export default function ContactList() {
 
   useEffect(() => {
     if (initial) {
-      if (contacts && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (contacts && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(contacts);
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
