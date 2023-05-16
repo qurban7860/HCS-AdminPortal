@@ -66,7 +66,6 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const onDelete = async () => {
     await dispatch(deleteContact(customer._id, currentContact._id));
-    handleCloseConfirm();
     dispatch(getContacts(customer._id));
     // dispatch(getContacts());
   };

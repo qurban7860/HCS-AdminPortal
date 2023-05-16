@@ -124,7 +124,7 @@ useEffect(()=>{
   dispatch(setCustomerDocumentFormVisibility(false))
   dispatch(setFileCategoryFormVisibility(false))
   dispatch(setDocumentNameFormVisibility(false))
-},[dispatch,customer._id, customerDocumentFormVisibility, customerDocumentEditFormVisibility])
+},[dispatch,customer._id])
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
