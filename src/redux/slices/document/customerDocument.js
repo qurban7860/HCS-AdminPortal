@@ -104,24 +104,28 @@ export function addCustomerDocument(customerId,params) {
           if(params?.customer){
             formData.append('customer', customerId);
           }
-          // if(params?.name){
-          //   formData.append('name', params?.name);
-          // }
-          // if(params?.description){
-          //   formData.append('description', params?.description);
-          // }
+          if(params?.name){
+            formData.append('name', params?.name);
+          }
+          if(params?.description){
+            formData.append('description', params?.description);
+          }
           if(params?.category){
             formData.append('category', params?.category);
           }
-          // if(params?.documentName){
-          //   formData.append('documentName', params?.documentName);
-          // }
+          if(params?.documentName){
+            formData.append('documentName', params?.documentName);
+          }
           if(params?.image){
             formData.append('image', params?.image);
           }
 
-console.log("formData : ",formData);
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData);
+// console.log("formData : ",params?.image);
+      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData,{
+        headers: {
+          'Content-Type':"multupart/form-data"
+        }
+      });
 
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getCustomerDocuments(customerId));
