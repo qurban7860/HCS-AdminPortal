@@ -43,11 +43,10 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     () => (
       {
         name:                     currentCustomerDocument?.name || "",
-        category:                 currentCustomerDocument?.category?.name || "",
         documentName:             currentCustomerDocument?.documentName?.name || "",
-        // customer:                 currentCustomerDocument?.customer?.name,
-        description:                 currentCustomerDocument?.description,
+        category:                 currentCustomerDocument?.category?.name || "",
         customer:                 currentCustomerDocument?.customer?.name,
+        description:              currentCustomerDocument?.description,
         isActive:                 currentCustomerDocument?.isActive,
         createdAt:                currentCustomerDocument?.createdAt || "",
         createdByFullName:        currentCustomerDocument?.createdBy?.name || "",
@@ -62,13 +61,13 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   return (
     <>
-    {/* <Cover name={currentCustomerDocument?.name}/> */}
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
             <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
             <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
             <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+            <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             <ViewFormSWitch isActive={defaultValues.isActive}/>
             <ViewFormAudit defaultValues={defaultValues}/>

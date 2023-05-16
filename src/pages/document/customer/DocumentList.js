@@ -119,14 +119,12 @@ export default function MachineSettingList() {
   };
 
 useEffect(()=>{
-setCustomerDocumentEditFormVisibility(false)
-setCustomerDocumentFormVisibility(false)
-setFileCategoryFormVisibility(false)
-setDocumentNameFormVisibility(false)
-},[customer])
-useLayoutEffect(() => {
   dispatch(getCustomerDocuments());
-}, [dispatch, customer._id ]);
+  dispatch(setCustomerDocumentEditFormVisibility(false))
+  dispatch(setCustomerDocumentFormVisibility(false))
+  dispatch(setFileCategoryFormVisibility(false))
+  dispatch(setDocumentNameFormVisibility(false))
+},[dispatch,customer._id, customerDocumentFormVisibility, customerDocumentEditFormVisibility])
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -135,6 +133,7 @@ useLayoutEffect(() => {
   useEffect(() => {
     setTableData(customerDocuments);
   }, [customerDocuments, error, responseMessage ]);
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),

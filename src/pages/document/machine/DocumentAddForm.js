@@ -13,8 +13,8 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Li
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addMachineDocument, setMachineDocumentFormVisibility  } from '../../../redux/slices/document/machineDocument';
-import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility  } from '../../../redux/slices/document/fileCategory';
-import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility  } from '../../../redux/slices/document/documentName';
+import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility ,getFileCategories } from '../../../redux/slices/document/fileCategory';
+import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames } from '../../../redux/slices/document/documentName';
 import { setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
@@ -44,6 +44,7 @@ export default function DocumentAddForm({currentDocument}) {
   const { documentNames } = useSelector((state) => state.documentName);
   const { fileCategories } = useSelector((state) => state.fileCategory);
   const { machine , machines } = useSelector((state) => state.machine);
+  // console.log("machine : " , machine)
   const { customers } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
@@ -73,14 +74,22 @@ export default function DocumentAddForm({currentDocument}) {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  useEffect(()=>{
+    dispatch(getDocumentNames());
+    dispatch(getFileCategories());
+  },[dispatch,machine._id])
  // a note can be archived.  
   const AddCustomerDocumentSchema = Yup.object().shape({
-    note: Yup.string().max(10000).required("Note Field is required!"),
+    name: Yup.string().min(2).required("Name Field is required!"),
+    description: Yup.string().max(10000).required("Description Field is required!"),
+    image: Yup.string().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
-      note: '',
+      name: '',
+      description: '',
+      image: null,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -107,7 +116,19 @@ export default function DocumentAddForm({currentDocument}) {
 
   const onSubmit = async (data) => {
       try{
-        await dispatch(addMachineDocument(machine._id,data));
+        if(fileCategoryVal){
+          data.category = fileCategoryVal._id
+        }else{
+          data.category = null;
+        }
+        if(documentNameVal){
+          data.documentName = documentNameVal._id
+        }else{
+          data.documentName = null;
+        }
+        await dispatch(addMachineDocument(machine.customer._id, machine._id,data));
+        setFileCategoryVal("")
+        setDocumentNameVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -137,7 +158,7 @@ export default function DocumentAddForm({currentDocument}) {
       });
 
       if (file) {
-        setValue('cover', newFile, { shouldValidate: true });
+        setValue('image', newFile, { shouldValidate: true });
       }
     },
     [setValue]
@@ -159,7 +180,7 @@ export default function DocumentAddForm({currentDocument}) {
               <Grid>
               <Autocomplete
                 // freeSolo
-                disabled={documentAvailable}
+                // disabled={documentAvailable}
                 value={documentNameVal || null}
                 options={documentNames}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -172,17 +193,17 @@ export default function DocumentAddForm({currentDocument}) {
                     setDocumentNameVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Document Name" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} >Not Available! <Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
+              <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} ><Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
               <Grid>
               <Autocomplete
                 // freeSolo
-                disabled={fileCategory}
+                // disabled={fileCategory}
                 value={fileCategoryVal || null}
                 options={fileCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -195,12 +216,12 @@ export default function DocumentAddForm({currentDocument}) {
                     setFileCategoryVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="File Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage}>Not Available! <Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
+              <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage}><Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
               {/* <Autocomplete
                 // freeSolo
@@ -282,7 +303,12 @@ export default function DocumentAddForm({currentDocument}) {
               /> */}
               </Box>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFUpload name="document" maxSize={3145728} onDrop={handleDrop} onDelete={handleRemoveFile} />
+              <RHFUpload 
+                  name="image"
+                  // maxSize={3145728}
+                  onDrop={handleDrop}
+                  onRemove={handleDrop}
+               />
               <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  
