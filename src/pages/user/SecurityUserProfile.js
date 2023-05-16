@@ -21,13 +21,10 @@ import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
 import { Cover } from '../components/Cover'
 import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
-<<<<<<< HEAD
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
-=======
 import ViewFormSWitch from '../components/ViewFormSwitch';
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfile() {
@@ -40,7 +37,6 @@ export default function SecurityUserProfile() {
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuthContext();
   const userId = localStorage.getItem("userId");
-  // console.log("user, userId : ",user, userId)
   const [currentTab, setCurrentTab] = useState('profile');
   const [openCustomer, setOpenCustomer] = useState(false);
   const handleOpenCustomer = () => setOpenCustomer(true);
@@ -93,7 +89,6 @@ export default function SecurityUserProfile() {
         updatedByFullName:        securityUser?.updatedBy?.name || "",
         updatedAt:                securityUser?.updatedAt || "",
         updatedIP:                securityUser?.updatedIP || "",
-        // eslint-disable-next-line react-hooks/exhaustive-deps
       }
       ),
       [securityUser] );
@@ -106,7 +101,7 @@ export default function SecurityUserProfile() {
             height: 160,
             position: 'relative',
           }}
-        >
+          >
           <Cover
             name={defaultValues?.name}
             photoURL={user.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
@@ -130,14 +125,13 @@ export default function SecurityUserProfile() {
                 },
               },
             }}
-          >
+            >
             {/* {TABS.map((tab) => (
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))} */}
           </Tabs>
         </Card>
         <Card sx={{ p: 3 }}>
-<<<<<<< HEAD
           <Stack
             justifyContent="flex-end"
             direction="row"
@@ -179,14 +173,6 @@ export default function SecurityUserProfile() {
                 )
               }
             />
-=======
-          <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
-              <Button onClick={() => handleEdit()} variant="outlined" ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
-          </Stack>
-          <Grid container>
-            <ViewFormField sm={6} heading="Customer" objectParam={defaultValues?.customer ? <Link onClick={handleOpenCustomer} href="#" underline="none" >{ defaultValues?.customer}</Link> : ''} isActive={defaultValues.isActive}/>
-            <ViewFormField sm={6} heading="Contact" objectParam={defaultValues?.contact ? <Link onClick={handleOpenContact} href="#" underline="none" >{ defaultValues?.contact}</Link> : ''} />
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
             <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
             <ViewFormField sm={12} heading="email" param={defaultValues?.email} />
@@ -197,11 +183,7 @@ export default function SecurityUserProfile() {
               param={defaultValues?.roles?.map((obj) => obj?.name).join(', ')}
             />
           </Grid>
-<<<<<<< HEAD
-          <Switch sx={{ mt: 1 }} checked={defaultValues.isActive} name="isActive" disabled />
-=======
-            <ViewFormSWitch isActive={defaultValues.isActive} />
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
+          <ViewFormSWitch isActive={defaultValues.isActive} />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
@@ -232,64 +214,34 @@ export default function SecurityUserProfile() {
             <Iconify icon="mdi:close-box-outline" />
           </Link>
         </Grid>
-<<<<<<< HEAD
-        <Grid container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name ? customer?.name : ''} />
-          <ViewFormField
-            sm={6}
-            heading="Trading Name"
-            param={customer?.tradingName ? customer?.tradingName : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Phone"
-            param={customer?.mainSite?.phone ? customer?.mainSite.phone : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Fax"
-            param={customer?.mainSite?.fax ? customer?.mainSite.fax : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Email"
-            param={customer?.mainSite?.email ? customer?.mainSite.email : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Site Name"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.street : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.street : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.suburb : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="City"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.city : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.region : ''}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.postcode : ''}
-          />
-          <ViewFormField
-            sm={12}
-            heading="Country"
-            param={customer?.mainSite?.address ? customer?.mainSite?.address?.country : ''}
-          />
+        <Grid container sx={{ p: 2 }}>
+          <ViewFormField sm={12} heading="Name" param={customer?.name} />
+          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
+          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
+          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
+          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
+          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
+          <Grid container sx={{ py: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+              }}
+            >
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
+                Address Information
+              </Typography>
+            </Grid>
+          </Grid>
+          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
+          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
+          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
+          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
+          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
+          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
           <ViewFormField
             sm={6}
             heading="Primary Biling Contact"
@@ -307,37 +259,24 @@ export default function SecurityUserProfile() {
                 ? `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
                 : ''
             }
-          />
-=======
-          <ViewFormField sm={12} heading="Name"                     param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name"              param={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone"                     param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax"                       param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email"                     param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name"                 param={customer?.mainSite?.name} />
-          <ViewFormField sm={6} heading="Street"                    param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb"                    param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City"                      param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region"                    param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code"                 param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country"                  param={customer?.mainSite?.address?.country} />
-          <ViewFormField sm={6} heading="Primary Biling Contact"    param={customer?.primaryBillingContact?   `${customer?.primaryBillingContact?.firstName } ${customer?.primaryBillingContact?.lastName}` : ''} />
-          <ViewFormField sm={6} heading="Primary Technical Contact" param={customer?.primaryTechnicalContact? `${customer?.primaryTechnicalContact?.firstName } ${customer?.primaryTechnicalContact?.lastName}`: ''} />
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
-        </Grid>
-        <Grid sx={{ p: '2rem' }}>
-          <Grid
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-            >
-            <Typography variant="h6" sx={{ px: 2, color: 'primary.contrastText' }}>
-              Howick Resources{' '}
-            </Typography>
-          </Grid>
+            />
         </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
+          <Grid container sx={{ py: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+              }}
+            >
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
+                Howick Resources
+              </Typography>
+            </Grid>
+          </Grid>
           <ViewFormField
             sm={6}
             heading="Account Manager"
@@ -396,9 +335,9 @@ export default function SecurityUserProfile() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-        >
+          >
           <Typography variant="h4" sx={{ px: 2 }}>
-            Contact
+            Contact{' '}
           </Typography>{' '}
           <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
@@ -424,6 +363,21 @@ export default function SecurityUserProfile() {
           />
           <ViewFormField sm={6} heading="Phone" param={contact?.phone ? contact?.phone : ''} />
           <ViewFormField sm={6} heading="Email" param={contact?.email ? contact?.email : ''} />
+          <Grid container sx={{ py: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+              }}
+            >
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
+                Address Information
+              </Typography>
+            </Grid>
+          </Grid>
           <ViewFormField
             sm={6}
             heading="Street"
@@ -455,9 +409,7 @@ export default function SecurityUserProfile() {
             param={contact?.address?.country ? contact?.address?.country : ''}
           />
         </Grid>
-<<<<<<< HEAD
-=======
-          <ViewFormField sm={6} heading='First Name'    param={contact?.firstName }/>
+        {/* <ViewFormField sm={6} heading='First Name'    param={contact?.firstName }/>
           <ViewFormField sm={6} heading='Last Name'     param={contact?.lastName  }/>
           <ViewFormField sm={6} heading='Title'         param={contact?.title }/>
           <ViewFormField sm={6} heading='Contact Types' param={contact?.contactTypes}/>
@@ -468,9 +420,7 @@ export default function SecurityUserProfile() {
           <ViewFormField sm={6} heading='City'          param={contact?.address?.city}/>
           <ViewFormField sm={6} heading='Region'        param={contact?.address?.region}/>
           <ViewFormField sm={6} heading='Post Code'     param={contact?.address?.postcode}/>
-          <ViewFormField sm={6} heading='Country'       param={contact?.address?.country}/>
-      </Grid>
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
+          <ViewFormField sm={6} heading='Country'       param={contact?.address?.country}/> */}
       </Dialog>
     </>
   );

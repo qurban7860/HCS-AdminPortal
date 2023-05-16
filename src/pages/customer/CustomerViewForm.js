@@ -99,7 +99,6 @@ const onDelete = async () => {
       {/* </Grid> */}
 
       <Grid container>
-<<<<<<< HEAD
         <ViewFormField sm={6} heading="Name" param={defaultValues.name ? defaultValues.name : ''} />
         <ViewFormField
           sm={6}
@@ -151,17 +150,6 @@ const onDelete = async () => {
               : ''
           }
         />
-=======
-        <ViewFormField sm={6}   heading='Name'               param={defaultValues?.name} isActive={defaultValues.isActive}/>
-        <ViewFormField sm={6}   heading='Trading Name'       param={defaultValues?.tradingName}/>
-        <ViewFormField sm={6}   heading='Phone'              param={defaultValues?.mainSite?.phone}/>
-        <ViewFormField sm={6}   heading='Fax'                param={defaultValues?.mainSite?.fax }/>
-        <ViewFormField sm={6}   heading='Email'              param={defaultValues?.mainSite?.email}/>
-      </Grid>
-      <Grid container>
-        <ViewFormField sm={6}   heading='Primary Billing Contact'      param={defaultValues?.primaryBillingContact?.firstName}     secondparam={defaultValues?.primaryBillingContact?.lastName}/>
-        <ViewFormField sm={6}   heading='Primary Technical Contact'    param={defaultValues?.primaryTechnicalContact?.firstName}   secondparam={defaultValues?.primaryTechnicalContact?.lastName}/>
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
       </Grid>
 
       {defaultValues.mainSite && (
@@ -178,7 +166,6 @@ const onDelete = async () => {
               </Typography>
             </Grid>
           </Grid>
-<<<<<<< HEAD
           <Grid container>
             <ViewFormField
               sm={6}
@@ -233,17 +220,6 @@ const onDelete = async () => {
             />
           </Grid>
         </>
-=======
-
-          <ViewFormField sm={6}   heading='Site Name'       param={defaultValues?.mainSite.name}/>
-          <ViewFormField sm={6}   heading='Street'          param={defaultValues?.mainSite.address?.street}/>
-          <ViewFormField sm={6}   heading='Suburb'          param={defaultValues?.mainSite.address?.suburb}/>
-          <ViewFormField sm={6}   heading='City'            param={defaultValues?.mainSite.address?.city}/>
-          <ViewFormField sm={6}   heading='Post Code'       param={defaultValues?.mainSite.address?.postcode}/>
-          <ViewFormField sm={6}   heading='Region'          param={defaultValues?.mainSite.address?.region}/>
-          <ViewFormField sm={6}   heading='Country'         param={defaultValues?.mainSite.address?.country}/>
-        </Grid>
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
       )}
       <Grid sx={{ py: '2rem' }}>
         <Grid
@@ -289,7 +265,6 @@ const onDelete = async () => {
           }
         />
 
-<<<<<<< HEAD
         {/* <Grid item xs={12} sm={12} sx={{pt: 3,display:'flex', flexDirection:'column' }}>
          <Typography variant="overline" sx={{ px:2, color: 'text.disabled' }}>
               Active
@@ -305,12 +280,6 @@ const onDelete = async () => {
           </Typography>
           <Switch sx={{ mb: 1 }} checked={defaultValues.isActive} disabled />
         </Grid>
-=======
-        <ViewFormField sm={6}   heading='Account Manager'       param={defaultValues?.accountManager.firstName} secondparam={defaultValues?.accountManager.lastName}/>
-        <ViewFormField sm={6}   heading='Project Manager'       param={defaultValues?.projectManager.firstName} secondparam={defaultValues?.projectManager.lastName}/>
-        <ViewFormField sm={6}   heading='Suppport Manager'      param={defaultValues?.supportManager.firstName} secondparam={defaultValues?.supportManager.lastName}/>
-        <ViewFormSwitch isActive={defaultValues.isActive}/>
->>>>>>> 7c7588c463c131c5511368995003169515fe36be
       </Grid>
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues} />
