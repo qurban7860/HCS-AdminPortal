@@ -107,13 +107,13 @@ export default function MachineSettingList() {
     setActiveIndex(accordianIndex)
    }
   };
-useLayoutEffect(() => {
-  dispatch(getMachineDocuments(machine._id));
+useEffect(() => {
+    dispatch(getMachineDocuments());
     dispatch(setMachineDocumentEditFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(false))
     dispatch(setFileCategoryFormVisibility(false))
     dispatch(setDocumentNameFormVisibility(false))
-}, [dispatch, machine._id, machineDocumentEditFormVisibility ]);
+}, [dispatch, machine._id ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -176,36 +176,35 @@ useLayoutEffect(() => {
 
           {machineDocumentEditFormVisibility  && <DocumentEditForm/>}
         <Card sx={{mt:2}}>
-          {!machineDocumentEditFormVisibility && !machineDocumentFormVisibility&& !fileCategoryFormVisibility && !documentNameFormVisibility && dataFiltered.map((setting, index) => { 
+          {!machineDocumentEditFormVisibility && !machineDocumentFormVisibility&& !fileCategoryFormVisibility && !documentNameFormVisibility && dataFiltered.map((document, index) => { 
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
-            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
+            <Accordion key={document._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
                 
-                <Grid container spacing={0}>
-                <Typography> Machine Documents</Typography>                 
-                {/* <Grid item xs={12} sm={3} md={3}>
-                    {setting?.techParam?.category?.name || ""}
+                <Grid container spacing={0}>               
+                <Grid item xs={12} sm={3} md={3}>
+                    {document?.name || "" }
                   </Grid>
                   <Grid item xs={12} sm={3} md={3}>
-                    {setting?.techParam?.name || "" }
+                    {document?.category?.name || ""}
                   </Grid>
                   <Grid item xs={12} sm={3} md={4}>
-                    {setting?.techParamValue || "" }
+                    {document?.documentName?.name || "" }
                   </Grid>
                   <Grid item xs={12} sm={3} md={2}>
                     <Typography variant="body2" >
-                    {fDate(setting?.createdAt || "")}
+                    {fDate(document?.createdAt || "")}
                     </Typography>
                   </Grid>
-                <Divider /> */}
+                <Divider />
                 </Grid>
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5, }}>
                 <DocumentViewForm
-                currentSetting={setting}
+                currentMachineDocument={document}
                 />
               </AccordionDetails>
             </Accordion>
@@ -257,11 +256,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter((setting) => setting?.techParam?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    setting?.techParam?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    setting?.techParamValue?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (setting?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
+    inputData = inputData.filter((document) => document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
     );
   }
 

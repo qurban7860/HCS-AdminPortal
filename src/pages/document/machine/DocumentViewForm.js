@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
+import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument} from '../../../redux/slices/document/machineDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -18,49 +18,58 @@ import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButton
 
 // ----------------------------------------------------------------------
 DocumentViewForm.propTypes = {
-  currentCustomerDocument: PropTypes.object,
+  currentMachineDocument: PropTypes.object,
 };
 
-export default function DocumentViewForm({ currentCustomerDocument = null }) {
-  const { customerDocument } = useSelector((state) => state.customerDocument);
-
+export default function DocumentViewForm({ currentMachineDocument = null }) {
+  const { machineDocument } = useSelector((state) => state.machineDocument);
+// console.log(machineDocument)
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
 
   const onDelete = async () => {
-    await dispatch(deleteCustomerDocument(customerDocument._id));
-    dispatch(getCustomerDocument(customerDocument._id));
+    await dispatch(deleteMachineDocument(currentMachineDocument._id));
+    dispatch(getMachineDocument(currentMachineDocument._id));
   };
 
   const  handleEdit = async () => {
-    await dispatch(getCustomerDocument(customerDocument._id));
-    dispatch(setCustomerDocumentEditFormVisibility(true));
+    await dispatch(getMachineDocument(currentMachineDocument._id));
+    dispatch(setMachineDocumentEditFormVisibility(true));
   };
 
   const defaultValues = useMemo(
     () => (
       {
-        isActive:                 currentCustomerDocument?.isActive,
-        createdAt:                currentCustomerDocument?.createdAt || "",
-        createdByFullName:        currentCustomerDocument?.createdBy?.name || "",
-        createdIP:                currentCustomerDocument?.createdIP || "",
-        updatedAt:                currentCustomerDocument?.updatedAt || "",
-        updatedByFullName:        currentCustomerDocument?.updatedBy?.name || "",
-        updatedIP:                currentCustomerDocument?.updatedIP || "",
+        name:                     currentMachineDocument?.name || "",
+        documentName:             currentMachineDocument?.documentName?.name || "",
+        category:                 currentMachineDocument?.category?.name || "",
+        customer:                 currentMachineDocument?.customer?.name,
+        description:              currentMachineDocument?.description,
+        isActive:                 currentMachineDocument?.isActive,
+        createdAt:                currentMachineDocument?.createdAt || "",
+        createdByFullName:        currentMachineDocument?.createdBy?.name || "",
+        createdIP:                currentMachineDocument?.createdIP || "",
+        updatedAt:                currentMachineDocument?.updatedAt || "",
+        updatedByFullName:        currentMachineDocument?.updatedBy?.name || "",
+        updatedIP:                currentMachineDocument?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentCustomerDocument, customerDocument]
+    [currentMachineDocument]
   );
 
   return (
     <Grid >
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-      <Grid container>
-          <ViewFormField sm={6} heading="Name" param="Document Name" />
+        <Grid container>
+          <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+          <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
+          <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+          <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
+          <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
           <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>
-      </Grid>
+        </Grid>
     </Grid>
   );
 }
