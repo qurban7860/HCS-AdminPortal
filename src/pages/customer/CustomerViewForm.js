@@ -120,7 +120,7 @@ const onDelete = async () => {
             </Divider>
           </Grid>
 
-          <ViewFormField sm={6}   heading='Site Name'       param={defaultValues?.mainSite.name}/>
+          <ViewFormField sm={6}   heading='Site Name'       param={defaultValues?.mainSite?.name}/>
           <ViewFormField sm={6}   heading='Street'          param={defaultValues?.mainSite.address?.street}/>
           <ViewFormField sm={6}   heading='Suburb'          param={defaultValues?.mainSite.address?.suburb}/>
           <ViewFormField sm={6}   heading='City'            param={defaultValues?.mainSite.address?.city}/>

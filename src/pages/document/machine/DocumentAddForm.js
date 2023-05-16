@@ -8,7 +8,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Link } from '@mui/material';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Link, InputLabel,MenuItem , FormControl} from '@mui/material';
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
@@ -55,6 +56,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ customerVal, setCustomerVal] = useState('')
   const [ siteVal, setSiteVal] = useState('')
   const [ contactVal, setContactVal] = useState('')
+  const [ customerAccessVal, setCustomerAccessVal] = useState(false)
 
   const navigate = useNavigate();
 
@@ -81,7 +83,7 @@ export default function DocumentAddForm({currentDocument}) {
  // a note can be archived.  
   const AddCustomerDocumentSchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
-    description: Yup.string().max(10000).required("Description Field is required!"),
+    description: Yup.string().max(10000),
     image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });
@@ -118,17 +120,19 @@ export default function DocumentAddForm({currentDocument}) {
       try{
         if(fileCategoryVal){
           data.category = fileCategoryVal._id
+        }
+        if(customerAccessVal === true || customerAccessVal === "true" ){
+          data.customerAccess = true
         }else{
-          data.category = null;
+          data.customerAccess = false
         }
         if(documentNameVal){
           data.documentName = documentNameVal._id
-        }else{
-          data.documentName = null;
         }
         await dispatch(addMachineDocument(machine.customer._id, machine._id ,data));
         setFileCategoryVal("")
         setDocumentNameVal("")
+        setCustomerAccessVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -168,6 +172,9 @@ export default function DocumentAddForm({currentDocument}) {
     setValue('cover', null);
   };
 
+  const handleChange = (event) => {
+    setCustomerAccessVal(event.target.value);
+  };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -177,6 +184,14 @@ export default function DocumentAddForm({currentDocument}) {
               {/* <FormHeading heading='New Note'/> */}
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="name" label="Name" />
+              <FormControl >
+                <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
+                <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="true">Yes</MenuItem>
+                  <MenuItem value={false}  >No</MenuItem>
+                </Select>
+              </FormControl>
               <Grid>
               <Autocomplete
                 // freeSolo
@@ -305,7 +320,7 @@ export default function DocumentAddForm({currentDocument}) {
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               <RHFUpload 
                   name="image"
-                  // maxSize={3145728}
+                  maxSize={3145728}
                   onDrop={handleDrop}
                   onRemove={handleDrop}
                />

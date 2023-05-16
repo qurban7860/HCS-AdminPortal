@@ -23,6 +23,7 @@ const StyledDropZone = styled('div')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   transition: theme.transitions.create('padding'),
   backgroundColor: theme.palette.background.neutral,
+  height:"auto",
   border: `1px solid ${alpha(theme.palette.grey[500], 0.32)}`,
   '&:hover': {
     opacity: 0.72,
@@ -93,7 +94,12 @@ export default function Upload({
             pointerEvents: 'none',
           }),
           ...(hasFile && {
-            padding: '12% 0',
+            padding: '8% 0',
+            width: '302px',
+            // height: '102px',
+            // maxWidth:"100%",
+            height: "auto",
+            objectFit:"cover"
           }),
         }}
       >
@@ -122,6 +128,7 @@ export default function Upload({
             top: 16,
             right: 16,
             zIndex: 9,
+            height: "300px",
             position: 'absolute',
             color: (theme) => alpha(theme.palette.common.white, 0.8),
             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
