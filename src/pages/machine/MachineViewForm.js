@@ -273,22 +273,22 @@ export default function MachineViewForm() {
             }
           />
         </Grid>
-        <Grid sx={{ py: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Howick Resources{' '}
-            </Typography>
-          </Grid>
-        </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
+          <Grid container sx={{ py: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+              }}
+            >
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
+                Howick Resources{' '}
+              </Typography>
+            </Grid>
+          </Grid>
           <ViewFormField
             sm={6}
             heading="Account Manager"
