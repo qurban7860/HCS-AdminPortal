@@ -92,7 +92,7 @@ export default function SecurityUserChangePassword() {
                   
                   <RHFTextField
                   name="email"
-                  label="Email"
+                  label="Login"
                   type="email"
                   autoComplete="email"
                   value={securityUser.login}

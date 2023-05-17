@@ -9,6 +9,7 @@ import { CONFIG } from '../../../config-global';
 const initialState = {
   customerDocumentFormVisibility: false,
   customerDocumentEditFormVisibility: false,
+  customerDocumentEdit: false,
   intial: false,
   responseMessage: null,
   success: false,
@@ -34,7 +35,10 @@ const slice = createSlice({
 
     // SET TOGGLE
     setCustomerDocumentEditFormVisibility(state, action){
-      state.cumentNameEditFormVisibility = action.payload;
+      state.customerDocumentEditFormVisibility = action.payload;
+    },
+    setCustomerDocumentEdit(state, action){
+      state.customerDocumentEdit = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -83,6 +87,7 @@ export default slice.reducer;
 export const {
   setCustomerDocumentFormVisibility,
   setCustomerDocumentEditFormVisibility,
+  setCustomerDocumentEdit,
   getCart,
   addToCart,
   setResponseMessage,
@@ -120,6 +125,9 @@ export function addCustomerDocument(customerId,params) {
           if(params?.image){
             formData.append('image', params?.image);
           }
+          if(params?.isActive){
+            formData.append('isActive', params?.isActive);
+          }
 
 // console.log("formData : ",params?.image);
       const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData,{
@@ -139,29 +147,38 @@ export function addCustomerDocument(customerId,params) {
 
 // ---------------------------------Update Customer Document-------------------------------------
 
-export function updateCustomerDocument(customerId,customerDocumentId,params) {
+export function updateCustomerDocument(customerDocumentId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-            formData.append('customer', customerId);
-          if(params?.name){
-            formData.append('name', params?.name);
-          }
-          if(params?.description){
-            formData.append('description', params?.description);
-          }
+      const data = { 
+                    name: params?.name,
+                    customerAccess: params.customerAccess,
+                    isActive: params.isActive,
+                    description: params.description,
+                  };
+
+          // if(params?.name){
+          //   formData.append('name', params?.name);
+          // }
+          // if(params?.description){
+          //   formData.append('description', params?.description);
+          // }
           if(params?.category){
-            formData.append('category', params?.category);
+            data.category = params?.category
           }
           if(params?.documentName){
-            formData.append('documentName', params?.documentName);
+            data.documentName = params?.documentName
           }
-          if(params?.image){
-            formData.append('image', params?.image);
-          }
+          // if(params?.image){
+          //   formData.append('image', params?.image);
+          // }
+          // if(params?.isActive){
+          //   formData.append('isActive', params?.isActive);
+          // }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, formData);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
+      // dispatch(getCustomerDocuments())
       dispatch(slice.actions.setResponseMessage('Customer Document updated successfully'));
       dispatch(setCustomerDocumentEditFormVisibility (false));
     } catch (error) {
@@ -173,7 +190,7 @@ export function updateCustomerDocument(customerId,customerDocumentId,params) {
 
 // -----------------------------------Get Customer Document-----------------------------------
 
-export function getCustomerDocuments() {
+export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -181,7 +198,8 @@ export function getCustomerDocuments() {
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          customer:customerId
         }
       }
       );

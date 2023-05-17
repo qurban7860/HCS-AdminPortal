@@ -119,7 +119,7 @@ export default function MachineSettingList() {
   };
 
 useEffect(()=>{
-  dispatch(getCustomerDocuments());
+  dispatch(getCustomerDocuments(customer._id));
   dispatch(setCustomerDocumentEditFormVisibility(false))
   dispatch(setCustomerDocumentFormVisibility(false))
   dispatch(setFileCategoryFormVisibility(false))
@@ -184,6 +184,8 @@ useEffect(()=>{
                   {!customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility &&  customerDocumentFormVisibility && <DocumentAddForm/>}
                   {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && fileCategoryFormVisibility && <FileCategoryAddForm/>}
                   {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && documentNameFormVisibility && !fileCategoryFormVisibility && <DocumentNameAddForm/>}
+                  {customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && <DocumentEditForm/>}
+
           {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
         <Card sx={{mt:2}}>
           {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && dataFiltered.map((document, index) => { 
