@@ -119,14 +119,12 @@ export default function MachineSettingList() {
   };
 
 useEffect(()=>{
-setCustomerDocumentEditFormVisibility(false)
-setCustomerDocumentFormVisibility(false)
-setFileCategoryFormVisibility(false)
-setDocumentNameFormVisibility(false)
-},[customer])
-useLayoutEffect(() => {
   dispatch(getCustomerDocuments());
-}, [dispatch, customer._id ]);
+  dispatch(setCustomerDocumentEditFormVisibility(false))
+  dispatch(setCustomerDocumentFormVisibility(false))
+  dispatch(setFileCategoryFormVisibility(false))
+  dispatch(setDocumentNameFormVisibility(false))
+},[dispatch,customer._id])
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -135,6 +133,7 @@ useLayoutEffect(() => {
   useEffect(() => {
     setTableData(customerDocuments);
   }, [customerDocuments, error, responseMessage ]);
+  
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -195,16 +194,19 @@ useLayoutEffect(() => {
                 { index !==  activeIndex ? 
                 
                 <Grid container spacing={0}>
-                <Grid item xs={12} sm={3} md={3}>
+                <Grid item xs={12} sm={4} md={2.4}>
                     {document?.name || "" }
                   </Grid>
-                  <Grid item xs={12} sm={3} md={3}>
+                  <Grid item xs={12} sm={4} md={2.4}>
                     {document?.category?.name || ""}
                   </Grid>
-                  <Grid item xs={12} sm={3} md={4}>
+                  <Grid item xs={12} sm={4} md={2.4}>
                     {document?.documentName?.name || "" }
                   </Grid>
-                  <Grid item xs={12} sm={3} md={2}>
+                  <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
+                    {document?.customerAccess !== true ? "customer Access : No" : "customer Access : Yes" }
+                  </Grid>
+                  <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
                     <Typography variant="body2" >
                     {fDate(document?.createdAt || "")}
                     </Typography>

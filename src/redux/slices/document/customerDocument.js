@@ -101,27 +101,32 @@ export function addCustomerDocument(customerId,params) {
         try {
 
           const formData = new FormData();
-          if(params?.customer){
-            formData.append('customer', params?.customer);
+          formData.append('customer', customerId);
+          // if(params?.customerAccess){
+            formData.append('customerAccess', params.customerAccess);
+          // }
+          if(params?.name){
+            formData.append('name', params?.name);
           }
-          // if(params?.name){
-          //   formData.append('name', params?.name);
-          // }
-          // if(params?.description){
-          //   formData.append('description', params?.description);
-          // }
+          if(params?.description){
+            formData.append('description', params?.description);
+          }
           if(params?.category){
             formData.append('category', params?.category);
           }
-          // if(params?.documentName){
-          //   formData.append('documentName', params?.documentName);
-          // }
+          if(params?.documentName){
+            formData.append('documentName', params?.documentName);
+          }
           if(params?.image){
             formData.append('image', params?.image);
           }
 
-console.log("formData : ",formData);
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData);
+// console.log("formData : ",params?.image);
+      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData,{
+        headers: {
+          'Content-Type':"multupart/form-data"
+        }
+      });
 
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getCustomerDocuments(customerId));
@@ -134,13 +139,29 @@ console.log("formData : ",formData);
 
 // ---------------------------------Update Customer Document-------------------------------------
 
-export function updateCustomerDocument(customerId,CustomerDocumentId,params) {
+export function updateCustomerDocument(customerId,customerDocumentId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-      }
-    //   const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${customerId}/techparamvalues/${documentId}`, data, );
+      const formData = new FormData();
+            formData.append('customer', customerId);
+          if(params?.name){
+            formData.append('name', params?.name);
+          }
+          if(params?.description){
+            formData.append('description', params?.description);
+          }
+          if(params?.category){
+            formData.append('category', params?.category);
+          }
+          if(params?.documentName){
+            formData.append('documentName', params?.documentName);
+          }
+          if(params?.image){
+            formData.append('image', params?.image);
+          }
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, formData);
       dispatch(slice.actions.setResponseMessage('Customer Document updated successfully'));
       dispatch(setCustomerDocumentEditFormVisibility (false));
     } catch (error) {
@@ -152,7 +173,7 @@ export function updateCustomerDocument(customerId,CustomerDocumentId,params) {
 
 // -----------------------------------Get Customer Document-----------------------------------
 
-export function getCustomerDocuments(id) {
+export function getCustomerDocuments() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -175,11 +196,11 @@ export function getCustomerDocuments(id) {
 
 // -------------------------------get Customer Document---------------------------------------
 
-export function getCustomerDocument(customerId,settingId) {
+export function getCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${customerId}/techparamvalues/${settingId}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`);
       dispatch(slice.actions.getCustomerDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
     } catch (error) {
@@ -191,11 +212,11 @@ export function getCustomerDocument(customerId,settingId) {
 
 // ---------------------------------archive Customer Document -------------------------------------
 
-export function deleteCustomerDocument(customerId,id) {
+export function deleteCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${customerId}/techparamvalues/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}` , 
       {
           isArchived: true, 
       });

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button ,Box} from '@mui/material';
 // redux
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
 // paths
@@ -24,18 +24,19 @@ DocumentViewForm.propTypes = {
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
-// console.log(currentCustomerDocument)
+  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+
   const navigate = useNavigate();
-
   const dispatch = useDispatch(); 
-
   const onDelete = async () => {
-    await dispatch(deleteCustomerDocument(customerDocument._id));
-    dispatch(getCustomerDocument(customerDocument._id));
+    console.log("currentCustomerDocument : ",currentCustomerDocument)
+    await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
+    dispatch(getCustomerDocuments())
   };
-
+  
   const  handleEdit = async () => {
-    await dispatch(getCustomerDocument(customerDocument._id));
+    await dispatch(getCustomerDocument(currentCustomerDocument._id));
+    dispatch(getCustomerDocument(currentCustomerDocument._id));
     dispatch(setCustomerDocumentEditFormVisibility(true));
   };
 
@@ -43,11 +44,10 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     () => (
       {
         name:                     currentCustomerDocument?.name || "",
-        category:                 currentCustomerDocument?.category?.name || "",
         documentName:             currentCustomerDocument?.documentName?.name || "",
-        // customer:                 currentCustomerDocument?.customer?.name,
-        description:                 currentCustomerDocument?.description,
+        category:                 currentCustomerDocument?.category?.name || "",
         customer:                 currentCustomerDocument?.customer?.name,
+        description:              currentCustomerDocument?.description,
         isActive:                 currentCustomerDocument?.isActive,
         createdAt:                currentCustomerDocument?.createdAt || "",
         createdByFullName:        currentCustomerDocument?.createdBy?.name || "",
@@ -62,14 +62,27 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   return (
     <>
-    {/* <Cover name={currentCustomerDocument?.name}/> */}
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
             <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
             <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
             <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+            <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+            { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
+          <Box
+        component="img"
+        sx={{
+          m:2,
+          height: 233,
+          width: 350,
+          maxHeight: { xs: 233, md: 167 },
+          maxWidth: { xs: 350, md: 250 },
+        }}
+        alt={defaultValues?.name}
+        src={currentCustomerDocument?.path}
+      />:""}
             <ViewFormSWitch isActive={defaultValues.isActive}/>
             <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

@@ -93,13 +93,31 @@ export const {
 
 // ----------------------------Add Machine Document------------------------------------------
 
-export function addMachineDocument(machineId,params) {
-    return async (dispatch) => {
+export function addMachineDocument(customerId , machineId , params) {
+    return async (dispatch) => { 
         dispatch(slice.actions.startLoading());
         try {
-            const data = {
-            }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
+          const formData = new FormData();
+            formData.append('customer', customerId);
+            formData.append('machine', machineId);
+            formData.append('customerAccess', params.customerAccess);
+          if(params?.name){
+            formData.append('name', params?.name);
+          }
+          if(params?.description){
+            formData.append('description', params?.description);
+          }
+          if(params?.category){
+            formData.append('category', params?.category);
+          }
+          if(params?.documentName){
+            formData.append('documentName', params?.documentName);
+          }
+          if(params?.image){
+            formData.append('image', params?.image);
+          }
+          // console.log("formData", formData);
+      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getMachineDocuments(machineId));
     } catch (error) {
@@ -111,13 +129,34 @@ export function addMachineDocument(machineId,params) {
 
 // ---------------------------------Update Machine Document-------------------------------------
 
-export function updateMachineDocument(machineId,MachineDocumentId,params) {
+export function updateMachineDocument(machineDocumentId, machineId , customerId , params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-      }
-    //   const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
+          const formData = new FormData();
+          if(params?.customer){
+            formData.append('customer', customerId);
+          }
+          if(params?.customer){
+            formData.append('machine', machineId);
+          }
+          // if(params?.name){
+          //   formData.append('name', params?.name);
+          // }
+          // if(params?.description){
+          //   formData.append('description', params?.description);
+          // }
+          if(params?.category){
+            formData.append('category', params?.category);
+          }
+          // if(params?.documentName){
+          //   formData.append('documentName', params?.documentName);
+          // }
+          if(params?.image){
+            formData.append('image', params?.image);
+          }
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`, formData );
       dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));
       dispatch(setMachineDocumentEditFormVisibility (false));
     } catch (error) {
@@ -129,11 +168,11 @@ export function updateMachineDocument(machineId,MachineDocumentId,params) {
 
 // -----------------------------------Get Machine Document-----------------------------------
 
-export function getMachineDocuments(id) {
+export function getMachineDocuments() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
       {
         params: {
           isArchived: false
@@ -151,11 +190,11 @@ export function getMachineDocuments(id) {
 
 // -------------------------------get Machine Document---------------------------------------
 
-export function getMachineDocument(machineId,settingId) {
+export function getMachineDocument(machineDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`);
       dispatch(slice.actions.getMachineDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document Loaded Successfuly'));
     } catch (error) {
@@ -167,11 +206,11 @@ export function getMachineDocument(machineId,settingId) {
 
 // ---------------------------------archive Machine Document -------------------------------------
 
-export function deleteMachineDocument(machineId,id) {
+export function deleteMachineDocument(machineDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}` , 
       {
           isArchived: true, 
       });

@@ -8,7 +8,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Link} from '@mui/material';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Link, InputLabel,MenuItem , FormControl}  from '@mui/material';
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
@@ -24,7 +25,7 @@ import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
-import FormProvider, {RHFTextField,RHFSwitch, RHFUpload} from '../../../components/hook-form';
+import FormProvider, {RHFTextField,RHFSwitch, RHFUpload, RHFSelect} from '../../../components/hook-form';
 import { Upload } from '../../../components/upload';
 import Cover from '../../components/Cover';
 import FormHeading from '../../components/FormHeading';
@@ -45,6 +46,9 @@ export default function DocumentAddForm({currentDocument}) {
 
   const [ documentNameVal, setDocumentNameVal] = useState('')
   const [ fileCategoryVal, setFileCategoryVal] = useState('')
+  const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ nameVal, setNameVal] = useState("")
+  // console.log("customer access : ", customerAccessVal)
   const [files, setFiles] = useState([]);
   const [ machineVal, setMachineVal] = useState('')
   const [ customerVal, setCustomerVal] = useState('')
@@ -53,19 +57,19 @@ export default function DocumentAddForm({currentDocument}) {
 
   const navigate = useNavigate();
 
-  let documentAvailable 
-  if(documentNames && documentNames.length){
-    documentAvailable =  true 
-  }else{
-    documentAvailable =  true 
-  }
+  // let documentAvailable 
+  // if(documentNames && documentNames.length){
+  //   documentAvailable =  true 
+  // }else{
+  //   documentAvailable =  true 
+  // }
 
-  let fileCategory 
-  if(fileCategories && fileCategories.length){
-    fileCategory =  true 
-  }else{
-    fileCategory =  true 
-  }
+  // let fileCategory 
+  // if(fileCategories && fileCategories.length){
+  //   fileCategory =  true 
+  // }else{
+  //   fileCategory =  true 
+  // }
 
 
   const dispatch = useDispatch();
@@ -76,14 +80,16 @@ export default function DocumentAddForm({currentDocument}) {
   },[dispatch,customer])
   
   const AddCustomerDocumentSchema = Yup.object().shape({
-    name: Yup.string().min(2).required("Name Field is required!"),
-    description: Yup.string().max(10000).required("Description Field is required!"),
-    image: Yup.string().required("Image Field is required!"),
+    name: Yup.string().max(50),
+    description: Yup.string().max(10000),
+    image: Yup.mixed().required("Upload Field is required!"),
+    // customerAccess: Yup.bool().required("Customer Access Field is required!"),
     isActive : Yup.boolean(),
   });
+
   const defaultValues = useMemo(
     () => ({
-      name: '',
+      name: nameVal,
       description: '',
       image: null,
       isActive: true,
@@ -116,12 +122,19 @@ export default function DocumentAddForm({currentDocument}) {
         if(fileCategoryVal){
           data.category = fileCategoryVal._id
         }
+        if(customerAccessVal === true || customerAccessVal === "true" ){
+          data.customerAccess = true
+        }else{
+          data.customerAccess = false
+        }
         if(documentNameVal){
           data.documentName = documentNameVal._id
         }
         await dispatch(addCustomerDocument(customer._id,data));
         setFileCategoryVal("")
         setDocumentNameVal("")
+        setCustomerAccessVal("")
+        setNameVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -181,6 +194,9 @@ export default function DocumentAddForm({currentDocument}) {
     },
     [setValue]
   );
+  const handleChange = (event) => {
+    setCustomerAccessVal(event.target.value);
+  };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* <Cover name="New Customer Document"/> */}
@@ -191,7 +207,15 @@ export default function DocumentAddForm({currentDocument}) {
               <FormHeading heading='New Document'/>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
-              <RHFTextField name="name" label="Name" />
+              <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
+              <FormControl >
+                <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
+                <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
+                  <MenuItem value={false}  >No</MenuItem>
+                  <MenuItem value="true">Yes</MenuItem>
+                  {/* <MenuItem value=""><em>None</em></MenuItem> */}
+                </Select>
+              </FormControl>
               <Grid>
               <Autocomplete
                 // freeSolo
@@ -203,6 +227,7 @@ export default function DocumentAddForm({currentDocument}) {
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
+                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
@@ -238,6 +263,7 @@ export default function DocumentAddForm({currentDocument}) {
               />
               <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage} ><Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
+              
               {/* <Autocomplete
                 // freeSolo
                 value={machineVal || null}
@@ -317,10 +343,12 @@ export default function DocumentAddForm({currentDocument}) {
                 ChipProps={{ size: 'small' }}
               /> */}
               </Box>
-              <RHFTextField name="description" label="Description" minRows={8} multiline />
+              <RHFTextField name="description" label="Description" minRows={3} multiline />
               <RHFUpload
+              // sx={{ width: '300px'}}
                   // multiple
                   // thumbnail
+                 
                   name="image"
                   maxSize={3145728}
                   onDrop={handleDrop}
