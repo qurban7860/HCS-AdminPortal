@@ -57,6 +57,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ siteVal, setSiteVal] = useState('')
   const [ contactVal, setContactVal] = useState('')
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ nameVal, setNameVal] = useState("")
 
   const navigate = useNavigate();
 
@@ -82,7 +83,7 @@ export default function DocumentAddForm({currentDocument}) {
   },[dispatch,machine._id])
  // a note can be archived.  
   const AddCustomerDocumentSchema = Yup.object().shape({
-    name: Yup.string().min(2).required("Name Field is required!"),
+    name: Yup.string().max(50),
     description: Yup.string().max(10000),
     image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
@@ -133,6 +134,7 @@ export default function DocumentAddForm({currentDocument}) {
         setFileCategoryVal("")
         setDocumentNameVal("")
         setCustomerAccessVal("")
+        setNameVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -183,7 +185,7 @@ export default function DocumentAddForm({currentDocument}) {
             <Stack spacing={2}>
               {/* <FormHeading heading='New Note'/> */}
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
-              <RHFTextField name="name" label="Name" />
+              <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
               <FormControl >
                 <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
                 <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
@@ -203,6 +205,7 @@ export default function DocumentAddForm({currentDocument}) {
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
+                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
