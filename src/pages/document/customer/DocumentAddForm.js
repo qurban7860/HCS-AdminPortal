@@ -47,6 +47,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ documentNameVal, setDocumentNameVal] = useState('')
   const [ fileCategoryVal, setFileCategoryVal] = useState('')
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ nameVal, setNameVal] = useState("")
   // console.log("customer access : ", customerAccessVal)
   const [files, setFiles] = useState([]);
   const [ machineVal, setMachineVal] = useState('')
@@ -55,23 +56,20 @@ export default function DocumentAddForm({currentDocument}) {
   const [ contactVal, setContactVal] = useState('')
 
   const navigate = useNavigate();
-  const ACCESS =[
-    {value:true, label: 'Yes'},
-    {value:false, label:"No"}
-  ]
-  let documentAvailable 
-  if(documentNames && documentNames.length){
-    documentAvailable =  true 
-  }else{
-    documentAvailable =  true 
-  }
 
-  let fileCategory 
-  if(fileCategories && fileCategories.length){
-    fileCategory =  true 
-  }else{
-    fileCategory =  true 
-  }
+  // let documentAvailable 
+  // if(documentNames && documentNames.length){
+  //   documentAvailable =  true 
+  // }else{
+  //   documentAvailable =  true 
+  // }
+
+  // let fileCategory 
+  // if(fileCategories && fileCategories.length){
+  //   fileCategory =  true 
+  // }else{
+  //   fileCategory =  true 
+  // }
 
 
   const dispatch = useDispatch();
@@ -82,7 +80,7 @@ export default function DocumentAddForm({currentDocument}) {
   },[dispatch,customer])
   
   const AddCustomerDocumentSchema = Yup.object().shape({
-    name: Yup.string().min(2).required("Name Field is required!"),
+    name: Yup.string().max(50),
     description: Yup.string().max(10000),
     image: Yup.mixed().required("Upload Field is required!"),
     // customerAccess: Yup.bool().required("Customer Access Field is required!"),
@@ -91,7 +89,7 @@ export default function DocumentAddForm({currentDocument}) {
 
   const defaultValues = useMemo(
     () => ({
-      name: '',
+      name: nameVal,
       description: '',
       image: null,
       isActive: true,
@@ -136,6 +134,7 @@ export default function DocumentAddForm({currentDocument}) {
         setFileCategoryVal("")
         setDocumentNameVal("")
         setCustomerAccessVal("")
+        setNameVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -208,13 +207,13 @@ export default function DocumentAddForm({currentDocument}) {
               <FormHeading heading='New Document'/>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
-              <RHFTextField name="name" label="Name" />
+              <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
               <FormControl >
                 <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
                 <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
-                  <MenuItem value=""><em>None</em></MenuItem>
-                  <MenuItem value="true">Yes</MenuItem>
                   <MenuItem value={false}  >No</MenuItem>
+                  <MenuItem value="true">Yes</MenuItem>
+                  {/* <MenuItem value=""><em>None</em></MenuItem> */}
                 </Select>
               </FormControl>
               <Grid>
@@ -228,6 +227,7 @@ export default function DocumentAddForm({currentDocument}) {
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
+                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
