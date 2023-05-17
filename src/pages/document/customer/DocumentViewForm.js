@@ -25,13 +25,14 @@ DocumentViewForm.propTypes = {
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
   // console.log("currentCustomerDocument : ",currentCustomerDocument)
+  const { customer, customers } = useSelector((state) => state.customer);
 
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
   const onDelete = async () => {
-    console.log("currentCustomerDocument : ",currentCustomerDocument)
+    // console.log("currentCustomerDocument : ",currentCustomerDocument)
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
-    dispatch(getCustomerDocuments())
+    dispatch(getCustomerDocuments(customer._id))
   };
   
   const  handleEdit = async () => {
@@ -46,7 +47,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         name:                     currentCustomerDocument?.name || "",
         documentName:             currentCustomerDocument?.documentName?.name || "",
         category:                 currentCustomerDocument?.category?.name || "",
-        customer:                 currentCustomerDocument?.customer?.name,
+        customer:                 currentCustomerDocument?.customer?.name || "",
+        customerAccess:           currentCustomerDocument?.customerAccess,
+        documentVersion:          currentCustomerDocument?.documentVersion,
         description:              currentCustomerDocument?.description,
         isActive:                 currentCustomerDocument?.isActive,
         createdAt:                currentCustomerDocument?.createdAt || "",
@@ -69,6 +72,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
             <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
+            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
           <Box

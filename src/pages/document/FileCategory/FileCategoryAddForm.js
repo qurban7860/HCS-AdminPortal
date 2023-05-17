@@ -14,7 +14,7 @@ import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/pa
 // slice
 import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility , getFileCategories } from '../../../redux/slices/document/fileCategory';
 import { addMachineDocument, getMachineDocuments, getMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
-import { setCustomerDocumentFormVisibility } from '../../../redux/slices/document/customerDocument';
+import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -30,6 +30,8 @@ DocumentNameAddForm.propTypes = {
 };
 export default function DocumentNameAddForm({currentDocument}) {
   const { fileCategories, fileCategory } = useSelector((state) => state.fileCategory);
+  const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
+  const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -71,8 +73,15 @@ export default function DocumentNameAddForm({currentDocument}) {
       try{
         await dispatch(addFileCategory(data));
         // dispatch(getFileCategories());
+        
         dispatch(setFileCategoryFormVisibility(false))
-        dispatch(setMachineDocumentFormVisibility(true));
+        if( machineDocumentEdit || customerDocumentEdit){
+          dispatch(setMachineDocumentEditFormVisibility(true))
+          dispatch(setCustomerDocumentEditFormVisibility(true))
+        }else{
+          dispatch(setMachineDocumentFormVisibility(true))
+          dispatch(setCustomerDocumentFormVisibility(true))
+        }
         reset();
       } catch(error){
         enqueueSnackbar('File Category Save failed!');

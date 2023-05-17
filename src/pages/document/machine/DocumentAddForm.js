@@ -13,10 +13,10 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Li
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addMachineDocument, setMachineDocumentFormVisibility  } from '../../../redux/slices/document/machineDocument';
+import { addMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
 import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility ,getFileCategories } from '../../../redux/slices/document/fileCategory';
 import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames } from '../../../redux/slices/document/documentName';
-import { setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
+import { setCustomerDocumentEditFormVisibility, setCustomerDocumentFormVisibility } from '../../../redux/slices/document/customerDocument';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -90,7 +90,7 @@ export default function DocumentAddForm({currentDocument}) {
   });
   const defaultValues = useMemo(
     () => ({
-      name: '',
+      name: nameVal,
       description: '',
       image: null,
       isActive: true,
@@ -182,7 +182,7 @@ export default function DocumentAddForm({currentDocument}) {
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
-            <Stack spacing={2}>
+            <Stack spacing={3}>
               {/* <FormHeading heading='New Note'/> */}
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>

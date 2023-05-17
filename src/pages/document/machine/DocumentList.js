@@ -108,7 +108,7 @@ export default function MachineSettingList() {
    }
   };
 useEffect(() => {
-    dispatch(getMachineDocuments());
+    dispatch(getMachineDocuments(machine._id));
     dispatch(setMachineDocumentEditFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(false))
     dispatch(setFileCategoryFormVisibility(false))
@@ -173,8 +173,10 @@ useEffect(() => {
                   {!machineDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && machineDocumentFormVisibility && <DocumentAddForm/>}
                   {!machineDocumentEditFormVisibility && !documentNameFormVisibility && fileCategoryFormVisibility && !machineDocumentFormVisibility && <FileCategoryAddForm/>}
                   {!machineDocumentEditFormVisibility && documentNameFormVisibility && !fileCategoryFormVisibility && !machineDocumentFormVisibility && <DocumentNameAddForm/>}
+                  {machineDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && !machineDocumentFormVisibility && <DocumentEditForm/>}
 
-          {machineDocumentEditFormVisibility  && <DocumentEditForm/>}
+
+          {/* {machineDocumentEditFormVisibility  && <DocumentEditForm/>} */}
         <Card sx={{mt:2}}>
           {!machineDocumentEditFormVisibility && !machineDocumentFormVisibility&& !fileCategoryFormVisibility && !documentNameFormVisibility && dataFiltered.map((document, index) => { 
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';

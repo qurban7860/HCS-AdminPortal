@@ -82,7 +82,7 @@ export default function DocumentAddForm({currentDocument}) {
   const AddCustomerDocumentSchema = Yup.object().shape({
     name: Yup.string().max(50),
     description: Yup.string().max(10000),
-    image: Yup.mixed().required("Upload Field is required!"),
+    // image: Yup.mixed().required("Upload Field is required!"),
     // customerAccess: Yup.bool().required("Customer Access Field is required!"),
     isActive : Yup.boolean(),
   });
@@ -203,7 +203,7 @@ export default function DocumentAddForm({currentDocument}) {
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
-            <Stack spacing={2}>
+            <Stack spacing={3}>
               <FormHeading heading='New Document'/>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 

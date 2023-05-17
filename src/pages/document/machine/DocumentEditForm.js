@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // routes
@@ -22,23 +22,30 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch
+  RHFSwitch,
+  RHFUpload
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/AddFormButtons';
+import FormHeading from '../../components/FormHeading';
 
 // slice
-import { addMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility, updateMachineDocument  } from '../../../redux/slices/document/machineDocument';
+import { addMachineDocument, setMachineDocumentEdit, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility, updateMachineDocument  } from '../../../redux/slices/document/machineDocument';
+import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility ,getFileCategories } from '../../../redux/slices/document/fileCategory';
+import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames } from '../../../redux/slices/document/documentName';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
 import { getSites } from '../../../redux/slices/customer/site';
+
 // ----------------------------------------------------------------------
 
 export default function DocumentEditForm() {
 
+  const { machineDocument } = useSelector((state) => state.machineDocument);
   const { documentNames } = useSelector((state) => state.documentName);
   const { fileCategories } = useSelector((state) => state.fileCategory);
   const { machine , machines } = useSelector((state) => state.machine);
+  // console.log("machine : " , machine)
   const { customers } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
@@ -49,6 +56,8 @@ export default function DocumentEditForm() {
   const [ customerVal, setCustomerVal] = useState('')
   const [ siteVal, setSiteVal] = useState('')
   const [ contactVal, setContactVal] = useState('')
+  const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ nameVal, setNameVal] = useState("")
 
   const navigate = useNavigate();
 
@@ -70,18 +79,30 @@ export default function DocumentEditForm() {
 
   const { enqueueSnackbar } = useSnackbar();
 
+useEffect(()=>{
+  setNameVal(machineDocument?.name)
+  setCustomerAccessVal(machineDocument?.customerAccess)
+  setFileCategoryVal(machineDocument?.category)
+  setDocumentNameVal(machineDocument?.documentName)
+},[machineDocument])
+
+  const EditMachineDocummentSchema = Yup.object().shape({
+    name: Yup.string().max(50),
+    description: Yup.string().max(10000),
+    // image: Yup.mixed().required("Image Field is required!"),
+    isActive : Yup.boolean(),
+  });
+
   const defaultValues = useMemo(
     () => ({
-      // techParamValue: setting?.techParamValue || '',
-      // isActive :      setting?.isActive ,
+      name: nameVal,
+      description: machineDocument?.description || "",
+      // image: null,
+      isActive: machineDocument?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditMachineDocummentSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(50),
-    isActive : Yup.boolean(),
-  });
 
   const methods = useForm({
     resolver: yupResolver(EditMachineDocummentSchema),
@@ -98,14 +119,24 @@ export default function DocumentEditForm() {
 
   const values = watch();
 
-  const toggleCancel = () => 
-  {
-    dispatch(setMachineDocumentEditFormVisibility(false));
-  };
+  
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateMachineDocument( machine._id, data));
+      data.customer = machine.customer._id
+      if(nameVal){
+        data.name = nameVal
+      }
+      // if(fileCategoryVal){
+      //   data.category = fileCategoryVal._id
+      // }
+      if(customerAccessVal === true || customerAccessVal === "true" ){
+        data.customerAccess = true
+      }else{
+        data.customerAccess = false
+      }
+      await dispatch(updateMachineDocument(machineDocument._id,data));
+      await dispatch(machine._id)
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
@@ -113,6 +144,44 @@ export default function DocumentEditForm() {
     }
   };
 
+  const toggleCancel = () => 
+  {
+    dispatch(setMachineDocumentEditFormVisibility(false));
+  };
+
+  const togleCategoryPage = ()=>{
+    dispatch(setMachineDocumentEdit(true))
+    dispatch(setFileCategoryFormVisibility(true))
+    dispatch(setMachineDocumentEditFormVisibility(false));
+  }
+  const togleDocumentNamePage = ()=>{
+    dispatch(setMachineDocumentEdit(true))
+    dispatch(setDocumentNameFormVisibility(true))
+    dispatch(setMachineDocumentEditFormVisibility(false));
+  }
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('image', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
+
+  const handleRemoveFile = () => {
+    setValue('cover', null);
+  };
+
+  const handleChange = (event) => {
+    setCustomerAccessVal(event.target.value);
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -120,17 +189,23 @@ export default function DocumentEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
-                <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Edit Machine Document 
-                </Typography>
-            </Stack>
+              <FormHeading heading='Edit Document'/>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
-              <RHFTextField name="displayName" label="Display Name" />
-              <Grid>
+
+              <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
+
+              <FormControl >
+                <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
+                <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value="true">Yes</MenuItem>
+                  <MenuItem value="false"  >No</MenuItem>
+                </Select>
+              </FormControl>
+
               <Autocomplete
                 // freeSolo
-                disabled={documentAvailable}
+                disabled
                 value={documentNameVal || null}
                 options={documentNames}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -138,22 +213,21 @@ export default function DocumentEditForm() {
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
+                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Document Name" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Document Name"  sx={{ color: 'red' }}  component="button"  variant="body2"  onClick={()=>{ navigate(PATH_DOCUMENT.documentName.new)}} >Not Available! <Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
-              </Grid>
-              <Grid>
+              
               <Autocomplete
                 // freeSolo
-                disabled={fileCategory}
+                disabled
                 value={fileCategoryVal || null}
                 options={fileCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -166,14 +240,13 @@ export default function DocumentEditForm() {
                     setFileCategoryVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="File Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Category"  sx={{ color: 'red' }}  component="button"  variant="body2"  onClick={()=>{ navigate(PATH_DOCUMENT.fileCategory.new)}}>Not Available! <Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
-              </Grid>
-              <Autocomplete
+
+              {/* <Autocomplete
                 // freeSolo
                 value={machineVal || null}
                 options={machines}
@@ -191,9 +264,9 @@ export default function DocumentEditForm() {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Machine" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
               
-              <Autocomplete 
+              {/* <Autocomplete 
                 value={customerVal || null}
                 options={customers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -210,9 +283,9 @@ export default function DocumentEditForm() {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
 
-              <Autocomplete 
+              {/* <Autocomplete 
                 // freeSolo
                 value={siteVal || null}
                 options={sites}
@@ -250,12 +323,18 @@ export default function DocumentEditForm() {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Contact" />}
                 ChipProps={{ size: 'small' }}
-              />
+              /> */}
               </Box>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>Active</Typography> } />
+              {/* <RHFUpload 
+                  name="image"
+                  maxSize={3145728}
+                  onDrop={handleDrop}
+                  onRemove={handleDrop}
+               /> */}
+              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
         </Grid>
       </Grid>

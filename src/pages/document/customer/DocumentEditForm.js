@@ -10,10 +10,13 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
+import { addCustomerDocument, updateCustomerDocument, setCustomerDocumentEdit, setCustomerDocumentEditFormVisibility, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
+import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
+import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -23,34 +26,45 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch
+  RHFSwitch,
+  RHFUpload
 } from '../../../components/hook-form';
-import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
 import AddFormButtons from '../../components/AddFormButtons';
+import FormHeading from '../../components/FormHeading';
+
 import Cover from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
 export default function SettingEditForm() {
 
-  const { setting, settings, settingEditFormVisibility, formVisibility ,error} = useSelector((state) => state.machineSetting);
-  const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-  const [category, setCategory] = useState('');
-  const [techParam, setTechParam] = useState('');
-  const [paramData, setparamData] = useState([]);
-  const { machine } = useSelector((state) => state.machine);
+  const { customerDocument } = useSelector((state) => state.customerDocument);
+  const { documentNames } = useSelector((state) => state.documentName);
+  const { fileCategories } = useSelector((state) => state.fileCategory);
+  // console.log("fileCategories : ", fileCategories, " documentNames : ", documentNames)
+  const { machines } = useSelector((state) => state.machine);
+  const { customer, customers } = useSelector((state) => state.customer);
+  const { contacts } = useSelector((state) => state.contact); 
+  const { sites } = useSelector((state) => state.site);
+
+  const [ documentNameVal, setDocumentNameVal] = useState('')
+  const [ fileCategoryVal, setFileCategoryVal] = useState('')
+  const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ nameVal, setNameVal] = useState("")
+  // console.log("customer access : ", customerAccessVal)
+  const [files, setFiles] = useState([]);
+  const [ machineVal, setMachineVal] = useState('')
+  const [ customerVal, setCustomerVal] = useState('')
+  const [ siteVal, setSiteVal] = useState('')
+  const [ contactVal, setContactVal] = useState('')
 
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    setCategory(setting.techParam.category);
-    setTechParam(setting.techParam);
-  }, [dispatch , setting]);
+
+  }, [dispatch , ]);
 
   // useLayoutEffect(() => {
   //   const filterSetting = [];
@@ -63,22 +77,26 @@ export default function SettingEditForm() {
   // });
 
   useEffect(()=>{
-    if(category){
-      dispatch(getTechparamsByCategory(category._id));
-      
-    }
-  },[dispatch,category])
+    setNameVal(customerDocument?.name)
+    setCustomerAccessVal(customerDocument?.customerAccess)
+    setFileCategoryVal(customerDocument?.category)
+    setDocumentNameVal(customerDocument?.documentName)
+  },[customerDocument])
 
   const defaultValues = useMemo(
     () => ({
-      techParamValue: setting?.techParamValue || '',
-      isActive : setting?.isActive ,
+      name: nameVal,
+      description: customerDocument?.description || "",
+      // image: null,
+      isActive: customerDocument?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
   const EditSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(50),
+    name: Yup.string().max(50),
+    description: Yup.string().max(10000),
+    // image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });
 
@@ -103,24 +121,81 @@ export default function SettingEditForm() {
   //   }
   // }, [site, reset, defaultValues]);
 
-  const toggleCancel = () => 
-  {
-    dispatch(setSettingEditFormVisibility (false));
-  };
 
   const onSubmit = async (data) => {
-    data.techParam = techParam || null
     try {
-      await dispatch(updateSetting( machine._id,setting._id,data));
+        data.customer = customer._id
+        if(nameVal){
+          data.name = nameVal
+        }
+        // if(fileCategoryVal){
+        //   data.category = fileCategoryVal._id
+        // }
+        if(customerAccessVal === true || customerAccessVal === "true" ){
+          data.customerAccess = true
+        }else{
+          data.customerAccess = false
+        }
+        // if(documentNameVal){
+        //   data.documentName = documentNameVal._id
+        // }
+        // console.log("data : ", data);
+      await dispatch(updateCustomerDocument(customerDocument._id,data));
+      await dispatch(customer._id)
       reset();
-      setCategory("")
-      setTechParam("")
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(err.message);
     }
   };
 
+  const toggleCancel = () => 
+  {
+    dispatch(setCustomerDocumentEditFormVisibility(false));
+  };
+  
+  // const togleCategoryPage = ()=>{
+  //   dispatch(setFileCategoryFormVisibility(true))
+  //   dispatch(setCustomerDocumentFormVisibility(false));
+  // }
+
+  // const togleDocumentNamePage = ()=>{
+  //   dispatch(setDocumentNameFormVisibility(true))
+  //   dispatch(setCustomerDocumentEdit(true))
+  //   dispatch(setCustomerDocumentFormVisibility(false));
+  //   dispatch(setCustomerDocumentEditFormVisibility(false));
+  // }
+
+  const handleUpload = () => {
+    console.log('ON UPLOAD');
+  };
+
+  const handleRemoveFile = (inputFile) => {
+    const filtered = files.filter((file) => file !== inputFile);
+    setFiles(filtered);
+  };
+
+  const handleRemoveAllFiles = () => {
+    setFiles([]);
+  };
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('image', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
+  const handleChange = (event) => {
+    setCustomerAccessVal(event.target.value);
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -129,63 +204,164 @@ export default function SettingEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Box
-                rowGap={3}
-                columnGap={3}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                 <Autocomplete
-                // freeSolo
-                disabled
-                value={ category || null}
-                options={techparamcategories}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                id="controllable-states-demo"
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setCategory(newValue);
-                  setTechParam("")
-                  }
-                  else{ 
-                  setCategory("");
-                  setTechParam("");
-                  }
-                }}
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="category" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
-                ChipProps={{ size: 'small' }}
-              />
-              
+            <FormHeading heading='Edit Document'/>
+              <Box rowGap={3} columnGap={3} display="grid" gridTemplateColumns={{  xs: 'repeat(1, 1fr)',  sm: 'repeat(2, 1fr)', }} >
+
+              <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
+
+              <FormControl >
+                <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
+                <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
+                  <MenuItem value="true">Yes</MenuItem>
+                  <MenuItem value="false"  >No</MenuItem>
+                  {/* <MenuItem value=""><em>None</em></MenuItem> */}
+                </Select>
+              </FormControl>
+
               <Autocomplete
                 // freeSolo
                 disabled
-                value={techParam || null}
+                value={documentNameVal || null}
+                options={documentNames}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                options={techparamsByCategory}
                 getOptionLabel={(option) => option.name}
-                id="controllable-states-demo"
                 onChange={(event, newValue) => {
                   if(newValue){
-                  setTechParam(newValue);
+                    setDocumentNameVal(newValue);
+                    setNameVal(newValue.name);
                   }
-                  else{ 
-                  setTechParam("");
+                  else{  
+                    setDocumentNameVal("");
                   }
                 }}
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Technical Parameters" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Document Name" />}
                 ChipProps={{ size: 'small' }}
               />
 
-              <RHFTextField name="techParamValue" label="Technical Parameter Value" />
+              <Autocomplete
+                // freeSolo
+                disabled
+                value={fileCategoryVal || null}
+                options={fileCategories}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setFileCategoryVal(newValue);
+                  }
+                  else{  
+                    setFileCategoryVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="File Category" />}
+                ChipProps={{ size: 'small' }}
+              />
+              
+              {/* <Autocomplete
+                // freeSolo
+                value={machineVal || null}
+                options={machines}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setMachineVal(newValue);
+                  }
+                  else{  
+                    setMachineVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Machine" />}
+                ChipProps={{ size: 'small' }}
+              /> */}
+              
+              {/* <Autocomplete 
+                value={customerVal || null}
+                options={customers}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setCustomerVal(newValue);
+                  }
+                  else{ 
+                  setCustomerVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Customer" />}
+                ChipProps={{ size: 'small' }}
+              /> */}
 
+              {/* <Autocomplete 
+                // freeSolo
+                value={siteVal || null}
+                options={sites}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setSiteVal(newValue);
+                  }
+                  else{ 
+                  setSiteVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Site" />}
+                ChipProps={{ size: 'small' }}
+              />
 
+              <Autocomplete 
+                // freeSolo
+                value={contactVal || null}
+                options={contacts}
+                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setContactVal(newValue);
+                  }
+                  else{ 
+                  setContactVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} label="Contact" />}
+                ChipProps={{ size: 'small' }}
+              /> */}
               </Box>
+              <RHFTextField name="description" label="Description" minRows={3} multiline />
+              {/* <RHFUpload
+              // sx={{ width: '300px'}}
+                  // multiple
+                  // thumbnail
+                 
+                  name="image"
+                  maxSize={3145728}
+                  onDrop={handleDrop}
+                  onRemove={handleDrop}
+                  // onRemoveAll={handleRemoveAllFiles}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                  // onDelete={handleRemoveFile}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                /> */}
+              {/* <Upload files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} /> */}
+              {/* {!!files.length && (
+          <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
+            Remove all
+          </Button>
+        )} */}
+
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"

@@ -13,8 +13,8 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , C
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames  } from '../../../redux/slices/document/documentName';
-import { addMachineDocument, setMachineDocumentFormVisibility  } from '../../../redux/slices/document/machineDocument';
-import { setCustomerDocumentFormVisibility } from '../../../redux/slices/document/customerDocument';
+import { addMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
+import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -30,6 +30,9 @@ DocumentNameAddForm.propTypes = {
 };
 export default function DocumentNameAddForm({currentDocument}) {
   const { documentName, documentNames } = useSelector((state) => state.documentName);
+  const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
+  const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
+
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -72,8 +75,13 @@ export default function DocumentNameAddForm({currentDocument}) {
         await dispatch(addDocumentName(data));
         // dispatch(getDocumentNames())
         dispatch(setDocumentNameFormVisibility(false))
-        dispatch(setMachineDocumentFormVisibility(true))
-        dispatch(setCustomerDocumentFormVisibility(true))
+        if( machineDocumentEdit || customerDocumentEdit){
+          dispatch(setMachineDocumentEditFormVisibility(true))
+          dispatch(setCustomerDocumentEditFormVisibility(true))
+        }else{
+          dispatch(setMachineDocumentFormVisibility(true))
+          dispatch(setCustomerDocumentFormVisibility(true))
+        }
         reset();
       } catch(error){
         enqueueSnackbar('Document Save failed!');
