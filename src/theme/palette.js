@@ -95,7 +95,7 @@ const HOWICKBURNIN = {
   main: '#D1ED18',
 };
 
-const COMMON = {
+ const COMMON = {
   common: { black: '#000', white: '#fff' },
   primary: PRIMARY,
   secondary: SECONDARY,

@@ -41,7 +41,6 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-
     },
 
     // HAS ERROR

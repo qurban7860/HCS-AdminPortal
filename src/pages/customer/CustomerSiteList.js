@@ -15,7 +15,7 @@ import {
   IconButton,
   TableContainer,
   DialogTitle,
-  Dialog, 
+  Dialog,
   Typography,
   Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
@@ -127,9 +127,9 @@ export default function CustomerSiteList() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const toggleChecked = async () => 
+  const toggleChecked = async () =>
     {
-      dispatch(setSiteFormVisibility(!siteAddFormVisibility));    
+      dispatch(setSiteFormVisibility(!siteAddFormVisibility));
     };
 
   const { themeStretch } = useSettingsContext();
@@ -160,7 +160,7 @@ export default function CustomerSiteList() {
   useEffect(() => {
     if(!siteAddFormVisibility && !siteEditFormVisibility){
       dispatch(getSites(customer._id));
-      
+
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 
@@ -170,7 +170,7 @@ export default function CustomerSiteList() {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
-      }   
+      }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
@@ -194,31 +194,70 @@ export default function CustomerSiteList() {
 
   return (
     <>
-        {!siteEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+      {!siteEditFormVisibility && (
+        <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
-              // alignItems 
-              onClick={toggleChecked}
+            // alignItems
+            onClick={toggleChecked}
+            variant="contained"
+            startIcon={
+              !siteAddFormVisibility ? (
+                <Iconify icon="eva:plus-fill" />
+              ) : (
+                <Iconify icon="eva:minus-fill" />
+              )
+            }
+          >
+            New Site
+          </Button>
+        </Stack>
+      )}
 
-              variant="contained"
-              startIcon={!siteAddFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-            >
-              New Site
-            </Button>
+      <Card>
+        {siteEditFormVisibility && <SiteEditForm />}
 
-        </Stack>}
-        
-        <Card>
+        {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
 
-          {siteEditFormVisibility && <SiteEditForm/>}
+        {!siteAddFormVisibility &&
+          !siteEditFormVisibility &&
+          sites.map((site, index) => {
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return (
+              <Accordion
+                key={site._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+              >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container spacing={0}>
+                      <Grid item xs={12} sm={4} md={4}>
+                        {' '}
+                        <Typography variant="body2"> {site.name} </Typography>{' '}
+                      </Grid>
+                      <CommaJoinField sm={8} objectParam={site.address} />
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <SiteViewForm currentSite={site} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
 
-          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm/>}
+        {isNotFound && <EmptyContent title="No site information saved" sx={{ color: '#DFDFDF' }} />}
 
-          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index)=>{ 
+          {!siteAddFormVisibility && !siteEditFormVisibility && sites.map((site, index)=>{
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={site._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
+                { index !==  activeIndex ?
                 <Grid container spacing={1}>
                   <Grid item xs={12} sm={4} md={4} sx={{ overflowWrap: "break-word", }}> <Typography variant="body2" > {site.name} </Typography> </Grid>
                   <CommaJoinField display={{ sm:"none", md:"block"}} sm={8} objectParam={site.address} sx={{ overflowWrap: "break-word", }}/>
@@ -231,11 +270,11 @@ export default function CustomerSiteList() {
                 />
               </AccordionDetails>
             </Accordion>
-            
-          )})} 
+
+          )})}
 
           {isNotFound && <EmptyContent title="No Data"/>}
-            
+
           {/* </Block> */}
           {/* <Block title="Controlled">
             {_accordions.map((item, index) => (
@@ -258,8 +297,7 @@ export default function CustomerSiteList() {
             ))}
           </Block> */}
 
-
-           {/* <SiteListTableToolbar
+        {/* <SiteListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -346,7 +384,7 @@ export default function CustomerSiteList() {
             dense={dense}
             onChangeDense={onChangeDense}
           /> */}
-        </Card>
+      </Card>
 
       {/* <ConfirmDialog
         open={openConfirm}

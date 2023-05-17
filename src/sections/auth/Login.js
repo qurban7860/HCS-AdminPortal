@@ -17,13 +17,6 @@ import { CONFIG } from '../../config-global';
 export default function Login(){
 return (
   <LoginLayout title={CONFIG.MESSAGE_LOGIN_USER}>
-    <Stack
-      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', whiteSpace: 'nowrap' }}
-    >
-      <Typography variant="h2" sx={{ mb: 5 }}>
-        CLOUD SERVICES
-      </Typography>
-    </Stack>
     <Grid item xs={6}>
       <Typography
         sx={{
@@ -33,6 +26,7 @@ return (
           fontWeight: 'bold',
           p: 1,
           py: 0.1,
+          mb: 1,
         }}
       >
         {CONFIG.ENV}
@@ -42,12 +36,12 @@ return (
     </Grid>
     <AuthLoginForm />
 
-    {/* <Stack direction="row" spacing={0.5} sx={{mt:2}}>
-          <Typography variant="body2">New user?</Typography>
-          <Link component={RouterLink} to={PATH_AUTH.register} variant="subtitle2">
-            Create an account
-          </Link>
-        </Stack> */}
+    {/* <Stack direction="row" spacing={0.5} sx={{ mt: 2, justifyContent: 'center' }}>
+      <Typography variant="body2">Need an account?</Typography>
+      <Link component={RouterLink} to={PATH_AUTH.register} variant="subtitle">
+        Create an account here
+      </Link>
+    </Stack> */}
 
     {/* <AuthWithSocial /> */}
   </LoginLayout>

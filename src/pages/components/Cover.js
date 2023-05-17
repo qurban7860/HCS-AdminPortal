@@ -133,7 +133,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
             }}
           >
             {/* if in mobile/device, only the avatar will show up for customer */}
-            {isMobile && customer ? '' : name}
+            {isMobile ? '' : name}
           </Typography>
         )}
 

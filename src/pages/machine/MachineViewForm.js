@@ -102,26 +102,10 @@ export default function MachineViewForm() {
           heading="Previous Machine Serial No"
           param={defaultValues?.parentSerialNo}
         />
-        <ViewFormField
-          sm={6}
-          heading="Previous Machine"
-          param={defaultValues?.parentMachine}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Supplier"
-          param={defaultValues?.supplier}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Machine Model"
-          param={defaultValues?.machineModel}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Status"
-          param={defaultValues?.status}
-        />
+        <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
+        <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
+        <ViewFormField sm={6} heading="Machine Model" param={defaultValues?.machineModel} />
+        <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
         <ViewFormField
           sm={6}
           heading="Work Order / Perchase Order"
@@ -166,25 +150,30 @@ export default function MachineViewForm() {
             )
           }
         />
-        <ViewFormField
-          sm={12}
-          heading="Nearby Milestone"
-          param={defaultValues?.siteMilestone}
-        />
-        <ViewFormField
-          sm={12}
-          heading="Description"
-          param={defaultValues?.description}
-        />
+        <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
+        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
-        <Grid item xs={12} sm={12} sx={{ pt: 2 }}>
-          <Divider>
-            <Typography variant="subtitle" sm={12}>
+        <Grid
+          container
+          sx={{
+            py: '2rem',
+          }}
+        >
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            sx={{
+              backgroundImage: (theme) =>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+          >
+            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
               Howick Resources
             </Typography>
-          </Divider>
+          </Grid>
         </Grid>
         <Grid item sm={6}>
           <ViewFormField
@@ -218,81 +207,53 @@ export default function MachineViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            Customer{' '}
+          </Typography>{' '}
+          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
+            {' '}
+            <Iconify icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
         <Grid container sx={{ px: 2, pt: 2 }}>
-          <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
-          >
-            <Typography variant="h4" sx={{ px: 2 }}>
-              Customer{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseCustomer()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
           <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField
-            sm={6}
-            heading="Trading Name"
-            param={customer?.tradingName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Phone"
-            param={customer?.mainSite?.phone}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Fax"
-            param={customer?.mainSite?.fax}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Email"
-            param={customer?.mainSite?.email}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Site Name"
-            param={customer?.mainSite?.name}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Street"
-            param={customer?.mainSite?.address.street}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suburb"
-            param={customer?.mainSite?.address.suburb}
-          />
-          <ViewFormField
-            sm={6}
-            heading="City"
-            param={customer?.mainSite?.address.city}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Region"
-            param={customer?.mainSite?.address.region}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Post Code"
-            param={customer?.mainSite?.address.postcode}
-          />
-          <ViewFormField
-            sm={12}
-            heading="Country"
-            param={customer?.mainSite?.address.country}
-          />
+          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
+          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
+          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
+          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
+          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
+          <Grid container sx={{ py: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+              }}
+            >
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
+                Address Information
+              </Typography>
+            </Grid>
+          </Grid>
+          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address.street} />
+          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address.suburb} />
+          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address.city} />
+          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address.region} />
+          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address.postcode} />
+          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address.country} />
           <ViewFormField
             sm={6}
             heading="Primary Biling Contact"
@@ -312,10 +273,22 @@ export default function MachineViewForm() {
             }
           />
         </Grid>
-        <Typography variant="subtitle2" sx={{ px: 4 }}>
-          Howick Resources{' '}
-        </Typography>
         <Grid container sx={{ px: 2, pb: 3 }}>
+          <Grid container sx={{ py: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+              }}
+            >
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
+                Howick Resources{' '}
+              </Typography>
+            </Grid>
+          </Grid>
           <ViewFormField
             sm={6}
             heading="Account Manager"
@@ -364,50 +337,36 @@ export default function MachineViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid container sx={{ p: 2 }}>
-          <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            Installation Site{' '}
+          </Typography>{' '}
+          <Link
+            onClick={() => handleCloseInstallationSite()}
+            href="#"
+            underline="none"
+            sx={{ ml: 'auto' }}
           >
-            <Typography variant="h4" sx={{ px: 2 }}>
-              Installation Site{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseInstallationSite()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
-          <ViewFormField
-            sm={12}
-            heading="Name"
-            param={defaultValues?.instalationSite?.name}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Phone"
-            param={defaultValues?.instalationSite?.phone}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Fax"
-            param={defaultValues?.instalationSite?.fax}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Email"
-            param={defaultValues?.instalationSite?.email}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Website"
-            param={defaultValues?.instalationSite?.website}
-          />
+            {' '}
+            <Iconify icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
+        <Grid container sx={{ p: 2 }}>
+          <ViewFormField sm={12} heading="Name" param={defaultValues?.instalationSite?.name} />
+          <ViewFormField sm={6} heading="Phone" param={defaultValues?.instalationSite?.phone} />
+          <ViewFormField sm={6} heading="Fax" param={defaultValues?.instalationSite?.fax} />
+          <ViewFormField sm={6} heading="Email" param={defaultValues?.instalationSite?.email} />
+          <ViewFormField sm={6} heading="Website" param={defaultValues?.instalationSite?.website} />
           <ViewFormField
             sm={6}
             heading="Street"
@@ -436,8 +395,7 @@ export default function MachineViewForm() {
           <ViewFormField
             sm={6}
             heading="Country"
-            param={
-              defaultValues.instalationSite?.address?.country}
+            param={defaultValues.instalationSite?.address?.country}
           />
         </Grid>
       </Dialog>
@@ -448,68 +406,47 @@ export default function MachineViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid container sx={{ p: 2 }}>
-          <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            Billing Site{' '}
+          </Typography>{' '}
+          <Link
+            onClick={() => handleCloseBillingSite()}
+            href="#"
+            underline="none"
+            sx={{ ml: 'auto' }}
           >
-            <Typography variant="h3" sx={{ px: 2 }}>
-              Billing Site{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseBillingSite()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
-          <ViewFormField
-            sm={12}
-            heading="Name"
-            param={defaultValues?.billingSite?.name}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Phone"
-            param={defaultValues?.billingSite?.phone}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Fax"
-            param={defaultValues?.billingSite?.fax}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Email"
-            param={defaultValues?.billingSite?.email}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Website"
-            param={defaultValues?.billingSite?.website}
-          />
+            {' '}
+            <Iconify icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
+        <Grid container sx={{ p: 2 }}>
+          <ViewFormField sm={12} heading="Name" param={defaultValues?.billingSite?.name} />
+          <ViewFormField sm={6} heading="Phone" param={defaultValues?.billingSite?.phone} />
+          <ViewFormField sm={6} heading="Fax" param={defaultValues?.billingSite?.fax} />
+          <ViewFormField sm={6} heading="Email" param={defaultValues?.billingSite?.email} />
+          <ViewFormField sm={6} heading="Website" param={defaultValues?.billingSite?.website} />
           <ViewFormField
             sm={6}
             heading="Street"
-            param={
-              defaultValues.billingSite?.address?.street
-            }
+            param={defaultValues.billingSite?.address?.street}
           />
           <ViewFormField
             sm={6}
             heading="Suburb"
-            param={
-              defaultValues.billingSite?.address?.suburb}
+            param={defaultValues.billingSite?.address?.suburb}
           />
-          <ViewFormField
-            sm={6}
-            heading="City"
-            param={defaultValues?.billingSite?.address?.city}
-          />
+          <ViewFormField sm={6} heading="City" param={defaultValues?.billingSite?.address?.city} />
           <ViewFormField
             sm={6}
             heading="Region"

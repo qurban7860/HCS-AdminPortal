@@ -15,7 +15,7 @@ import {
   IconButton,
   TableContainer,
   DialogTitle,
-  Dialog, 
+  Dialog,
   Typography,
   Accordion, AccordionSummary, AccordionDetails
 } from '@mui/material';
@@ -125,9 +125,9 @@ export default function MachineLicenseList() {
 
   const { initial,error, responseMessage , licenseEditFormVisibility ,licenses, formVisibility } = useSelector((state) => state.license);
   const { machine } = useSelector((state) => state.machine);
-  const toggleChecked = async () => 
+  const toggleChecked = async () =>
     {
-      dispatch(setLicenseFormVisibility (!formVisibility));    
+      dispatch(setLicenseFormVisibility (!formVisibility));
     };
 
   const { themeStretch } = useSettingsContext();
@@ -157,14 +157,14 @@ export default function MachineLicenseList() {
     setExpanded(isExpanded ? panel : false);
   };
 
- 
+
   useEffect(() => {
     if (initial) {
       if (licenses && !error) {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
-      }   
+      }
       setTableData(licenses);
     }
   }, [licenses, error, responseMessage, enqueueSnackbar, initial]);
@@ -188,58 +188,67 @@ export default function MachineLicenseList() {
 
   return (
     <>
-        {!licenseEditFormVisibility && <Stack alignItems="flex-end" sx={{ mb: 3, px:4 }}>
+      {!licenseEditFormVisibility && (
+        <Stack alignItems="flex-end" sx={{ mb: 3, px: 4 }}>
           <Button
-              // alignItems 
-              onClick={toggleChecked}
-              variant="contained"
-              startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-            >
+            // alignItems
+            onClick={toggleChecked}
+            variant="contained"
+            startIcon={
+              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+            }
+          >
             New License
-            </Button>
-        </Stack>}
-        
-        <Card sx={{mt:3}}>
-          {formVisibility && !licenseEditFormVisibility && <LicenseAddForm/>}
-          {licenseEditFormVisibility && <LicenseEditForm/>}
-          {!formVisibility && !licenseEditFormVisibility && licenses.map((license, index) => { 
+          </Button>
+        </Stack>
+      )}
+
+      <Card sx={{ mt: 3 }}>
+        {formVisibility && !licenseEditFormVisibility && <LicenseAddForm />}
+        {licenseEditFormVisibility && <LicenseEditForm />}
+        {!formVisibility &&
+          !licenseEditFormVisibility &&
+          licenses.map((license, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={license._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
-                <Grid container spacing={0}>
-                  
-                  {/* <Grid item xs={12} sm={3} md={2}>
+            return (
+              <Accordion
+                key={license._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+              >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container spacing={0}>
+                      {/* <Grid item xs={12} sm={3} md={2}>
                     {license?.license?.name || "" }
                   </Grid> */}
 
-                  <Grid item xs={12} sm={6} md={8}>
-                    {license?.licenseDetail?.length > 100 ? license?.licenseDetail.substring(0, 100) :license?.licenseDetail}
-                    {license?.licenseDetail?.length > 100 ? "..." :null}
-                  </Grid>
+                      <Grid item xs={12} sm={6} md={8}>
+                        {license?.licenseDetail?.length > 100
+                          ? license?.licenseDetail.substring(0, 100)
+                          : license?.licenseDetail}
+                        {license?.licenseDetail?.length > 100 ? '...' : null}
+                      </Grid>
 
-                  <Grid item xs={12} sm={3} md={2}>
-                    <Typography variant="body2" >
-                    {fDate(license?.createdAt || "")}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{mt:-5}}>
-                <LicenseViewForm
-                currentTool={license}
-                />
-              </AccordionDetails>
-            </Accordion>
-            
-          )})} 
+                      <Grid item xs={12} sm={3} md={2}>
+                        <Typography variant="body2">{fDate(license?.createdAt || '')}</Typography>
+                      </Grid>
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <LicenseViewForm currentTool={license} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
 
-          {isNotFound && <EmptyContent title="No Data"/>}
-            
-
-        </Card>
+        {isNotFound && <EmptyContent title="No license saved" sx={{ color: '#DFDFDF' }} />}
+      </Card>
 
       {/* <ConfirmDialog
         open={openConfirm}

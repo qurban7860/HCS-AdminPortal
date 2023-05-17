@@ -83,6 +83,8 @@ export default function Header({ onOpenNav }) {
       sx={{
         boxShadow: 'none',
         height: HEADER.H_MOBILE,
+        position: 'fixed',
+        top: 0,
         zIndex: theme.zIndex.appBar + 1,
         ...bgBlur({
           color: bgcolor,
@@ -114,8 +116,9 @@ export default function Header({ onOpenNav }) {
           height: 1,
           px: { lg: 5 },
           color: 'text.primary',
+          position: 'sticky'
         }}
-      >
+        >
         {renderContent}
       </Toolbar>
     </AppBar>

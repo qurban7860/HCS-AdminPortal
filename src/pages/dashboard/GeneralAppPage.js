@@ -4,6 +4,7 @@ import Chart from "react-apexcharts";
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Typography, Container, Grid, Stack, Button, Card   } from '@mui/material';
+import { AppShortcutRounded } from '@mui/icons-material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -31,9 +32,10 @@ import {
 } from '../../sections/@dashboard/general/app';
 // assets
 import { SeoIllustration } from '../../assets/illustrations';
-
+import MachineListTableToolbar from '../machine/MachineListTableToolbar'
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count'
+
 
 
 
@@ -44,6 +46,8 @@ export default function GeneralAppPage() {
   const dispatch = useDispatch();
 
   const { user } = useAuthContext();
+
+  const theme = useTheme();
 
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
 
@@ -133,160 +137,126 @@ export default function GeneralAppPage() {
   }, [dispatch]);
 
   return (
-    <Container maxWidth={false}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} md={12}>
-          <AppWelcome
-            title={`CUSTOMER \n SERVICE & SUPPORT`}
-            // title={`Welcome back! \n ${user?.displayName}`}
-            description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
-            img={
-              <SeoIllustration
-                sx={{
-                  p: 3,
-                  width: { xs: 360, md: 640 },
-                  margin: { xs: 'auto', md: 'inherit' },
-                  display: { xs: 'none', md: 'block' },
-                }}
-              />
-            }
-            action={
-              <Button
-                variant="contained"
-                href="https://www.howickltd.com/products" target="_blank"
-                >
-                {/* we can create a shortcut here to reports for the customers */}
-                OUR PRODUCTS
-              </Button>
-            }
-          />
+    <Container
+      maxWidth={false}
+      p={0}
+      sx={{
+        backgroundImage: `url(../../assets/illustrations/illustration_howick_icon.svg)`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'top right',
+        backgroundSize: 'auto 90%',
+        backgroundOpacity: 0.1,
+        backgroundAttachment: 'fixed',
+        // height: '100%',
+        // width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
+      }}
+    >
+      <Grid container spacing={3} m={3}>
+        <Grid container xs={12} md={20} lg={20} spacing={3}>
+          <Grid
+            item
+            xs={12}
+            md={10}
+            lg={6}
+            sx={{
+              height: { xs: 360, md: 400 },
+              marginTop: { xs: -10, md: 0 },
+            }}
+            mb={-13}
+          >
+            <AppWelcome
+              title={`CUSTOMER \n SERVICE & SUPPORT`}
+              // title={`Welcome back! \n ${user?.displayName}`}
+              description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
+            />
+          </Grid>
         </Grid>
 
         {/* <Grid item xs={12} md={12}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-
-
-        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-          <AppWidgetSummary
-            title="Customers"
-            // percent={-0.1}
-            total={count?.customerCount || 0}
-            // chart={{
-            //   colors: [theme.palette.warning.main],
-            //   series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-            // }}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-          <AppWidgetSummary
-            title="Sites"
-            // percent={2.6}
-            total={count?.siteCount || 0}
-            // chart={{
-            //   colors: [theme.palette.primary.main],
-            //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-            // }}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-          <AppWidgetSummary
-            title="Machines"
-            // percent={0.2}
-            total={count?.machineCount || 0}
-            // chart={{
-            //   colors: [theme.palette.info.main],
-            //   series: [10, 6, 4],
-            // }}
-          />
-        </Grid>
-
-
-
-        <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-          <AppWidgetSummary
-            title="Active Users"
-            // percent={2.6}
-            total={count?.userCount || 0}
-            // chart={{
-            //   colors: [theme.palette.primary.main],
-            //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-            // }}
-          />
-        </Grid>
-
-
-
-        <Grid item md={12}>
-          {/* widget for typography */}
-
-          {/* <Typography variant="h1" gutterBottom color={theme.palette.bronze.main}>
-           SHAPING THE\n WORLD OF CONSTRUCTION
-
-          </Typography> */}
-        </Grid>
-        {/* <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentDownload
-              title="Current Machines"
-              chart={{
-                colors: [
-                  theme.palette.primary.main,
-                  theme.palette.info.main,
-                  // theme.palette.error.main,
-                  theme.palette.warning.main,
-                ],
-                series: [
-                  { label: 'FRAMA', value: 10 },
-                  { label: 'Decoiler', value: 6 },
-                  { label: 'Rivet Cutter', value: 4 },
-                ],
-              }}
-            />
-          </Grid> */}
-          <Grid  item xs={12} md={6} lg={6}>
-            <Card sx={{px:3 ,mb:3}}>
-              <Stack sx={{pt:2}}>
-                <Typography variant="subtitle2">Customers</Typography>
-              </Stack>
-              <Chart
-                options={CustomerData.options}
-                series={CustomerData.series}
-                type="bar"
-                height="300px"
-                width="100%"
+        <Grid container xs={12} md={16} m={3}>
+          <Grid container xs={12} md={16} spacing={3}>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Customers"
+                percent={-0.1}
+                total={count?.customerCount || 0}
+                chart={{
+                  colors: [theme.palette.warning.main],
+                  series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+                }}
               />
-            </Card>
-          </Grid>
-          <Grid  item xs={12} md={6} lg={6}>
-            <Card sx={{px:3 ,mb:3}}>
-              <Stack sx={{pt:2}}>
-                <Typography variant="subtitle2">Sites</Typography>
-              </Stack>
-              <Chart
-                options={SiteData.options}
-                series={SiteData.series}
-                type="bar"
-                height="300px"
-                width="100%"
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Sites"
+                percent={2.6}
+                total={count?.siteCount || 0}
+                chart={{
+                  colors: [theme.palette.primary.main],
+                  series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+                }}
               />
-            </Card>
+            </Grid>
           </Grid>
-          <Grid  item xs={12} md={6} lg={6}>
-            <Card sx={{px:3 ,mb:3}}>
-              <Stack sx={{pt:2}}>
-                <Typography variant="subtitle2">Machine Models</Typography>
-              </Stack>
-              <Chart
-                options={ModelData.options}
-                series={ModelData.series}
-                type="bar"
-                height="300px"
-                width="100%"
+          <Grid container xs={12} md={16} spacing={3}>
+            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+              <AppWidgetSummary
+                title="Machines"
+                // percent={0.2}
+                total={count?.machineCount || 0}
               />
-            </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+              <AppWidgetSummary
+                title="Active Users"
+                // percent={2.6}
+                total={count?.userCount || 0}
+                // chart={{
+                //   colors: [theme.palette.primary.main],
+                //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+                // }}
+              />
+            </Grid>
           </Grid>
+          <Grid container xs={12} md={16} spacing={3} mt={2}>
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ px: 3, mb: 3 }}>
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="subtitle2">Customers</Typography>
+                </Stack>
+                <Chart
+                  options={CustomerData.options}
+                  series={CustomerData.series}
+                  type="bar"
+                  height="300px"
+                  width="100%"
+                />
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ px: 3, mb: 3 }}>
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="subtitle2">Machine Models</Typography>
+                </Stack>
+                <Chart
+                  options={ModelData.options}
+                  series={ModelData.series}
+                  type="bar"
+                  height="300px"
+                  width="100%"
+                />
+              </Card>
+            </Grid>
+          </Grid>
+        </Grid>
+
         {/* <Grid item xs={12} md={6} lg={8}>
             <AppAreaInstalled
               title="Sites"
@@ -331,15 +301,15 @@ export default function GeneralAppPage() {
             <AppTopRelated title="Top Related Applications" list={_appRelated} />
           </Grid> */}
 
-         {/* <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
           </Grid> */}
 
-          {/* <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopAuthors title="Top Authors" list={_appAuthors} />
           </Grid> */}
 
-          {/* <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <Stack spacing={3}>
               <AppWidget
                 title="Conversion"

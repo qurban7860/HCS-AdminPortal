@@ -71,7 +71,7 @@ export default function CustomerContactList() {
   const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const [checked, setChecked] = useState(false);
-  const toggleChecked = () => 
+  const toggleChecked = () =>
     {
       setChecked(value => !value);
       dispatch(setContactFormVisibility(!formVisibility));
@@ -84,7 +84,7 @@ export default function CustomerContactList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-  
+
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
     setActiveIndex(null)
@@ -110,7 +110,7 @@ export default function CustomerContactList() {
         enqueueSnackbar(responseMessage);
       } else {
         enqueueSnackbar(error, { variant: `error` });
-      }   
+      }
       setTableData(contacts);
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
@@ -127,37 +127,83 @@ export default function CustomerContactList() {
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   return (
     <>
-        {!contactEditFormVisibility && <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-          <Button  onClick={toggleChecked} variant="contained" startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />} > New Contact </Button>
-        </Stack>}
-        <Card>
-          {contactEditFormVisibility && <ContactEditForm/>}
-          {formVisibility && !contactEditFormVisibility && <ContactAddForm/>}
-          {/* {!formVisibility && !contactEditFormVisibility && <Block title="Available Sites"> */}
-          {!formVisibility && !contactEditFormVisibility && contacts.map((contact, index) =>{ 
+      {!contactEditFormVisibility && (
+        <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+          <Button
+            onClick={toggleChecked}
+            variant="contained"
+            startIcon={
+              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+            }
+          >
+            {' '}
+            New Contact{' '}
+          </Button>
+        </Stack>
+      )}
+      <Card>
+        {contactEditFormVisibility && <ContactEditForm />}
+        {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
+        {/* {!formVisibility && !contactEditFormVisibility && <Block title="Available Sites"> */}
+        {!formVisibility &&
+          !contactEditFormVisibility &&
+          contacts.map((contact, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={contact._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
-              <Grid container >
-                <Grid item xs={12} sm={6} md={3} sx={{ overflowWrap: "break-word", px:1 }} >{contact?.firstName} {contact.lastName} </Grid>
-                <Grid item xs={12} sm={6} md={3} sx={{ overflowWrap: "break-word", px:1 }} >{contact?.email && <Typography variant="body2" >{contact.email}</Typography>}</Grid>
-                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"block"}}>{contact?.phone && <Typography variant="body2" >{contact.phone}</Typography>}</Grid>
-                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"none", lg:"block"}}>{contact?.title && <Typography variant="body2" >{contact.title}</Typography>}</Grid>
-                <Grid item xs={12} sm={9} md={2} sx={{ overflowWrap: "break-word", px:1 }} display={{ xs:"none", sm:"none", md:"none",  lg:"block"}}>{contact?.contactTypes && <Typography variant="body2" >{Object.values(contact.contactTypes)?.join(", ")}</Typography>}</Grid>
-              </Grid>
-            : null }
-              </AccordionSummary>
-              <AccordionDetails  sx={{ mt:-5 }}>
-                <ContactViewForm
-                currentContact={contact}
-                />
-              </AccordionDetails>
-            </Accordion>
-          )})} 
-          {isNotFound && <EmptyContent title="No Data"/>}
-        </Card>
+            return (
+              <Accordion
+                key={contact._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+                >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container spacing={0}>
+                      <Grid item xs={12} sm={6} md={3}>
+                        {contact?.firstName} {contact.lastName}{' '}
+                      </Grid>
+                      <Grid item xs={12} sm={6} md={3}>
+                        {contact?.email && <Typography variant="body2">{contact.email}</Typography>}
+                      </Grid>
+                      <Grid item xs={12} sm={9} md={2} display={{ sm: 'none', md: 'block' }}>
+                        {contact?.phone && <Typography variant="body2">{contact.phone}</Typography>}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={9}
+                        md={2}
+                        display={{ sm: 'none', md: 'none', lg: 'block' }}
+                      >
+                        {contact?.title && <Typography variant="body2">{contact.title}</Typography>}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        sm={9}
+                        md={2}
+                        display={{ sm: 'none', md: 'none', lg: 'block' }}
+                      >
+                        {contact?.contactTypes && (
+                          <Typography variant="body2">
+                            {Object.values(contact.contactTypes)?.join(', ')}
+                          </Typography>
+                        )}
+                      </Grid>
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <ContactViewForm currentContact={contact} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        {isNotFound && <EmptyContent title="No contacts saved" sx={{ color: '#DFDFDF' }} />}
+      </Card>
     </>
   );
 }

@@ -32,14 +32,24 @@ export default function LoginLayout({ children, illustration, title }) {
           alignItems="center"
           spacing={2}
           container
-          >
+        >
           <Grid item>
             <Logo
               sx={{
-                width: { lg: '280px', md: '260px', sm: '255px', xs: '250px' },
+                width: '100%',
+                p: 1,
                 pointerEvents: 'none',
               }}
             />
+            <Stack
+              sx={{
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="h2" sx={{ mb: 6, mt: -2 }}>
+                CLOUD SERVICES
+              </Typography>
+            </Stack>
           </Grid>
         </Grid>
         <Stack sx={{ width: '100%' }}> {children} </Stack>

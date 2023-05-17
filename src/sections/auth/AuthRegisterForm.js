@@ -95,10 +95,10 @@ export default function AuthRegisterForm() {
           variant="contained"
           loading={isSubmitting || isSubmitSuccessful}
           sx={{
-            bgcolor: 'text.primary',
+            bgcolor: 'primary.main',
             color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
             '&:hover': {
-              bgcolor: 'text.primary',
+              bgcolor: 'secondary.main',
               color: (theme) => (theme.palette.mode === 'light' ? 'common.white' : 'grey.800'),
             },
           }}
