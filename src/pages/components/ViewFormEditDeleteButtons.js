@@ -47,15 +47,24 @@ const handleCloseConfirm = () => {
                 variant="outlined"
                 title="Edit"
                 >
-              <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:pencil" /></Button>
-              <Button
+              <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:pencil" />
+              </Button>
+              {/* if not in the profile show this */}
+              {onDelete ? (
+                 <Button
                 onClick={() => {
                   handleOpenConfirm();
                 }}
                 variant="outlined"
                 color="error"
                 title="Delete"
-              ><Iconify sx={{height: '24px',width: '24px' }} icon="mdi:trash-can-outline" /></Button>
+                >
+              <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:trash-can-outline" />
+              </Button>
+              ) : ''}
+
+
+
           </Stack>
           <ConfirmDialog
             open={openConfirm}

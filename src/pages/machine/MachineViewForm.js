@@ -155,12 +155,7 @@ export default function MachineViewForm() {
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
-        <Grid
-          container
-          sx={{
-            py: '2rem',
-          }}
-        >
+        <Grid container sx={{ py: '2rem' }}>
           <Grid
             item
             xs={12}
@@ -169,34 +164,33 @@ export default function MachineViewForm() {
               backgroundImage: (theme) =>
                 `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
             }}
-          >
+            >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
               Howick Resources
             </Typography>
           </Grid>
         </Grid>
-        <Grid item sm={6}>
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={defaultValues?.accountManager?.firstName}
-            secondParam={defaultValues?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={defaultValues?.projectManager?.firstName}
-            secondParam={defaultValues?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={defaultValues?.supportManager?.firstName}
-            secondParam={defaultValues?.supportManager?.lastName}
-          />
-        </Grid>
+
+        <ViewFormField
+          sm={6}
+          heading="Account Manager"
+          param={defaultValues?.accountManager?.firstName}
+          secondParam={defaultValues?.accountManager?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Project Manager"
+          param={defaultValues?.projectManager?.firstName}
+          secondParam={defaultValues?.projectManager?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Suppport Manager"
+          param={defaultValues?.supportManager?.firstName}
+          secondParam={defaultValues?.supportManager?.lastName}
+        />
+        <ViewFormSwitch isActive={defaultValues.isActive} />
       </Grid>
-      <ViewFormSwitch isActive={defaultValues.isActive} />
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
@@ -206,7 +200,7 @@ export default function MachineViewForm() {
         onClose={handleCloseCustomer}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-      >
+        >
         <Grid
           container
           sx={{
@@ -336,7 +330,7 @@ export default function MachineViewForm() {
         onClose={handleCloseInstallationSite}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-      >
+        >
         <Grid
           container
           sx={{
@@ -356,7 +350,7 @@ export default function MachineViewForm() {
             href="#"
             underline="none"
             sx={{ ml: 'auto' }}
-          >
+            >
             {' '}
             <Iconify icon="mdi:close-box-outline" />
           </Link>
@@ -405,7 +399,7 @@ export default function MachineViewForm() {
         onClose={handleCloseBillingSite}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-      >
+        >
         <Grid
           container
           sx={{
@@ -416,7 +410,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-        >
+          >
           <Typography variant="h4" sx={{ px: 2 }}>
             Billing Site{' '}
           </Typography>{' '}
@@ -425,7 +419,7 @@ export default function MachineViewForm() {
             href="#"
             underline="none"
             sx={{ ml: 'auto' }}
-          >
+            >
             {' '}
             <Iconify icon="mdi:close-box-outline" />
           </Link>

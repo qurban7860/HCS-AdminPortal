@@ -120,9 +120,9 @@ export default function SecurityUserViewForm() {
           />
         </Card>
         <Card sx={{ p: 3 }}>
-        <ViewFormEditDeleteButtons
+          <ViewFormEditDeleteButtons
             handleEdit={handleEdit}
-            handleDelete={handleOpenConfirm}
+            onDelete={onDelete}
           />
           {/* <Stack
             justifyContent="flex-end"

@@ -23,7 +23,7 @@ import { Cover } from '../components/Cover'
 import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-
+import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import ViewFormSWitch from '../components/ViewFormSwitch';
 // ----------------------------------------------------------------------
 
@@ -101,7 +101,7 @@ export default function SecurityUserProfile() {
             height: 160,
             position: 'relative',
           }}
-          >
+        >
           <Cover
             name={defaultValues?.name}
             photoURL={user.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
@@ -125,27 +125,14 @@ export default function SecurityUserProfile() {
                 },
               },
             }}
-            >
+          >
             {/* {TABS.map((tab) => (
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))} */}
           </Tabs>
         </Card>
         <Card sx={{ p: 3 }}>
-          <Stack
-            justifyContent="flex-end"
-            direction="row"
-            spacing={2}
-            sx={{ mb: -4, mt: -1, mr: 2 }}
-          >
-            <Button
-              onClick={() => handleEdit()}
-              variant="outlined"
-              startIcon={<Iconify icon="eva:edit-fill" />}
-            >
-              Edit
-            </Button>
-          </Stack>
+          <ViewFormEditDeleteButtons handleEdit={handleEdit} />
           <Grid container>
             <ViewFormField
               sm={6}
@@ -259,7 +246,7 @@ export default function SecurityUserProfile() {
                 ? `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
                 : ''
             }
-            />
+          />
         </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
           <Grid container sx={{ py: '2rem' }}>
@@ -335,7 +322,7 @@ export default function SecurityUserProfile() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-          >
+        >
           <Typography variant="h4" sx={{ px: 2 }}>
             Contact{' '}
           </Typography>{' '}

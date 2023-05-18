@@ -181,20 +181,20 @@ const onDelete = async () => {
         <ViewFormField
           sm={6}
           heading="Account Manager"
-          param={defaultValues?.accountManager.firstName}
-          secondparam={defaultValues?.accountManager.lastName}
+          param={defaultValues?.accountManager?.firstName}
+          secondparam={defaultValues?.accountManager?.lastName}
         />
         <ViewFormField
           sm={6}
           heading="Project Manager"
-          param={defaultValues?.projectManager.firstName}
-          secondparam={defaultValues?.projectManager.lastName}
+          param={defaultValues?.projectManager?.firstName}
+          secondparam={defaultValues?.projectManager?.lastName}
         />
         <ViewFormField
           sm={6}
           heading="Suppport Manager"
-          param={defaultValues?.supportManager.firstName}
-          secondparam={defaultValues?.supportManager.lastName}
+          param={defaultValues?.supportManager?.firstName}
+          secondparam={defaultValues?.supportManager?.lastName}
         />
         <ViewFormSwitch isActive={defaultValues.isActive} />
       </Grid>
