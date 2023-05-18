@@ -99,50 +99,104 @@ const onDelete = async () => {
       {/* </Grid> */}
 
       <Grid container>
-        <ViewFormField sm={6}   heading='Name'               param={defaultValues?.name} isActive={defaultValues.isActive}/>
-        <ViewFormField sm={6}   heading='Trading Name'       param={defaultValues?.tradingName}/>
-        <ViewFormField sm={6}   heading='Phone'              param={defaultValues?.mainSite?.phone}/>
-        <ViewFormField sm={6}   heading='Fax'                param={defaultValues?.mainSite?.fax }/>
-        <ViewFormField sm={6}   heading='Email'              param={defaultValues?.mainSite?.email}/>
+        <ViewFormField
+          sm={6}
+          heading="Name"
+          param={defaultValues?.name}
+          isActive={defaultValues.isActive}
+        />
+        <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
+        <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
+        <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
+        <ViewFormField sm={6} heading="Email" param={defaultValues?.mainSite?.email} />
       </Grid>
       <Grid container>
-        <ViewFormField sm={6}   heading='Primary Billing Contact'      param={defaultValues?.primaryBillingContact?.firstName}     secondparam={defaultValues?.primaryBillingContact?.lastName}/>
-        <ViewFormField sm={6}   heading='Primary Technical Contact'    param={defaultValues?.primaryTechnicalContact?.firstName}   secondparam={defaultValues?.primaryTechnicalContact?.lastName}/>
+        <ViewFormField
+          sm={6}
+          heading="Primary Billing Contact"
+          param={defaultValues?.primaryBillingContact?.firstName}
+          secondparam={defaultValues?.primaryBillingContact?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Primary Technical Contact"
+          param={defaultValues?.primaryTechnicalContact?.firstName}
+          secondparam={defaultValues?.primaryTechnicalContact?.lastName}
+        />
       </Grid>
 
       {defaultValues.mainSite && (
         <Grid container>
-          <Grid item xs={12} sm={12} sx={{ pt: 2 , px: 2 }}>
-            <Divider>
-              <Typography variant="subtitle" sx={{ color: '#131414' }}>
-                Address Details
+          <Grid container sx={{ py: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+              }}
+            >
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
+                Address Information
               </Typography>
-            </Divider>
+            </Grid>
           </Grid>
 
-          <ViewFormField sm={6}   heading='Site Name'       param={defaultValues?.mainSite?.name}/>
-          <ViewFormField sm={6}   heading='Street'          param={defaultValues?.mainSite.address?.street}/>
-          <ViewFormField sm={6}   heading='Suburb'          param={defaultValues?.mainSite.address?.suburb}/>
-          <ViewFormField sm={6}   heading='City'            param={defaultValues?.mainSite.address?.city}/>
-          <ViewFormField sm={6}   heading='Post Code'       param={defaultValues?.mainSite.address?.postcode}/>
-          <ViewFormField sm={6}   heading='Region'          param={defaultValues?.mainSite.address?.region}/>
-          <ViewFormField sm={6}   heading='Country'         param={defaultValues?.mainSite.address?.country}/>
+          <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
+          <ViewFormField sm={6} heading="Street" param={defaultValues?.mainSite.address?.street} />
+          <ViewFormField sm={6} heading="Suburb" param={defaultValues?.mainSite.address?.suburb} />
+          <ViewFormField sm={6} heading="City" param={defaultValues?.mainSite.address?.city} />
+          <ViewFormField
+            sm={6}
+            heading="Post Code"
+            param={defaultValues?.mainSite.address?.postcode}
+          />
+          <ViewFormField sm={6} heading="Region" param={defaultValues?.mainSite.address?.region} />
+          <ViewFormField
+            sm={6}
+            heading="Country"
+            param={defaultValues?.mainSite.address?.country}
+          />
         </Grid>
       )}
 
       <Grid container>
-        <Grid item xs={12} sm={12} sx={{ pt: 2 , px: 2 }}>
-          <Divider>
-            <Typography variant="subtitle" sx={{ color: 'black' }}>
+        <Grid container sx={{ py: '2rem' }}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            sx={{
+              backgroundImage: (theme) =>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+          >
+            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
               Howick Resources
             </Typography>
-          </Divider>
+          </Grid>
         </Grid>
 
-        <ViewFormField sm={6}   heading='Account Manager'       param={defaultValues?.accountManager.firstName} secondparam={defaultValues?.accountManager.lastName}/>
-        <ViewFormField sm={6}   heading='Project Manager'       param={defaultValues?.projectManager.firstName} secondparam={defaultValues?.projectManager.lastName}/>
-        <ViewFormField sm={6}   heading='Suppport Manager'      param={defaultValues?.supportManager.firstName} secondparam={defaultValues?.supportManager.lastName}/>
-        <ViewFormSwitch isActive={defaultValues.isActive}/>
+        <ViewFormField
+          sm={6}
+          heading="Account Manager"
+          param={defaultValues?.accountManager?.firstName}
+          secondparam={defaultValues?.accountManager?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Project Manager"
+          param={defaultValues?.projectManager?.firstName}
+          secondparam={defaultValues?.projectManager?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Suppport Manager"
+          param={defaultValues?.supportManager?.firstName}
+          secondparam={defaultValues?.supportManager?.lastName}
+        />
+        <ViewFormSwitch isActive={defaultValues.isActive} />
       </Grid>
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues} />

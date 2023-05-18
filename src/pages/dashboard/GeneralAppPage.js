@@ -4,7 +4,7 @@ import Chart from "react-apexcharts";
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Typography, Container, Grid, Stack, Button, Card   } from '@mui/material';
-import { AppShortcutRounded } from '@mui/icons-material';
+import { AppShortcutRounded, CenterFocusStrong } from '@mui/icons-material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -154,9 +154,10 @@ export default function GeneralAppPage() {
         justifyContent: 'center',
         alignItems: 'center',
         padding: 0,
+        alignContent: 'center',
       }}
     >
-      <Grid container spacing={3} m={3}>
+      <Grid container sx={{ justifyContent: 'center' }}>
         <Grid container xs={12} md={20} lg={20} spacing={3}>
           <Grid
             item
@@ -164,10 +165,9 @@ export default function GeneralAppPage() {
             md={10}
             lg={6}
             sx={{
-              height: { xs: 360, md: 400 },
-              marginTop: { xs: -10, md: 0 },
+              height: { xs: 250, md: 400 },
+              position: 'relative',
             }}
-            mb={-13}
           >
             <AppWelcome
               title={`CUSTOMER \n SERVICE & SUPPORT`}
@@ -180,7 +180,7 @@ export default function GeneralAppPage() {
         {/* <Grid item xs={12} md={12}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-        <Grid container xs={12} md={16} m={3}>
+        <Grid container xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
           <Grid container xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
               <AppWidgetSummary
