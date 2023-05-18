@@ -157,8 +157,8 @@ export default function GeneralAppPage() {
         alignContent: 'center',
       }}
     >
-      <Grid container sx={{ justifyContent: 'center' }}>
-        <Grid container xs={12} md={20} lg={20} spacing={3}>
+      <Grid container item sx={{ justifyContent: 'center' }}>
+        <Grid container item xs={12} md={20} lg={20} spacing={3}>
           <Grid
             item
             xs={12}
@@ -180,8 +180,8 @@ export default function GeneralAppPage() {
         {/* <Grid item xs={12} md={12}>
             <AppFeatured list={_appFeatured} />
           </Grid> */}
-        <Grid container xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
-          <Grid container xs={12} md={16} spacing={3}>
+        <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
+          <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
               <AppWidgetSummary
                 title="Customers"
@@ -205,7 +205,7 @@ export default function GeneralAppPage() {
               />
             </Grid>
           </Grid>
-          <Grid container xs={12} md={16} spacing={3}>
+          <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
               <AppWidgetSummary
                 title="Machines"
@@ -225,7 +225,7 @@ export default function GeneralAppPage() {
               />
             </Grid>
           </Grid>
-          <Grid container xs={12} md={16} spacing={3} mt={2}>
+          <Grid container item xs={12} md={16} spacing={3} mt={2}>
             <Grid item xs={12} md={6} lg={6}>
               <Card sx={{ px: 3, mb: 3 }}>
                 <Stack sx={{ pt: 2 }}>

@@ -15,16 +15,16 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  machines: [],
   machine: {},
-  machineParams: {
-  }
+  machines: [],
+  customerMachines:[],
 };
 
 const slice = createSlice({
   name: 'machine',
   initialState,
   reducers: {
+
     // START LOADING
     startLoading(state) {
       state.isLoading = true;
@@ -58,9 +58,16 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Customer Machines
+    getCustomerMachinesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.customerMachines = action.payload;
+      state.initial = true;
+    },
+
     // GET Machine
     getMachineSuccess(state, action) {
-      
       state.isLoading = false;
       state.success = true;
       state.machine = action.payload;
@@ -115,6 +122,29 @@ export function getMachines() {
         }
       });
       dispatch(slice.actions.getMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getCustomerMachines(customerId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isArchived: false,
+          customer: customerId
+        }
+      });
+      dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);
