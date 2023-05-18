@@ -21,7 +21,7 @@ export default function ViewFormField({heading,param, secondParam ,objectParam,s
             {/* <Typography variant="body2">{param || ''} {secondParam || ''} {objectParam || ''} {secondObjectParam || ''} {numberParam || ''}</Typography> */}
 
 
-            <Typography variant="h6" style={{ display: 'flex', alignItems: 'center' }}>
+            <Typography variant="body1" style={{ display: 'flex', alignItems: 'center' }}>
               {isActive !== undefined && (
                 <Iconify
                   icon={isActive ? "mdi:user-check-outline" : "mdi:user-block-outline"}
