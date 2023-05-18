@@ -116,7 +116,7 @@ export default function Header({ onOpenNav }) {
           height: 1,
           px: { lg: 5 },
           color: 'text.primary',
-          position: 'sticky'
+          position: 'sticky',
         }}
         >
         {renderContent}

@@ -156,7 +156,7 @@ export default function GeneralAppPage() {
         padding: 0,
       }}
     >
-      <Grid container spacing={3} m={3}>
+      <Grid container>
         <Grid container xs={12} md={20} lg={20} spacing={3}>
           <Grid
             item
@@ -164,10 +164,9 @@ export default function GeneralAppPage() {
             md={10}
             lg={6}
             sx={{
-              height: { xs: 360, md: 400 },
-              marginTop: { xs: -10, md: 0 },
+              height: { xs: 250, md: 400 },
+              position: 'relative',
             }}
-            mb={-13}
           >
             <AppWelcome
               title={`CUSTOMER \n SERVICE & SUPPORT`}
