@@ -30,7 +30,7 @@ export default function CategoryListTableRow({
   onViewRow,
 }) {
   const { name, isActive, createdAt} = row;
-  
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -63,16 +63,16 @@ export default function CategoryListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name} </Link>
+            <Link noWrap color="inherit" variant="body1" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name} </Link>
           </Stack>
         </TableCell>
 
-        <TableCell align="center"> <Switch  checked = { isActive } disabled  sx={{my:-1}}/> </TableCell> 
+        <TableCell align="center"> <Switch  checked = { isActive } disabled  sx={{my:-1}}/> </TableCell>
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
-        
-       
-      </TableRow> 
+
+
+      </TableRow>
 
       <MenuPopover
         open={openPopover}

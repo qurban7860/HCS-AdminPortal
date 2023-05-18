@@ -90,22 +90,45 @@ export default function CustomerListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell align="right">{type==='SP' ? <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled',mr:-2  }} width="15px"/>  : ""}</TableCell>
+        <TableCell align="right">
+          {type === 'SP' ? (
+            <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled', mr: -2 }} width="15px" />
+          ) : (
+            ''
+          )}
+        </TableCell>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
+            <Link
+              noWrap
+              color="inherit"
+              variant="body1"
+              onClick={onViewRow}
+              sx={{ cursor: 'pointer' }}
+            >
+              {' '}
+              {name}
+            </Link>
           </Stack>
         </TableCell>
         <TableCell>{tradingName}</TableCell>
-        <TableCell>{Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}</TableCell>
-        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell>  
+        <TableCell>
+          {Object.values(address ?? {})
+            .map((value) => (typeof value === 'string' ? value.trim() : ''))
+            .filter((value) => value !== '')
+            .join(', ')}
+        </TableCell>
+        <TableCell align="center">
+          {' '}
+          <Switch checked={isActive} disabled size="small" />{' '}
+        </TableCell>
         <TableCell>{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </StyledTableRow> 
+      </StyledTableRow>
 
       {/* <MenuPopover
         open={openPopover}
