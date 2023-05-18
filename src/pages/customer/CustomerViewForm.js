@@ -83,21 +83,6 @@ const onDelete = async () => {
   return (
     <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
-      {/* <Grid item xs={12} sm={12} > */}
-      {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-        <Button
-          onClick={() => {
-            toggleEdit();
-          }}
-          variant="contained"
-          size="medium"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Edit Customer
-        </Button>
-      </Stack> */}
-      {/* </Grid> */}
-
       <Grid container>
         <ViewFormField
           sm={6}
@@ -171,7 +156,7 @@ const onDelete = async () => {
               backgroundImage: (theme) =>
                 `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
             }}
-          >
+            >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
               Howick Resources
             </Typography>

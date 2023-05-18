@@ -62,9 +62,6 @@ const handleCloseConfirm = () => {
               <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:trash-can-outline" />
               </Button>
               ) : ''}
-
-
-
           </Stack>
           <ConfirmDialog
             open={openConfirm}

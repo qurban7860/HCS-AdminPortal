@@ -131,17 +131,11 @@ export default function MachineLicenseList() {
     };
 
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [activeIndex, setActiveIndex] = useState(null);
-
   const [expanded, setExpanded] = useState(false);
 
   const handleAccordianClick = (accordianIndex) => {
@@ -152,11 +146,9 @@ export default function MachineLicenseList() {
    }
   };
 
-
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
 
   useEffect(() => {
     if (initial) {
@@ -169,8 +161,6 @@ export default function MachineLicenseList() {
     }
   }, [licenses, error, responseMessage, enqueueSnackbar, initial]);
 
-
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -179,11 +169,8 @@ export default function MachineLicenseList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = !licenses.length && !formVisibility && !licenseEditFormVisibility;
 
   return (
@@ -246,8 +233,7 @@ export default function MachineLicenseList() {
               </Accordion>
             );
           })}
-
-        {isNotFound && <EmptyContent title="No license saved" sx={{ color: '#DFDFDF' }} />}
+        <TableNoData isNotFound={isNotFound} />
       </Card>
 
       {/* <ConfirmDialog

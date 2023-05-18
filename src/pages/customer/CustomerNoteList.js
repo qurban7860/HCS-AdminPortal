@@ -114,20 +114,13 @@ export default function CustomerNoteList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
-
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
@@ -143,7 +136,6 @@ export default function CustomerNoteList() {
     setExpanded(isExpanded ? panel : false);
     // console.log("Expended : ",expanded)
   };
-
 
   const { notes, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.note);
   const { customer } = useSelector((state) => state.customer);
@@ -175,8 +167,6 @@ export default function CustomerNoteList() {
     filterName,
     filterStatus,
   });
-
-
 //  -----------------------------------------------------------------------
 
 
@@ -277,67 +267,86 @@ const toggleChecked = () =>
 
   return (
     <>
-        {!noteEditFormVisibility &&
-            <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-                <Button
-                    onClick={toggleChecked}
-                    variant="contained"
-                    startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-                    >
-                    New Note
-                </Button>
-            </Stack>
-        }
-        <Card>
-          {noteEditFormVisibility && <NoteEditForm/> }
-          {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
-          {!formVisibility && !noteEditFormVisibility && notes.map((note, index) =>{
+      {!noteEditFormVisibility && (
+        <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+          <Button
+            onClick={toggleChecked}
+            variant="contained"
+            startIcon={
+              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+            }
+          >
+            New Note
+          </Button>
+        </Stack>
+      )}
+      <Card>
+        {noteEditFormVisibility && <NoteEditForm />}
+        {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
+        {!formVisibility &&
+          !noteEditFormVisibility &&
+          notes.map((note, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={note._id} expanded={expanded === index} onChange={handleChange(index)}  sx={{borderTop: borderTopVal}}>
-              <AccordionSummary   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-            { index !==  activeIndex ?
-              <Grid container spacing={1}>
-                <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: "break-word", }}>
-                  <Typography variant="body2" > {note.note.length > 100 ? note.note.substring(0, 150) :note.note} {note.note.length > 100 ? "..." :null} </Typography>
-                  {/* <Typography variant="body2" display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
-                  {/* <Typography variant="body2" display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
-                  {/* <Typography variant="body2" display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
-                </Grid>
-                <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: "break-word", }} > <Typography variant="body2" > {fDateTime(note.createdAt)} </Typography> </Grid>
-                
-              </Grid>
-            : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{ mt:-5 }}>
-                <NotesViewForm currentNote={note} />
-              </AccordionDetails>
-            </Accordion>
-          )})}
-          {isNotFound  && <EmptyContent title="No saved notes" sx={{color: '#DFDFDF'}}/>}
-        </Card>
-        <ConfirmDialog
-          open={openConfirm}
-          onClose={handleCloseConfirm}
-          title="Delete"
-          content={
-            <>
-              Are you sure want to delete <strong> {selected.length} </strong> items?
-            </>
-          }
-          action={
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
-                handleDeleteRow(selected);
-                handleCloseConfirm();
-              }}
-            >
-              Delete
-            </Button>
-          }
-        />
+            return (
+              <Accordion
+                key={note._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+              >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container spacing={1}>
+                      <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: 'break-word' }}>
+                        <Typography variant="body2">
+                          {' '}
+                          {note.note.length > 100 ? note.note.substring(0, 150) : note.note}{' '}
+                          {note.note.length > 100 ? '...' : null}{' '}
+                        </Typography>
+                        {/* <Typography variant="body2" display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
+                        {/* <Typography variant="body2" display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
+                        {/* <Typography variant="body2" display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
+                      </Grid>
+                      <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: 'break-word' }}>
+                        {' '}
+                        <Typography variant="body2"> {fDateTime(note.createdAt)} </Typography>{' '}
+                      </Grid>
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <NotesViewForm currentNote={note} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        <TableNoData isNotFound={isNotFound} />
+      </Card>
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete <strong> {selected.length} </strong> items?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRow(selected);
+              handleCloseConfirm();
+            }}
+          >
+            Delete
+          </Button>
+        }
+      />
     </>
   );
 }

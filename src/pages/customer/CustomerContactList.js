@@ -155,7 +155,7 @@ export default function CustomerContactList() {
                 expanded={expanded === index}
                 onChange={handleChange(index)}
                 sx={{ borderTop: borderTopVal }}
-                >
+              >
                 <AccordionSummary
                   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   onClick={() => handleAccordianClick(index)}
@@ -202,7 +202,7 @@ export default function CustomerContactList() {
               </Accordion>
             );
           })}
-        {isNotFound && <EmptyContent title="No contacts saved" sx={{ color: '#DFDFDF' }} />}
+        <TableNoData isNotFound={isNotFound} />
       </Card>
     </>
   );

@@ -80,25 +80,17 @@ export default function MachineSettingList() {
 
 
   const dispatch = useDispatch();
-
   const { error, responseMessage , customerDocuments, customerDocument, customerDocumentEditFormVisibility, customerDocumentFormVisibility } = useSelector((state) => state.customerDocument);
-
-  const toggleChecked = async () => 
+  const toggleChecked = async () =>
     {
-      dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));    
+      dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
     };
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [activeIndex, setActiveIndex] = useState(null);
-
   const [expanded, setExpanded] = useState(false);
 
   const handleAccordianClick = (accordianIndex) => {
@@ -109,7 +101,6 @@ export default function MachineSettingList() {
    }
   };
 
-
 // useLayoutEffect(() => {
 //   dispatch(getSettings(machine._id));
 // }, [dispatch, machine._id, settingEditFormVisibility ]);
@@ -117,7 +108,7 @@ export default function MachineSettingList() {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
- 
+
   useEffect(() => {
     setTableData(customerDocuments);
   }, [customerDocuments, error, responseMessage ]);
@@ -129,11 +120,8 @@ export default function MachineSettingList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = !customerDocuments.length && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility;
 
   const handleFilterName = (event) => {
@@ -145,42 +133,82 @@ export default function MachineSettingList() {
     setFilterStatus([]);
   };
 
-
   return (
     <>
-
-        <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{  py: 2 }} >
-          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
-              <Grid item xs={12} sm={8}>
-                {!customerDocumentFormVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment> ),}}/>}
-              </Grid>
-              {isFiltered && (<Button color="error" sx={{ flexShrink: 0 , ml:1}} onClick={handleResetFilter} startIcon={<Iconify icon="eva:trash-2-outline" />} > Clear </Button>)}
+      <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row' }} sx={{ py: 2 }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
+            <Grid item xs={12} sm={8}>
+              {!customerDocumentFormVisibility && (
+                <TextField
+                  fullWidth
+                  value={filterName}
+                  onChange={handleFilterName}
+                  placeholder="Search..."
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              )}
             </Grid>
-            <Grid item xs={8} sm={3}>
-              <Stack alignItems="flex-end" sx={{my: "auto" }}> 
-                <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!customerDocumentFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Document</Button>
-              </Stack>
-            </Grid>
+            {isFiltered && (
+              <Button
+                color="error"
+                sx={{ flexShrink: 0, ml: 1 }}
+                onClick={handleResetFilter}
+                startIcon={<Iconify icon="eva:trash-2-outline" />}
+              >
+                {' '}
+                Clear{' '}
+              </Button>
+            )}
           </Grid>
-        </Stack>
-        
-                  {!customerDocumentEditFormVisibility && customerDocumentFormVisibility && <DocumentAddForm/>}
+          <Grid item xs={8} sm={3}>
+            <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
+              <Button
+                sx={{ p: 1 }}
+                onClick={toggleChecked}
+                variant="contained"
+                startIcon={
+                  !customerDocumentFormVisibility ? (
+                    <Iconify icon="eva:plus-fill" />
+                  ) : (
+                    <Iconify icon="eva:minus-fill" />
+                  )
+                }
+              >
+                New Document
+              </Button>
+            </Stack>
+          </Grid>
+        </Grid>
+      </Stack>
 
-          {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
-        <Card sx={{mt:2}}>
-          {!customerDocumentEditFormVisibility && dataFiltered.map((setting, index) => { 
+      {!customerDocumentEditFormVisibility && customerDocumentFormVisibility && <DocumentAddForm />}
+
+      {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
+      <Card sx={{ mt: 2 }}>
+        {!customerDocumentEditFormVisibility &&
+          dataFiltered.map((setting, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
-                
-                <Grid container spacing={0}>
-                  {/* <Grid item xs={12} sm={3} md={3}>
+            return (
+              <Accordion
+                key={setting._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+              >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container spacing={0}>
+                      {/* <Grid item xs={12} sm={3} md={3}>
                     {setting?.techParam?.category?.name || ""}
                   </Grid>
                   <Grid item xs={12} sm={3} md={3}>
@@ -194,23 +222,18 @@ export default function MachineSettingList() {
                     {fDate(setting?.createdAt || "")}
                     </Typography>
                   </Grid> */}
-                <Divider />
-                </Grid>
-                : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{mt:-5, }}>
-                <DocumentViewForm
-                currentCustomerDocument={customerDocument}
-                />
-              </AccordionDetails>
-            </Accordion>
-            
-          )})} 
-
-          {isNotFound && <EmptyContent title="No Data"/>}
-            
-
-        </Card>
+                      <Divider />
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <DocumentViewForm currentCustomerDocument={customerDocument} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        <TableNoData isNotFound={isNotFound} />
+      </Card>
 
       {/* <ConfirmDialog
         open={openConfirm}
@@ -256,7 +279,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     setting?.techParam?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     setting?.techParamValue?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (setting?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
+    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0
     );
   }
 

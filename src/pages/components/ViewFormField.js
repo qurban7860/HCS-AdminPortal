@@ -18,9 +18,6 @@ export default function ViewFormField({heading,param, secondParam ,objectParam,s
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 {heading}
             </Typography>
-            {/* <Typography variant="body2">{param || ''} {secondParam || ''} {objectParam || ''} {secondObjectParam || ''} {numberParam || ''}</Typography> */}
-
-
             <Typography variant="body1" style={{ display: 'flex', alignItems: 'center' }}>
               {isActive !== undefined && (
                 <Iconify
