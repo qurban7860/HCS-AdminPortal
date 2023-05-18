@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
+import { Switch, Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
@@ -128,18 +128,18 @@ export default function SettingEditForm() {
         if(nameVal){
           data.name = nameVal
         }
-        // if(fileCategoryVal){
-        //   data.category = fileCategoryVal._id
-        // }
-        if(customerAccessVal === true || customerAccessVal === "true" ){
+        if(fileCategoryVal){
+          data.category = fileCategoryVal._id
+        }
+        if(customerAccessVal ){
           data.customerAccess = true
         }else{
           data.customerAccess = false
         }
-        // if(documentNameVal){
-        //   data.documentName = documentNameVal._id
-        // }
-        // console.log("data : ", data);
+        if(documentNameVal){
+          data.documentName = documentNameVal._id
+        }
+        console.log("data : ", data);
       await dispatch(updateCustomerDocument(customerDocument._id,data));
       await dispatch(customer._id)
       reset();
@@ -193,8 +193,8 @@ export default function SettingEditForm() {
     },
     [setValue]
   );
-  const handleChange = (event) => {
-    setCustomerAccessVal(event.target.value);
+  const handleChange = () => {
+    setCustomerAccessVal(!customerAccessVal);
   };
 
   return (
@@ -209,14 +209,15 @@ export default function SettingEditForm() {
 
               <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
 
-              <FormControl >
-                <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
-                <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
-                  <MenuItem value="true">Yes</MenuItem>
-                  <MenuItem value="false"  >No</MenuItem>
-                  {/* <MenuItem value=""><em>None</em></MenuItem> */}
-                </Select>
-              </FormControl>
+              <Grid item xs={12} sm={12} sx={{display:'flex'}}>
+                  <Grid item xs={12} sm={6} sx={{display:'flex'}}>
+                   <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
+                        Customer Access
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+                  </Grid>
+                  <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
+              </Grid>
 
               <Autocomplete
                 // freeSolo
@@ -362,7 +363,7 @@ export default function SettingEditForm() {
           </Button>
         )} */}
 
-              <RHFSwitch
+              {/* <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
                 label={
@@ -372,7 +373,7 @@ export default function SettingEditForm() {
                     </Typography>
                   </>
                 } 
-              />
+              /> */}
 
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
