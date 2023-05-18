@@ -28,7 +28,6 @@ const handleCloseConfirm = () => {
             mb: -4,
             mt:-1,
             mr:2,
-            // small buttons
             '& .MuiButton-root': {
               minWidth: '32px',
               width: '32px',
@@ -48,7 +47,7 @@ const handleCloseConfirm = () => {
                 variant="outlined"
                 title="Edit"
                 >
-              <Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
+              <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:pencil" /></Button>
               <Button
                 onClick={() => {
                   handleOpenConfirm();
@@ -56,7 +55,7 @@ const handleCloseConfirm = () => {
                 variant="outlined"
                 color="error"
                 title="Delete"
-              ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:trash-2-fill" /></Button>
+              ><Iconify sx={{height: '24px',width: '24px' }} icon="mdi:trash-can-outline" /></Button>
           </Stack>
           <ConfirmDialog
             open={openConfirm}
