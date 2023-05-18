@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Link, InputLabel,MenuItem , FormControl} from '@mui/material';
+import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Link, InputLabel,MenuItem , FormControl} from '@mui/material';
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
@@ -175,7 +175,7 @@ export default function DocumentAddForm({currentDocument}) {
   };
 
   const handleChange = (event) => {
-    setCustomerAccessVal(event.target.value);
+    setCustomerAccessVal(!customerAccessVal);
   };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -186,14 +186,12 @@ export default function DocumentAddForm({currentDocument}) {
               {/* <FormHeading heading='New Note'/> */}
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
-              <FormControl >
-                <InputLabel id="demo-simple-select-helper-label">Customer Access</InputLabel>
-                <Select labelId="demo-simple-select-helper-label" id="demo-simple-select-helper" value={customerAccessVal} label="Customer Access" onChange={handleChange} >
-                  <MenuItem value=""><em>None</em></MenuItem>
-                  <MenuItem value="true">Yes</MenuItem>
-                  <MenuItem value={false}  >No</MenuItem>
-                </Select>
-              </FormControl>
+              <Grid item xs={12} sm={6} sx={{display:'flex'}}>
+               <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
+                    Customer Access
+                  </Typography>
+                <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+              </Grid>
               <Grid>
               <Autocomplete
                 // freeSolo
