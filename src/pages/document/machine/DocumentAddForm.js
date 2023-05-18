@@ -174,7 +174,7 @@ export default function DocumentAddForm({currentDocument}) {
     setValue('cover', null);
   };
 
-  const handleChange = (event) => {
+  const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
   };
   return (
@@ -186,12 +186,17 @@ export default function DocumentAddForm({currentDocument}) {
               {/* <FormHeading heading='New Note'/> */}
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
-              <Grid item xs={12} sm={6} sx={{display:'flex'}}>
-               <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
-                    Customer Access
-                  </Typography>
-                <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+
+              <Grid item xs={12} sm={12} sx={{display:'flex'}}>
+                  <Grid item xs={12} sm={6} sx={{display:'flex'}}>
+                   <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
+                        Customer Access
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+                  </Grid>
+                  <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
               </Grid>
+
               <Grid>
               <Autocomplete
                 // freeSolo
@@ -325,7 +330,7 @@ export default function DocumentAddForm({currentDocument}) {
                   onDrop={handleDrop}
                   onRemove={handleDrop}
                />
-              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+              {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  
           </Card>
