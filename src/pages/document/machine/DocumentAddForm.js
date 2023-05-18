@@ -119,6 +119,9 @@ export default function DocumentAddForm({currentDocument}) {
 
   const onSubmit = async (data) => {
       try{
+        if(nameVal){
+          data.name = nameVal
+        }
         if(fileCategoryVal){
           data.category = fileCategoryVal._id
         }
@@ -130,6 +133,8 @@ export default function DocumentAddForm({currentDocument}) {
         if(documentNameVal){
           data.documentName = documentNameVal._id
         }
+        console.log("data : ", data)
+
         await dispatch(addMachineDocument(machine.customer._id, machine._id ,data));
         setFileCategoryVal("")
         setDocumentNameVal("")
