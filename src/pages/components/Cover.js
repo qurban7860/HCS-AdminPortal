@@ -119,7 +119,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
-          >
+            >
             {serialNo} {name ? ` / ${name}` : ''}
           </Typography>
         ) : (
@@ -131,7 +131,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               mt: { xs: 7, md: 6 },
               display: { xs: 'flex', md: 'block' },
             }}
-          >
+            >
             {/* if in mobile/device, only the avatar will show up for customer */}
             {isMobile ? '' : name}
           </Typography>
@@ -149,7 +149,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               component="button"
               variant="body2"
               onClick={handleBacklink}
-            >
+              >
               <Iconify icon="material-symbols:arrow-back-rounded" />
             </Link>
           ) : (
