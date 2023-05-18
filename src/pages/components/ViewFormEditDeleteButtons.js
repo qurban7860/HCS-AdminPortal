@@ -20,14 +20,35 @@ const handleCloseConfirm = () => {
 };
     return (
       <>
-        <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4, mt:-1, mr:2}}>
+        <Stack
+          justifyContent="flex-end"
+          direction="row"
+          spacing={2}
+          sx={{
+            mb: -4,
+            mt:-1,
+            mr:2,
+            // small buttons
+            '& .MuiButton-root': {
+              minWidth: '32px',
+              width: '32px',
+              height: '32px',
+              p: 0,
+              '&:hover': {
+                background: 'transparent',
+              },
+            },
+
+            }}
+            >
               <Button
                 onClick={() => {
                   handleEdit();
                 }}
                 variant="outlined"
                 title="Edit"
-              ><Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
+                >
+              <Iconify sx={{height: '24px',width: '24px' }} icon="eva:edit-fill" /></Button>
               <Button
                 onClick={() => {
                   handleOpenConfirm();
