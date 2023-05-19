@@ -72,16 +72,28 @@ export default function MachineListTableRow({
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
-        <TableCell align="right"  >{parentMachine ? <Iconify icon="bi:layer-backward" sx={{ color: 'text.disabled',mr:-2 ,  }} width="15px" />  : ""}</TableCell>
+        <TableCell align="right">
+          {parentMachine ? (
+            <Iconify
+              icon="bi:layer-backward"
+              sx={{ color: 'text.disabled', mr: -2 }}
+              width="15px"
+            />
+          ) : (
+            ''
+          )}
+        </TableCell>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
             <Link
               noWrap
               color="inherit"
-              variant="subtitle2"
+              variant="body1"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
-            >{serialNo || ''}</Link>
+            >
+              {serialNo || ''}
+            </Link>
           </Stack>
         </TableCell>
         <TableCell>{name || ''}</TableCell>
@@ -89,7 +101,10 @@ export default function MachineListTableRow({
         <TableCell>{status?.name || ''}</TableCell>
         <TableCell>{customer?.name || ''}</TableCell>
         <TableCell>{instalationSite?.name || ''}</TableCell>
-        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell> 
+        <TableCell align="center">
+          {' '}
+          <Switch checked={isActive} disabled size="small" />{' '}
+        </TableCell>
         <TableCell>{fDate(createdAt)}</TableCell>
 
         {/* <TableCell align="center">
@@ -97,7 +112,7 @@ export default function MachineListTableRow({
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </TableRow> 
+      </TableRow>
 
       {/* <MenuPopover
         open={openPopover}

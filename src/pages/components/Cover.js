@@ -137,7 +137,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
           </Typography>
         )}
 
-        <div style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
+        <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
           {backLink ? (
             <Link
               title="Go Back"
@@ -173,7 +173,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
           ) : (
             ' '
           )}
-        </div>
+        </Grid>
       </StyledInfo>
     </StyledRoot>
   );
