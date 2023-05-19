@@ -194,12 +194,7 @@ export default function CustomerContactList() {
                         md={6}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
-                      {/* {Object.values(customerMachine?.instalationSite?.address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")} */}
-                        {customerMachine?.instalationSite?.address?.city.trim() ? customerMachine?.instalationSite?.address?.city : ""}
-                        {customerMachine?.instalationSite?.address?.city.trim() !== "" && customerMachine?.instalationSite?.address?.region.trim() !== "" && ", "}
-                        {customerMachine?.instalationSite?.address?.region.trim() ? customerMachine?.instalationSite?.address?.region : ""}
-                        {customerMachine?.instalationSite?.address?.country.trim() !== "" && customerMachine?.instalationSite?.address?.region.trim() !== "" && ", "}
-                        {customerMachine?.instalationSite?.address?.country.trim() ? customerMachine?.instalationSite?.address?.country : ""}
+ 
                       </Grid>
                     </Grid>
                   ) : null}
