@@ -39,7 +39,7 @@ export default function DocumentNameAddForm({currentDocument}) {
  // a note can be archived.  
   const AddDocumentNameSchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
-    description: Yup.string().max(10000).required("Name Field is required!"),
+    description: Yup.string().max(10000),
     isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(

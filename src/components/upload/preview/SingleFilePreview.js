@@ -25,10 +25,8 @@ export default function SingleFilePreview({ file }) {
         zIndex: 8,
         borderRadius: 1,
         position: 'absolute',
-        width: 'calc(300px - 16px)',
-        height: 'calc(auto - 16px)',
-        objectFit: "cover",
-        backgroundColor:"green",
+        width: 'calc(100% - 16px)',
+        height: 'calc(100% - 16px)',
       }}
     />
   );

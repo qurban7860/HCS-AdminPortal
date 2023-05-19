@@ -73,6 +73,7 @@
     "mapbox-gl": "^2.11.0",
     "mdi-js": "^1.0.1",
     "mdi-react": "^9.2.0",
+    "mui-image": "^1.0.7",
     "mui-tel-input": "^3.1.1",
     "notistack": "^2.0.8",
     "nprogress": "^0.2.0",

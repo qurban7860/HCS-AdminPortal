@@ -195,11 +195,11 @@ export default function CustomerContactList() {
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
                       {/* {Object.values(customerMachine?.instalationSite?.address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")} */}
-                        {customerMachine?.instalationSite?.address?.city ? customerMachine?.instalationSite?.address?.city : ""}
-                        {customerMachine?.instalationSite?.address?.city !== "" && customerMachine?.instalationSite?.address?.region !== "" && ", "}
-                        {customerMachine?.instalationSite?.address?.region ? customerMachine?.instalationSite?.address?.region : ""}
-                        {customerMachine?.instalationSite?.address?.country !== "" && customerMachine?.instalationSite?.address?.region !== "" && ", "}
-                        {customerMachine?.instalationSite?.address?.country ? customerMachine?.instalationSite?.address?.country : ""}
+                        {customerMachine?.instalationSite?.address?.city?.trim() ? customerMachine?.instalationSite?.address?.city : ""}
+                        {customerMachine?.instalationSite?.address?.city?.trim() !== "" && customerMachine?.instalationSite?.address?.region?.trim() !== "" && ", "}
+                        {customerMachine?.instalationSite?.address?.region?.trim() ? customerMachine?.instalationSite?.address?.region : ""}
+                        {customerMachine?.instalationSite?.address?.country?.trim() !== "" && customerMachine?.instalationSite?.address?.region?.trim() !== "" && ", "}
+                        {customerMachine?.instalationSite?.address?.country?.trim() ? customerMachine?.instalationSite?.address?.country : ""}
                       </Grid>
                     </Grid>
                   ) : null}
@@ -211,7 +211,7 @@ export default function CustomerContactList() {
             );
           })}
         {isNotFound && <EmptyContent title="No data" sx={{ color: '#DFDFDF' }} />}
-        <Dialog
+      <Dialog
         maxWidth="md"
         open={openMachine}
         onClose={handleCloseMachine}
@@ -235,7 +235,7 @@ export default function CustomerContactList() {
           </Typography>{' '}
           <Link onClick={() => handleCloseMachine()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ px: 2, pt: 2 }}>
