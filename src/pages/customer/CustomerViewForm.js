@@ -21,6 +21,7 @@ import {
   InputAdornment,
   Link,
   Divider,
+  Tooltip,
 } from '@mui/material';
 // global
 import { CONFIG } from '../../config-global';
@@ -85,10 +86,14 @@ const onDelete = async () => {
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField
+          sm={12}
+          param=""
+          isActive={defaultValues.isActive}
+          />
+        <ViewFormField
           sm={6}
           heading="Name"
           param={defaultValues?.name}
-          isActive={defaultValues.isActive}
         />
         <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
@@ -112,7 +117,7 @@ const onDelete = async () => {
 
       {defaultValues.mainSite && (
         <Grid container>
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -121,13 +126,12 @@ const onDelete = async () => {
                 backgroundImage: (theme) =>
                   `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
               }}
-            >
+              >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
                 Address Information
               </Typography>
             </Grid>
           </Grid>
-
           <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
           <ViewFormField sm={6} heading="Street" param={defaultValues?.mainSite.address?.street} />
           <ViewFormField sm={6} heading="Suburb" param={defaultValues?.mainSite.address?.suburb} />
@@ -145,9 +149,8 @@ const onDelete = async () => {
           />
         </Grid>
       )}
-
       <Grid container>
-        <Grid container sx={{ py: '2rem' }}>
+        <Grid container sx={{ pt: '2rem' }}>
           <Grid
             item
             xs={12}
@@ -162,7 +165,6 @@ const onDelete = async () => {
             </Typography>
           </Grid>
         </Grid>
-
         <ViewFormField
           sm={6}
           heading="Account Manager"
@@ -181,9 +183,10 @@ const onDelete = async () => {
           param={defaultValues?.supportManager?.firstName}
           secondparam={defaultValues?.supportManager?.lastName}
         />
-        <ViewFormSwitch isActive={defaultValues.isActive} />
+        <ViewFormField />
+        {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
       </Grid>
-      <Grid container>
+      <Grid container sx={{ pb: '1rem' }}>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

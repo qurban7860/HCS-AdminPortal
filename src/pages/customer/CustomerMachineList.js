@@ -203,7 +203,7 @@ export default function CustomerContactList() {
                     sm={6}
                     md={2}
                     display={{ sm: 'none', md: 'none', lg: 'block' }}
-                  >
+                    >
                     {customerMachine?.status?.name && (
                       <Typography variant="body2" sx={{ p: 2 }}>
                         {customerMachine?.status?.name}
@@ -240,7 +240,7 @@ export default function CustomerContactList() {
           onClose={handleCloseMachine}
           aria-labelledby="keep-mounted-modal-title"
           aria-describedby="keep-mounted-modal-description"
-        >
+          >
           <Grid
             container
             sx={{
@@ -251,7 +251,7 @@ export default function CustomerContactList() {
               color: 'primary.contrastText',
               padding: '10px',
             }}
-          >
+            >
             <Typography variant="h4" sx={{ px: 2 }}>
               Machine{' '}
             </Typography>{' '}
@@ -260,17 +260,20 @@ export default function CustomerContactList() {
               href="#"
               underline="none"
               sx={{ ml: 'auto' }}
-            >
+              >
               {' '}
               <Iconify icon="mdi:close-box-outline" />
             </Link>
           </Grid>
           <Grid container sx={{ px: 2, pt: 2 }}>
             <ViewFormField
+              sm={12}
+              isActive={machineData.isActive}
+            />
+            <ViewFormField
               sm={6}
               heading="Serial No"
               param={machineData?.serialNo}
-              isActive={machineData.isActive}
             />
             <ViewFormField sm={6} heading="Name" param={machineData?.name} />
             <ViewFormField

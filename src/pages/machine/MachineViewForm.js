@@ -90,12 +90,8 @@ export default function MachineViewForm() {
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField
-          sm={6}
-          heading="Serial No"
-          param={defaultValues?.serialNo}
-          isActive={defaultValues.isActive}
-        />
+        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        <ViewFormField sm={6} heading="Serial No" param={defaultValues?.serialNo} />
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField
           sm={6}
@@ -155,7 +151,7 @@ export default function MachineViewForm() {
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
-        <Grid container sx={{ py: '2rem' }}>
+        <Grid container sx={{ pt: '2rem' }}>
           <Grid
             item
             xs={12}
@@ -164,7 +160,7 @@ export default function MachineViewForm() {
               backgroundImage: (theme) =>
                 `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
             }}
-            >
+          >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
               Howick Resources
             </Typography>
@@ -189,7 +185,7 @@ export default function MachineViewForm() {
           param={defaultValues?.supportManager?.firstName}
           secondParam={defaultValues?.supportManager?.lastName}
         />
-        <ViewFormSwitch isActive={defaultValues.isActive} />
+        <ViewFormField />
       </Grid>
       <Grid container>
         <ViewFormAudit defaultValues={defaultValues} />
@@ -200,7 +196,7 @@ export default function MachineViewForm() {
         onClose={handleCloseCustomer}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-        >
+      >
         <Grid
           container
           sx={{
@@ -227,7 +223,7 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
           <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -268,7 +264,7 @@ export default function MachineViewForm() {
           />
         </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -341,7 +337,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-        >
+          >
           <Typography variant="h4" sx={{ px: 2 }}>
             Installation Site{' '}
           </Typography>{' '}
@@ -350,7 +346,7 @@ export default function MachineViewForm() {
             href="#"
             underline="none"
             sx={{ ml: 'auto' }}
-            >
+          >
             {' '}
             <Iconify icon="mdi:close-box-outline" />
           </Link>
@@ -391,6 +387,7 @@ export default function MachineViewForm() {
             heading="Country"
             param={defaultValues.instalationSite?.address?.country}
           />
+          <ViewFormField />
         </Grid>
       </Dialog>
 
@@ -410,7 +407,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-          >
+        >
           <Typography variant="h4" sx={{ px: 2 }}>
             Billing Site{' '}
           </Typography>{' '}
@@ -419,7 +416,7 @@ export default function MachineViewForm() {
             href="#"
             underline="none"
             sx={{ ml: 'auto' }}
-            >
+          >
             {' '}
             <Iconify icon="mdi:close-box-outline" />
           </Link>
@@ -456,6 +453,7 @@ export default function MachineViewForm() {
             heading="Country"
             param={defaultValues?.billingSite?.address?.country}
           />
+          <ViewFormField />
         </Grid>
       </Dialog>
     </Card>

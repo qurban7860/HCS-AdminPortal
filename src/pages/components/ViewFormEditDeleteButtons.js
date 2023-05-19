@@ -26,7 +26,7 @@ const handleCloseConfirm = () => {
           spacing={2}
           sx={{
             mb: -4,
-            mt:-1,
+            mt:1,
             mr:2,
             '& .MuiButton-root': {
               minWidth: '32px',
@@ -37,7 +37,6 @@ const handleCloseConfirm = () => {
                 background: 'transparent',
               },
             },
-
             }}
             >
               <Button

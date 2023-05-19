@@ -266,7 +266,6 @@ useLayoutEffect(() => {
     </>
   );
 }
-
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {

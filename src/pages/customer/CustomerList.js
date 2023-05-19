@@ -224,10 +224,7 @@ export default function CustomerList() {
             // mt: '24px',
           }}
         >
-          <Cover
-            name="Customers"
-            icon="ph:users-light"
-          />
+          <Cover name="Customers" icon="ph:users-light" />
         </Card>
 
         <Card sx={{ mt: 3 }}>
@@ -258,7 +255,6 @@ export default function CustomerList() {
                 </Tooltip>
               }
             />
-
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
@@ -300,11 +296,10 @@ export default function CustomerList() {
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   /> */}
-
-                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
+            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom
@@ -316,7 +311,6 @@ export default function CustomerList() {
           />
         </Card>
       </Container>
-
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}

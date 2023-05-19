@@ -215,7 +215,6 @@ export default function CustomerSiteList() {
                 <AccordionSummary
                   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   onClick={() => handleAccordianClick(index)}
-
                   >
                   {index !== activeIndex ? (
                     <Grid container spacing={0}>
@@ -228,8 +227,7 @@ export default function CustomerSiteList() {
                   ) : null}
                 </AccordionSummary>
                 <AccordionDetails sx={{
-                  mt: -5,
-                  width: '50%'
+                  mt: -5
                   }}>
                   <SiteViewForm currentSite={site} />
                 </AccordionDetails>

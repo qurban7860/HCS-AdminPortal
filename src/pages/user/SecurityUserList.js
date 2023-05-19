@@ -185,7 +185,7 @@ export default function SecurityUserList() {
 
   return (
     <>
-      <Container maxWidth={false }>
+      <Container maxWidth={false}>
         {/* <CustomBreadcrumbs
           heading="User List"
           links={[
@@ -204,8 +204,8 @@ export default function SecurityUserList() {
             </Button>
           }
         /> */}
-        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-          <Cover name='Users' icon="ph:users-light"/>
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <Cover name="Users" icon="ph:users-light" />
         </Card>
         <Card>
           {/* <Tabs
@@ -254,7 +254,7 @@ export default function SecurityUserList() {
             />
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 800 }}>
+              <Table size="small" sx={{ minWidth: 800 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -271,7 +271,6 @@ export default function SecurityUserList() {
                 />
 
                 <TableBody>
-
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
@@ -286,10 +285,10 @@ export default function SecurityUserList() {
                       />
                     ))}
 
-                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
+            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom
