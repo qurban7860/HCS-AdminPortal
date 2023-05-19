@@ -78,11 +78,10 @@ export default function ModelListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="left" spacing={2}>
-
             <Link
               noWrap
               color="inherit"
-              variant="subtitle2"
+              variant="body1"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
@@ -92,12 +91,13 @@ export default function ModelListTableRow({
         </TableCell>
         <TableCell align="left">{category?.name || ''}</TableCell>
 
-        <TableCell align="center"> <Switch  checked = { isActive } disabled  sx={{my:-1}}/> </TableCell> 
+        <TableCell align="center">
+          {' '}
+          <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
+        </TableCell>
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
-        
-       
-      </TableRow> 
+      </TableRow>
 
       <MenuPopover
         open={openPopover}

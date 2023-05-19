@@ -170,7 +170,7 @@ export default function SecurityUserProfile() {
               param={defaultValues?.roles?.map((obj) => obj?.name).join(', ')}
             />
           </Grid>
-          <ViewFormSWitch isActive={defaultValues.isActive} />
+          <ViewFormField />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
@@ -208,7 +208,7 @@ export default function SecurityUserProfile() {
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
           <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -350,7 +350,7 @@ export default function SecurityUserProfile() {
           />
           <ViewFormField sm={6} heading="Phone" param={contact?.phone ? contact?.phone : ''} />
           <ViewFormField sm={6} heading="Email" param={contact?.email ? contact?.email : ''} />
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -395,6 +395,7 @@ export default function SecurityUserProfile() {
             heading="Country"
             param={contact?.address?.country ? contact?.address?.country : ''}
           />
+          <ViewFormField />
         </Grid>
         {/* <ViewFormField sm={6} heading='First Name'    param={contact?.firstName }/>
           <ViewFormField sm={6} heading='Last Name'     param={contact?.lastName  }/>

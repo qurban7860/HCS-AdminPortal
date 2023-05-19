@@ -24,7 +24,7 @@ import ViewFormField from '../../components/ViewFormField';
 import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
- 
+
 // ----------------------------------------------------------------------
 
 ContactViewForm.propTypes = {
@@ -32,19 +32,12 @@ ContactViewForm.propTypes = {
 };
 
 export default function ContactViewForm({ currentContact = null }) {
-
   const { contact } = useSelector((state) => state.contact);
-
   const { customer } = useSelector((state) => state.customer);
-
   const dispatch = useDispatch();
-  
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
 
   const handleOpenConfirm = () => {
@@ -98,10 +91,10 @@ export default function ContactViewForm({ currentContact = null }) {
 
   return (
     <Grid >
-
           <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
           <Grid container >
-          <ViewFormField sm={6} heading='First Name'    param={defaultValues?.firstName} isActive={defaultValues.isActive}/>
+          <ViewFormField sm={12} isActive={defaultValues.isActive}/>
+          <ViewFormField sm={6} heading='First Name'    param={defaultValues?.firstName}/>
           <ViewFormField sm={6} heading='Last Name'     param={defaultValues?.lastName}/>
           <ViewFormField sm={6} heading='Title'         param={defaultValues?.title}/>
           <ViewFormField sm={6} heading='Contact Types' param={defaultValues?.contactTypes.toString()}/>
@@ -113,8 +106,9 @@ export default function ContactViewForm({ currentContact = null }) {
           <ViewFormField sm={6} heading='Region'        param={defaultValues?.region}/>
           <ViewFormField sm={6} heading='Post Code'     param={defaultValues?.postcode}/>
           <ViewFormField sm={6} heading='Country'       param={defaultValues?.country}/>
+          <ViewFormField />
           </Grid>
-          <ViewFormSwitch isActive={defaultValues.isActive}/>
+          {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
             <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>
   );

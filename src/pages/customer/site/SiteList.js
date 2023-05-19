@@ -87,21 +87,13 @@ export default function SiteList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
 
   useLayoutEffect(() => {
@@ -127,11 +119,8 @@ export default function SiteList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -203,8 +192,6 @@ export default function SiteList() {
   return (
     <>
       <Container maxWidth={themeStretch ? false : 'lg'}>
-        
-
         <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
           </Grid>
@@ -221,7 +208,7 @@ export default function SiteList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -292,7 +279,7 @@ export default function SiteList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
+
           />
         </Card>
       </Container>

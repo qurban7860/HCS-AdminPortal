@@ -54,31 +54,62 @@ export default function StatusListTableRow({
       <TableRow hover selected={selected}>
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} >
+            <Link
+              noWrap
+              color="inherit"
+              variant="body1"
+              onClick={onViewRow}
+              sx={{ cursor: 'pointer' }}
+            >
               {name}
             </Link>
           </Stack>
         </TableCell>
-        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" sx={{my:-1}}/> </TableCell> 
+        <TableCell align="center">
+          {' '}
+          <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
+        </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
-      </TableRow> 
-      <MenuPopover open={openPopover} onClose={handleClosePopover} arrow="right-top" sx={{ width: 140 }} >
-        <MenuItem onClick={() => { handleOpenConfirm(); handleClosePopover(); }} sx={{ color: 'error.main' }} >
+      </TableRow>
+      <MenuPopover
+        open={openPopover}
+        onClose={handleClosePopover}
+        arrow="right-top"
+        sx={{ width: 140 }}
+      >
+        <MenuItem
+          onClick={() => {
+            handleOpenConfirm();
+            handleClosePopover();
+          }}
+          sx={{ color: 'error.main' }}
+        >
           <Iconify icon="eva:trash-2-outline" />
           Delete
         </MenuItem>
 
-        <MenuItem onClick={() => { onEditRow(); handleClosePopover(); }} >
+        <MenuItem
+          onClick={() => {
+            onEditRow();
+            handleClosePopover();
+          }}
+        >
           <Iconify icon="eva:edit-fill" />
           Edit
         </MenuItem>
       </MenuPopover>
 
-      <ConfirmDialog open={openConfirm} onClose={handleCloseConfirm} title="Delete" content="Are you sure want to delete?" action={
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Delete"
+        content="Are you sure want to delete?"
+        action={
           <Button variant="contained" color="error" onClick={onDeleteRow}>
             Delete
           </Button>
-        }/>
+        }
+      />
     </>
   );
 }

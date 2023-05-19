@@ -120,10 +120,7 @@ export default function SecurityUserViewForm() {
           />
         </Card>
         <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons
-            handleEdit={handleEdit}
-            onDelete={onDelete}
-          />
+          <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
           {/* <Stack
             justifyContent="flex-end"
             direction="row"
@@ -165,6 +162,7 @@ export default function SecurityUserViewForm() {
           />
 
           <Grid container>
+            <ViewFormField sm={12} isActive={defaultValues.isActive} />
             <ViewFormField
               sm={6}
               heading="Customer"
@@ -177,7 +175,6 @@ export default function SecurityUserViewForm() {
                   ''
                 )
               }
-              isActive={defaultValues.isActive}
             />
             {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
             <ViewFormField
@@ -204,7 +201,7 @@ export default function SecurityUserViewForm() {
               param={defaultValues?.roles?.map((obj) => obj.name).join(', ')}
             />
           </Grid>
-          <ViewFormSWitch isActive={defaultValues.isActive} />
+          <ViewFormField />
           <Grid container>
             <ViewFormAudit defaultValues={defaultValues} />
           </Grid>
@@ -242,7 +239,7 @@ export default function SecurityUserViewForm() {
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
           <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -283,7 +280,7 @@ export default function SecurityUserViewForm() {
           />
         </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -383,7 +380,7 @@ export default function SecurityUserViewForm() {
           />
           <ViewFormField sm={6} heading="Phone" param={contact?.phone ? contact?.phone : ''} />
           <ViewFormField sm={6} heading="Email" param={contact?.email ? contact?.email : ''} />
-          <Grid container sx={{ py: '2rem' }}>
+          <Grid container sx={{ pt: '2rem' }}>
             <Grid
               item
               xs={12}
@@ -428,6 +425,7 @@ export default function SecurityUserViewForm() {
             heading="Country"
             param={contact?.address?.country ? contact?.address?.country : ''}
           />
+          <ViewFormField />
         </Grid>
       </Dialog>
     </>

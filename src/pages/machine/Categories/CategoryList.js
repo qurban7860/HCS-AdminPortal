@@ -317,9 +317,7 @@ export default function CategoryList() {
 
           />
         </Card>
-
       </Container>
-
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}

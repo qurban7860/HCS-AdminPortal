@@ -26,11 +26,10 @@ TechParamCategoryViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function TechParamCategoryViewForm({ currentTechparamcategory = null }) {
-  
+
   const toggleEdit = () => {navigate(PATH_MACHINE.techParam.techparamcategoryedit(id))}
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
   const { techparamcategory } = useSelector((state) => state.techparamcategory);
 
   const { id } = useParams();
@@ -61,7 +60,6 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
       <Grid container>
         <ViewFormField sm={12}   heading='Name'                 param={defaultValues?.name} isActive={defaultValues.isActive}/>
         <ViewFormField sm={12}   heading='Description'          param={defaultValues?.description}/>
-
         <ViewFormSWitch isActive={defaultValues.isActive }/>
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>

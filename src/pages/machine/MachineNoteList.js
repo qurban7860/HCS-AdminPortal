@@ -52,12 +52,7 @@ import NotesViewForm from './note/NotesViewForm';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-
-
 import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/products/machineNote';
-
-
-
 
 // ----------------------------------------------------------------------
 
@@ -111,20 +106,13 @@ export default function MachineNoteList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
-
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
@@ -168,9 +156,7 @@ export default function MachineNoteList() {
     filterStatus,
   });
 
-
 //  -----------------------------------------------------------------------
-
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -311,9 +297,7 @@ const toggleChecked = () =>
               </Accordion>
             );
           })}
-        {isNotFound && !noteEditFormVisibility && !formVisibility && (
-          <EmptyContent title="No saved notes" sx={{ color: '#DFDFDF' }} />
-        )}
+        <TableNoData isNotFound={isNotFound} />
       </Card>
     </>
   );

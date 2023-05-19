@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -79,15 +79,12 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
           <Box
         component="img"
         sx={{
-          m:2,
-          height: 233,
-          width: 350,
-          maxHeight: { xs: 233, md: 167 },
-          maxWidth: { xs: 350, md: 250 },
+          m:2
         }}
         alt={defaultValues?.name}
-        src={currentMachineDocument?.path}
-      />:""}
+        src={`data:image/png;base64, ${currentMachineDocument?.content}`}
+        />:""}
+
           <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

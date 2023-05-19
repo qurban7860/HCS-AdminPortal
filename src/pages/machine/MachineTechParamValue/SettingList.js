@@ -87,19 +87,12 @@ export default function SettingList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
 
   // const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
@@ -127,11 +120,8 @@ export default function SettingList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -203,8 +193,6 @@ export default function SettingList() {
   return (
     <>
       <Container maxWidth={ false }>
-        
-
         <Grid container spacing={3}>
           <Cover name="Setting List" icon='material-symbols:list-alt-outline' setting="enable" />
           </Grid>
@@ -221,7 +209,7 @@ export default function SettingList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -286,7 +274,7 @@ export default function SettingList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
+
           />
         </Card>
       </Container>
