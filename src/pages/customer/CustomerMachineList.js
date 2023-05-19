@@ -194,7 +194,11 @@ export default function CustomerContactList() {
                         md={6}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
- 
+                        {customerMachine?.instalationSite?.address?.city?.city.trim() ? customerMachine?.instalationSite?.address?.city : ""}
+                        {customerMachine?.instalationSite?.address?.city?.city.trim() !== "" && customerMachine?.instalationSite?.address?.region?.region.trim() !== "" && ", "}
+                        {customerMachine?.instalationSite?.address?.region?.region.trim() ? customerMachine?.instalationSite?.address?.region : ""}
+                        {customerMachine?.instalationSite?.address?.country?.country.trim() !== "" && customerMachine?.instalationSite?.address?.region?.region.trim() !== "" && ", "}
+                        {customerMachine?.instalationSite?.address?.country?.country.trim() ? customerMachine?.instalationSite?.address?.country : ""}
                       </Grid>
                     </Grid>
                   ) : null}
