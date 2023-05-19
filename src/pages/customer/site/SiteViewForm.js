@@ -31,7 +31,7 @@ export default function SiteViewForm({ currentSite = null }) {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const handleOpenConfirm = () => {
@@ -57,7 +57,7 @@ export default function SiteViewForm({ currentSite = null }) {
     await dispatch(getSite(customer._id, currentSite._id));
     dispatch(setSiteEditFormVisibility(true));
   };
-  
+
   const defaultValues = useMemo(
     () => (
       {
@@ -93,9 +93,10 @@ export default function SiteViewForm({ currentSite = null }) {
   );
 
   return (
-    <Grid >
-            <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-
+    <Grid>
+      <Grid container justifyContent="flex-end" sx={{ pr: '2rem' }}>
+        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      </Grid>
       {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
           Edit
@@ -105,43 +106,61 @@ export default function SiteViewForm({ currentSite = null }) {
         </Button>
       </Stack> */}
       <Grid container>
-        <ViewFormField sm={6}   heading='Name'       param={defaultValues?.name}     isActive={defaultValues.isActive}/>
-        <ViewFormField sm={6}   heading='Phone'       param={defaultValues?.phone} />
-        <ViewFormField sm={6}   heading='Fax'       param={defaultValues?.fax} />
-        <ViewFormField sm={6}   heading='Email'       param={defaultValues?.email} />
-        <ViewFormField sm={6}   heading='Website'       param={defaultValues?.website} />
-        <ViewFormField sm={6}   heading='Street'       param={defaultValues?.street} />
-        <ViewFormField sm={6}   heading='Suburb'       param={defaultValues?.suburb} />
-        <ViewFormField sm={6}   heading='City'       param={defaultValues?.city} />
-        <ViewFormField sm={6}   heading='Region'       param={defaultValues?.region} />
-        <ViewFormField sm={6}   heading='Post Code'       param={defaultValues?.postcode} />
-        <ViewFormField sm={6}   heading='Country'       param={defaultValues?.country} />
+        <ViewFormField
+          sm={12}
+          isActive={defaultValues.isActive}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Name"
+          param={defaultValues?.name}
+        />
+        <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
+        <ViewFormField sm={6} heading="Fax" param={defaultValues?.fax} />
+        <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
+        <ViewFormField sm={6} heading="Website" param={defaultValues?.website} />
+        <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />
+        <ViewFormField sm={6} heading="Suburb" param={defaultValues?.suburb} />
+        <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
+        <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
+        <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
+        <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
 
-          <Grid container>
-            <ViewFormField sm={6}   heading='Latitude'       param={defaultValues?.lat}/>
-            <ViewFormField sm={6}   heading='Longitude'       param={defaultValues?.long} />
-          </Grid>
+        <Grid container>
+          <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
+          <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
+        </Grid>
 
-           <Grid container>
-            <ViewFormField sm={6}   heading='Primary Billing Contact'       param={defaultValues?.primaryBillingContact?.firstName} secondparam={defaultValues?.primaryBillingContact?.lastName}/>
-            <ViewFormField sm={6}   heading='Primary Technical Contact'       param={defaultValues?.primaryTechnicalContact?.firstName} secondparam={defaultValues?.primaryTechnicalContact?.lastName}/>
-          </Grid>
-            <ViewFormSwitch isActive={defaultValues.isActive}/>
-          <Grid container>
-            <ViewFormAudit defaultValues={defaultValues}/>
-          </Grid>
-        <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
+        <Grid container>
+          <ViewFormField
+            sm={6}
+            heading="Primary Billing Contact"
+            param={defaultValues?.primaryBillingContact?.firstName}
+            secondparam={defaultValues?.primaryBillingContact?.lastName}
           />
-
+          <ViewFormField
+            sm={6}
+            heading="Primary Technical Contact"
+            param={defaultValues?.primaryTechnicalContact?.firstName}
+            secondparam={defaultValues?.primaryTechnicalContact?.lastName}
+          />
+        </Grid>
+        <ViewFormField />
+        {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues} />
+        </Grid>
+        <ConfirmDialog
+          open={openConfirm}
+          onClose={handleCloseConfirm}
+          title="Delete"
+          content="Are you sure want to delete?"
+          action={
+            <Button variant="contained" color="error" onClick={onDelete}>
+              Delete
+            </Button>
+          }
+        />
       </Grid>
     </Grid>
   );

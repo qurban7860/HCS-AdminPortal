@@ -178,14 +178,9 @@ export default function MachineList() {
             mt: '24px',
           }}
         >
-          <Cover
-            title='Machines'
-            name='Machines'
-            icon='arcticons:materialistic'
-            setting="enable"
-            />
+          <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting="enable" />
         </Card>
-        <Card sx={{mt: 3 }}>
+        <Card sx={{ mt: 3 }}>
           <MachineListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -196,7 +191,7 @@ export default function MachineList() {
             onResetFilter={handleResetFilter}
           />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-          {/* {selected.length > 1 ? "" :
+            {/* {selected.length > 1 ? "" :
 
             <TableSelectedAction
 
@@ -217,9 +212,8 @@ export default function MachineList() {
               }
             />
           } */}
-
             <Scrollbar>
-              <Table size= 'small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -258,11 +252,10 @@ export default function MachineList() {
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   /> */}
-
-                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
+            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom
@@ -272,7 +265,6 @@ export default function MachineList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
             //
-
           />
         </Card>
       </Container>

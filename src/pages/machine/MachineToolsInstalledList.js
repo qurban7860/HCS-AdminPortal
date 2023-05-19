@@ -133,17 +133,11 @@ export default function MachineToolsInstalledList() {
     };
 
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [activeIndex, setActiveIndex] = useState(null);
-
   const [expanded, setExpanded] = useState(false);
 
   const handleAccordianClick = (accordianIndex) => {
@@ -164,7 +158,6 @@ useLayoutEffect(() => {
     setExpanded(isExpanded ? panel : false);
   };
 
-
   useEffect(() => {
     if (initial) {
       if (toolsInstalled && !error) {
@@ -176,8 +169,6 @@ useLayoutEffect(() => {
     }
   }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial]);
 
-
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -186,66 +177,69 @@ useLayoutEffect(() => {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = !toolsInstalled.length && !formVisibility && !toolInstalledEditFormVisibility;
 
   return (
     <>
-        {!toolInstalledEditFormVisibility && <Stack alignItems="flex-end" sx={{ mb: 3, px:4 }}>
+      {!toolInstalledEditFormVisibility && (
+        <Stack alignItems="flex-end" sx={{ mb: 3, px: 4 }}>
           <Button
-              onClick={toggleChecked}
-              variant="contained"
-              startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-            >
+            onClick={toggleChecked}
+            variant="contained"
+            startIcon={
+              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+            }
+          >
             New Tool
-            </Button>
-        </Stack>}
+          </Button>
+        </Stack>
+      )}
 
-        <Card sx={{mt:3}}>
-          {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm/>}
-          {toolInstalledEditFormVisibility && <ToolsInstalledEditForm/>}
-          {!formVisibility && !toolInstalledEditFormVisibility && toolsInstalled.map((tool, index) => {
+      <Card sx={{ mt: 3 }}>
+        {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm />}
+        {toolInstalledEditFormVisibility && <ToolsInstalledEditForm />}
+        {!formVisibility &&
+          !toolInstalledEditFormVisibility &&
+          toolsInstalled.map((tool, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={tool._id} expanded={expanded === index} onChange={handleChange(index)} sx={{borderTop: borderTopVal}}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ?
-                <Grid container spacing={0}>
+            return (
+              <Accordion
+                key={tool._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+              >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container spacing={0}>
+                      <Grid item xs={12} sm={3} md={2}>
+                        {tool?.tool?.name || ''}
+                      </Grid>
 
-                  <Grid item xs={12} sm={3} md={2}>
-                    {tool?.tool?.name || "" }
-                  </Grid>
+                      <Grid item xs={12} sm={6} md={8}>
+                        {tool?.note.length > 100 ? tool?.note.substring(0, 100) : tool?.note}
+                        {tool?.note.length > 100 ? '...' : null}
+                      </Grid>
 
-                  <Grid item xs={12} sm={6} md={8}>
-                    {tool?.note.length > 100 ? tool?.note.substring(0, 100) :tool?.note}
-                    {tool?.note.length > 100 ? "..." :null}
-                  </Grid>
-
-                  <Grid item xs={12} sm={3} md={2}>
-                    <Typography variant="body2" >
-                    {fDate(tool?.createdAt || "")}
-                    </Typography>
-                  </Grid>
-                </Grid>
-                : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{mt:-5}}>
-                <ToolsInstalledViewForm
-                currentTool={tool}
-                />
-              </AccordionDetails>
-            </Accordion>
-
-          )})}
-
-          {isNotFound && <EmptyContent title="No installed tool listed here" sx={{color: "#DFDFDF"}}/>}
-
-
-        </Card>
+                      <Grid item xs={12} sm={3} md={2}>
+                        <Typography variant="body2">{fDate(tool?.createdAt || '')}</Typography>
+                      </Grid>
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <ToolsInstalledViewForm currentTool={tool} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        <TableNoData isNotFound={isNotFound} />
+      </Card>
 
       {/* <ConfirmDialog
         open={openConfirm}
@@ -272,7 +266,6 @@ useLayoutEffect(() => {
     </>
   );
 }
-
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {

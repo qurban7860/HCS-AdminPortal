@@ -25,13 +25,9 @@ SettingViewForm.propTypes = {
 
 export default function SettingViewForm({ currentSetting = null }) {
   const { machine } = useSelector((state) => state.machine);
-
   const navigate = useNavigate();
-
-  const dispatch = useDispatch(); 
-  
+  const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
 
   const handleOpenConfirm = () => {
@@ -58,7 +54,6 @@ export default function SettingViewForm({ currentSetting = null }) {
     dispatch(setSettingEditFormVisibility (true));
   };
 
-
   const defaultValues = useMemo(
     () => (
       {
@@ -78,14 +73,33 @@ export default function SettingViewForm({ currentSetting = null }) {
   );
 
   return (
-    <Grid >
-      <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
+    <Grid>
+      <Grid container justifyContent="flex-end" sx={{pr: '2rem'}}>
+        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      </Grid>
       <Grid container>
-          <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues?.techParamName} isActive={defaultValues.isActive}/>
-          <ViewFormField sm={6} heading="Technical Perameter Code" param={defaultValues?.techParamCode} />
-          <ViewFormField sm={12} heading="Technical Perameter Value" param={defaultValues?.techParamValue} />
-          <ViewFormSWitch isActive={defaultValues.isActive}/>
-          <ViewFormAudit defaultValues={defaultValues}/>
+        {/* <ViewFormField
+          sm={12}
+          isActive={defaultValues.isActive}
+        /> */}
+        <ViewFormField
+          sm={6}
+          heading="Technical Perameter"
+          param={defaultValues?.techParamName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Technical Perameter Code"
+          param={defaultValues?.techParamCode}
+        />
+        <ViewFormField
+          sm={12}
+          heading="Technical Perameter Value"
+          param={defaultValues?.techParamValue}
+        />
+        <ViewFormField />
+        {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
+        <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Grid>
   );

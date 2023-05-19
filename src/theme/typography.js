@@ -26,6 +26,7 @@ export function responsiveFontSizes({ sm, md, lg }) {
 
 // const FONT_PRIMARY = 'Public Sans, sans-serif'; // Google Font
 const FONT_PRIMARY = 'Yantramanav, Arimo, Calibri'; // Official Howick Fonts
+const FONT_SECONDARY = 'Arimo'
 // const FONT_PRIMARY = 'Arimo'; // Local Font
 // const FONT_SECONDARY = 'Calibri, sans-serif'; // Local Font
 
@@ -72,24 +73,29 @@ const typography = {
     ...responsiveFontSizes({ sm: 18, md: 18, lg: 18 }),
   },
   subtitle1: {
+    fontFamily: FONT_SECONDARY,
     fontWeight: 600,
     lineHeight: 1.5,
     fontSize: pxToRem(16),
   },
   subtitle2: {
+    fontFamily: FONT_SECONDARY,
     fontWeight: 600,
     lineHeight: 22 / 14,
     fontSize: pxToRem(14),
   },
   body1: {
+    fontFamily: FONT_SECONDARY,
     lineHeight: 1.5,
-    fontSize: pxToRem(20),
+    fontSize: pxToRem(18),
   },
   body2: {
+    fontFamily: FONT_SECONDARY,
     lineHeight: 22 / 14,
     fontSize: pxToRem(14),
   },
   caption: {
+    fontFamily: FONT_SECONDARY,
     lineHeight: 1.5,
     fontSize: pxToRem(12),
   },
@@ -100,6 +106,7 @@ const typography = {
     textTransform: 'uppercase',
   },
   button: {
+    fontFamily: FONT_SECONDARY,
     fontWeight: 700,
     lineHeight: 24 / 14,
     fontSize: pxToRem(14),

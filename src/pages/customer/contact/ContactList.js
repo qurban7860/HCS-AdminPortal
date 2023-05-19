@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Grid, 
+  Grid,
   Card,
   Table,
   Button,
@@ -90,21 +90,13 @@ export default function ContactList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const { contacts, isLoading, error, initial, responseMessage } = useSelector((state) => state.contact);
 
   useLayoutEffect(() => {
@@ -130,11 +122,8 @@ export default function ContactList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -223,10 +212,8 @@ export default function ContactList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-            
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -243,7 +230,6 @@ export default function ContactList() {
                 </Tooltip>
               }
             />
-
             <Scrollbar>
               <Table size='small' sx={{ minWidth: 960 }}>
                 <TableHeadCustom
@@ -297,7 +283,7 @@ export default function ContactList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
+
           />
         </Card>
       </Container>
@@ -346,10 +332,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (contact) => contact.firstName.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
-
   if (filterStatus.length) {
     inputData = inputData.filter((contact) => filterStatus.includes(contact.status));
   }
-
   return inputData;
 }
