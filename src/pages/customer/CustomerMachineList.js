@@ -20,6 +20,7 @@ import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slice
 import _mock from '../../_mock';
 import EmptyContent from '../../components/empty-content';
 import ViewFormField from '../components/ViewFormField';
+import ListSwitch from '../components/ListSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -88,6 +89,7 @@ export default function CustomerContactList() {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [openMachine, setOpenMachine] = useState(false);
   const [machineData, setMachineData] = useState({});
+  // console.log("machineData", machineData);
   const handleOpenMachine = () =>  setOpenMachine(true);
   const handleCloseMachine = () => setOpenMachine(false);
   const handleAccordianClick = (accordianIndex) => {
@@ -165,9 +167,9 @@ export default function CustomerContactList() {
                   // onClick={() => handleAccordianClick(index)}
                 > */}
                   {index !== activeIndex ? (
-                    <Grid container spacing={0}>
-                      <Grid item xs={12} sm={6} md={3} >
-                        {customerMachine?.serialNo && <Typography variant="body2" sx={{p:2}} >
+                    <Grid container spacing={0} sx={{p:1}}>
+                      <Grid item xs={12} sm={6} md={2} >
+                        {customerMachine?.serialNo && 
                           <Link 
                           onClick={()=>{ 
                             setDescriptionExpanded(false);
@@ -177,32 +179,27 @@ export default function CustomerContactList() {
                           href="#"
                           underline="none">
                           {customerMachine?.serialNo}
-                          </Link>
-                          </Typography>}
+                          </Link>}
                       </Grid>
-                      <Grid item xs={12} sm={6} md={3}>
-                        {customerMachine?.name && <Typography variant="body2" sx={{p:2}} >{customerMachine?.name}</Typography>}
+                      <Grid item xs={12} sm={6} md={2}>
+                        {customerMachine?.name && customerMachine?.name}
                       </Grid>
                       <Grid item xs={12} sm={6} md={2} display={{ sm: 'none', md: 'block' }}  >
-                        {customerMachine?.machineModel?.name && <Typography variant="body2" sx={{p:2}} >{customerMachine?.machineModel?.name}</Typography>}
+                        {customerMachine?.machineModel?.name && customerMachine?.machineModel?.name}
                       </Grid>
                       <Grid
                         item
                         xs={12}
                         sm={6}
-                        md={2}
+                        md={6}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
-                        {customerMachine?.status?.name && <Typography variant="body2" sx={{p:2}} >{customerMachine?.status?.name}</Typography>}
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={9}
-                        md={2}
-                        display={{ sm: 'none', md: 'none', lg: 'block' }}
-                      >
-                        <Switch checked = { customerMachine?.isActive } disabled size="small" sx={{p:2}} />
+                      {/* {Object.values(customerMachine?.instalationSite?.address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")} */}
+                        {customerMachine?.instalationSite?.address?.city.trim() ? customerMachine?.instalationSite?.address?.city : ""}
+                        {customerMachine?.instalationSite?.address?.city.trim() !== "" && customerMachine?.instalationSite?.address?.region.trim() !== "" && ", "}
+                        {customerMachine?.instalationSite?.address?.region.trim() ? customerMachine?.instalationSite?.address?.region : ""}
+                        {customerMachine?.instalationSite?.address?.country.trim() !== "" && customerMachine?.instalationSite?.address?.region.trim() !== "" && ", "}
+                        {customerMachine?.instalationSite?.address?.country.trim() ? customerMachine?.instalationSite?.address?.country : ""}
                       </Grid>
                     </Grid>
                   ) : null}
@@ -223,6 +220,7 @@ export default function CustomerContactList() {
         >
         <Grid
           container
+          item
           sx={{
             display: 'flex',
             justifyContent: 'center',
@@ -247,13 +245,12 @@ export default function CustomerContactList() {
           <ViewFormField sm={6} heading="Previous Machine"            param={machineData?.parentMachine?.name} />
           <ViewFormField sm={6} heading="Supplier"                    param={machineData?.supplier?.name} />
           <ViewFormField sm={6} heading="Machine Model"               param={machineData?.machineModel?.name} />
-          <ViewFormField sm={6} heading="Status"                      param={machineData?.status?.name} />
-          <ViewFormField sm={6} heading="Work Order / Perchase Order" param={machineData?.workOrderRef} />
-          <ViewFormField sm={12} heading="Customer"                   param={machineData?.customer?.name }/>
+          {/* <ViewFormField sm={6} heading="Status"                      param={machineData?.status?.name} /> */}
+          {/* <ViewFormField sm={6} heading="Work Order / Perchase Order" param={machineData?.workOrderRef} /> */}
+          {/* <ViewFormField sm={12} heading="Customer"                   param={machineData?.customer?.name }/> */}
           <ViewFormField sm={6} heading="Installation Site"           param={machineData?.instalationSite?.name}/>
           <ViewFormField sm={6} heading="Billing Site"                param={machineData?.billingSite?.name}/>
           <ViewFormField sm={12} heading="Nearby Milestone"           param={machineData?.siteMilestone} />
-          {/* <ViewFormField sm={12} heading="Description"                param={machineData?.description} /> */}
           <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}> Description </Typography>
             {machineData?.description && <Typography variant="body1" component="p" >
@@ -265,8 +262,8 @@ export default function CustomerContactList() {
           </Grid>
           
         </Grid>
-        <Grid container sx={{ px: 2, pb: 3 }}>
-          <Grid container sx={{ py: '2rem' }}>
+        <Grid item container sx={{ px: 2, pb: 3 }}>
+          <Grid item container sx={{ py: '2rem' }}>
             <Grid
               item
               xs={12}

@@ -237,7 +237,7 @@ export default function CustomerSiteList() {
                     <Grid container spacing={0}>
                       <Grid item xs={12} sm={4} md={4}>
                         {' '}
-                        <Typography variant="body2"> {site.name} </Typography>{' '}
+                        <Typography > {site.name} </Typography>{' '}
                       </Grid>
                       <CommaJoinField sm={8} objectParam={site.address} />
                     </Grid>
@@ -259,7 +259,7 @@ export default function CustomerSiteList() {
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ?
                 <Grid container spacing={1}>
-                  <Grid item xs={12} sm={4} md={4} sx={{ overflowWrap: "break-word", }}> <Typography variant="body2" > {site.name} </Typography> </Grid>
+                  <Grid item xs={12} sm={4} md={4} sx={{ overflowWrap: "break-word", }}> <Typography  > {site.name} </Typography> </Grid>
                   <CommaJoinField display={{ sm:"none", md:"block"}} sm={8} objectParam={site.address} sx={{ overflowWrap: "break-word", }}/>
                 </Grid>
                 : null }

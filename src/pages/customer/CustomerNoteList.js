@@ -299,12 +299,12 @@ const toggleChecked = () =>
             { index !==  activeIndex ?
               <Grid container spacing={1}>
                 <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: "break-word", }}>
-                  <Typography variant="body2" > {note.note.length > 100 ? note.note.substring(0, 150) :note.note} {note.note.length > 100 ? "..." :null} </Typography>
-                  {/* <Typography variant="body2" display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
-                  {/* <Typography variant="body2" display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
-                  {/* <Typography variant="body2" display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
+                  <Typography > {note.note.length > 100 ? note.note.substring(0, 150) :note.note} {note.note.length > 100 ? "..." :null} </Typography>
+                  {/* <Typography  display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
+                  {/* <Typography  display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
+                  {/* <Typography  display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
                 </Grid>
-                <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: "break-word", }} > <Typography variant="body2" > {fDateTime(note.createdAt)} </Typography> </Grid>
+                <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: "break-word", }} > <Typography > {fDateTime(note.createdAt)} </Typography> </Grid>
                 
               </Grid>
             : null }

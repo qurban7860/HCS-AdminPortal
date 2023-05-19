@@ -141,7 +141,7 @@ export default function SettingEditForm() {
         }
         console.log("data : ", data);
       await dispatch(updateCustomerDocument(customerDocument._id,data));
-      await dispatch(customer._id)
+      await dispatch(setCustomerDocumentEditFormVisibility(false));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');

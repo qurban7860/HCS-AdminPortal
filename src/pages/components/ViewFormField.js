@@ -16,7 +16,7 @@ export default function ViewFormField({heading,param, secondParam ,objectParam,s
     return (
     <Grid item xs={12} sm={sm} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-                {heading}
+                {heading || ""}
             </Typography>
             {/* <Typography variant="body2">{param || ''} {secondParam || ''} {objectParam || ''} {secondObjectParam || ''} {numberParam || ''}</Typography> */}
 

@@ -135,6 +135,7 @@ export default function DocumentAddForm({currentDocument}) {
           data.documentName = documentNameVal._id
         }
         await dispatch(addCustomerDocument(customer._id,data));
+        dispatch(setCustomerDocumentFormVisibility(false));
         setFileCategoryVal("")
         setDocumentNameVal("")
         setCustomerAccessVal("")
