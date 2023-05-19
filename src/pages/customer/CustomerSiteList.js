@@ -255,7 +255,7 @@ export default function CustomerSiteList() {
                     <Grid container spacing={1}>
                       <Grid item xs={12} sm={4} md={4} sx={{ overflowWrap: 'break-word' }}>
                         {' '}
-                        <Typography variant="body2"> {site.name} </Typography>{' '}
+                        <Typography > {site.name} </Typography>{' '}
                       </Grid>
                       <CommaJoinField
                         display={{ sm: 'none', md: 'block' }}

@@ -7,7 +7,7 @@ CommaJoinField.propTypes = {
   };
 export default function CommaJoinField({  objectParam, sm}) {
     return (
-     <Grid item xs={12} sm={sm} > <Typography variant="body2" >{Object.values(objectParam ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")} </Typography>
+     <Grid item xs={12} sm={sm} > <Typography  >{Object.values(objectParam ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")} </Typography>
      </Grid>
     )
 }

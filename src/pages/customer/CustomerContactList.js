@@ -166,10 +166,10 @@ export default function CustomerContactList() {
                         {contact?.firstName} {contact.lastName}{' '}
                       </Grid>
                       <Grid item xs={12} sm={6} md={3}>
-                        {contact?.email && <Typography variant="body2">{contact.email}</Typography>}
+                        {contact?.email && <Typography >{contact.email}</Typography>}
                       </Grid>
                       <Grid item xs={12} sm={9} md={2} display={{ sm: 'none', md: 'block' }}>
-                        {contact?.phone && <Typography variant="body2">{contact.phone}</Typography>}
+                        {contact?.phone && <Typography >{contact.phone}</Typography>}
                       </Grid>
                       <Grid
                         item
@@ -178,7 +178,7 @@ export default function CustomerContactList() {
                         md={2}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
-                        {contact?.title && <Typography variant="body2">{contact.title}</Typography>}
+                        {contact?.title && <Typography >{contact.title}</Typography>}
                       </Grid>
                       <Grid
                         item
@@ -188,7 +188,7 @@ export default function CustomerContactList() {
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
                         {contact?.contactTypes && (
-                          <Typography variant="body2">
+                          <Typography >
                             {Object.values(contact.contactTypes)?.join(', ')}
                           </Typography>
                         )}
