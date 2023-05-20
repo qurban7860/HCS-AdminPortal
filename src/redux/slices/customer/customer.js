@@ -137,10 +137,11 @@ export function getCustomer(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          flag: 'basic',
         }
       }
       );

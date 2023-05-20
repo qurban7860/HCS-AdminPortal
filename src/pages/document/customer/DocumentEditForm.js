@@ -204,7 +204,7 @@ export default function SettingEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <FormHeading heading='Edit Document'/>
+              <FormHeading heading='Edit Document'/>
               <Box rowGap={3} columnGap={3} display="grid" gridTemplateColumns={{  xs: 'repeat(1, 1fr)',  sm: 'repeat(2, 1fr)', }} >
 
               <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
@@ -358,10 +358,10 @@ export default function SettingEditForm() {
                 /> */}
               {/* <Upload files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} /> */}
               {/* {!!files.length && (
-          <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
-            Remove all
-          </Button>
-        )} */}
+                <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
+                  Remove all
+                </Button>
+              )} */}
 
               {/* <RHFSwitch
                 name="isActive"
@@ -375,8 +375,8 @@ export default function SettingEditForm() {
                 } 
               /> */}
 
+            <AddFormButtons sx={{mt:3}} isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
 
         </Grid>

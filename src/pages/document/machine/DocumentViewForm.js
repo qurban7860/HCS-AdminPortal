@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
+import Image from 'mui-image';
+// eslint-disable-next-line import/no-anonymous-default-export
 import { Switch, Card, Grid, Stack, Typography, Button , Box} from '@mui/material';
 // redux
 import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument} from '../../../redux/slices/document/machineDocument';
@@ -65,9 +67,9 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   );
 
   return (
-    <Grid >
+    <Grid sx={{mt:-2}}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-        <Grid container>
+        <Grid container >
           <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
           <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
           <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
@@ -75,15 +77,9 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
           <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
           <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} />
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+
           {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ? 
-          <Box
-        component="img"
-        sx={{
-          m:2
-        }}
-        alt={defaultValues?.name}
-        src={`data:image/png;base64, ${currentMachineDocument?.content}`}
-        />:""}
+          <Image alt={defaultValues.name} src={currentMachineDocument?.path} /> : null}
 
           <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>

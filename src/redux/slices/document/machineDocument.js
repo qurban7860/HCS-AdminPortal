@@ -14,8 +14,8 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  machineDocuments: [],
   machineDocument: null,
+  machineDocuments: [],
 };
 
 const slice = createSlice({
@@ -69,6 +69,23 @@ const slice = createSlice({
       state.initial = true;
     },
 
+
+    // RESET Machine Document
+    resetMachineDocument(state){
+      state.machineDocument = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET Machine Documents
+    resetMachineDocuments(state){
+      state.machineDocuments = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -87,6 +104,8 @@ export const {
   setMachineDocumentFormVisibility,
   setMachineDocumentEditFormVisibility,
   setMachineDocumentEdit,
+  resetMachineDocument,
+  resetMachineDocuments,
   getCart,
   addToCart,
   setResponseMessage,

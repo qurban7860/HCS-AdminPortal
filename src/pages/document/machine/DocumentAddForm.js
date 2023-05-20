@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Link, InputLabel,MenuItem , FormControl} from '@mui/material';
+import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Link, InputLabel,MenuItem , FormControl, Dialog} from '@mui/material';
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
@@ -59,7 +59,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
   const [ nameVal, setNameVal] = useState("")
   const [ preview, setPreview] = useState(false)
-
+  const [ previewVal, setPreviewVal] = useState("")
   const navigate = useNavigate();
 
   let documentAvailable 
@@ -78,7 +78,12 @@ export default function DocumentAddForm({currentDocument}) {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+ 
   useEffect(()=>{
+    setNameVal("")
+    setDocumentNameVal("")
+    setFileCategoryVal("")
+    setCustomerAccessVal(false)
     dispatch(getDocumentNames());
     dispatch(getFileCategories());
   },[dispatch,machine._id])
@@ -86,7 +91,7 @@ export default function DocumentAddForm({currentDocument}) {
   const AddCustomerDocumentSchema = Yup.object().shape({
     name: Yup.string().max(50),
     description: Yup.string().max(10000),
-    image: Yup.mixed().required("Image Field is required!"),
+    image: Yup.mixed().required("File is required!"),
     isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
@@ -137,10 +142,13 @@ export default function DocumentAddForm({currentDocument}) {
         console.log("data : ", data)
 
         await dispatch(addMachineDocument(machine.customer._id, machine._id ,data));
+        dispatch(setMachineDocumentFormVisibility(false));
         setFileCategoryVal("")
         setDocumentNameVal("")
         setCustomerAccessVal("")
         setNameVal("")
+        setPreview(false);
+        setPreviewVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -164,22 +172,26 @@ export default function DocumentAddForm({currentDocument}) {
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
-
+      const fileName = file.name.split(".");
+      setNameVal(fileName[0])
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
-
       if (file) {
+      setPreviewVal(file.preview)
         setValue('image', newFile, { shouldValidate: true });
       }
     },
     [setValue]
   );
 
-  const previewHandle = (inputFile) => {setPreview(true)};
+  const previewHandle = () => {setPreview(true)};
+
+  const handleClosePreview = () => { setPreview(false) };
 
   const handleRemoveFile = () => {
-    setValue('cover', null);
+    setValue('image', "", { shouldValidate: true });
+    setNameVal("")
   };
 
   const handleChange = () => {
@@ -194,6 +206,7 @@ export default function DocumentAddForm({currentDocument}) {
               <FormHeading heading='New Document'/>
               <Grid item xs={12} md={6} > 
                 <RHFUpload
+                required
                   sx={{ width: '300px'}}
                   // multiple
                   // thumbnail
@@ -233,7 +246,6 @@ export default function DocumentAddForm({currentDocument}) {
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
-                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
@@ -348,13 +360,49 @@ export default function DocumentAddForm({currentDocument}) {
                 ChipProps={{ size: 'small' }}
               /> */}
               </Box>
-              <RHFTextField name="description" label="Description" minRows={8} multiline />
+              <RHFTextField name="description" label="Description" minRows={3} multiline />
               
               {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  
           </Card>
         </Grid>
+        <Dialog
+        maxWidth="md"
+        open={preview}
+        onClose={handleClosePreview}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+        >
+        <Grid
+          container
+          item
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            {nameVal}
+          </Typography>{' '}
+          <Link onClick={() => handleClosePreview()} href="#" underline="none" sx={{ ml: 'auto' }}>
+            {' '}
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
+        {/* <Grid  > */}
+        <Box
+            component="img"
+            
+            alt={defaultValues?.name}
+            src={previewVal}
+            />
+        {/* </Grid> */}
+      </Dialog>
       </Grid>
     </FormProvider>
   );

@@ -46,6 +46,9 @@ import { getCustomers, deleteCustomer, getCustomer ,resetCustomer,resetCustomers
 import { resetSite,resetSites, setSiteEditFormVisibility, setSiteFormVisibility     } from '../../redux/slices/customer/site';
 import { resetContact,resetContacts, setContactEditFormVisibility,setContactFormVisibility} from '../../redux/slices/customer/contact';
 import { resetNote,resetNotes ,setNoteEditFormVisibility,setNoteFormVisibility } from '../../redux/slices/customer/note';
+import { resetCustomerDocument, resetCustomerDocuments } from '../../redux/slices/document/customerDocument';
+import { resetCustomerMachines } from '../../redux/slices/products/machine';
+
 import { Cover } from '../components/Cover';
 import { fDate } from '../../utils/formatTime';
 
@@ -112,6 +115,9 @@ export default function CustomerList() {
     dispatch(resetContacts())
     dispatch(resetNote())
     dispatch(resetNotes())
+    dispatch(resetCustomerDocument());
+    dispatch(resetCustomerDocuments());
+    dispatch(resetCustomerMachines())
     dispatch(setSiteFormVisibility(false));
     dispatch(setSiteEditFormVisibility(false));
     dispatch(setContactFormVisibility(false));

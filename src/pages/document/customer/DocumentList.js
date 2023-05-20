@@ -162,12 +162,12 @@ useEffect(()=>{
 
   return (
     <>
-
+        {!customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && 
         <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{  py: 2 }} >
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
             <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
               <Grid item xs={12} sm={8}>
-                {!customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
+                {!customerDocumentFormVisibility &&  <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
                 <InputAdornment position="start">
                   <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
                 </InputAdornment> ),}}/>}
@@ -180,7 +180,7 @@ useEffect(()=>{
               </Stack>
             </Grid>
           </Grid>
-        </Stack>
+        </Stack>}
         
                   {!customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility &&  customerDocumentFormVisibility && <DocumentAddForm/>}
                   {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && fileCategoryFormVisibility && <FileCategoryAddForm/>}
@@ -195,7 +195,7 @@ useEffect(()=>{
             <Accordion key={document._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
                 { index !==  activeIndex ? 
-                <Grid container spacing={0}>
+                <Grid container >
                 <Grid item xs={12} sm={4} md={2.4}>
                     {document?.name || "" }
                   </Grid>
@@ -216,7 +216,7 @@ useEffect(()=>{
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5, }}>
-                <DocumentViewForm currentCustomerDocument={document} />
+                <DocumentViewForm currentCustomerDocument={document} sx={{pt:-2}}/>
               </AccordionDetails>
             </Accordion>
             
