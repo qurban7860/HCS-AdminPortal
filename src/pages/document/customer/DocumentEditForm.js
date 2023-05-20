@@ -14,7 +14,7 @@ import { Switch, Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { addCustomerDocument, updateCustomerDocument, setCustomerDocumentEdit, setCustomerDocumentEditFormVisibility, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
+import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments , setCustomerDocumentEdit, setCustomerDocumentEditFormVisibility, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
 import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
 import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 // routes
@@ -139,9 +139,10 @@ export default function SettingEditForm() {
         if(documentNameVal){
           data.documentName = documentNameVal._id
         }
-        console.log("data : ", data);
+        // console.log("data : ", data);
       await dispatch(updateCustomerDocument(customerDocument._id,data));
-      await dispatch(setCustomerDocumentEditFormVisibility(false));
+       dispatch(getCustomerDocuments(customerDocument._id));
+      // dispatch(setCustomerDocumentEditFormVisibility(false));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
