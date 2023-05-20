@@ -82,6 +82,7 @@ export default function DocumentAddForm({currentDocument}) {
     setNameVal("")
     setDocumentNameVal("")
     setFileCategoryVal("")
+    setCustomerAccessVal(false)
     dispatch(getDocumentNames())
     dispatch(getFileCategories())
   },[dispatch,customer])
@@ -89,7 +90,7 @@ export default function DocumentAddForm({currentDocument}) {
   const AddCustomerDocumentSchema = Yup.object().shape({
     name: Yup.string().max(50),
     description: Yup.string().max(10000),
-    // image: Yup.mixed().required("Upload Field is required!"),
+    image: Yup.mixed().required("File is required!"),
     // customerAccess: Yup.bool().required("Customer Access Field is required!"),
     isActive : Yup.boolean(),
   });
@@ -190,7 +191,7 @@ export default function DocumentAddForm({currentDocument}) {
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
-const previewHandle = (inputFile) => {setPreview(true)};
+const previewHandle = () => {setPreview(true)};
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -221,6 +222,7 @@ const previewHandle = (inputFile) => {setPreview(true)};
 
               <Grid item xs={12} md={6} > 
                 <RHFUpload
+                required
                   sx={{ width: '300px'}}
                   // multiple
                   // thumbnail

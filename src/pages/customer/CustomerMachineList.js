@@ -89,6 +89,7 @@ export default function CustomerContactList() {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [openMachine, setOpenMachine] = useState(false);
   const [machineData, setMachineData] = useState({});
+  const address = {};
   // console.log("machineData", machineData);
   const handleOpenMachine = () =>  setOpenMachine(true);
   const handleCloseMachine = () => setOpenMachine(false);
@@ -154,6 +155,9 @@ export default function CustomerContactList() {
       )} */}
       <Card>
         {customerMachines.map((customerMachine, index) => {
+                address.city = customerMachine?.instalationSite?.address?.city
+                address.region = customerMachine?.instalationSite?.address?.region
+                address.country = customerMachine?.instalationSite?.address?.country
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return (
               <Accordion
@@ -194,12 +198,12 @@ export default function CustomerContactList() {
                         md={6}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
-                      {/* {Object.values(customerMachine?.instalationSite?.address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")} */}
-                        {customerMachine?.instalationSite?.address?.city?.trim() ? customerMachine?.instalationSite?.address?.city : ""}
-                        {customerMachine?.instalationSite?.address?.city?.trim() !== "" && customerMachine?.instalationSite?.address?.region?.trim() !== "" && ", "}
-                        {customerMachine?.instalationSite?.address?.region?.trim() ? customerMachine?.instalationSite?.address?.region : ""}
-                        {customerMachine?.instalationSite?.address?.country?.trim() !== "" && customerMachine?.instalationSite?.address?.region?.trim() !== "" && ", "}
-                        {customerMachine?.instalationSite?.address?.country?.trim() ? customerMachine?.instalationSite?.address?.country : ""}
+                      {Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}
+                        {/* {customerMachine?.instalationSite?.address?.city ? customerMachine?.instalationSite?.address?.city : ""}
+                        {customerMachine?.instalationSite?.address?.region?.trim() !== undefined  ? ", " : ''}
+                        {customerMachine?.instalationSite?.address?.region ? customerMachine?.instalationSite?.address?.region : ""}
+                        {customerMachine?.instalationSite?.address?.country?.trim() !== undefined   ? ", " : ''}
+                        {customerMachine?.instalationSite?.address?.country ? customerMachine?.instalationSite?.address?.country : ""} */}
                       </Grid>
                     </Grid>
                   ) : null}
@@ -211,7 +215,7 @@ export default function CustomerContactList() {
             );
           })}
         {isNotFound && <EmptyContent title="No data" sx={{ color: '#DFDFDF' }} />}
-      <Dialog
+        <Dialog
         maxWidth="md"
         open={openMachine}
         onClose={handleCloseMachine}
@@ -235,11 +239,11 @@ export default function CustomerContactList() {
           </Typography>{' '}
           <Link onClick={() => handleCloseMachine()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
+            <Iconify icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={6} heading="Serial No"                   param={machineData?.serialNo} isActive={machineData.isActive} />
+          <ViewFormField sm={6} heading="Serial No"                   param={machineData?.serialNo} />
           <ViewFormField sm={6} heading="Name"                        param={machineData?.name} />
           <ViewFormField sm={6} heading="Previous Machine Serial No"  param={machineData?.parentSerialNo}/>
           <ViewFormField sm={6} heading="Previous Machine"            param={machineData?.parentMachine?.name} />

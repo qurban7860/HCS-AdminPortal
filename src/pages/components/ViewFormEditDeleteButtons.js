@@ -25,8 +25,8 @@ const handleCloseConfirm = () => {
           direction="row"
           spacing={2}
           sx={{
-            mb: -4,
-            mt:1,
+            mb: -5,
+            // mt:1,
             mr:2,
             '& .MuiButton-root': {
               minWidth: '32px',

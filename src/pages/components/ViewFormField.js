@@ -24,7 +24,7 @@ export default function ViewFormField({heading,param, secondParam ,objectParam,s
             <Typography variant="body1" style={{ display: 'flex', alignItems: 'center' }}>
               {isActive !== undefined && (
                 <Iconify
-                  icon={isActive ? "mdi:user-check-outline" : "mdi:user-block-outline"}
+                  icon={isActive ? "ph:seal-check-fill" : "ph:seal-warning-fill"}
                   style={{ color: isActive ? "green" : "red", fontSize: '24px', marginRight: '8px' }}
                 />
               )}

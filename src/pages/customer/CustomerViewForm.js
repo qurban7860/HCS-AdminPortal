@@ -47,7 +47,7 @@ export default function CustomerViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { customer } = useSelector((state) => state.customer);
-  console.log("customer : ",customer)
+  // console.log("customer : ",customer)
   const toggleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
   };

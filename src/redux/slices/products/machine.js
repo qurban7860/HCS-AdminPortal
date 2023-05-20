@@ -66,6 +66,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // Reset Customer Machines
+    resetCustomerMachines(state){
+      state.customerMachines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+        
     // GET Machine
     getMachineSuccess(state, action) {
       state.isLoading = false;
@@ -99,6 +107,7 @@ export default slice.reducer;
 // Actions
 export const {
   setMachineEditFormVisibility,
+  resetCustomerMachines,
   resetMachine,
   getCart,
   addToCart,

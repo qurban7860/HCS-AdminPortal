@@ -70,6 +70,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // RESET Customer Document
+    resetCustomerDocument(state){
+      state.customerDocument = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET Customer Documents
+    resetCustomerDocuments(state){
+      state.customerDocuments = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -88,6 +104,8 @@ export const {
   setCustomerDocumentFormVisibility,
   setCustomerDocumentEditFormVisibility,
   setCustomerDocumentEdit,
+  resetCustomerDocument,
+  resetCustomerDocuments,
   getCart,
   addToCart,
   setResponseMessage,

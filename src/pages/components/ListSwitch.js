@@ -19,11 +19,8 @@ ViewFormSWitch.propTypes = {
         setIsActiveVal(event.target.checked);
       };
     return (
-        <Grid item xs={12} sm={12} sx={{display:'flex', }}>
-          <Typography sx={{ pl:2, pb:1, display:'flex', alignItems:'center' }}>
-            {heading || ""}
-          </Typography>
+      <>
           <Switch  checked={isActiveVal || false} onChange={handleIsActiveChange} disabled />
-       </Grid>
+      </>
     )
 }
