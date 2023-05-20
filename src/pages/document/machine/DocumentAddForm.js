@@ -58,6 +58,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ contactVal, setContactVal] = useState('')
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
   const [ nameVal, setNameVal] = useState("")
+  const [ preview, setPreview] = useState(false)
 
   const navigate = useNavigate();
 
@@ -175,6 +176,8 @@ export default function DocumentAddForm({currentDocument}) {
     [setValue]
   );
 
+  const previewHandle = (inputFile) => {setPreview(true)};
+
   const handleRemoveFile = () => {
     setValue('cover', null);
   };
@@ -188,7 +191,24 @@ export default function DocumentAddForm({currentDocument}) {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
             <Stack spacing={3}>
-              {/* <FormHeading heading='New Note'/> */}
+              <FormHeading heading='New Document'/>
+              <Grid item xs={12} md={6} > 
+                <RHFUpload
+                  sx={{ width: '300px'}}
+                  // multiple
+                  // thumbnail
+                  onPreview={previewHandle}
+                  name="image"
+                  maxSize={30145728}
+                  onDelete={handleRemoveFile}
+                  onDrop={handleDrop}
+                  onRemove={handleDrop}
+                  // onRemoveAll={handleRemoveAllFiles}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                  // onDelete={handleRemoveFile}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                />
+                </Grid>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
 
@@ -329,12 +349,7 @@ export default function DocumentAddForm({currentDocument}) {
               /> */}
               </Box>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFUpload 
-                  name="image"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleDrop}
-               />
+              
               {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>  

@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Link, InputLabel,MenuItem , FormControl}  from '@mui/material';
+import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Link, InputLabel,MenuItem , FormControl, Dialog}  from '@mui/material';
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
@@ -48,7 +48,10 @@ export default function DocumentAddForm({currentDocument}) {
   const [ fileCategoryVal, setFileCategoryVal] = useState('')
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
   const [ nameVal, setNameVal] = useState("")
-  // console.log("customer access : ", customerAccessVal)
+  const [ previewVal, setPreviewVal] = useState("")
+  const [ preview, setPreview] = useState(false)
+
+  // console.log("custom.previe
   const [files, setFiles] = useState([]);
   const [ machineVal, setMachineVal] = useState('')
   const [ customerVal, setCustomerVal] = useState('')
@@ -76,6 +79,9 @@ export default function DocumentAddForm({currentDocument}) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   useEffect(()=>{
+    setNameVal("")
+    setDocumentNameVal("")
+    setFileCategoryVal("")
     dispatch(getDocumentNames())
     dispatch(getFileCategories())
   },[dispatch,customer])
@@ -140,6 +146,8 @@ export default function DocumentAddForm({currentDocument}) {
         setDocumentNameVal("")
         setCustomerAccessVal("")
         setNameVal("")
+        setPreview(false);
+        setPreviewVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Note Save failed!');
@@ -172,28 +180,28 @@ export default function DocumentAddForm({currentDocument}) {
   //   [files]
   // );
 
-  const handleUpload = () => {
-    console.log('ON UPLOAD');
-  };
+  const handleClosePreview = () => { setPreview(false) };
 
-  const handleRemoveFile = (inputFile) => {
-    const filtered = files.filter((file) => file !== inputFile);
-    setFiles(filtered);
+  const handleRemoveFile = () => {
+    setValue('image', "", { shouldValidate: true });
+    setNameVal("")
   };
 
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
+const previewHandle = (inputFile) => {setPreview(true)};
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
-
+      const fileName = file.name.split(".");
+      setNameVal(fileName[0])
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
-
       if (file) {
+      setPreviewVal(file.preview)
         setValue('image', newFile, { shouldValidate: true });
       }
     },
@@ -210,8 +218,27 @@ export default function DocumentAddForm({currentDocument}) {
           <Card sx={{ p: 3 }} >
             <Stack spacing={3}>
               <FormHeading heading='New Document'/>
-              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
+              <Grid item xs={12} md={6} > 
+                <RHFUpload
+                  sx={{ width: '300px'}}
+                  // multiple
+                  // thumbnail
+                  onPreview={previewHandle}
+                  name="image"
+                  maxSize={30145728}
+                  onDelete={handleRemoveFile}
+                  onDrop={handleDrop}
+                  onRemove={handleDrop}
+                  // onRemoveAll={handleRemoveAllFiles}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                  // onDelete={handleRemoveFile}
+                  // onUpload={() => console.log('ON UPLOAD')}
+                />
+                </Grid>
+
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
+              
               <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
 
               <Grid item xs={12} sm={12} sx={{display:'flex'}}>
@@ -235,7 +262,6 @@ export default function DocumentAddForm({currentDocument}) {
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
-                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
@@ -352,20 +378,7 @@ export default function DocumentAddForm({currentDocument}) {
               /> */}
               </Box>
               <RHFTextField name="description" label="Description" minRows={3} multiline />
-              <RHFUpload
-              // sx={{ width: '300px'}}
-                  // multiple
-                  // thumbnail
-                 
-                  name="image"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleDrop}
-                  // onRemoveAll={handleRemoveAllFiles}
-                  // onUpload={() => console.log('ON UPLOAD')}
-                  // onDelete={handleRemoveFile}
-                  // onUpload={() => console.log('ON UPLOAD')}
-                />
+              
               {/* <Upload files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} /> */}
               {/* {!!files.length && (
           <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
@@ -377,6 +390,42 @@ export default function DocumentAddForm({currentDocument}) {
           </Card>
         </Grid>
       </Grid>
+      <Dialog
+        maxWidth="md"
+        open={preview}
+        onClose={handleClosePreview}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+        >
+        <Grid
+          container
+          item
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            {nameVal}
+          </Typography>{' '}
+          <Link onClick={() => handleClosePreview()} href="#" underline="none" sx={{ ml: 'auto' }}>
+            {' '}
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
+        {/* <Grid  > */}
+        <Box
+            component="img"
+            
+            alt={defaultValues?.name}
+            src={previewVal}
+            />
+        {/* </Grid> */}
+      </Dialog>
     </FormProvider>
   );
 }

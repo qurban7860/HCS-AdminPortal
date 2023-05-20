@@ -2,14 +2,16 @@ import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button ,Box} from '@mui/material';
+import Image from 'mui-image';
+// eslint-disable-next-line import/no-anonymous-default-export
+import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia} from '@mui/material';
 // redux
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
+import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import Cover from '../../components/Cover';
 import ViewFormAudit from '../../components/ViewFormAudit';
@@ -75,15 +77,17 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
             <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-            { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
+            {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
           <Box
-        component="img"
-        sx={{
-          m:2
-        }}
-        alt={defaultValues?.name}
-        src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
-      />:""}
+            component="img"
+            sx={{
+              m:2
+            }}
+            alt={defaultValues.name}
+            src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
+            />:""} */}
+            { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
+            <Image alt={defaultValues.name} src={currentCustomerDocument?.path} /> : null}
             <ViewFormSWitch isActive={defaultValues.isActive}/>
             <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
