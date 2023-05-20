@@ -216,7 +216,7 @@ useEffect(()=>{
                 : null }
               </AccordionSummary>
               <AccordionDetails sx={{mt:-5, }}>
-                <DocumentViewForm currentCustomerDocument={document} sx={{pt:-2}}/>
+                <DocumentViewForm currentCustomerDocument={document}/>
               </AccordionDetails>
             </Accordion>
             
