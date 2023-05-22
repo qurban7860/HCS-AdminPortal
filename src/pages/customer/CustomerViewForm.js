@@ -47,7 +47,7 @@ export default function CustomerViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { customer } = useSelector((state) => state.customer);
-  // console.log("customer : ",customer)
+  console.log("customer : ",customer)
   const toggleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
   };
@@ -83,7 +83,7 @@ const onDelete = async () => {
   );
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={customer?.type !== "SP"? onDelete : null} />
       <Grid container>
         <ViewFormField
           sm={12}

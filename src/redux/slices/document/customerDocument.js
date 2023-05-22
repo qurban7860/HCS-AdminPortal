@@ -194,9 +194,10 @@ export function updateCustomerDocument(customerDocumentId,params) {
           // if(params?.isActive){
           //   formData.append('isActive', params?.isActive);
           // }
-
+          console.log("Payload : ",params);
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
       // dispatch(getCustomerDocuments())
+      await dispatch(getCustomerDocuments(customerDocumentId));
       dispatch(slice.actions.setResponseMessage('Customer Document updated successfully'));
       dispatch(setCustomerDocumentEditFormVisibility (false));
     } catch (error) {
@@ -221,6 +222,7 @@ export function getCustomerDocuments(customerId) {
         }
       }
       );
+      console.log("response : ", response);
       dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customer Document loaded successfully'));
     } catch (error) {
