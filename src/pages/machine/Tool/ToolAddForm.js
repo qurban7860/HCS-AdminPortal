@@ -129,7 +129,7 @@ export default function ToolAddForm() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Tools" required />
+              <RHFTextField name="name" label="Name" required />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
                 name="isActive"
