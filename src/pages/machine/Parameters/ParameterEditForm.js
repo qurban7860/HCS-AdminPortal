@@ -135,10 +135,10 @@ export default function ParameterEditForm() {
                   setParamVal(newValue);
                 }}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Tech Param Categories" />}
+                renderInput={(params) => <TextField {...params} label="Parameter Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              <RHFTextField name="name" label="Machine Tech Param" required />
+              <RHFTextField name="name" label="Name" required />
               <RHFTextField name="code" label="Code" required />
             </Box>
             <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >

@@ -110,12 +110,12 @@ export default function ParameterAddForm() {
                     setParamCategoryVal(newValue);
                   }}
                   id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Technical Parameter Categories" />}
+                  renderInput={(params) => <TextField {...params} label="Parameter Category" />}
                   ChipProps={{ size: 'small' }}
                 />
               </Box>
               <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
-                <RHFTextField name="name" label="Machine Technical Parameter"  />
+                <RHFTextField name="name" label="Name"  />
                 <RHFTextField name="code" label="Code"  />
               </Box>
               <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >

@@ -255,7 +255,7 @@ export default function CustomerContactList() {
           <ViewFormField sm={6} heading="Installation Site"           param={machineData?.instalationSite?.name}/>
           <ViewFormField sm={6} heading="Billing Site"                param={machineData?.billingSite?.name}/>
           <ViewFormField sm={12} heading="Nearby Milestone"           param={machineData?.siteMilestone} />
-          <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
+          {/* <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}> Description </Typography>
             {machineData?.description && <Typography variant="body1" component="p" >
                 {descriptionExpanded ? machineData?.description : `${machineData?.description.slice(0, 90)}...`}{machineData?.description?.length > 90 && (
@@ -263,7 +263,7 @@ export default function CustomerContactList() {
                   {descriptionExpanded ? 'See Less' : 'See More'}
                 </Button>)}
             </Typography>}
-          </Grid>
+          </Grid> */}
           
         </Grid>
         <Grid item container sx={{ px: 2, pb: 3 }}>
