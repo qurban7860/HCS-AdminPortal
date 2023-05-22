@@ -33,7 +33,7 @@ import FormProvider, {
   RHFUpload,
 } from '../../../components/hook-form';
 import {Cover} from '../../components/Cover';
-import { dispatchReq, dispatchReqEditAndView, dispatchReqNavToList } from '../../asset/dispatchRequests';
+import { dispatchReqEditAndView, dispatchReqNavToList } from '../../asset/dispatchRequests';
 import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ export default function ModelEditForm() {
                 ChipProps={{ size: 'small' }}
               />
 
-              <RHFTextField name="name" label="Model Name" />
+              <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch name="isActive" labelPlacement="start" label={
                   <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 

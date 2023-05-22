@@ -137,7 +137,7 @@ export default function StatusAddForm() {
             <Card sx={{ p: 3, mt: 3}}>
               <Stack spacing={3}>
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-                <RHFTextField name="name" label="Name of Supplier"  />
+                <RHFTextField name="name" label="Name"  />
                 </Box>
               </Stack>
             </Card>

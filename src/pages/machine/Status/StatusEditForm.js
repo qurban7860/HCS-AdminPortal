@@ -98,9 +98,9 @@ export default function StatusEditForm() {
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-                <RHFTextField name="name" label="Machine status" />
+                <RHFTextField name="name" label="Name" />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
-                <RHFTextField name="displayOrderNo" label="Display Order No" type='number' />
+                <RHFTextField name="displayOrderNo" label="Display Order No." type='number' />
                 {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                       <option value="" defaultValue/>
                 </RHFSelect> */}

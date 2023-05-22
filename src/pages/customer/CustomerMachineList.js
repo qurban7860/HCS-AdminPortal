@@ -160,18 +160,22 @@ export default function CustomerContactList() {
                 address.country = customerMachine?.instalationSite?.address?.country
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return (
-              <Accordion
+              <Accordion expanded={false} focusVisible={false}
                 key={customerMachine._id}
                 // expanded={expanded === index}
                 // onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal }}
+                sx={{ borderTop: borderTopVal, }}
                 >
-                {/* <AccordionSummary
+                <AccordionSummary 
+                 aria-controls="panel1a-content"
+                 focusVisible={false}
+                 sx={{ cursor: 'unset !important' }}
+                //  sx={{ pointerEvents: "none"}}
                   // expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   // onClick={() => handleAccordianClick(index)}
-                > */}
+                >
                   {index !== activeIndex ? (
-                    <Grid container spacing={0} sx={{p:1}}>
+                    <Grid container spacing={1}>
                       <Grid item xs={12} sm={6} md={2} >
                         {customerMachine?.serialNo && 
                           <Link 
@@ -182,14 +186,14 @@ export default function CustomerContactList() {
                           }}
                           href="#"
                           underline="none">
-                          {customerMachine?.serialNo}
+                          <Typography >{customerMachine?.serialNo}</Typography>
                           </Link>}
                       </Grid>
                       <Grid item xs={12} sm={6} md={2}>
-                        {customerMachine?.name && customerMachine?.name}
+                      <Typography >{customerMachine?.name}</Typography>
                       </Grid>
                       <Grid item xs={12} sm={6} md={2} display={{ sm: 'none', md: 'block' }}  >
-                        {customerMachine?.machineModel?.name && customerMachine?.machineModel?.name}
+                      <Typography >{customerMachine?.machineModel?.name}</Typography>
                       </Grid>
                       <Grid
                         item
@@ -198,7 +202,7 @@ export default function CustomerContactList() {
                         md={6}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
-                      {Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}
+                      <Typography >{Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}</Typography>
                         {/* {customerMachine?.instalationSite?.address?.city ? customerMachine?.instalationSite?.address?.city : ""}
                         {customerMachine?.instalationSite?.address?.region?.trim() !== undefined  ? ", " : ''}
                         {customerMachine?.instalationSite?.address?.region ? customerMachine?.instalationSite?.address?.region : ""}
@@ -207,9 +211,8 @@ export default function CustomerContactList() {
                       </Grid>
                     </Grid>
                   ) : null}
-                {/* </AccordionSummary> */}
+                </AccordionSummary>
                 {/* <AccordionDetails sx={{ mt: -5 }}> */}
-                  {/* <ContactViewForm currentContact={customerMachine} /> */}
                 {/* </AccordionDetails> */}
               </Accordion>
             );
