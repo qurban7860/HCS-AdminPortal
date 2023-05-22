@@ -77,7 +77,9 @@ export default function Upload({
   const hasFiles = files && multiple && files.length > 0;
 
   const isError = isDragReject || !!error;
-
+  const allowedImageExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp" ];
+  const allowedDocumentExtensions = ["pdf", "doc", "docx",  "xls", "xlsx", "ppt", "pptx"];
+  const fileExtension = file?.name?.split(".").pop().toLowerCase();
   return (
     <Box sx={{ width: 1, position: 'relative', ...sx }}>
       <StyledDropZone
@@ -166,7 +168,7 @@ export default function Upload({
         </IconButton>
       )}
 
-      {hasFile && onPreview && (
+      {hasFile && onPreview && allowedImageExtensions.includes(fileExtension) && (
         <IconButton
           size="small"
           onClick={onPreview}
