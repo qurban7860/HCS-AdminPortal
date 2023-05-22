@@ -90,9 +90,22 @@ export default function DocumentAddForm({currentDocument}) {
   const AddCustomerDocumentSchema = Yup.object().shape({
     name: Yup.string().max(50),
     description: Yup.string().max(10000),
-    image: Yup.mixed().required("File is required!"),
-    // customerAccess: Yup.bool().required("Customer Access Field is required!"),
-    isActive : Yup.boolean(),
+    image: Yup.mixed()
+      .required("File is required!")
+      .test(
+        "fileType",
+        "Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx",
+        (value) => {
+          if (value && value?.name) {
+            const allowedExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx",  "xls", "xlsx", "ppt", "pptx" ];
+            const fileExtension = value?.name?.split(".").pop().toLowerCase();
+            return allowedExtensions.includes(fileExtension);
+          }
+          return false;
+        }
+      )
+      .nullable(true),
+    isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -141,6 +154,7 @@ export default function DocumentAddForm({currentDocument}) {
         if(documentNameVal){
           data.documentName = documentNameVal._id
         }
+        console.log("data : ",data)
         await postAndGet( dispatch, enqueueSnackbar ,addCustomerDocument(customer._id,data), getCustomerDocuments(customer._id));
         dispatch(setCustomerDocumentFormVisibility(false));
         setFileCategoryVal("")
@@ -184,7 +198,7 @@ export default function DocumentAddForm({currentDocument}) {
   const handleClosePreview = () => { setPreview(false) };
 
   const handleRemoveFile = () => {
-    setValue('image', "", { shouldValidate: true });
+    setValue('image', "");
     setNameVal("")
   };
 
@@ -220,7 +234,7 @@ const previewHandle = () => {setPreview(true)};
             <Stack spacing={3}>
               <FormHeading heading='New Document'/>
 
-              <Grid item xs={12} md={6} > 
+              <Grid item xs={12} md={12} > 
                 <RHFUpload
                 required
                   sx={{ width: '300px'}}
