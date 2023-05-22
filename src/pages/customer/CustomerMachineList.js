@@ -164,9 +164,13 @@ export default function CustomerContactList() {
                 key={customerMachine._id}
                 // expanded={expanded === index}
                 // onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal }}
+                sx={{ borderTop: borderTopVal, }}
                 >
                 <AccordionSummary 
+                 aria-controls="panel1a-content"
+                 focusVisible={false}
+                 sx={{ cursor: 'unset !important' }}
+                //  sx={{ pointerEvents: "none"}}
                   // expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   // onClick={() => handleAccordianClick(index)}
                 >
