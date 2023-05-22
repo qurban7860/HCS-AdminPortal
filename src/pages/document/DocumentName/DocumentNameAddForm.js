@@ -36,7 +36,7 @@ export default function DocumentNameAddForm({currentDocument}) {
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
- // a note can be archived.  
+ // a note can be archived.
   const AddDocumentNameSchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
     description: Yup.string().max(10000),
@@ -89,7 +89,7 @@ export default function DocumentNameAddForm({currentDocument}) {
       }
   };
 
-  const toggleCancel = () => 
+  const toggleCancel = () =>
   {
     // navigate(PATH_DOCUMENT.documentName.list);
     dispatch(setDocumentNameFormVisibility(false))
@@ -105,8 +105,22 @@ export default function DocumentNameAddForm({currentDocument}) {
               <FormHeading heading='New Document Name'/>
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-            </Stack>  
+              <RHFSwitch
+                      name="isActive"
+                      labelPlacement="start"
+                      label={
+                              <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                          mx: 0,
+                                          width: 1,
+                                          justifyContent: 'space-between',
+                                          mb: 0.5,
+                                          color: 'text.secondary'
+                                        }}> Active
+                                        </Typography>
+                                        } />
+            </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
         </Grid>

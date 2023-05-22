@@ -15,7 +15,7 @@ import {
   IconButton,
   TableContainer,
   DialogTitle,
-  Dialog, 
+  Dialog,
   TextField,
   Typography,
   InputAdornment,
@@ -111,9 +111,9 @@ export default function MachineSettingList() {
 
   const { initial,error, responseMessage , documentNames, documentNameFormVisibility,documentNameEditFormVisibility} = useSelector((state) => state.documentName);
   // console.log("settings : ",settings)
-  const toggleChecked = async () => 
+  const toggleChecked = async () =>
     {
-      dispatch(setDocumentNameFormVisibility(!documentNameFormVisibility));    
+      dispatch(setDocumentNameFormVisibility(!documentNameFormVisibility));
     };
   const { themeStretch } = useSettingsContext();
 
@@ -144,7 +144,7 @@ useLayoutEffect(() => {
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
- 
+
   useEffect(() => {
     setTableData(documentNames);
   }, [documentNames, error, responseMessage ]);
@@ -189,24 +189,24 @@ useLayoutEffect(() => {
               {isFiltered && (<Button color="error" sx={{ flexShrink: 0 , ml:1}} onClick={handleResetFilter} startIcon={<Iconify icon="eva:trash-2-outline" />} > Clear </Button>)}
             </Grid>
             <Grid item xs={8} sm={3}>
-              <Stack alignItems="flex-end" sx={{my: "auto" }}> 
+              <Stack alignItems="flex-end" sx={{my: "auto" }}>
                 <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Setting</Button>
               </Stack>
             </Grid>
           </Grid>
         </Stack>
-        
+
                   {!settingEditFormVisibility && formVisibility && <SettingAddForm/>}
 
           {settingEditFormVisibility && <SettingEditForm/>}
         <Card sx={{mt:2}}>
-          {!settingEditFormVisibility && dataFiltered.map((setting, index) => { 
+          {!settingEditFormVisibility && dataFiltered.map((setting, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return(
             <Accordion key={setting._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
               <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ? 
-                
+                { index !==  activeIndex ?
+
                 <Grid container spacing={0}>
                   <Grid item xs={12} sm={3} md={3}>
                     {setting?.techParam?.category?.name || ""}
@@ -232,11 +232,11 @@ useLayoutEffect(() => {
                 />
               </AccordionDetails>
             </Accordion>
-            
-          )})} 
+
+          )})}
 
           {isNotFound && <EmptyContent title="No Data"/>}
-            
+
 
         </Card>
 
@@ -284,7 +284,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     setting?.techParam?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     setting?.techParamValue?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
     // (setting?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 
+    fDate(setting?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0
     );
   }
 

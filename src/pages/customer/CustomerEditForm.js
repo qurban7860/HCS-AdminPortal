@@ -41,7 +41,6 @@ export default function CustomerEditForm() {
 
   const { error, customer } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
-
   const { contacts, spContacts } = useSelector((state) => state.contact);
   const [accountManVal, setAccountManVal] = useState('')
   const [supportManVal, setSupportManVal] = useState('')
@@ -78,10 +77,10 @@ export default function CustomerEditForm() {
       tradingName: customer?.tradingName || '',
       // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
       // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
-      // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id, 
+      // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id,
       // supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
       // primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
-      // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id, 
+      // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id,
       isActive: customer?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,7 +121,7 @@ export default function CustomerEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer]);
 
-  const toggleCancel = () => 
+  const toggleCancel = () =>
     {
       dispatch(setCustomerEditFormVisibility(false));
     };
@@ -170,7 +169,6 @@ export default function CustomerEditForm() {
     }
   };
 
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
@@ -185,12 +183,12 @@ export default function CustomerEditForm() {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
-              >
+                >
                 <RHFTextField name="name" label="Customer Name" />
 
                 <RHFTextField name="tradingName" label="Trading Name" />
 
-                <Autocomplete 
+                <Autocomplete
                   // freeSolo
                   value={siteVal || null}
                   options={sites}
@@ -200,7 +198,7 @@ export default function CustomerEditForm() {
                     if(newValue){
                       setSiteVal(newValue);
                     }
-                    else{ 
+                    else{
                       setSiteVal("");
                     }
                   }}
@@ -210,7 +208,7 @@ export default function CustomerEditForm() {
                   ChipProps={{ size: 'small' }}
                 />
 
-              </Box>  
+              </Box>
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -219,9 +217,9 @@ export default function CustomerEditForm() {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
-              > 
-              
-              <Autocomplete 
+                >
+
+              <Autocomplete
                   // freeSolo
                   value={billingContactVal || null}
                   options={contacts}
@@ -231,7 +229,7 @@ export default function CustomerEditForm() {
                     if(newValue){
                       setBillingContactVal(newValue);
                     }
-                    else{ 
+                    else{
                       setBillingContactVal("");
                     }
                   }}
@@ -241,7 +239,7 @@ export default function CustomerEditForm() {
                   ChipProps={{ size: 'small' }}
                 />
 
-                <Autocomplete 
+                <Autocomplete
                   // freeSolo
                   value={technicalContactVal || null}
                   options={contacts}
@@ -251,7 +249,7 @@ export default function CustomerEditForm() {
                     if(newValue){
                       setTechnicalContactVal(newValue);
                     }
-                    else{ 
+                    else{
                       setTechnicalContactVal("");
                     }
                   }}
@@ -260,9 +258,7 @@ export default function CustomerEditForm() {
                   renderInput={(params) => <TextField {...params} label="Primary Technical Contact" />}
                   ChipProps={{ size: 'small' }}
                 />
-
               </Box>
-
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -273,7 +269,7 @@ export default function CustomerEditForm() {
                 }}
               >
 
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={accountManVal || null}
                 options={spContacts}
@@ -283,7 +279,7 @@ export default function CustomerEditForm() {
                   if(newValue){
                     setAccountManVal(newValue);
                   }
-                  else{ 
+                  else{
                     setAccountManVal("");
                   }
                 }}
@@ -292,7 +288,7 @@ export default function CustomerEditForm() {
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={projectManVal || null}
                 options={spContacts}
@@ -302,7 +298,7 @@ export default function CustomerEditForm() {
                   if(newValue){
                     setProjectManVal(newValue);
                   }
-                  else{ 
+                  else{
                     setProjectManVal("");
                   }
                 }}
@@ -311,7 +307,7 @@ export default function CustomerEditForm() {
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={supportManVal || null}
                 options={spContacts}
@@ -321,7 +317,7 @@ export default function CustomerEditForm() {
                   if(newValue){
                     setSupportManVal(newValue);
                   }
-                  else{ 
+                  else{
                     setSupportManVal("");
                   }
                 }}
@@ -361,8 +357,18 @@ export default function CustomerEditForm() {
                     ))}
                 </RHFSelect> */}
               </Box>
-                <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-              
+                <RHFSwitch name="isActive" labelPlacement="start" label={
+                    <Typography
+                          variant="subtitle2"
+                          sx={{
+                                mx: 0,
+                                width: 1,
+                                justifyContent: 'space-between',
+                                mb: 0.5, color: 'text.secondary'
+                              }}>
+                              Active
+                    </Typography>
+                    } />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>

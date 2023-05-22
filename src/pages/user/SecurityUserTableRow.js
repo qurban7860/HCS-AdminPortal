@@ -59,7 +59,7 @@ export default function SecurityUserTableRow({ row, selected, onEditRow, onViewR
             <Link
               noWrap
               color="inherit"
-              variant="body1"
+              variant="body2"
               onClick={onViewRow}
               sx={{
                 cursor: 'pointer',
@@ -67,9 +67,9 @@ export default function SecurityUserTableRow({ row, selected, onEditRow, onViewR
                 justifyContent: 'center',
                 alignItems: 'center',
               }}
-            >
+              >
               <CustomAvatar name={name} alt={name} sx={{ mr: 1 }} />
-              <Typography variant="body1" noWrap>
+              <Typography variant="body2" noWrap>
                 {`${name}`}
               </Typography>
             </Link>

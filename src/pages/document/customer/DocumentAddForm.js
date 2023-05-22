@@ -191,7 +191,8 @@ export default function DocumentAddForm({currentDocument}) {
   const handleRemoveAllFiles = () => {
     setFiles([]);
   };
-const previewHandle = () => {setPreview(true)};
+
+  const previewHandle = () => {setPreview(true)};
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -214,66 +215,149 @@ const previewHandle = () => {setPreview(true)};
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* <Cover name="New Customer Document"/> */}
-      <Grid container xs={12} md={6} lg={12} spacing={3}>
-        <Grid item xs={12} md={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <Grid container lg={6}>
-                <FormHeading heading="New Document" />
-              </Grid>
-              <Grid container xs={3} sm={3} md={3} lg={6}
-              justifyContent='flex-end'>
-                <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex' }}>
-                  <Typography
-                    variant="body1"
-                    sx={{ pl: 2, pb: 1, display: 'flex', alignItems: 'center' }}
-                  >
-                    Customer Access
-                  </Typography>
-                  <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+      <Box
+        column={12}
+        rowGap={3}
+        columnGap={2}
+        display="grid"
+        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+        >
+        <Grid container xs={12} md={6} lg={12}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Grid container lg={6}>
+                  <FormHeading heading="New Document" />
                 </Grid>
-                <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex' }}>
-                  <RHFSwitch
-                    sx={{ mt: 1 }}
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
+                <Grid container lg={12} sx={{ justifyContent: 'flex' }}>
+                  <Grid container lg={4}>
+                    <Typography />
+                  </Grid>
+                  <Grid container lg={4}>
+                    <Typography />
+                  </Grid>
+                  <Grid container lg={4} sx={{ justifyContent: 'flex-end' }}>
+                    <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex' }}>
                       <Typography
-                        variant="body1"
-                        sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}
-                      >
-                        {' '}
-                        Active
+                        variant="body2"
+                        sx={{ pl: 2, pb: 1, display: 'flex', alignItems: 'center' }}
+                        >
+                        Customer Access
                       </Typography>
-                    }
+                      <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+                    </Grid>
+                    <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex-end' }}>
+                      <RHFSwitch
+                        sx={{ mt: 1 }}
+                        name="isActive"
+                        labelPlacement="start"
+                        label={
+                          <Typography
+                            variant="body2"
+                            sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}
+                          >
+                            {' '}
+                            Active
+                          </Typography>
+                        }
+                      />
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item xs={12} md={6} lg={12}>
+                  <RHFUpload
+                    required
+                    // multiple
+                    // thumbnail
+                    onPreview={previewHandle}
+                    name="image"
+                    maxSize={30145728}
+                    onDelete={handleRemoveFile}
+                    onDrop={handleDrop}
+                    onRemove={handleDrop}
+                    // onRemoveAll={handleRemoveAllFiles}
+                    // onUpload={() => console.log('ON UPLOAD')}
+                    // onDelete={handleRemoveFile}
+                    // onUpload={() => console.log('ON UPLOAD')}
                   />
                 </Grid>
-              </Grid>
+                <Grid container xs={12} md={6} lg={12}>
+                  <Grid container lg={12} gap={3}>
+                    <Grid item lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        // disabled={documentAvailable}
+                        value={documentNameVal || null}
+                        options={documentNames}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentNameVal(newValue);
+                          } else {
+                            setDocumentNameVal('');
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} label="Document Name" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>
+                    <Grid item lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        // disabled={fileCategory}
+                        value={fileCategoryVal || null}
+                        options={fileCategories}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) => option.name}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setFileCategoryVal(newValue);
+                          } else {
+                            setFileCategoryVal('');
+                          }
+                        }}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>
+                            {option.name}
+                          </li>
+                        )}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} label="File Category" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>
+                  </Grid>
+                  {/* <Grid container lg={6} spacing={3}>
+                  <Grid item>
+                    <Link
+                      title="Add Document Name"
+                      sx={{ color: 'blue' }}
+                      component="button"
+                      variant="body2"
+                      onClick={togleDocumentNamePage}
+                    >
+                      <Typography variant="body" sx={{ mt: 1 }}>
+                        Add new Document Name
+                      </Typography>
+                    </Link>
+                  </Grid>
+                  <Grid item>
+                    <Link
+                      title="Add Category"
+                      sx={{ color: 'blue' }}
+                      component="button"
+                      variant="body2"
+                      onClick={togleCategoryPage}
+                    >
+                      <Typography variant="body">Add new Category</Typography>
+                    </Link>
+                  </Grid>
+                </Grid> */}
+                </Grid>
 
-              <Grid item xs={12} md={6} lg={12}>
-                <RHFUpload
-                  required
-                  // multiple
-                  // thumbnail
-                  onPreview={previewHandle}
-                  name="image"
-                  maxSize={30145728}
-                  onDelete={handleRemoveFile}
-                  onDrop={handleDrop}
-                  onRemove={handleDrop}
-                  // onRemoveAll={handleRemoveAllFiles}
-                  // onUpload={() => console.log('ON UPLOAD')}
-                  // onDelete={handleRemoveFile}
-                  // onUpload={() => console.log('ON UPLOAD')}
-                />
-              </Grid>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
                 <RHFTextField
                   name="name"
                   value={nameVal}
@@ -282,75 +366,6 @@ const previewHandle = () => {setPreview(true)};
                     setNameVal(e.target.value);
                   }}
                 />
-
-                <Grid>
-                  <Autocomplete
-                    // freeSolo
-                    // disabled={documentAvailable}
-                    value={documentNameVal || null}
-                    options={documentNames}
-                    // isOptionEqualToValue={(option, value) => option.name === value.name}
-                    getOptionLabel={(option) => option.name}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setDocumentNameVal(newValue);
-                      } else {
-                        setDocumentNameVal('');
-                      }
-                    }}
-                    // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField {...params} label="Document Name" />}
-                    ChipProps={{ size: 'small' }}
-                  />
-                  <Link
-                    title="Add Document Name"
-                    sx={{ color: 'blue' }}
-                    component="button"
-                    variant="body2"
-                    onClick={togleDocumentNamePage}
-                  >
-                    <Typography variant="body" sx={{ mt: 1 }}>
-                      Add new Document Name
-                    </Typography>
-                    <Iconify icon="mdi:share" />
-                  </Link>
-                </Grid>
-                <Grid>
-                  <Autocomplete
-                    // freeSolo
-                    // disabled={fileCategory}
-                    value={fileCategoryVal || null}
-                    options={fileCategories}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
-                    getOptionLabel={(option) => option.name}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setFileCategoryVal(newValue);
-                      } else {
-                        setFileCategoryVal('');
-                      }
-                    }}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        {option.name}
-                      </li>
-                    )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField {...params} label="File Category" />}
-                    ChipProps={{ size: 'small' }}
-                  />
-                  <Link
-                    title="Add Category"
-                    sx={{ color: 'blue' }}
-                    component="button"
-                    variant="body2"
-                    onClick={togleCategoryPage}
-                  >
-                    <Typography variant="body">Add new Category</Typography>
-                    <Iconify icon="mdi:share" />
-                  </Link>
-                </Grid>
 
                 {/* <Autocomplete
                 // freeSolo
@@ -430,20 +445,21 @@ const previewHandle = () => {setPreview(true)};
                 renderInput={(params) => <TextField {...params} label="Contact" />}
                 ChipProps={{ size: 'small' }}
               /> */}
-              </Box>
-              <RHFTextField name="description" label="Description" minRows={3} multiline />
 
-              {/* <Upload files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} /> */}
-              {/* {!!files.length && (
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
+
+                {/* <Upload files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} /> */}
+                {/* {!!files.length && (
           <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
             Remove all
           </Button>
         )} */}
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-            </Stack>
-          </Card>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
+      </Box>
       <Dialog
         maxWidth="md"
         open={preview}

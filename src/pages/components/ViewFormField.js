@@ -23,7 +23,7 @@ export default function ViewFormField({heading,param, secondParam ,objectParam,s
         <Typography variant="body1" style={{ display: 'flex', alignItems: 'center' }}>
           {isActive !== undefined && (
             <Iconify
-              icon={isActive ? 'mdi:account-badge' : 'mdi:account-arrow-down-outline'}
+              icon={isActive ? 'mdi:account-badge' : 'mdi:account-cancel-outline'}
               style={{ color: isActive ? 'green' : 'red', fontSize: '24px', marginRight: '8px' }}
             />
           )}

@@ -52,7 +52,6 @@ export default function MachineViewForm() {
   const handleOpenBillingSite = () => setOpenBilingSite(true);
   const handleCloseBillingSite = () => setOpenBilingSite(false);
 
-
   const defaultValues = useMemo(
     () => ({
       id:                       machine?._id || "",
