@@ -1,8 +1,10 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
+import Chart from "react-apexcharts";
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Stack, Button } from '@mui/material';
+import { Typography, Container, Grid, Stack, Button, Card   } from '@mui/material';
+import { AppShortcutRounded, CenterFocusStrong } from '@mui/icons-material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -30,10 +32,11 @@ import {
 } from '../../sections/@dashboard/general/app';
 // assets
 import { SeoIllustration } from '../../assets/illustrations';
-
+import MachineListTableToolbar from '../machine/MachineListTableToolbar'
 import { useDispatch, useSelector } from '../../redux/store';
+import { getCount } from '../../redux/slices/dashboard/count'
 
-import { getSites } from '../../redux/slices/site';
+
 
 
 // ----------------------------------------------------------------------
@@ -44,109 +47,217 @@ export default function GeneralAppPage() {
 
   const { user } = useAuthContext();
 
-  const MACHINES = [
-    { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
-    { group: 'Decoiler', classify: ['0.5T Decoiler', '1.0T Decoiler', '1.5T Decoiler', '3.0T Decoiler', '5.0T Decoiler', '6.0T Decoiler'] },
-    { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
-  ];
-
-  const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
-
   const theme = useTheme();
 
-  const { themeStretch } = useSettingsContext();
+  const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
+
+  const modelWiseMachineNumber=[]
+  const modelWiseMachineModel = []
+  if(count && count?.modelWiseMachineCount){
+    count.modelWiseMachineCount.map((model) => {
+      modelWiseMachineNumber.push(model.count)
+      modelWiseMachineModel.push(model._id)
+      return null;
+    })
+  }
+
+  const countryWiseCustomerCountNumber=[]
+  const countryWiseCustomerCountCountries = []
+  if(count && count.countryWiseCustomerCount){
+    count.countryWiseCustomerCount.map((customer) => {
+      countryWiseCustomerCountNumber.push(customer.count)
+      countryWiseCustomerCountCountries.push(customer._id)
+      return null;
+    })
+  }
+
+  const countryWiseSiteCountNumber=[]
+  const countryWiseSiteCountCountries = []
+  if(count && count.countryWiseSiteCount){
+    count.countryWiseSiteCount.map((site) => {
+      countryWiseSiteCountNumber.push(site.count)
+      countryWiseSiteCountCountries.push(site._id)
+      return null;
+    })
+  }
+
+ const ModelData = {
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: modelWiseMachineModel
+      }
+    },
+    series: [
+      {
+        name: "Machine Models",
+        data: modelWiseMachineNumber
+      }
+    ]
+  };
+
+  const CustomerData = {
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: countryWiseCustomerCountCountries
+      }
+    },
+    series: [
+      {
+        name: "Customers",
+        data: countryWiseCustomerCountNumber
+      }
+    ]
+  };
+
+  const SiteData = {
+    options: {
+      chart: {
+        id: "basic-bar"
+      },
+      xaxis: {
+        categories: countryWiseSiteCountCountries
+      }
+    },
+    series: [
+      {
+        name: "Sites",
+        data: countryWiseSiteCountNumber
+      }
+    ]
+  };
 
   useLayoutEffect(() => {
-    dispatch(getSites());
+    dispatch(getCount());
   }, [dispatch]);
 
-  console.log('sites', sites)
-
   return (
-    <>
-      <Helmet>
-        <title> General: App | Machine ERP</title>
-      </Helmet>
-
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+    <Container
+      maxWidth={false}
+      p={0}
+      sx={{
+        backgroundImage: `url(../../assets/illustrations/illustration_howick_icon.svg)`,
+        backgroundRepeat: 'no-repeat',
+        backgroundPosition: 'top right',
+        backgroundSize: 'auto 90%',
+        backgroundOpacity: 0.1,
+        backgroundAttachment: 'fixed',
+        // height: '100%',
+        // width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 0,
+        alignContent: 'center',
+      }}
+    >
+      <Grid container item sx={{ justifyContent: 'center' }}>
+        <Grid container item xs={12} md={20} lg={20} spacing={3}>
+          <Grid
+            item
+            xs={12}
+            md={10}
+            lg={6}
+            sx={{
+              height: { xs: 250, md: 400 },
+              position: 'relative',
+            }}
+          >
             <AppWelcome
-              title={`Welcome back! \n ${user?.displayName}`}
-              description="If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything."
-              img={
-                <SeoIllustration
-                  sx={{
-                    p: 3,
-                    width: 360,
-                    margin: { xs: 'auto', md: 'inherit' },
-                  }}
-                />
-              }
-              action={<Button variant="contained">Go Now</Button>}
+              title={`CUSTOMER \n SERVICE & SUPPORT`}
+              // title={`Welcome back! \n ${user?.displayName}`}
+              description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
             />
           </Grid>
+        </Grid>
 
-          <Grid item xs={12} md={4}>
+        {/* <Grid item xs={12} md={12}>
             <AppFeatured list={_appFeatured} />
+          </Grid> */}
+        <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
+          <Grid container item xs={12} md={16} spacing={3}>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Customers"
+                percent={-0.1}
+                total={count?.customerCount || 0}
+                chart={{
+                  colors: [theme.palette.warning.main],
+                  series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
+                }}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3}>
+              <AppWidgetSummary
+                title="Sites"
+                percent={2.6}
+                total={count?.siteCount || 0}
+                chart={{
+                  colors: [theme.palette.primary.main],
+                  series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+                }}
+              />
+            </Grid>
           </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppWidgetSummary
-              title="Total Active Users"
-              percent={2.6}
-              total={18765}
-              chart={{
-                colors: [theme.palette.primary.main],
-                series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-              }}
-            />
+          <Grid container item xs={12} md={16} spacing={3}>
+            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+              <AppWidgetSummary
+                title="Machines"
+                // percent={0.2}
+                total={count?.machineCount || 0}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+              <AppWidgetSummary
+                title="Active Users"
+                // percent={2.6}
+                total={count?.userCount || 0}
+                // chart={{
+                //   colors: [theme.palette.primary.main],
+                //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+                // }}
+              />
+            </Grid>
           </Grid>
-
-          <Grid item xs={12} md={4}>
-            <AppWidgetSummary
-              title="Total Machines"
-              percent={0.2}
-              total={20}
-              chart={{
-                colors: [theme.palette.info.main],
-                series: [10, 6, 4],
-              }}
-            />
+          <Grid container item xs={12} md={16} spacing={3} mt={2}>
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ px: 3, mb: 3 }}>
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="subtitle2">Customers</Typography>
+                </Stack>
+                <Chart
+                  options={CustomerData.options}
+                  series={CustomerData.series}
+                  type="bar"
+                  height="300px"
+                  width="100%"
+                />
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <Card sx={{ px: 3, mb: 3 }}>
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="subtitle2">Machine Models</Typography>
+                </Stack>
+                <Chart
+                  options={ModelData.options}
+                  series={ModelData.series}
+                  type="bar"
+                  height="300px"
+                  width="100%"
+                />
+              </Card>
+            </Grid>
           </Grid>
+        </Grid>
 
-          <Grid item xs={12} md={4}>
-            <AppWidgetSummary
-              title="Total Customers"
-              percent={-0.1}
-              total={678}
-              chart={{
-                colors: [theme.palette.warning.main],
-                series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppCurrentDownload
-              title="Current Machines"
-              chart={{
-                colors: [
-                  theme.palette.primary.main,
-                  theme.palette.info.main,
-                  // theme.palette.error.main,
-                  theme.palette.warning.main,
-                ],
-                series: [
-                  { label: 'FRAMA', value: 10 },
-                  { label: 'Decoiler', value: 6 },
-                  { label: 'Rivet Cutter', value: 4 },
-                ],
-              }}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
+        {/* <Grid item xs={12} md={6} lg={8}>
             <AppAreaInstalled
               title="Sites"
               subheader="(+43%) than last year"
@@ -170,35 +281,35 @@ export default function GeneralAppPage() {
                 ],
               }}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} lg={8}>
+        {/* <Grid item xs={12} lg={8}>
             <AppNewInvoice
               title="New Site"
               tableData={_appInvoices}
               tableLabels={[
-                { id: 'id', label: 'Invoice ID' },
+                { id: 'id', label: 'Site ID' },
                 { id: 'category', label: 'Category' },
                 { id: 'price', label: 'Price' },
                 { id: 'status', label: 'Status' },
                 { id: '' },
               ]}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopRelated title="Top Related Applications" list={_appRelated} />
-          </Grid>
+          </Grid> */}
 
-          {/* <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <AppTopAuthors title="Top Authors" list={_appAuthors} />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+        {/* <Grid item xs={12} md={6} lg={4}>
             <Stack spacing={3}>
               <AppWidget
                 title="Conversion"
@@ -220,8 +331,7 @@ export default function GeneralAppPage() {
               />
             </Stack>
           </Grid> */}
-        </Grid>
-      </Container>
-    </>
+      </Grid>
+    </Container>
   );
 }

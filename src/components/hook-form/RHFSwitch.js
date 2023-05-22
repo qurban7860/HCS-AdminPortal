@@ -13,7 +13,6 @@ RHFSwitch.propTypes = {
 
 export default function RHFSwitch({ name, helperText, ...other }) {
   const { control } = useFormContext();
-
   return (
     <Controller
       name={name}

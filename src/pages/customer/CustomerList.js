@@ -4,6 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
+  Switch,
   Grid,
   Card,
   Table,
@@ -13,6 +14,7 @@ import {
   Container,
   IconButton,
   TableContainer,
+  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -40,44 +42,33 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer } from '../../redux/slices/customer';
-import CustomerDashboardNavbar from './util/CustomerDashboardNavbar';
+import { getCustomers, deleteCustomer, getCustomer ,resetCustomer,resetCustomers } from '../../redux/slices/customer/customer';
+import { resetSite,resetSites, setSiteEditFormVisibility, setSiteFormVisibility     } from '../../redux/slices/customer/site';
+import { resetContact,resetContacts, setContactEditFormVisibility,setContactFormVisibility} from '../../redux/slices/customer/contact';
+import { resetNote,resetNotes ,setNoteEditFormVisibility,setNoteFormVisibility } from '../../redux/slices/customer/note';
+import { resetCustomerDocument, resetCustomerDocuments } from '../../redux/slices/document/customerDocument';
+import { resetCustomerMachines } from '../../redux/slices/products/machine';
 
+import { Cover } from '../components/Cover';
+import { fDate } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
+  { id: 'type', label: '', align: 'center', width: 1.5 },
   { id: 'name', label: 'Customer', align: 'left' },
   { id: 'tradingName', label: 'Trading Name', align: 'left' },
   { id: 'mainSiteAddress', label: 'Address', align: 'left' },
-  { id: 'active', label: 'Active', align: 'left' },
+  { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
 
 ];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_customers', label: 'All Customers' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
 
 // ----------------------------------------------------------------------
 
 export default function CustomerList() {
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -90,7 +81,6 @@ export default function CustomerList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
@@ -106,6 +96,8 @@ export default function CustomerList() {
   const navigate = useNavigate();
 
   const [filterName, setFilterName] = useState('');
+  const [filterAddress, setAddress] = useState('');
+
 
   const [tableData, setTableData] = useState([]);
 
@@ -114,18 +106,34 @@ export default function CustomerList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
-
   useLayoutEffect(() => {
     dispatch(getCustomers());
+    dispatch(resetCustomer())
+    dispatch(resetSite())
+    dispatch(resetSites())
+    dispatch(resetContact())
+    dispatch(resetContacts())
+    dispatch(resetNote())
+    dispatch(resetNotes())
+    dispatch(resetCustomerDocument());
+    dispatch(resetCustomerDocuments());
+    dispatch(resetCustomerMachines())
+    dispatch(setSiteFormVisibility(false));
+    dispatch(setSiteEditFormVisibility(false));
+    dispatch(setContactFormVisibility(false));
+    dispatch(setContactEditFormVisibility(false));
+    dispatch(setNoteFormVisibility(false));
+    dispatch(setNoteEditFormVisibility(false))
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      if (customers && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (customers && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // }
+      // else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(customers);
     }
   }, [customers, error, responseMessage, enqueueSnackbar, initial]);
@@ -139,7 +147,7 @@ export default function CustomerList() {
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  const denseHeight = dense ? 60 : 80;
+  const denseHeight = 60;
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
@@ -165,7 +173,7 @@ export default function CustomerList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      console.log(id);
+      // console.log(id);
       await dispatch(deleteCustomer(id));
       dispatch(getCustomers());
       setSelected([]);
@@ -176,7 +184,7 @@ export default function CustomerList() {
         }
       }
     } catch (err) {
-      console.log(err);
+      console.log(err.message);
     }
   };
 
@@ -198,7 +206,7 @@ export default function CustomerList() {
   };
 
   const handleEditRow = (id) => {
-    console.log(id);
+    // console.log(id);
     navigate(PATH_DASHBOARD.customer.edit(id));
   };
 
@@ -213,49 +221,30 @@ export default function CustomerList() {
 
   return (
     <>
-      <Helmet>
-        <title> Customer: List | Machine ERP </title>
-      </Helmet>
+      <Container maxWidth={false}>
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            // mt: '24px',
+          }}
+        >
+          <Cover name="Customers" icon="ph:users-light" />
+        </Card>
 
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-      <Grid container spacing={3}>
-          <CustomerDashboardNavbar/>
-          </Grid>
-        {/* <CustomBreadcrumbs
-          heading="Customer List"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
-            },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              component={RouterLink}
-              to={PATH_DASHBOARD.customer.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Customer
-            </Button>
-          }
-        /> */}
-        <Card>
+        <Card sx={{ mt: 3 }}>
           <CustomerListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
-              dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -272,22 +261,21 @@ export default function CustomerList() {
                 </Tooltip>
               }
             />
-
             <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
+                  // rowCount={tableData.length}
+                  // numSelected={selected.length}
                   onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
                 />
 
                 <TableBody>
@@ -303,21 +291,21 @@ export default function CustomerList() {
                           onDeleteRow={() => handleDeleteRow(row._id)}
                           // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
 
-                  <TableEmptyRows
+                  {/* <TableEmptyRows
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData isNotFound={isNotFound} />
+                  /> */}
                 </TableBody>
               </Table>
             </Scrollbar>
+            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom
@@ -326,13 +314,9 @@ export default function CustomerList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
           />
         </Card>
       </Container>
-
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
@@ -363,7 +347,6 @@ export default function CustomerList() {
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -371,11 +354,15 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter(
-      (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-    );
+    inputData = inputData.filter( (customer) => customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    customer?.tradingName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
+    customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {

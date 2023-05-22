@@ -14,6 +14,7 @@ export default function Input(theme) {
           },
         },
         input: {
+          padding : 0,
           '&::placeholder': {
             opacity: 1,
             color: theme.palette.text.disabled,
@@ -23,6 +24,7 @@ export default function Input(theme) {
     },
     MuiInput: {
       styleOverrides: {
+        padding: '0x',
         underline: {
           '&:before': {
             borderBottomColor: alpha(theme.palette.grey[500], 0.56),
@@ -69,6 +71,8 @@ export default function Input(theme) {
         root: {
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: alpha(theme.palette.grey[500], 0.32),
+            // backgroundColor: 'red',
+            // padding: '0 12x',
           },
           '&.Mui-focused': {
             '& .MuiOutlinedInput-notchedOutline': {

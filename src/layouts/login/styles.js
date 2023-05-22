@@ -8,12 +8,13 @@ import { bgGradient } from '../../utils/cssStyles';
 export const StyledRoot = styled('main')(() => ({
   height: '100%',
   display: 'flex',
-  position: 'relative',
+  flexDirection: 'column', justifyContent:'center'
+  // position: 'relative',
 }));
 
 export const StyledSection = styled('div')(({ theme }) => ({
   display: 'none',
-  position: 'relative',
+  // position: 'relative',
   [theme.breakpoints.up('md')]: {
     flexGrow: 1,
     display: 'flex',
@@ -30,22 +31,23 @@ export const StyledSectionBg = styled('div')(({ theme }) => ({
   }),
   top: 0,
   left: 0,
-  zIndex: -1,
+  // zIndex: -1,
   width: '100%',
   height: '100%',
-  position: 'absolute',
+  // position: 'absolute',
   transform: 'scaleX(-1)',
 }));
 
 export const StyledContent = styled('div')(({ theme }) => ({
-  width: 480,
+  width: {sm:'100', md: '50%'},
   margin: 'auto',
   display: 'flex',
+  flexDirection: 'column',
   minHeight: '100vh',
-  justifyContent: 'center',
+  // justifyContent: 'center',
   padding: theme.spacing(15, 2),
   [theme.breakpoints.up('md')]: {
     flexShrink: 0,
-    padding: theme.spacing(30, 8, 0, 8),
+    padding: theme.spacing(20, 8, 0, 8),
   },
 }));

@@ -1,7 +1,7 @@
 // @mui
-import { Stack, Box } from '@mui/material';
+import { Stack, Box , Typography, Grid} from '@mui/material';
 // config
-import { NAV } from '../../../config-global';
+import { NAV, CONFIG } from '../../../config-global';
 // utils
 import { hideScrollbarX } from '../../../utils/cssStyles';
 // components
@@ -35,12 +35,16 @@ export default function NavMini() {
           height: 1,
           position: 'fixed',
           width: NAV.W_DASHBOARD_MINI,
-          borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+          borderRight: (theme) => `solid 1px ${theme.palette.divider}`,
           ...hideScrollbarX,
         }}
       >
-        <Logo sx={{ mx: 'auto', my: 2 }} />
-
+        <Logo src="/logo/HowickIcon.svg" sx={{ mx: 'auto', my: 2, width: '40px', height: '40px' }} />
+        <Grid sx={{ margin: '0 auto', mt: -2, mb: 1 }}>
+          <Typography variant="body2" sx={{ margin: '0 auto', mt: 1, mb: 1, color: '#897A69' }}>
+            {CONFIG.Version}
+          </Typography>
+        </Grid>
         <NavSectionMini data={navConfig} />
       </Stack>
     </Box>

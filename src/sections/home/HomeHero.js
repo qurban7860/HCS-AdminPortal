@@ -29,7 +29,7 @@ const StyledRoot = styled('div')(({ theme }) => ({
     top: 0,
     left: 0,
     width: '100%',
-    height: '100vh',
+    height: '100%',
     position: 'fixed',
   },
 }));
@@ -199,7 +199,12 @@ function Description() {
               target="_blank"
               rel="noopener"
               href={PATH_FREE_VERSION}
-              sx={{ textDecoration: 'underline', display: 'inline-flex', alignItems: 'center' }}
+              sx={{
+                  color: 'text.primary',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+
+                   }}
             >
               <Iconify icon="eva:external-link-fill" width={16} sx={{ mr: 0.5 }} />
               Get Free Version

@@ -6,10 +6,9 @@ import { Container } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // slices
-import { getCustomer } from '../../redux/slices/customer';
-import { getUsers } from '../../redux/slices/user';
-import { getSites } from '../../redux/slices/site';
-import { getContacts } from '../../redux/slices/contact';
+import { getCustomer } from '../../redux/slices/customer/customer';
+import { getSites } from '../../redux/slices/customer/site';
+import { getContacts } from '../../redux/slices/customer/contact';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -27,14 +26,13 @@ export default function CustomerEdit() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-  console.log(id);
+  // console.log(id);
 
 
   const { customer } = useSelector((state) => state.customer);
 
   useLayoutEffect(() => {
     dispatch(getCustomer(id));
-    dispatch(getUsers());
     dispatch(getSites());
     dispatch(getContacts());
   }, [dispatch, id]);
@@ -43,10 +41,6 @@ export default function CustomerEdit() {
 
   return (
     <>
-      <Helmet>
-        <title> Customer: Edit Page | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Edit Customer"

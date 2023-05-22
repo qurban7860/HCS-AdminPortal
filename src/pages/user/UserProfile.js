@@ -37,6 +37,9 @@ export default function UserProfile() {
   const [searchFriends, setSearchFriends] = useState('');
 
   const [currentTab, setCurrentTab] = useState('profile');
+  // const handleViewRow = (id) => {
+  //   navigate(PATH_MACHINE.machine.view(id));
+  // };
 
   const TABS = [
     {
@@ -72,11 +75,6 @@ export default function UserProfile() {
   ];
 
   return (
-    <>
-      <Helmet>
-        <title> User: Profile | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="Profile"
@@ -123,6 +121,5 @@ export default function UserProfile() {
           (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component} </Box>
         )}
       </Container>
-    </>
   );
 }

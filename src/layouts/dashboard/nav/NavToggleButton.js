@@ -31,11 +31,12 @@ export default function NavToggleButton({ sx, ...other }) {
       sx={{
         p: 0.5,
         top: 32,
+        // transition: 'all 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important',
         position: 'fixed',
         left: NAV.W_DASHBOARD - 12,
         bgcolor: 'background.default',
         zIndex: (theme) => theme.zIndex.appBar + 1,
-        border: (theme) => `dashed 1px ${theme.palette.divider}`,
+        border: (theme) => `solid 1px ${theme.palette.divider}`,
         '&:hover': {
           bgcolor: 'background.default',
         },

@@ -49,7 +49,7 @@ CustomerCover.propTypes = {
   role: PropTypes.string,
 };
 
-export default function CustomerCover({ name, role, cover }) {
+export function CustomerCover({ name, role, cover }) {
   const { customer } = useAuthContext();
 
   return (
@@ -64,8 +64,8 @@ export default function CustomerCover({ name, role, cover }) {
             borderWidth: 2,
             borderStyle: 'solid',
             borderColor: 'common.white',
-            width: { xs: 80, md: 128 },
-            height: { xs: 80, md: 128 },
+            width: { xs: 80, md: 110 },
+            height: { xs: 80, md: 110 },
           }}
         />
 

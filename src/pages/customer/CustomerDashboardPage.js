@@ -26,7 +26,6 @@ import { SeoIllustration } from '../../assets/illustrations';
 
 import { useDispatch } from '../../redux/store';
 
-import { getSites } from '../../redux/slices/site';
 import CustomerWidget from './util/CustomerWidget';
 import Iconify from '../../components/iconify';
 
@@ -54,17 +53,9 @@ export default function CustomerDashboardPage() {
 
   const { themeStretch } = useSettingsContext();
 
-  useLayoutEffect(() => {
-    dispatch(getSites());
-  }, [dispatch]);
-
   return (
-    <>
-      <Helmet>
-        <title> General: App | Machine ERP</title>
-      </Helmet>
 
-      <Container maxWidth={themeStretch ? false : 'xl'}>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
           <CustomerDashboardNavbar/>
 
@@ -168,6 +159,5 @@ export default function CustomerDashboardPage() {
           </Grid>
         </Grid>
       </Container>
-    </>
   );
 }

@@ -196,7 +196,7 @@ export default function FileCard({ file, selected, onSelect, onDelete, sx, ...ot
           Share
         </MenuItem>
 
-        <Divider sx={{ borderStyle: 'dashed' }} />
+        <Divider sx={{ borderStyle: 'solid' }} />
 
         <MenuItem
           onClick={() => {

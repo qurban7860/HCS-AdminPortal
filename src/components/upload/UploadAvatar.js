@@ -22,7 +22,7 @@ const StyledDropZone = styled('div')(({ theme }) => ({
   alignItems: 'center',
   position: 'relative',
   justifyContent: 'center',
-  border: `1px dashed ${alpha(theme.palette.grey[500], 0.32)}`,
+  border: `1px solid ${alpha(theme.palette.grey[500], 0.32)}`,
 }));
 
 const StyledPlaceholder = styled('div')(({ theme }) => ({

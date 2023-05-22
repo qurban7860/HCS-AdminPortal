@@ -5,6 +5,7 @@ import { Typography, Stack } from '@mui/material';
 // utils
 import { bgGradient } from '../../../../utils/cssStyles';
 
+
 // ----------------------------------------------------------------------
 
 const StyledRoot = styled('div')(({ theme }) => ({
@@ -68,17 +69,18 @@ export default function AppWelcome({ title, description, action, img, ...other }
           textAlign: { xs: 'center', md: 'left' },
         }}
       >
-        <Typography paragraph variant="h4" sx={{ whiteSpace: 'pre-line' }}>
+        <Typography paragraph variant="h1" sx={{ whiteSpace: 'pre-line' }}>
+          {/* {title} */}
           {title}
         </Typography>
 
         <Typography
-          variant="body2"
+          variant="body"
           sx={{
             opacity: 0.8,
             mb: { xs: 3, xl: 5 },
           }}
-        >
+          >
           {description}
         </Typography>
 

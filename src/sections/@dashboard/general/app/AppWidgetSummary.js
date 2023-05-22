@@ -7,6 +7,7 @@ import { fNumber, fPercent } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/iconify';
 import Chart from '../../../../components/chart';
+import palette from '../../../../theme';
 
 // ----------------------------------------------------------------------
 
@@ -14,20 +15,21 @@ AppWidgetSummary.propTypes = {
   sx: PropTypes.object,
   chart: PropTypes.object,
   title: PropTypes.string,
+  title2: PropTypes.string,
   total: PropTypes.number,
   percent: PropTypes.number,
 };
 
-export default function AppWidgetSummary({ title, percent, total, chart, sx, ...other }) {
-  const { colors, series, options } = chart;
+export default function AppWidgetSummary({ title, title2, percent, total, chart, sx, ...other }) {
+  // const { colors, series, options } = chart;
 
   const chartOptions = {
-    colors,
-    chart: {
-      sparkline: {
-        enabled: true,
-      },
-    },
+    // colors,
+    // chart: {
+    //   sparkline: {
+    //     enabled: true,
+    //   },
+    // },
     plotOptions: {
       bar: {
         columnWidth: '68%',
@@ -44,20 +46,23 @@ export default function AppWidgetSummary({ title, percent, total, chart, sx, ...
       },
       marker: { show: false },
     },
-    ...options,
+    // ...options,
   };
 
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3, ...sx }} {...other}>
       <Box sx={{ flexGrow: 1 }}>
-        <Typography variant="subtitle2">{title}</Typography>
-
-        <TrendingInfo percent={percent} />
+        <Typography variant="h5" sx={{color: 'grey.500'}}>
+          {title}
+        </Typography>
+        <Typography variant="subtitle2">{title2}</Typography>
 
         <Typography variant="h3">{fNumber(total)}</Typography>
       </Box>
-
-      <Chart type="bar" series={[{ data: series }]} options={chartOptions} width={60} height={36} />
+      <Box>
+        <TrendingInfo percent={percent} />
+      </Box>
+      {/* <Chart type="bar" series={[{ data: series }]} options={chartOptions} width={60} height={36} /> */}
     </Card>
   );
 }

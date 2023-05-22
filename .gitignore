@@ -3,6 +3,9 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+#application data
+src/config-global.js
+
 #configuration file
 .env
 howickcopy.sh
@@ -26,6 +29,9 @@ dist/
 # Maven
 target/
 dist/
+
+# VS Code
+.vscode/
 
 # JetBrains IDE
 .idea/

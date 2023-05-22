@@ -1,13 +1,28 @@
+import { blue } from '@mui/material/colors';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, Container, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import {
+  Switch,
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  Container,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
+  Link,
+  Divider,
+  Tooltip,
+} from '@mui/material';
 // global
 import { CONFIG } from '../../config-global';
 // routes
@@ -18,236 +33,162 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 
 // slices
-import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
-
-import { fDate } from '../../utils/formatTime';
-
+import { getCustomers, getCustomer, setCustomerEditFormVisibility, deleteCustomer } from '../../redux/slices/customer/customer';
+import FormProvider, { RHFSwitch } from '../../components/hook-form';
+import { fDateTime } from '../../utils/formatTime';
+import ViewFormAudit from '../components/ViewFormAudit';
+import ViewFormField from '../components/ViewFormField';
+import ViewFormSwitch from '../components/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerViewForm() {
-
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const { customer } = useSelector((state) => state.customer);
-  console.log(customer);
-  
-  const [editFlag, setEditFlag] = useState(false);
-  console.log('editflag', editFlag);
-
+  console.log("customer : ",customer)
   const toggleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
-  }
-  
-  const navigate = useNavigate();
+  };
+const onDelete = async () => {
+  await dispatch(deleteCustomer(customer._id));
+  navigate(PATH_DASHBOARD.customer.list)
+}
+
 
   const { enqueueSnackbar } = useSnackbar();
 
-
   const defaultValues = useMemo(
     () => ({
-      id: customer?._id || 'N/A',
-      name: customer?.name || 'N/A',
-      tradingName: customer?.tradingName || 'N/A',
-      accountManager: customer?.accountManager || 'N/A',
-      projectManager: customer?.projectManager || 'N/A',
-      supportManager: customer?.supportManager || 'N/A',
+      id: customer?._id || '',
+      name: customer?.name || '',
+      tradingName: customer?.tradingName || '',
+      accountManager: customer?.accountManager || '',
+      projectManager: customer?.projectManager || '',
+      supportManager: customer?.supportManager || '',
       mainSite: customer?.mainSite || null,
+      primaryBillingContact: customer?.primaryBillingContact || null,
+      primaryTechnicalContact: customer?.primaryTechnicalContact || null,
+      isActive: customer?.isActive,
       createdAt: customer?.createdAt || '',
-      updatedAt: customer?.updatedAt || ''
+      createdByFullName: customer?.createdBy?.name || '',
+      createdIP: customer?.createdIP || '',
+      updatedAt: customer?.updatedAt || '',
+      updatedByFullName: customer?.updatedBy?.name || '',
+      updatedIP: customer?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-
-  console.log(defaultValues); 
-
-
-
-
   return (
+    <Card sx={{ p: 2 }}>
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={customer?.type !== "SP"? onDelete : null} />
+      <Grid container>
+        <ViewFormField
+          sm={12}
+          param=""
+          isActive={defaultValues.isActive}
+          />
+        <ViewFormField
+          sm={6}
+          heading="Name"
+          param={defaultValues?.name}
+        />
+        <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
+        <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
+        <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
+        <ViewFormField sm={6} heading="Email" param={defaultValues?.mainSite?.email} />
+      </Grid>
+      <Grid container>
+        <ViewFormField
+          sm={6}
+          heading="Primary Billing Contact"
+          param={defaultValues?.primaryBillingContact?.firstName}
+          secondparam={defaultValues?.primaryBillingContact?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Primary Technical Contact"
+          param={defaultValues?.primaryTechnicalContact?.firstName}
+          secondparam={defaultValues?.primaryTechnicalContact?.lastName}
+        />
+      </Grid>
 
-      <Card sx={{ pt: 5, px: 5 }}>
-    
+      {defaultValues.mainSite && (
         <Grid container>
-
-        <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-
-        <Stack alignItems="flex-end" sx={{ mt: 3 }}>
-              <Button
-                onClick={() => { 
-                  toggleEdit(); 
+          <Grid container sx={{ pt: '2rem' }}>
+            <Grid
+              item
+              xs={12}
+              sm={12}
+              sx={{
+                backgroundImage: (theme) =>
+                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
               }}
-                variant="contained"
-                size="medium"
-                startIcon={<Iconify icon="eva:edit-fill" />}
               >
-                Edit Customer
-              </Button>
-        </Stack>
-        </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Name
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.name}</Typography>
-
-          </Grid>
-
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Trading Name
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.tradingName}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Account Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.accountManager.firstName} {defaultValues.accountManager.lastName}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Project Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.projectManager.firstName} {defaultValues.projectManager.lastName}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Suppport Manager
-            </Typography>
-
-            <Typography variant="body2">{defaultValues.supportManager.firstName} {defaultValues.supportManager.lastName}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Created At
-            </Typography>
-
-            <Typography variant="body2">{fDate(defaultValues.createdAt)}</Typography>
-            
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-             Updated At
-            </Typography>
-
-            <Typography variant="body2">{fDate(defaultValues.updatedAt)}</Typography>
-            
-          </Grid>
-
-          </Grid>
-          
-          {/* {fDate(createdAt)} */}
-
-          {defaultValues.mainSite && <Grid container>
-
-
-          <Grid item xs={12} sm={12} sx={{ mb: 4, padding: -5 }}>
-            <Typography variant="subtitle2" sx={{ color: '#131414' }}>
-               Site Details
-            </Typography>
-          </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Name
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.name}</Typography>
-
-        </Grid>
-
-          <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Phone
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.phone}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Email
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.email}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Street
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.address?.street}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Suburb
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.address?.suburb}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            City
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.address?.city}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Region
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.address?.region}</Typography>
-
-        </Grid>
-
-        <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-          <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-            Country
-          </Typography>
-
-          <Typography variant="body2">{defaultValues.mainSite.address?.country}</Typography>
-
-        </Grid>
-
-
-          {/* <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
-            <Typography paragraph variant="overline" sx={{ color: 'text.disabled' }}>
-              Department
-            </Typography>
-            
-            <Typography variant="body2">{customer.mainSite.department}</Typography>
-            
-          </Grid> */}
-
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
+                Address Information
+              </Typography>
             </Grid>
-            }
-            </Card>
+          </Grid>
+          <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
+          <ViewFormField sm={6} heading="Street" param={defaultValues?.mainSite.address?.street} />
+          <ViewFormField sm={6} heading="Suburb" param={defaultValues?.mainSite.address?.suburb} />
+          <ViewFormField sm={6} heading="City" param={defaultValues?.mainSite.address?.city} />
+          <ViewFormField
+            sm={6}
+            heading="Post Code"
+            param={defaultValues?.mainSite.address?.postcode}
+          />
+          <ViewFormField sm={6} heading="Region" param={defaultValues?.mainSite.address?.region} />
+          <ViewFormField
+            sm={6}
+            heading="Country"
+            param={defaultValues?.mainSite.address?.country}
+          />
+        </Grid>
+      )}
+      <Grid container>
+        <Grid container sx={{ pt: '2rem' }}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            sx={{
+              backgroundImage: (theme) =>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+            >
+            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
+              Howick Resources
+            </Typography>
+          </Grid>
+        </Grid>
+        <ViewFormField
+          sm={6}
+          heading="Account Manager"
+          param={defaultValues?.accountManager?.firstName}
+          secondparam={defaultValues?.accountManager?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Project Manager"
+          param={defaultValues?.projectManager?.firstName}
+          secondparam={defaultValues?.projectManager?.lastName}
+        />
+        <ViewFormField
+          sm={6}
+          heading="Suppport Manager"
+          param={defaultValues?.supportManager?.firstName}
+          secondparam={defaultValues?.supportManager?.lastName}
+        />
+        <ViewFormField />
+        {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
+      </Grid>
+      <Grid container sx={{ pb: '1rem' }}>
+        <ViewFormAudit defaultValues={defaultValues} />
+      </Grid>
+    </Card>
   );
 }

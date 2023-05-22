@@ -12,8 +12,11 @@ import {
   InputAdornment,
   ClickAwayListener,
   Autocomplete,
+  Typography
 } from '@mui/material';
 // utils
+import { CONFIG } from '../../../config-global';
+
 import { bgBlur } from '../../../utils/cssStyles';
 import flattenArray from '../../../utils/flattenArray';
 // components
@@ -72,7 +75,7 @@ const StyledPopper = styled((props) => <Popper {...props} />)(({ theme }) => ({
       padding: theme.spacing(0.5, 2),
       margin: 0,
       display: 'block',
-      border: `dashed 1px transparent`,
+      border: `solid 1px transparent`,
       borderBottomColor: theme.palette.divider,
       '&:last-of-type': {
         borderBottomColor: 'transparent',
@@ -142,6 +145,7 @@ function Searchbar() {
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div>
+        
         {!open && (
           <IconButtonAnimate onClick={handleOpen}>
             <Iconify icon="eva:search-fill" />

@@ -7,15 +7,16 @@ import { Button, Typography } from '@mui/material';
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
 import { SeverErrorIllustration } from '../assets/illustrations';
+import { CONFIG } from '../config-global';
 
 // ----------------------------------------------------------------------
 
 export default function Page500() {
   return (
     <>
-      <Helmet>
-        <title> 500 Internal Server Error | Machine ERP</title>
-      </Helmet>
+      {/* <Helmet>
+        <title> 500 Internal Server Error | {CONFIG.APP_TITLE} </title>
+      </Helmet> */}
 
       <MotionContainer>
         <m.div variants={varBounce().in}>

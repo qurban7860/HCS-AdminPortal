@@ -10,15 +10,16 @@ import Iconify from '../../components/iconify';
 import AuthVerifyCodeForm from '../../sections/auth/AuthVerifyCodeForm';
 // assets
 import { EmailInboxIcon } from '../../assets/icons';
+import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
 export default function VerifyCodePage() {
   return (
     <>
-      <Helmet>
-        <title> Verify Code | Machine ERP</title>
-      </Helmet>
+      {/* <Helmet>
+        <title> Verify Code | {CONFIG.APP_TITLE} </title>
+      </Helmet> */}
 
       <EmailInboxIcon sx={{ mb: 5, height: 96 }} />
 

@@ -1,23 +1,24 @@
 // routes
 import { PATH_DASHBOARD } from './routes/paths';
 
-
 // ----------------------------------------------------------------------
 
 export const CONFIG = {
-  APP_CODE: 'hcs-adminportal',
-  APP_TITLE: 'Howick Cloud Services',
-  APP_NAME: 'Howick Cloud Services Administration Portal',
-  ENV: 'dev',
-  APP_DOMAIN_NAME: 'localhost',
-  APP_PORT: '5000',
-  SSL_Enabled_domain:'' ,
-  SERVER_URL: 'http://localhost:5000/api/1.0.0/',
-  MESSAGE_REGISTER_USER: 'Welcome to Howick Cloud Services',
-  MESSAGE_LOGIN_USER: 'Hi, Welcome to Howick Cloud Services'
-}
+  APP_CODE: process.env.REACT_APP_CODE,
+  APP_TITLE: process.env.REACT_APP_TITLE,
+  APP_NAME: process.env.REACT_APP_NAME,
+  ENV: process.env.REACT_APP_ENV,
+  Version: process.env.REACT_APP_VERSION,
+  Background_Color: process.env.REACT_APP_BG_COLOR,
+  SERVER_URL: process.env.REACT_APP_SERVER_URL,
+  MESSAGE_REGISTER_USER: process.env.REACT_APP_MESSAGE_REGISTER_USER,
+  MESSAGE_LOGIN_USER: process.env.REACT_APP_MESSAGE_LOGIN_USER,
+};
+
+console.log(CONFIG);
 
 export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
+// console.log('APP_HOST', HOST_API_KEY);
 
 export const FIREBASE_API = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -50,7 +51,7 @@ export const PATH_AFTER_LOGIN = PATH_DASHBOARD.general.app; // as '/dashboard/ap
 export const HEADER = {
   H_MOBILE: 64,
   H_MAIN_DESKTOP: 88,
-  H_DASHBOARD_DESKTOP: 92,
+  H_DASHBOARD_DESKTOP: 65,
   H_DASHBOARD_DESKTOP_OFFSET: 92 - 32,
 };
 

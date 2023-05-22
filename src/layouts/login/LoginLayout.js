@@ -1,11 +1,14 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Typography, Stack } from '@mui/material';
+import { Badge, Box, Typography, Stack , Grid} from '@mui/material';
 // components
 import Logo from '../../components/logo';
 import Image from '../../components/image';
 //
+import { CONFIG } from '../../config-global';
+//
 import { StyledRoot, StyledSectionBg, StyledSection, StyledContent } from './styles';
+import theme from '../../theme';
 
 // ----------------------------------------------------------------------
 
@@ -16,35 +19,40 @@ LoginLayout.propTypes = {
 };
 
 export default function LoginLayout({ children, illustration, title }) {
+
   return (
     <StyledRoot>
-      <Logo
-        sx={{
-          zIndex: 9,
-          position: 'absolute',
-          mt: { xs: 1.5, md: 5 },
-          ml: { xs: 2, md: 5 },
-        }}
-      />
-
-      <StyledSection>
-        <Typography variant="h3" sx={{ mb: 10, maxWidth: 480, textAlign: 'center' }}>
-          {title || 'Hi, Welcome back'}
-        </Typography>
-
-        <Image
-          disabledEffect
-          visibleByDefault
-          alt="auth"
-          src={illustration || '/assets/illustrations/illustration_dashboard.png'}
-          sx={{ maxWidth: 720 }}
-        />
-
-        <StyledSectionBg />
-      </StyledSection>
-
       <StyledContent>
-        <Stack sx={{ width: 1 }}> {children} </Stack>
+        <Grid
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            mb: -3,
+          }}
+          alignItems="center"
+          spacing={2}
+          container
+        >
+          <Grid item>
+            <Logo
+              sx={{
+                width: '100%',
+                p: 1,
+                pointerEvents: 'none',
+              }}
+            />
+            <Stack
+              sx={{
+                alignItems: 'center',
+              }}
+            >
+              <Typography variant="h2" sx={{ mb: 6, mt: -2 }}>
+                CLOUD SERVICES
+              </Typography>
+            </Stack>
+          </Grid>
+        </Grid>
+        <Stack sx={{ width: '100%' }}> {children} </Stack>
       </StyledContent>
     </StyledRoot>
   );

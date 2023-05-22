@@ -74,7 +74,6 @@ const StyledMarkdown = styled('div')(({ theme }) => {
       border: `1px solid ${theme.palette.divider}`,
       'th, td': {
         padding: theme.spacing(1),
-        border: `1px solid ${theme.palette.divider}`,
       },
       'tbody tr:nth-of-type(odd)': {
         backgroundColor: theme.palette.background.neutral,

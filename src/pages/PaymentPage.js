@@ -13,9 +13,6 @@ export default function PaymentPage() {
 
   return (
     <>
-      <Helmet>
-        <title> Payment | Machine ERP</title>
-      </Helmet>
 
       <Container
         sx={{
@@ -45,7 +42,7 @@ export default function PaymentPage() {
                 p: { md: 5 },
                 borderRadius: 2,
                 border: (theme) => ({
-                  md: `dashed 1px ${theme.palette.divider}`,
+                  md: `solid 1px ${theme.palette.divider}`,
                 }),
               }}
             >

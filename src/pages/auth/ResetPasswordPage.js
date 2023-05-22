@@ -10,15 +10,16 @@ import Iconify from '../../components/iconify';
 import AuthResetPasswordForm from '../../sections/auth/AuthResetPasswordForm';
 // assets
 import { PasswordIcon } from '../../assets/icons';
+import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
 export default function ResetPasswordPage() {
   return (
     <>
-      <Helmet>
-        <title> Reset Password | Machine ERP</title>
-      </Helmet>
+      {/* <Helmet>
+        <title> Reset Password Login | {CONFIG.APP_TITLE} </title>
+      </Helmet> */}
 
       <PasswordIcon sx={{ mb: 5, height: 96 }} />
 

@@ -23,7 +23,7 @@ export default function AccountBillingAddressBook({ addressBook }) {
         </Button>
       </Stack>
 
-      <Stack spacing={3} divider={<Divider sx={{ borderStyle: 'dashed' }} />}>
+      <Stack spacing={3} divider={<Divider sx={{ borderStyle: 'solid' }} />}>
         {addressBook.map((address) => (
           <Stack key={address.id} spacing={1}>
             <Typography variant="subtitle1">{address.name}</Typography>

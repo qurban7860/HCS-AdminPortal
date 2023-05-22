@@ -7,6 +7,8 @@ function path(root, sublink) {
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_CUSTOMER = '/customer';
+const ROOTS_MACHINE = '/machine';
+const ROOTS_DOCUMENT = '/document';
 
 // ----------------------------------------------------------------------
 
@@ -18,7 +20,9 @@ export const PATH_AUTH = {
   registerUnprotected: path(ROOTS_AUTH, '/register-unprotected'),
   verify: path(ROOTS_AUTH, '/verify'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
-  newPassword: path(ROOTS_AUTH, '/new-password'),
+  newpassword: (token, userId) => path(ROOTS_AUTH, `/new-password/${token}/${userId}`),
+
+  // newPassword: path(ROOTS_AUTH, '/new-password/${id}/asset/${userId}/edit'),
 };
 
 export const PATH_PAGE = {
@@ -44,7 +48,10 @@ export const PATH_DASHBOARD = {
     list: path(ROOTS_DASHBOARD, '/user/list'),
     cards: path(ROOTS_DASHBOARD, '/user/cards'),
     profile: path(ROOTS_DASHBOARD, '/user/profile'),
+    password: path(ROOTS_DASHBOARD, '/user/password'),
+    userPassword: path(ROOTS_DASHBOARD, '/user/changePassword'),
     account: path(ROOTS_DASHBOARD, '/user/account'),
+    view: (id) => path(ROOTS_DASHBOARD, `/user/${id}/view`),
     edit: (id) => path(ROOTS_DASHBOARD, `/user/${id}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
   },
@@ -93,15 +100,13 @@ export const PATH_DASHBOARD = {
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
   permissionDenied: path(ROOTS_CUSTOMER, '/permission-denied'),
+  dashboard: path(ROOTS_CUSTOMER, '/customer/dashboard'),
+  list: path(ROOTS_CUSTOMER, '/customer/list'),
+  new: path(ROOTS_CUSTOMER, '/customer/new'),
+  view: path(ROOTS_CUSTOMER, `/customer/view`),
+  edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
   general: {
     app: path(ROOTS_CUSTOMER, '/app'),
-  },
-  customer: {
-    dashboard: path(ROOTS_CUSTOMER, '/customer/dashboard'),
-    list: path(ROOTS_CUSTOMER, '/customer/list'),
-    new: path(ROOTS_CUSTOMER, '/customer/new'),
-    view: path(ROOTS_CUSTOMER, `/customer/view`),
-    edit: (id) => path(ROOTS_CUSTOMER, `/customer/${id}/edit`),
   },
   site: {
     root: path(ROOTS_CUSTOMER, '/site'),
@@ -125,10 +130,100 @@ export const PATH_CUSTOMER = {
     edit: (id) => path(ROOTS_CUSTOMER, `/note/${id}/edit`),
   },
 };
+// Machine
+export const PATH_MACHINE = {
+  root: ROOTS_MACHINE,
+  permissionDenied: path(ROOTS_MACHINE, '/permission-denied'),
+  general: {
+    app: path(ROOTS_MACHINE, '/app'),
+  },
+  machine:{
+    new: path(ROOTS_MACHINE, '/new'),
+    list: path(ROOTS_MACHINE, '/list'),
+    view: (id) => path(ROOTS_MACHINE, `/${id}/view`),
+    edit: (id) => path(ROOTS_MACHINE, `/${id}/edit`),
+  },
+  supplier:{
+    supplier: (ROOTS_MACHINE, '/machine/supplier/supplier'),
+    list: (ROOTS_MACHINE, '/machine/supplier/list'),
+    view: (id) => path(ROOTS_MACHINE, `/supplier/${id}/view`),
+    supplieredit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/editform`),
+  },
+  license:{
+    license: (ROOTS_MACHINE, '/machine/license/license'),
+    list: (ROOTS_MACHINE, '/machine/license/list')
+  },
+  categories:{
+    categories: (ROOTS_MACHINE, '/machine/categories/categories'),
+    list: (ROOTS_MACHINE, '/machine/categories/list'),
+    view: (id) => path(ROOTS_MACHINE, `/categories/${id}/view`),
+    categoryedit: (id) => path(ROOTS_MACHINE, `/categories/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/categories/${id}/editform`),
+  },
+  tool:{
+    tool: (ROOTS_MACHINE, '/machine/tool/tool'),
+    list: (ROOTS_MACHINE, '/machine/tool/list'),
+    view: (id) => path(ROOTS_MACHINE, `/tool/${id}/view`),
+    tooledit: (id) => path(ROOTS_MACHINE, `/tool/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/tool/${id}/editform`),
+  },
+  techParam:{
+    techParam: (ROOTS_MACHINE, '/machine/machine-tech/params'),
+    list: (ROOTS_MACHINE, '/machine/machine-tech/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/view`),
+    techparamcategoryedit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/editform`),
+  },
+  machineStatus:{
+    status: (ROOTS_MACHINE, '/machine/machine-status/status'),
+    list: (ROOTS_MACHINE, '/machine/machine-status/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/view`),
+    statusedit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/editform`),
+  },
+  machineModel:{
+    model: (ROOTS_MACHINE, '/machine/machine-model/model'),
+    list: (ROOTS_MACHINE, '/machine/machine-model/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/view`),
+    modeledit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/editform`),
+  },
+  parameters:{
+    params: (ROOTS_MACHINE, '/machine/machine-parameters/params'),
+    list: (ROOTS_MACHINE, '/machine/machine-parameters/list'),
+    view: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/view`),
+    parameteredit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/edit`),
+    edit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/editform`),
+  },
+
+}
+
+export const PATH_DOCUMENT = {
+  root: ROOTS_DOCUMENT,
+  permissionDenied: path(ROOTS_DOCUMENT, '/permission-denied'),
+  dashboard: path(ROOTS_DOCUMENT, '/document/dashboard'),
+  list: path(ROOTS_DOCUMENT, '/document/list'),
+  new: path(ROOTS_DOCUMENT, '/document/new'),
+  view: path(ROOTS_DOCUMENT, `/document/view`),
+  edit: (id) => path(ROOTS_DOCUMENT, `/document/${id}/edit`),
+  documentName: {
+    list: path(ROOTS_DOCUMENT, '/documentName/list'),
+    new: path(ROOTS_DOCUMENT, '/documentName/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/edit`),
+  },
+  fileCategory: {
+    list: path(ROOTS_DOCUMENT, '/fileCategory/list'),
+    new: path(ROOTS_DOCUMENT, '/fileCategory/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/edit`),
+  }
+};
 
 export const PATH_DOCS = {
-  root: 'https://docs.minimals.cc',
-  changelog: 'https://docs.minimals.cc/changelog',
+  root: 'https://www.howickltd.com/why-howick',
+  changelog: 'https://www.howickltd.com/why-howick',
 };
 
 export const PATH_ZONE_ON_STORE = 'https://mui.com/store/items/zone-landing-page/';

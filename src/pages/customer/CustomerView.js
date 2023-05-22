@@ -4,19 +4,18 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, Typography,tabsClasses } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomers, getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer';
-import { getDepartments } from '../../redux/slices/department';
-import { setFormVisibility } from '../../redux/slices/site';
-
+import {  getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getSites } from '../../redux/slices/customer/site';
+import { getContacts } from '../../redux/slices/customer/contact';
 
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-// _mock_
+// mock
 import {
   _userAbout,
   _userFeeds,
@@ -29,170 +28,213 @@ import Iconify from '../../components/iconify';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 // sections
-import {
-  CustomerCover
-} from './util';
+import { Cover } from '../components/Cover';
 
-import CustomerAddForm from './CustomerAddForm'
-import SiteAddForm from '../site/SiteAddForm';
-import SiteList from '../site/SiteList';
-import ContactAddForm from '../contact/ContactAddForm';
-import CustomerStepper from './CustomerStepper';
-/* eslint-disable */
-
+import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
-/* eslint-enable */
+import useResponsive from '../../hooks/useResponsive';
+
 
 import CustomerEditForm from './CustomerEditForm';
 import CustomerSiteList from './CustomerSiteList';
 import CustomerContactList from './CustomerContactList';
+import CustomerMachineList from './CustomerMachineList';
+import DocumentList from '../document/customer/DocumentList';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
-// ----------------------------------------------------------------------
-
-/* eslint-disable */
-CustomerViewPage.propTypes = {
+CustomerView.propTypes = {
   editPage: PropTypes.bool,
 };
-/* eslint-enable */
 
+export default function CustomerView({editPage}) {
 
-export default function CustomerViewPage({editPage}) {
-
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
-
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
 
-  const { site } = useSelector((state) => state.site);
+  const { site, siteEditFormVisibility } = useSelector((state) => state.site);
 
-  useLayoutEffect(() => {
-    if(id != null){
-      dispatch(getCustomer(id));
-    }
-  }, [dispatch, id]);
-
-  const [currentTab, setCurrentTab] = useState('customer-edit');
+  const { contactEditFormVisibility } = useSelector((state) => state.contact);
+  const { noteEditFormVisibility} = useSelector((state) => state.note);
+  const [currentTab, setCurrentTab] = useState('customer-info');
 
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag(value => !value);
+
 
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
 
   const [customerFlag, setCustomerFlag] = useState(true);
 
-  useLayoutEffect(() => {
-    dispatch(setCustomerEditFormVisibility(editFlag));
-  }, [dispatch, editFlag]);
+  const isMobile = useResponsive('down', 'sm');
+
+  useEffect(() => {
+    if(id !== 'null'){
+      dispatch(getCustomer(id));
+      dispatch(getSites(id));
+      dispatch(getContacts(id));
+    }
+  }, [dispatch, id]);
 
   useEffect(() => {
     if(customerEditFormFlag){
       setCurrentComponent(<CustomerEditForm/>);
     }else{
       setCustomerFlag(false);
-      setCurrentComponent(<CustomerViewForm/>);        
+      setCurrentComponent(<CustomerViewForm/>);
     }
-  }, [editPage, site, customerEditFormFlag, customer]);
-
+  }, [dispatch, customerEditFormFlag, customer]);
 
   const TABS = [
     {
-      value: 'customer-edit',
-      label: 'Basic Info',
-      icon: <Iconify icon="ic:round-account-box" />,
+      disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      value: 'customer-info',
+      label: 'Customer Info',
+      icon: <Iconify icon="mdi:badge-account" />,
       component: currentComponent
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
       value: 'sites',
       label: 'Sites',
-      icon: <Iconify icon="eva:navigation-2-outline" />,
+      icon: <Iconify icon="mdi:map-legend" />,
       component: <CustomerSiteList/>,
-
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
-      icon: <Iconify icon="eva:people-outline" />,
+      icon: <Iconify icon="mdi:account-multiple" />,
       component: <CustomerContactList/>,
-
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'notes',
       label: 'Notes',
-      icon: <Iconify icon="eva:archive-outline" />,
+      icon: <Iconify icon="mdi:note-multiple" />,
+      component: <CustomerNoteList/>
     },
     {
-      disabled: customerEditFormFlag,
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'documents',
       label: 'Documents',
-      icon: <Iconify icon="eva:book-fill" />,
+      icon: <Iconify icon="mdi:folder-open" />,
+      component: <DocumentList/>
     },
+    {
+      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      value: 'machines',
+      label: 'Machines',
+      icon: <Iconify icon="mdi:greenhouse" />,
+      component: <CustomerMachineList />
+    }
+
   ];
 
   return (
-    <>
-      <Helmet>
-        <title> Customer: Information | Machine ERP</title>
-      </Helmet>
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
+    <Container maxWidth={false}>
+      {/* <CustomBreadcrumbs
           heading="Customer View"
+        /> */}
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+        }}
+      >
+        <Cover
+          name={customer ? customer.name : 'New Customer'}
+          photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
+          icon="ph:users-light"
         />
-        <Card
+
+        <Tabs
+          value={currentTab}
+          onChange={(event, newValue) => setCurrentTab(newValue)}
+          variant="scrollable"
+          aria-label="visible arrows tabs example"
           sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
+            [`& .${tabsClasses.scrollButtons}`]: {
+              '&.Mui-disabled': { opacity: 0.3 },
+            },
+            width: 1,
+            bottom: 0,
+            zIndex: 9,
+            position: 'absolute',
+            bgcolor: 'background.paper',
+            '& .MuiTabs-flexContainer': {
+              pr: { md: 3 },
+              justifyContent: {
+                md: 'flex-end',
+              },
+            },
           }}
         >
-          <CustomerCover name={customer ? customer.name : 'New Customer'}/>
-
-          
-          
-           
-
-          <Tabs
-            value={currentTab}
-            onChange={(event, newValue) => setCurrentTab(newValue)}
-            sx={{
-  
-              width: 1,
-              bottom: 0,
-              zIndex: 9,
-              position: 'absolute',
-              bgcolor: 'background.paper',
-              '& .MuiTabs-flexContainer': {
-                pr: { md: 3 },
-                justifyContent: {
-                  sm: 'center',
-                  md: 'flex-end',
-                },
-              },
-            }}
-          >
-            {TABS.map((tab) => (
-              <Tab disabled={tab.disabled} key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
-            ))}
-          </Tabs>
-          
-        </Card>
-        
-        
-        {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
-        )}
-        
-
-        
-      </Container>
-    </>
+          {TABS.map((tab) => (
+            <Tab
+              disabled={tab.disabled}
+              key={tab.value}
+              value={tab.value}
+              icon={tab.icon}
+              label={tab.label}
+            />
+          ))}
+        </Tabs>
+      </Card>
+      {TABS.map(
+        (tab) =>
+          tab.value === currentTab && (
+            <Box key={tab.value} height='100vh'>
+              {' '}
+              {tab.component ? (
+                tab.component
+              ) : (
+                <Grid container sx={{ justifyContent: 'center' }}>
+                  <Grid
+                    item
+                    sx={{
+                      opacity: '30%',
+                      marginTop: '50px',
+                      height: '40vh',
+                      display: 'flex',
+                    }}
+                  >
+                    <img
+                      src="/assets/illustrations/characters/character_5.png"
+                      alt="UNDER CONSTRUCTION"
+                    />
+                  </Grid>
+                  <Grid
+                    item
+                    sx={{
+                      display: 'block',
+                      justifyContent: 'center',
+                      textAlign: 'center',
+                      width: '50%',
+                      height: '40vh',
+                      opacity: '30%',
+                      position: 'relative',
+                      margin: '20px',
+                    }}
+                  >
+                    <Typography variant="h1">UNDER DEVELOPMENT..</Typography>
+                    <Typography variant="body1" >
+                      While we are still working on completing our website, we invite you to check
+                      back soon for updates. In the meantime, please feel free to contact us
+                      directly if you have any questions or concerns. We appreciate your patience
+                      and understanding during this time, and we look forward to serving you better
+                      through our new website. Thank you for your interest in our company.
+                    </Typography>
+                  </Grid>
+                </Grid>
+              )}{' '}
+            </Box>
+          )
+      )}
+    </Container>
   );
 }

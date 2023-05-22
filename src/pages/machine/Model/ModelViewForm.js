@@ -1,0 +1,100 @@
+import PropTypes from 'prop-types';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { useNavigate,useParams } from 'react-router-dom';
+// @mui
+import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
+// redux
+import { setMachinemodelsEditFormVisibility, deleteMachineModel} from '../../../redux/slices/products/model';
+// paths
+import { PATH_MACHINE } from '../../../routes/paths';
+// components
+import { useSnackbar } from '../../../components/snackbar';
+
+// Iconify
+
+import { fDate } from '../../../utils/formatTime';
+import ModelEditForm from './ModelEditForm';
+
+import Iconify from '../../../components/iconify/Iconify';
+import FormProvider, {
+    RHFSelect,
+    RHFAutocomplete,
+    RHFTextField,
+    RHFSwitch,
+  } from '../../../components/hook-form';
+  import ViewFormAudit from '../../components/ViewFormAudit';
+  import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+  import ViewFormField from '../../components/ViewFormField';
+  import ViewFormSWitch from '../../components/ViewFormSwitch';
+
+
+// ----------------------------------------------------------------------
+
+
+ModelViewForm.propTypes = {
+  currentMachinemodel: PropTypes.object,
+};
+
+// ----------------------------------------------------------------------
+
+export default function ModelViewForm({ currentMachinemodel = null }) {
+
+
+  const [editFlag, setEditFlag] = useState(false);
+
+  const toggleEdit = () => {
+    dispatch(setMachinemodelsEditFormVisibility(true));
+    navigate(PATH_MACHINE.machineModel.modeledit(id));
+  }
+
+  const navigate = useNavigate();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const { machinemodel } = useSelector((state) => state.machinemodel);
+// console.log("machinemodel : ", machinemodel)
+  const { id } = useParams();
+
+  const dispatch = useDispatch()
+
+
+  const defaultValues = useMemo(
+    () => (
+      {
+        name:                     machinemodel?.name || '',
+        description:              machinemodel?.description || '',
+        displayOrderNo:           machinemodel?.displayOrderNo || '',
+        category:                 machinemodel?.category || '',
+        isActive:                 machinemodel?.isActive,
+        createdByFullName:        machinemodel?.createdBy?.name || "",
+        createdAt:                machinemodel?.createdAt || "",
+        createdIP:                machinemodel?.createdIP || "",
+        updatedByFullName:        machinemodel?.updatedBy?.name || "",
+        updatedAt:                machinemodel?.updatedAt || "",
+        updatedIP:                machinemodel?.updatedIP || "",
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentMachinemodel, machinemodel]
+    );
+
+    const onDelete = () => {
+      dispatch(deleteMachineModel(id))
+      navigate(PATH_MACHINE.machineModel.list)
+    }
+  return (
+    <Card sx={{ p: 2 }}>
+      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
+      <Grid container>
+        <ViewFormField sm={6}   heading='Category Name'        param={defaultValues?.category?.name} isActive={defaultValues.isActive}/>
+        <ViewFormField sm={6}   heading='Name'                 param={defaultValues?.name}/>
+        <ViewFormField sm={6}   heading='Description'          param={defaultValues?.description}/>
+        <ViewFormSWitch  isActive={defaultValues.isActive} />
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues}/>
+        </Grid>
+      </Grid>
+    </Card>
+  );
+}

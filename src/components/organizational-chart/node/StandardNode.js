@@ -49,11 +49,11 @@ export default function StandardNode({ node, onEdit, onDelete, sx }) {
           <Iconify icon="eva:more-horizontal-fill" />
         </IconButton>
 
-        <Avatar
+        {/* <Avatar
           alt={node.name}
           src={node.avatar || ''}
           sx={{ mr: 2, mb: 1, width: 48, height: 48 }}
-        />
+        /> */}
 
         <Typography variant="subtitle2" noWrap>
           {node.name}

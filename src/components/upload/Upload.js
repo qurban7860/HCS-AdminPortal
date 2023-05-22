@@ -23,7 +23,8 @@ const StyledDropZone = styled('div')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   transition: theme.transitions.create('padding'),
   backgroundColor: theme.palette.background.neutral,
-  border: `1px dashed ${alpha(theme.palette.grey[500], 0.32)}`,
+  height:"auto",
+  border: `1px solid ${alpha(theme.palette.grey[500], 0.32)}`,
   '&:hover': {
     opacity: 0.72,
   },
@@ -39,6 +40,7 @@ Upload.propTypes = {
   disabled: PropTypes.bool,
   multiple: PropTypes.bool,
   onDelete: PropTypes.func,
+  onPreview: PropTypes.func,
   onRemove: PropTypes.func,
   onUpload: PropTypes.func,
   thumbnail: PropTypes.bool,
@@ -54,6 +56,7 @@ export default function Upload({
   //
   file,
   onDelete,
+  onPreview,
   //
   files,
   thumbnail,
@@ -82,6 +85,7 @@ export default function Upload({
         sx={{
           ...(isDragActive && {
             opacity: 0.72,
+            height: '165px',
           }),
           ...(isError && {
             color: 'error.main',
@@ -90,10 +94,16 @@ export default function Upload({
           }),
           ...(disabled && {
             opacity: 0.48,
+            height: '165px',
             pointerEvents: 'none',
           }),
           ...(hasFile && {
-            padding: '12% 0',
+            padding: '8% 0',
+            width: '100%',
+            height: '165px',
+            // maxWidth:"100%",
+            // height: "100%",
+            objectFit:"cover"
           }),
         }}
       >
@@ -122,6 +132,7 @@ export default function Upload({
             top: 16,
             right: 16,
             zIndex: 9,
+            height: "150",
             position: 'absolute',
             color: (theme) => alpha(theme.palette.common.white, 0.8),
             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
@@ -131,6 +142,48 @@ export default function Upload({
           }}
         >
           <Iconify icon="eva:close-fill" width={18} />
+        </IconButton>
+      )}
+
+      {hasFile && onDelete && (
+        <IconButton
+          size="small"
+          onClick={onDelete}
+          sx={{
+            top: 16,
+            right: 16,
+            zIndex: 9,
+            height: "150",
+            position: 'absolute',
+            color: (theme) => alpha(theme.palette.common.white, 0.8),
+            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+            '&:hover': {
+              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+            },
+          }}
+        >
+          <Iconify icon="eva:close-fill" width={18} />
+        </IconButton>
+      )}
+
+      {hasFile && onPreview && (
+        <IconButton
+          size="small"
+          onClick={onPreview}
+          sx={{
+            top: 16,
+            right: 56,
+            zIndex: 9,
+            height: "150",
+            position: 'absolute',
+            color: (theme) => alpha(theme.palette.common.white, 0.8),
+            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+            '&:hover': {
+              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+            },
+          }}
+        >
+          <Iconify icon="icon-park-outline:preview-open" width={18} />
         </IconButton>
       )}
 
@@ -144,6 +197,12 @@ export default function Upload({
             {onRemoveAll && (
               <Button color="inherit" variant="outlined" size="small" onClick={onRemoveAll}>
                 Remove all
+              </Button>
+            )}
+
+            {onRemove && (
+              <Button color="inherit" variant="outlined" size="small" onClick={onRemove}>
+                Remove
               </Button>
             )}
 
@@ -177,6 +236,7 @@ function Placeholder({ sx, ...other }) {
       }}
       sx={{
         width: 1,
+        // height: "150px",
         textAlign: {
           xs: 'center',
           md: 'left',
@@ -185,15 +245,12 @@ function Placeholder({ sx, ...other }) {
       }}
       {...other}
     >
-      <UploadIllustration sx={{ width: 220 }} />
+      <UploadIllustration sx={{ width: 420 }} />
 
       <div>
-        <Typography gutterBottom variant="h5">
-          Drop or Select file
-        </Typography>
 
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-          Drop files here or click
+          Drop or 
           <Typography
             variant="body2"
             component="span"
@@ -203,9 +260,9 @@ function Placeholder({ sx, ...other }) {
               textDecoration: 'underline',
             }}
           >
-            browse
+            Select
           </Typography>
-          thorough your machine
+          file
         </Typography>
       </div>
     </Stack>

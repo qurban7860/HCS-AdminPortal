@@ -1,19 +1,16 @@
 import { Helmet } from 'react-helmet-async';
+import  React  from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { Button, Typography, Stack } from '@mui/material';
 // assets
 import { MaintenanceIllustration } from '../assets/illustrations';
 
+
 // ----------------------------------------------------------------------
 
 export default function MaintenancePage() {
   return (
-    <>
-      <Helmet>
-        <title> Maintenance | Minimal UI</title>
-      </Helmet>
-
       <Stack sx={{ alignItems: 'center' }}>
         <Typography variant="h3" paragraph>
           Website currently under maintenance
@@ -29,6 +26,5 @@ export default function MaintenancePage() {
           Go to Home
         </Button>
       </Stack>
-    </>
   );
 }

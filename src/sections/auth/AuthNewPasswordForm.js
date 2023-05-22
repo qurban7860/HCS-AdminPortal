@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+// import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -13,45 +15,41 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField, RHFCodes } from '../../components/hook-form';
+import axios from '../../utils/axios';
+import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
 export default function AuthNewPasswordForm() {
   const navigate = useNavigate();
-
+  const { token, userId } = useParams();
   const { enqueueSnackbar } = useSnackbar();
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const emailRecovery =
-    typeof window !== 'undefined' ? sessionStorage.getItem('email-recovery') : '';
+  // const emailRecovery =
+  //   typeof window !== 'undefined' ? sessionStorage.getItem('email-recovery') : '';
 
   const VerifyCodeSchema = Yup.object().shape({
-    code1: Yup.string().required('Code is required'),
-    code2: Yup.string().required('Code is required'),
-    code3: Yup.string().required('Code is required'),
-    code4: Yup.string().required('Code is required'),
-    code5: Yup.string().required('Code is required'),
-    code6: Yup.string().required('Code is required'),
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string()
       .min(6, 'Password must be at least 6 characters')
       .required('Password is required'),
     confirmPassword: Yup.string()
       .required('Confirm password is required')
       .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+      token: Yup.string()
+      .required('Token is required'),
+      userId: Yup.string()
+      .required('User ID is required')
   });
 
   const defaultValues = {
-    code1: '',
-    code2: '',
-    code3: '',
-    code4: '',
-    code5: '',
-    code6: '',
-    email: emailRecovery || '',
+    // email: emailRecovery || '',
     password: '',
     confirmPassword: '',
+    token,
+    userId
   };
 
   const methods = useForm({
@@ -67,13 +65,16 @@ export default function AuthNewPasswordForm() {
 
   const onSubmit = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      console.log('DATA:', {
-        email: data.email,
-        code: `${data.code1}${data.code2}${data.code3}${data.code4}${data.code5}${data.code6}`,
+      const DATA = {
+        // email: data.email,
+        token: data.token,
+        userId: data.userId,
         password: data.password,
-      });
-      sessionStorage.removeItem('email-recovery');
+      };
+
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword/verifyToken`, DATA);
+
+      // sessionStorage.removeItem('email-recovery');
       enqueueSnackbar('Change password success!');
       navigate(PATH_DASHBOARD.root);
     } catch (error) {
@@ -84,13 +85,13 @@ export default function AuthNewPasswordForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        <RHFTextField
+        {/* <RHFTextField
           name="email"
           label="Email"
           disabled={!!emailRecovery}
           InputLabelProps={{ shrink: true }}
-        />
-
+        /> */}
+{/* 
         <RHFCodes keyName="code" inputs={['code1', 'code2', 'code3', 'code4', 'code5', 'code6']} />
 
         {(!!errors.code1 ||
@@ -102,7 +103,7 @@ export default function AuthNewPasswordForm() {
           <FormHelperText error sx={{ px: 2 }}>
             Code is required
           </FormHelperText>
-        )}
+        )} */}
 
         <RHFTextField
           name="password"

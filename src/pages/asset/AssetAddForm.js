@@ -71,24 +71,25 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
   const { error } = useSelector((state) => state.asset);
 
   const { departments } = useSelector((state) => state.department);
-  
+
   const { userId } = useAuthContext();
 
   const dispatch = useDispatch();
-  
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const AddAssetSchema = Yup.object().shape({
-    name: Yup.string().min(5).max(40).required('Name is required')  ,
+    name: Yup.string().min(2).max(40).required('Name is required')  ,
     status: Yup.string(),
     tag: Yup.string(),
     model: Yup.string(),
     serial: Yup.string().max(40).required('Serial is required'),
     location: Yup.string(),
     department: Yup.string(),
-    image: Yup.mixed().nullable(true),  });
+    image: Yup.mixed().nullable(true)
+   });
 
   const defaultValues = useMemo(
     () => ({
@@ -133,7 +134,7 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
 
 
   const onSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
       try{
         dispatch(saveAsset(data));
         reset();
@@ -211,7 +212,7 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
                   <Grid item xs={8}>
                     <RHFSelect native name="department" label="Department">
                     <option value="" selected/>
-                    { 
+                    {
                     departments.length > 0 && departments.map((option) => (
                     <option key={option._id} value={option._id}>
                       {option.name}
@@ -220,7 +221,7 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
                     </RHFSelect>
                   </Grid>
                   <Grid item xs={4}>
-                    <LoadingButton variant="contained" size="large" loading={isSubmitting}>
+                    <LoadingButton variant="contained" size="large" loading={isSubmitting} >
                       New
                     </LoadingButton>
                   </Grid>
@@ -245,9 +246,9 @@ export default function AssetAddForm({ isEdit, readOnly, currentAsset }) {
               {!isEdit ? 'Save Asset' : 'Save Changes'}
             </LoadingButton>
             </Stack>
-            
+
           </Card>
-          
+
         </Grid>
       </Grid>
     </FormProvider>

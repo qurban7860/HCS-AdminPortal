@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import {
+  Switch,
   Stack,
   Button,
   TableRow,
@@ -13,6 +14,7 @@ import {
   Link,
 } from '@mui/material';
 // utils
+import { styled } from '@mui/system';
 import { fDate } from '../../utils/formatTime';
 import { fCurrency } from '../../utils/formatNumber';
 // components
@@ -23,11 +25,11 @@ import Label from '../../components/label';
 
 import { useSelector } from '../../redux/store';
 
-
 // ----------------------------------------------------------------------
 
 CustomerListTableRow.propTypes = {
   row: PropTypes.object,
+  style: PropTypes.object,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
@@ -35,23 +37,35 @@ CustomerListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: "white",
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: "#f4f6f866",
+  },
+}));
+
 export default function CustomerListTableRow({
   row,
+  style,
   selected,
   onSelectRow,
   onDeleteRow,
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isDisabled, createdAt } = row;
-
-  console.log('ID', isDisabled);
-
+  const { name, tradingName, mainSite, isActive, type, createdAt } = row;
+  const address = []
+  if(mainSite?.address?.city){
+    address.push(mainSite?.address?.city)
+  }
+  if( mainSite?.address?.country){
+    address.push(mainSite?.address?.country)
+  }
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
-
-  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -69,54 +83,52 @@ export default function CustomerListTableRow({
     setOpenPopover(null);
   };
 
-  console.log('isDisabled',isDisabled);
-
-
   return (
     <>
-      <TableRow hover selected={selected}>
-        <TableCell padding="checkbox">
+      <StyledTableRow hover selected={selected}>
+        {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
+        </TableCell> */}
+        {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
+        <TableCell align="right">
+          {type === 'SP' ? (
+            <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled', mr: -2 }} width="15px" />
+          ) : (
+            ''
+          )}
         </TableCell>
-
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
             <Link
               noWrap
               color="inherit"
-              variant="subtitle2"
+              variant="body1"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
+              {' '}
               {name}
             </Link>
           </Stack>
         </TableCell>
-
         <TableCell>{tradingName}</TableCell>
-
-        <TableCell>{mainSite?.address?.city}{mainSite?.address?.country ? `, ${mainSite?.address?.country}` : ''}</TableCell>
-
-
-        <TableCell align="left">
-          <Label
-            variant="soft"
-            color={(isDisabled === true && 'error') || 'success'}
-            sx={{ textTransform: 'capitalize' }}
-          >
-            {isDisabled === false ? 'Yes' : 'No'}
-          </Label>
-        </TableCell> 
-
+        <TableCell>
+          {Object.values(address ?? {})
+            .map((value) => (typeof value === 'string' ? value.trim() : ''))
+            .filter((value) => value !== '')
+            .join(', ')}
+        </TableCell>
+        <TableCell align="center">
+          {' '}
+          <Switch checked={isActive} disabled size="small" />{' '}
+        </TableCell>
         <TableCell>{fDate(createdAt)}</TableCell>
-
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </TableRow> 
+      </StyledTableRow>
 
       {/* <MenuPopover
         open={openPopover}

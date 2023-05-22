@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Container, Grid } from '@mui/material';
+import { Container, Grid , Card } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
@@ -16,12 +16,7 @@ export default function CustomerAdd() {
 
   return (
     <>
-      <Helmet>
-        <title> Customer: Create a new Customer</title>
-      </Helmet>
-      
-
-      <Container maxWidth={themeStretch ? false : 'lg'}>
+      <Container maxWidth={false}>
         <CustomerAddForm />
       </Container>
     </>

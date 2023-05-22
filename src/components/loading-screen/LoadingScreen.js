@@ -10,7 +10,7 @@ import { NAV } from '../../config-global';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 //
-import Logo from '../logo';
+import Logo from '../logo-loading';
 import ProgressBar from '../progress-bar';
 import { useSettingsContext } from '../settings';
 

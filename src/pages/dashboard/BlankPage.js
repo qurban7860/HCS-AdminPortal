@@ -10,10 +10,6 @@ export default function BlankPage() {
 
   return (
     <>
-      <Helmet>
-        <title> Blank Page | Minimal UI</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h6"> Blank </Typography>
       </Container>

@@ -9,7 +9,7 @@ import { _userCards } from '../../_mock/arrays';
 import { useSettingsContext } from '../../components/settings';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // sections
-import { UserCard } from '../../sections/@dashboard/user/cards';
+import UserCard from '../../sections/@dashboard/user/cards/UserCard';
 
 // ----------------------------------------------------------------------
 
@@ -17,11 +17,6 @@ export default function UserCardsPage() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
-      <Helmet>
-        <title> User: Cards | Machine ERP</title>
-      </Helmet>
-
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <CustomBreadcrumbs
           heading="User Cards"
@@ -46,6 +41,5 @@ export default function UserCardsPage() {
           ))}
         </Box>
       </Container>
-    </>
   );
 }

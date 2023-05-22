@@ -10,10 +10,6 @@ import { Container, Typography, Stack, Link, Box, Divider } from '@mui/material'
 export default function ComponentsOverviewPage() {
   return (
     <>
-      <Helmet>
-        <title> Components Overview | Machine ERP</title>
-      </Helmet>
-
       {/* <ComponentHero /> */}
 
       <Container sx={{ pt: 10, pb: 15 }}>
@@ -26,10 +22,10 @@ export default function ComponentsOverviewPage() {
             </Typography>
           </Stack>
 
-        
+
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed', my: 8 }} />
+        <Divider sx={{ borderStyle: 'solid', my: 8 }} />
 
         <Stack spacing={3}>
           <Stack spacing={1}>
@@ -67,9 +63,9 @@ export default function ComponentsOverviewPage() {
           </Grid>
         </Stack>
 
-        <Divider sx={{ borderStyle: 'dashed', my: 8 }} />
+        <Divider sx={{ borderStyle: 'solid', my: 8 }} />
 
-      
+
       </Container>
     </>
   );

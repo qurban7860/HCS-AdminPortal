@@ -7,15 +7,16 @@ import { Button, Typography } from '@mui/material';
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
 import { ForbiddenIllustration } from '../assets/illustrations';
+import { CONFIG } from '../config-global';
 
 // ----------------------------------------------------------------------
 
 export default function Page403() {
   return (
     <>
-      <Helmet>
-        <title> 403 Forbidden | Machine ERP</title>
-      </Helmet>
+      {/* <Helmet>
+        <title> 403 Forbidden | {CONFIG.APP_TITLE} </title>
+      </Helmet> */}
 
       <MotionContainer>
         <m.div variants={varBounce().in}>

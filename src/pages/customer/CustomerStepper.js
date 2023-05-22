@@ -3,12 +3,12 @@ import { useState } from 'react';
 import { alpha } from '@mui/material/styles';
 import { Box, Step, Paper, Button, Stepper, StepLabel, Typography } from '@mui/material';
 import CustomerAddForm from './CustomerAddForm';
-import SiteAddForm from '../site/SiteAddForm';
+import SiteAddForm from './site/SiteAddForm';
 // ----------------------------------------------------------------------
 
 const steps = ['Enter Contact Details', 'Enter Site Details'];
 
-export default function LinearAlternativeLabel() {
+export default function CustomerStepper() {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
 

@@ -2,11 +2,12 @@ import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
-import { Box, Stack, Drawer } from '@mui/material';
+import { Box, Stack, Drawer, Slide , Typography,Grid} from '@mui/material'
 // hooks
+import { useSettingsContext } from '../../../components/settings';
 import useResponsive from '../../../hooks/useResponsive';
 // config
-import { NAV } from '../../../config-global';
+import { CONFIG, NAV  } from '../../../config-global';
 // components
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
@@ -26,7 +27,7 @@ NavVertical.propTypes = {
 
 export default function NavVertical({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
-
+  const { themeLayout } = useSettingsContext();
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -46,9 +47,8 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexDirection: 'column',
         },
       }}
-    >
+      >
       <Stack
-        spacing={3}
         sx={{
           pt: 3,
           pb: 2,
@@ -56,39 +56,51 @@ export default function NavVertical({ openNav, onCloseNav }) {
           flexShrink: 0,
         }}
       >
-        <Logo />
-
+        <Logo sx={{ width: '70%', margin: '0 auto', mt: '-30px' }} />
+        <Grid sx={{ margin: '0 auto', mt: -2, mb: 1 }}>
+          <Typography
+              variant="body2"
+              sx={{ margin: '0 auto', mt: -1, mb: 3, color: '#897A69' }}
+              >
+           {CONFIG.Version}
+          </Typography>
+        </Grid>
         <NavAccount />
       </Stack>
 
-      <NavSectionVertical data={navConfig} />
+      <NavSectionVertical sx={{ mt: '-50px' }} data={navConfig} />
 
       <Box sx={{ flexGrow: 1 }} />
 
       <NavDocs />
     </Scrollbar>
   );
-
+      // console.log({ themeLayout, isDesktop })
   return (
     <Box
       component="nav"
       sx={{
         flexShrink: { lg: 0 },
         width: { lg: NAV.W_DASHBOARD },
+        // background: '#DFDFDF',
       }}
     >
-      <NavToggleButton />
+      <NavToggleButton
+        sx={{
+          top: 22
+        }}
+      />
 
       {isDesktop ? (
         <Drawer
           open
-          variant="permanent"
+          variant="persistent"
           PaperProps={{
             sx: {
               zIndex: 0,
               width: NAV.W_DASHBOARD,
               bgcolor: 'transparent',
-              borderRightStyle: 'dashed',
+              borderRightStyle: 'solid',
             },
           }}
         >

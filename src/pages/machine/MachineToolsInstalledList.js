@@ -1,0 +1,293 @@
+import { Helmet } from 'react-helmet-async';
+import { paramCase } from 'change-case';
+import { useState, useEffect, useLayoutEffect } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+// @mui
+import {
+  Stack,
+  Card,
+  Grid,
+  Table,
+  Button,
+  Tooltip,
+  TableBody,
+  Container,
+  IconButton,
+  TableContainer,
+  DialogTitle,
+  Dialog,
+  Typography,
+  Accordion, AccordionSummary, AccordionDetails
+} from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
+// routes
+import { PATH_DASHBOARD } from '../../routes/paths';
+// components
+import { useSnackbar } from '../../components/snackbar';
+import { useSettingsContext } from '../../components/settings';
+import {
+  useTable,
+  getComparator,
+  emptyRows,
+  TableNoData,
+  TableSkeleton,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../components/table';
+import Iconify from '../../components/iconify';
+import Scrollbar from '../../components/scrollbar';
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
+import ConfirmDialog from '../../components/confirm-dialog';
+// sections
+import { setToolInstalledEditFormVisibility , setToolInstalledFormVisibility , updateToolInstalled , getToolsInstalled , getToolInstalled } from '../../redux/slices/products/toolInstalled';
+import { getTools } from '../../redux/slices/products/tools';
+
+import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm'
+import ToolsInstalledEditForm from './ToolsInstalled/ToolsInstalledEditForm';
+import ToolsInstalledViewForm from './ToolsInstalled/ToolsInstalledViewForm';
+
+import _mock from '../../_mock';
+import EmptyContent from '../../components/empty-content';
+import { fDate,fDateTime } from '../../utils/formatTime';
+
+
+
+// ----------------------------------------------------------------------
+
+// const TABLE_HEAD = [
+//   { id: 'name', label: 'Site', align: 'left' },
+//   { id: 'email', label: 'Email', align: 'left' },
+//   { id: 'website', label: 'Website', align: 'left' },
+//   { id: 'isverified', label: 'Disabled', align: 'left' },
+//   { id: 'created_at', label: 'Created At', align: 'left' },
+//   { id: 'action', label: 'Actions', align: 'left' },
+
+// ];
+
+const STATUS_OPTIONS = [
+  // { id: '1', value: 'Order Received' },
+  // { id: '2', value: 'In Progress' },
+  // { id: '3', value: 'Ready For Transport' },
+  // { id: '4', value: 'In Freight' },
+  // { id: '5', value: 'Deployed' },
+  // { id: '6', value: 'Archived' },
+];
+
+// const STATUS_OPTIONS = [
+//   { value: 'all_sites', label: 'All Sites' },
+//   { value: 'deployable', label: 'All Deployable' },
+//   { value: 'pending', label: 'All Pending' },
+//   { value: 'archived', label: 'All Archived' },
+//   { value: 'undeployable', label: 'All Undeployable' }
+// ];
+
+const _accordions = [...Array(8)].map((_, index) => ({
+  id: _mock.id(index),
+  value: `panel${index + 1}`,
+  heading: `Site ${index + 1}`,
+  subHeading: _mock.text.title(index),
+  detail: _mock.text.description(index),
+}));
+
+// ----------------------------------------------------------------------
+
+export default function MachineToolsInstalledList() {
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    setPage,
+    //
+    selected,
+    setSelected,
+    onSelectRow,
+    onSelectAllRows,
+    //
+    onSort,
+    onChangeDense,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useTable({
+    defaultOrderBy: 'createdAt',
+  });
+
+
+  const [controlled, setControlled] = useState(false);
+
+  const handleChangeControlled = (panel) => (event, isExpanded) => {
+    setControlled(isExpanded ? panel : false);
+  };
+  const dispatch = useDispatch();
+
+  const { tools } = useSelector((state) => state.tool);
+  const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
+  const { machine } = useSelector((state) => state.machine);
+  const toggleChecked = async () =>
+    {
+      dispatch(setToolInstalledFormVisibility (!formVisibility));
+    };
+
+  const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
+  const [filterName, setFilterName] = useState('');
+  const [tableData, setTableData] = useState([]);
+  const [filterStatus, setFilterStatus] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleAccordianClick = (accordianIndex) => {
+   if(accordianIndex === activeIndex ){
+    setActiveIndex(null)
+   }else{
+    setActiveIndex(accordianIndex)
+   }
+  };
+
+useLayoutEffect(() => {
+  // if(!formVisibility && !toolInstalledEditFormVisibility){
+  dispatch(getToolsInstalled(machine._id));
+  // }
+}, [dispatch, machine._id,toolInstalledEditFormVisibility, formVisibility]);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+
+  useEffect(() => {
+    if (initial) {
+      if (toolsInstalled && !error) {
+        enqueueSnackbar(responseMessage);
+      } else {
+        enqueueSnackbar(error, { variant: `error` });
+      }
+      setTableData(toolsInstalled);
+    }
+  }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial]);
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+    filterStatus,
+  });
+
+  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const denseHeight = dense ? 60 : 80;
+  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isNotFound = !toolsInstalled.length && !formVisibility && !toolInstalledEditFormVisibility;
+
+  return (
+    <>
+      {!toolInstalledEditFormVisibility && (
+        <Stack alignItems="flex-end" sx={{ mb: 3, px: 4 }}>
+          <Button
+            onClick={toggleChecked}
+            variant="contained"
+            startIcon={
+              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+            }
+          >
+            New Tool
+          </Button>
+        </Stack>
+      )}
+
+      <Card sx={{ mt: 3 }}>
+        {formVisibility && !toolInstalledEditFormVisibility && <ToolsInstalledAddForm />}
+        {toolInstalledEditFormVisibility && <ToolsInstalledEditForm />}
+        {!formVisibility &&
+          !toolInstalledEditFormVisibility &&
+          toolsInstalled.map((tool, index) => {
+            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            return (
+              <Accordion
+                key={tool._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+              >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container spacing={0}>
+                      <Grid item xs={12} sm={3} md={2}>
+                        {tool?.tool?.name || ''}
+                      </Grid>
+
+                      <Grid item xs={12} sm={6} md={8}>
+                        {tool?.note.length > 100 ? tool?.note.substring(0, 100) : tool?.note}
+                        {tool?.note.length > 100 ? '...' : null}
+                      </Grid>
+
+                      <Grid item xs={12} sm={3} md={2}>
+                        <Typography variant="body2">{fDate(tool?.createdAt || '')}</Typography>
+                      </Grid>
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <ToolsInstalledViewForm currentTool={tool} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
+        <TableNoData isNotFound={isNotFound} />
+      </Card>
+
+      {/* <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete <strong> {selected.length} </strong> items?
+          </>
+        }
+        action={
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => {
+              handleDeleteRows(selected);
+              handleCloseConfirm();
+            }}
+          >
+            Delete
+          </Button>
+        }
+      /> */}
+    </>
+  );
+}
+// ----------------------------------------------------------------------
+
+function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+
+  if (filterName) {
+    inputData = inputData.filter(
+      (site) => site.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+    );
+  }
+
+  if (filterStatus.length) {
+    inputData = inputData.filter((site) => filterStatus.includes(site.status));
+  }
+
+  return inputData;
+}
