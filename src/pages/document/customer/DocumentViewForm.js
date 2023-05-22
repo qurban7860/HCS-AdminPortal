@@ -2,9 +2,8 @@ import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-// @mui
-import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
+import Image from 'mui-image';
 import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia} from '@mui/material';
 // redux
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
@@ -30,13 +29,13 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customer, customers } = useSelector((state) => state.customer);
 
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const onDelete = async () => {
     // console.log("currentCustomerDocument : ",currentCustomerDocument)
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
     dispatch(getCustomerDocuments(customer._id))
   };
-  
+
   const  handleEdit = async () => {
     await dispatch(getCustomerDocument(currentCustomerDocument._id));
     dispatch(getCustomerDocument(currentCustomerDocument._id));
@@ -66,7 +65,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   );
 
   return (
-    <>
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
@@ -77,7 +75,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
             <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-            {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
+            {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
           <Box
             component="img"
             sx={{
@@ -92,6 +90,5 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
       </Grid>
-    </>
   );
 }
