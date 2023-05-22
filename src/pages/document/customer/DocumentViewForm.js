@@ -99,7 +99,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
-            <ViewFormAudit sx={{pt:2}} defaultValues={defaultValues}/>
+      <Grid container sx={{ mt: 2 }}>
+            <ViewFormAudit  defaultValues={defaultValues}/>
+      </Grid>
         </Grid>
       </Grid>
     </>
