@@ -112,7 +112,7 @@ export default function CategoryAddForm() {
               }}
             >
 
-              <RHFTextField name="name" label="Machine Category" />
+              <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
               <RHFSwitch
                 name="isActive"

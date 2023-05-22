@@ -73,7 +73,7 @@ console.log("machinestatus : ", machinestatus)
         <ViewFormField sm={12}   isActive={defaultValues.isActive}/>
         <ViewFormField sm={12}   heading='Name'                 param={defaultValues?.name} />
         <ViewFormField sm={12}   heading='Description'          param={defaultValues?.description}/>
-        <ViewFormField sm={12}   heading='Display Order No'     numberParam={defaultValues?.displayOrderNo}/>
+        <ViewFormField sm={12}   heading='Display Order No.'     numberParam={defaultValues?.displayOrderNo}/>
         {/* <ViewFormSWitch  isActive={defaultValues.isActive}/> */}
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>

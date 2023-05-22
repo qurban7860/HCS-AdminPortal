@@ -220,7 +220,7 @@ export default function CustomerSiteList() {
                     <Grid container spacing={0}>
                       <Grid item xs={12} sm={8} md={4}>
                         {' '}
-                        <Typography variant="body1"> {site.name} </Typography>{' '}
+                        <Typography > {site.name} </Typography>{' '}
                       </Grid>
                       {/* <CommaJoinField sm={8} objectParam={site.address} /> */}
                     </Grid>
