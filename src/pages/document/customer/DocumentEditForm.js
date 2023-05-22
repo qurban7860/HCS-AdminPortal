@@ -14,7 +14,7 @@ import { Switch, Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments , setCustomerDocumentEdit, setCustomerDocumentEditFormVisibility, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
+import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments , setCustomerDocumentEdit, setCustomerDocumentEditFormVisibility, setCustomerDocumentFormVisibility , resetCustomerDocument } from '../../../redux/slices/document/customerDocument';
 import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
 import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 // routes
@@ -31,14 +31,16 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
-
 import Cover from '../../components/Cover';
+import { postAndGet } from '../../asset/dispatchRequests'
+
 
 // ----------------------------------------------------------------------
 
 export default function SettingEditForm() {
 
   const { customerDocument } = useSelector((state) => state.customerDocument);
+  console.log("customerDocument : ",customerDocument)
   const { documentNames } = useSelector((state) => state.documentName);
   const { fileCategories } = useSelector((state) => state.fileCategory);
   // console.log("fileCategories : ", fileCategories, " documentNames : ", documentNames)
@@ -82,6 +84,12 @@ export default function SettingEditForm() {
     setFileCategoryVal(customerDocument?.category)
     setDocumentNameVal(customerDocument?.documentName)
   },[customerDocument])
+  const EditSettingSchema = Yup.object().shape({
+    name: Yup.string().max(50),
+    description: Yup.string().max(10000),
+    // image: Yup.mixed().required("Image Field is required!"),
+    isActive : Yup.boolean(),
+  });
 
   const defaultValues = useMemo(
     () => ({
@@ -90,15 +98,9 @@ export default function SettingEditForm() {
       // image: null,
       isActive: customerDocument?.isActive,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [customerDocument, nameVal]
   );
-  const EditSettingSchema = Yup.object().shape({
-    name: Yup.string().max(50),
-    description: Yup.string().max(10000),
-    // image: Yup.mixed().required("Image Field is required!"),
-    isActive : Yup.boolean(),
-  });
+console.log("defaultValues : ",defaultValues)
 
   const methods = useForm({
     resolver: yupResolver(EditSettingSchema),
@@ -140,9 +142,9 @@ export default function SettingEditForm() {
           data.documentName = documentNameVal._id
         }
         // console.log("data : ", data);
-      await dispatch(updateCustomerDocument(customerDocument._id,data));
-       dispatch(getCustomerDocuments(customerDocument._id));
-      // dispatch(setCustomerDocumentEditFormVisibility(false));
+      await postAndGet(dispatch, enqueueSnackbar,updateCustomerDocument(customerDocument._id,data),getCustomerDocuments(customer._id));
+      dispatch(resetCustomerDocument());
+      dispatch(setCustomerDocumentEditFormVisibility(false));
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');

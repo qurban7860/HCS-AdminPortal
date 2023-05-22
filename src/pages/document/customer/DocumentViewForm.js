@@ -14,10 +14,12 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import Cover from '../../components/Cover';
+import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import { getWithMsg } from '../../asset/dispatchRequests'
 
 // ----------------------------------------------------------------------
 DocumentViewForm.propTypes = {
@@ -28,7 +30,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
   // console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
-
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
   const onDelete = async () => {
@@ -38,9 +40,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   };
   
   const  handleEdit = async () => {
-    await dispatch(getCustomerDocument(currentCustomerDocument._id));
-    dispatch(getCustomerDocument(currentCustomerDocument._id));
-    dispatch(setCustomerDocumentEditFormVisibility(true));
+    await getWithMsg(dispatch, getCustomerDocument(currentCustomerDocument._id), enqueueSnackbar);
+          dispatch(setCustomerDocumentEditFormVisibility(true));
   };
 
   const defaultValues = useMemo(
@@ -70,12 +71,21 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
+            <ViewFormField sm={12} isActive={defaultValues.isActive} />
             <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
             <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
             <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
             <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
-            <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} />
+            <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Customer Access
+              </Typography>
+              <Typography>
+                <Switch  checked={defaultValues?.customerAccess}  disabled/>
+              </Typography>
+            </Grid>
+            {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
           <Box
@@ -87,9 +97,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
             />:""} */}
             { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
-            <Image alt={defaultValues.name} src={currentCustomerDocument?.path} /> : null}
-            <ViewFormSWitch isActive={defaultValues.isActive}/>
-            <ViewFormAudit defaultValues={defaultValues}/>
+            <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null}
+            {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
+            <ViewFormAudit sx={{pt:2}} defaultValues={defaultValues}/>
         </Grid>
       </Grid>
     </>

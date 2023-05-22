@@ -397,7 +397,7 @@ export default function DocumentAddForm({currentDocument}) {
         {/* <Grid  > */}
         <Box
             component="img"
-            
+            sx={{minWidth:"400px", minHeight:"400px"}}
             alt={defaultValues?.name}
             src={previewVal}
             />

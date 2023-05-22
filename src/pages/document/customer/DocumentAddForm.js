@@ -13,7 +13,7 @@ import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextF
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addCustomerDocument, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
+import { addCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
 import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
 import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 import { getCustomers } from '../../../redux/slices/customer/customer';
@@ -30,7 +30,7 @@ import { Upload } from '../../../components/upload';
 import Cover from '../../components/Cover';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
-
+import { postAndGet } from '../../asset/dispatchRequests'
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
@@ -141,7 +141,7 @@ export default function DocumentAddForm({currentDocument}) {
         if(documentNameVal){
           data.documentName = documentNameVal._id
         }
-        await dispatch(addCustomerDocument(customer._id,data));
+        await postAndGet( dispatch, enqueueSnackbar ,addCustomerDocument(customer._id,data), getCustomerDocuments(customer._id));
         dispatch(setCustomerDocumentFormVisibility(false));
         setFileCategoryVal("")
         setDocumentNameVal("")
@@ -422,7 +422,7 @@ const previewHandle = () => {setPreview(true)};
         {/* <Grid  > */}
         <Box
             component="img"
-            
+            sx={{minWidth:"400px", minHeight:"400px"}}
             alt={defaultValues?.name}
             src={previewVal}
             />

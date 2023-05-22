@@ -75,11 +75,18 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
           <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
           <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
           <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
-          <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} />
+          <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
+            <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+            Customer Access
+            </Typography>
+            <Typography>
+              <Switch  checked={defaultValues?.customerAccess}  disabled/>
+            </Typography>
+          </Grid>
+          {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-
           {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ? 
-          <Image alt={defaultValues.name} src={currentMachineDocument?.path} /> : null}
+          <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null}
 
           <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>
