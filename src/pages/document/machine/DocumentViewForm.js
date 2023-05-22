@@ -70,6 +70,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
     <Grid sx={{mt:-2}}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
+          <ViewFormField sm={12} isActive={defaultValues.isActive} />
           <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
           <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
           <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
@@ -88,8 +89,10 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
           {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ? 
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null}
 
-          <ViewFormSWitch isActive={defaultValues.isActive}/>
-          <ViewFormAudit defaultValues={defaultValues}/>
+          {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
+          <Grid container sx={{ mt: '1rem' }}>
+              <ViewFormAudit defaultValues={defaultValues}/>
+          </Grid>
         </Grid>
     </Grid>
   );
