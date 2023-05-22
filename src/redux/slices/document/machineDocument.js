@@ -184,7 +184,8 @@ data.documentName = params?.documentName
 // }
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`, data );
-      dispatch(getMachineDocuments())
+      console.log("machineId : ", machineId)
+      dispatch(getMachineDocuments(machineId))
       dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));
       dispatch(setMachineDocumentEditFormVisibility (false));
     } catch (error) {

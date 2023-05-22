@@ -28,7 +28,7 @@ import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../DocumentName/DocumentNameAddForm';
 import FileCategoryAddForm from '../FileCategory/FileCategoryAddForm';
-
+import ListSwitch from '../../components/ListSwitch';
 
 import _mock from '../../../_mock';
 import EmptyContent from '../../../components/empty-content';
@@ -241,7 +241,7 @@ useEffect(() => {
                       <Grid item xs={12} sm={4} md={2.4}>
                         {document?.documentName?.name || ''}
                       </Grid>
-                      <Grid
+                      {/* <Grid
                         item
                         xs={12}
                         display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
@@ -250,6 +250,9 @@ useEffect(() => {
                         {document?.customerAccess !== true
                           ? 'customer Access : No'
                           : 'customer Access : Yes'}
+                      </Grid> */}
+                      <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
+                        <ListSwitch isActive={document?.customerAccess} />
                       </Grid>
                       <Grid
                         item
@@ -257,7 +260,7 @@ useEffect(() => {
                         display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
                         md={2.4}
                       >
-                        <Typography variant="body2">{fDate(document?.createdAt || '')}</Typography>
+                        <Typography >{fDate(document?.createdAt || '')}</Typography>
                       </Grid>
                       <Divider />
                     </Grid>

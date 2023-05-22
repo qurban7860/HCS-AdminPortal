@@ -136,7 +136,6 @@ useEffect(()=>{
         data.customerAccess = false
       }
       await dispatch(updateMachineDocument(machineDocument?._id,data, machine?._id));
-      await dispatch(machine._id)
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
