@@ -78,10 +78,10 @@ export default function SettingViewForm({ currentSetting = null }) {
         <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       </Grid>
       <Grid container>
-        {/* <ViewFormField
+        <ViewFormField
           sm={12}
           isActive={defaultValues.isActive}
-        /> */}
+        />
         <ViewFormField
           sm={6}
           heading="Technical Perameter"

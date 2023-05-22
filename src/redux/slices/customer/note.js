@@ -10,7 +10,7 @@ import { CONFIG } from '../../../config-global';
 
 
 // ----------------------------------------------------------------------
-
+const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   responseMessage: null,

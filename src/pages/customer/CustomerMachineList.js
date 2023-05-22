@@ -239,7 +239,7 @@ export default function CustomerContactList() {
           </Typography>{' '}
           <Link onClick={() => handleCloseMachine()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ px: 2, pt: 2 }}>

@@ -4,7 +4,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
+const regEx = /^[^2]*/
 const initialState = {
   machineDocumentFormVisibility: false,
   machineDocumentEditFormVisibility: false,
@@ -153,7 +153,7 @@ export function addMachineDocument(customerId , machineId , params) {
 
 // ---------------------------------Update Machine Document-------------------------------------
 
-export function updateMachineDocument(machineDocumentId, params) {
+export function updateMachineDocument(machineDocumentId, params,machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -184,7 +184,7 @@ data.documentName = params?.documentName
 // }
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`, data );
-      // dispatch(getMachineDocuments())
+      dispatch(getMachineDocuments())
       dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));
       dispatch(setMachineDocumentEditFormVisibility (false));
     } catch (error) {

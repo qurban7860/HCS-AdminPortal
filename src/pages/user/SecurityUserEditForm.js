@@ -26,7 +26,7 @@ import { getContacts , resetContacts} from '../../redux/slices/customer/contact'
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import AddFormButtons from '../components/AddFormButtons';
-import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import { getWithMsg, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 
 
 // ----------------------------------------------------------------------
@@ -161,7 +161,7 @@ useEffect(() => {
       ROLES.some((Role) => Role.value === role)
       )
       data.roles = submitSecurityUserRoles;
-      dispatchReq(dispatch, updateSecurityUser(data,securityUser._id), enqueueSnackbar)
+      getWithMsg(dispatch, updateSecurityUser(data,securityUser._id), enqueueSnackbar)
             navigate(PATH_DASHBOARD.user.view(defaultValues.id));
     //     dispatch(updateSecurityUser(data,securityUser._id))
     //     .then(res => {
