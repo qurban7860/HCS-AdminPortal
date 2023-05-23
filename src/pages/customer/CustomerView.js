@@ -36,7 +36,8 @@ import useResponsive from '../../hooks/useResponsive';
 
 
 import CustomerEditForm from './CustomerEditForm';
-import CustomerSiteList from './CustomerSiteList';
+// import CustomerSiteList from './CustomerSiteList';
+import CustomerSiteDynamicList from './CustomerSiteDynamicList';
 import CustomerContactList from './CustomerContactList';
 import CustomerMachineList from './CustomerMachineList';
 import DocumentList from '../document/customer/DocumentList';
@@ -101,7 +102,7 @@ export default function CustomerView({editPage}) {
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="mdi:map-legend" />,
-      component: <CustomerSiteList/>,
+      component: <CustomerSiteDynamicList/>,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,

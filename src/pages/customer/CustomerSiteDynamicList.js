@@ -7,6 +7,7 @@ import {
   Stack,
   Card,
   Grid,
+  Box,
   Table,
   Button,
   Tooltip,
@@ -51,6 +52,7 @@ import CommaJoinField from '../components/CommaJoinField';
 import _mock from '../../_mock';
 import SiteViewForm from './site/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
+
 
 // ----------------------------------------------------------------------
 
@@ -195,7 +197,10 @@ export default function CustomerSiteList() {
           </Button>
         </Stack>
       )}
+
       <Card>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2, py: 2 }}>
+
         {siteEditFormVisibility && <SiteEditForm />}
         {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
         {!siteAddFormVisibility &&
@@ -203,210 +208,21 @@ export default function CustomerSiteList() {
           sites.map((site, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return (
-              <Accordion
-                key={site._id}
-                expanded={expanded === index}
-                onChange={handleChange(index)}
-                sx={{
-                  borderTop: borderTopVal
-                  }}
-                >
-                <AccordionSummary
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  onClick={() => handleAccordianClick(index)}
-                  >
-                  {index !== activeIndex ? (
-                    <Grid container spacing={0}>
-                      <Grid item xs={12} sm={8} md={4}>
-                        {' '}
-                        <Typography > {site.name} </Typography>{' '}
-                      </Grid>
-                      {/* <CommaJoinField sm={8} objectParam={site.address} /> */}
-                    </Grid>
-                  ) : null}
-                </AccordionSummary>
-                <AccordionDetails sx={{
-                  mt: -5
-                  }}>
+              <Grid container lg={12} justifyContent="flex-end" alignItems="flex-end">
+              <Grid item lg={3} sx={{ borderTop: borderTopVal, py: 2 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                  {site.name}
+                </Typography>
+              </Grid>
+                <Grid item lg={3}>
                   <SiteViewForm currentSite={site} />
-                </AccordionDetails>
-              </Accordion>
+                </Grid>
+              </Grid>
             );
           })}
         <TableNoData isNotFound={isNotFound} />
-{/*
-        {!siteAddFormVisibility &&
-          !siteEditFormVisibility &&
-          sites.map((site, index) => {
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return (
-              <Accordion
-                key={site._id}
-                expanded={expanded === index}
-                onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal }}
-              >
-                <AccordionSummary
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  onClick={() => handleAccordianClick(index)}
-                >
-                  {index !== activeIndex ? (
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} sm={4} md={4} sx={{ overflowWrap: 'break-word' }}>
-                        {' '}
-                        <Typography > {site.name} </Typography>{' '}
-                      </Grid>
-                      <CommaJoinField
-                        display={{ sm: 'none', md: 'block' }}
-                        sm={8}
-                        objectParam={site.address}
-                        sx={{ overflowWrap: 'break-word' }}
-                      />
-                    </Grid>
-                  ) : null}
-                </AccordionSummary>
-                <AccordionDetails sx={{ mt: -5 }}>
-                  <SiteViewForm currentSite={site} />
-                </AccordionDetails>
-              </Accordion>
-            );
-          })}
-
-        <TableNoData isNotFound={isNotFound} /> */}
-
-        {/* </Block> */}
-        {/* <Block title="Controlled">
-            {_accordions.map((item, index) => (
-              <Accordion
-                key={item.value}
-                disabled={index === 3}
-                expanded={controlled === item.value}
-                onChange={handleChangeControlled(item.value)}
-              >
-                <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}>
-                  <Typography variant="subtitle1" sx={{ width: '33%', flexShrink: 0 }}>
-                    {item.heading}
-                  </Typography>
-                  <Typography sx={{ color: 'text.secondary' }}>{item.subHeading}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>{item.detail}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
-          </Block> */}
-
-        {/* <SiteListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-          />
-
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              dense={dense}
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
-
-            <Scrollbar>
-              <Table size={dense ? 'small' : 'medium'} sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  rowCount={tableData.length}
-                  numSelected={selected.length}
-                  onSort={onSort}
-                  onSelectAllRows={(checked) =>
-                    onSelectAllRows(
-                      checked,
-                      tableData.map((row) => row._id)
-                    )
-                  }
-                />
-
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <SiteListTableRow
-                          key={row._id}
-                          row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-
-                  <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  />
-
-                  <TableNoData isNotFound={isNotFound} />
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
-
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-            //
-            dense={dense}
-            onChangeDense={onChangeDense}
-          /> */}
+        </Box>
       </Card>
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      /> */}
     </>
   );
 }

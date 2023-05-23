@@ -89,9 +89,6 @@ export default function MachineViewForm() {
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
-      <ViewFormField
-          isActive={defaultValues.isActive}
-        />
         <ViewFormField
           sm={12}
           isActive={defaultValues.isActive}

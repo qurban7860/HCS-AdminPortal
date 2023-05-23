@@ -111,7 +111,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
 
         {serialNo ? (
           <Typography
-            variant="h4"
+            variant={isMobile ? 'h3' : 'h2'}
             sx={{
               px: 3,
               color: 'common.white',
@@ -124,7 +124,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
           </Typography>
         ) : (
           <Typography
-            variant={photoURL ? 'h4' : 'h3'}
+            variant={photoURL ? 'h3' : 'h2'}
             sx={{
               px: 3,
               color: 'common.white',
