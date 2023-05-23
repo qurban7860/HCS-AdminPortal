@@ -93,7 +93,7 @@ const handleDownload= () => {
   dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
     console.log("res : ",res)
     if(regEx.test(res.status)){ 
-      downloadBase64File(res.data, currentCustomerDocument?.displayName["."][currentCustomerDocument?.extension]);
+      downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
       enqueueSnackbar(res.statusText);
 
     }else{
