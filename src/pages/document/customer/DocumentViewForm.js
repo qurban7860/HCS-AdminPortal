@@ -108,27 +108,26 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     //   downloadBase64File(base64Data, fileName);
     // };
 
-const handleDownload= Loadable(lazy(async () => {
-    await dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
-    console.log("res : ",res)
-    if(regEx.test(res.status)){ 
-      // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
-      downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
-      enqueueSnackbar(res.statusText);
-
-    }else{
-      enqueueSnackbar(res.statusText,{ variant: `error` })
-    }
-  }).catch(err => {
-    if(err.Message){
-      enqueueSnackbar(err.Message,{ variant: `error` })
-    }else if(err.message){
-      enqueueSnackbar(err.message,{ variant: `error` })
-    }else{
-      enqueueSnackbar("Something went wrong!",{ variant: `error` })
-    }
-  });
-}))
+    const handleDownload = Loadable(lazy(async () => {
+      try {
+        const res = await dispatch(getDocumentDownload(currentCustomerDocument._id));
+        console.log("res : ", res);
+        if (regEx.test(res.status)) {
+          // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
+          downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
+          enqueueSnackbar(res.statusText);
+        } else {
+          enqueueSnackbar(res.statusText, { variant: 'error' });
+        }
+      } catch (err) {
+        if (err.message) {
+          enqueueSnackbar(err.message, { variant: 'error' });
+        } else {
+          enqueueSnackbar('Something went wrong!', { variant: 'error' });
+        }
+      }
+    }));
+    
   return (
     <>
       <Grid >
@@ -182,9 +181,9 @@ const handleDownload= Loadable(lazy(async () => {
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
-      <Grid container sx={{ mt: 2 }}>
-            <ViewFormAudit  defaultValues={defaultValues}/>
-      </Grid>
+          <Grid container sx={{ mt: 2 }}>
+                <ViewFormAudit  defaultValues={defaultValues}/>
+          </Grid>
         </Grid>
       </Grid>
     </>
