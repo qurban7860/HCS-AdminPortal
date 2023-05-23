@@ -150,7 +150,7 @@ const handleDownload= () => {
             </Grid>
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-            { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
+            { currentCustomerDocument?.type.startsWith("image") ? 
             <Link href="#" underline="none" 
               component="button"
               title='Download File'

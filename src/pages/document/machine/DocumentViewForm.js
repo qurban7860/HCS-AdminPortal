@@ -96,7 +96,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
             </Grid>
           {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ? 
+          {currentMachineDocument?.type.startsWith("image") ? 
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null}
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
           <Grid container sx={{ mt: '1rem' }}>
