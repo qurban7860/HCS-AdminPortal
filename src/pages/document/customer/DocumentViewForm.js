@@ -74,11 +74,26 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const handleClosePreview = () => { setPreview(false) };
 
   const handleOpenPreview = () => {setPreview(true)};
+
+  const downloadBase64File = (base64Data, fileName) => {
+    const link = document.createElement('a');
+    link.href = base64Data;
+    link.download = fileName;
+    link.target = '_blank';
+    link.click();
+    }
+
+    // const handleDownloadFile = (base64,) => {
+    //   const base64Data = base64;
+    //   const fileName = 'your_file_name.ext';
+    //   downloadBase64File(base64Data, fileName);
+    // };
+
 const handleDownload= () => {
   dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
     console.log("res : ",res)
     if(regEx.test(res.status)){ 
-      // `data:image/png;base64, ${res.data}`
+      downloadBase64File(res.data, currentCustomerDocument?.displayName["."][currentCustomerDocument?.extension]);
       enqueueSnackbar(res.statusText);
 
     }else{
