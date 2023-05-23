@@ -163,7 +163,13 @@ const handleDownload= () => {
                 alt={defaultValues.displayName}
                 src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
                 />
-            </Link>:""}
+            </Link>: <Link href="#" underline="none" 
+              component="button"
+              title='Download File'
+              onClick={handleDownload}
+            >
+              <Iconify icon="ph:files-fill" />
+            </Link>}
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
