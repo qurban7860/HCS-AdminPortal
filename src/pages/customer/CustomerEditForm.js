@@ -159,7 +159,7 @@ export default function CustomerEditForm() {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
-              >
+                >
                 <RHFTextField name="name" label="Customer Name" />
 
                 <RHFTextField name="tradingName" label="Trading Name" />

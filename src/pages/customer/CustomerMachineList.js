@@ -167,15 +167,15 @@ export default function CustomerContactList() {
                 sx={{ borderTop: borderTopVal }}
                 >
                 {/* <AccordionSummary
-                  // expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  // onClick={() => handleAccordianClick(index)}
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
                 > */}
                   {index !== activeIndex ? (
-                    <Grid container spacing={0} sx={{p:1}}>
+                    <Grid container spacing={0} sx={{p:1.5}}>
                       <Grid item xs={12} sm={6} md={2} >
-                        {customerMachine?.serialNo && 
-                          <Link 
-                          onClick={()=>{ 
+                        {customerMachine?.serialNo &&
+                          <Link
+                          onClick={()=>{
                             setDescriptionExpanded(false);
                             setOpenMachine(true);
                             setMachineData(customerMachine)
@@ -207,8 +207,8 @@ export default function CustomerContactList() {
                       </Grid>
                     </Grid>
                   ) : null}
-                {/* </AccordionSummary> */}
-                {/* <AccordionDetails sx={{ mt: -5 }}> */}
+                {/* </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
                   {/* <ContactViewForm currentContact={customerMachine} /> */}
                 {/* </AccordionDetails> */}
               </Accordion>
@@ -264,7 +264,7 @@ export default function CustomerContactList() {
                 </Button>)}
             </Typography>}
           </Grid>
-          
+
         </Grid>
         <Grid item container sx={{ px: 2, pb: 3 }}>
           <Grid item container sx={{ py: '2rem' }}>
