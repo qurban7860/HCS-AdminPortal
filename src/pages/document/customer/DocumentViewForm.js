@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
-import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia} from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link} from '@mui/material';
 // redux
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
 // paths
@@ -28,9 +28,11 @@ DocumentViewForm.propTypes = {
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+  console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
+  const [ preview, setPreview] = useState(false)
+
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
   const onDelete = async () => {
@@ -66,6 +68,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     [currentCustomerDocument, customerDocument]
   );
 
+  const handleClosePreview = () => { setPreview(false) };
+
   return (
     <>
       <Grid >
@@ -90,9 +94,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
           <Box
             component="img"
-            sx={{
-              m:2
-            }}
+            sx={{ m:2 }}
             alt={defaultValues.name}
             src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
             />:""}
@@ -104,6 +106,42 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       </Grid>
         </Grid>
       </Grid>
+      <Dialog
+        maxWidth="md"
+        open={preview}
+        onClose={handleClosePreview}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+        >
+        <Grid
+          container
+          item
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            bgcolor: 'primary.main',
+            color: 'primary.contrastText',
+            padding: '10px',
+          }}
+        >
+          <Typography variant="h4" sx={{ px: 2 }}>
+            {defaultValues?.name}
+          </Typography>{' '}
+          <Link onClick={() => handleClosePreview()} href="#" underline="none" sx={{ ml: 'auto' }}>
+            {' '}
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
+          </Link>
+        </Grid>
+        {/* <Grid  > */}
+        <Box
+            component="img"
+            sx={{minWidth:"400px", minHeight:"400px"}}
+            alt={defaultValues?.name}
+            src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
+            />
+        {/* </Grid> */}
+      </Dialog>
     </>
   );
 }
