@@ -6,11 +6,14 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Link, InputLabel,MenuItem , FormControl, Dialog}  from '@mui/material';
 // routes
+import ViewFormField from '../../components/ViewFormField';
+import ViewFormSWitch from '../../components/ViewFormSwitch';
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addCustomerDocument, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
@@ -30,6 +33,8 @@ import { Upload } from '../../../components/upload';
 import Cover from '../../components/Cover';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
+
+
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -219,34 +224,48 @@ export default function DocumentAddForm({currentDocument}) {
         column={12}
         rowGap={3}
         columnGap={2}
-        display="grid"
+        // display="grid"
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-        >
-        <Grid container xs={12} md={6} lg={12}>
+      >
+        <Grid container xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <Grid container lg={6}>
+                <Grid container lg={12}>
                   <FormHeading heading="New Document" />
                 </Grid>
-                <Grid container lg={12} sx={{ justifyContent: 'flex' }}>
+                <Grid container lg={12} justifyContent="center">
                   <Grid container lg={4}>
                     <Typography />
                   </Grid>
                   <Grid container lg={4}>
                     <Typography />
                   </Grid>
-                  <Grid container lg={4} sx={{ justifyContent: 'flex-end' }}>
-                    <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex' }}>
-                      <Typography
-                        variant="body2"
-                        sx={{ pl: 2, pb: 1, display: 'flex', alignItems: 'center' }}
-                        >
-                        Customer Access
-                      </Typography>
-                      <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+                  <Grid container lg={12} justifyContent="flex-end">
+                    <Grid item xs={6} sm={6} md={8} lg={2}>
+                      <ViewFormSWitch
+                        heading="Customer Access"
+                        customerAccess={customerAccessVal}
+                        onChange={handleChange}
+                      />
+                      {/* <RHFSwitch
+                        name="customerAccess"
+                        sx={{ mt: 1 }}
+                        // checked={customerAccessVal}
+                        // onChange={handleChange}
+                        labelPlacement="start"
+                        label={
+                          <Typography
+                            variant="body2"
+                            sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}
+                          >
+                            {' '}
+                            Customer Access
+                          </Typography>
+                        }
+                      /> */}
                     </Grid>
-                    <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex-end' }}>
+                    {/* <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex-end' }}>
                       <RHFSwitch
                         sx={{ mt: 1 }}
                         name="isActive"
@@ -261,7 +280,7 @@ export default function DocumentAddForm({currentDocument}) {
                           </Typography>
                         }
                       />
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 </Grid>
                 <Grid item xs={12} md={6} lg={12}>
@@ -281,8 +300,8 @@ export default function DocumentAddForm({currentDocument}) {
                     // onUpload={() => console.log('ON UPLOAD')}
                   />
                 </Grid>
-                <Grid container xs={12} md={6} lg={12}>
-                  <Grid container lg={12} gap={3}>
+                <Grid container lg={12}>
+                  <Grid container spacing={2}>
                     <Grid item lg={6}>
                       <Autocomplete
                         // freeSolo
@@ -330,7 +349,17 @@ export default function DocumentAddForm({currentDocument}) {
                       />
                     </Grid>
                   </Grid>
-                  {/* <Grid container lg={6} spacing={3}>
+                </Grid>
+
+                <RHFTextField
+                  name="name"
+                  value={nameVal}
+                  label="Name"
+                  onChange={(e) => {
+                    setNameVal(e.target.value);
+                  }}
+                />
+                {/* <Grid container lg={6} spacing={3}>
                   <Grid item>
                     <Link
                       title="Add Document Name"
@@ -356,16 +385,6 @@ export default function DocumentAddForm({currentDocument}) {
                     </Link>
                   </Grid>
                 </Grid> */}
-                </Grid>
-
-                <RHFTextField
-                  name="name"
-                  value={nameVal}
-                  label="Name"
-                  onChange={(e) => {
-                    setNameVal(e.target.value);
-                  }}
-                />
 
                 {/* <Autocomplete
                 // freeSolo
