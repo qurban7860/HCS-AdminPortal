@@ -160,18 +160,22 @@ export default function CustomerContactList() {
                 address.country = customerMachine?.instalationSite?.address?.country
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return (
-              <Accordion
+              <Accordion expanded={false} focusVisible={false}
                 key={customerMachine._id}
                 // expanded={expanded === index}
                 // onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal }}
+                sx={{ borderTop: borderTopVal, }}
                 >
-                {/* <AccordionSummary
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  onClick={() => handleAccordianClick(index)}
-                > */}
+                <AccordionSummary
+                 aria-controls="panel1a-content"
+                 focusVisible={false}
+                 sx={{ cursor: 'unset !important' }}
+                //  sx={{ pointerEvents: "none"}}
+                  // expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  // onClick={() => handleAccordianClick(index)}
+                >
                   {index !== activeIndex ? (
-                    <Grid container spacing={0} sx={{p:1.5}}>
+                    <Grid container spacing={1}>
                       <Grid item xs={12} sm={6} md={2} >
                         {customerMachine?.serialNo &&
                           <Link
@@ -182,14 +186,14 @@ export default function CustomerContactList() {
                           }}
                           href="#"
                           underline="none">
-                          {customerMachine?.serialNo}
+                          <Typography >{customerMachine?.serialNo}</Typography>
                           </Link>}
                       </Grid>
                       <Grid item xs={12} sm={6} md={2}>
-                        {customerMachine?.name && customerMachine?.name}
+                      <Typography >{customerMachine?.name}</Typography>
                       </Grid>
                       <Grid item xs={12} sm={6} md={2} display={{ sm: 'none', md: 'block' }}  >
-                        {customerMachine?.machineModel?.name && customerMachine?.machineModel?.name}
+                      <Typography >{customerMachine?.machineModel?.name}</Typography>
                       </Grid>
                       <Grid
                         item
@@ -198,7 +202,7 @@ export default function CustomerContactList() {
                         md={6}
                         display={{ sm: 'none', md: 'none', lg: 'block' }}
                       >
-                      {Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}
+                      <Typography >{Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}</Typography>
                         {/* {customerMachine?.instalationSite?.address?.city ? customerMachine?.instalationSite?.address?.city : ""}
                         {customerMachine?.instalationSite?.address?.region?.trim() !== undefined  ? ", " : ''}
                         {customerMachine?.instalationSite?.address?.region ? customerMachine?.instalationSite?.address?.region : ""}
@@ -207,9 +211,8 @@ export default function CustomerContactList() {
                       </Grid>
                     </Grid>
                   ) : null}
-                {/* </AccordionSummary>
-                <AccordionDetails sx={{ mt: -5 }}>
-                  {/* <ContactViewForm currentContact={customerMachine} /> */}
+                </AccordionSummary>
+                {/* <AccordionDetails sx={{ mt: -5 }}> */}
                 {/* </AccordionDetails> */}
               </Accordion>
             );
@@ -239,7 +242,7 @@ export default function CustomerContactList() {
           </Typography>{' '}
           <Link onClick={() => handleCloseMachine()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ px: 2, pt: 2 }}>
@@ -255,7 +258,7 @@ export default function CustomerContactList() {
           <ViewFormField sm={6} heading="Installation Site"           param={machineData?.instalationSite?.name}/>
           <ViewFormField sm={6} heading="Billing Site"                param={machineData?.billingSite?.name}/>
           <ViewFormField sm={12} heading="Nearby Milestone"           param={machineData?.siteMilestone} />
-          <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
+          {/* <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}> Description </Typography>
             {machineData?.description && <Typography variant="body1" component="p" >
                 {descriptionExpanded ? machineData?.description : `${machineData?.description.slice(0, 90)}...`}{machineData?.description?.length > 90 && (
@@ -263,7 +266,7 @@ export default function CustomerContactList() {
                   {descriptionExpanded ? 'See Less' : 'See More'}
                 </Button>)}
             </Typography>}
-          </Grid>
+          </Grid> */}
 
         </Grid>
         <Grid item container sx={{ px: 2, pb: 3 }}>

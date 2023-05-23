@@ -18,7 +18,7 @@ import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/secu
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/AddFormButtons';
 import { PATH_DASHBOARD } from '../../routes/paths';
-import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import { getWithMsg, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +61,7 @@ export default function SecurityUserChangePassword() {
 }
   const onSubmit = async (data) => {
       if(userId){
-        await dispatchReq(dispatch, SecurityUserPasswordUpdate(data,userId), enqueueSnackbar);
+        await getWithMsg(dispatch, SecurityUserPasswordUpdate(data,userId), enqueueSnackbar);
         reset();
       }
   };

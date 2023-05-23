@@ -38,7 +38,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const { machinestatus } = useSelector((state) => state.machinestatus);
-
+console.log("machinestatus : ", machinestatus)
   const { id } = useParams();
 
   const dispatch = useDispatch()
@@ -70,10 +70,11 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
     <Card sx={{ p: 2 }}>
         <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField sm={12}   heading='Name'                 param={defaultValues?.name} isActive={defaultValues.isActive}/>
+        <ViewFormField sm={12}   isActive={defaultValues.isActive}/>
+        <ViewFormField sm={12}   heading='Name'                 param={defaultValues?.name} />
         <ViewFormField sm={12}   heading='Description'          param={defaultValues?.description}/>
-        <ViewFormField sm={12}   heading='Display Order No'     numberparam={defaultValues?.displayOrderNo ? defaultValues.displayOrderNo : ""}/>
-        <ViewFormSWitch  isActive={defaultValues.isActive}/>
+        <ViewFormField sm={12}   heading='Display Order No.'     numberParam={defaultValues?.displayOrderNo}/>
+        {/* <ViewFormSWitch  isActive={defaultValues.isActive}/> */}
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>

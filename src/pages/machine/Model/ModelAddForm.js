@@ -130,7 +130,7 @@ export default function ModelAddForm() {
                       renderInput={(params) => <TextField {...params} label="Category" />}
                       ChipProps={{ size: 'small' }}
                     />
-                    <RHFTextField name="name" label="Model Name"  />
+                    <RHFTextField name="name" label="Name"  />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                     <RHFSwitch

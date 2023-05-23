@@ -5,7 +5,7 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-
+const regEx = /^[^2]*/
 const initialState = {
   customerDocumentFormVisibility: false,
   customerDocumentEditFormVisibility: false,
@@ -121,8 +121,6 @@ export const {
 export function addCustomerDocument(customerId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
-        try {
-
           const formData = new FormData();
           formData.append('customer', customerId);
           // if(params?.customerAccess){
@@ -154,12 +152,7 @@ export function addCustomerDocument(customerId,params) {
         }
       });
 
-      dispatch(slice.actions.setResponseMessage('Document saved successfully'));
-      dispatch(getCustomerDocuments(customerId));
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+    return response;
   };
 }
 
@@ -168,7 +161,6 @@ export function addCustomerDocument(customerId,params) {
 export function updateCustomerDocument(customerDocumentId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
       const data = { 
                     name: params?.name,
                     customerAccess: params.customerAccess,
@@ -176,12 +168,7 @@ export function updateCustomerDocument(customerDocumentId,params) {
                     description: params.description,
                   };
 
-          // if(params?.name){
-          //   formData.append('name', params?.name);
-          // }
-          // if(params?.description){
-          //   formData.append('description', params?.description);
-          // }
+
           if(params?.category){
             data.category = params?.category
           }
@@ -194,15 +181,12 @@ export function updateCustomerDocument(customerDocumentId,params) {
           // if(params?.isActive){
           //   formData.append('isActive', params?.isActive);
           // }
-
+          // console.log("Payload : ",params);
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
-      // dispatch(getCustomerDocuments())
-      dispatch(slice.actions.setResponseMessage('Customer Document updated successfully'));
-      dispatch(setCustomerDocumentEditFormVisibility (false));
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      if(regEx.test(response.status)){
+        dispatch(setCustomerDocumentEditFormVisibility (false));
+      }
+    return response;
   };
 }
 
@@ -211,8 +195,7 @@ export function updateCustomerDocument(customerDocumentId,params) {
 export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      
+
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
       {
         params: {
@@ -221,12 +204,11 @@ export function getCustomerDocuments(customerId) {
         }
       }
       );
-      dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Customer Document loaded successfully'));
-    } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+      // console.log("response : ", response);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
+      }
+    return response;
   };
 }
 
@@ -235,14 +217,11 @@ export function getCustomerDocuments(customerId) {
 export function getCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`);
       dispatch(slice.actions.getCustomerDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
-    } catch (error) {
-      console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
-    }
+     
+    return response;
   };
 }
 

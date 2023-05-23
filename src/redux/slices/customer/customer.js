@@ -6,7 +6,7 @@ import { CONFIG } from '../../../config-global';
 const _ = require('lodash');
 
 // ---------------------------------------------------------------------
-
+const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   customerEditFormFlag: false,

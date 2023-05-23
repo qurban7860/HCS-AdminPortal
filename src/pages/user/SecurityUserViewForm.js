@@ -20,7 +20,7 @@ import {Cover} from '../components/Cover';
 import { useAuthContext } from '../../auth/useAuthContext';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../components/hook-form';
 import { useSnackbar } from '../../components/snackbar';
-import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import {  dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 import palette from '../../theme';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
@@ -228,7 +228,7 @@ export default function SecurityUserViewForm() {
           </Typography>{' '}
           <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ p: 2 }}>
@@ -355,9 +355,9 @@ export default function SecurityUserViewForm() {
           <Typography variant="h4" sx={{ px: 2 }}>
             Contact{' '}
           </Typography>{' '}
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
+          <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ px: 2, py: 2 }}>

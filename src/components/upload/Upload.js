@@ -77,7 +77,42 @@ export default function Upload({
   const hasFiles = files && multiple && files.length > 0;
 
   const isError = isDragReject || !!error;
+  const allowedImageExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp" ];
+  const allowedDocumentExtension = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
 
+  // const allowedPdfExtension = ["pdf"];
+  // const allowedDoctExtensions = ["doc", "docx"];
+  // const allowedXlsExtensions = ["xls", "xlsx"];
+  // const allowedPptExtensions = ["ppt", "pptx"];
+  const document = {
+    icon: {
+      pdf: "bxs:file-pdf",
+      doc: "mdi:file-word",
+      docx: "mdi:file-word",
+      xls: "mdi:file-excel",
+      xlsx: "mdi:file-excel",
+      ppt: "mdi:file-powerpoint",
+      pptx: "mdi:file-powerpoint"
+    },
+    color: {
+      pdf: "#f44336",
+      doc: "#448aff",
+      docx: "#448aff",
+      xls: "#388e3c",
+      xlsx: "#388e3c",
+      ppt: "#e65100",
+      pptx: "#e65100"
+    }
+  }
+  // const pdf = "bxs:file-pdf"
+  // const doc = "bxs:file-doc"
+  // const docx = "bxs:file-doc"
+  // const xls = "mdi:file-powerpoint"
+  // const xlsx = "mdi:file-powerpoint"
+  // const ppt = "mdi:file-powerpoint"
+  // const pptx = "mdi:file-powerpoint"
+
+  const fileExtension = file?.name?.split(".").pop().toLowerCase();
   return (
     <Box sx={{ width: 1, position: 'relative', ...sx }}>
       <StyledDropZone
@@ -166,7 +201,7 @@ export default function Upload({
         </IconButton>
       )}
 
-      {hasFile && onPreview && (
+      {hasFile && onPreview && allowedImageExtensions.includes(fileExtension) && (
         <IconButton
           size="small"
           onClick={onPreview}
@@ -184,6 +219,27 @@ export default function Upload({
           }}
         >
           <Iconify icon="icon-park-outline:preview-open" width={18} />
+        </IconButton>
+      )}
+
+      {hasFile && onPreview && allowedDocumentExtension.includes(fileExtension) && (
+        <IconButton
+        size="small"
+          sx={{
+            top: 80,
+            left: 2,
+            zIndex: 9,
+            // height: "350",
+            position: 'absolute',
+            // cursor: 'unset !important',
+            // color: (theme) => alpha(theme.palette.common.black, 0.8),
+            // bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+            '&:hover': {
+              bgcolor: "transparent"
+            },
+          }}
+        >
+          <Iconify icon={document.icon[fileExtension]} color={document.color[fileExtension]} width={60} sx={{ p:1, color: document.color[fileExtension] }} /><Typography variant='body2'>{file?.name}</Typography>
         </IconButton>
       )}
 

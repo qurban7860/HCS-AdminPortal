@@ -254,7 +254,7 @@ useLayoutEffect(() => {
                         {setting?.techParamValue || ''}
                       </Grid>
                       <Grid item xs={12} sm={3} md={2}>
-                        <Typography variant="body2">{fDate(setting?.createdAt || '')}</Typography>
+                        <Typography >{fDate(setting?.createdAt || '')}</Typography>
                       </Grid>
                       <Divider />
                     </Grid>

@@ -89,6 +89,9 @@ export default function MachineViewForm() {
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
+      <ViewFormField
+          isActive={defaultValues.isActive}
+        />
         <ViewFormField
           sm={12}
           isActive={defaultValues.isActive}
@@ -194,7 +197,7 @@ export default function MachineViewForm() {
         <ViewFormField />
         {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
       </Grid>
-      <Grid container>
+      <Grid container sx={{mt:2}}>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
 
@@ -221,7 +224,7 @@ export default function MachineViewForm() {
           </Typography>{' '}
           <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify sx={{color: "white", }} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid item container sx={{ px: 2, pt: 2 }}>
@@ -357,7 +360,7 @@ export default function MachineViewForm() {
             sx={{ ml: 'auto' }}
           >
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify  sx={{color: "white", }} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid item container sx={{ p: 2 }}>
@@ -426,7 +429,7 @@ export default function MachineViewForm() {
             sx={{ ml: 'auto' }}
           >
             {' '}
-            <Iconify icon="mdi:close-box-outline" />
+            <Iconify  sx={{color: "white", }} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid item container sx={{ p: 2 }}>

@@ -280,13 +280,13 @@ const toggleChecked = () =>
                   {index !== activeIndex ? (
                     <Grid container spacing={0}>
                       <Grid item xs={12} sm={9} md={10}>
-                        <Typography variant="body2">
+                        <Typography >
                           {window.innerWidth > 1200 ? note.note.substring(0, 100) : note.note}
                           {note.note.length > 50 ? '...' : null}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={3} md={2}>
-                        <Typography variant="body2">{fDate(note.createdAt)}</Typography>
+                        <Typography >{fDate(note.createdAt)}</Typography>
                       </Grid>
                     </Grid>
                   ) : null}

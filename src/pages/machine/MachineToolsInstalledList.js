@@ -227,7 +227,7 @@ useLayoutEffect(() => {
                       </Grid>
 
                       <Grid item xs={12} sm={3} md={2}>
-                        <Typography variant="body2">{fDate(tool?.createdAt || '')}</Typography>
+                        <Typography >{fDate(tool?.createdAt || '')}</Typography>
                       </Grid>
                     </Grid>
                   ) : null}

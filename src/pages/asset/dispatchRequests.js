@@ -104,10 +104,28 @@ export const dispatchReqNavToList = (dispatch, dispatchAction, dispachReset , re
     });
 }
 
-export const dispatchReq = (dispatch, dispatchAction, enqueueSnackbar) =>{
+export const getWithMsg = (dispatch, dispatchAction, enqueueSnackbar) =>{
   dispatch(dispatchAction).then(res => {
       if(regEx.test(res.status)){ 
         enqueueSnackbar(res.statusText)
+      }else{
+        enqueueSnackbar(res.statusText,{ variant: `error` })
+      }
+    }).catch(err => {
+      if(err.Message){
+        enqueueSnackbar(err.Message,{ variant: `error` })
+      }else if(err.message){
+        enqueueSnackbar(err.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+    });
+}
+
+export const getWithNoMsg = (dispatch, dispatchAction, enqueueSnackbar) =>{
+  dispatch(dispatchAction).then(res => {
+      if(regEx.test(res.status)){ 
+        // enqueueSnackbar(res.statusText)
       }else{
         enqueueSnackbar(res.statusText,{ variant: `error` })
       }
@@ -126,6 +144,25 @@ export const dispatchReqNoMsg = (dispatch, dispatchAction, enqueueSnackbar) =>{
   dispatch(dispatchAction).then(res => {
       if(regEx.test(res.status)){ 
         // enqueueSnackbar(res.statusText) 
+      }else{
+        enqueueSnackbar(res.statusText,{ variant: `error` })
+      }
+    }).catch(err => {
+      if(err.Message){
+        enqueueSnackbar(err.Message,{ variant: `error` })
+      }else if(err.message){
+        enqueueSnackbar(err.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+    });
+}
+
+export const postAndGet = (dispatch, enqueueSnackbar, dispatchAction1, dispatchAction2) =>{
+  dispatch(dispatchAction1).then(res => {
+      if(regEx.test(res.status)){ 
+        enqueueSnackbar(res.statusText);
+        dispatchReqNoMsg(dispatch, dispatchAction2, enqueueSnackbar);
       }else{
         enqueueSnackbar(res.statusText,{ variant: `error` })
       }

@@ -8,8 +8,9 @@ import Iconify from '../../components/iconify';
 ViewFormEditDeleteButtons.propTypes = {
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,
+  type: PropTypes.string,
   };
-export default function ViewFormEditDeleteButtons({onDelete,handleEdit}) {
+export default function ViewFormEditDeleteButtons({onDelete,handleEdit, type}) {
 const [openConfirm, setOpenConfirm] = useState(false);
 const [openPopover, setOpenPopover] = useState(null);
 const handleOpenConfirm = () => {

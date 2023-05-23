@@ -45,7 +45,7 @@ import ListSwitch from '../../components/ListSwitch';
 import _mock from '../../../_mock';
 import EmptyContent from '../../../components/empty-content';
 import { fDate,fDateTime } from '../../../utils/formatTime';
-
+import { getWithNoMsg } from '../../asset/dispatchRequests'
 
 
 // ----------------------------------------------------------------------
@@ -120,11 +120,12 @@ export default function MachineSettingList() {
   };
 
 useEffect(()=>{
-  dispatch(getCustomerDocuments(customer._id));
+  getWithNoMsg(dispatch, getCustomerDocuments(customer._id), enqueueSnackbar);
   dispatch(setCustomerDocumentEditFormVisibility(false))
   dispatch(setCustomerDocumentFormVisibility(false))
   dispatch(setFileCategoryFormVisibility(false))
   dispatch(setDocumentNameFormVisibility(false))
+   // eslint-disable-next-line react-hooks/exhaustive-deps
 },[dispatch,customer._id])
 
   const handleChange = (panel) => (event, isExpanded) => {

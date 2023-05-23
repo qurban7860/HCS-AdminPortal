@@ -378,7 +378,9 @@ export default function CustomerEditForm() {
                     ))}
                 </RHFSelect> */}
               </Box>
-              <ViewFormSWitch heading="Active" isActive="isActive"/>
+
+                { customer?.type !== "SP" ? <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> : null}
+
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

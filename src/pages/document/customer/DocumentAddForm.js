@@ -16,7 +16,7 @@ import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addCustomerDocument, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
+import { addCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
 import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
 import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
 import { getCustomers } from '../../../redux/slices/customer/customer';
@@ -33,9 +33,7 @@ import { Upload } from '../../../components/upload';
 import Cover from '../../components/Cover';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
-
-
-
+import { postAndGet } from '../../asset/dispatchRequests'
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
@@ -95,9 +93,22 @@ export default function DocumentAddForm({currentDocument}) {
   const AddCustomerDocumentSchema = Yup.object().shape({
     name: Yup.string().max(50),
     description: Yup.string().max(10000),
-    image: Yup.mixed().required("File is required!"),
-    // customerAccess: Yup.bool().required("Customer Access Field is required!"),
-    isActive : Yup.boolean(),
+    image: Yup.mixed()
+      .required("File is required!")
+      .test(
+        "fileType",
+        "Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx",
+        (value) => {
+          if (value && value?.name) {
+            const allowedExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx",  "xls", "xlsx", "ppt", "pptx" ];
+            const fileExtension = value?.name?.split(".").pop().toLowerCase();
+            return allowedExtensions.includes(fileExtension);
+          }
+          return false;
+        }
+      )
+      .nullable(true),
+    isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -146,7 +157,8 @@ export default function DocumentAddForm({currentDocument}) {
         if(documentNameVal){
           data.documentName = documentNameVal._id
         }
-        await dispatch(addCustomerDocument(customer._id,data));
+        console.log("data : ",data)
+        await postAndGet( dispatch, enqueueSnackbar ,addCustomerDocument(customer._id,data), getCustomerDocuments(customer._id));
         dispatch(setCustomerDocumentFormVisibility(false));
         setFileCategoryVal("")
         setDocumentNameVal("")
@@ -189,7 +201,7 @@ export default function DocumentAddForm({currentDocument}) {
   const handleClosePreview = () => { setPreview(false) };
 
   const handleRemoveFile = () => {
-    setValue('image', "", { shouldValidate: true });
+    setValue('image', "");
     setNameVal("")
   };
 

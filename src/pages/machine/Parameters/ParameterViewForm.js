@@ -86,13 +86,13 @@ useLayoutEffect(()=>{
     <Card sx={{ p: 2 }}>
         <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
-          <ViewFormField sm={6}   heading='Name'        param={defaultValues?.name} isActive={defaultValues.isActive}/>
+          <ViewFormField sm={12}  isActive={defaultValues.isActive}/>
+          <ViewFormField sm={6}   heading='Category Name'        param={defaultValues?.category}/>
+          <ViewFormField sm={6}   heading='Name'        param={defaultValues?.name} />
           <ViewFormField sm={6}   heading='Code'        param={defaultValues?.code}/>
-          <ViewFormField sm={6}   heading='Description'        param={defaultValues?.description}/>
-          <ViewFormField sm={6}   heading='Tech Param Category Name'        param={defaultValues?.category}/>
-        <ViewFormSWitch  isActive={defaultValues.isActive} />
+          <ViewFormField sm={12}   heading='Description'        param={defaultValues?.description}/>
+        {/* <ViewFormSWitch  isActive={defaultValues.isActive} /> */}
       </Grid>
-
 
         <Grid item container>
           <ViewFormAudit defaultValues={defaultValues}/>
