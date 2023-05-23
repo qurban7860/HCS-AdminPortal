@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import download from 'downloadjs';
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -103,6 +104,7 @@ const handleDownload= () => {
   dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
     console.log("res : ",res)
     if(regEx.test(res.status)){ 
+      // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
       downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
       enqueueSnackbar(res.statusText);
 
@@ -152,7 +154,7 @@ const handleDownload= () => {
             <Link href="#" underline="none" 
               component="button"
               title='Download File'
-              onClick={downloadBase64File}
+              onClick={handleDownload}
             >
               <Box
                 onAbort={handleOpenPreview}
