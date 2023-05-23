@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Typography, Grid} from '@mui/material';
+import { Typography, Grid, Tooltip } from '@mui/material';
 import Iconify from '../../components/iconify';
 
 ViewFormField.propTypes = {
@@ -22,10 +22,12 @@ export default function ViewFormField({heading,param, secondParam ,objectParam,s
 
         <Typography variant="body1" style={{ display: 'flex', alignItems: 'center' }}>
           {isActive !== undefined && (
-            <Iconify
-              icon={isActive ? 'mdi:account-badge' : 'mdi:account-cancel-outline'}
-              style={{ color: isActive ? 'green' : 'red', fontSize: '24px', marginRight: '8px' }}
-            />
+            <Tooltip title={isActive ? 'Active' : 'InActive'} placement="top">
+              <Iconify
+                icon={isActive ? 'mdi:account-badge' : 'mdi:account-cancel-outline'}
+                style={{ color: isActive ? 'green' : 'red', fontSize: '24px', marginRight: '8px' }}
+              />
+            </Tooltip>
           )}
           {param && param.trim().length > 0 ? param : ''}
           {param && param.trim().length > 0 && secondParam && secondParam.trim().length > 0

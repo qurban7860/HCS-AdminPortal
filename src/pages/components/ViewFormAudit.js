@@ -15,14 +15,14 @@ const {createdByFullName,createdAt,createdIP,updatedByFullName,updatedAt,updated
           <Typography paragraph variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
             created by: {createdByFullName ? `${createdByFullName} / ` : ''}{' '}
             {fDateTime(createdAt) ? `${fDateTime(createdAt)} / ` : ''}
-            {createdIP ? `${createdIP} / ` : ''}
+            {createdIP ? `${createdIP} ` : ''}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
             updated by: {updatedByFullName ? `${updatedByFullName} / ` : ''}
             {fDateTime(updatedAt) ? `${fDateTime(updatedAt)} / ` : ''}
-            {updatedIP ? `${updatedIP} / ` : ''}
+            {updatedIP ? `${updatedIP}` : ''}
           </Typography>
         </Grid>
       </Grid>

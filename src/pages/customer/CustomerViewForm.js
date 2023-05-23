@@ -90,7 +90,9 @@ const onDelete = async () => {
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        <Tooltip title="Active">
+          <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        </Tooltip>
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
