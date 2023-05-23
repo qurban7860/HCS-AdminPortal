@@ -7,6 +7,7 @@ import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
 import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link} from '@mui/material';
 // redux
+import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -27,6 +28,7 @@ DocumentViewForm.propTypes = {
 };
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
+  const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
   console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
@@ -70,6 +72,27 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const handleClosePreview = () => { setPreview(false) };
 
+  const handleOpenPreview = () => {setPreview(true)};
+const handleDownload= () => {
+  dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
+    console.log("res : ",res)
+    if(regEx.test(res.status)){ 
+      // `data:image/png;base64, ${res.data}`
+      enqueueSnackbar(res.statusText);
+
+    }else{
+      enqueueSnackbar(res.statusText,{ variant: `error` })
+    }
+  }).catch(err => {
+    if(err.Message){
+      enqueueSnackbar(err.Message,{ variant: `error` })
+    }else if(err.message){
+      enqueueSnackbar(err.message,{ variant: `error` })
+    }else{
+      enqueueSnackbar("Something went wrong!",{ variant: `error` })
+    }
+  });
+}
   return (
     <>
       <Grid >
@@ -92,12 +115,19 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
             { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
-          <Box
-            component="img"
-            sx={{ m:2 }}
-            alt={defaultValues.name}
-            src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
-            />:""}
+            <Link href="#" underline="none" 
+              component="button"
+              title='Download File'
+              onClick={handleDownload}
+            >
+              <Box
+                onAbort={handleOpenPreview}
+                component="img"
+                sx={{ m:2 }}
+                alt={defaultValues.name}
+                src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
+                />
+            </Link>:""}
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
@@ -106,42 +136,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       </Grid>
         </Grid>
       </Grid>
-      <Dialog
-        maxWidth="md"
-        open={preview}
-        onClose={handleClosePreview}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-        >
-        <Grid
-          container
-          item
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            {defaultValues?.name}
-          </Typography>{' '}
-          <Link onClick={() => handleClosePreview()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        {/* <Grid  > */}
-        <Box
-            component="img"
-            sx={{minWidth:"400px", minHeight:"400px"}}
-            alt={defaultValues?.name}
-            src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
-            />
-        {/* </Grid> */}
-      </Dialog>
     </>
   );
 }

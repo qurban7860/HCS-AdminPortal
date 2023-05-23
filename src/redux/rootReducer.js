@@ -25,6 +25,7 @@ import documentNameReducer from './slices/document/documentName';
 import fileCategoryReducer from './slices/document/fileCategory';
 import customerDocumentReducer from './slices/document/customerDocument';
 import machineDocumentReducer from './slices/document/machineDocument';
+import downloadDocumentReducer from './slices/document/downloadDocument';
 
 
 
@@ -181,6 +182,12 @@ export const customerDocumentPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const downloadDocumentPersistConfig = {
+  key: 'downloadDocument',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -206,6 +213,7 @@ const rootReducer = combineReducers({
   fileCategory: persistReducer(fileCategoryPersistConfig, fileCategoryReducer),
   customerDocument: persistReducer(customerDocumentPersistConfig, customerDocumentReducer),
   machineDocument: persistReducer(machineDocumentPersistConfig, machineDocumentReducer),
+  downloadDocument: persistReducer(downloadDocumentPersistConfig, downloadDocumentReducer),
 });
 
 export default rootReducer;
