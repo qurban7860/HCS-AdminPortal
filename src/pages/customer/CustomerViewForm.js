@@ -48,14 +48,19 @@ export default function CustomerViewForm() {
   const navigate = useNavigate();
   const { customer } = useSelector((state) => state.customer);
   // console.log("customer : ",customer)
-  const toggleEdit = () => {
+  // const toggleEdit = () => {
+  //   dispatch(setCustomerEditFormVisibility(true));
+  // };
+
+
+
+const handleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
-  };
+  }
 const onDelete = async () => {
   await dispatch(deleteCustomer(customer._id));
   navigate(PATH_DASHBOARD.customer.list)
-}
-
+  }
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -82,19 +87,13 @@ const onDelete = async () => {
     [customer]
   );
   return (
-    <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={customer?.type !== "SP"? onDelete : null} />
+    <Card sx={{ p: 3 }}>
+      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField
-          sm={12}
-          param=""
-          isActive={defaultValues.isActive}
-          />
-        <ViewFormField
-          sm={6}
-          heading="Name"
-          param={defaultValues?.name}
-        />
+        <Tooltip title="Active">
+          <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        </Tooltip>
+        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
         <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
@@ -105,13 +104,13 @@ const onDelete = async () => {
           sm={6}
           heading="Primary Billing Contact"
           param={defaultValues?.primaryBillingContact?.firstName}
-          secondparam={defaultValues?.primaryBillingContact?.lastName}
+          secondParam={defaultValues?.primaryBillingContact?.lastName}
         />
         <ViewFormField
           sm={6}
           heading="Primary Technical Contact"
           param={defaultValues?.primaryTechnicalContact?.firstName}
-          secondparam={defaultValues?.primaryTechnicalContact?.lastName}
+          secondParam={defaultValues?.primaryTechnicalContact?.lastName}
         />
       </Grid>
 
@@ -126,7 +125,7 @@ const onDelete = async () => {
                 backgroundImage: (theme) =>
                   `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
               }}
-              >
+            >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
                 Address Information
               </Typography>
@@ -159,7 +158,7 @@ const onDelete = async () => {
               backgroundImage: (theme) =>
                 `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
             }}
-            >
+          >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
               Howick Resources
             </Typography>
@@ -169,19 +168,19 @@ const onDelete = async () => {
           sm={6}
           heading="Account Manager"
           param={defaultValues?.accountManager?.firstName}
-          secondparam={defaultValues?.accountManager?.lastName}
+          secondParam={defaultValues?.accountManager?.lastName}
         />
         <ViewFormField
           sm={6}
           heading="Project Manager"
           param={defaultValues?.projectManager?.firstName}
-          secondparam={defaultValues?.projectManager?.lastName}
+          secondParam={defaultValues?.projectManager?.lastName}
         />
         <ViewFormField
           sm={6}
           heading="Suppport Manager"
           param={defaultValues?.supportManager?.firstName}
-          secondparam={defaultValues?.supportManager?.lastName}
+          secondParam={defaultValues?.supportManager?.lastName}
         />
         <ViewFormField />
         {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}

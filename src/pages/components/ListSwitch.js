@@ -14,13 +14,13 @@ ViewFormSWitch.propTypes = {
     useEffect(() => {
         setIsActiveVal(isActive);
     },[isActive])
-    
+
     const handleIsActiveChange = (event) => {
         setIsActiveVal(event.target.checked);
       };
     return (
-      <>
+
           <Switch  checked={isActiveVal || false} onChange={handleIsActiveChange} disabled />
-      </>
+
     )
 }

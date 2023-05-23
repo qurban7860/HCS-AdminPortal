@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
-import { Button, Grid, Stack,Link } from '@mui/material';
+import { Button, Grid, Stack,Link, Tooltip } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 
@@ -28,7 +28,7 @@ const handleCloseConfirm = () => {
           sx={{
             mb: -5,
             // mt:1,
-            mr:2,
+            mr: 3,
             '& .MuiButton-root': {
               minWidth: '32px',
               width: '32px',
@@ -38,42 +38,48 @@ const handleCloseConfirm = () => {
                 background: 'transparent',
               },
             },
+          }}
+        >
+          <Button
+            onClick={() => {
+              handleEdit();
             }}
+            variant="outlined"
+            title="Edit"
             >
-              <Button
-                onClick={() => {
-                  handleEdit();
-                }}
-                variant="outlined"
-                title="Edit"
-                >
-              <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:pencil" />
-              </Button>
-              {/* if not in the profile show this */}
-              {onDelete ? (
-                 <Button
-                onClick={() => {
-                  handleOpenConfirm();
-                }}
-                variant="outlined"
-                color="error"
-                title="Delete"
-                >
-              <Iconify sx={{height: '24px',width: '24px' }} icon="mdi:trash-can-outline" />
-              </Button>
-              ) : ''}
-          </Stack>
-          <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
-          />
+            <Tooltip title="Edit" placement="top" disableFocusListener>
+              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:pencil" />
+            </Tooltip>
+          </Button>
+          {/* if not in the profile show this */}
+          {onDelete ? (
+            <Button
+              onClick={() => {
+                handleOpenConfirm();
+              }}
+              variant="outlined"
+              color="error"
+              title="Delete"
+            >
+              <Tooltip title="Delete" placement="top" disableFocusListener>
+                <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:trash-can-outline" />
+              </Tooltip>
+            </Button>
+          ) : (
+            ''
+          )}
+        </Stack>
+        <ConfirmDialog
+          open={openConfirm}
+          onClose={handleCloseConfirm}
+          title="Delete"
+          content="Are you sure want to delete?"
+          action={
+            <Button variant="contained" color="error" onClick={onDelete}>
+              Delete
+            </Button>
+          }
+        />
       </>
-    )
+    );
 }

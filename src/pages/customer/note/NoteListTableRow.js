@@ -78,28 +78,26 @@ export default function NoteListTableRow({
 
         <TableCell>
           <Stack direction="row" alignItems="center" spacing={2}>
-
             <Link
               noWrap
               color="inherit"
               variant="subtitle2"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
-            >
+              >
               {note}
             </Link>
           </Stack>
         </TableCell>
-
         <TableCell align="false">
           <Label
             variant="soft"
             color={(isDisabled === true && 'error') || 'success'}
             sx={{ textTransform: 'capitalize' }}
-          >
+            >
             {isDisabled === false ? 'false' : true}
           </Label>
-        </TableCell> 
+        </TableCell>
 
         <TableCell>{fDate(createdAt)}</TableCell>
 
@@ -107,8 +105,8 @@ export default function NoteListTableRow({
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
-        </TableCell>  
-      </TableRow> 
+        </TableCell>
+      </TableRow>
 
       <MenuPopover
         open={openPopover}

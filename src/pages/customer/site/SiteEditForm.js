@@ -41,11 +41,11 @@ export default function SiteEditForm() {
   const { contacts } = useSelector((state) => state.contact);
   const [countryVal, setCountryVal] = useState("")
   const dispatch = useDispatch();
-  
+
   const { enqueueSnackbar } = useSnackbar();
   const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const numberRegExp = /^[0-9]+$/;
-  
+
   const [phone, setPhone] = useState('')
   const [fax, setFaxVal] = useState('')
   const [billingContactVal , setBillingContactVal] = useState('')
@@ -116,7 +116,7 @@ export default function SiteEditForm() {
       country: site?.address?.country || '',
       isActive: site?.isActive ,
       // primaryBillingContact: site?.primaryBillingContact?._id  === null || site?.primaryBillingContact?._id  === undefined  ? null : site.primaryBillingContact?._id ,
-      // primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id, 
+      // primaryTechnicalContact: site?.primaryTechnicalContact?._id === null || site?.primaryTechnicalContact?._id === undefined  ? null : site.primaryTechnicalContact._id,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [site]
@@ -143,7 +143,7 @@ export default function SiteEditForm() {
     }
   }, [site, reset, defaultValues]);
 
-  const toggleCancel = () => 
+  const toggleCancel = () =>
   {
     dispatch(setSiteEditFormVisibility(false));
   };
@@ -213,19 +213,14 @@ export default function SiteEditForm() {
 
                 {/* <RHFTextField name="phone" label="Phone" /> */}
                 <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
-                
+
                 {/* <RHFTextField name="fax" label="Fax" /> */}
                 <MuiTelInput value={fax} name='fax' label="Fax" flagSize="medium"  onChange={handleFaxChange} forceCallingCode defaultCountry="NZ"/>
 
                 <RHFTextField name="email" label="Email" />
 
                 <RHFTextField name="website" label="Website" />
-
-
-              
               </Box>
-
-
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Address Details
@@ -272,7 +267,7 @@ export default function SiteEditForm() {
                       if(newValue){
                       setCountryVal(newValue);
                       }
-                      else{ 
+                      else{
                       setCountryVal("");
                       }
                     }}
@@ -298,7 +293,7 @@ export default function SiteEditForm() {
                 />
 
                 <RHFTextField name="lat" label="Latitude" />
-                
+
                 <RHFTextField name="long" label="Longitude" />
 
               </Box>
@@ -315,7 +310,7 @@ export default function SiteEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <Autocomplete 
+                <Autocomplete
                   // freeSolo
                   value={billingContactVal || null}
                   options={contacts}
@@ -325,7 +320,7 @@ export default function SiteEditForm() {
                     if(newValue){
                       setBillingContactVal(newValue);
                     }
-                    else{ 
+                    else{
                       setBillingContactVal("");
                     }
                   }}
@@ -335,7 +330,7 @@ export default function SiteEditForm() {
                   ChipProps={{ size: 'small' }}
                 />
 
-                <Autocomplete 
+                <Autocomplete
                   // freeSolo
                   value={technicalContactVal || null}
                   options={contacts}
@@ -345,7 +340,7 @@ export default function SiteEditForm() {
                     if(newValue){
                       setTechnicalContactVal(newValue);
                     }
-                    else{ 
+                    else{
                       setTechnicalContactVal("");
                     }
                   }}

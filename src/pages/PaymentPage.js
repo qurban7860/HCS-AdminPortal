@@ -12,8 +12,6 @@ export default function PaymentPage() {
   const isDesktop = useResponsive('up', 'md');
 
   return (
-    <>
-
       <Container
         sx={{
           pt: 15,
@@ -57,6 +55,5 @@ export default function PaymentPage() {
           </Grid>
         </Grid>
       </Container>
-    </>
   );
 }

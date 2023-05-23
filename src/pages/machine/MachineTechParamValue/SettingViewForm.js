@@ -99,7 +99,7 @@ export default function SettingViewForm({ currentSetting = null }) {
         />
         <ViewFormField />
         {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
-        <ViewFormAudit defaultValues={defaultValues} />
+        <ViewFormAudit defaultValues={defaultValues}  />
       </Grid>
     </Grid>
   );

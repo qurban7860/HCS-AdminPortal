@@ -34,7 +34,7 @@ const slice = createSlice({
     setCustomerEditFormVisibility(state, action){
       state.customerEditFormFlag = action.payload;
     },
-    
+
     // RESET CUSTOMER
     resetCustomer(state){
       state.customer = {};
@@ -73,7 +73,6 @@ const slice = createSlice({
       state.customer = action.payload;
       state.initial = true;
     },
-
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -160,7 +159,7 @@ export function deleteCustomer(id) {
     try {
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${id}`,
       {
-        isArchived: true, 
+        isArchived: true,
       });
       dispatch(slice.actions.setResponseMessage(response.data));
       // state.responseMessage = response.data;
@@ -197,60 +196,60 @@ export function addCustomer(params) {
         // params.accountManager ? data.accountManager = params.accountManager : '';
 
         if(params.accountManager !== "null" && params.accountManager !== "undefined") {
-          data.accountManager = params.accountManager;        
+          data.accountManager = params.accountManager;
         }
 
         // params.projectManager ? data.projectManager = params.projectManager : '';
         if(params.projectManager !== "null" && params.projectManager !== "undefined"){
-          data.projectManager = params.projectManager;        
+          data.projectManager = params.projectManager;
         }
 
         // params.supportManager ? data.supportManager = params.supportManager : '';
         if(params.supportManager !== "null" && params.supportManager !== "undefined"){
-          data.supportManager = params.supportManager;        
+          data.supportManager = params.supportManager;
         }
 
         // params.phone ? data.phone = params.supportManager : '';
         if(params.phone){
-          data.mainSite.phone = params.phone;        
+          data.mainSite.phone = params.phone;
         }
 
         // params.email ? data.email = params.email : '';
         if(params.email){
-          data.mainSite.email = params.email;        
+          data.mainSite.email = params.email;
         }
 
         if(params.fax){
-          data.mainSite.fax = params.fax;        
+          data.mainSite.fax = params.fax;
         }
 
         if(params.website){
-          data.mainSite.website = params.website;        
+          data.mainSite.website = params.website;
         }
 
         if(params.street){
-          data.mainSite.address.street = params.street;        
+          data.mainSite.address.street = params.street;
         }
 
         if(params.suburb){
-          data.mainSite.address.suburb = params.suburb;        
+          data.mainSite.address.suburb = params.suburb;
         }
 
         if(params.city){
-          data.mainSite.address.city = params.city;        
+          data.mainSite.address.city = params.city;
         }
 
         if(params.postcode){
-          data.mainSite.address.postcode = params.postcode;        
+          data.mainSite.address.postcode = params.postcode;
         }
 
         if(params.region){
-          data.mainSite.address.region = params.region;        
+          data.mainSite.address.region = params.region;
         }
 
         if(params.country){
-          data.mainSite.address.country = params.country;        
-        }        
+          data.mainSite.address.country = params.country;
+        }
 
         // Billing Contact Information Start
         if(params.billingFirstName){
@@ -293,15 +292,15 @@ export function addCustomer(params) {
           technicalContact.email = params.technicalContactEmail;
         }
         // Technical Contact Information End
-        
+
         if(!_.isEmpty(billingContact)){
           data.billingContact = billingContact;
           if(params.sameContactFlag){
             console.log('same contact');
             data.technicalContact = billingContact;
           }
-        }    
-        
+        }
+
         if(!params.sameContactFlag && !_.isEmpty(technicalContact)){
           data.technicalContact = technicalContact;
         }
@@ -337,9 +336,9 @@ export function updateCustomer(params) {
         data.mainSite = null;
       }
       if(params.accountManager !== "null" && params.accountManager !== null){
-        data.accountManager = params.accountManager;       
+        data.accountManager = params.accountManager;
       }else{
-        data.accountManager = null;        
+        data.accountManager = null;
       }
       if(params.projectManager !== "null" && params.projectManager !== null){
         data.projectManager = params.projectManager;
@@ -352,14 +351,14 @@ export function updateCustomer(params) {
         data.supportManager = null;
       }
       if(params.primaryBillingContact !== "null" && params.primaryBillingContact !== null){
-        data.primaryBillingContact = params.primaryBillingContact;        
+        data.primaryBillingContact = params.primaryBillingContact;
       }else{
-        data.primaryBillingContact = null;   
+        data.primaryBillingContact = null;
       }
       if(params.primaryTechnicalContact !== "null" && params.primaryTechnicalContact !== null){
-        data.primaryTechnicalContact = params.primaryTechnicalContact;        
+        data.primaryTechnicalContact = params.primaryTechnicalContact;
       }else{
-        data.primaryTechnicalContact = null;  
+        data.primaryTechnicalContact = null;
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
         data

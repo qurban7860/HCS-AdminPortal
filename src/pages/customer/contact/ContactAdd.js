@@ -15,21 +15,19 @@ export default function ContactAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
-      <Container maxWidth={themeStretch ? false : 'lg'}>
-        <CustomBreadcrumbs
-          heading="Create a new Contact"
-          links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            {
-              name: 'Contact',
-              href: PATH_DASHBOARD.contact.list,
-            },
-            { name: 'New Contact' },
-          ]}
-        />
-        <ContactAddForm />
-      </Container>
-    </>
+    <Container maxWidth={themeStretch ? false : 'lg'}>
+      <CustomBreadcrumbs
+        heading="Create a new Contact"
+        links={[
+          { name: 'Dashboard', href: PATH_DASHBOARD.root },
+          {
+            name: 'Contact',
+            href: PATH_DASHBOARD.contact.list,
+          },
+          { name: 'New Contact' },
+        ]}
+      />
+      <ContactAddForm />
+    </Container>
   );
 }

@@ -166,7 +166,7 @@ export default function CustomerContactList() {
                 // onChange={handleChange(index)}
                 sx={{ borderTop: borderTopVal, }}
                 >
-                <AccordionSummary 
+                <AccordionSummary
                  aria-controls="panel1a-content"
                  focusVisible={false}
                  sx={{ cursor: 'unset !important' }}
@@ -177,9 +177,9 @@ export default function CustomerContactList() {
                   {index !== activeIndex ? (
                     <Grid container spacing={1}>
                       <Grid item xs={12} sm={6} md={2} >
-                        {customerMachine?.serialNo && 
-                          <Link 
-                          onClick={()=>{ 
+                        {customerMachine?.serialNo &&
+                          <Link
+                          onClick={()=>{
                             setDescriptionExpanded(false);
                             setOpenMachine(true);
                             setMachineData(customerMachine)
@@ -267,7 +267,7 @@ export default function CustomerContactList() {
                 </Button>)}
             </Typography>}
           </Grid> */}
-          
+
         </Grid>
         <Grid item container sx={{ px: 2, pb: 3 }}>
           <Grid item container sx={{ py: '2rem' }}>

@@ -102,7 +102,7 @@ export default function CustomerListTableRow({
             <Link
               noWrap
               color="inherit"
-              variant="body1"
+              variant="body2"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >

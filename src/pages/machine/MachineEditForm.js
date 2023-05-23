@@ -43,11 +43,8 @@ export default function MachineEditForm() {
 
   const { machine } = useSelector((state) => state.machine);
   const { users } = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
   const { spContacts } = useSelector((state) => state.contact);
   const { machines} = useSelector((state) => state.machine);
@@ -165,8 +162,6 @@ useLayoutEffect(() => {
     margin: theme.spacing(0.5),
   }));
 
-
-
   useEffect(() => {
     if (machine) {
       reset(defaultValues);
@@ -174,7 +169,7 @@ useLayoutEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [machine]);
 
-  const toggleCancel = () => 
+  const toggleCancel = () =>
     {
       dispatch(setMachineEditFormVisibility(false));
     };
@@ -237,12 +232,10 @@ const handleKeyPress = (e) => {
 		setCurrTag(e.target.value);
   };
 
-
-//   const toggleCancel = () => 
+//   const toggleCancel = () =>
 //     {
 //       dispatch(setMachineEditFormVisibility(false));
 //     };
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -267,7 +260,7 @@ const handleKeyPress = (e) => {
                     // setSupplierVal(newValue.supplier);
                     // setModelVal(newValue.machineModel);
                   }
-                  else{          
+                  else{
                     setParMachineVal("");
                     setParMachSerVal("");
                     // setSupplierVal("");
@@ -289,7 +282,7 @@ const handleKeyPress = (e) => {
                 options={machines}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue !== null){
                     // setParMachineVal(newValue);
@@ -297,7 +290,7 @@ const handleKeyPress = (e) => {
                     // setSupplierVal(newValue.supplier);
                     // setModelVal(newValue.machineModel);
                   }
-                  else{          
+                  else{
                     // setParMachineVal("");
                     // setParMachSerVal("");
                     // setSupplierVal("");
@@ -309,7 +302,7 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params}  label="Previous Machine" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
                 ChipProps={{ size: 'small' }}
               />
-              
+
             </Box>
             <Box  rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <Autocomplete
@@ -318,12 +311,12 @@ const handleKeyPress = (e) => {
                 options={suppliers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
-                 
+
                 onChange={(event, newValue) => {
                 if(newValue){
                   setSupplierVal(newValue);
                   }
-                  else{ 
+                  else{
                   setSupplierVal("");
                   }
                 }}
@@ -332,19 +325,19 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params}  label="Supplier" />}
                 ChipProps={{ size: 'small' }}
               />
-              
+
               <Autocomplete
                 // freeSolo
                 value={modelVal || null}
                 options={machineModels}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setModelVal(newValue);
                   }
-                  else{ 
+                  else{
                   setModelVal("");
                   }
                 }}
@@ -353,19 +346,19 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
               />
-              
+
               <Autocomplete
                 // freeSolo
                 value={statusVal || null}
                 options={machinestatuses}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setStatusVal(newValue);
                   }
-                  else{ 
+                  else{
                   setStatusVal("");
                   }
                 }}
@@ -382,12 +375,12 @@ const handleKeyPress = (e) => {
                 options={customers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setCustomerVal(newValue);
                   }
-                  else{ 
+                  else{
                   setCustomerVal("");
                   }
                 }}
@@ -398,19 +391,19 @@ const handleKeyPress = (e) => {
               />
             </Box>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
-            
-              <Autocomplete 
+
+              <Autocomplete
                 // freeSolo
                 value={installVal || null}
                 options={sites}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setInstallVal(newValue);
                   }
-                  else{ 
+                  else{
                   setInstallVal("");
                   }
                 }}
@@ -419,18 +412,18 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={billingVal || null}
                 options={sites}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setBillingVal(newValue);
                   }
-                  else{ 
+                  else{
                   setBillingVal("");
                   }
                 }}
@@ -446,18 +439,18 @@ const handleKeyPress = (e) => {
               </Box>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={accoVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setAccoManVal(newValue);
                   }
-                  else{ 
+                  else{
                   setAccoManVal("");
                   }
                 }}
@@ -466,18 +459,18 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={projVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setProjManVal(newValue);
                   }
-                  else{ 
+                  else{
                   setProjManVal("");
                   }
                 }}
@@ -486,18 +479,18 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={suppVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-                 
+
                 onChange={(event, newValue) => {
                   if(newValue){
                   setSuppManVal(newValue);
                   }
-                  else{ 
+                  else{
                   setSuppManVal("");
                   }
                 }}
@@ -506,7 +499,7 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params} label="Support Manager" />}
                 ChipProps={{ size: 'small' }}
               />
-            
+
               </Box>
               <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }}  >
                 <RHFTextField name="description" label="Description" minRows={8} multiline sx={{ my:-3}}/>
@@ -515,7 +508,7 @@ const handleKeyPress = (e) => {
 
                 {/* <Card
                       sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
-                      {chipData.map((data,index) => 
+                      {chipData.map((data,index) =>
                           <ListItem key={index}>
                             <Chip
                               label={data}
@@ -523,16 +516,25 @@ const handleKeyPress = (e) => {
                             />
                           </ListItem>
                        )}
-                       <TextField name="tag" sx={{p:1}}   variant="standard"  
-                        InputProps={{disableUnderline: true,}} 
+                       <TextField name="tag" sx={{p:1}}   variant="standard"
+                        InputProps={{disableUnderline: true,}}
                         placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
                     </Card> */}
-                  
+
                     <RHFSwitch name="isActive" labelPlacement="start" label={
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
-                      />
+                        <Typography
+                                  variant="subtitle2"
+                                  sx={{
+                                        mx: 0,
+                                        width: 1,
+                                        justifyContent: 'space-between',
+                                        mb: 0.5,
+                                        color: 'text.secondary'
+                                      }}> Active
+                        </Typography>
+                        }/>
                 {/* -------------------------end add chips------------------------- */}
-                
+
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
