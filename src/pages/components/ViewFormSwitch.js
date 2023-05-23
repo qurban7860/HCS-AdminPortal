@@ -33,9 +33,8 @@ ViewFormSWitch.propTypes = {
         <Typography
           variant="overline"
           sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
-        >
-          {/* {isActive ? 'Active' : 'Inactive'} */}
-          {heading ? 'Customer Access' : 'Active'}
+         >
+          {heading || ''}
         </Typography>
         {customerAccess ? (
           <Switch

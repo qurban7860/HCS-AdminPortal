@@ -32,6 +32,7 @@ import FormProvider, {
   RHFSwitch
 
 } from '../../components/hook-form';
+import ViewFormSWitch from '../components/ViewFormSwitch';
 
 
 // ----------------------------------------------------------------------
@@ -159,7 +160,7 @@ export default function CustomerEditForm() {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
-                >
+              >
                 <RHFTextField name="name" label="Customer Name" />
 
                 <RHFTextField name="tradingName" label="Trading Name" />
@@ -376,26 +377,8 @@ export default function CustomerEditForm() {
                       </option>
                     ))}
                 </RHFSelect> */}
-
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                      >
-                      Active
-                    </Typography>
-                  }
-                />
               </Box>
+              <ViewFormSWitch heading="Active" isActive="isActive"/>
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

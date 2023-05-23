@@ -162,70 +162,139 @@ useEffect(()=>{
 
   return (
     <>
-        {!customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility &&
-        <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{  py: 2 }} >
-          <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
-              <Grid item xs={12} sm={8}>
-                {!customerDocumentFormVisibility &&  <TextField fullWidth value={filterName} onChange={handleFilterName} placeholder="Search..." InputProps={{ startAdornment: (
-                <InputAdornment position="start">
-                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                </InputAdornment> ),}}/>}
+      {!customerDocumentEditFormVisibility &&
+        !documentNameFormVisibility &&
+        !fileCategoryFormVisibility && (
+          <Stack
+            spacing={2}
+            alignItems="center"
+            direction={{ xs: 'column', md: 'row' }}
+            sx={{ py: 2 }}
+          >
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
+                <Grid item xs={12} sm={8}>
+                  {!customerDocumentFormVisibility && (
+                    <TextField
+                      fullWidth
+                      value={filterName}
+                      onChange={handleFilterName}
+                      placeholder="Search..."
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  )}
+                </Grid>
+                {isFiltered && (
+                  <Button
+                    color="error"
+                    sx={{ flexShrink: 0, ml: 1 }}
+                    onClick={handleResetFilter}
+                    startIcon={<Iconify icon="eva:trash-2-outline" />}
+                  >
+                    {' '}
+                    Clear{' '}
+                  </Button>
+                )}
               </Grid>
-              {isFiltered && (<Button color="error" sx={{ flexShrink: 0 , ml:1}} onClick={handleResetFilter} startIcon={<Iconify icon="eva:trash-2-outline" />} > Clear </Button>)}
+              <Grid item xs={8} sm={3}>
+                <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
+                  <Button
+                    sx={{ p: 1 }}
+                    onClick={toggleChecked}
+                    variant="contained"
+                    startIcon={
+                      !customerDocumentFormVisibility ? (
+                        <Iconify icon="eva:plus-fill" />
+                      ) : (
+                        <Iconify icon="eva:minus-fill" />
+                      )
+                    }
+                  >
+                    New Document
+                  </Button>
+                </Stack>
+              </Grid>
             </Grid>
-            <Grid item xs={8} sm={3}>
-              <Stack alignItems="flex-end" sx={{my: "auto" }}>
-                <Button sx={{p:1}} onClick={toggleChecked} variant="contained" startIcon={!customerDocumentFormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}>New Document</Button>
-              </Stack>
-            </Grid>
-          </Grid>
-        </Stack>}
+          </Stack>
+        )}
 
-                  {!customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility &&  customerDocumentFormVisibility && <DocumentAddForm/>}
-                  {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && fileCategoryFormVisibility && <FileCategoryAddForm/>}
-                  {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && documentNameFormVisibility && !fileCategoryFormVisibility && <DocumentNameAddForm/>}
-                  {customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && <DocumentEditForm/>}
+      {!customerDocumentEditFormVisibility &&
+        !documentNameFormVisibility &&
+        !fileCategoryFormVisibility &&
+        customerDocumentFormVisibility && <DocumentAddForm />}
+      {!customerDocumentEditFormVisibility &&
+        !customerDocumentFormVisibility &&
+        !documentNameFormVisibility &&
+        fileCategoryFormVisibility && <FileCategoryAddForm />}
+      {!customerDocumentEditFormVisibility &&
+        !customerDocumentFormVisibility &&
+        documentNameFormVisibility &&
+        !fileCategoryFormVisibility && <DocumentNameAddForm />}
+      {customerDocumentEditFormVisibility &&
+        !customerDocumentFormVisibility &&
+        !documentNameFormVisibility &&
+        !fileCategoryFormVisibility && <DocumentEditForm />}
 
-          {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
-        <Card sx={{mt:2}}>
-          {!customerDocumentEditFormVisibility && !customerDocumentFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && dataFiltered.map((document, index) => {
+      {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
+      <Card sx={{ mt: 2 }}>
+        {!customerDocumentEditFormVisibility &&
+          !customerDocumentFormVisibility &&
+          !documentNameFormVisibility &&
+          !fileCategoryFormVisibility &&
+          dataFiltered.map((document, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return(
-            <Accordion key={document._id} expanded={expanded === index} onChange={handleChange(index)} sx={ {borderTop: borderTopVal}}>
-              <AccordionSummary expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />} onClick={()=>handleAccordianClick(index)} >
-                { index !==  activeIndex ?
-                <Grid container >
-                <Grid item xs={12} sm={4} md={2.4}>
-                    {document?.name || "" }
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={2.4}>
-                    {document?.category?.name || ""}
-                  </Grid>
-                  <Grid item xs={12} sm={4} md={2.4}>
-                    {document?.documentName?.name || "" }
-                  </Grid>
-                  {/* <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
+            return (
+              <Accordion
+                key={document._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{ borderTop: borderTopVal }}
+              >
+                <AccordionSummary
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  onClick={() => handleAccordianClick(index)}
+                >
+                  {index !== activeIndex ? (
+                    <Grid container>
+                      <Grid item xs={12} sm={4} md={2.4}>
+                        {document?.name || ''}
+                      </Grid>
+                      <Grid item xs={12} sm={4} md={2.4}>
+                        {document?.category?.name || ''}
+                      </Grid>
+                      <Grid item xs={12} sm={4} md={2.4}>
+                        {document?.documentName?.name || ''}
+                      </Grid>
+                      {/* <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
                     <ListSwitch isActive={document?.customerAccess} />
                   </Grid> */}
-                  <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
-                    {fDate(document?.createdAt || "")}
-                  </Grid>
-                <Divider />
-                </Grid>
-                : null }
-              </AccordionSummary>
-              <AccordionDetails sx={{mt:-5, }}>
-                <DocumentViewForm currentCustomerDocument={document} sx={{pt:-2}}/>
-              </AccordionDetails>
-            </Accordion>
+                      <Grid
+                        item
+                        xs={12}
+                        display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
+                        md={2.4}
+                      >
+                        {fDate(document?.createdAt || '')}
+                      </Grid>
+                      <Divider />
+                    </Grid>
+                  ) : null}
+                </AccordionSummary>
+                <AccordionDetails sx={{ mt: -5 }}>
+                  <DocumentViewForm currentCustomerDocument={document} sx={{ pt: -2 }} />
+                </AccordionDetails>
+              </Accordion>
+            );
+          })}
 
-          )})}
-
-          {isNotFound && <EmptyContent title="No Data"/>}
-
-
-        </Card>
+        <TableNoData isNotFound={isNotFound} />
+      </Card>
 
       {/* <ConfirmDialog
         open={openConfirm}
