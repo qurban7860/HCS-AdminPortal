@@ -120,7 +120,9 @@ export default function MachineSettingList() {
   };
 
 useEffect(()=>{
-  getWithNoMsg(dispatch, getCustomerDocuments(customer._id), enqueueSnackbar);
+  if(customer?._id){
+    getWithNoMsg(dispatch, getCustomerDocuments(customer?._id), enqueueSnackbar);
+  }
   dispatch(setCustomerDocumentEditFormVisibility(false))
   dispatch(setCustomerDocumentFormVisibility(false))
   dispatch(setFileCategoryFormVisibility(false))

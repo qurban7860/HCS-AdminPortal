@@ -87,7 +87,7 @@ useEffect(()=>{
 },[machineDocument])
 
   const EditMachineDocummentSchema = Yup.object().shape({
-    name: Yup.string().max(50),
+    displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     // image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
@@ -95,7 +95,7 @@ useEffect(()=>{
 
   const defaultValues = useMemo(
     () => ({
-      name: nameVal,
+      displayName: nameVal,
       description: machineDocument?.description || "",
       // image: null,
       isActive: machineDocument?.isActive,
@@ -191,7 +191,7 @@ useEffect(()=>{
               <FormHeading heading='Edit Document'/>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
-              <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
+              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
 
               <Grid item xs={12} sm={12} sx={{display:'flex'}}>
                   <Grid item xs={12} sm={6} sx={{display:'flex'}}>

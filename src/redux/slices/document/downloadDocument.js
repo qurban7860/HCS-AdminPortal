@@ -55,7 +55,7 @@ export const {
 export function getDocumentDownload(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/download/{documentId}` );
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/download/${documentId}` );
     return response;
   };
 }

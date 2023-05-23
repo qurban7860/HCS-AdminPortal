@@ -126,8 +126,8 @@ export function addCustomerDocument(customerId,params) {
           // if(params?.customerAccess){
             formData.append('customerAccess', params.customerAccess);
           // }
-          if(params?.name){
-            formData.append('name', params?.name);
+          if(params?.displayName){
+            formData.append('displayName', params?.displayName);
           }
           if(params?.description){
             formData.append('description', params?.description);
@@ -144,7 +144,6 @@ export function addCustomerDocument(customerId,params) {
           if(params?.isActive){
             formData.append('isActive', params?.isActive);
           }
-
 // console.log("formData : ",params?.image);
       const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData,{
         headers: {
@@ -162,13 +161,11 @@ export function updateCustomerDocument(customerDocumentId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
       const data = { 
-                    name: params?.name,
+                    displayName: params?.displayName,
                     customerAccess: params.customerAccess,
                     isActive: params.isActive,
                     description: params.description,
                   };
-
-
           if(params?.category){
             data.category = params?.category
           }
@@ -195,12 +192,12 @@ export function updateCustomerDocument(customerDocumentId,params) {
 export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
       {
         params: {
           isArchived: false,
-          customer:customerId
+          customer:customerId,
+          machine: null,
         }
       }
       );

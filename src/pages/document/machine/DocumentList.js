@@ -102,7 +102,9 @@ export default function MachineSettingList() {
    }
   };
 useEffect(() => {
-    dispatch(getMachineDocuments(machine._id));
+    if(machine?._id){
+      dispatch(getMachineDocuments(machine?._id));
+    }
     dispatch(setMachineDocumentEditFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(false))
     dispatch(setFileCategoryFormVisibility(false))
