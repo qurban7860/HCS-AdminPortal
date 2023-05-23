@@ -27,6 +27,7 @@ import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import AddFormButtons from '../components/AddFormButtons';
 import { getWithMsg, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import ViewFormSWitch from '../components/ViewFormSwitch';
 
 
 // ----------------------------------------------------------------------
@@ -51,7 +52,6 @@ if(securityUser?.roles){
   const [ contactVal, setContactVal ] = useState('');
   const [ valid, setValid ] = useState(true);
   const [phone, setPhone] = useState('')
-  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -139,16 +139,15 @@ useEffect(() => {
       setPhone(newValue)
     }
   }
-  
+
   const onSubmit = async (data) => {
     console.log("data : " , data)
-
       data.customer = customerVal?._id || null
       data.contact = contactVal?._id || null
       if(phone && phone.length > 7 ){
         data.phone = phone
       }else{
-        data.phone = "" 
+        data.phone = ""
       }
       if(name){
         data.name = name ;
@@ -166,7 +165,7 @@ useEffect(() => {
     //     dispatch(updateSecurityUser(data,securityUser._id))
     //     .then(res => {
     //     console.log("res : " , res)
-    //     if(regEx.test(res.status)){ 
+    //     if(regEx.test(res.status)){
     //       reset();
     //       enqueueSnackbar(res.statusText)
     //       dispatch(setSecurityUserEditFormVisibility(false))
@@ -290,7 +289,7 @@ useEffect(() => {
               }}
             >
 
-            <Autocomplete 
+            <Autocomplete
                 // freeSolo
                 required
                 value={customerVal || null}
@@ -303,7 +302,7 @@ useEffect(() => {
                   setContactVal("");
                   dispatch(resetContacts());
                   }
-                  else{ 
+                  else{
                   setCustomerVal("");
                   setContactVal("");
                   setName("");
@@ -323,7 +322,7 @@ useEffect(() => {
                   </div>
                 )}
               </Autocomplete>
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={ contactVal || null}
                 options={contacts}
@@ -336,7 +335,7 @@ useEffect(() => {
                   setPhone(newValue.phone)
                   setEmail(newValue.email);
                   }
-                  else{ 
+                  else{
                   setContactVal("");
                   setName("");
                   setPhone("")
@@ -387,7 +386,8 @@ useEffect(() => {
               />
             </Box>
             <Grid item md={12}>
-              <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+              <ViewFormSWitch heading="Active" isActive={securityUser?.isActive} />
+              {/* <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
             </Grid>
             <Stack  sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>

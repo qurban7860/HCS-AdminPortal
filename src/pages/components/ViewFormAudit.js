@@ -10,19 +10,21 @@ const {createdByFullName,createdAt,createdIP,updatedByFullName,updatedAt,updated
   const created =[createdByFullName,createdAt,createdIP]
   const updated =[updatedByFullName,updatedAt,updatedIP]
     return (
-      <>
-        <Grid container item md={12}  sx={{  overflowWrap: "break-word",display:'flex'}}>
-            <Grid item xs={12} sm={6} >
-                <Typography paragraph variant="body2" sx={{ px:2, color: 'text.disabled' }}>
-                  created by: {createdByFullName || ''}, {fDateTime(createdAt) || '' }, {createdIP || ''}
-                </Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} >
-                <Typography variant="body2" sx={{px:2,  color: 'text.disabled' }}>
-                  updated by: {updatedByFullName || ''}, {fDateTime(updatedAt) || ''}, {updatedIP || ''}
-                </Typography>
-            </Grid>
+      <Grid container item md={12} sx={{ overflowWrap: 'break-word', display: 'flex' }}>
+        <Grid item xs={12} sm={6}>
+          <Typography paragraph variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
+            created by: {createdByFullName ? `${createdByFullName} / ` : ''}{' '}
+            {fDateTime(createdAt) ? `${fDateTime(createdAt)} / ` : ''}
+            {createdIP ? `${createdIP} ` : ''}
+          </Typography>
         </Grid>
-      </>
-    )
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
+            updated by: {updatedByFullName ? `${updatedByFullName} / ` : ''}
+            {fDateTime(updatedAt) ? `${fDateTime(updatedAt)} / ` : ''}
+            {updatedIP ? `${updatedIP}` : ''}
+          </Typography>
+        </Grid>
+      </Grid>
+    );
 }

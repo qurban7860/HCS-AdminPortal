@@ -81,16 +81,15 @@ export default function NoteViewForm({currentNote = null}) {
     <>
             <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container >
-            <ViewFormField sm={12}   isActive={defaultValues.isActive}/>
             <ViewFormField sm={6}   heading='Site'       param={defaultValues?.site_name} />
             <ViewFormField sm={6}   heading='Contact'    param={defaultValues?.contact_firstName} secondparam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName:""}/>
             <ViewFormField sm={12}  heading='Note'       param={defaultValues?.note}/>
-            
+            <ViewFormField />
             {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
-            <Grid container sx={{mt:1}}>
+            <Grid container>
               <ViewFormAudit defaultValues={defaultValues}/>
             </Grid>
-            
+
       </Grid>
     </>
   );

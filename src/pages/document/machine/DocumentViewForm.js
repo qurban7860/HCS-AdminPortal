@@ -15,7 +15,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
-import ViewFormSWitch from '../../components/ViewFormSwitch';
+import ViewFormSWitch from '../../components/ViewFormSwitch'
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -31,7 +31,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
 // console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
 
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
   const onDelete = async () => {
     await dispatch(deleteMachineDocument(currentMachineDocument._id));
@@ -86,8 +86,9 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
           </Grid>
           {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ? 
-          <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null}
+
+          {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ?
+          <Image alt={defaultValues.name} src={currentMachineDocument?.path} /> : null}
 
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
           <Grid container sx={{ mt: '1rem' }}>

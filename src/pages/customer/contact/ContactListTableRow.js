@@ -100,7 +100,7 @@ export default function ContactListTableRow({
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </TableRow> 
+      </TableRow>
 
       <MenuPopover
         open={openPopover}

@@ -160,7 +160,6 @@ export default function SecurityUserViewForm() {
               </Button>
             }
           />
-
           <Grid container>
             <ViewFormField sm={12} isActive={defaultValues.isActive} />
             <ViewFormField

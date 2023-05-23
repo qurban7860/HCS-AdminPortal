@@ -32,6 +32,7 @@ import FormProvider, {
   RHFSwitch
 
 } from '../../components/hook-form';
+import ViewFormSWitch from '../components/ViewFormSwitch';
 
 
 // ----------------------------------------------------------------------
@@ -41,7 +42,6 @@ export default function CustomerEditForm() {
 
   const { error, customer } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
-
   const { contacts, spContacts } = useSelector((state) => state.contact);
   const [accountManVal, setAccountManVal] = useState('')
   const [supportManVal, setSupportManVal] = useState('')
@@ -78,10 +78,10 @@ export default function CustomerEditForm() {
       tradingName: customer?.tradingName || '',
       // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
       // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
-      // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id, 
+      // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id,
       // supportManager: customer?.supportManager?._id === null || customer?.supportManager?._id === undefined  ? null : customer.supportManager?._id,
       // primaryBillingContact: customer?.primaryBillingContact?._id  === null || customer?.primaryBillingContact?._id  === undefined  ? null : customer.primaryBillingContact?._id ,
-      // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id, 
+      // primaryTechnicalContact: customer?.primaryTechnicalContact?._id === null || customer?.primaryTechnicalContact?._id === undefined  ? null : customer.primaryTechnicalContact._id,
       isActive: customer?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -122,43 +122,19 @@ export default function CustomerEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [customer]);
 
-  const toggleCancel = () => 
+  const toggleCancel = () =>
     {
       dispatch(setCustomerEditFormVisibility(false));
     };
 
   const onSubmit = async (data) => {
     // console.log("customer : ",data);
-    if(siteVal){
-      data.mainSite = siteVal._id
-    }else{
-      data.mainSite = null;
-    }
-    if(accountManVal){
-      data.accountManager = accountManVal._id
-    }else{
-      data.accountManager = null;
-    }
-    if(projectManVal){
-      data.projectManager = projectManVal._id
-    }else{
-      data.projectManager = null;
-    }
-    if(supportManVal){
-      data.supportManager = supportManVal._id
-    }else{
-      data.supportManager = null;
-    }
-    if(billingContactVal){
-      data.primaryBillingContact = billingContactVal._id;
-    }else{
-      data.primaryBillingContact = null;
-    }
-    if(technicalContactVal){
-      data.primaryTechnicalContact= technicalContactVal._id;
-    }else{
-      data.primaryTechnicalContact= null;
-    }
+      data.mainSite = siteVal?._id || null;
+      data.accountManager = accountManVal?._id || null;
+      data.projectManager = projectManVal?._id || null;
+      data.supportManager = supportManVal?._id || null;
+      data.primaryBillingContact = billingContactVal?._id || null;
+      data.primaryTechnicalContact= technicalContactVal?._id || null;
     try {
       dispatch(updateCustomer(data));
       reset();
@@ -169,7 +145,6 @@ export default function CustomerEditForm() {
       console.error(err.message);
     }
   };
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -190,79 +165,29 @@ export default function CustomerEditForm() {
 
                 <RHFTextField name="tradingName" label="Trading Name" />
 
-                <Autocomplete 
+                <Autocomplete
                   // freeSolo
                   value={siteVal || null}
                   options={sites}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
-                  getOptionLabel={(option) => `${option.name ? option.name :''}`}
+                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
-                    if(newValue){
+                    if (newValue) {
                       setSiteVal(newValue);
-                    }
-                    else{ 
-                      setSiteVal("");
+                    } else {
+                      setSiteVal('');
                     }
                   }}
-                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name ? option.name :''}</li>)}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option.name ? option.name : ''}
+                    </li>
+                  )}
                   id="controllable-states-demo"
                   renderInput={(params) => <TextField {...params} label="Main Site" />}
                   ChipProps={{ size: 'small' }}
                 />
-
-              </Box>  
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              > 
-              
-              <Autocomplete 
-                  // freeSolo
-                  value={billingContactVal || null}
-                  options={contacts}
-                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                  getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
-                  onChange={(event, newValue) => {
-                    if(newValue){
-                      setBillingContactVal(newValue);
-                    }
-                    else{ 
-                      setBillingContactVal("");
-                    }
-                  }}
-                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
-                  id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Primary Billing Contact" />}
-                  ChipProps={{ size: 'small' }}
-                />
-
-                <Autocomplete 
-                  // freeSolo
-                  value={technicalContactVal || null}
-                  options={contacts}
-                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                  getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
-                  onChange={(event, newValue) => {
-                    if(newValue){
-                      setTechnicalContactVal(newValue);
-                    }
-                    else{ 
-                      setTechnicalContactVal("");
-                    }
-                  }}
-                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
-                  id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Primary Technical Contact" />}
-                  ChipProps={{ size: 'small' }}
-                />
-
               </Box>
-
               <Box
                 rowGap={3}
                 columnGap={2}
@@ -272,64 +197,156 @@ export default function CustomerEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
+                <Autocomplete
+                  // freeSolo
+                  value={billingContactVal || null}
+                  options={contacts}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  getOptionLabel={(option) =>
+                    `${option.firstName ? option.firstName : ''} ${
+                      option.lastName ? option.lastName : ''
+                    }`
+                  }
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setBillingContactVal(newValue);
+                    } else {
+                      setBillingContactVal('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option.firstName ? option.firstName : ''}{' '}
+                      {option.lastName ? option.lastName : ''}
+                    </li>
+                  )}
+                  id="controllable-states-demo"
+                  renderInput={(params) => (
+                    <TextField {...params} label="Primary Billing Contact" />
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
 
-              <Autocomplete 
-                // freeSolo
-                value={accountManVal || null}
-                options={spContacts}
-                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setAccountManVal(newValue);
+                <Autocomplete
+                  // freeSolo
+                  value={technicalContactVal || null}
+                  options={contacts}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  getOptionLabel={(option) =>
+                    `${option.firstName ? option.firstName : ''} ${
+                      option.lastName ? option.lastName : ''
+                    }`
                   }
-                  else{ 
-                    setAccountManVal("");
-                  }
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setTechnicalContactVal(newValue);
+                    } else {
+                      setTechnicalContactVal('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option.firstName ? option.firstName : ''}{' '}
+                      {option.lastName ? option.lastName : ''}
+                    </li>
+                  )}
+                  id="controllable-states-demo"
+                  renderInput={(params) => (
+                    <TextField {...params} label="Primary Technical Contact" />
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
+              </Box>
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Account Manager" />}
-                ChipProps={{ size: 'small' }}
-              />
-              <Autocomplete 
-                // freeSolo
-                value={projectManVal || null}
-                options={spContacts}
-                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setProjectManVal(newValue);
+              >
+                <Autocomplete
+                  // freeSolo
+                  value={accountManVal || null}
+                  options={spContacts}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  getOptionLabel={(option) =>
+                    `${option.firstName ? option.firstName : ''} ${
+                      option.lastName ? option.lastName : ''
+                    }`
                   }
-                  else{ 
-                    setProjectManVal("");
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setAccountManVal(newValue);
+                    } else {
+                      setAccountManVal('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option.firstName ? option.firstName : ''}{' '}
+                      {option.lastName ? option.lastName : ''}
+                    </li>
+                  )}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                  ChipProps={{ size: 'small' }}
+                />
+                <Autocomplete
+                  // freeSolo
+                  value={projectManVal || null}
+                  options={spContacts}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  getOptionLabel={(option) =>
+                    `${option.firstName ? option.firstName : ''} ${
+                      option.lastName ? option.lastName : ''
+                    }`
                   }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Project Manager" />}
-                ChipProps={{ size: 'small' }}
-              />
-              <Autocomplete 
-                // freeSolo
-                value={supportManVal || null}
-                options={spContacts}
-                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setSupportManVal(newValue);
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setProjectManVal(newValue);
+                    } else {
+                      setProjectManVal('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option.firstName ? option.firstName : ''}{' '}
+                      {option.lastName ? option.lastName : ''}
+                    </li>
+                  )}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                  ChipProps={{ size: 'small' }}
+                />
+                <Autocomplete
+                  // freeSolo
+                  value={supportManVal || null}
+                  options={spContacts}
+                  isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                  getOptionLabel={(option) =>
+                    `${option.firstName ? option.firstName : ''} ${
+                      option.lastName ? option.lastName : ''
+                    }`
                   }
-                  else{ 
-                    setSupportManVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.firstName ? option.firstName :''} {option.lastName ? option.lastName: ''}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Support Manager" />}
-                ChipProps={{ size: 'small' }}
-              />
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setSupportManVal(newValue);
+                    } else {
+                      setSupportManVal('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option.firstName ? option.firstName : ''}{' '}
+                      {option.lastName ? option.lastName : ''}
+                    </li>
+                  )}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                  ChipProps={{ size: 'small' }}
+                />
 
                 {/* <RHFSelect native name="accountManager" label="Account Manager">
                   <option defaultValue value="null" selected >No Account Manager Selected</option>
@@ -363,9 +380,9 @@ export default function CustomerEditForm() {
               </Box>
 
                 { customer?.type !== "SP" ? <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> : null}
-              
+
             </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>

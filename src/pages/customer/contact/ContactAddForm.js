@@ -43,7 +43,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { userId, user } = useAuthContext();
 
   const dispatch = useDispatch();
-  
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -136,7 +136,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       }
   };
 
-  const toggleCancel = () => 
+  const toggleCancel = () =>
     {
       dispatch(setContactFormVisibility(false));
     };
@@ -173,9 +173,9 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
-                
+
               <RHFTextField name="email" label="Email" />
-              
+
               </Box>
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Address Details
@@ -208,7 +208,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                   freeSolo
                   options={countries.map((country) => country.label)}
                   // getOptionLabel={(option) => option.title}
-                  
+
                   ChipProps={{ size: 'small' }}
                 /> */}
                 <RHFAutocomplete
@@ -223,7 +223,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                       if(newValue){
                       setCountryVal(newValue);
                       }
-                      else{ 
+                      else{
                       setCountryVal("");
                       }
                     }}
@@ -252,7 +252,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
             </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-            
+
           </Card>
         </Grid>
       </Grid>

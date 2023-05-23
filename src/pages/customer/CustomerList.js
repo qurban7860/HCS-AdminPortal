@@ -226,8 +226,7 @@ export default function CustomerList() {
           sx={{
             mb: 3,
             height: 160,
-            position: 'relative',
-            // mt: '24px',
+            position: 'relative'
           }}
         >
           <Cover name="Customers" icon="ph:users-light" />
@@ -241,7 +240,7 @@ export default function CustomerList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-          />
+            />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
