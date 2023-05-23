@@ -125,8 +125,8 @@ export function addMachineDocument(customerId , machineId , params) {
             formData.append('customer', customerId);
             formData.append('machine', machineId);
             formData.append('customerAccess', params.customerAccess);
-          if(params?.name){
-            formData.append('name', params?.name);
+          if(params?.displayName){
+            formData.append('displayName', params?.displayName);
           }
           if(params?.description){
             formData.append('description', params?.description);
@@ -158,7 +158,7 @@ export function updateMachineDocument(machineDocumentId, params,machineId) {
     dispatch(slice.actions.startLoading());
     try {
       const data = { 
-        name: params?.name,
+        displayName: params?.displayName,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
         description: params.description,

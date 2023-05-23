@@ -85,7 +85,7 @@ export default function SettingEditForm() {
     setDocumentNameVal(customerDocument?.documentName)
   },[customerDocument])
   const EditSettingSchema = Yup.object().shape({
-    name: Yup.string().max(50),
+    displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     // image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
@@ -93,7 +93,7 @@ export default function SettingEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      name: nameVal,
+      displayName: nameVal,
       description: customerDocument?.description || "",
       // image: null,
       isActive: customerDocument?.isActive,
@@ -128,7 +128,7 @@ console.log("defaultValues : ",defaultValues)
     try {
         data.customer = customer._id
         if(nameVal){
-          data.name = nameVal
+          data.displayName = nameVal
         }
         if(fileCategoryVal){
           data.category = fileCategoryVal._id
@@ -210,7 +210,7 @@ console.log("defaultValues : ",defaultValues)
               <FormHeading heading='Edit Document'/>
               <Box rowGap={3} columnGap={3} display="grid" gridTemplateColumns={{  xs: 'repeat(1, 1fr)',  sm: 'repeat(2, 1fr)', }} >
 
-              <RHFTextField name="name" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
+              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
 
               <Grid item xs={12} sm={12} sx={{display:'flex'}}>
                   <Grid item xs={12} sm={6} sx={{display:'flex'}}>

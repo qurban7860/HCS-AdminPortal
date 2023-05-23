@@ -51,11 +51,12 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:                     currentCustomerDocument?.name || "",
+        displayName :                     currentCustomerDocument?.displayName || "",
         documentName:             currentCustomerDocument?.documentName?.name || "",
         category:                 currentCustomerDocument?.category?.name || "",
         customer:                 currentCustomerDocument?.customer?.name || "",
         customerAccess:           currentCustomerDocument?.customerAccess,
+        isActiveVersion:          currentCustomerDocument?.isActiveVersion,
         documentVersion:          currentCustomerDocument?.documentVersion,
         description:              currentCustomerDocument?.description,
         isActive:                 currentCustomerDocument?.isActive,
@@ -99,7 +100,7 @@ const handleDownload= () => {
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
             <ViewFormField sm={12} isActive={defaultValues.isActive} />
-            <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
             <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
             <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
@@ -110,6 +111,14 @@ const handleDownload= () => {
               </Typography>
               <Typography>
                 <Switch  checked={defaultValues?.customerAccess}  disabled/>
+              </Typography>
+            </Grid>
+            <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Version Status
+              </Typography>
+              <Typography>
+                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
               </Typography>
             </Grid>
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
@@ -124,7 +133,7 @@ const handleDownload= () => {
                 onAbort={handleOpenPreview}
                 component="img"
                 sx={{ m:2 }}
-                alt={defaultValues.name}
+                alt={defaultValues.displayName}
                 src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
                 />
             </Link>:""}

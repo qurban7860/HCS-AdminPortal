@@ -47,11 +47,12 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:                     currentMachineDocument?.name || "",
+        displayName:              currentMachineDocument?.displayName || "",
         documentName:             currentMachineDocument?.documentName?.name || "",
         category:                 currentMachineDocument?.category?.name || "",
         customer:                 currentMachineDocument?.customer?.name,
         customerAccess:           currentMachineDocument?.customerAccess,
+        isActiveVersion:          currentMachineDocument?.isActiveVersion,
         documentVersion:          currentMachineDocument?.documentVersion,
         description:              currentMachineDocument?.description,
         isActive:                 currentMachineDocument?.isActive,
@@ -71,7 +72,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
           <ViewFormField sm={12} isActive={defaultValues.isActive} />
-          <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+          <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
           <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
           <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
           <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
@@ -84,11 +85,19 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
               <Switch  checked={defaultValues?.customerAccess}  disabled/>
             </Typography>
           </Grid>
+          
+          <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
+              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
+              Version Status
+              </Typography>
+              <Typography>
+                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
+              </Typography>
+            </Grid>
           {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
           {currentMachineDocument?.type.startsWith("image")  && currentMachineDocument?.customerAccess === true ? 
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null}
-
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
           <Grid container sx={{ mt: '1rem' }}>
               <ViewFormAudit defaultValues={defaultValues}/>
