@@ -266,7 +266,7 @@ useEffect(()=>{
                   {index !== activeIndex ? (
                     <Grid container>
                       <Grid item xs={12} sm={4} md={2.4}>
-                        {document?.name || ''}
+                        {document?.displayName || ''}
                       </Grid>
                       <Grid item xs={12} sm={4} md={2.4}>
                         {document?.category?.name || ''}
