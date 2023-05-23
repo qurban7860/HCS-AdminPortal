@@ -91,7 +91,7 @@ export default function DocumentAddForm({currentDocument}) {
   },[dispatch,customer])
 
   const AddCustomerDocumentSchema = Yup.object().shape({
-    name: Yup.string().max(50),
+    displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     image: Yup.mixed()
       .required("File is required!")
@@ -113,7 +113,7 @@ export default function DocumentAddForm({currentDocument}) {
 
   const defaultValues = useMemo(
     () => ({
-      name: nameVal,
+      displayName: nameVal,
       description: '',
       image: null,
       isActive: true,
