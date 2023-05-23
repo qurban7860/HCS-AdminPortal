@@ -140,7 +140,6 @@ export function getCustomer(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}` ,
       {
         params: {
-          isArchived: false,
           flag: 'basic',
         }
       }

@@ -87,7 +87,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             </Grid>
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-            {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
+            { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ? 
           <Box
             component="img"
             sx={{
@@ -95,9 +95,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             }}
             alt={defaultValues.name}
             src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
-            />:""} */}
-            { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
-            <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null}
+            />:""}
+            {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
+            <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
       <Grid container sx={{ mt: 2 }}>
             <ViewFormAudit  defaultValues={defaultValues}/>
