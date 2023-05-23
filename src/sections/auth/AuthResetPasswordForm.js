@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
+import { Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
@@ -17,6 +18,8 @@ import { useSnackbar } from '../../components/snackbar';
 
 export default function AuthResetPasswordForm() {
   const { enqueueSnackbar } = useSnackbar();
+  const regEx = /^[4][0-9][0-9]$/
+
 
   const navigate = useNavigate();
 
@@ -30,8 +33,10 @@ export default function AuthResetPasswordForm() {
   });
 
   const {
+    reset,
+    setError,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
   const onSubmit = async (data) => {
@@ -44,11 +49,31 @@ export default function AuthResetPasswordForm() {
       // navigate(PATH_AUTH.newPassword);
     } catch (error) {
       console.error(error);
+      if(regEx.test(error.MessageCode)){
+        reset();
+        setError('afterSubmit', {
+          ...error,
+          message: error.Message,
+        });
+    }else{
+      setError('afterSubmit', {
+        ...error,
+        message: "Something went wrong",
+      });
+    }
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+
+      {!!errors.afterSubmit && <Alert 
+        severity="error" 
+        sx={{ mb: 3 }}
+        >
+          {errors.afterSubmit.message}
+      </Alert>}
+      
       <RHFTextField name="login" label="Email address" />
 
       <LoadingButton
