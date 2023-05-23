@@ -149,7 +149,6 @@ export function getCustomerMachines(customerId) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
         params: {
-          isArchived: false,
           customer: customerId
         }
       });
