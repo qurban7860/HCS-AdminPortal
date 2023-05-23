@@ -26,12 +26,8 @@ import { getContacts , resetContacts} from '../../redux/slices/customer/contact'
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import AddFormButtons from '../components/AddFormButtons';
-<<<<<<< HEAD
-import { dispatchReq, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
-import ViewFormSWitch from '../components/ListSwitch';
-=======
 import { getWithMsg, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
->>>>>>> 030ab94bf89a371407ac0a96d7b4e3d7ae866682
+import ViewFormSWitch from '../components/ViewFormSwitch';
 
 
 // ----------------------------------------------------------------------
