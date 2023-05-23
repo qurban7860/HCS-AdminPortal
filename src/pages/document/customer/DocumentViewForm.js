@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import download from 'downloadjs';
+// import download from 'downloadjs';
+
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -13,6 +14,7 @@ import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCus
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
+import LoadingScreen from '../../../components/loading-screen';
 import Iconify from '../../../components/iconify';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import Cover from '../../components/Cover';
@@ -29,6 +31,12 @@ DocumentViewForm.propTypes = {
 };
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
+  const Loadable = (Component) => (props) =>
+  (
+    <Suspense fallback={<LoadingScreen />}>
+      <Component {...props} />
+    </Suspense>
+  );
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
   console.log("currentCustomerDocument : ",currentCustomerDocument)
@@ -100,8 +108,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     //   downloadBase64File(base64Data, fileName);
     // };
 
-const handleDownload= () => {
-  dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
+const handleDownload= Loadable(lazy(async () => {
+    await dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
     console.log("res : ",res)
     if(regEx.test(res.status)){ 
       // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
@@ -120,7 +128,7 @@ const handleDownload= () => {
       enqueueSnackbar("Something went wrong!",{ variant: `error` })
     }
   });
-}
+}))
   return (
     <>
       <Grid >
@@ -164,11 +172,12 @@ const handleDownload= () => {
                 src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
                 />
             </Link>: <Link href="#" underline="none" 
+              sx={{ m:2 }}
               component="button"
               title='Download File'
               onClick={handleDownload}
             >
-              <Iconify icon="ph:files-fill" />
+              <Iconify width="50px" icon="ph:files-fill" />
             </Link>}
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
