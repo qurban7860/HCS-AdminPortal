@@ -89,19 +89,19 @@ export default function Upload({
       pdf: "bxs:file-pdf",
       doc: "mdi:file-word",
       docx: "mdi:file-word",
-      xls: "mdi:file-powerpoint",
-      xlsx: "mdi:file-powerpoint",
+      xls: "mdi:file-excel",
+      xlsx: "mdi:file-excel",
       ppt: "mdi:file-powerpoint",
       pptx: "mdi:file-powerpoint"
     },
     color: {
-      pdf: "red",
-      doc: "blue",
-      docx: "blue",
-      xls: "green",
-      xlsx: "green",
-      ppt: "orange",
-      pptx: "orange"
+      pdf: "#f44336",
+      doc: "#448aff",
+      docx: "#448aff",
+      xls: "#388e3c",
+      xlsx: "#388e3c",
+      ppt: "#e65100",
+      pptx: "#e65100"
     }
   }
   // const pdf = "bxs:file-pdf"
@@ -231,7 +231,7 @@ export default function Upload({
             zIndex: 9,
             // height: "350",
             position: 'absolute',
-            cursor: 'unset !important',
+            // cursor: 'unset !important',
             // color: (theme) => alpha(theme.palette.common.black, 0.8),
             // bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
             '&:hover': {
