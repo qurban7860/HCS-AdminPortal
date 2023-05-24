@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo, useState, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-// import download from 'downloadjs';
+import download from 'downloadjs';
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -63,8 +63,8 @@ export default function DownloadDocument({ currentCustomerDocument = null }) {
         const res = dispatch(getDocumentDownload(currentCustomerDocument._id));
         console.log("res : ", res);
         if (regEx.test(res.status)) {
-          // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
-          downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
+          download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
+        //   downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
           enqueueSnackbar(res.statusText);
         } else {
           enqueueSnackbar(res.statusText, { variant: 'error' });

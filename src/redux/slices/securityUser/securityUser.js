@@ -211,10 +211,10 @@ export function deleteSecurityUser(id) {
 }
 //------------------------------------------------------------------------------
 
-export function SecurityUserPasswordUpdate(data,id) {
+export function SecurityUserPasswordUpdate(data,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${Id}`,
       data
       );
       if(regEx.test(response.status)){

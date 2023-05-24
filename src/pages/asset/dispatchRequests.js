@@ -51,11 +51,14 @@ export const dispatchReqAddAndList = (dispatch, dispatchAction,  reset, navigate
     });
 }
 
-export const dispatchReqEditAndView = (dispatch, dispatchAction,  reset, navigate, navigatePath, id, enqueueSnackbar) =>{
+export const dispatchReqEditAndView = (dispatch, dispatchAction,  reset, navigate, navigatePath, id, enqueueSnackbar, msg) =>{
   dispatch(dispatchAction).then(res => {
-    console.log("res : ", res);
       if(regEx.test(res.status)){ 
-        enqueueSnackbar(res.statusText)
+        if(msg){
+          enqueueSnackbar(msg)
+        }else{
+          enqueueSnackbar(res.statusText)
+        }
         if(reset){
           reset()
         }
@@ -104,10 +107,14 @@ export const dispatchReqNavToList = (dispatch, dispatchAction, dispachReset , re
     });
 }
 
-export const getWithMsg = (dispatch, dispatchAction, enqueueSnackbar) =>{
+export const getWithMsg = (dispatch, dispatchAction, enqueueSnackbar, msg) =>{
   dispatch(dispatchAction).then(res => {
       if(regEx.test(res.status)){ 
-        enqueueSnackbar(res.statusText)
+        if(msg){
+          enqueueSnackbar( msg )
+        }else{
+          enqueueSnackbar(res.statusText)
+        }
       }else{
         enqueueSnackbar(res.statusText,{ variant: `error` })
       }
