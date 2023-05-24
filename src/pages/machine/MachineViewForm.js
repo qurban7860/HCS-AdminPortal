@@ -103,7 +103,7 @@ export default function MachineViewForm() {
             }}
           >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Basic Information
+              Key Details
             </Typography>
           </Grid>
         </Grid>
