@@ -194,6 +194,7 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
+        { path: 'setting', element: <GeneralAppPage /> },
         {
           path: 'user',
           children: [
