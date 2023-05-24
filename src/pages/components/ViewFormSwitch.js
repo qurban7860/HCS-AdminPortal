@@ -29,7 +29,7 @@ ViewFormSWitch.propTypes = {
     };
 
     return (
-      <Grid item xs={12} sm={12} sx={{ pt: 3, display: 'flex' }}>
+      <Grid item xs={12} sm={12} sx={{  display: 'flex' }}>
         <Typography
           variant="overline"
           sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}

@@ -27,6 +27,7 @@ import FormProvider, {
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
+import ViewFormSWitch from '../../components/ViewFormSwitch';
 
 // slice
 import { addMachineDocument, setMachineDocumentEdit, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility, updateMachineDocument  } from '../../../redux/slices/document/machineDocument';
@@ -189,19 +190,10 @@ useEffect(()=>{
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <FormHeading heading='Edit Document'/>
+              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
-              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
-
-              <Grid item xs={12} sm={12} sx={{display:'flex'}}>
-                  <Grid item xs={12} sm={6} sx={{display:'flex'}}>
-                   <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
-                        Customer Access
-                      </Typography>
-                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-                  </Grid>
-                  <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
-              </Grid>
+              
 
               <Autocomplete
                 // freeSolo
@@ -245,7 +237,16 @@ useEffect(()=>{
                 renderInput={(params) => <TextField {...params}  label="File Category" />}
                 ChipProps={{ size: 'small' }}
               />
-
+              {/* <Grid item xs={12} sm={12} sx={{display:'flex'}}>
+                  <Grid item xs={12} sm={6} sx={{display:'flex'}}>
+                   <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
+                        Customer Access
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+                  </Grid>
+                  <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
+              </Grid> */}
+              
               {/* <Autocomplete
                 // freeSolo
                 value={machineVal || null}
@@ -325,6 +326,15 @@ useEffect(()=>{
                 ChipProps={{ size: 'small' }}
               /> */}
               </Box>
+              <Grid container lg={12} justifyContent="flex-end">
+                <Grid item xs={6} sm={6} md={8} lg={2} justifyContent="flex-end">
+                    <ViewFormSWitch
+                      heading="Customer Access"
+                      customerAccess={customerAccessVal}
+                      onChange={handleChange}
+                    /> 
+                </Grid>
+              </Grid>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               {/* <RHFUpload 
                   name="image"

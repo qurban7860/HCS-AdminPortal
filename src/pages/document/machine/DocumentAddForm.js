@@ -35,6 +35,7 @@ import FormProvider, {
 import { countries } from '../../../assets/data';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
+import ViewFormSWitch from '../../components/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -91,7 +92,21 @@ export default function DocumentAddForm({currentDocument}) {
   const AddCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
-    image: Yup.mixed().required("File is required!"),
+    image: Yup.mixed()
+      .required("File is required!")
+      .test(
+        "fileType",
+        "Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx",
+        (value) => {
+          if (value && value?.name) {
+            const allowedExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx",  "xls", "xlsx", "ppt", "pptx" ];
+            const fileExtension = value?.name?.split(".").pop().toLowerCase();
+            return allowedExtensions.includes(fileExtension);
+          }
+          return false;
+        }
+      )
+      .nullable(true),
     isActive : Yup.boolean(),
   });
   const defaultValues = useMemo(
@@ -204,10 +219,11 @@ export default function DocumentAddForm({currentDocument}) {
           <Card sx={{ p: 3 }} >
             <Stack spacing={3}>
               <FormHeading heading='New Document'/>
-              <Grid item xs={12} md={6} > 
+              
+              <Grid item xs={12} md={12} > 
                 <RHFUpload
-                required
-                  sx={{ width: '300px'}}
+                  required
+                  // sx={{ width: '300px'}}
                   // multiple
                   // thumbnail
                   onPreview={previewHandle}
@@ -222,10 +238,9 @@ export default function DocumentAddForm({currentDocument}) {
                   // onUpload={() => console.log('ON UPLOAD')}
                 />
                 </Grid>
-              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
               <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
-
-              <Grid item xs={12} sm={12} sx={{display:'flex'}}>
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
+              {/* <Grid item xs={12} sm={12} sx={{display:'flex'}}>
                   <Grid item xs={12} sm={6} sx={{display:'flex'}}>
                    <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
                         Customer Access
@@ -233,7 +248,7 @@ export default function DocumentAddForm({currentDocument}) {
                     <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
                   </Grid>
                   <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
-              </Grid>
+              </Grid> */}
 
               <Grid>
               <Autocomplete
@@ -281,6 +296,7 @@ export default function DocumentAddForm({currentDocument}) {
               />
               <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage}><Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
               </Grid>
+             
               {/* <Autocomplete
                 // freeSolo
                 value={machineVal || null}
@@ -360,6 +376,15 @@ export default function DocumentAddForm({currentDocument}) {
                 ChipProps={{ size: 'small' }}
               /> */}
               </Box>
+              <Grid container lg={12} justifyContent="flex-end">
+                <Grid item xs={6} sm={6} md={8} lg={2} justifyContent="flex-end">
+                    <ViewFormSWitch
+                      heading="Customer Access"
+                      customerAccess={customerAccessVal}
+                      onChange={handleChange}
+                    /> 
+                </Grid>
+              </Grid>
               <RHFTextField name="description" label="Description" minRows={3} multiline />
               
               {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
