@@ -181,7 +181,7 @@ export default function MachineSettingList() {
                   )
                 }
               >
-                New Document
+                New Category
               </Button>
             </Stack>
           </Grid>

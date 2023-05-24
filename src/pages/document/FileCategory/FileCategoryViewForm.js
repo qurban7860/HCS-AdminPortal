@@ -57,7 +57,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     <Grid >
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
       <Grid container>
-          <ViewFormField sm={6} heading="Name" param="Document Name" />
+          <ViewFormField sm={6} heading="Name" param="Category Name" />
           <ViewFormSWitch isActive={defaultValues.isActive}/>
           <ViewFormAudit defaultValues={defaultValues}/>
       </Grid>

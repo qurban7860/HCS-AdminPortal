@@ -33,6 +33,7 @@ import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
 import Cover from '../../components/Cover';
 import { postAndGet } from '../../asset/dispatchRequests'
+import ViewFormSWitch from '../../components/ViewFormSwitch';
 
 
 // ----------------------------------------------------------------------
@@ -208,11 +209,10 @@ console.log("defaultValues : ",defaultValues)
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <FormHeading heading='Edit Document'/>
-              <Box rowGap={3} columnGap={3} display="grid" gridTemplateColumns={{  xs: 'repeat(1, 1fr)',  sm: 'repeat(2, 1fr)', }} >
-
               <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
-
-              <Grid item xs={12} sm={12} sx={{display:'flex'}}>
+              <Box rowGap={3} columnGap={3} display="grid" gridTemplateColumns={{  xs: 'repeat(1, 1fr)',  sm: 'repeat(2, 1fr)', }} >
+              
+              {/* <Grid item xs={12} sm={12} sx={{display:'flex'}}>
                   <Grid item xs={12} sm={6} sx={{display:'flex'}}>
                    <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
                         Customer Access
@@ -220,7 +220,7 @@ console.log("defaultValues : ",defaultValues)
                     <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
                   </Grid>
                   <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
-              </Grid>
+              </Grid> */}
 
               <Autocomplete
                 // freeSolo
@@ -344,6 +344,15 @@ console.log("defaultValues : ",defaultValues)
                 ChipProps={{ size: 'small' }}
               /> */}
               </Box>
+              <Grid container lg={12} justifyContent="flex-end">
+                    <Grid item xs={6} sm={6} md={8} lg={2}>
+                      <ViewFormSWitch
+                        heading="Customer Access"
+                        customerAccess={customerAccessVal}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                </Grid>
               <RHFTextField name="description" label="Description" minRows={3} multiline />
               {/* <RHFUpload
               // sx={{ width: '300px'}}

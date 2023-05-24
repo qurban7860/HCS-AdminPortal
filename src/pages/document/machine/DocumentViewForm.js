@@ -130,7 +130,11 @@ const handleDownload = () => {
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
           <ViewFormField sm={12} isActive={defaultValues.isActive} />
-          <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
+          <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
+          <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
+          <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+          {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
+          <Grid item xs={12} sm={12} sx={{px:2,py:1, overflowWrap: "break-word",}}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Customer Access
             </Typography>
@@ -138,10 +142,6 @@ const handleDownload = () => {
               <Switch  checked={defaultValues?.customerAccess}  disabled/>
             </Typography>
           </Grid>
-          <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
-          <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
-          <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-          <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
           <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
 
           <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
