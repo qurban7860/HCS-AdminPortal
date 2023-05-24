@@ -35,6 +35,7 @@ const ICONS = {
   asset: icon('ic_ecommerce'),
   analytics: icon('ic_analytics'),
   dashboard: <Iconify icon="mdi:view-dashboard" />,
+  setting: <Iconify icon="ant-design:setting-filled" />,
   map: <Iconify icon="mdi:map-legend" />,
   machines: <Iconify icon="mdi:gate-open" />,
   users: <Iconify icon="mdi:account-group" />,
@@ -50,6 +51,7 @@ const navConfig = [
       { title: 'Customers', path: PATH_DASHBOARD.customer.list, icon: ICONS.users },
       { title: 'Machines', path: PATH_MACHINE.machine.list, icon: ICONS.machines },
       { title: 'Security', path: PATH_DASHBOARD.user.list, icon: ICONS.user },
+      { title: 'Setting', path: PATH_DASHBOARD.setting, icon: ICONS.setting },
       // {
       //   title: 'Button Title',
       //   path: '/PATH_DASHBOARD.customer.new',

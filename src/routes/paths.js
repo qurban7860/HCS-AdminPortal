@@ -42,6 +42,7 @@ export const PATH_DASHBOARD = {
   general: {
     app: path(ROOTS_DASHBOARD, '/app'),
   },
+  setting: path(ROOTS_DASHBOARD, '/setting'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
     new: path(ROOTS_DASHBOARD, '/user/new'),
