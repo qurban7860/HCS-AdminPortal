@@ -209,14 +209,23 @@ export default function CustomerSiteList() {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return (
               <Grid container lg={12} justifyContent="flex-end" alignItems="flex-end">
-              <Grid item lg={3} sx={{ borderTop: borderTopVal, py: 2 }}>
-                <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                  {site.name}
-                </Typography>
-              </Grid>
-                <Grid item lg={3}>
-                  <SiteViewForm currentSite={site} />
+                <Grid item lg={3} sx={{ borderTop: borderTopVal, py: 2 }}>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
+                    {site.name}
+                  </Typography>
                 </Grid>
+                <Accordion xs={12}>
+                  <AccordionDetails
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                    onClick={() => handleAccordianClick(index)}
+                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  >
+                    <Grid container>
+                      <SiteViewForm currentSite={site} />
+                    </Grid>
+                  </AccordionDetails>
+                </Accordion>
               </Grid>
             );
           })}

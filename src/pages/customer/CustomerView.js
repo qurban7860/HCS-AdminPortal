@@ -36,8 +36,8 @@ import useResponsive from '../../hooks/useResponsive';
 
 
 import CustomerEditForm from './CustomerEditForm';
-// import CustomerSiteList from './CustomerSiteList';
-import CustomerSiteDynamicList from './CustomerSiteDynamicList';
+import CustomerSiteList from './CustomerSiteList';
+// import CustomerSiteDynamicList from './CustomerSiteDynamicList';
 import CustomerContactList from './CustomerContactList';
 import CustomerMachineList from './CustomerMachineList';
 import DocumentList from '../document/customer/DocumentList';
@@ -102,7 +102,7 @@ export default function CustomerView({editPage}) {
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="mdi:map-legend" />,
-      component: <CustomerSiteDynamicList/>,
+      component: <CustomerSiteList/>,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
@@ -146,7 +146,7 @@ export default function CustomerView({editPage}) {
           height: 160,
           position: 'relative',
         }}
-      >
+        >
         <Cover
           name={customer ? customer.name : 'New Customer'}
           photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
@@ -203,7 +203,7 @@ export default function CustomerView({editPage}) {
                       height: '40vh',
                       display: 'flex',
                     }}
-                  >
+                    >
                     <img
                       src="/assets/illustrations/characters/character_5.png"
                       alt="UNDER CONSTRUCTION"
