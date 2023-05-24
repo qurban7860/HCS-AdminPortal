@@ -108,9 +108,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     //   downloadBase64File(base64Data, fileName);
     // };
 
-    const handleDownload = Loadable(lazy(async () => {
+    const handleDownload = Loadable(lazy(() => {
       try {
-        const res = await dispatch(getDocumentDownload(currentCustomerDocument._id));
+        const res = dispatch(getDocumentDownload(currentCustomerDocument._id));
         console.log("res : ", res);
         if (regEx.test(res.status)) {
           // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
@@ -127,7 +127,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         }
       }
     }));
-    
+
   return (
     <>
       <Grid >
