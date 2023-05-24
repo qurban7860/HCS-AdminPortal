@@ -125,9 +125,7 @@ export default function DocumentAddForm({currentDocument}) {
 
   const onSubmit = async (data) => {
       try{
-        if(nameVal){
-          data.name = nameVal
-        }
+        data.displayName = nameVal
         if(fileCategoryVal){
           data.category = fileCategoryVal._id
         }
@@ -173,7 +171,9 @@ export default function DocumentAddForm({currentDocument}) {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       const fileName = file.name.split(".");
-      setNameVal(fileName[0])
+      if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[1])){
+        setNameVal(fileName[0])
+      }
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });

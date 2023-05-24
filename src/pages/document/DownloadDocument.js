@@ -18,10 +18,10 @@ import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
 DownloadDocument.propTypes = {
-  currentCustomerDocument: PropTypes.object,
+  Document: PropTypes.object,
 };
 
-export default function DownloadDocument({ currentCustomerDocument = null }) {
+export default function DownloadDocument({ Document = null }) {
 //   const Loadable = (Component) => (props) =>
 //   (
 //     <Suspense fallback={<LoadingScreen />}>
@@ -31,7 +31,6 @@ export default function DownloadDocument({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
@@ -59,10 +58,10 @@ export default function DownloadDocument({ currentCustomerDocument = null }) {
         //     const DownloadComponent = module.default;
         //     // Render the DownloadComponent
         //   });
-        dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
+        dispatch(getDocumentDownload(Document._id)).then(res => {
             console.log("res : ",res)
             if(regEx.test(res.status)){ 
-              download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
+              download(atob(res.data), `${Document?.displayName}.${Document?.extension}`, { type: Document?.type});
             //   downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
               enqueueSnackbar(res.statusText);
             }else{

@@ -130,10 +130,14 @@ import {
   FileCategoryList     ,
   FileCategoryViewForm ,
   FileCategoryEditForm ,
-//
+// Setting
+  Setting,
+// Reports
+  Reports,
+//   
   BlankPage,
   PermissionDeniedPage,
-  //
+//
   Page500,
   Page403,
   Page404,
@@ -194,7 +198,8 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
-        { path: 'setting', element: <GeneralAppPage /> },
+        { path: 'setting', element: <Setting /> },
+        { path: 'reports', element: <Reports /> },
         {
           path: 'user',
           children: [

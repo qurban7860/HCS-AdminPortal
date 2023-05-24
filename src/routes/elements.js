@@ -163,6 +163,11 @@ export const FileCategoryEditForm     = Loadable(lazy(()=> import('../pages/docu
 // export const fileCategoryView = Loadable(lazy(()=>     import('../pages/')));
 // export const fileCategoryEdit = Loadable(lazy(()=>     import('../pages/')));
 
+// DASHBOARD: SETTINGS
+export const Setting = Loadable(lazy(() => import('../pages/setting/Setting')));
+
+// DASHBOARD: REPORTS
+export const Reports = Loadable(lazy(() => import('../pages/Reports/Reports')));
 
 
 // TEST RENDER PAGE BY ROLE

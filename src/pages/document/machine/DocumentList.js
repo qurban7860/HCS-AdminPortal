@@ -189,7 +189,7 @@ useEffect(() => {
                   )
                 }
               >
-                New Machine Document
+                New Document
               </Button>
             </Stack>
           </Grid>
