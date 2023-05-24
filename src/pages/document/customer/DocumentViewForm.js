@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo, useState, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
 // import download from 'downloadjs';
 
 // @mui
@@ -37,6 +38,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       <Component {...props} />
     </Suspense>
   );
+  const DownloadComponent = Loadable(lazy(() => import('../DownloadDocument')));
+
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
   console.log("currentCustomerDocument : ",currentCustomerDocument)
@@ -108,7 +111,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     //   downloadBase64File(base64Data, fileName);
     // };
 
-    const handleDownload = Loadable(lazy(() => {
+    const handleDownload = () => {
       try {
         const res = dispatch(getDocumentDownload(currentCustomerDocument._id));
         console.log("res : ", res);
@@ -126,7 +129,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
           enqueueSnackbar('Something went wrong!', { variant: 'error' });
         }
       }
-    }));
+    };
 
   return (
     <>
@@ -157,6 +160,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             </Grid>
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+
+            <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
             { currentCustomerDocument?.type.startsWith("image") ? 
             <Link href="#" underline="none" 
               component="button"
@@ -178,6 +183,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             >
               <Iconify width="50px" icon="ph:files-fill" />
             </Link>}
+              <DownloadComponent currentCustomerDocument={currentCustomerDocument} />
+              {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
+            </Grid>
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
