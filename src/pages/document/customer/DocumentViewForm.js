@@ -26,19 +26,21 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import { getWithMsg } from '../../asset/dispatchRequests'
 
-// ----------------------------------------------------------------------
-DocumentViewForm.propTypes = {
-  currentCustomerDocument: PropTypes.object,
-};
-
-export default function DocumentViewForm({ currentCustomerDocument = null }) {
-  const Loadable = (Component) => (props) =>
+const Loadable = (Component) => (props) =>
   (
     <Suspense fallback={<LoadingScreen />}>
       <Component {...props} />
     </Suspense>
   );
   const DownloadComponent = Loadable(lazy(() => import('../DownloadDocument')));
+
+// ----------------------------------------------------------------------
+DocumentViewForm.propTypes = {
+  currentCustomerDocument: PropTypes.object,
+};
+
+export default function DocumentViewForm({ currentCustomerDocument = null }) {
+  
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
@@ -138,12 +140,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
             <ViewFormField sm={12} isActive={defaultValues.isActive} />
-            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
-            <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
-            <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
-            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
-            <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
+            <Grid item xs={12} sm={12}  sx={{px:2,py:1, overflowWrap: "break-word",display:"flex"}}>
+            <Grid>
               <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Customer Access
               </Typography>
@@ -151,6 +149,12 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 <Switch  checked={defaultValues?.customerAccess}  disabled/>
               </Typography>
             </Grid>
+            </Grid>
+            <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
+            <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+            <ViewFormField sm={12} heading="Customer" param={defaultValues?.customer} />
+            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
             <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
               <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
               Version Status
@@ -184,7 +188,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             >
               <Iconify width="50px" icon="ph:files-fill" />
             </Link>}
-              <DownloadComponent currentCustomerDocument={currentCustomerDocument} />
+              <DownloadComponent Document={currentCustomerDocument} />
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?

@@ -60,7 +60,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ customerVal, setCustomerVal] = useState('')
   const [ siteVal, setSiteVal] = useState('')
   const [ contactVal, setContactVal] = useState('')
-
+  const allowedExtension = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
 
   const navigate = useNavigate();
 
@@ -143,6 +143,7 @@ export default function DocumentAddForm({currentDocument}) {
   const onSubmit = async (data) => {
       try{
         data.customer = customer._id
+        data.displayName = nameVal
         if(nameVal){
           data.name = nameVal
         }
@@ -215,17 +216,23 @@ export default function DocumentAddForm({currentDocument}) {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       const fileName = file.name.split(".");
-      setNameVal(fileName[0])
+
+      if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[1])){
+        setNameVal(fileName[0])
+      }
+      
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
       });
       if (file) {
-      setPreviewVal(file.preview)
+        setPreviewVal(file.preview)
         setValue('image', newFile, { shouldValidate: true });
       }
+      
     },
     [setValue]
   );
+
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
   };
