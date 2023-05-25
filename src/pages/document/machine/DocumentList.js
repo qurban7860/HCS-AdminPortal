@@ -48,7 +48,7 @@ const _accordions = [...Array(8)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export default function MachineSettingList() {
+export default function DocumentList() {
   const {
     dense,
     page,
@@ -82,10 +82,7 @@ export default function MachineSettingList() {
   const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
   const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
   const { machine } = useSelector((state) => state.machine);
-  const toggleChecked = async () =>
-    {
-      dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility));
-    };
+  const toggleChecked = async () =>{ dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility))};
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const [filterName, setFilterName] = useState('');

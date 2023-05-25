@@ -19,9 +19,6 @@ const initialState = {
   contacts: [],
   spContacts: [],
   contact: null,
-  contactParams: {
-
-  }
 };
 
 const slice = createSlice({
@@ -101,14 +98,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
-    },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
-    },
   },
 });
 
@@ -121,13 +110,7 @@ export const {
   setContactEditFormVisibility,
   resetContact,
   resetContacts,
-  getCart,
-  addToCart,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------------------------------------------------

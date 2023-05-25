@@ -38,14 +38,15 @@ ViewFormSWitch.propTypes = {
         </Typography>
         {customerAccess ? (
           <Switch
-              sx={{ mb: 1 }} checked={isActiveVal || false}
-              onChange={handleIsActiveChange}
-              />
-        ) : (
-          <Switch
               sx={{ mb: 1 }}
               checked={customerAccessVal || false}
               onChange={handleCustomerAccessChange}
+              />
+          
+        ) : (
+          <Switch
+              sx={{ mb: 1 }} checked={isActiveVal || false}
+              onChange={handleIsActiveChange}
               />
         )}
       </Grid>

@@ -25,10 +25,10 @@ import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
 import Cover from '../../components/Cover'
 // ----------------------------------------------------------------------
-DocumentNameAddForm.propTypes = {
+FileCategoryAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
-export default function DocumentNameAddForm({currentDocument}) {
+export default function FileCategoryAddForm({currentDocument}) {
   const { fileCategories, fileCategory } = useSelector((state) => state.fileCategory);
   const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
   const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
@@ -36,7 +36,7 @@ export default function DocumentNameAddForm({currentDocument}) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
  // a note can be archived.  
-  const AddDocumentNameSchema = Yup.object().shape({
+  const AddFileCategorySchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
     description: Yup.string().max(10000),
     isActive : Yup.boolean(),
@@ -52,7 +52,7 @@ export default function DocumentNameAddForm({currentDocument}) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddDocumentNameSchema),
+    resolver: yupResolver(AddFileCategorySchema),
     defaultValues,
   });
 

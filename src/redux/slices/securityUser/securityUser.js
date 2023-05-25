@@ -42,21 +42,6 @@ const slice = createSlice({
     setSecurityUserEditFormVisibility(state, action){
       state.editFormVisibility = action.payload;
     },
-
-    // RESET USERS
-    resetSecurityUsers(state){
-      state.users = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // RESET USER
-    resetSecurityUser(state){
-      state.securityUser = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
     // GET users
     getSecurityUsersSuccess(state, action) {
       state.isLoading = false;
@@ -82,13 +67,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET SECURITY USER
+    resetSecurityUser(state){
+      state.securityUser = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET SECURITY USERS
+    resetSecurityUsers(state){
+      state.securityUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
+
   },
 });
 
@@ -101,9 +95,7 @@ export const {
   setSecurityUserEditFormVisibility,
   resetSecurityUsers,
   resetSecurityUser,
-  gotoStep,
-  backStep,
-  nextStep,
+ 
 } = slice.actions;
 // ----------------------------------------------------------------------
 

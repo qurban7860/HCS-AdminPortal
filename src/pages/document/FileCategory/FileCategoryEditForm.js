@@ -31,7 +31,7 @@ import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/p
 import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
-export default function SettingEditForm() {
+export default function FileCategoryEditForm() {
 
   const { setting, settings, settingEditFormVisibility, formVisibility ,error} = useSelector((state) => state.machineSetting);
   const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
@@ -75,13 +75,13 @@ export default function SettingEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditSettingSchema = Yup.object().shape({
+  const EditFileCategorySchema = Yup.object().shape({
     techParamValue: Yup.string().max(50),
     isActive : Yup.boolean(),
   });
 
   const methods = useForm({
-    resolver: yupResolver(EditSettingSchema),
+    resolver: yupResolver(EditFileCategorySchema),
     defaultValues,
   });
 

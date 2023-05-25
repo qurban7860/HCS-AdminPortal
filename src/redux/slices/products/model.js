@@ -15,8 +15,6 @@ const initialState = {
   error: null,
   machineModels: [],
   machineModel: {},
-  machinemodelParams: {
-  }
 };
 
 const slice = createSlice({
@@ -32,13 +30,6 @@ const slice = createSlice({
       state.machinemodelEditFormFlag = action.payload;
     },
     
-    // RESET CUSTOMER
-    resetMachinemodel(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -47,7 +38,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  MODEL
     getMachineModelsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,7 +46,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET MODEL
     getMachinemodelSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -69,11 +60,21 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET 
+    resetMachineModel(state){
+      state.machineModel = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+
+    // RESET 
+    resetMachineModels(state){
+      state.machineModels = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -85,12 +86,8 @@ export default slice.reducer;
 export const {
   setMachinemodelsEditFormVisibility,
   resetMachineModel,
-  getCart,
-  addToCart,
+  resetMachineModels,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
 } = slice.actions;
 
 

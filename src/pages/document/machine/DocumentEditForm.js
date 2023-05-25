@@ -87,7 +87,7 @@ useEffect(()=>{
   setDocumentNameVal(machineDocument?.documentName)
 },[machineDocument])
 
-  const EditMachineDocummentSchema = Yup.object().shape({
+  const EditMachineDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     // image: Yup.mixed().required("Image Field is required!"),
@@ -106,7 +106,7 @@ useEffect(()=>{
   );
 
   const methods = useForm({
-    resolver: yupResolver(EditMachineDocummentSchema),
+    resolver: yupResolver(EditMachineDocumentSchema),
     defaultValues,
   });
 

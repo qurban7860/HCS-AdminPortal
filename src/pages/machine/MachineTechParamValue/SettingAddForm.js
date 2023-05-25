@@ -10,7 +10,7 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } f
 // slice
 import { setSettingEditFormVisibility , setSettingFormVisibility , addSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import { getTechparams , getTechparamsByCategory , resetTechparamByCategory } from '../../../redux/slices/products/machineTechParam';
+import { getTechparams , getTechparamsByCategory , resetTechParamByCategory } from '../../../redux/slices/products/machineTechParam';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -39,7 +39,7 @@ export default function SettingAddForm() {
 
 useLayoutEffect(() => {
   dispatch(getTechparamcategories())
-  dispatch(resetTechparamByCategory())
+  dispatch(resetTechParamByCategory())
 }, [dispatch]);
 
 useLayoutEffect(() => {
@@ -69,7 +69,7 @@ const AddSettingSchema = Yup.object().shape({
 
 useEffect(()=>{
   if(category){
-    dispatch(resetTechparamByCategory())
+    dispatch(resetTechParamByCategory())
     dispatch(getTechparamsByCategory(category._id));
   }
 },[dispatch,category])
@@ -155,7 +155,7 @@ useEffect(()=>{
                   }
                   else{ 
                   setCategory("");
-                    dispatch(resetTechparamByCategory())
+                    dispatch(resetTechParamByCategory())
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}

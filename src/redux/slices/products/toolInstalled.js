@@ -21,9 +21,6 @@ const initialState = {
   error: null,
   toolsInstalled: [],
   toolInstalled: null,
-  toolInstalledParams: {
-
-  }
 };
 
 const slice = createSlice({
@@ -52,7 +49,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Setting
+    // GET TOOLS INSTALLED
     getToolsInstalledSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -60,7 +57,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Setting
+    // GET TOOLS INSTALLED
     getToolInstalledSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -75,12 +72,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET TOOLS INSTALLED
+    resetToolInstalled(state){
+      state.toolInstalled = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET TOOLS INSTALLED
+    resetToolsInstalled(state){
+      state.toolsInstalled = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -92,15 +97,10 @@ export default slice.reducer;
 export const {
   setToolInstalledFormVisibility,
   setToolInstalledEditFormVisibility,
-  getCart,
-  addToCart,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
 } = slice.actions;
 
-// ----------------------------Save Note------------------------------------------
+// ----------------------------Save TOOLS INSTALLED ------------------------------------------
 
 export function addToolInstalled(machineId,params) {
     return async (dispatch) => {
@@ -120,7 +120,7 @@ export function addToolInstalled(machineId,params) {
   };
 }
 
-// ---------------------------------Update Note-------------------------------------
+// ---------------------------------Update TOOLS INSTALLED -------------------------------------
 
 export function updateToolInstalled(machineId,toolInstallledId,params) {
   return async (dispatch) => {
@@ -141,7 +141,7 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
   };
 }
 
-// -----------------------------------Get Settings-----------------------------------
+// -----------------------------------Get TOOLS INSTALLED -----------------------------------
 
 export function getToolsInstalled(machineId) {
   return async (dispatch) => {
@@ -163,7 +163,7 @@ export function getToolsInstalled(machineId) {
   };
 }
 
-// -------------------------------get Setting---------------------------------------
+// -------------------------------get TOOLS INSTALLED ---------------------------------------
 
 export function getToolInstalled(machineId,Id) {
   return async (dispatch) => {
@@ -179,7 +179,7 @@ export function getToolInstalled(machineId,Id) {
   };
 }
 
-// ---------------------------------archive Note-------------------------------------
+// ---------------------------------archive TOOLS INSTALLED -------------------------------------
 
 export function deleteToolInstalled(machineId,id) {
   return async (dispatch) => {

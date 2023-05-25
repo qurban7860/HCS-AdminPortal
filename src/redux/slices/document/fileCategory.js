@@ -14,7 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   fileCategories: [],
-  fileCategory: null,
+  fileCategory: {},
 };
 
 const slice = createSlice({
@@ -65,12 +65,21 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET FILE CATEGORY
+    resetFileCategory(state){
+      state.fileCategory = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET FILE CATEGORY
+    resetFileCategories(state){
+      state.fileCategories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -82,13 +91,9 @@ export default slice.reducer;
 export const {
   setFileCategoryFormVisibility,
   setFileCategoryEditFormVisibility,
-  getCart,
-  addToCart,
+  resetFileCategory,
+  resetFileCategories,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------Add FileCategory------------------------------------------

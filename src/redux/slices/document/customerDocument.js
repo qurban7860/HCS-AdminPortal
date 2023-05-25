@@ -86,13 +86,6 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
-    },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
-    },
   },
 });
 
@@ -106,13 +99,7 @@ export const {
   setCustomerDocumentEdit,
   resetCustomerDocument,
   resetCustomerDocuments,
-  getCart,
-  addToCart,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 
