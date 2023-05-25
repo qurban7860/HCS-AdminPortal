@@ -236,7 +236,6 @@ export default function CustomerSiteList() {
           sx={{
             display: 'block',
             alignItems: 'center',
-            px: 2,
             py: 2,
           }}
           >
@@ -251,38 +250,47 @@ export default function CustomerSiteList() {
                   key={site._id}
                   expanded={expanded === index}
                   onChange={handleChange(index)}
-                  >
+                  sx={{
+                    padding : '0px',
+                    borderTop: borderTopVal,
+                    borderBottom: '0px solid white',
+                    boxShadow: 'none',
+                    borderRadius: '0px',
+                    '&:before': {
+                      display: 'none',
+                    },
+                  }}
+                >
                   <AccordionSummary
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     onClick={() => handleAccordianClick(index)}
                     // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
                     >
-                    <Grid container xs={12} lg={6} display="block">
+                    <Grid container xs={12} lg={4}>
                       {index !== activeIndex ? (
-                        <Card sx={{ display: 'block' }}>
+                        <Card sx={{ display: 'block', width: 'auto' }}>
                           <CardActionArea>
-                              <Box lg={3} >
+                            <Box lg={4} sx={{ display: 'inline-flex' }}>
+                              <Box justifyContent="flex-start" sx={{width: '200px'}}>
                                 <CardContent sx={{ flex: '1 0 auto' }}>
-                                  <Box item lg={12}>
-                                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                      {site.name}
-                                    </Typography>
-                                    <Typography variant="body2">
-                                      {site.email ? site.email : <br />}
-                                    </Typography>
-                                  </Box>
+                                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                    {site.name}
+                                  </Typography>
+                                  <Typography variant="body2">
+                                    {site.email ? site.email : <br />}
+                                  </Typography>
                                 </CardContent>
                               </Box>
-                              <Box justifyContent="flex-end" lg={3}>
+                              <Box lg={4}>
                                 <CardMedia
                                   component="img"
-                                  sx={{ width: 100, zIndex: 0 }}
-                                  image="https://www.howickltd.com/asset/1117/w800-h600-q80.png"
+                                  sx={{ width: 151, display: 'flex', justifyContent: 'flex-end' }}
+                                  image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
                                   alt="customer's site photo was here"
                                 />
                               </Box>
-
+                            </Box>
                           </CardActionArea>
                         </Card>
                       ) : null}
@@ -290,7 +298,7 @@ export default function CustomerSiteList() {
                   </AccordionSummary>
                   <AccordionDetailsCustom
                     expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                    >
+                  >
                     <Box lg={6} justifyContent="flex-end" alignItems="flex-end">
                       <SiteViewForm currentSite={site} />
                     </Box>
