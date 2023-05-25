@@ -8,7 +8,6 @@ import {
   Card,
   Grid,
   Button,
-  Box,
   Link,
   CardActionArea,
   CardContent,
@@ -20,8 +19,10 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Avatar,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -38,6 +39,7 @@ import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
 import EmptyContent from '../../components/empty-content';
+
 
 // ----------------------------------------------------------------------
 
@@ -150,6 +152,7 @@ export default function CustomerContactList() {
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
+  const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName}`);
   return (
     <>
       {!contactEditFormVisibility && (
@@ -159,8 +162,8 @@ export default function CustomerContactList() {
             variant="contained"
             startIcon={
               !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
-            }
-          >
+              }
+            >
             {' '}
             New Contact{' '}
           </Button>
@@ -178,19 +181,21 @@ export default function CustomerContactList() {
                 underline="hover"
                 variant="subtitle2"
                 color="inherit"
-                href={PATH_DASHBOARD.customer.sites}
-              >
-                Sites
+                href={PATH_DASHBOARD.customer.contacts}
+                >
+                Contacts
               </Link>
             </Breadcrumbs>
           </Grid>
         </Stack>
       )}
-      <Box
-        sx={{
-          display: 'block',
-          alignItems: 'center',
-        }}
+      <Grid
+        container
+        lg={12}
+        spacing={3}
+        justifyContent="flex-start"
+        grid-template-rows="repeat(3, 1fr)"
+        grid-template-columns="repeat(3, 1fr)"
         >
         {contactEditFormVisibility && <ContactEditForm />}
         {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
@@ -199,66 +204,99 @@ export default function CustomerContactList() {
           contacts.map((contact, index) => {
             const borderTopVal = index !== 0 ? '0px solid white' : '';
             return (
-              <Accordion
-                key={contact._id}
-                expanded={expanded === index}
-                onChange={handleChange(index)}
-                sx={{
-                  padding: '0px',
-                  borderTop: borderTopVal,
-                  borderBottom: '0px solid white',
-                  boxShadow: 'none',
-                  borderRadius: '0px',
-                  '&:before': {
-                    display: 'none',
-                  },
-                }}
-                >
-                <AccordionSummary
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                  onClick={() => handleAccordianClick(index)}
-                  // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
-                  sx={{
-                    animation: 'transition.expandIn',
-                    ease: 'ease-in',
-                    transition: 'all 0.10s ease-in',
-                  }}
-                  >
-                  <Grid container xs={12} lg={4}>
-                    {index !== activeIndex ? (
-                      <Card sx={{ display: 'block', width: 'auto' }}>
-                        <CardActionArea>
-                          <Box lg={4} sx={{ display: 'inline-flex' }}>
-                            <Box justifyContent="flex-start" sx={{ width: '200px' }}>
-                              <CardContent sx={{ flex: '1 0 auto' }}>
-                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                  {contact.name}
-                                </Typography>
-                                <Typography variant="body2">
-                                  {contact.email ? contact.email : <br />}
-                                </Typography>
-                              </CardContent>
-                            </Box>
-                            <Box lg={4}>
+              <>
+                <Grid item sx={{ display: 'inline-block' }}>
+                  {index !== activeIndex ? (
+                    <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
+                      <CardActionArea>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          alignContent="center"
+                          sx={{ display: 'block' }}
+                          >
+                          <Grid
+                            item
+                            justifyContent="center"
+                            sx={{ bgcolor: 'blue', alignContent: 'center' }}
+                            >
+                            <CardContent
+                              component={Stack}
+                              display="block"
+                              height="170px"
+                              sx={{ position: 'relative', zIndex: '1' }}
+                              >
+                              <CustomAvatar
+                                sx={{
+                                  width: '100px',
+                                  height: '100px',
+                                  display: 'flex',
+                                  marginTop: '60px',
+                                  marginRight: 'auto',
+                                  marginLeft: 'auto',
+                                  marginBottom: '0px',
+                                  boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+                                  fontSize: '40px',
+                                  zIndex: '2',
+                                }}
+                                name={fullName[index]}
+                                alt={fullName[index]}
+                              />
                               <CardMedia
                                 component="img"
-                                sx={{ width: 151, display: 'flex', justifyContent: 'flex-end' }}
+                                sx={{
+                                  height: '170px',
+                                  opacity: '0.5',
+                                  display: 'block',
+                                  zIndex: '-1',
+                                  position: 'absolute',
+                                  top: '0',
+                                  left: '0',
+                                  right: '0',
+                                  bottom: '0',
+                                  width: '100%',
+                                  objectFit: 'cover',
+                                  objectPosition: 'center',
+                                }}
                                 image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                alt="customer's site photo was here"
+                                alt="customer's contact cover photo was here"
                               />
-                            </Box>
-                          </Box>
-                        </CardActionArea>
-                      </Card>
-                    ) : null}
-                  </Grid>
-                </AccordionSummary>
-                <AccordionDetailsCustom
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  aria-controls="panel1a-content"
-                  sx={{ mt: -5 }}
-                >
+                            </CardContent>
+                          </Grid>
+                          <Grid
+                            item
+                            justifyContent="center"
+                            sx={{ display: 'block', textAlign: 'center', width: '200px' }}
+                            >
+                            <CardContent
+                              component={Stack}
+                              display="block"
+                              justifyContent="center"
+                              height="130px"
+                              >
+                              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                {contact.firstName} {contact.lastName}
+                              </Typography>
+                              <Typography variant="body2" color="text.secondary">
+                                {contact.title ? contact.title : <br />}
+                              </Typography>
+                              <Typography variant="overline" color="secondary.main" pt={2}>
+                                {contact.email ? contact.email : <br />}
+                              </Typography>
+                            </CardContent>
+                          </Grid>
+                        </Grid>
+                      </CardActionArea>
+                    </Card>
+                  ) : null}
+                </Grid>
+                <Dialog
+                  key={contact._id}
+                  open={index === activeIndex}
+                  onClose={() => handleAccordianClick(index)}
+                  aria-labelledby="alert-dialog-title"
+                  aria-describedby="alert-dialog-description"
+                  >
                   <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
                     <Grid item lg={4}>
                       <Card sx={{ width: 'auto', height: '100%', m: 2 }}>
@@ -272,16 +310,16 @@ export default function CustomerContactList() {
                         </CardActionArea>
                       </Card>
                     </Grid>
-                    <Grid item lg={8}>
+                    <Grid container lg={12}>
                       <ContactViewForm currentContact={contact} />
                     </Grid>
                   </Grid>
-                </AccordionDetailsCustom>
-              </Accordion>
+                </Dialog>
+              </>
             );
           })}
         <TableNoData isNotFound={isNotFound} />
-      </Box>
+      </Grid>
     </>
   );
 
