@@ -2,9 +2,8 @@ import PropTypes from 'prop-types';
 import { useMemo, useState, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+// eslint-disable-next-line import/no-extraneous-dependencies
 import download from 'downloadjs';
-
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -40,7 +39,7 @@ DocumentViewForm.propTypes = {
 };
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
-  
+
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
@@ -50,13 +49,13 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const [ preview, setPreview] = useState(false)
 
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const onDelete = async () => {
     // console.log("currentCustomerDocument : ",currentCustomerDocument)
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
     dispatch(getCustomerDocuments(customer._id))
   };
-  
+
   const  handleEdit = async () => {
     await getWithMsg(dispatch, getCustomerDocument(currentCustomerDocument._id), enqueueSnackbar);
           dispatch(setCustomerDocumentEditFormVisibility(true));
@@ -116,7 +115,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     const handleDownload = () => {
        dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
         console.log("res : ",res)
-        if(regEx.test(res.status)){ 
+        if(regEx.test(res.status)){
           // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
           downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
           enqueueSnackbar(res.statusText);
@@ -135,12 +134,10 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     };
 
   return (
-    <>
+
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
-            <ViewFormField sm={12} isActive={defaultValues.isActive} />
-            
             <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
             <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
             <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
@@ -168,8 +165,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
             <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
-            { currentCustomerDocument?.type.startsWith("image") ? 
-            <Link href="#" underline="none" 
+            { currentCustomerDocument?.type.startsWith("image") ?
+            <Link href="#" underline="none"
               component="button"
               title='Download File'
               onClick={handleDownload}
@@ -181,7 +178,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 alt={defaultValues.displayName}
                 src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
                 />
-            </Link>: <Link href="#" underline="none" 
+            </Link>: <Link href="#" underline="none"
               sx={{ m:2 }}
               component="button"
               title='Download File'
@@ -200,6 +197,5 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
           </Grid>
         </Grid>
       </Grid>
-    </>
   );
 }

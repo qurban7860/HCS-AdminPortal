@@ -45,7 +45,7 @@ const { enqueueSnackbar } = useSnackbar();
 // console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
 
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
   const onDelete = async () => {
     await dispatch(deleteMachineDocument(currentMachineDocument._id));
@@ -107,7 +107,7 @@ link.click();
 const handleDownload = () => {
    dispatch(getDocumentDownload(currentMachineDocument._id)).then(res => {
     console.log("res : ",res)
-    if(regEx.test(res.status)){ 
+    if(regEx.test(res.status)){
       // download(atob(res.data), `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`, { type: currentMachineDocument?.type});
       downloadBase64File(res.data, `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`);
       enqueueSnackbar(res.statusText);
@@ -129,7 +129,6 @@ const handleDownload = () => {
     <Grid sx={{mt:-2}}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
-          <ViewFormField sm={12} isActive={defaultValues.isActive} />
           <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
           <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
           <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
@@ -155,8 +154,8 @@ const handleDownload = () => {
           {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
           <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
-            { currentMachineDocument?.type.startsWith("image") ? 
-            <Link href="#" underline="none" 
+            { currentMachineDocument?.type.startsWith("image") ?
+            <Link href="#" underline="none"
               component="button"
               title='Download File'
               onClick={handleDownload}
@@ -167,7 +166,7 @@ const handleDownload = () => {
                 alt={defaultValues.displayName}
                 src={`data:image/png;base64, ${currentMachineDocument?.content}`}
                 />
-            </Link>: <Link href="#" underline="none" 
+            </Link>: <Link href="#" underline="none"
               sx={{ m:2 }}
               component="button"
               title='Download File'
@@ -178,7 +177,7 @@ const handleDownload = () => {
               <DownloadComponent Document={currentMachineDocument} />
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>
-          {/* {currentMachineDocument?.type.startsWith("image") ? 
+          {/* {currentMachineDocument?.type.startsWith("image") ?
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null} */}
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
           <Grid container sx={{ mt: '1rem' }}>

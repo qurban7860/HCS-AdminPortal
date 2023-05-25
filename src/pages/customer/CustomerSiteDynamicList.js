@@ -6,6 +6,8 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Stack,
   Card,
+  CardMedia,
+  CardContent,
   Grid,
   Box,
   Table,
@@ -18,8 +20,11 @@ import {
   DialogTitle,
   Dialog,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion, AccordionSummary, AccordionDetails, Avatar, CardActionArea
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { CustomAvatar } from '../../components/custom-avatar';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -52,6 +57,7 @@ import CommaJoinField from '../components/CommaJoinField';
 import _mock from '../../_mock';
 import SiteViewForm from './site/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
+
 
 
 // ----------------------------------------------------------------------
@@ -123,6 +129,34 @@ export default function CustomerSiteList() {
   const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
 
+  const AccordionCustom = styled((props) => (
+    <Accordion disableGutters elevation={2} square {...props} />
+  ))(({ theme }) => ({
+    border: `solid 1px ${theme.palette.divider}`,
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    }
+  }));
+
+  const AccordionSummaryCustom = styled((props) => (
+    <AccordionSummary {...props} />
+  ))(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, .07)' : 'rgba(255, 255, 255, .07)',
+    borderBottom: `solid 1px ${theme.palette.divider}`,
+    minHeight: 56
+  }));
+
+  const AccordionDetailsCustom = styled((props) => (
+    <AccordionDetails {...props} />
+  ))(({ theme }) => ({
+    padding: theme.spacing(2),
+    borderTop: `solid 1px ${theme.palette.divider}`,
+
+  }))
+
   const toggleChecked = async () =>
     {
       dispatch(setSiteFormVisibility(!siteAddFormVisibility));
@@ -135,6 +169,7 @@ export default function CustomerSiteList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
+
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
     setActiveIndex(null)
@@ -192,46 +227,79 @@ export default function CustomerSiteList() {
                 <Iconify icon="eva:minus-fill" />
               )
             }
-            >
+          >
             New Site
           </Button>
         </Stack>
       )}
-
-      <Card>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2, py: 2 }}>
-
-        {siteEditFormVisibility && <SiteEditForm />}
-        {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
-        {!siteAddFormVisibility &&
-          !siteEditFormVisibility &&
-          sites.map((site, index) => {
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return (
-              <Grid container lg={12} justifyContent="flex-end" alignItems="flex-end">
-                <Grid item lg={3} sx={{ borderTop: borderTopVal, py: 2 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                    {site.name}
-                  </Typography>
-                </Grid>
-                <Accordion xs={12}>
-                  <AccordionDetails
+        <Box
+          sx={{
+            display: 'block',
+            alignItems: 'center',
+            px: 2,
+            py: 2,
+          }}
+          >
+          {siteEditFormVisibility && <SiteEditForm />}
+          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
+          {!siteAddFormVisibility &&
+            !siteEditFormVisibility &&
+            sites.map((site, index) => {
+              const borderTopVal = index !== 0 ? '0px solid white' : '';
+              return (
+                <Accordion
+                  key={site._id}
+                  expanded={expanded === index}
+                  onChange={handleChange(index)}
+                  >
+                  <AccordionSummary
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     onClick={() => handleAccordianClick(index)}
-                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  >
-                    <Grid container>
-                      <SiteViewForm currentSite={site} />
+                    // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
+                    >
+                    <Grid container xs={12} lg={6} display="block">
+                      {index !== activeIndex ? (
+                        <Card sx={{ display: 'block' }}>
+                          <CardActionArea>
+                              <Box lg={3} >
+                                <CardContent sx={{ flex: '1 0 auto' }}>
+                                  <Box item lg={12}>
+                                    <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                      {site.name}
+                                    </Typography>
+                                    <Typography variant="body2">
+                                      {site.email ? site.email : <br />}
+                                    </Typography>
+                                  </Box>
+                                </CardContent>
+                              </Box>
+                              <Box justifyContent="flex-end" lg={3}>
+                                <CardMedia
+                                  component="img"
+                                  sx={{ width: 100, zIndex: 0 }}
+                                  image="https://www.howickltd.com/asset/1117/w800-h600-q80.png"
+                                  alt="customer's site photo was here"
+                                />
+                              </Box>
+
+                          </CardActionArea>
+                        </Card>
+                      ) : null}
                     </Grid>
-                  </AccordionDetails>
+                  </AccordionSummary>
+                  <AccordionDetailsCustom
+                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                    >
+                    <Box lg={6} justifyContent="flex-end" alignItems="flex-end">
+                      <SiteViewForm currentSite={site} />
+                    </Box>
+                  </AccordionDetailsCustom>
                 </Accordion>
-              </Grid>
-            );
-          })}
-        <TableNoData isNotFound={isNotFound} />
+              );
+            })}
+          <TableNoData isNotFound={isNotFound} />
         </Box>
-      </Card>
     </>
   );
 }

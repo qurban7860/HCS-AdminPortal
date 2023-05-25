@@ -67,7 +67,7 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
         overflow: 'hidden',
         position: 'relative',
         color: 'common.white',
-        bgcolor: `${color}.dark`,
+        bgcolor: `${color}.main`,
         ...sx,
       }}
       {...other}
@@ -76,8 +76,7 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
 
       <Box sx={{ ml: 3 }}>
         <Typography variant="h4"> {fNumber(total)}</Typography>
-
-        <Typography variant="body2" sx={{ opacity: 0.72 }}>
+        <Typography variant="body1" sx={{ opacity: 0.72 }}>
           {title}
         </Typography>
       </Box>
