@@ -94,7 +94,7 @@ export default function SiteViewForm({ currentSite = null }) {
 
   return (
     <Grid>
-      <Grid container justifyContent="flex-end" sx={{ pr: '2rem' }}>
+      <Grid container justifyContent="flex-end" sx={{ pr: '1rem' }}>
         <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       </Grid>
       {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>

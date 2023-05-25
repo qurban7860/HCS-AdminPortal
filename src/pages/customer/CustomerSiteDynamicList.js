@@ -152,8 +152,8 @@ export default function CustomerSiteList() {
   const AccordionDetailsCustom = styled((props) => (
     <AccordionDetails {...props} />
   ))(({ theme }) => ({
-    padding: theme.spacing(2),
-    borderTop: `solid 1px ${theme.palette.divider}`,
+    padding: theme.spacing(1),
+    // borderTop: `solid 1px ${theme.palette.divider}`,
 
   }))
 
@@ -251,7 +251,7 @@ export default function CustomerSiteList() {
                   expanded={expanded === index}
                   onChange={handleChange(index)}
                   sx={{
-                    padding : '0px',
+                    padding: '0px',
                     borderTop: borderTopVal,
                     borderBottom: '0px solid white',
                     boxShadow: 'none',
@@ -272,7 +272,7 @@ export default function CustomerSiteList() {
                         <Card sx={{ display: 'block', width: 'auto' }}>
                           <CardActionArea>
                             <Box lg={4} sx={{ display: 'inline-flex' }}>
-                              <Box justifyContent="flex-start" sx={{width: '200px'}}>
+                              <Box justifyContent="flex-start" sx={{ width: '200px' }}>
                                 <CardContent sx={{ flex: '1 0 auto' }}>
                                   <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
                                     {site.name}
@@ -298,10 +298,25 @@ export default function CustomerSiteList() {
                   </AccordionSummary>
                   <AccordionDetailsCustom
                     expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  >
-                    <Box lg={6} justifyContent="flex-end" alignItems="flex-end">
-                      <SiteViewForm currentSite={site} />
-                    </Box>
+                    aria-controls="panel1a-content"
+                    >
+                    <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
+                      <Grid item lg={4}>
+                        <Card sx={{ width: 'auto', height: '100%', m: 2}}>
+                          <CardActionArea>
+                            <CardMedia
+                              component="img"
+                              sx={{ height:'100%', display: 'block' }}
+                              image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                              alt="customer's site photo was here"
+                            />
+                          </CardActionArea>
+                        </Card>
+                      </Grid>
+                      <Grid item lg={8}>
+                        <SiteViewForm currentSite={site} />
+                      </Grid>
+                    </Grid>
                   </AccordionDetailsCustom>
                 </Accordion>
               );
