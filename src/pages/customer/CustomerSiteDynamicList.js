@@ -10,17 +10,9 @@ import {
   CardContent,
   Grid,
   Box,
-  Table,
   Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
-  Dialog,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails, Avatar, CardActionArea
+  Accordion, AccordionSummary, AccordionDetails, CardActionArea, Breadcrumbs, Link
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { CustomAvatar } from '../../components/custom-avatar';
@@ -227,102 +219,122 @@ export default function CustomerSiteList() {
                 <Iconify icon="eva:minus-fill" />
               )
             }
-          >
+            >
             New Site
-          </Button>
+          </Button>{' '}
+          <Grid container>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Link
+                underline="hover"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.root}
+                >
+                Customer
+              </Link>
+              <Link
+                underline="hover"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.sites}
+                >
+                Sites
+              </Link>
+            </Breadcrumbs>
+          </Grid>
         </Stack>
       )}
-        <Box
-          sx={{
-            display: 'block',
-            alignItems: 'center',
-            py: 2,
-          }}
-          >
-          {siteEditFormVisibility && <SiteEditForm />}
-          {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
-          {!siteAddFormVisibility &&
-            !siteEditFormVisibility &&
-            sites.map((site, index) => {
-              const borderTopVal = index !== 0 ? '0px solid white' : '';
-              return (
-                <Accordion
-                  key={site._id}
-                  expanded={expanded === index}
-                  onChange={handleChange(index)}
-                  sx={{
-                    padding: '0px',
-                    borderTop: borderTopVal,
-                    borderBottom: '0px solid white',
-                    boxShadow: 'none',
-                    borderRadius: '0px',
-                    '&:before': {
-                      display: 'none',
-                    },
-                  }}
+      <Box
+        sx={{
+          display: 'block',
+          alignItems: 'center',
+          py: 2,
+        }}
+      >
+        {siteEditFormVisibility && <SiteEditForm />}
+        {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
+        {!siteAddFormVisibility &&
+          !siteEditFormVisibility &&
+          sites.map((site, index) => {
+            const borderTopVal = index !== 0 ? '0px solid white' : '';
+            return (
+              <Accordion
+                key={site._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{
+                  padding: '0px',
+                  borderTop: borderTopVal,
+                  borderBottom: '0px solid white',
+                  boxShadow: 'none',
+                  borderRadius: '0px',
+                  '&:before': {
+                    display: 'none',
+                  },
+                }}
+              >
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  onClick={() => handleAccordianClick(index)}
+                  // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
                 >
-                  <AccordionSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                    onClick={() => handleAccordianClick(index)}
-                    // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
-                    >
-                    <Grid container xs={12} lg={4}>
-                      {index !== activeIndex ? (
-                        <Card sx={{ display: 'block', width: 'auto' }}>
-                          <CardActionArea>
-                            <Box lg={4} sx={{ display: 'inline-flex' }}>
-                              <Box justifyContent="flex-start" sx={{ width: '200px' }}>
-                                <CardContent sx={{ flex: '1 0 auto' }}>
-                                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                    {site.name}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {site.email ? site.email : <br />}
-                                  </Typography>
-                                </CardContent>
-                              </Box>
-                              <Box lg={4}>
-                                <CardMedia
-                                  component="img"
-                                  sx={{ width: 151, display: 'flex', justifyContent: 'flex-end' }}
-                                  image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                  alt="customer's site photo was here"
-                                />
-                              </Box>
+                  <Grid container xs={12} lg={4}>
+                    {index !== activeIndex ? (
+                      <Card sx={{ display: 'block', width: 'auto' }}>
+                        <CardActionArea>
+                          <Box lg={4} sx={{ display: 'inline-flex' }}>
+                            <Box justifyContent="flex-start" sx={{ width: '200px' }}>
+                              <CardContent sx={{ flex: '1 0 auto' }}>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                  {site.name}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {site.email ? site.email : <br />}
+                                </Typography>
+                              </CardContent>
                             </Box>
-                          </CardActionArea>
-                        </Card>
-                      ) : null}
+                            <Box lg={4}>
+                              <CardMedia
+                                component="img"
+                                sx={{ width: 151, display: 'flex', justifyContent: 'flex-end' }}
+                                image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                alt="customer's site photo was here"
+                              />
+                            </Box>
+                          </Box>
+                        </CardActionArea>
+                      </Card>
+                    ) : null}
+                  </Grid>
+                </AccordionSummary>
+                <AccordionDetailsCustom
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  aria-controls="panel1a-content"
+                >
+                  <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
+                    <Grid item lg={4}>
+                      <Card sx={{ width: 'auto', height: '100%', m: 2 }}>
+                        <CardActionArea>
+                          <CardMedia
+                            component="img"
+                            sx={{ height: '100%', display: 'block' }}
+                            image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                            alt="customer's site photo was here"
+                          />
+                        </CardActionArea>
+                      </Card>
                     </Grid>
-                  </AccordionSummary>
-                  <AccordionDetailsCustom
-                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                    aria-controls="panel1a-content"
-                    >
-                    <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
-                      <Grid item lg={4}>
-                        <Card sx={{ width: 'auto', height: '100%', m: 2}}>
-                          <CardActionArea>
-                            <CardMedia
-                              component="img"
-                              sx={{ height:'100%', display: 'block' }}
-                              image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                              alt="customer's site photo was here"
-                            />
-                          </CardActionArea>
-                        </Card>
-                      </Grid>
-                      <Grid item lg={8}>
-                        <SiteViewForm currentSite={site} />
-                      </Grid>
+                    <Grid item lg={8}>
+                      <SiteViewForm currentSite={site} />
                     </Grid>
-                  </AccordionDetailsCustom>
-                </Accordion>
-              );
-            })}
-          <TableNoData isNotFound={isNotFound} />
-        </Box>
+                  </Grid>
+                </AccordionDetailsCustom>
+              </Accordion>
+            );
+          })}
+        <TableNoData isNotFound={isNotFound} />
+      </Box>
     </>
   );
 }
