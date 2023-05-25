@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo, useState, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import download from 'downloadjs';
 // @mui
 import Image from 'mui-image';
@@ -33,7 +34,7 @@ export default function DownloadDocument({ Document = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
 
   const downloadBase64File = (base64Data, fileName) => {
         // Decode the Base64 file
@@ -60,7 +61,7 @@ export default function DownloadDocument({ Document = null }) {
         //   });
         dispatch(getDocumentDownload(Document._id)).then(res => {
             console.log("res : ",res)
-            if(regEx.test(res.status)){ 
+            if(regEx.test(res.status)){
               download(atob(res.data), `${Document?.displayName}.${Document?.extension}`, { type: Document?.type});
             //   downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
               enqueueSnackbar(res.statusText);

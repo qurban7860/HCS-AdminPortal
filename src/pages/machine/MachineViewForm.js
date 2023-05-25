@@ -89,9 +89,24 @@ export default function MachineViewForm() {
     <Card sx={{ p: 3 }}>
       <Grid container justifyContent="flex-end" alignContent="flex-end">
         <ViewFormEditDeleteButtons sx={{ pt: 5 }} handleEdit={handleEdit} onDelete={onDelete} />
-        <ViewFormField sm={12} isActive={defaultValues.isActive}/>
+        <ViewFormField sm={12} isActive={defaultValues.isActive} />
       </Grid>
       <Grid container>
+        <Grid item container sx={{ py: '1rem' }}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            sx={{
+              backgroundImage: (theme) =>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+          >
+            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
+              Key Details
+            </Typography>
+          </Grid>
+        </Grid>
         <Grid container>
           <Card sx={{ width: '100%', p: '1rem' }}>
             <Grid container>
@@ -113,36 +128,10 @@ export default function MachineViewForm() {
             </Grid>
           </Card>
         </Grid>
-        <Grid item container sx={{ pt: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-            >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Basic Information
-            </Typography>
-          </Grid>
-        </Grid>
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField
-          sm={6}
-          heading="Previous Machine Serial No"
-          param={defaultValues?.parentSerialNo}
-        />
         <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
         <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <ViewFormField
-          sm={6}
-          heading="Work Order / Perchase Order"
-          param={defaultValues?.workOrderRef}
-        />
-
         <ViewFormField
           sm={6}
           heading="Installation Site"
@@ -169,6 +158,12 @@ export default function MachineViewForm() {
             )
           }
         />
+        <ViewFormField
+          sm={6}
+          heading="Work Order / Perchase Order"
+          param={defaultValues?.workOrderRef}
+        />
+
         <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
@@ -258,7 +253,7 @@ export default function MachineViewForm() {
                   `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
               }}
             >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.constrastText' }}>
+              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
                 Address Information
               </Typography>
             </Grid>
@@ -298,7 +293,7 @@ export default function MachineViewForm() {
                 backgroundImage: (theme) =>
                   `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
               }}
-              >
+            >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
                 Howick Resources{' '}
               </Typography>
@@ -351,7 +346,7 @@ export default function MachineViewForm() {
         onClose={handleCloseInstallationSite}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-        >
+      >
         <Grid
           item
           container
@@ -363,7 +358,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-          >
+        >
           <Typography variant="h4" sx={{ px: 2 }}>
             Installation Site{' '}
           </Typography>{' '}
@@ -372,7 +367,7 @@ export default function MachineViewForm() {
             href="#"
             underline="none"
             sx={{ ml: 'auto' }}
-            >
+          >
             {' '}
             <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
           </Link>
@@ -432,7 +427,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-          >
+        >
           <Typography variant="h4" sx={{ px: 2 }}>
             Billing Site{' '}
           </Typography>{' '}
