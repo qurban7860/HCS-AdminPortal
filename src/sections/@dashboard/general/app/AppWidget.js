@@ -48,8 +48,8 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
           },
           value: {
             offsetY: 6,
-            color: theme.palette.common.white,
-            fontSize: theme.typography.subtitle2.fontSize,
+            color: theme.palette.primary.main,
+            fontSize: '0px'
           },
         },
       },
@@ -66,8 +66,8 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
         borderRadius: 2,
         overflow: 'hidden',
         position: 'relative',
-        color: 'common.white',
-        bgcolor: `${color}.main`,
+        color: 'primary.main',
+        bgcolor: 'grey.200',
         ...sx,
       }}
       {...other}
