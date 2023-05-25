@@ -38,7 +38,8 @@ import useResponsive from '../../hooks/useResponsive';
 import CustomerEditForm from './CustomerEditForm';
 // import CustomerSiteList from './CustomerSiteList';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';
-import CustomerContactList from './CustomerContactList';
+// import CustomerContactList from './CustomerContactList';
+import CustomerContactDynamicList from './CustomerContactDynamicList';
 import CustomerMachineList from './CustomerMachineList';
 import DocumentList from '../document/customer/DocumentList';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
@@ -109,7 +110,7 @@ export default function CustomerView({editPage}) {
       value: 'contacts',
       label: 'Contacts',
       icon: <Iconify icon="mdi:account-multiple" />,
-      component: <CustomerContactList />,
+      component: <CustomerContactDynamicList />,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,

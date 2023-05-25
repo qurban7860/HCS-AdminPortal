@@ -248,7 +248,6 @@ export default function CustomerSiteList() {
         sx={{
           display: 'block',
           alignItems: 'center',
-          py: 2,
         }}
       >
         {siteEditFormVisibility && <SiteEditForm />}
@@ -278,7 +277,12 @@ export default function CustomerSiteList() {
                   id="panel1a-header"
                   onClick={() => handleAccordianClick(index)}
                   // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
-                >
+                  sx={{
+                    animation: 'transition.expandIn',
+                    ease: 'ease-in',
+                    transition: 'all 0.10s ease-in',
+                  }}
+                  >
                   <Grid container xs={12} lg={4}>
                     {index !== activeIndex ? (
                       <Card sx={{ display: 'block', width: 'auto' }}>
@@ -311,6 +315,7 @@ export default function CustomerSiteList() {
                 <AccordionDetailsCustom
                   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   aria-controls="panel1a-content"
+                  sx={{ mt: -5 }}
                 >
                   <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
                     <Grid item lg={4}>
