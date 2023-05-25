@@ -3,7 +3,25 @@ import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Card, Grid, Table, Button, Tooltip, TableBody, Container, IconButton, TableContainer, DialogTitle, Dialog,  Typography, Accordion, AccordionSummary, AccordionDetails } from '@mui/material';
+import {
+  Stack,
+  Card,
+  Grid,
+  Button,
+  Box,
+  Link,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Breadcrumbs,
+  DialogTitle,
+  Dialog,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -115,6 +133,13 @@ export default function CustomerContactList() {
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
 
+    const AccordionDetailsCustom = styled((props) => <AccordionDetails {...props} />)(
+      ({ theme }) => ({
+        padding: theme.spacing(1),
+        // borderTop: `solid 1px ${theme.palette.divider}`,
+      })
+    );
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -139,73 +164,129 @@ export default function CustomerContactList() {
             {' '}
             New Contact{' '}
           </Button>
+          <Grid container>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Link
+                underline="hover"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.root}
+              >
+                Customer
+              </Link>
+              <Link
+                underline="hover"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.sites}
+              >
+                Sites
+              </Link>
+            </Breadcrumbs>
+          </Grid>
         </Stack>
       )}
-      <Card >
+      <Box
+        sx={{
+          display: 'block',
+          alignItems: 'center',
+        }}
+        >
         {contactEditFormVisibility && <ContactEditForm />}
         {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
-        {/* {!formVisibility && !contactEditFormVisibility && <Block title="Available Sites"> */}
         {!formVisibility &&
           !contactEditFormVisibility &&
           contacts.map((contact, index) => {
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            const borderTopVal = index !== 0 ? '0px solid white' : '';
             return (
               <Accordion
                 key={contact._id}
                 expanded={expanded === index}
                 onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal }}
+                sx={{
+                  padding: '0px',
+                  borderTop: borderTopVal,
+                  borderBottom: '0px solid white',
+                  boxShadow: 'none',
+                  borderRadius: '0px',
+                  '&:before': {
+                    display: 'none',
+                  },
+                }}
                 >
                 <AccordionSummary
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
                   onClick={() => handleAccordianClick(index)}
+                  // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
+                  sx={{
+                    animation: 'transition.expandIn',
+                    ease: 'ease-in',
+                    transition: 'all 0.10s ease-in',
+                  }}
                   >
-                  {index !== activeIndex ? (
-                    <Grid container spacing={0}>
-                      <Grid item xs={12} sm={6} md={3}>
-                        {contact?.firstName} {contact.lastName}{' '}
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={3}>
-                        {contact?.email && <Typography >{contact.email}</Typography>}
-                      </Grid>
-                      <Grid item xs={12} sm={9} md={2} display={{ sm: 'none', md: 'block' }}>
-                        {contact?.phone && <Typography >{contact.phone}</Typography>}
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={9}
-                        md={2}
-                        display={{ sm: 'none', md: 'none', lg: 'block' }}
-                      >
-                        {contact?.title && <Typography >{contact.title}</Typography>}
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={9}
-                        md={2}
-                        display={{ sm: 'none', md: 'none', lg: 'block' }}
-                      >
-                        {contact?.contactTypes && (
-                          <Typography >
-                            {Object.values(contact.contactTypes)?.join(', ')}
-                          </Typography>
-                        )}
-                      </Grid>
-                    </Grid>
-                  ) : null}
+                  <Grid container xs={12} lg={4}>
+                    {index !== activeIndex ? (
+                      <Card sx={{ display: 'block', width: 'auto' }}>
+                        <CardActionArea>
+                          <Box lg={4} sx={{ display: 'inline-flex' }}>
+                            <Box justifyContent="flex-start" sx={{ width: '200px' }}>
+                              <CardContent sx={{ flex: '1 0 auto' }}>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                  {contact.name}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {contact.email ? contact.email : <br />}
+                                </Typography>
+                              </CardContent>
+                            </Box>
+                            <Box lg={4}>
+                              <CardMedia
+                                component="img"
+                                sx={{ width: 151, display: 'flex', justifyContent: 'flex-end' }}
+                                image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                alt="customer's site photo was here"
+                              />
+                            </Box>
+                          </Box>
+                        </CardActionArea>
+                      </Card>
+                    ) : null}
+                  </Grid>
                 </AccordionSummary>
-                <AccordionDetails sx={{ mt: -5 }}>
-                  <ContactViewForm currentContact={contact} />
-                </AccordionDetails>
+                <AccordionDetailsCustom
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  aria-controls="panel1a-content"
+                  sx={{ mt: -5 }}
+                >
+                  <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
+                    <Grid item lg={4}>
+                      <Card sx={{ width: 'auto', height: '100%', m: 2 }}>
+                        <CardActionArea>
+                          <CardMedia
+                            component="img"
+                            sx={{ height: '100%', display: 'block' }}
+                            image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                            alt="customer's site photo was here"
+                          />
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+                    <Grid item lg={8}>
+                      <ContactViewForm currentContact={contact} />
+                    </Grid>
+                  </Grid>
+                </AccordionDetailsCustom>
               </Accordion>
             );
           })}
         <TableNoData isNotFound={isNotFound} />
-      </Card>
+      </Box>
     </>
   );
+
+
+
 }
 
 // ----------------------------------------------------------------------
