@@ -97,6 +97,8 @@ export default slice.reducer;
 export const {
   setToolInstalledFormVisibility,
   setToolInstalledEditFormVisibility,
+  resetToolInstalled,
+  resetToolsInstalled,
   setResponseMessage,
 } = slice.actions;
 

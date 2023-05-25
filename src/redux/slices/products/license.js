@@ -102,6 +102,7 @@ export const {
   setLicenseEditFormVisibility,
   setLicenseFormVisibility,
   resetLicense,
+  resetLicenses,
   setResponseMessage,
 } = slice.actions;
 
