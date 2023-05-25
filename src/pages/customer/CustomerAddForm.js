@@ -53,7 +53,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
 
   const dispatch = useDispatch();
-  
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -252,10 +252,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               <RHFTextField name="name" label="Customer Name" />
 
               <RHFTextField name="tradingName" label="Trading Name" />
-              
+
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium"  onChange={handlePhoneChange}  forceCallingCode defaultCountry="NZ"/>
-              
+
               {/* <RHFTextField name="fax" label="Fax" /> */}
               <MuiTelInput value={fax} name='fax' label="Fax" flagSize="medium"  onChange={handleFaxChange} forceCallingCode defaultCountry="NZ"/>
 
@@ -267,10 +267,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               </Box>
               </Stack>
               </Card>
-              
+
               <Card sx={{ p: 3, mb: 3 }}>
             <Stack spacing={3}>
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                 Address Information
               </Typography>
               <Box
@@ -299,7 +299,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   freeSolo
                   options={countries.map((country) => country.label)}
                   // getOptionLabel={(option) => option.title}
-                  
+
                   ChipProps={{ size: 'small' }}
                 />  */}
 
@@ -315,7 +315,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                       if(newValue){
                       setCountryVal(newValue);
                       }
-                      else{ 
+                      else{
                       setCountryVal("");
                       }
                     }}
@@ -348,7 +348,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             <Card sx={{ p: 3, mb: 3 }}>
               <Stack spacing={3}>
 
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                 Billing Contact Information
               </Typography>
 
@@ -369,7 +369,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               {/* <RHFTextField name="billingContactPhone" label="Contact Phone" /> */}
               <MuiTelInput value={billingContactPhone} name="billingContactPhone" label="Contact Phone" flagSize="medium"  onChange={handleBillingContactPhoneChange}  forceCallingCode defaultCountry="NZ"/>
-              
+
               <RHFTextField name="billingContactEmail" label="Contact Email" />
 
               </Box>
@@ -388,7 +388,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 alignItems="center"
                 spacing={3}>
 
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                 Technical Contact Information
               </Typography>
 
@@ -412,7 +412,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
               {/* <RHFTextField name="technicalContactPhone" label="Contact Phone" /> */}
               <MuiTelInput value={technicalContactPhone} name="technicalContactPhone" label="Contact Phone" flagSize="medium"  onChange={handleTechnicalContactPhoneChange}  forceCallingCode defaultCountry="NZ"/>
-              
+
               <RHFTextField name="technicalContactEmail" label="Contact Email" />
 
               </Box>}
@@ -425,7 +425,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
 
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+              <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
                 Howick Resources
               </Typography>
 
@@ -438,7 +438,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={accountManVal || null}
                 options={spContacts}
@@ -448,7 +448,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   if(newValue){
                     setAccountManVal(newValue);
                   }
-                  else{ 
+                  else{
                     setAccountManVal("");
                   }
                 }}
@@ -457,7 +457,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={projectManVal || null}
                 options={spContacts}
@@ -467,7 +467,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   if(newValue){
                     setProjectManVal(newValue);
                   }
-                  else{ 
+                  else{
                     setProjectManVal("");
                   }
                 }}
@@ -476,7 +476,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Autocomplete 
+              <Autocomplete
                 // freeSolo
                 value={supportManVal || null}
                 options={spContacts}
@@ -486,7 +486,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   if(newValue){
                     setSupportManVal(newValue);
                   }
-                  else{ 
+                  else{
                     setSupportManVal("");
                   }
                 }}

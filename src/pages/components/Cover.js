@@ -101,7 +101,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               width: { xs: 110, md: 110 },
               height: { xs: 110, md: 110 },
             }}
-          >
+            >
             {/* if the page is Howick, will show the howick logo */}
             {name !== 'HOWICK LTD.' ? null : <LogoAvatar />}
           </CustomAvatar>
