@@ -65,13 +65,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET DOCUMENT NAME
+    resetDocumentName(state){
+      state.documentName = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET DOCUMENT NAME
+    resetDocumentNames(state){
+      state.documentNames = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
+
   },
 });
 
@@ -82,13 +91,9 @@ export default slice.reducer;
 export const {
   setDocumentNameFormVisibility,
   setDocumentNameEditFormVisibility,
-  getCart,
-  addToCart,
+  resetDocumentName,
+  resetDocumentNames,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------Add Document Name------------------------------------------

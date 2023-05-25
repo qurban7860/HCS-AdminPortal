@@ -14,7 +14,7 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  machineDocument: null,
+  machineDocument: {},
   machineDocuments: [],
 };
 
@@ -72,7 +72,7 @@ const slice = createSlice({
 
     // RESET Machine Document
     resetMachineDocument(state){
-      state.machineDocument = null;
+      state.machineDocument = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -86,13 +86,6 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
-    },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
-    },
   },
 });
 
@@ -106,13 +99,7 @@ export const {
   setMachineDocumentEdit,
   resetMachineDocument,
   resetMachineDocuments,
-  getCart,
-  addToCart,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------Add Machine Document------------------------------------------

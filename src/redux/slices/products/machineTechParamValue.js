@@ -15,8 +15,6 @@ const initialState = {
   error: null,
   settings: [],
   setting: null,
-  settingParams: {
-  }
 };
 
 const slice = createSlice({
@@ -67,12 +65,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET SETTING
+    resetSetting(state){
+      state.setting = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET SETTING
+    resetSettings(state){
+      state.settings = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -84,16 +90,12 @@ export default slice.reducer;
 export const {
   setSettingFormVisibility,
   setSettingEditFormVisibility,
-  getCart,
-  addToCart,
+  resetSetting,
+  resetSettings,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
-// ----------------------------Add Note------------------------------------------
+// ----------------------------Add Setting------------------------------------------
 
 export function addSetting(machineId,params) {
     return async (dispatch) => {
@@ -115,7 +117,7 @@ export function addSetting(machineId,params) {
   };
 }
 
-// ---------------------------------Update Note-------------------------------------
+// ---------------------------------Update Setting-------------------------------------
 
 export function updateSetting(machineId,settingId,params) {
   return async (dispatch) => {
@@ -174,7 +176,7 @@ export function getSetting(machineId,settingId) {
   };
 }
 
-// ---------------------------------archive Note-------------------------------------
+// ---------------------------------archive Setting-------------------------------------
 
 export function deleteSetting(machineId,id) {
   return async (dispatch) => {

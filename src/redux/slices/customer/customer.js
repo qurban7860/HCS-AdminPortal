@@ -16,9 +16,6 @@ const initialState = {
   error: null,
   customers: [],
   customer: {},
-  customerParams: {
-
-  }
 };
 
 const slice = createSlice({
@@ -33,22 +30,6 @@ const slice = createSlice({
     // SET TOGGLE
     setCustomerEditFormVisibility(state, action){
       state.customerEditFormFlag = action.payload;
-    },
-
-    // RESET CUSTOMER
-    resetCustomer(state){
-      state.customer = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-
-    // RESET CUSTOMERS
-    resetCustomers(state){
-      state.customers = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
     },
 
     // HAS ERROR
@@ -81,14 +62,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET CUSTOMER
+    resetCustomer(state){
+      state.customer = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET CUSTOMERS
+    resetCustomers(state){
+      state.customers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
+
   },
 });
 
@@ -100,13 +89,7 @@ export const {
   setCustomerEditFormVisibility,
   resetCustomer,
   resetCustomers,
-  getCart,
-  addToCart,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------------------------------------------------

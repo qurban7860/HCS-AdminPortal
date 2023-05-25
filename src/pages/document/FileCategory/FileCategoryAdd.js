@@ -11,7 +11,7 @@ import DocumentNameAddForm from './../DocumentNameAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentNameAdd() {
+export default function FileCategoryAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (

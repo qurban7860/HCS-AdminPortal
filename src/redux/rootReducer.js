@@ -26,7 +26,7 @@ import fileCategoryReducer from './slices/document/fileCategory';
 import customerDocumentReducer from './slices/document/customerDocument';
 import machineDocumentReducer from './slices/document/machineDocument';
 import downloadDocumentReducer from './slices/document/downloadDocument';
-
+import machineConnectionsReducer from './slices/products/machineConnections';
 
 
 // ----------------------------------------------------------------------
@@ -188,6 +188,12 @@ export const downloadDocumentPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const machineConnectionsPersistConfig={
+  key: 'machineConnections',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -214,6 +220,7 @@ const rootReducer = combineReducers({
   customerDocument: persistReducer(customerDocumentPersistConfig, customerDocumentReducer),
   machineDocument: persistReducer(machineDocumentPersistConfig, machineDocumentReducer),
   downloadDocument: persistReducer(downloadDocumentPersistConfig, downloadDocumentReducer),
+  machineConnections: persistReducer(machineConnectionsPersistConfig, machineConnectionsReducer),
 });
 
 export default rootReducer;

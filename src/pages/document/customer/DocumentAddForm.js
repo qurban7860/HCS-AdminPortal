@@ -81,6 +81,7 @@ export default function DocumentAddForm({currentDocument}) {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  
   useEffect(()=>{
     setNameVal("")
     setDocumentNameVal("")
@@ -335,40 +336,8 @@ export default function DocumentAddForm({currentDocument}) {
                         customerAccess={customerAccessVal}
                         onChange={handleChange}
                       />
-                      {/* <RHFSwitch
-                        name="customerAccess"
-                        sx={{ mt: 1 }}
-                        // checked={customerAccessVal}
-                        // onChange={handleChange}
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            variant="body2"
-                            sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}
-                          >
-                            {' '}
-                            Customer Access
-                          </Typography>
-                        }
-                      /> */}
                     </Grid>
-                    {/* <Grid item xs={6} sm={6} md={3} lg={6} sx={{ display: 'flex-end' }}>
-                      <RHFSwitch
-                        sx={{ mt: 1 }}
-                        name="isActive"
-                        labelPlacement="start"
-                        label={
-                          <Typography
-                            variant="body2"
-                            sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}
-                          >
-                            {' '}
-                            Active
-                          </Typography>
-                        }
-                      />
-                    </Grid> */}
-                  </Grid>
+                </Grid>
                 {/* <Grid container lg={6} spacing={3}>
                   <Grid item>
                     <Link

@@ -17,11 +17,11 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
-DocumentViewForm.propTypes = {
+FileCategoryViewForm.propTypes = {
   currentCustomerDocument: PropTypes.object,
 };
 
-export default function DocumentViewForm({ currentCustomerDocument = null }) {
+export default function FileCategoryViewForm({ currentCustomerDocument = null }) {
   const { customerDocument } = useSelector((state) => state.customerDocument);
 
   const navigate = useNavigate();

@@ -56,7 +56,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function CustomerList() {
+export default function DocumentNameList() {
   const {
     page,
     order,

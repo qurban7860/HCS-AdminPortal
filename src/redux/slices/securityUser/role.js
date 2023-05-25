@@ -15,8 +15,6 @@ const initialState = {
   error: null,
   roles: [],
   role: null,
-  roleParams: {
-  }
 };
 
 const slice = createSlice({
@@ -45,21 +43,7 @@ const slice = createSlice({
       state.editFormVisibility = action.payload;
     },
 
-    // RESET USERS
-    resetRoles(state){
-      state.roles = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // RESET USER
-    resetRole(state){
-      state.role = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // GET users
+    // GET  Role
     getRolesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -67,8 +51,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    // GET user
+    // GET Role
     getRoleSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -84,12 +67,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET ROLE
+    resetRole(state){
+      state.role = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET ROLES
+    resetRoles(state){
+      state.roles = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -103,9 +94,7 @@ export const {
   setEditFormVisibility,
   resetRoles,
   resetRole,
-  gotoStep,
-  backStep,
-  nextStep,
+
 } = slice.actions;
 // ----------------------------------------------------------------------
 

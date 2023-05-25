@@ -15,8 +15,6 @@ const initialState = {
   error: null,
   categories: [],
   category: {},
-  categoryParams: {
-  }
 };
 
 const slice = createSlice({
@@ -35,20 +33,7 @@ const slice = createSlice({
     setCategoryFormVisibility(state, action){
       state.categoryFormVisibility = action.payload;
     },
-    // RESET Category
-    resetCategory(state){
-      state.category = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // RESET Categories
-    resetCategories(state){
-      state.category = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
+  
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -77,6 +62,23 @@ const slice = createSlice({
       state.success = true;
       state.initial = true;
     },
+
+    // RESET CATEGORIES
+    resetCategory(state){
+      state.category = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET CATEGORIES
+    resetCategories(state){
+      state.categories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
   },
 });
 

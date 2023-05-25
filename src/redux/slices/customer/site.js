@@ -18,9 +18,6 @@ const initialState = {
   error: null,
   sites: [],
   site: null,
-  siteParams: {
-
-  }
 };
 
 const slice = createSlice({
@@ -89,13 +86,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
-    },
-
-    nextStep(state) {
-      state.checkout.activeStep += 1;
-    },
   },
 });
 
@@ -109,10 +99,6 @@ export const {
   setResponseMessage,
   resetSite,
   resetSites,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------------------------------------------------

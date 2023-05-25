@@ -35,14 +35,6 @@ const slice = createSlice({
       state.machineEditFormFlag = action.payload;
     },
     
-    // RESET Machine
-    resetMachine(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -66,13 +58,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // Reset Customer Machines
-    resetCustomerMachines(state){
-      state.customerMachines = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
+
         
     // GET Machine
     getMachineSuccess(state, action) {
@@ -90,13 +76,28 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET MACHINE
+    resetMachine(state){
+      state.machine = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET MACHINE
+    resetMachines(state){
+      state.machines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // Reset Customer Machines
+    resetCustomerMachines(state){
+      state.customerMachines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -109,13 +110,8 @@ export const {
   setMachineEditFormVisibility,
   resetCustomerMachines,
   resetMachine,
-  getCart,
-  addToCart,
+  resetMachines,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------------------------------------------------
