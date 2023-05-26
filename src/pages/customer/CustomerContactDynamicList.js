@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useMemo, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -13,16 +14,14 @@ import {
   CardContent,
   CardMedia,
   Breadcrumbs,
-  DialogTitle,
   Dialog,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Avatar,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import ViewFormAudit from '../components/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import ViewFormField from '../components/ViewFormField';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -30,16 +29,16 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../components/table';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 // sections
-import { getContacts, setContactFormVisibility } from '../../redux/slices/customer/contact';
+import {
+  getContacts, getContact, setContactFormVisibility } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
 import EmptyContent from '../../components/empty-content';
-
 
 // ----------------------------------------------------------------------
 
@@ -62,14 +61,9 @@ const _accordions = [...Array(8)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export default function CustomerContactList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage
-  } = useTable({
+export default function CustomerContactList(currentContact = null) {
+  const { customer } = useSelector((state) => state.customer);
+  const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: 'createdAt',
   });
   const [openContact, setOpenContact] = useState(false);
@@ -78,14 +72,13 @@ export default function CustomerContactList() {
     setControlled(isExpanded ? panel : false);
   };
   const dispatch = useDispatch();
-  const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } = useSelector((state) => state.contact);
-  const { customer } = useSelector((state) => state.customer);
+  const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } =
+    useSelector((state) => state.contact);
   const [checked, setChecked] = useState(false);
-  const toggleChecked = () =>
-    {
-      setChecked(value => !value);
-      dispatch(setContactFormVisibility(!formVisibility));
-    };
+  const toggleChecked = () => {
+    setChecked((value) => !value);
+    dispatch(setContactFormVisibility(!formVisibility));
+  };
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -93,25 +86,34 @@ export default function CustomerContactList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [currentContactData, setCurrentContactData] = useState({});
   const [expanded, setExpanded] = useState(false);
-  const handleOpenContact = () => setOpenContact(true);
+  // open the dialog and set the current contact to the contact that was clicked
+  const handleOpenContact = (index) => {
+    if(index === activeIndex){
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(index);
+      setOpenContact(true);
+    }}
   const handleCloseContact = () => setOpenContact(false);
 
-  const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+  const handleAccordianClick = (index) => {
+    if (index === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(index);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
     // console.log("Expended : ",expanded)
   };
+
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
-    if(!formVisibility && !contactEditFormVisibility){
+    if (!formVisibility && !contactEditFormVisibility) {
       dispatch(getContacts(customer._id));
     }
   }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility]);
@@ -127,13 +129,6 @@ export default function CustomerContactList() {
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
 
-    const AccordionDetailsCustom = styled((props) => <AccordionDetails {...props} />)(
-      ({ theme }) => ({
-        padding: theme.spacing(1),
-        // borderTop: `solid 1px ${theme.palette.divider}`,
-      })
-    );
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -144,7 +139,8 @@ export default function CustomerContactList() {
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
-  const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName}`);
+  const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName || ''}`);
+
   return (
     <>
       {!contactEditFormVisibility && (
@@ -154,15 +150,16 @@ export default function CustomerContactList() {
             variant="contained"
             startIcon={
               !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
-              }
+            }
             >
             {' '}
             New Contact{' '}
           </Button>
+
           <Grid container>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
               <Link
-                underline="hover"
+                underline="none"
                 variant="subtitle2"
                 color="inherit"
                 href={PATH_DASHBOARD.customer.root}
@@ -170,17 +167,27 @@ export default function CustomerContactList() {
                 Customer
               </Link>
               <Link
-                underline="hover"
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.root}
+              >
+                {customer.name}
+              </Link>
+              <Link
+                underline="none"
                 variant="subtitle2"
                 color="inherit"
                 href={PATH_DASHBOARD.customer.contacts}
-                >
+              >
                 Contacts
               </Link>
             </Breadcrumbs>
           </Grid>
         </Stack>
       )}
+      {contactEditFormVisibility && <ContactEditForm />}
+      {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
       <Grid
         container
         lg={12}
@@ -189,8 +196,6 @@ export default function CustomerContactList() {
         grid-template-rows="repeat(3, 1fr)"
         grid-template-columns="repeat(3, 1fr)"
         >
-        {contactEditFormVisibility && <ContactEditForm />}
-        {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
         {!formVisibility &&
           !contactEditFormVisibility &&
           contacts.map((contact, index) => {
@@ -200,8 +205,14 @@ export default function CustomerContactList() {
                 <Grid item sx={{ display: 'inline-block' }}>
                   {index !== activeIndex ? (
                     <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
-                      <CardActionArea>
-                        <Link onClick={handleOpenContact} href="#" underline="none">
+                      <Link
+                        onClick={() => {
+                          setCurrentContactData(contact);
+                          setOpenContact(true);
+                        }}
+                        underline="none"
+                      >
+                        <CardActionArea>
                           <Grid
                             container
                             justifyContent="center"
@@ -267,8 +278,8 @@ export default function CustomerContactList() {
                                 justifyContent="center"
                                 height="130px"
                               >
-                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                  {contact.firstName} {contact.lastName}
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', p: 1 }}>
+                                  {fullName[index] ? fullName[index] : <br />}
                                 </Typography>
                                 <Typography variant="body2" color="text.secondary">
                                   {contact.title ? contact.title : <br />}
@@ -279,8 +290,8 @@ export default function CustomerContactList() {
                               </CardContent>
                             </Grid>
                           </Grid>
-                        </Link>
-                      </CardActionArea>
+                        </CardActionArea>
+                      </Link>
                     </Card>
                   ) : null}
                 </Grid>
@@ -289,8 +300,8 @@ export default function CustomerContactList() {
                   onClose={handleCloseContact}
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
-                  >
-                  <Grid container lg={12}>
+                >
+                  <Grid container lg={12} justifyContent="center">
                     <Grid item lg={12}>
                       <Card sx={{ width: 'auto', height: 'auto', m: 2 }}>
                         <CardActionArea>
@@ -322,7 +333,6 @@ export default function CustomerContactList() {
                               bottom: '0',
                               zIndex: '-1',
                               objectFit: 'cover',
-                              position: 'relative',
                             }}
                             image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
                             alt="customer's site photo was here"
@@ -331,20 +341,19 @@ export default function CustomerContactList() {
                       </Card>
                     </Grid>
                     <Grid container lg={12}>
-                      <ContactViewForm currentContact={contact} />
+                      <ContactViewForm currentContact={currentContactData} />
                     </Grid>
                   </Grid>
                 </Dialog>
               </>
             );
           })}
-        <TableNoData isNotFound={isNotFound} />
+        <Grid item lg={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
       </Grid>
     </>
   );
-
-
-
 }
 
 // ----------------------------------------------------------------------

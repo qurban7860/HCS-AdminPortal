@@ -24,17 +24,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
@@ -146,7 +136,6 @@ export default function CustomerSiteList() {
   ))(({ theme }) => ({
     padding: theme.spacing(1),
     // borderTop: `solid 1px ${theme.palette.divider}`,
-
   }))
 
   const toggleChecked = async () =>
@@ -219,21 +208,29 @@ export default function CustomerSiteList() {
                 <Iconify icon="eva:minus-fill" />
               )
             }
-            >
+          >
             New Site
           </Button>{' '}
           <Grid container>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
               <Link
-                underline="hover"
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.root}
+              >
+                Customer
+              </Link>
+              <Link
+                underline="none"
                 variant="subtitle2"
                 color="inherit"
                 href={PATH_DASHBOARD.customer.root}
                 >
-                Customer
+                {customer.name}
               </Link>
               <Link
-                underline="hover"
+                underline="none"
                 variant="subtitle2"
                 color="inherit"
                 href={PATH_DASHBOARD.customer.sites}
@@ -282,7 +279,7 @@ export default function CustomerSiteList() {
                     ease: 'ease-in',
                     transition: 'all 0.10s ease-in',
                   }}
-                  >
+                >
                   <Grid container xs={12} lg={4}>
                     {index !== activeIndex ? (
                       <Card sx={{ display: 'block', width: 'auto' }}>
@@ -316,7 +313,7 @@ export default function CustomerSiteList() {
                   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   aria-controls="panel1a-content"
                   sx={{ mt: -5 }}
-                  >
+                >
                   <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
                     <Grid item lg={4}>
                       <Card sx={{ width: 'auto', height: '100%', m: 2 }}>

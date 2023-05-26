@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Divider, Switch, Card, Grid, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack} from '@mui/material';
+import { Divider, Switch, Card, Grid, Typography, Link ,Dialog } from '@mui/material';
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
@@ -215,7 +215,7 @@ export default function MachineViewForm() {
         onClose={handleCloseCustomer}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-      >
+        >
         <Grid
           container
           item
@@ -227,7 +227,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-        >
+          >
           <Typography variant="h4" sx={{ px: 2 }}>
             Customer{' '}
           </Typography>{' '}
