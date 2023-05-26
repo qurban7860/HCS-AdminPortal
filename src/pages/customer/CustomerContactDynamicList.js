@@ -68,21 +68,11 @@ export default function CustomerContactList() {
     page,
     order,
     orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    rowsPerPage
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
+  const [openContact, setOpenContact] = useState(false);
   const [controlled, setControlled] = useState(false);
   const handleChangeControlled = (panel) => (event, isExpanded) => {
     setControlled(isExpanded ? panel : false);
@@ -104,6 +94,8 @@ export default function CustomerContactList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const handleOpenContact = () => setOpenContact(true);
+  const handleCloseContact = () => setOpenContact(false);
 
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
@@ -209,101 +201,129 @@ export default function CustomerContactList() {
                   {index !== activeIndex ? (
                     <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
                       <CardActionArea>
-                        <Grid
-                          container
-                          justifyContent="center"
-                          alignContent="center"
-                          sx={{ display: 'block' }}
+                        <Link onClick={handleOpenContact} href="#" underline="none">
+                          <Grid
+                            container
+                            justifyContent="center"
+                            alignContent="center"
+                            sx={{ display: 'block' }}
                           >
-                          <Grid
-                            item
-                            justifyContent="center"
-                            sx={{ bgcolor: 'blue', alignContent: 'center' }}
-                            >
-                            <CardContent
-                              component={Stack}
-                              display="block"
-                              height="170px"
-                              sx={{ position: 'relative', zIndex: '1' }}
-                              >
-                              <CustomAvatar
-                                sx={{
-                                  width: '100px',
-                                  height: '100px',
-                                  display: 'flex',
-                                  marginTop: '60px',
-                                  marginRight: 'auto',
-                                  marginLeft: 'auto',
-                                  marginBottom: '0px',
-                                  boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                                  fontSize: '40px',
-                                  zIndex: '2',
-                                }}
-                                name={fullName[index]}
-                                alt={fullName[index]}
-                              />
-                              <CardMedia
-                                component="img"
-                                sx={{
-                                  height: '170px',
-                                  opacity: '0.5',
-                                  display: 'block',
-                                  zIndex: '-1',
-                                  position: 'absolute',
-                                  top: '0',
-                                  left: '0',
-                                  right: '0',
-                                  bottom: '0',
-                                  width: '100%',
-                                  objectFit: 'cover',
-                                  objectPosition: 'center',
-                                }}
-                                image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                alt="customer's contact cover photo was here"
-                              />
-                            </CardContent>
-                          </Grid>
-                          <Grid
-                            item
-                            justifyContent="center"
-                            sx={{ display: 'block', textAlign: 'center', width: '200px' }}
-                            >
-                            <CardContent
-                              component={Stack}
-                              display="block"
+                            <Grid
+                              item
                               justifyContent="center"
-                              height="130px"
+                              sx={{ bgcolor: 'blue', alignContent: 'center' }}
+                            >
+                              <CardContent
+                                component={Stack}
+                                display="block"
+                                height="170px"
+                                sx={{ position: 'relative', zIndex: '1' }}
                               >
-                              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                {contact.firstName} {contact.lastName}
-                              </Typography>
-                              <Typography variant="body2" color="text.secondary">
-                                {contact.title ? contact.title : <br />}
-                              </Typography>
-                              <Typography variant="overline" color="secondary.main" pt={2}>
-                                {contact.email ? contact.email : <br />}
-                              </Typography>
-                            </CardContent>
+                                <CustomAvatar
+                                  sx={{
+                                    width: '100px',
+                                    height: '100px',
+                                    display: 'flex',
+                                    marginTop: '60px',
+                                    marginRight: 'auto',
+                                    marginLeft: 'auto',
+                                    marginBottom: '0px',
+                                    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+                                    fontSize: '40px',
+                                    zIndex: '2',
+                                  }}
+                                  name={fullName[index]}
+                                  alt={fullName[index]}
+                                />
+                                <CardMedia
+                                  component="img"
+                                  sx={{
+                                    height: '170px',
+                                    opacity: '0.5',
+                                    display: 'block',
+                                    zIndex: '-1',
+                                    position: 'absolute',
+                                    top: '0',
+                                    left: '0',
+                                    right: '0',
+                                    bottom: '0',
+                                    width: '100%',
+                                    objectFit: 'cover',
+                                    objectPosition: 'center',
+                                  }}
+                                  image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                  alt="customer's contact cover photo was here"
+                                />
+                              </CardContent>
+                            </Grid>
+                            <Grid
+                              item
+                              justifyContent="center"
+                              sx={{ display: 'block', textAlign: 'center', width: '200px' }}
+                            >
+                              <CardContent
+                                component={Stack}
+                                display="block"
+                                justifyContent="center"
+                                height="130px"
+                              >
+                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                  {contact.firstName} {contact.lastName}
+                                </Typography>
+                                <Typography variant="body2" color="text.secondary">
+                                  {contact.title ? contact.title : <br />}
+                                </Typography>
+                                <Typography variant="overline" color="secondary.main" pt={2}>
+                                  {contact.email ? contact.email : <br />}
+                                </Typography>
+                              </CardContent>
+                            </Grid>
                           </Grid>
-                        </Grid>
+                        </Link>
                       </CardActionArea>
                     </Card>
                   ) : null}
                 </Grid>
                 <Dialog
-                  key={contact._id}
-                  open={index === activeIndex}
-                  onClose={() => handleAccordianClick(index)}
+                  open={openContact}
+                  onClose={handleCloseContact}
                   aria-labelledby="alert-dialog-title"
                   aria-describedby="alert-dialog-description"
                   >
-                  <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
-                    <Grid item lg={4}>
-                      <Card sx={{ width: 'auto', height: '100%', m: 2 }}>
+                  <Grid container lg={12}>
+                    <Grid item lg={12}>
+                      <Card sx={{ width: 'auto', height: 'auto', m: 2 }}>
                         <CardActionArea>
+                          {/* <CustomAvatar
+                            sx={{
+                              width: '100px',
+                              height: '100px',
+                              display: 'flex',
+                              marginTop: '60px',
+                              marginRight: 'auto',
+                              marginLeft: 'auto',
+                              marginBottom: '0px',
+                              boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+                              fontSize: '40px',
+                              zIndex: '2',
+                            }}
+                            name={fullName[index]}
+                            alt={fullName[index]}
+                          /> */}
                           <CardMedia
                             component="img"
-                            sx={{ height: '100%', display: 'block' }}
+                            sx={{
+                              height: '200px',
+                              width: '100%',
+                              display: 'block',
+                              top: '0',
+                              left: '0',
+                              right: '0',
+                              bottom: '0',
+                              zIndex: '-1',
+                              objectFit: 'cover',
+                              position: 'relative',
+                            }}
                             image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
                             alt="customer's site photo was here"
                           />
