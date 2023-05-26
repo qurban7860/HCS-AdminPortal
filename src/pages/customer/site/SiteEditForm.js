@@ -19,6 +19,7 @@ import { updateSite, setSiteEditFormVisibility } from '../../../redux/slices/cus
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
+import GoogleMaps from '../../../assets/GoogleMaps';
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 import AddFormButtons from '../../components/AddFormButtons';
@@ -292,11 +293,35 @@ export default function SiteEditForm() {
                     )}
                 />
 
-                <RHFTextField name="lat" label="Latitude" />
+                {/* <RHFTextField name="lat" label="Latitude" /> */}
 
-                <RHFTextField name="long" label="Longitude" />
+                {/* <RHFTextField name="long" label="Longitude" /> */}
 
               </Box>
+
+              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
+                Pinned Location
+              </Typography>
+              
+              <Box
+                rowGap={2}
+                columnGap={1}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(1, 1fr)',
+                }}
+              >
+              
+                <GoogleMaps
+                  lat={defaultValues.lat  ? defaultValues.lat : 0}
+                  lng={defaultValues.long ? defaultValues.long : 0}
+                  edit
+                />  
+                {/* <RHFTextField name="lat" label="Latitude" />
+                <RHFTextField name="long" label="Longitude" /> */}
+              </Box>
+
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
                 Contact Details
             </Typography>

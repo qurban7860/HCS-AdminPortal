@@ -14,7 +14,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
-
+import GoogleMaps from '../../../assets/GoogleMaps';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
@@ -127,8 +127,13 @@ export default function SiteViewForm({ currentSite = null }) {
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
 
         <Grid container>
-          <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
-          <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
+          {(defaultValues.lat && defaultValues.long) && <GoogleMaps 
+            lat={defaultValues.lat  ? defaultValues.lat : 0}
+            lng={defaultValues.long ? defaultValues.long : 0}
+          />}  
+
+          {/* <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
+          <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} /> */}
         </Grid>
 
         <Grid container>

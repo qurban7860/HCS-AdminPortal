@@ -18,6 +18,8 @@ const initialState = {
   error: null,
   sites: [],
   site: null,
+  lat: '',
+  long: '',
 };
 
 const slice = createSlice({
@@ -86,6 +88,11 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    setLatLongCoordinates(state, action) {
+      state.lat = action.payload.lat;
+      state.long = action.payload.lng;
+    },
+
   },
 });
 
@@ -94,6 +101,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  setLatLongCoordinates,
   setSiteFormVisibility,
   setSiteEditFormVisibility,
   setResponseMessage,
@@ -104,7 +112,8 @@ export const {
 // ----------------------------------------------------------------------
 
 export function addSite(params) {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { lat, long } = getState().site;
     dispatch(slice.actions.setSiteFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
@@ -116,8 +125,8 @@ export function addSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          lat: params.lat,
-          long: params.long,
+          lat,
+          long,
           isActive: params.isActive,
           address: {}
         };
@@ -168,7 +177,8 @@ export function addSite(params) {
 
 export function updateSite(params,customerId,Id) {
   
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const { lat, long } = getState().site;
     dispatch(slice.actions.setSiteEditFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
@@ -180,8 +190,8 @@ export function updateSite(params,customerId,Id) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          lat: params.lat,
-          long: params.long,
+          lat,
+          long,
           isActive: params.isActive,
           address: {}
         };
