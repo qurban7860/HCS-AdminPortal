@@ -3,6 +3,8 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
+import { CONFIG } from '../config-global';
+
 
 const containerStyle = {
   width: '400px',
@@ -25,9 +27,10 @@ GoogleMaps.propTypes = {
 export default function GoogleMaps({ lat, lng, edit = false }) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey:  process.env.GOOGLE_MAPS_API_KEY || 'AIzaSyDKh6PmxP2Esl8t9EFyttd3g3_jNgej9RY'
+    googleMapsApiKey:  CONFIG.GOOGLE_MAPS_API_KEY || ''
   });
-  
+
+
   const dispatch = useDispatch();
   const [map, setMap] = useState(null);
   const [markerPosition, setMarkerPosition] = useState(null);

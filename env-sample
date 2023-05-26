@@ -6,7 +6,7 @@ REACT_APP_ENV=Dev
 REACT_APP_BG_COLOR='#E40066'
 REACT_APP_MESSAGE_REGISTER_USER='Welcome to Howick Cloud Services'
 REACT_APP_MESSAGE_LOGIN_USER='Hi, Welcome to Howick Cloud Services'
-GOOGLE_MAPS_API_KEY=AIzaSyDKh6PmxP2Esl8t9EFyttd3g3_jNgej9RY
+REACT_APP_GOOGLE_MAPS_API_KEY=AIzaSyAgjPEqyEU_GIf7BPOL6pzHTEyjlA1W7_o
 
 
 #back-end server configuration

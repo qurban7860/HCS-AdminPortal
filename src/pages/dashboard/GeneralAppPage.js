@@ -10,6 +10,9 @@ import ChartMixed from '../../sections/_examples/extra/chart/ChartMixed';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
+// 
+import GoogleMaps from '../../assets/GoogleMaps';
+
 import {
   _appFeatured,
   _appAuthors,
@@ -300,6 +303,13 @@ export default function GeneralAppPage() {
                   height="300px"
                   width="100%"
                 /> */}
+              </Card>
+            </Grid>
+          </Grid>
+          <Grid container item xs={12} md={16} spacing={3} mt={2}>
+            <Grid item xs={12} md={12} lg={12}>
+              <Card sx={{ px: 3, mb: 3 }}>
+                <GoogleMaps/>  
               </Card>
             </Grid>
           </Grid>
