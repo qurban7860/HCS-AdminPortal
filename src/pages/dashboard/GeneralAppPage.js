@@ -5,6 +5,8 @@ import Chart from "react-apexcharts";
 import { useTheme } from '@mui/material/styles';
 import { Typography, Container, Grid, Stack, Button, Card   } from '@mui/material';
 import { AppShortcutRounded, CenterFocusStrong } from '@mui/icons-material';
+import ChartBar from '../../sections/_examples/extra/chart/ChartBar'
+import ChartMixed from '../../sections/_examples/extra/chart/ChartMixed';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
@@ -35,6 +37,7 @@ import { SeoIllustration } from '../../assets/illustrations';
 import MachineListTableToolbar from '../machine/MachineListTableToolbar'
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count'
+
 
 
 
@@ -183,7 +186,16 @@ export default function GeneralAppPage() {
         <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
           <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
-              <AppWidgetSummary
+              <AppWidget
+                title="Customers"
+                total={count?.customerCount || 0}
+                icon="mdi:account-group"
+                color="warning"
+                chart={{
+                  series: 48,
+                }}
+              />
+              {/* <AppWidgetSummary
                 title="Customers"
                 percent={-0.1}
                 total={count?.customerCount || 0}
@@ -191,30 +203,50 @@ export default function GeneralAppPage() {
                   colors: [theme.palette.warning.main],
                   series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
                 }}
-              />
+              /> */}
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AppWidgetSummary
+              <AppWidget
                 title="Sites"
-                percent={2.6}
                 total={count?.siteCount || 0}
+                icon="eva:email-fill"
+                color="bronze"
                 chart={{
-                  colors: [theme.palette.primary.main],
-                  series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
+                  series: 75,
                 }}
               />
             </Grid>
           </Grid>
           <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-              <AppWidgetSummary
+              <AppWidget
+                title="Machines"
+                total={count?.machineCount || 0}
+                icon="mdi:window-shutter-settings"
+                color="info"
+                chart={{
+                  series: 75,
+                }}
+              />
+
+              {/* <AppWidgetSummary
                 title="Machines"
                 // percent={0.2}
                 total={count?.machineCount || 0}
-              />
+              /> */}
             </Grid>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-              <AppWidgetSummary
+              <AppWidget
+                title="Active Users"
+                total={count?.userCount || 0}
+                icon="mdi:account"
+                color="error"
+                chart={{
+                  series: 75,
+                }}
+              />
+
+              {/* <AppWidgetSummary
                 title="Active Users"
                 // percent={2.6}
                 total={count?.userCount || 0}
@@ -222,7 +254,7 @@ export default function GeneralAppPage() {
                 //   colors: [theme.palette.primary.main],
                 //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
                 // }}
-              />
+              /> */}
             </Grid>
           </Grid>
           <Grid container item xs={12} md={16} spacing={3} mt={2}>
@@ -231,13 +263,21 @@ export default function GeneralAppPage() {
                 <Stack sx={{ pt: 2 }}>
                   <Typography variant="subtitle2">Customers</Typography>
                 </Stack>
-                <Chart
+                <ChartBar
                   options={CustomerData.options}
                   series={CustomerData.series}
                   type="bar"
                   height="300px"
                   width="100%"
                 />
+
+                {/* <Chart
+                  options={CustomerData.options}
+                  series={CustomerData.series}
+                  type="bar"
+                  height="300px"
+                  width="100%"
+                /> */}
               </Card>
             </Grid>
             <Grid item xs={12} md={6} lg={6}>
@@ -245,13 +285,21 @@ export default function GeneralAppPage() {
                 <Stack sx={{ pt: 2 }}>
                   <Typography variant="subtitle2">Machine Models</Typography>
                 </Stack>
-                <Chart
+                <ChartMixed
+                  options={ModelData.options}
+                  series={ModelData.series}
+
+                  height="300px"
+                  width="100%"
+                />
+
+                {/* <Chart
                   options={ModelData.options}
                   series={ModelData.series}
                   type="bar"
                   height="300px"
                   width="100%"
-                />
+                /> */}
               </Card>
             </Grid>
           </Grid>

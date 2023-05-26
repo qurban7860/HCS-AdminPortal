@@ -6,20 +6,17 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Stack,
   Card,
+  CardMedia,
+  CardContent,
   Grid,
   Box,
-  Table,
   Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
-  Dialog,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion, AccordionSummary, AccordionDetails, CardActionArea, Breadcrumbs, Link
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { CustomAvatar } from '../../components/custom-avatar';
+import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -27,17 +24,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
@@ -52,6 +39,7 @@ import CommaJoinField from '../components/CommaJoinField';
 import _mock from '../../_mock';
 import SiteViewForm from './site/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
+
 
 
 // ----------------------------------------------------------------------
@@ -123,6 +111,33 @@ export default function CustomerSiteList() {
   const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
 
+  const AccordionCustom = styled((props) => (
+    <Accordion disableGutters elevation={2} square {...props} />
+  ))(({ theme }) => ({
+    border: `solid 1px ${theme.palette.divider}`,
+    '&:not(:last-child)': {
+      borderBottom: 0,
+    },
+    '&:before': {
+      display: 'none',
+    }
+  }));
+
+  const AccordionSummaryCustom = styled((props) => (
+    <AccordionSummary {...props} />
+  ))(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, .07)' : 'rgba(255, 255, 255, .07)',
+    borderBottom: `solid 1px ${theme.palette.divider}`,
+    minHeight: 56
+  }));
+
+  const AccordionDetailsCustom = styled((props) => (
+    <AccordionDetails {...props} />
+  ))(({ theme }) => ({
+    padding: theme.spacing(1),
+    // borderTop: `solid 1px ${theme.palette.divider}`,
+  }))
+
   const toggleChecked = async () =>
     {
       dispatch(setSiteFormVisibility(!siteAddFormVisibility));
@@ -135,6 +150,7 @@ export default function CustomerSiteList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
+
   const handleAccordianClick = (accordianIndex) => {
    if(accordianIndex === activeIndex ){
     setActiveIndex(null)
@@ -192,46 +208,135 @@ export default function CustomerSiteList() {
                 <Iconify icon="eva:minus-fill" />
               )
             }
-            >
+          >
             New Site
-          </Button>
+          </Button>{' '}
+          <Grid container>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Link
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.root}
+              >
+                Customer
+              </Link>
+              <Link
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.root}
+                >
+                {customer.name}
+              </Link>
+              <Link
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.sites}
+                >
+                Sites
+              </Link>
+            </Breadcrumbs>
+          </Grid>
         </Stack>
       )}
-
-      <Card>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', px: 2, py: 2 }}>
-
+      <Box
+        sx={{
+          display: 'block',
+          alignItems: 'center',
+        }}
+      >
         {siteEditFormVisibility && <SiteEditForm />}
         {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
         {!siteAddFormVisibility &&
           !siteEditFormVisibility &&
           sites.map((site, index) => {
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+            const borderTopVal = index !== 0 ? '0px solid white' : '';
             return (
-              <Grid container lg={12} justifyContent="flex-end" alignItems="flex-end">
-                <Grid item lg={3} sx={{ borderTop: borderTopVal, py: 2 }}>
-                  <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
-                    {site.name}
-                  </Typography>
-                </Grid>
-                <Accordion xs={12}>
-                  <AccordionDetails
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                    onClick={() => handleAccordianClick(index)}
-                    expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  >
-                    <Grid container>
+              <Accordion
+                key={site._id}
+                expanded={expanded === index}
+                onChange={handleChange(index)}
+                sx={{
+                  padding: '0px',
+                  borderTop: borderTopVal,
+                  borderBottom: '0px solid white',
+                  boxShadow: 'none',
+                  borderRadius: '0px',
+                  '&:before': {
+                    display: 'none',
+                  },
+                }}
+              >
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                  onClick={() => handleAccordianClick(index)}
+                  // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
+                  sx={{
+                    animation: 'transition.expandIn',
+                    ease: 'ease-in',
+                    transition: 'all 0.10s ease-in',
+                  }}
+                >
+                  <Grid container xs={12} lg={4}>
+                    {index !== activeIndex ? (
+                      <Card sx={{ display: 'block', width: 'auto' }}>
+                        <CardActionArea>
+                          <Box lg={4} sx={{ display: 'inline-flex' }}>
+                            <Box justifyContent="flex-start" sx={{ width: '200px' }}>
+                              <CardContent sx={{ flex: '1 0 auto' }}>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                  {site.name}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {site.email ? site.email : <br />}
+                                </Typography>
+                              </CardContent>
+                            </Box>
+                            <Box lg={4}>
+                              <CardMedia
+                                component="img"
+                                sx={{ width: 151, display: 'flex', justifyContent: 'flex-end' }}
+                                image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                alt="customer's site photo was here"
+                              />
+                            </Box>
+                          </Box>
+                        </CardActionArea>
+                      </Card>
+                    ) : null}
+                  </Grid>
+                </AccordionSummary>
+                <AccordionDetailsCustom
+                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                  aria-controls="panel1a-content"
+                  sx={{ mt: -5 }}
+                >
+                  <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
+                    <Grid item lg={4}>
+                      <Card sx={{ width: 'auto', height: '100%', m: 2 }}>
+                        <CardActionArea>
+                          <CardMedia
+                            component="img"
+                            sx={{ height: '100%', display: 'block' }}
+                            image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                            alt="customer's site photo was here"
+                          />
+                        </CardActionArea>
+                      </Card>
+                    </Grid>
+                    <Grid item lg={8}>
                       <SiteViewForm currentSite={site} />
                     </Grid>
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
+                  </Grid>
+                </AccordionDetailsCustom>
+              </Accordion>
             );
           })}
         <TableNoData isNotFound={isNotFound} />
-        </Box>
-      </Card>
+      </Box>
     </>
   );
 }

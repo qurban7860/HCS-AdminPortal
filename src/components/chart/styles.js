@@ -17,7 +17,7 @@ export default function StyledChart() {
           '.apexcharts-xaxistooltip': {
             ...bgBlur({ color: theme.palette.background.default }),
             border: 0,
-            color: theme.palette.text.primary,
+            color: 'black',
             boxShadow: theme.customShadows.dropdown,
             borderRadius: Number(theme.shape.borderRadius) * 1.5,
             '&:before': { borderBottomColor: 'transparent' },
@@ -33,7 +33,7 @@ export default function StyledChart() {
               textAlign: 'center',
               fontWeight: theme.typography.fontWeightBold,
               backgroundColor: alpha(theme.palette.grey[500], 0.16),
-              color: theme.palette.text[theme.palette.mode === 'light' ? 'secondary' : 'primary'],
+              color: theme.palette.text[theme.palette.mode === 'light' ? 'primary' : 'secondary'],
             },
           },
 

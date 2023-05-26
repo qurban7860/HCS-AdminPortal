@@ -36,9 +36,10 @@ import useResponsive from '../../hooks/useResponsive';
 
 
 import CustomerEditForm from './CustomerEditForm';
-import CustomerSiteList from './CustomerSiteList';
-// import CustomerSiteDynamicList from './CustomerSiteDynamicList';
-import CustomerContactList from './CustomerContactList';
+// import CustomerSiteList from './CustomerSiteList';
+import CustomerSiteDynamicList from './CustomerSiteDynamicList';
+// import CustomerContactList from './CustomerContactList';
+import CustomerContactDynamicList from './CustomerContactDynamicList';
 import CustomerMachineList from './CustomerMachineList';
 import DocumentList from '../document/customer/DocumentList';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
@@ -95,44 +96,51 @@ export default function CustomerView({editPage}) {
       value: 'customer-info',
       label: 'Customer Info',
       icon: <Iconify icon="mdi:badge-account" />,
-      component: currentComponent
+      component: currentComponent,
     },
     {
       disabled: customerEditFormFlag || contactEditFormVisibility || noteEditFormVisibility,
       value: 'sites',
       label: 'Sites',
       icon: <Iconify icon="mdi:map-legend" />,
-      component: <CustomerSiteList/>,
+      component: <CustomerSiteDynamicList />,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || noteEditFormVisibility,
       value: 'contacts',
       label: 'Contacts',
       icon: <Iconify icon="mdi:account-multiple" />,
-      component: <CustomerContactList/>,
+      component: <CustomerContactDynamicList />,
     },
     {
       disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="mdi:note-multiple" />,
-      component: <CustomerNoteList/>
+      component: <CustomerNoteList />,
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      disabled:
+        customerEditFormFlag ||
+        siteEditFormVisibility ||
+        contactEditFormVisibility ||
+        noteEditFormVisibility,
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
-      component: <DocumentList/>
+      component: <DocumentList />,
     },
     {
-      disabled: customerEditFormFlag || siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      disabled:
+        customerEditFormFlag ||
+        siteEditFormVisibility ||
+        contactEditFormVisibility ||
+        noteEditFormVisibility,
       value: 'machines',
       label: 'Machines',
       icon: <Iconify icon="mdi:greenhouse" />,
-      component: <CustomerMachineList />
-    }
-
+      component: <CustomerMachineList />,
+    },
   ];
 
   return (

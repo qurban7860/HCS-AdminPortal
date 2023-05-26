@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch,Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch,Card, Grid, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
 // redux
 import { deleteSite, getSite, getSites, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
 
@@ -94,7 +94,7 @@ export default function SiteViewForm({ currentSite = null }) {
 
   return (
     <Grid>
-      <Grid container justifyContent="flex-end" sx={{ pr: '2rem' }}>
+      <Grid container justifyContent="flex-end" sx={{ pr: '1rem' }}>
         <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       </Grid>
       {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>

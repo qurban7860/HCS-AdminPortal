@@ -88,7 +88,11 @@ const HOWICKORANGE = {
 };
 
 const HOWICKBRONZE = {
+  lighter: '#B8AEA3',
+  light: '#A39586',
   main: '#897A69',
+  dark: '#5E5244',
+  darker: '#473D31',
 };
 
 const HOWICKBURNIN = {
