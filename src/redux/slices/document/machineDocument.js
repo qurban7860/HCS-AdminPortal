@@ -146,6 +146,7 @@ export function updateMachineDocument(machineDocumentId, params,machineId) {
     try {
       const data = { 
         displayName: params?.displayName,
+        documentName: params?.documentName,
         customerAccess: params.customerAccess,
         isActive: params.isActive,
         description: params.description,

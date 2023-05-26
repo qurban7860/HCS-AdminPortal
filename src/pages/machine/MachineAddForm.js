@@ -329,7 +329,7 @@ const onSubmit = async (data) => {
                 ChipProps={{ size: 'small' }}
               />
               
-              {/* <Autocomplete
+              <Autocomplete
                 // freeSolo
                 multiple
                 value={machineConnections || null}
@@ -348,7 +348,7 @@ const onSubmit = async (data) => {
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Machine Connections" />}
                 ChipProps={{ size: 'small' }}
-              /> */}
+              />
               
               <Autocomplete
                 // freeSolo

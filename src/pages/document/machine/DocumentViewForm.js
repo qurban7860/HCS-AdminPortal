@@ -42,7 +42,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   const { machine , machines } = useSelector((state) => state.machine);
 const { enqueueSnackbar } = useSnackbar();
 // console.log(machineDocument)
-// console.log("currentMachineDocument", currentMachineDocument)
+console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
