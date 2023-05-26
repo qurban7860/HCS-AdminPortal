@@ -12,10 +12,8 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  machinestatuses: [],
   machinestatus: {},
-  machinestatusParams: {
-  }
+  machinestatuses: [],
 };
 
 const slice = createSlice({
@@ -31,15 +29,6 @@ const slice = createSlice({
     setMachinestatusesEditFormVisibility(state, action){
       state.machinestatusEditFormFlag = action.payload;
     },
-    
-    // RESET CUSTOMER
-    resetMachinestatus(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -48,7 +37,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  STATUSES
     getMachinestatusesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -56,7 +45,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET STATUS
     getMachinestatusSuccess(state, action) {
       
       state.isLoading = false;
@@ -73,13 +62,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET 
+    resetMachineStatus(state){
+      state.machinestatus = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET 
+    resetMachineStatuses(state){
+      state.machinestatuses = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -91,13 +87,8 @@ export default slice.reducer;
 export const {
   setMachinestatusesEditFormVisibility,
   resetMachineStatus,
-  getCart,
-  addToCart,
+  resetMachineStatuses,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 

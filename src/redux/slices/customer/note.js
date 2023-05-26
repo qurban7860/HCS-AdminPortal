@@ -19,9 +19,6 @@ const initialState = {
   error: null,
   notes: [],
   note: null,
-  noteParams: {
-
-  }
 };
 
 const slice = createSlice({
@@ -49,20 +46,7 @@ const slice = createSlice({
       state.error = action.payload;
       state.initial = true;
     },
-    // RESET NOTE
-    resetNote(state){
-      state.note = null;
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-    // RESET NOTES
-    resetNotes(state){
-      state.notes = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
+
     // GET Notes
     getNotesSuccess(state, action) {
       state.isLoading = false;
@@ -87,14 +71,21 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET NOTE
+    resetNote(state){
+      state.note = null;
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+    // RESET NOTES
+    resetNotes(state){
+      state.notes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
-    },
   },
 });
 
@@ -108,10 +99,6 @@ export const {
   resetNote,
   resetNotes,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------Save Note------------------------------------------

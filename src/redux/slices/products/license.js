@@ -13,11 +13,8 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  licenses: [],
   license: {},
-  licenseParams: {
-
-  }
+  licenses: [],
 };
 
 const slice = createSlice({
@@ -37,14 +34,6 @@ const slice = createSlice({
     // SET TOGGLE
     setLicenseFormVisibility(state, action){
       state.formVisibility = action.payload;
-    },
-
-    // RESET License
-    resetLicense(state){
-      state.license = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
     },
 
     // HAS ERROR
@@ -77,6 +66,24 @@ const slice = createSlice({
       state.initial = true;
     },
 
+
+    // RESET LICENSE
+    resetLicense(state){
+      state.license = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET LICENSE
+    resetLicenses(state){
+      state.licenses = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+
     backStep(state) {
       state.checkout.activeStep -= 1;
     },
@@ -95,12 +102,8 @@ export const {
   setLicenseEditFormVisibility,
   setLicenseFormVisibility,
   resetLicense,
-  getCart,
-  addToCart,
+  resetLicenses,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
 } = slice.actions;
 
 

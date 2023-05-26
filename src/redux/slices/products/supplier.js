@@ -14,8 +14,6 @@ const initialState = {
   error: null,
   suppliers: [],
   supplier: {},
-  supplierParams: {
-  }
 };
 
 const slice = createSlice({
@@ -31,14 +29,6 @@ const slice = createSlice({
     setSupplierEditFormVisibility(state, action){
       state.supplierEditFormFlag = action.payload;
     },
-    
-    // RESET CUSTOMER
-    resetSupplier(state){
-      state.machine = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -47,7 +37,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET Supplier
     getSuppliersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,7 +45,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET Supplier
     getSupplierSuccess(state, action) {
       
       state.isLoading = false;
@@ -71,12 +61,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET SUPPLIERS
+    resetSupplier(state){
+      state.supplier = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+
+    // RESET SUPPLIERS
+    resetSuppliers(state){
+      state.suppliers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
+
   },
 });
 
@@ -87,13 +87,8 @@ export default slice.reducer;
 export const {
   setSupplierEditFormVisibility,
   resetSupplier,
-  getCart,
-  addToCart,
+  resetSuppliers,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 //------------------------------------------------------------------------------

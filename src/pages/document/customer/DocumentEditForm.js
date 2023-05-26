@@ -38,7 +38,7 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
-export default function SettingEditForm() {
+export default function DocumentEditForm() {
 
   const { customerDocument } = useSelector((state) => state.customerDocument);
   console.log("customerDocument : ",customerDocument)
@@ -54,40 +54,22 @@ export default function SettingEditForm() {
   const [ fileCategoryVal, setFileCategoryVal] = useState('')
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
   const [ nameVal, setNameVal] = useState("")
-  // console.log("customer access : ", customerAccessVal)
   const [files, setFiles] = useState([]);
-  const [ machineVal, setMachineVal] = useState('')
-  const [ customerVal, setCustomerVal] = useState('')
-  const [ siteVal, setSiteVal] = useState('')
-  const [ contactVal, setContactVal] = useState('')
 
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  useLayoutEffect(() => {
-
-  }, [dispatch , ]);
-
-  // useLayoutEffect(() => {
-  //   const filterSetting = [];
-  //   settings.map((setting)=>(filterSetting.push(setting.techParam._id)))
-  //   const filteredsetting = techparamsByCategory.filter(item => !filterSetting.includes(item._id));
-  //   setparamData(filteredsetting);
-  //   }, [settings,techparamsByCategory]);
-  // const EditSettingSchema = Yup.object().shape({
-  //   techParamValue: Yup.string().max(20),
-  // });
-
-  useEffect(()=>{
-    setNameVal(customerDocument?.name)
+  useLayoutEffect(()=>{
+    setNameVal(customerDocument?.displayName)
     setCustomerAccessVal(customerDocument?.customerAccess)
     setFileCategoryVal(customerDocument?.category)
     setDocumentNameVal(customerDocument?.documentName)
   },[customerDocument])
-  const EditSettingSchema = Yup.object().shape({
+
+  const EditCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
-    description: Yup.string().max(10000),
+    description: Yup.string().max(1000),
     // image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });
@@ -95,16 +77,18 @@ export default function SettingEditForm() {
   const defaultValues = useMemo(
     () => ({
       displayName: nameVal,
-      description: customerDocument?.description || "",
+      description: customerDocument?.description ? customerDocument?.description : "",
       // image: null,
       isActive: customerDocument?.isActive,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [customerDocument, nameVal]
   );
+
 console.log("defaultValues : ",defaultValues)
 
   const methods = useForm({
-    resolver: yupResolver(EditSettingSchema),
+    resolver: yupResolver(EditCustomerDocumentSchema),
     defaultValues,
   });
 
@@ -142,7 +126,7 @@ console.log("defaultValues : ",defaultValues)
         if(documentNameVal){
           data.documentName = documentNameVal._id
         }
-        // console.log("data : ", data);
+        console.log("data : ", data);
       await postAndGet(dispatch, enqueueSnackbar,updateCustomerDocument(customerDocument._id,data),getCustomerDocuments(customer._id));
       dispatch(resetCustomerDocument());
       dispatch(setCustomerDocumentEditFormVisibility(false));
@@ -209,22 +193,10 @@ console.log("defaultValues : ",defaultValues)
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <FormHeading heading='Edit Document'/>
-              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
+              <TextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}} />
               <Box rowGap={3} columnGap={3} display="grid" gridTemplateColumns={{  xs: 'repeat(1, 1fr)',  sm: 'repeat(2, 1fr)', }} >
-              
-              {/* <Grid item xs={12} sm={12} sx={{display:'flex'}}>
-                  <Grid item xs={12} sm={6} sx={{display:'flex'}}>
-                   <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
-                        Customer Access
-                      </Typography>
-                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-                  </Grid>
-                  <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
-              </Grid> */}
 
               <Autocomplete
-                // freeSolo
-                disabled
                 value={documentNameVal || null}
                 options={documentNames}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -232,7 +204,6 @@ console.log("defaultValues : ",defaultValues)
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
-                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
@@ -245,7 +216,6 @@ console.log("defaultValues : ",defaultValues)
               />
 
               <Autocomplete
-                // freeSolo
                 disabled
                 value={fileCategoryVal || null}
                 options={fileCategories}
@@ -265,85 +235,8 @@ console.log("defaultValues : ",defaultValues)
                 ChipProps={{ size: 'small' }}
               />
               
-              {/* <Autocomplete
-                // freeSolo
-                value={machineVal || null}
-                options={machines}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setMachineVal(newValue);
-                  }
-                  else{  
-                    setMachineVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Machine" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-              
-              {/* <Autocomplete 
-                value={customerVal || null}
-                options={customers}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setCustomerVal(newValue);
-                  }
-                  else{ 
-                  setCustomerVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Customer" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-
-              {/* <Autocomplete 
-                // freeSolo
-                value={siteVal || null}
-                options={sites}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setSiteVal(newValue);
-                  }
-                  else{ 
-                  setSiteVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Site" />}
-                ChipProps={{ size: 'small' }}
-              />
-
-              <Autocomplete 
-                // freeSolo
-                value={contactVal || null}
-                options={contacts}
-                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setContactVal(newValue);
-                  }
-                  else{ 
-                  setContactVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Contact" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
               </Box>
+
               <Grid container lg={12} justifyContent="flex-end">
                     <Grid item xs={6} sm={6} md={8} lg={2}>
                       <ViewFormSWitch
@@ -352,40 +245,9 @@ console.log("defaultValues : ",defaultValues)
                         onChange={handleChange}
                       />
                     </Grid>
-                </Grid>
-              <RHFTextField name="description" label="Description" minRows={3} multiline />
-              {/* <RHFUpload
-              // sx={{ width: '300px'}}
-                  // multiple
-                  // thumbnail
-                 
-                  name="image"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleDrop}
-                  // onRemoveAll={handleRemoveAllFiles}
-                  // onUpload={() => console.log('ON UPLOAD')}
-                  // onDelete={handleRemoveFile}
-                  // onUpload={() => console.log('ON UPLOAD')}
-                /> */}
-              {/* <Upload files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} /> */}
-              {/* {!!files.length && (
-                <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
-                  Remove all
-                </Button>
-              )} */}
-
-              {/* <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                      Active
-                    </Typography>
-                  </>
-                } 
-              /> */}
+              </Grid>
+              <RHFTextField name="description" label="Description" minRows={8} multiline />
+              {/* <RHFTextField name="description" label="Description" minRows={3} multiline /> */}
 
             <AddFormButtons sx={{mt:3}} isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
             </Stack>

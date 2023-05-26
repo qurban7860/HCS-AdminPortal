@@ -12,12 +12,9 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
+  techparam: {},
   techparams: [],
   techparamsByCategory: [],
-  techparam: {},
-  techparamParams: {
-
-  }
 };
 
 const slice = createSlice({
@@ -33,30 +30,6 @@ const slice = createSlice({
     setTechparamEditFormVisibility(state, action){
       state.techparamEditFormFlag = action.payload;
     },
-  
-    // RESET Technical Parameters
-    resetTechparams(state){
-      state.techparams = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-
-    // RESET Technical Parameter
-    resetTechparam(state){
-      state.techparam = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-
-    // RESET Technical Parameter By Category
-    resetTechparamByCategory(state){
-      state.techparamsByCategory = [];
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -65,7 +38,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET MACHINE TECH PARAM
     getTechparamsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -79,7 +52,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET MACHINE TECH PARAM
     getTechparamSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -94,12 +67,29 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET MACHINE TECH PARAM
+    resetTechParam(state){
+      state.techparam = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET MACHINE TECH PARAM
+    resetTechParams(state){
+      state.techparams = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET MACHINE TECH PARAM CATEGORY
+    resetTechParamByCategory(state){
+      state.techparamsByCategory = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -110,15 +100,10 @@ export default slice.reducer;
 // Actions
 export const {
   setTechparamEditFormVisibility,
-  resetTechparams,
-  resetTechparam,
-  resetTechparamByCategory,
-  getCart,
-  addToCart,
+  resetTechParams,
+  resetTechParam,
+  resetTechParamByCategory,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

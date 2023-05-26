@@ -13,10 +13,12 @@ import { Box, Card, styled, Grid,Container, Stack,TextField,Autocomplete,Select,
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers} from '../../redux/slices/customer/customer';
 import { getSites , resetSites } from '../../redux/slices/customer/site';
-import { addMachine,   getMachines } from '../../redux/slices/products/machine';
+import machine, { addMachine,   getMachines } from '../../redux/slices/products/machine';
 import { getMachinestatuses } from '../../redux/slices/products/statuses';
 import { getMachineModels} from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
+import { getMachineConnections } from '../../redux/slices/products/machineConnections';
+
 import { Cover } from '../components/Cover';
 
 // routes
@@ -48,8 +50,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { machineModels} = useSelector((state) => state.machinemodel);
   const { machinestatuses } = useSelector((state) => state.machinestatus);
   const { customers } = useSelector((state) => state.customer);
-  const { sites} = useSelector((state) => state.site);
-
+  const { sites } = useSelector((state) => state.site);
+  const { machineConnections } = useSelector((state) => state.machineConnections);
+  console.log("machineConnections : " , machineConnections );
   const { enqueueSnackbar } = useSnackbar();
   const [parMachineVal, setParMachineVal] = useState('');
   const [parMachSerVal, setParMachSerVal] = useState('');
@@ -63,6 +66,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [projVal, setProjManVal] = useState('');
   const [suppVal, setSuppManVal] = useState('');
   const [currTag, setCurrTag] = useState('');
+  const [machineConnectionVal, setMachineConnectionVal] = useState('');
   const [chipData, setChipData] = useState([]);
 
  useLayoutEffect(() => {
@@ -72,7 +76,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   dispatch(getMachineModels());
   dispatch(getSuppliers());
   dispatch(getSPContacts());
-  
+  dispatch(getMachineConnections());
 }, [dispatch]);
 
 useLayoutEffect(() => {
@@ -178,6 +182,7 @@ const onSubmit = async (data) => {
       setAccoManVal('');
       setProjManVal('');
       setSuppManVal('');
+      setMachineConnectionVal("")
       // setChipData([]);
       setCurrTag('');
       reset();
@@ -210,6 +215,7 @@ const onSubmit = async (data) => {
   const handleChange = (e) => {
 		setCurrTag(e.target.value);
   };
+
   const toggleCancel = () => { navigate(PATH_MACHINE.machine.list); };
 
   const { themeStretch } = useSettingsContext();
@@ -322,6 +328,27 @@ const onSubmit = async (data) => {
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
               />
+              
+              {/* <Autocomplete
+                // freeSolo
+                multiple
+                value={machineConnections || null}
+                options={machineConnectionVal}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setMachineConnectionVal(newValue);
+                  }
+                  else{ 
+                    setMachineConnectionVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params}  label="Machine Connections" />}
+                ChipProps={{ size: 'small' }}
+              /> */}
               
               <Autocomplete
                 // freeSolo

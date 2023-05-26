@@ -13,8 +13,6 @@ const initialState = {
   error: null,
   notes: [],
   note: null,
-  noteParams: {
-  }
 };
 
 const slice = createSlice({
@@ -25,8 +23,8 @@ const slice = createSlice({
     startLoading(state) {
       state.isLoading = true;
       state.error = null;
-
     },
+
     // SET TOGGLE
     setNoteFormVisibility(state, action){
       state.formVisibility = action.payload;
@@ -36,6 +34,7 @@ const slice = createSlice({
     setNoteEditFormVisibility(state, action){
       state.noteEditFormVisibility = action.payload;
     },
+
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -66,12 +65,21 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET NOTE
+    resetNote(state){
+      state.note = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET NOTES
+    resetNotes(state){
+      state.notes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
   },
 });
@@ -83,12 +91,9 @@ export default slice.reducer;
 export const {
   setNoteFormVisibility,
   setNoteEditFormVisibility,
-  getCart,
-  addToCart,
+  resetNote,
+  resetNotes,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
 } = slice.actions;
 
 // ----------------------------Save Note------------------------------------------

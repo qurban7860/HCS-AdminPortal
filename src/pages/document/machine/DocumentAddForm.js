@@ -89,7 +89,7 @@ export default function DocumentAddForm({currentDocument}) {
     dispatch(getFileCategories());
   },[dispatch,machine._id])
  // a note can be archived.  
-  const AddCustomerDocumentSchema = Yup.object().shape({
+  const AddMachineDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     image: Yup.mixed()
@@ -121,7 +121,7 @@ export default function DocumentAddForm({currentDocument}) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddCustomerDocumentSchema),
+    resolver: yupResolver(AddMachineDocumentSchema),
     defaultValues,
   });
 

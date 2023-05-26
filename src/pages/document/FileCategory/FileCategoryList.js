@@ -56,7 +56,7 @@ const _accordions = [...Array(8)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export default function MachineSettingList() {
+export default function FileCategoryList() {
   const {
     dense,
     page,

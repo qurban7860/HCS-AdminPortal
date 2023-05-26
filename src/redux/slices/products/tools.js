@@ -32,14 +32,6 @@ const slice = createSlice({
       state.toolEditFormFlag = action.payload;
     },
     
-    // RESET CUSTOMER
-    resetTool(state){
-      state.tool = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-    },
-
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -47,7 +39,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  TOOLS
     getToolsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,7 +47,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET TOOLS
     getToolSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -70,13 +62,23 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+
+    // RESET TOOLS
+    resetTool(state){
+      state.tool = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET TOOLS
+    resetTools(state){
+      state.tools = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
+
   },
 });
 
@@ -87,12 +89,8 @@ export default slice.reducer;
 export const {
   setToolEditFormVisibility,
   resetTool,
-  getCart,
-  addToCart,
+  resetTools,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

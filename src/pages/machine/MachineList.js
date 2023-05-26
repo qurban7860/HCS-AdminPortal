@@ -18,7 +18,12 @@ import MachineListTableToolbar from './MachineListTableToolbar';
 import { Cover } from '../components/Cover';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
-import machine, { getMachines, deleteMachine } from '../../redux/slices/products/machine';
+import { getMachines, deleteMachine, resetMachine, getMachine } from '../../redux/slices/products/machine';
+import { resetToolInstalled,resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
+import { resetSetting, resetSettings } from '../../redux/slices/products/machineTechParamValue';
+import { resetLicense, resetLicenses } from '../../redux/slices/products/license';
+import { resetNote, resetNotes } from '../../redux/slices/products/machineNote';
+import { resetMachineDocument, resetMachineDocuments } from '../../redux/slices/document/machineDocument';
 
 // routes
 import { PATH_DASHBOARD , PATH_MACHINE } from '../../routes/paths';
@@ -67,9 +72,22 @@ export default function MachineList() {
   const { machines, isLoading, error, initial, responseMessage } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
   useLayoutEffect(() => {
     dispatch(getMachines());
+    dispatch(resetMachine())
+    dispatch(resetToolInstalled())
+    dispatch(resetToolsInstalled())
+    dispatch(resetSetting())
+    dispatch(resetSettings())
+    dispatch(resetLicense())
+    dispatch(resetLicenses())
+    dispatch(resetNote())
+    dispatch(resetNotes())
+    dispatch(resetMachineDocument())
+    dispatch(resetMachineDocuments())
   }, [dispatch]);
+
   const { themeStretch } = useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);

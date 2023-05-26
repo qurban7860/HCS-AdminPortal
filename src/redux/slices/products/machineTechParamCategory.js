@@ -12,9 +12,8 @@ const initialState = {
   success: false,
   isLoading: false,
   error: null,
-  techparamcategories: [],
   techparamcategory: {},
-  techparamcategoryParams: {}
+  techparamcategories: [],
 };
 
 const slice = createSlice({
@@ -30,15 +29,6 @@ const slice = createSlice({
     setTechparamcategoryEditFormVisibility(state, action){
       state.techparamEditFormFlag = action.payload;
     },
-    
-    // RESET CUSTOMER
-    resetTechparamcategory(state){
-      state.techparamcategory = {};
-      state.responseMessage = null;
-      state.success = false;
-      state.isLoading = false;
-
-    },
 
     // HAS ERROR
     hasError(state, action) {
@@ -47,7 +37,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customers
+    // GET  TECH PARAM CATEGORY
     getTechparamcategoriesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -55,7 +45,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Customer
+    // GET  TECH PARAM CATEGORY
     getTechparamcategorySuccess(state, action) {
       
       state.isLoading = false;
@@ -72,14 +62,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
-    backStep(state) {
-      state.checkout.activeStep -= 1;
+    // RESET TECH PARAM CATEGORY
+    resetTechParamCategory(state){
+      state.techparamcategory = {};
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
-    nextStep(state) {
-      state.checkout.activeStep += 1;
+    // RESET TECH PARAM CATEGORIES
+    resetTechParamCategories(state){
+      state.techparamcategories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
+
   },
 });
 
@@ -89,14 +87,9 @@ export default slice.reducer;
 // Actions
 export const {
   setTecparamEditFormVisibility,
-  resetTechparamcategory,
-  getCart,
-  addToCart,
+  resetTechParamCategory,
+  resetTechParamCategories,
   setResponseMessage,
-  gotoStep,
-  backStep,
-  nextStep,
-
 } = slice.actions;
 
 // ----------------------------------------------------------------------
