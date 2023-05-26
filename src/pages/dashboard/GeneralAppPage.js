@@ -306,13 +306,6 @@ export default function GeneralAppPage() {
               </Card>
             </Grid>
           </Grid>
-          <Grid container item xs={12} md={16} spacing={3} mt={2}>
-            <Grid item xs={12} md={12} lg={12}>
-              <Card sx={{ px: 3, mb: 3 }}>
-                <GoogleMaps/>  
-              </Card>
-            </Grid>
-          </Grid>
         </Grid>
 
         {/* <Grid item xs={12} md={6} lg={8}>
