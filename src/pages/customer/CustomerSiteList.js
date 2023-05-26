@@ -110,7 +110,7 @@ export default function CustomerSiteList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
 
   const [controlled, setControlled] = useState(false);

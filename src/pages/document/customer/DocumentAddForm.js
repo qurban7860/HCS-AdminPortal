@@ -218,7 +218,7 @@ export default function DocumentAddForm({currentDocument}) {
       const file = acceptedFiles[0];
       const fileName = file.name.split(".");
 
-      if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[1])){
+      if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[fileName.length - 1])){
         setNameVal(fileName[0])
       }
       

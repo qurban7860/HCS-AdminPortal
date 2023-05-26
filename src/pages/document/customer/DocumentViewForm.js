@@ -44,7 +44,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  console.log("currentCustomerDocument : ",currentCustomerDocument)
+  // console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const [ preview, setPreview] = useState(false)

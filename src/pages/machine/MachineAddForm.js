@@ -52,7 +52,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { customers } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
   const { machineConnections } = useSelector((state) => state.machineConnections);
-  console.log("machineConnections : " , machineConnections );
+  // console.log("machineConnections : " , machineConnections );
+  // console.log("machines : " , machines );
+
   const { enqueueSnackbar } = useSnackbar();
   const [parMachineVal, setParMachineVal] = useState('');
   const [parMachSerVal, setParMachSerVal] = useState('');
@@ -66,7 +68,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [projVal, setProjManVal] = useState('');
   const [suppVal, setSuppManVal] = useState('');
   const [currTag, setCurrTag] = useState('');
-  const [machineConnectionVal, setMachineConnectionVal] = useState('');
+  const [machineConnectionVal, setMachineConnectionVal] = useState([]);
+
   const [chipData, setChipData] = useState([]);
 
  useLayoutEffect(() => {
@@ -122,6 +125,7 @@ useLayoutEffect(() => {
       parentSerialNo: parMachSerVal?.serialNo || null,
       supplier: supplierVal?._id || null,
       machineModel: modelVal?._id || null,
+      connection: [],
       status: statusVal?._id || null,
       workOrderRef: '',
       customer:customerVal._id || null,
@@ -168,7 +172,8 @@ const onSubmit = async (data) => {
   data.projectManager = projVal?._id || null
   data.supportManager = suppVal?._id || null
   // data.customerTags = chipData
-
+  const idsOnly = machineConnectionVal.map(obj => obj._id);
+  data.machineConnections = idsOnly
     try{
       await dispatch(addMachine(data));
       setParMachineVal('');
@@ -262,7 +267,7 @@ const onSubmit = async (data) => {
               />
               <Autocomplete
                 // freeSolo
-                disabled
+                readOnly
                 value={parMachineVal || null}
                 options={machines}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -330,26 +335,60 @@ const onSubmit = async (data) => {
               />
               
               <Autocomplete
-                // freeSolo
                 multiple
-                value={machineConnections || null}
-                options={machineConnectionVal}
+                name="connection"
+                id="tags-outlined"
+                value={ machineConnectionVal || null}
+                options={machineConnections}
+                getOptionLabel={(option) => option.name}
+                filterSelectedOptions
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setMachineConnectionVal(newValue);
+                  }
+                  else{ 
+                  setMachineConnectionVal([]);
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Machine Connections"
+                    placeholder="Search"
+                  />
+                )}
+              />
+              
+              {/* <Autocomplete
+                // freeSolo
+                value={ machineConnectionVal || null}
+                options={machineConnections}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
-                    setMachineConnectionVal(newValue);
+                  setMachineConnectionVal(newValue);
                   }
                   else{ 
-                    setMachineConnectionVal("");
+                  setMachineConnectionVal("");
                   }
                 }}
+                renderTags={(tagValue, getTagProps) =>
+                  tagValue.map((option, index) => (
+                    <Chip
+                      label={option.title}
+                      {...getTagProps({ index })}
+                    />
+                  ))
+                }
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Machine Connections" />}
                 ChipProps={{ size: 'small' }}
-              />
-              
+              /> */}
+
               <Autocomplete
                 // freeSolo
                 value={statusVal || null}
@@ -446,7 +485,7 @@ const onSubmit = async (data) => {
                 value={accoVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setAccoManVal(newValue);
@@ -455,7 +494,7 @@ const onSubmit = async (data) => {
                   setAccoManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -465,7 +504,7 @@ const onSubmit = async (data) => {
                 value={projVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setProjManVal(newValue);
@@ -474,7 +513,7 @@ const onSubmit = async (data) => {
                   setProjManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -484,7 +523,7 @@ const onSubmit = async (data) => {
                 value={suppVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setSuppManVal(newValue);
@@ -493,7 +532,7 @@ const onSubmit = async (data) => {
                   setSuppManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Support Manager" />}
                 ChipProps={{ size: 'small' }}

@@ -202,7 +202,8 @@ export function addMachine(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
-          siteMilestone: params.siteMilestone
+          siteMilestone: params.siteMilestone,
+          machineConnections: params.machineConnections
         };
         /* eslint-enable */
         
@@ -251,6 +252,7 @@ export function addMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
+        console.log("data : ", data);
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
