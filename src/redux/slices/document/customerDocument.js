@@ -165,7 +165,7 @@ export function updateCustomerDocument(customerDocumentId,params) {
           // if(params?.isActive){
           //   formData.append('isActive', params?.isActive);
           // }
-          // console.log("Payload : ",params);
+          console.log("Payload : ",params);
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
       if(regEx.test(response.status)){
         dispatch(setCustomerDocumentEditFormVisibility (false));

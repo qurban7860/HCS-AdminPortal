@@ -81,7 +81,7 @@ export default function DocumentEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
 useEffect(()=>{
-  setNameVal(machineDocument?.name)
+  setNameVal(machineDocument?.displayName)
   setCustomerAccessVal(machineDocument?.customerAccess)
   setFileCategoryVal(machineDocument?.category)
   setDocumentNameVal(machineDocument?.documentName)
@@ -126,16 +126,20 @@ useEffect(()=>{
     try {
       data.customer = machine.customer._id
       if(nameVal){
-        data.name = nameVal
+        data.displayName = nameVal
+      }
+      if(documentNameVal){
+        data.documentName = documentNameVal
       }
       // if(fileCategoryVal){
       //   data.category = fileCategoryVal._id
       // }
-      if(customerAccessVal){
+      if(customerAccessVal === "true" || customerAccessVal === true){
         data.customerAccess = true
       }else{
         data.customerAccess = false
       }
+      console.log("data : ",data)
       await dispatch(updateMachineDocument(machineDocument?._id,data, machine?._id));
       reset();
     } catch (err) {
@@ -197,7 +201,7 @@ useEffect(()=>{
 
               <Autocomplete
                 // freeSolo
-                disabled
+                // disabled
                 value={documentNameVal || null}
                 options={documentNames}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -205,7 +209,6 @@ useEffect(()=>{
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentNameVal(newValue);
-                    setNameVal(newValue.name);
                   }
                   else{  
                     setDocumentNameVal("");
@@ -237,15 +240,7 @@ useEffect(()=>{
                 renderInput={(params) => <TextField {...params}  label="File Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              {/* <Grid item xs={12} sm={12} sx={{display:'flex'}}>
-                  <Grid item xs={12} sm={6} sx={{display:'flex'}}>
-                   <Typography variant="body1" sx={{ pl:2,pb:1, display:'flex', alignItems:'center' }}>
-                        Customer Access
-                      </Typography>
-                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-                  </Grid>
-                  <RHFSwitch sx={{mt:1}} name="isActive" labelPlacement="start" label={ <Typography variant="body1" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5 }}> Active</Typography> } />
-              </Grid> */}
+              
               
               {/* <Autocomplete
                 // freeSolo
@@ -327,6 +322,14 @@ useEffect(()=>{
               /> */}
               </Box>
               <Grid container lg={12} justifyContent="flex-end">
+                <Grid item xs={6} sm={6} md={8} lg={2} display="flex">
+                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', alignItems:'center' }}>
+                        Customer Access
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+                  </Grid>
+              </Grid>
+              {/* <Grid container lg={12} justifyContent="flex-end">
                 <Grid item xs={6} sm={6} md={8} lg={2} justifyContent="flex-end">
                     <ViewFormSWitch
                       heading="Customer Access"
@@ -334,7 +337,7 @@ useEffect(()=>{
                       onChange={handleChange}
                     /> 
                 </Grid>
-              </Grid>
+              </Grid> */}
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               {/* <RHFUpload 
                   name="image"
