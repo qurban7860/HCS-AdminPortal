@@ -10,6 +10,9 @@ import ChartMixed from '../../sections/_examples/extra/chart/ChartMixed';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
+// 
+import GoogleMaps from '../../assets/GoogleMaps';
+
 import {
   _appFeatured,
   _appAuthors,
