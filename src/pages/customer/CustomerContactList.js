@@ -61,7 +61,7 @@ export default function CustomerContactList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
   const [controlled, setControlled] = useState(false);
   const handleChangeControlled = (panel) => (event, isExpanded) => {

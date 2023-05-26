@@ -81,7 +81,7 @@ export default function DocumentList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
 
 
@@ -91,7 +91,7 @@ export default function DocumentList() {
   const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
   const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
   const { customer } = useSelector((state) => state.customer);
-// console.log("customerDocuments : ",customerDocuments)
+console.log("customerDocuments : ",customerDocuments)
 // console.log("customerDocumentEditFormVisibility : ",customerDocumentEditFormVisibility, "documentNameFormVisibility : ",documentNameFormVisibility, "fileCategoryFormVisibility : ",fileCategoryFormVisibility, " customerDocumentFormVisibility : ", customerDocumentFormVisibility)
   const toggleChecked = async () =>
     {

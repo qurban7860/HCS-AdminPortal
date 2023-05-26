@@ -110,7 +110,7 @@ export default function CustomerNoteList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
 
   const dispatch = useDispatch();

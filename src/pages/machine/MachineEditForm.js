@@ -20,6 +20,7 @@ import { getSuppliers } from '../../redux/slices/products/supplier';
 import { CONFIG } from '../../config-global';
 // slice
 import { getMachines,updateMachine, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
+import { getMachineConnections } from '../../redux/slices/products/machineConnections';
 // import { getContacts } from '../../redux/slices/customer/contact';
 // import { getSites } from '../../redux/slices/customer/site';
 // routes
@@ -53,6 +54,7 @@ export default function MachineEditForm() {
   const { machinestatuses } = useSelector((state) => state.machinestatus);
   const { customers } = useSelector((state) => state.customer);
   const { sites} = useSelector((state) => state.site);
+  const { machineConnections } = useSelector((state) => state.machineConnections);
 // console.log("machine Edit machine?.isDisabled : ",machine?.isDisabled)
   const [parMachineVal, setParMachineVal] = useState('');
   const [parMachSerVal, setParMachSerVal] = useState('');
@@ -67,6 +69,9 @@ export default function MachineEditForm() {
   const [suppVal, setSuppManVal] = useState('');
   const [currTag, setCurrTag] = useState('');
   const [chipData, setChipData] = useState([]);
+  const [machineConnectionVal, setMachineConnectionVal] = useState([]);
+  const [connections, setConnections] = useState([]);
+console.log("connections : ",connections , "machineConnectionVal : ", machineConnectionVal)
 
  useLayoutEffect(() => {
   dispatch(getCustomers());
@@ -75,19 +80,21 @@ export default function MachineEditForm() {
   dispatch(getMachineModels());
   dispatch(getSuppliers());
   dispatch(getSPContacts());
-
-  setParMachineVal(machine.parentMachine);
-  setParMachSerVal(machine.parentMachine);
-  setStatusVal(machine.status)
-  setModelVal(machine.machineModel)
-  setSupplierVal(machine.supplier)
-  setCustomerVal(machine.customer)
-  setInstallVal(machine.instalationSite)
-  setBillingVal(machine.billingSite)
-  setChipData(machine.customerTags)
-  setAccoManVal(machine.accountManager);
-  setProjManVal(machine.projectManager);
-  setSuppManVal(machine.supportManager);
+  dispatch(getMachineConnections());
+  setParMachineVal(machine?.parentMachine);
+  setParMachSerVal(machine?.parentMachine);
+  setStatusVal(machine?.status)
+  setModelVal(machine?.machineModel)
+  setSupplierVal(machine?.supplier)
+  setCustomerVal(machine?.customer)
+  setInstallVal(machine?.instalationSite)
+  setBillingVal(machine?.billingSite)
+  setChipData(machine?.customerTags)
+  setAccoManVal(machine?.accountManager);
+  setProjManVal(machine?.projectManager);
+  setSuppManVal(machine?.supportManager);
+  setMachineConnectionVal(machine?.machineConnections);
+  setConnections(machine?.machineConnections);
 }, [dispatch , machine]);
 
 useLayoutEffect(() => {
@@ -346,6 +353,34 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
               />
+
+              <Autocomplete
+                multiple
+                name="connection"
+                id="tags-outlined"
+                value={ machineConnectionVal || null}
+                options={machineConnections}
+                getOptionLabel={(option) => option.name}
+                filterSelectedOptions
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                  setMachineConnectionVal(newValue);
+                  }
+                  else{ 
+                  setMachineConnectionVal([]);
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="Machine Connections"
+                    placeholder="Search"
+                  />
+                )}
+              />
+              
 
               <Autocomplete
                 // freeSolo

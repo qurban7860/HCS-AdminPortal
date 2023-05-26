@@ -62,7 +62,9 @@ export default function SecurityUserList() {
     onChangeRowsPerPage,
   } = useTable();
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch({
+    defaultOrderBy: '-createdAt',
+});
 
   const { securityUsers, error, responseMessage, initial,securityUserEditFormVisibility,securityUserFormVisibility} = useSelector((state) => state.user);
 // console.log("securityUsers", securityUsers);

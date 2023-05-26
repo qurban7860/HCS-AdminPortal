@@ -84,7 +84,7 @@ export default function CustomerList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
 
   const dispatch = useDispatch();
@@ -260,6 +260,7 @@ export default function CustomerList() {
                 </Tooltip>
               }
             />
+            
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
