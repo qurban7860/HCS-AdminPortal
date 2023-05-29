@@ -112,8 +112,7 @@ export const {
 // ----------------------------------------------------------------------
 
 export function addSite(params) {
-  return async (dispatch, getState) => {
-    const { lat, long } = getState().site;
+  return async (dispatch) => {
     dispatch(slice.actions.setSiteFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
@@ -125,8 +124,8 @@ export function addSite(params) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          lat,
-          long,
+          lat: params.lat,
+          long: params.long,
           isActive: params.isActive,
           address: {}
         };
@@ -177,8 +176,7 @@ export function addSite(params) {
 
 export function updateSite(params,customerId,Id) {
   
-  return async (dispatch, getState) => {
-    const { lat, long } = getState().site;
+  return async (dispatch) => {
     dispatch(slice.actions.setSiteEditFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
@@ -190,8 +188,8 @@ export function updateSite(params,customerId,Id) {
           email: params.email,
           fax: params.fax,
           website: params.website,
-          lat,
-          long,
+          lat: params.lat,
+          long: params.long,
           isActive: params.isActive,
           address: {}
         };
@@ -257,6 +255,36 @@ export function getSites(customerID) {
       // else{
         //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
         // }
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function searchSites() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      let response = null;
+      response = await axios.get(`${CONFIG.SERVER_URL}crm/sites/search` , 
+      {
+        params: {
+          isArchived: false,
+          lat: { $exists: true },
+          long: { $exists: true }
+        }
+      }
+      );
+      dispatch(slice.actions.getSitesSuccess(response.data));
+      console.log('response data----->', response.data);
+      dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
+      // else{
+      //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
+      // }
 
     } catch (error) {
       console.log(error);

@@ -268,31 +268,9 @@ useEffect(()=>{
                       />
                     )}
                 />
+                <RHFTextField name="lat" label="Latitude" />
+                <RHFTextField name="long" label="Longitude" />
 
-              </Box>
-
-              
-
-
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Pinned Location
-              </Typography>
-
-              <Box
-                rowGap={2}
-                columnGap={1}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(1, 1fr)',
-                }}
-              >
-              
-                <GoogleMaps
-                  edit
-                />  
-                {/* <RHFTextField name="lat" label="Latitude" />
-                <RHFTextField name="long" label="Longitude" /> */}
               </Box>
 
               <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
