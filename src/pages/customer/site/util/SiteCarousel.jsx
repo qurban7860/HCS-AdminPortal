@@ -9,19 +9,11 @@ import { Paper, Button } from '@mui/material';
 const useStyles = makeStyles((theme) => ({
   root: {
     // width: '100%',
-    height: '100%',
+    height: '200px',
     objectFit: 'cover',
-    // display: 'flex',
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // backgroundColor: theme.palette.background.default,
-    // padding: theme.spacing(2),
-    // borderRadius: theme.spacing(2),
-    // boxShadow: theme.shadows[25].z8,
-    // [theme.breakpoints.down('md')]: {
-    //   padding: theme.spacing(1),
-    // },
     carousel: {
+      position: 'relative',
+
       buttonWrapper: {
         position: 'absolute',
         backgroundColor: 'transparent',
@@ -89,6 +81,9 @@ export default function SiteCarousel() {
       easing="ease-in-out"
       disableButtonsControls="true"
       className={classes.carousel}
+      sx={{
+        height: '230px',
+      }}
     >
       {items.map((item, i) => (
         <Paper key={i}>

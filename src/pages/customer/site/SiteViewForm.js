@@ -62,6 +62,10 @@ export default function SiteViewForm({ currentSite = null }) {
     dispatch(setSiteEditFormVisibility(true));
   };
 
+  const handleMap = async () => {
+    navigate(`/dashboard/map/${currentSite._id}`);
+  };
+
   const defaultValues = useMemo(
     () => ({
       id: currentSite ? currentSite._id : site?._id || '',
@@ -98,7 +102,12 @@ export default function SiteViewForm({ currentSite = null }) {
   return (
     <Grid>
       <Grid container justifyContent="flex-end" sx={{ pr: '1rem' }}>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons
+          handleEdit={handleEdit}
+          onDelete={onDelete}
+          sites="true"
+          handleMap={handleMap}
+        />
       </Grid>
       {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
@@ -120,7 +129,6 @@ export default function SiteViewForm({ currentSite = null }) {
         <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-
         {/* <Grid container>
           {defaultValues.lat && defaultValues.long && (
             <GoogleMaps
