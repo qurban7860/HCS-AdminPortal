@@ -5,15 +5,14 @@ import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';
 
-
 const containerStyle = {
   width: '400px',
-  height: '400px'
+  height: '400px',
 };
 
 const defaultCenter = {
-  lat: -37.78686042520777,
-  lng: 175.28343200683594
+  lat: -36.902893343776185,
+  lng: 174.92608245309523,
 };
 
 GoogleMaps.propTypes = {
@@ -27,9 +26,8 @@ GoogleMaps.propTypes = {
 export default function GoogleMaps({ lat, lng, edit = false }) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey:  CONFIG.GOOGLE_MAPS_API_KEY || ''
+    googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY || '',
   });
-
 
   const dispatch = useDispatch();
   const [map, setMap] = useState(null);
@@ -40,7 +38,7 @@ export default function GoogleMaps({ lat, lng, edit = false }) {
     if (map && lat && lng && !isNaN(lat) && !isNaN(lng)) {
       const position = {
         lat: parseFloat(lat),
-        lng: parseFloat(lng)
+        lng: parseFloat(lng),
       };
       // map.panTo(position);
       setMarkerPosition(position);
@@ -59,7 +57,7 @@ export default function GoogleMaps({ lat, lng, edit = false }) {
     if (edit) {
       const latLng = {
         lat: event.latLng.lat(),
-        lng: event.latLng.lng()
+        lng: event.latLng.lng(),
       };
       setMarkerPosition(latLng);
       dispatch(setLatLongCoordinates(latLng));

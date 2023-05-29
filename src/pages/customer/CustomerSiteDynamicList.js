@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 // @mui
 import {
   Stack,
@@ -20,6 +21,7 @@ import {
   Link,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import SiteCarousel from './site/util/SiteCarousel';
 import { CustomAvatar } from '../../components/custom-avatar';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 // redux
@@ -35,6 +37,7 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 import GoogleMaps from '../../assets/GoogleMaps';
+import useResponsive from '../../hooks/useResponsive';
 // sections
 import SiteListTableRow from './site/SiteListTableRow';
 import SiteListTableToolbar from './site/SiteListTableToolbar';
@@ -205,11 +208,11 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     filterStatus,
   });
 
+  const isMobile = useResponsive('down', 'sm');
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
-
   return (
     <>
       {!siteEditFormVisibility && (
@@ -331,33 +334,46 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                   aria-controls="panel1a-content"
                   sx={{ mt: -5 }}
                 >
-                  <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
+                  <Grid container lg={12} justifyContent="space-evenly" alignItems="flex-start">
                     <Grid item lg={4}>
-                      <Card sx={{ width: 'auto', height: '100%', m: 2 }}>
-                        <CardActionArea>
-                          <CardMedia
-                            component={GoogleMaps}
-                            sx={{ height: '100%', display: 'block' }}
-                            image={
-                              defaultValues.lat && defaultValues.long ? (
-                                <GoogleMaps
-                                  lat={defaultValues.lat ? defaultValues.lat : 0}
-                                  lng={defaultValues.long ? defaultValues.long : 0}
-                                />
-                              ) : (
-                                'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
-                              )
-                            }
-                            alt="customer's site photo was here"
-                          />
-                        </CardActionArea>
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                            alt={site.name}
-                          />
-                        </CardActionArea>
+                      <Card
+                        xs={12}
+                        md={12}
+                        sx={{
+                          display: { sm: 'none', md: 'block' },
+                          height: '100%',
+                          mx: { sm: 0, md: 5 },
+                          my: { sm: 1, md: 3 },
+                        }}
+                      >
+                        {!isMobile ? (
+                          <>
+                            <CardActionArea>
+                              <CardMedia
+                                component={SiteCarousel}
+                                image={<SiteCarousel />}
+                                alt={site.name}
+                              />
+                            </CardActionArea>
+                            <CardActionArea>
+                              <CardMedia
+                                component={GoogleMaps}
+                                sx={{ width: 'auto', display: 'block' }}
+                                image={
+                                  defaultValues.lat && defaultValues.long ? (
+                                    <GoogleMaps
+                                      lat={defaultValues.lat ? defaultValues.lat : 0}
+                                      lng={defaultValues.long ? defaultValues.long : 0}
+                                    />
+                                  ) : (
+                                    'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
+                                  )
+                                }
+                                alt="customer's site photo was here"
+                              />
+                            </CardActionArea>
+                          </>
+                        ) : null}
                       </Card>
                     </Grid>
                     <Grid item lg={8}>

@@ -120,18 +120,18 @@ export default function SiteViewForm({ currentSite = null }) {
         <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-        <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
 
-        <Grid container>
+        {/* <Grid container>
           {defaultValues.lat && defaultValues.long && (
             <GoogleMaps
               lat={defaultValues.lat ? defaultValues.lat : 0}
               lng={defaultValues.long ? defaultValues.long : 0}
             />
           )}
-        </Grid>
-        {/* <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
-          <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} /> */}
+        </Grid> */}
+        <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
+        <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
 
         <Grid container>
           <ViewFormField
