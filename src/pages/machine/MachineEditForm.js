@@ -193,6 +193,8 @@ const onSubmit = async (data) => {
   data.accountManager = accoVal?._id || null
   data.projectManager = projVal?._id || null
   data.supportManager = suppVal?._id || null
+  const idsOnly = machineConnectionVal.map(obj => obj._id);
+  data.machineConnections = idsOnly
   // data.customerTags = chipData
     try{
       await dispatch(updateMachine(data));
@@ -209,6 +211,7 @@ const onSubmit = async (data) => {
       setSuppManVal('');
       setChipData([]);
       setCurrTag('');
+      setMachineConnectionVal([]);
       reset();
       enqueueSnackbar('Update success!');
     } catch(error){

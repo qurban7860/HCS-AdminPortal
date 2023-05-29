@@ -289,6 +289,7 @@ export function updateMachine(params) {
         projectManager: params.projectManager,
         supportManager: params.supportManager,
         description: params.description,
+        machineConnections: params.machineConnections,
         customerTags: params.customerTags,
         isActive: params.isActive,
       };
