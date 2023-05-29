@@ -356,24 +356,33 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                               />
                             </CardActionArea>
                             <CardActionArea>
-                              <CardMedia
+                            {site.lat && site.long ? ( 
+                                    <GoogleMaps 
+                                    lat={site.lat ? site.lat : 0} 
+                                    lng={site.long ? site.long : 0}
+                                    />
+                                  ) : (
+                                    'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
+                                  )
+                            }
+                              {/* <CardMedia
                                 component={GoogleMaps}
                                 sx={{ objectFit: 'cover', display: 'block', width: 'auto' }}
                                 image={
-                                  defaultValues.lat && defaultValues.long ? (
-                                    <GoogleMaps
-                                      lat={defaultValues.lat ? defaultValues.lat : 0}
-                                      lng={defaultValues.long ? defaultValues.long : 0}
+                                  site.lat && site.long ? ( 
+                                    <GoogleMaps 
+                                    lat={site.lat ? site.lat : 0} 
+                                    lng={site.long ? site.long : 0}
                                     />
                                   ) : (
                                     'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
                                   )
                                 }
                                 alt="customer's site photo was here"
-                              />
+                              /> */}
                             </CardActionArea>
                           </>
-                        ) : null}
+                          ) : null}
                       </Card>
                     </Grid>
                     <Grid item lg={8}>

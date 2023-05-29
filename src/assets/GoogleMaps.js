@@ -6,7 +6,7 @@ import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';
 
 const containerStyle = {
-  width: '400px',
+  width: '100%',
   height: '400px',
 };
 
@@ -19,11 +19,14 @@ GoogleMaps.propTypes = {
   lat: PropTypes.string,
   lng: PropTypes.string,
   edit: PropTypes.bool,
+  // latlongArr: PropTypes.arrayOf(PropTypes.shape({
+  //   lat: PropTypes.string.isRequired,
+  //   lng: PropTypes.string.isRequired,
+  // })),
 };
 
 /* eslint-disable */
-
-export default function GoogleMaps({ lat, lng, edit = false }) {
+export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY || '',
@@ -31,8 +34,8 @@ export default function GoogleMaps({ lat, lng, edit = false }) {
 
   const dispatch = useDispatch();
   const [map, setMap] = useState(null);
-  const [markerPosition, setMarkerPosition] = useState(null);
-  const markerRef = useRef(null);
+  const [markerPositions, setMarkerPositions] = useState([]);
+  const markerRefs = useRef([]);
 
   useEffect(() => {
     if (map && lat && lng && !isNaN(lat) && !isNaN(lng)) {
@@ -40,11 +43,22 @@ export default function GoogleMaps({ lat, lng, edit = false }) {
         lat: parseFloat(lat),
         lng: parseFloat(lng),
       };
-      // map.panTo(position);
-      setMarkerPosition(position);
+      setMarkerPositions([position]);
     }
   }, [map, lat, lng]);
 
+  useEffect(() => {
+    if (map && latlongArr.length > 0) {
+      const positions = latlongArr
+        .filter(({ lat, long }) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(long)))
+        .map(({ lat, long }) => ({
+          lat: parseFloat(lat),
+          lng: parseFloat(long),
+        }));
+      setMarkerPositions(positions);
+    }
+  }, [map, latlongArr]);
+  
   const onLoad = (map) => {
     setMap(map);
   };
@@ -59,7 +73,7 @@ export default function GoogleMaps({ lat, lng, edit = false }) {
         lat: event.latLng.lat(),
         lng: event.latLng.lng(),
       };
-      setMarkerPosition(latLng);
+      setMarkerPositions([latLng]);
       dispatch(setLatLongCoordinates(latLng));
     }
   };
@@ -67,13 +81,15 @@ export default function GoogleMaps({ lat, lng, edit = false }) {
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={markerPosition || defaultCenter}
+      center={markerPositions.length > 0 ? markerPositions[0] : defaultCenter}
       zoom={12}
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={onMapClick}
     >
-      {markerPosition && <Marker position={markerPosition} draggable={edit} ref={markerRef} />}
+      {markerPositions.map((position, index) => (
+        <Marker key={index} position={position} draggable={edit} ref={(ref) => markerRefs.current[index] = ref} />
+      ))}
     </GoogleMap>
   ) : (
     <></>

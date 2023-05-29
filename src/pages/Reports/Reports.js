@@ -16,9 +16,13 @@ import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE, PATH_DOCUMENT } from '../../routes/paths';
-import { useDispatch } from '../../redux/store';
+import {
+  searchSites,
+} from '../../redux/slices/customer/site';
+import { useDispatch, useSelector } from '../../redux/store';
 import { Cover } from '../components/Cover';
 import Iconify from '../../components/iconify';
+import GoogleMaps from '../../assets/GoogleMaps';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +31,18 @@ export default function Reports() {
   const theme = useTheme();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    dispatch(searchSites());
+  }, [dispatch]);
+
+  const {
+    sites
+  } = useSelector((state) => state.site);
+
+
+  const latLongValues = sites
+  .filter(({ lat, long }) => lat && long)
+  .map(({ lat, long }) => ({ lat, long }));
 
    // Functions to navigate to different pages
    const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentName.list); };
@@ -74,6 +90,12 @@ export default function Reports() {
             </Card>
           </Grid>
         </Grid>
+      </Grid>
+      <Grid container spacing={0}>
+        <GoogleMaps
+          latlongArr={latLongValues}
+        />
+
       </Grid>
     </Container>
   );
