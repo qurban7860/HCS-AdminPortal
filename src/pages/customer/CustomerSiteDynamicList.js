@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 // @mui
 import {
   Stack,
@@ -12,9 +13,15 @@ import {
   Box,
   Button,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails, CardActionArea, Breadcrumbs, Link
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  CardActionArea,
+  Breadcrumbs,
+  Link,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import SiteCarousel from './site/util/SiteCarousel';
 import { CustomAvatar } from '../../components/custom-avatar';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 // redux
@@ -29,18 +36,24 @@ import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
+import GoogleMaps from '../../assets/GoogleMaps';
+import useResponsive from '../../hooks/useResponsive';
 // sections
 import SiteListTableRow from './site/SiteListTableRow';
 import SiteListTableToolbar from './site/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setSiteFormVisibility, setSiteEditFormVisibility } from '../../redux/slices/customer/site';
+import {
+  getSites,
+  deleteSite,
+  getSite,
+  setSiteFormVisibility,
+  setSiteEditFormVisibility,
+} from '../../redux/slices/customer/site';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 import CommaJoinField from '../components/CommaJoinField';
 import _mock from '../../_mock';
 import SiteViewForm from './site/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -51,7 +64,6 @@ const TABLE_HEAD = [
   { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -81,7 +93,7 @@ const _accordions = [...Array(8)].map((_, index) => ({
 
 // ----------------------------------------------------------------------
 
-export default function CustomerSiteList() {
+export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const {
     dense,
     page,
@@ -108,7 +120,15 @@ export default function CustomerSiteList() {
     setControlled(isExpanded ? panel : false);
   };
   const dispatch = useDispatch();
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
+  const {
+    sites,
+    isLoading,
+    error,
+    initial,
+    responseMessage,
+    siteEditFormVisibility,
+    siteAddFormVisibility,
+  } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
 
   const AccordionCustom = styled((props) => (
@@ -120,28 +140,28 @@ export default function CustomerSiteList() {
     },
     '&:before': {
       display: 'none',
-    }
+    },
   }));
 
-  const AccordionSummaryCustom = styled((props) => (
-    <AccordionSummary {...props} />
-  ))(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'light' ? 'rgba(0, 0, 0, .07)' : 'rgba(255, 255, 255, .07)',
-    borderBottom: `solid 1px ${theme.palette.divider}`,
-    minHeight: 56
-  }));
+  const AccordionSummaryCustom = styled((props) => <AccordionSummary {...props} />)(
+    ({ theme }) => ({
+      backgroundColor:
+        theme.palette.mode === 'light' ? 'rgba(0, 0, 0, .07)' : 'rgba(255, 255, 255, .07)',
+      borderBottom: `solid 1px ${theme.palette.divider}`,
+      minHeight: 56,
+    })
+  );
 
-  const AccordionDetailsCustom = styled((props) => (
-    <AccordionDetails {...props} />
-  ))(({ theme }) => ({
-    padding: theme.spacing(1),
-    // borderTop: `solid 1px ${theme.palette.divider}`,
-  }))
+  const AccordionDetailsCustom = styled((props) => <AccordionDetails {...props} />)(
+    ({ theme }) => ({
+      padding: theme.spacing(1),
+      // borderTop: `solid 1px ${theme.palette.divider}`,
+    })
+  );
 
-  const toggleChecked = async () =>
-    {
-      dispatch(setSiteFormVisibility(!siteAddFormVisibility));
-    };
+  const toggleChecked = async () => {
+    dispatch(setSiteFormVisibility(!siteAddFormVisibility));
+  };
 
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -152,11 +172,11 @@ export default function CustomerSiteList() {
   const [expanded, setExpanded] = useState(false);
 
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -165,7 +185,7 @@ export default function CustomerSiteList() {
   };
 
   useEffect(() => {
-    if(!siteAddFormVisibility && !siteEditFormVisibility){
+    if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
@@ -180,7 +200,7 @@ export default function CustomerSiteList() {
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-// console.log("sites", sites);
+  // console.log("sites", sites);
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -188,11 +208,11 @@ export default function CustomerSiteList() {
     filterStatus,
   });
 
+  const isMobile = useResponsive('down', 'sm');
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
-
   return (
     <>
       {!siteEditFormVisibility && (
@@ -226,7 +246,7 @@ export default function CustomerSiteList() {
                 variant="subtitle2"
                 color="inherit"
                 href={PATH_DASHBOARD.customer.root}
-                >
+              >
                 {customer.name}
               </Link>
               <Link
@@ -234,7 +254,7 @@ export default function CustomerSiteList() {
                 variant="subtitle2"
                 color="inherit"
                 href={PATH_DASHBOARD.customer.sites}
-                >
+              >
                 Sites
               </Link>
             </Breadcrumbs>
@@ -314,17 +334,46 @@ export default function CustomerSiteList() {
                   aria-controls="panel1a-content"
                   sx={{ mt: -5 }}
                 >
-                  <Grid container lg={12} justifyContent="flex-start" alignItems="flex-start">
+                  <Grid container lg={12} justifyContent="space-evenly" alignItems="flex-start">
                     <Grid item lg={4}>
-                      <Card sx={{ width: 'auto', height: '100%', m: 2 }}>
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            sx={{ height: '100%', display: 'block' }}
-                            image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                            alt="customer's site photo was here"
-                          />
-                        </CardActionArea>
+                      <Card
+                        sx={{
+                          display: { sm: 'none', md: 'block' },
+                          width: '400px',
+                          objectFit: 'cover',
+                          height: '100%',
+                          mx: { sm: 0, md: 3, lg: 3 },
+                          my: { sm: 1, md: 3 },
+                        }}
+                      >
+                        {!isMobile ? (
+                          <>
+                            <CardActionArea>
+                              <CardMedia
+                                component={SiteCarousel}
+                                image={<SiteCarousel />}
+                                alt={site.name}
+                              />
+                            </CardActionArea>
+                            <CardActionArea>
+                              <CardMedia
+                                component={GoogleMaps}
+                                sx={{ objectFit: 'cover', display: 'block', width: 'auto' }}
+                                image={
+                                  defaultValues.lat && defaultValues.long ? (
+                                    <GoogleMaps
+                                      lat={defaultValues.lat ? defaultValues.lat : 0}
+                                      lng={defaultValues.long ? defaultValues.long : 0}
+                                    />
+                                  ) : (
+                                    'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
+                                  )
+                                }
+                                alt="customer's site photo was here"
+                              />
+                            </CardActionArea>
+                          </>
+                        ) : null}
                       </Card>
                     </Grid>
                     <Grid item lg={8}>

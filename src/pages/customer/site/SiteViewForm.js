@@ -5,9 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch,Card, Grid, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
 // redux
-import { deleteSite, getSite, getSites, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
+import {
+  deleteSite,
+  getSite,
+  getSites,
+  setSiteEditFormVisibility,
+} from '../../../redux/slices/customer/site';
 
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -15,7 +20,7 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import GoogleMaps from '../../../assets/GoogleMaps';
-import { fDate,fDateTime } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSwitch from '../../components/ViewFormSwitch';
@@ -27,7 +32,6 @@ SiteViewForm.propTypes = {
 };
 
 export default function SiteViewForm({ currentSite = null }) {
-
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const navigate = useNavigate();
@@ -53,41 +57,44 @@ export default function SiteViewForm({ currentSite = null }) {
     // dispatch(getContacts());
   };
 
-  const  handleEdit = async () => {
+  const handleEdit = async () => {
     await dispatch(getSite(customer._id, currentSite._id));
     dispatch(setSiteEditFormVisibility(true));
   };
 
-  const defaultValues = useMemo(
-    () => (
-      {
-        id: currentSite ? currentSite._id : site?._id || '',
-        name: currentSite ? currentSite.name : site?.name || '',
-        customer: currentSite ? currentSite.name : site?.tradingName || '',
-        billingSite: currentSite ? currentSite._id : site?.accountManager || '',
-        phone: currentSite ? currentSite.phone : site?.phone || '',
-        email: currentSite ? currentSite.email : site?.email || '',
-        fax: currentSite ? currentSite.fax : site?.fax || '',
-        website: currentSite ? currentSite.website : site?.website || '',
-        lat: currentSite ? currentSite.lat : site?.lat || '',
-        long: currentSite ? currentSite.long : site?.long || '',
+  const handleMap = async () => {
+    navigate(`/dashboard/map/${currentSite._id}`);
+  };
 
-        street: currentSite ? currentSite.address?.street : site?.address.street || '',
-        suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || '',
-        city: currentSite ? currentSite.address?.city : site?.address.city || '',
-        postcode: currentSite ? currentSite.address?.postcode : site?.address.postcode || '',
-        region: currentSite ? currentSite.address?.region : site?.address.region || '',
-        country: currentSite ? currentSite.address?.country : site?.address.country || '',
-        primaryBillingContact: currentSite?.primaryBillingContact || null,
-        primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
-        isActive: currentSite.isActive,
-        createdAt:                currentSite?.createdAt || "",
-        createdByFullName:           currentSite?.createdBy?.name || "",
-        createdIP:                currentSite?.createdIP || "",
-        updatedAt:                currentSite?.updatedAt || "",
-        updatedByFullName:           currentSite?.updatedBy?.name || "",
-        updatedIP:                currentSite?.updatedIP || "",
-      }),
+  const defaultValues = useMemo(
+    () => ({
+      id: currentSite ? currentSite._id : site?._id || '',
+      name: currentSite ? currentSite.name : site?.name || '',
+      customer: currentSite ? currentSite.name : site?.tradingName || '',
+      billingSite: currentSite ? currentSite._id : site?.accountManager || '',
+      phone: currentSite ? currentSite.phone : site?.phone || '',
+      email: currentSite ? currentSite.email : site?.email || '',
+      fax: currentSite ? currentSite.fax : site?.fax || '',
+      website: currentSite ? currentSite.website : site?.website || '',
+      lat: currentSite ? currentSite.lat : site?.lat || '',
+      long: currentSite ? currentSite.long : site?.long || '',
+
+      street: currentSite ? currentSite.address?.street : site?.address.street || '',
+      suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || '',
+      city: currentSite ? currentSite.address?.city : site?.address.city || '',
+      postcode: currentSite ? currentSite.address?.postcode : site?.address.postcode || '',
+      region: currentSite ? currentSite.address?.region : site?.address.region || '',
+      country: currentSite ? currentSite.address?.country : site?.address.country || '',
+      primaryBillingContact: currentSite?.primaryBillingContact || null,
+      primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
+      isActive: currentSite.isActive,
+      createdAt: currentSite?.createdAt || '',
+      createdByFullName: currentSite?.createdBy?.name || '',
+      createdIP: currentSite?.createdIP || '',
+      updatedAt: currentSite?.updatedAt || '',
+      updatedByFullName: currentSite?.updatedBy?.name || '',
+      updatedIP: currentSite?.updatedIP || '',
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentSite, site]
   );
@@ -95,7 +102,12 @@ export default function SiteViewForm({ currentSite = null }) {
   return (
     <Grid>
       <Grid container justifyContent="flex-end" sx={{ pr: '1rem' }}>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons
+          handleEdit={handleEdit}
+          onDelete={onDelete}
+          sites="true"
+          handleMap={handleMap}
+        />
       </Grid>
       {/* <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
         <Button onClick={() => handleEdit()} variant="outlined" startIcon={<Iconify icon="eva:edit-fill" />} >
@@ -106,15 +118,8 @@ export default function SiteViewForm({ currentSite = null }) {
         </Button>
       </Stack> */}
       <Grid container>
-        <ViewFormField
-          sm={12}
-          isActive={defaultValues.isActive}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Name"
-          param={defaultValues?.name}
-        />
+        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
         <ViewFormField sm={6} heading="Fax" param={defaultValues?.fax} />
         <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
@@ -124,17 +129,17 @@ export default function SiteViewForm({ currentSite = null }) {
         <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
+        {/* <Grid container>
+          {defaultValues.lat && defaultValues.long && (
+            <GoogleMaps
+              lat={defaultValues.lat ? defaultValues.lat : 0}
+              lng={defaultValues.long ? defaultValues.long : 0}
+            />
+          )}
+        </Grid> */}
+        <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
-
-        <Grid container>
-          {(defaultValues.lat && defaultValues.long) && <GoogleMaps 
-            lat={defaultValues.lat  ? defaultValues.lat : 0}
-            lng={defaultValues.long ? defaultValues.long : 0}
-          />}  
-
-          {/* <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
-          <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} /> */}
-        </Grid>
+        <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
 
         <Grid container>
           <ViewFormField
