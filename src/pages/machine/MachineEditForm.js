@@ -71,7 +71,6 @@ export default function MachineEditForm() {
   const [chipData, setChipData] = useState([]);
   const [machineConnectionVal, setMachineConnectionVal] = useState([]);
   const [connections, setConnections] = useState([]);
-console.log("connections : ",connections , "machineConnectionVal : ", machineConnectionVal)
 
  useLayoutEffect(() => {
   dispatch(getCustomers());
@@ -193,6 +192,7 @@ const onSubmit = async (data) => {
   data.accountManager = accoVal?._id || null
   data.projectManager = projVal?._id || null
   data.supportManager = suppVal?._id || null
+  console.log("machineConnectionVal : ",machineConnectionVal)
   const idsOnly = machineConnectionVal.map(obj => obj._id);
   data.machineConnections = idsOnly
   // data.customerTags = chipData
@@ -363,7 +363,7 @@ const handleKeyPress = (e) => {
                 id="tags-outlined"
                 value={ machineConnectionVal || null}
                 options={machineConnections}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => option.connectedMachine.name}
                 filterSelectedOptions
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
@@ -374,7 +374,7 @@ const handleKeyPress = (e) => {
                   setMachineConnectionVal([]);
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.connectedMachine.name}</li>)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
