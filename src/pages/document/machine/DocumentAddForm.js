@@ -164,7 +164,7 @@ export default function DocumentAddForm({currentDocument}) {
         setPreviewVal("")
         reset();
       } catch(error){
-        enqueueSnackbar('Note Save failed!');
+        enqueueSnackbar('Machine Save failed!');
         console.error(error);
       }
   };
