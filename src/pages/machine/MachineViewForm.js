@@ -25,7 +25,6 @@ export default function MachineViewForm() {
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
-console.log("machine : ",machine)
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false))
     if(machine?.customer){
