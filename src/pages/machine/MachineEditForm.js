@@ -70,6 +70,7 @@ export default function MachineEditForm() {
   const [currTag, setCurrTag] = useState('');
   const [chipData, setChipData] = useState([]);
   const [machineConnectionVal, setMachineConnectionVal] = useState([]);
+  console.log("machineconnectionVal : ", machineConnectionVal)
   const [connections, setConnections] = useState([]);
 
  useLayoutEffect(() => {
@@ -260,7 +261,7 @@ const handleKeyPress = (e) => {
                 // freeSolo
                 value={parMachSerVal || null}
                 options={machines}
-                getOptionLabel={(option) => option.serialNo}
+                getOptionLabel={(option) => `${ option.serialNo ? option.serialNo : ""}`}
                 isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -277,7 +278,7 @@ const handleKeyPress = (e) => {
                   }
                 }}
                 id="controllable-states-demo"
-                renderOption={(props, option) => (<Box component="li" {...props} key={option._id}>{option.serialNo}</Box>)}
+                renderOption={(props, option) => (<Box component="li" {...props} key={option._id}>{`${ option.serialNo ? option.serialNo : ""}`}</Box>)}
                 renderInput={(params) => <TextField {...params}  label="Previous Machine Serial No." />}
                 ChipProps={{ size: 'small' }}
               />
@@ -289,8 +290,8 @@ const handleKeyPress = (e) => {
                 id="combo-box-demo"
                 value={parMachineVal || null}
                 options={machines}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option?.name === value.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue !== null){
@@ -307,7 +308,7 @@ const handleKeyPress = (e) => {
                   }
                 }}
                 // id="controllable-states-demo"
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 renderInput={(params) => <TextField {...params}  label="Previous Machine" sx={{ "& .MuiInputBase-input.Mui-disabled": { WebkitTextFillColor: "#000000" }}}/>}
                 ChipProps={{ size: 'small' }}
               />
@@ -319,7 +320,7 @@ const handleKeyPress = (e) => {
                 value={supplierVal || null}
                 options={suppliers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
 
                 onChange={(event, newValue) => {
                 if(newValue){
@@ -329,7 +330,7 @@ const handleKeyPress = (e) => {
                   setSupplierVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Supplier" />}
                 ChipProps={{ size: 'small' }}
@@ -340,7 +341,7 @@ const handleKeyPress = (e) => {
                 value={modelVal || null}
                 options={machineModels}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) =>`${option.name ? option.name : ""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -350,7 +351,7 @@ const handleKeyPress = (e) => {
                   setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
@@ -362,7 +363,7 @@ const handleKeyPress = (e) => {
                 id="tags-outlined"
                 value={ machineConnectionVal || null}
                 options={machineConnections}
-                getOptionLabel={(option) => option.connectedMachine.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 filterSelectedOptions
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
@@ -373,7 +374,7 @@ const handleKeyPress = (e) => {
                   setMachineConnectionVal([]);
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.connectedMachine.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
@@ -389,7 +390,7 @@ const handleKeyPress = (e) => {
                 value={statusVal || null}
                 options={machinestatuses}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -399,7 +400,7 @@ const handleKeyPress = (e) => {
                   setStatusVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Status" />}
                 ChipProps={{ size: 'small' }}
@@ -411,7 +412,7 @@ const handleKeyPress = (e) => {
                 value={customerVal || null}
                 options={customers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -421,7 +422,7 @@ const handleKeyPress = (e) => {
                   setCustomerVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
@@ -434,7 +435,7 @@ const handleKeyPress = (e) => {
                 value={installVal || null}
                 options={sites}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -444,7 +445,7 @@ const handleKeyPress = (e) => {
                   setInstallVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
@@ -454,7 +455,7 @@ const handleKeyPress = (e) => {
                 value={billingVal || null}
                 options={sites}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -464,7 +465,7 @@ const handleKeyPress = (e) => {
                   setBillingVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}
@@ -481,7 +482,7 @@ const handleKeyPress = (e) => {
                 value={accoVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -491,7 +492,7 @@ const handleKeyPress = (e) => {
                   setAccoManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Account Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -501,7 +502,7 @@ const handleKeyPress = (e) => {
                 value={projVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -511,7 +512,7 @@ const handleKeyPress = (e) => {
                   setProjManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Project Manager" />}
                 ChipProps={{ size: 'small' }}
@@ -521,7 +522,7 @@ const handleKeyPress = (e) => {
                 value={suppVal || null}
                 options={spContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                getOptionLabel={(option) => `${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}
 
                 onChange={(event, newValue) => {
                   if(newValue){
@@ -531,7 +532,7 @@ const handleKeyPress = (e) => {
                   setSuppManVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName} ${option.lastName}`}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName ? option.firstName : ""} ${option.lastName  ? option.lastName :""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Support Manager" />}
                 ChipProps={{ size: 'small' }}

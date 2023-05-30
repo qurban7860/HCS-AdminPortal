@@ -244,7 +244,7 @@ const onSubmit = async (data) => {
                 value={parMachSerVal || null}
                 options={machines}
                 isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                getOptionLabel={(option) => option.serialNo}
+                getOptionLabel={(option) => `${ option.serialNo ? option.serialNo : ""}`}
                 id="controllable-states-demo"
                 onChange={(event, newValue) => {
                   
@@ -261,7 +261,7 @@ const onSubmit = async (data) => {
                     setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${ option.serialNo ? option.serialNo : ""}`}</li>)}
                 renderInput={(params) => <TextField {...params}  label="Previous Machine Serial No." />}
                 ChipProps={{ size: 'small' }}
               />
@@ -271,7 +271,7 @@ const onSubmit = async (data) => {
                 value={parMachineVal || null}
                 options={machines}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                     setParMachineVal(newValue);
@@ -299,7 +299,7 @@ const onSubmit = async (data) => {
                 value={supplierVal || null}
                 options={suppliers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setSupplierVal(newValue);
@@ -308,7 +308,7 @@ const onSubmit = async (data) => {
                   setSupplierVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Supplier" />}
                 ChipProps={{ size: 'small' }}
@@ -319,7 +319,7 @@ const onSubmit = async (data) => {
                 value={modelVal || null}
                 options={machineModels}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setModelVal(newValue);
@@ -328,7 +328,7 @@ const onSubmit = async (data) => {
                   setModelVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Model" />}
                 ChipProps={{ size: 'small' }}
@@ -340,7 +340,7 @@ const onSubmit = async (data) => {
                 id="tags-outlined"
                 value={ machineConnectionVal || null}
                 options={machineConnections}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 filterSelectedOptions
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
@@ -351,11 +351,11 @@ const onSubmit = async (data) => {
                   setMachineConnectionVal([]);
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Machine Connections"
+                    label="Connected Machines"
                     placeholder="Search"
                   />
                 )}
@@ -394,7 +394,7 @@ const onSubmit = async (data) => {
                 value={statusVal || null}
                 options={machinestatuses}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setStatusVal(newValue);
@@ -403,7 +403,7 @@ const onSubmit = async (data) => {
                   setStatusVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params}  label="Status" />}
                 ChipProps={{ size: 'small' }}
@@ -415,7 +415,7 @@ const onSubmit = async (data) => {
                 value={customerVal || null}
                 options={customers}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setCustomerVal(newValue);
@@ -425,7 +425,7 @@ const onSubmit = async (data) => {
                   dispatch(resetSites());
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Customer" />}
                 ChipProps={{ size: 'small' }}
@@ -439,7 +439,7 @@ const onSubmit = async (data) => {
                 value={installVal || null}
                 options={sites}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setInstallVal(newValue);
@@ -448,7 +448,7 @@ const onSubmit = async (data) => {
                   setInstallVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Instalation Site" />}
                 ChipProps={{ size: 'small' }}
@@ -460,7 +460,7 @@ const onSubmit = async (data) => {
                 value={billingVal || null}
                 options={sites}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
+                getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setBillingVal(newValue);
@@ -469,7 +469,7 @@ const onSubmit = async (data) => {
                   setBillingVal("");
                   }
                 }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.name ? option.name : ""}`}</li>)}
                 id="controllable-states-demo"
                 renderInput={(params) => <TextField {...params} label="Billing Site" />}
                 ChipProps={{ size: 'small' }}

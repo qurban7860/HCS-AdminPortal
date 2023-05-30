@@ -13,7 +13,7 @@ export default function CommaJoinField({ arrayParam, objectParam,heading, sm}) {
       {heading && <Typography variant="overline" sx={{ color: 'text.disabled' }}>
         {heading || ''}
       </Typography>}
-        {arrayParam && <Typography> {arrayParam.map(item => typeof item.connectedMachine.name === "string" ? item.connectedMachine.name.trim() : "").filter(value => value !== "").join(", ")}</Typography>}
+        {arrayParam && <Typography> {arrayParam.map(item => typeof item.name === "string" ? item.connectedMachine.name.trim() : "").filter(value => value !== "").join(", ")}</Typography>}
         {objectParam && <Typography  >{Object.values(objectParam ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")} </Typography>}
      </Grid>
     )
