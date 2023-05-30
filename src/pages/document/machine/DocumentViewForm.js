@@ -130,8 +130,8 @@ const handleDownload = () => {
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
           <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-          <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
-          <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+          <ViewFormField sm={6} heading="Document Type" param={defaultValues?.documentName} />
+          <ViewFormField sm={6} heading="Document Category" param={defaultValues?.category} />
           {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
           <Grid item xs={12} sm={12} sx={{px:2,py:1, overflowWrap: "break-word",}}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
@@ -174,7 +174,7 @@ const handleDownload = () => {
             >
               <Iconify width="50px" icon="ph:files-fill" />
             </Link>}
-              <DownloadComponent Document={currentMachineDocument} />
+              {/* <DownloadComponent Document={currentMachineDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>
           {/* {currentMachineDocument?.type.startsWith("image") ?
