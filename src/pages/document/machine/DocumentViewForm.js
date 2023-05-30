@@ -6,7 +6,8 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
-import { Switch, Card, Grid, Stack, Typography, Button , Box , Link} from '@mui/material';
+import { styled, alpha } from '@mui/material/styles';
+import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton} from '@mui/material';
 // redux
 import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument} from '../../../redux/slices/document/machineDocument';
 // paths
@@ -165,7 +166,46 @@ const handleDownload = () => {
                 sx={{ m:2 }}
                 alt={defaultValues.displayName}
                 src={`data:image/png;base64, ${currentMachineDocument?.content}`}
-                />
+                >
+                  <IconButton
+                    size="small"
+                    // onClick={onPreview}
+                    sx={{
+                      top: 16,
+                      right: 56,
+                      zIndex: 9,
+                      height: "150",
+                      position: 'absolute',
+                      color: (theme) => alpha(theme.palette.common.white, 0.8),
+                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                      '&:hover': {
+                        bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+                      },
+                    }}
+                  >
+                    <Iconify icon="line-md:download-loop" width={18} />
+                  </IconButton>
+
+                  <IconButton
+                    size="small"
+                    // onClick={onDelete}
+                    sx={{
+                      top: 16,
+                      right: 16,
+                      zIndex: 9,
+                      height: "150",
+                      position: 'absolute',
+                      color: (theme) => alpha(theme.palette.common.white, 0.8),
+                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                      '&:hover': {
+                        bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+                      },
+                    }}
+                  >
+                    <Iconify icon="icon-park-outline:preview-open" width={18} />
+                  </IconButton>
+
+                </Box>
             </Link>: <Link href="#" underline="none"
               sx={{ m:2 }}
               component="button"
