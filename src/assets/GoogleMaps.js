@@ -82,7 +82,7 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={markerPositions.length > 0 ? markerPositions[0] : defaultCenter}
-      zoom={12}
+      zoom={latlongArr.length > 0 ? 1 : 12}
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={onMapClick}
