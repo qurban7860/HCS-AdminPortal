@@ -186,7 +186,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             >
               <Iconify width="50px" icon="ph:files-fill" />
             </Link>}
-              <DownloadComponent Document={currentCustomerDocument} />
+              {/* <DownloadComponent Document={currentCustomerDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?

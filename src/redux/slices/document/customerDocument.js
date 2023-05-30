@@ -169,6 +169,7 @@ export function updateCustomerDocument(customerDocumentId,params) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
       if(regEx.test(response.status)){
         dispatch(setCustomerDocumentEditFormVisibility (false));
+        dispatch(getCustomerDocuments(customerDocumentId))
       }
     return response;
   };
