@@ -15,6 +15,8 @@ import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import CommaJoinField from '../components/CommaJoinField';
+
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
@@ -23,7 +25,7 @@ export default function MachineViewForm() {
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
-
+console.log("machine : ",machine)
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false))
     if(machine?.customer){
@@ -132,6 +134,7 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
         <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+        <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
         <ViewFormField
           sm={6}
           heading="Installation Site"

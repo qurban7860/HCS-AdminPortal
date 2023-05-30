@@ -378,7 +378,7 @@ const handleKeyPress = (e) => {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Machine Connections"
+                    label="Connected Machines"
                     placeholder="Search"
                   />
                 )}
