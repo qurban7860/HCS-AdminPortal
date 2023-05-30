@@ -141,6 +141,9 @@ export default function GeneralAppPage() {
   useLayoutEffect(() => {
     dispatch(getCount());
   }, [dispatch]);
+console.log("ModelData.options : ",ModelData.options)
+console.log("ModelData.series : ",ModelData.series)
+console.log("CustomerData.options : ",CustomerData.options)
 
   return (
     <Container
@@ -267,8 +270,8 @@ export default function GeneralAppPage() {
                   <Typography variant="subtitle2">Customers</Typography>
                 </Stack>
                 <ChartBar
-                  options={CustomerData.options}
-                  series={CustomerData.series}
+                  optionsData={countryWiseCustomerCountCountries}
+                  seriesData={countryWiseCustomerCountNumber}
                   type="bar"
                   height="300px"
                   width="100%"
