@@ -109,7 +109,9 @@ export function addMachineDocument(customerId , machineId , params) {
         dispatch(slice.actions.startLoading());
         try {
           const formData = new FormData();
+          if(customerId){
             formData.append('customer', customerId);
+          }
             formData.append('machine', machineId);
             formData.append('customerAccess', params.customerAccess);
           if(params?.displayName){
