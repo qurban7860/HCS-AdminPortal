@@ -6,7 +6,7 @@ import { Divider, Switch, Card, Grid, Typography, Link ,Dialog } from '@mui/mate
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
-import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
+import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
 import Iconify from '../../components/iconify';
@@ -33,6 +33,10 @@ export default function MachineViewForm() {
     }
   }, [ dispatch ,machine ])
   const handleEdit = () => {
+    dispatch(setMachineEditFormVisibility(true));
+  }
+  const handleTransfer = () => {
+    dispatch(setTransferMachineFlag(true));
     dispatch(setMachineEditFormVisibility(true));
   }
   const handleViewCustomer = (id) => {
@@ -90,7 +94,7 @@ export default function MachineViewForm() {
   return (
     <Card sx={{ p: 3 }}>
       <Grid container justifyContent="flex-end" alignContent="flex-end">
-        <ViewFormEditDeleteButtons sx={{ pt: 5 }} handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons sx={{ pt: 5 }} handleTransfer={handleTransfer} handleEdit={handleEdit} onDelete={onDelete} />
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
       </Grid>
       <Grid container>

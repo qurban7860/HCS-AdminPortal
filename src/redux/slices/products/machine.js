@@ -11,6 +11,7 @@ const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   machineEditFormFlag: false,
+  transferMachineFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -33,6 +34,11 @@ const slice = createSlice({
     // SET TOGGLE
     setMachineEditFormVisibility(state, action){
       state.machineEditFormFlag = action.payload;
+    },
+
+    // SET TOGGLE
+    setTransferMachineFlag(state, action){
+      state.transferMachineFlag = action.payload;
     },
     
     // HAS ERROR
@@ -108,6 +114,7 @@ export default slice.reducer;
 // Actions
 export const {
   setMachineEditFormVisibility,
+  setTransferMachineFlag,
   resetCustomerMachines,
   resetMachine,
   resetMachines,
@@ -295,6 +302,47 @@ export function updateMachine(params) {
       };
      /* eslint-enable */
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
+        data
+      );
+
+      dispatch(getMachine(params.id));
+      dispatch(slice.actions.setMachineEditFormVisibility(false));
+
+      // this.updateCustomerSuccess(response);
+
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+
+}
+
+// --------------------------------------------------------------------------
+
+export function transferMachine(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const formData = new FormData();
+
+      const data = {
+        machine: params.id,
+        name: params.name,
+        supplier: params.supplier,
+        workOrderRef: params.workOrderRef,
+        customer: params.customer,
+        billingSite: params.billingSite,
+        instalationSite: params.instalationSite,
+        siteMilestone: params.siteMilestone,
+        accountManager: params.accountManager,
+        projectManager: params.projectManager,
+        supportManager: params.supportManager,
+        description: params.description,
+        customerTags: params.customerTags,
+      };
+     /* eslint-enable */
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
 

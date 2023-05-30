@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 ViewFormEditDeleteButtons.propTypes = {
+  handleTransfer: PropTypes.func,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,
@@ -31,6 +32,7 @@ ViewFormEditDeleteButtons.propTypes = {
 export default function ViewFormEditDeleteButtons({
   onDelete,
   handleEdit,
+  handleTransfer,
   type,
   sites,
   handleMap,
@@ -125,6 +127,27 @@ export default function ViewFormEditDeleteButtons({
                 Open MAP
               </Typography>
             </Popover>
+          </Button>
+        ) : (
+          ''
+        )}
+
+        {handleTransfer ? (
+          <Button
+            onClick={() => {
+              handleTransfer();
+            }}
+            variant="outlined"
+            title="Transfer"
+          >
+            <Tooltip
+              title="Transfer Ownership"
+              placement="top"
+              disableFocusListener
+              classes={{ tooltip: classes.tooltip }}
+            >
+              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi-cog-transfer-outline" />
+            </Tooltip>
           </Button>
         ) : (
           ''
