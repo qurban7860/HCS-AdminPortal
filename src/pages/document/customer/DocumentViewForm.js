@@ -139,8 +139,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
             <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Document Name" param={defaultValues?.documentName} />
-            <ViewFormField sm={6} heading="Category" param={defaultValues?.category} />
+            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.documentName} />
+            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.category} />
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
             <Grid item xs={12} sm={6}  sx={{px:2,py:1, overflowWrap: "break-word",display:"flex"}}>
               <Grid>

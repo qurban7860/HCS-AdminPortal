@@ -298,7 +298,7 @@ export default function DocumentAddForm({currentDocument}) {
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} label="Document Name" />}
+                        renderInput={(params) => <TextField {...params} label="Document Type" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
@@ -323,7 +323,7 @@ export default function DocumentAddForm({currentDocument}) {
                           </li>
                         )}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} label="File Category" />}
+                        renderInput={(params) => <TextField {...params} label="Document Category" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
