@@ -5,11 +5,6 @@ import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';
 
-const containerStyle = {
-  width: '100%',
-  height: '800px',
-};
-
 const defaultCenter = {
   lat: -36.902893343776185,
   lng: 174.92608245309523,
@@ -37,6 +32,10 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
     googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY || '',
   });
 
+  const containerStyle = {
+    width: '100%',
+    height: latlongArr.length > 0 ? '800px' : '400px',
+  };
   const dispatch = useDispatch();
   const [map, setMap] = useState(null);
   const [markerPositions, setMarkerPositions] = useState([]);
@@ -82,11 +81,11 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
       dispatch(setLatLongCoordinates(latLng));
     }
   };
-
+  console.log('position',markerPositions[0]);
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={markerPositions.length > 0 ? reportDefaultCenter : defaultCenter}
+      center={latlongArr.length > 0 ? reportDefaultCenter : markerPositions[0]}
       zoom={latlongArr.length > 0 ? 2 : 12}
       onLoad={onLoad}
       onUnmount={onUnmount}

@@ -73,7 +73,7 @@ useEffect(()=>{
       if (!value) return true;
       const trimmedValue = value.trim();
       const parsedValue = parseFloat(trimmedValue);
-      return trimmedValue === parsedValue.toString() && !isNaN(parsedValue) && parsedValue >= -90 && parsedValue <= 90;
+      return trimmedValue === parsedValue.toString() && !isNaN(parsedValue) && parsedValue >= -180 && parsedValue <= 180;
     }),
     street: Yup.string(),
     suburb: Yup.string(),
