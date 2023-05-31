@@ -44,6 +44,7 @@ import { getSites } from '../../../redux/slices/customer/site';
 export default function DocumentEditForm() {
 
   const { customerDocument } = useSelector((state) => state.customerDocument);
+  console.log("customerDocument : ",customerDocument)
   const { documentTypes } = useSelector((state) => state.documentType);
   const { documentCategories } = useSelector((state) => state.documentCategory);
   // console.log("machine : " , machine)

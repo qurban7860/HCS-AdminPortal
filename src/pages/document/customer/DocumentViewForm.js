@@ -62,7 +62,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   };
 
   const  handleEdit = async () => {
-    await (getCustomerDocument(currentCustomerDocument._id));
+    console.log("edit customer document call")
+    await dispatch(getCustomerDocument(currentCustomerDocument._id));
           dispatch(setCustomerDocumentEditFormVisibility(true));
   };
 
