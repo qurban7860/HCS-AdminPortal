@@ -19,9 +19,9 @@ import Scrollbar from '../../../components/scrollbar';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import { addMachineDocument, getMachineDocuments, getMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
-import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
-import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
+import { getMachineDocuments, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { setDocumentTypeFormVisibility} from '../../../redux/slices/document/documentType';
+import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
 
 import DocumentAddForm from './DocumentAddForm'
 import DocumentEditForm from './DocumentEditForm';
@@ -79,8 +79,8 @@ export default function DocumentList() {
   const dispatch = useDispatch();
 
   const { initial,error, responseMessage , machineDocuments, machineDocumentEditFormVisibility, machineDocumentFormVisibility } = useSelector((state) => state.machineDocument);
-  const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
-  const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
+  const { documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
+  const { documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { machine } = useSelector((state) => state.machine);
   const toggleChecked = async () =>{ dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility))};
   const { themeStretch } = useSettingsContext();
@@ -104,8 +104,8 @@ useEffect(() => {
     }
     dispatch(setMachineDocumentEditFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(false))
-    dispatch(setFileCategoryFormVisibility(false))
-    dispatch(setDocumentNameFormVisibility(false))
+    dispatch(setDocumentCategoryFormVisibility(false))
+    dispatch(setDocumentTypeFormVisibility(false))
 }, [dispatch, machine._id ]);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -139,7 +139,7 @@ useEffect(() => {
 
   return (
     <>
-    {!machineDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility && 
+    {!machineDocumentEditFormVisibility && !documentTypeFormVisibility && !documentCategoryFormVisibility && 
       <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row' }} sx={{ py: 2 }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
@@ -194,28 +194,28 @@ useEffect(() => {
       </Stack>}
 
       {!machineDocumentEditFormVisibility &&
-        !documentNameFormVisibility &&
-        !fileCategoryFormVisibility &&
+        !documentTypeFormVisibility &&
+        !documentCategoryFormVisibility &&
         machineDocumentFormVisibility && <DocumentAddForm />}
       {!machineDocumentEditFormVisibility &&
-        !documentNameFormVisibility &&
-        fileCategoryFormVisibility &&
+        !documentTypeFormVisibility &&
+        documentCategoryFormVisibility &&
         !machineDocumentFormVisibility && <FileCategoryAddForm />}
       {!machineDocumentEditFormVisibility &&
-        documentNameFormVisibility &&
-        !fileCategoryFormVisibility &&
+        documentTypeFormVisibility &&
+        !documentCategoryFormVisibility &&
         !machineDocumentFormVisibility && <DocumentNameAddForm />}
       {machineDocumentEditFormVisibility &&
-        !documentNameFormVisibility &&
-        !fileCategoryFormVisibility &&
+        !documentTypeFormVisibility &&
+        !documentCategoryFormVisibility &&
         !machineDocumentFormVisibility && <DocumentEditForm />}
 
       {/* {machineDocumentEditFormVisibility  && <DocumentEditForm/>} */}
       <Card sx={{ mt: 2 }}>
         {!machineDocumentEditFormVisibility &&
           !machineDocumentFormVisibility &&
-          !fileCategoryFormVisibility &&
-          !documentNameFormVisibility &&
+          !documentCategoryFormVisibility &&
+          !documentTypeFormVisibility &&
           dataFiltered.map((document, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return (
@@ -235,10 +235,10 @@ useEffect(() => {
                         {document?.displayName || ''}
                       </Grid>
                       <Grid item xs={12} sm={4} md={2.4}>
-                        {document?.category?.name || ''}
+                        {document?.docType?.name || ''}
                       </Grid>
                       <Grid item xs={12} sm={4} md={2.4}>
-                        {document?.documentName?.name || ''}
+                        {document?.docCategory?.name || ''}
                       </Grid>
                       {/* <Grid
                         item

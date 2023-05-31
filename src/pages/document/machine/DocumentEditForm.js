@@ -30,9 +30,9 @@ import FormHeading from '../../components/FormHeading';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 
 // slice
-import { addMachineDocument, setMachineDocumentEdit, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility, updateMachineDocument  } from '../../../redux/slices/document/machineDocument';
-import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility ,getFileCategories } from '../../../redux/slices/document/fileCategory';
-import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames } from '../../../redux/slices/document/documentName';
+import { setMachineDocumentEdit, setMachineDocumentEditFormVisibility, updateMachineDocument  } from '../../../redux/slices/document/machineDocument';
+import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
+import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -43,16 +43,16 @@ import { getSites } from '../../../redux/slices/customer/site';
 export default function DocumentEditForm() {
 
   const { machineDocument } = useSelector((state) => state.machineDocument);
-  const { documentNames } = useSelector((state) => state.documentName);
-  const { fileCategories } = useSelector((state) => state.fileCategory);
+  const { documentTypes } = useSelector((state) => state.documentType);
+  const { documentCategories } = useSelector((state) => state.documentCategory);
   const { machine , machines } = useSelector((state) => state.machine);
   // console.log("machine : " , machine)
   const { customers } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
 
-  const [ documentNameVal, setDocumentNameVal] = useState('')
-  const [ fileCategoryVal, setFileCategoryVal] = useState('')
+  const [ documentTypeVal, setDocumentTypeVal] = useState('')
+  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const [ machineVal, setMachineVal] = useState('')
   const [ customerVal, setCustomerVal] = useState('')
   const [ siteVal, setSiteVal] = useState('')
@@ -63,17 +63,17 @@ export default function DocumentEditForm() {
   const navigate = useNavigate();
 
   let documentAvailable 
-  if(documentNames && documentNames.length){
+  if(documentTypes && documentTypes.length){
     documentAvailable =  true 
   }else{
     documentAvailable =  true 
   }
 
-  let fileCategory 
-  if(fileCategories && fileCategories.length){
-    fileCategory =  true 
+  let documentCategory 
+  if(documentCategories && documentCategories.length){
+    documentCategory =  true 
   }else{
-    fileCategory =  true 
+    documentCategory =  true 
   }
 
   const dispatch = useDispatch();
@@ -83,8 +83,8 @@ export default function DocumentEditForm() {
 useEffect(()=>{
   setNameVal(machineDocument?.displayName)
   setCustomerAccessVal(machineDocument?.customerAccess)
-  setFileCategoryVal(machineDocument?.category)
-  setDocumentNameVal(machineDocument?.documentName)
+  setDocumentCategoryVal(machineDocument?.category)
+  setDocumentTypeVal(machineDocument?.documentName)
 },[machineDocument])
 
   const EditMachineDocumentSchema = Yup.object().shape({
@@ -128,11 +128,11 @@ useEffect(()=>{
       if(nameVal){
         data.displayName = nameVal
       }
-      if(documentNameVal){
-        data.documentName = documentNameVal
+      if(documentTypeVal){
+        data.documentName = documentTypeVal
       }
-      // if(fileCategoryVal){
-      //   data.category = fileCategoryVal._id
+      // if(documentCategoryVal){
+      //   data.category = documentCategoryVal._id
       // }
       if(customerAccessVal === "true" || customerAccessVal === true){
         data.customerAccess = true
@@ -155,12 +155,12 @@ useEffect(()=>{
 
   const togleCategoryPage = ()=>{
     dispatch(setMachineDocumentEdit(true))
-    dispatch(setFileCategoryFormVisibility(true))
+    dispatch(setDocumentCategoryFormVisibility(true))
     dispatch(setMachineDocumentEditFormVisibility(false));
   }
   const togleDocumentNamePage = ()=>{
     dispatch(setMachineDocumentEdit(true))
-    dispatch(setDocumentNameFormVisibility(true))
+    dispatch(setDocumentTypeFormVisibility(true))
     dispatch(setMachineDocumentEditFormVisibility(false));
   }
 
@@ -202,16 +202,16 @@ useEffect(()=>{
               <Autocomplete
                 // freeSolo
                 // disabled
-                value={documentNameVal || null}
-                options={documentNames}
+                value={documentTypeVal || null}
+                options={documentTypes}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
-                    setDocumentNameVal(newValue);
+                    setDocumentTypeVal(newValue);
                   }
                   else{  
-                    setDocumentNameVal("");
+                    setDocumentTypeVal("");
                   }
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
@@ -223,16 +223,16 @@ useEffect(()=>{
               <Autocomplete
                 // freeSolo
                 disabled
-                value={fileCategoryVal || null}
-                options={fileCategories}
+                value={documentCategoryVal || null}
+                options={documentCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
-                    setFileCategoryVal(newValue);
+                    setDocumentCategoryVal(newValue);
                   }
                   else{  
-                    setFileCategoryVal("");
+                    setDocumentCategoryVal("");
                   }
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}

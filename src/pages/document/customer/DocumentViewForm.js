@@ -66,7 +66,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       {
         displayName :                     currentCustomerDocument?.displayName || "",
         documentName:             currentCustomerDocument?.documentName?.name || "",
-        category:                 currentCustomerDocument?.category?.name || "",
+        docCategory:              currentCustomerDocument?.docCategory?.name || "",
+        docType:                  currentCustomerDocument?.docType?.name || "",
         customer:                 currentCustomerDocument?.customer?.name || "",
         customerAccess:           currentCustomerDocument?.customerAccess,
         isActiveVersion:          currentCustomerDocument?.isActiveVersion,
@@ -139,8 +140,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
             <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.documentName} />
-            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.category} />
+            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
             <Grid item xs={12} sm={6}  sx={{px:2,py:1, overflowWrap: "break-word",display:"flex"}}>
               <Grid>
@@ -165,7 +166,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
             <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
-            { currentCustomerDocument?.type.startsWith("image") ?
+            {/* { currentCustomerDocument?.type.startsWith("images") ?
             <Link href="#" underline="none"
               component="button"
               title='Download File'
@@ -185,7 +186,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
               onClick={handleDownload}
             >
               <Iconify width="50px" icon="ph:files-fill" />
-            </Link>}
+            </Link>} */}
               {/* <DownloadComponent Document={currentCustomerDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>

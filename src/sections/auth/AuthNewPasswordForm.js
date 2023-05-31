@@ -74,7 +74,6 @@ export default function AuthNewPasswordForm() {
 
       const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword/verifyToken`, DATA);
 
-      // sessionStorage.removeItem('email-recovery');
       enqueueSnackbar('Change password success!');
       navigate(PATH_DASHBOARD.root);
     } catch (error) {

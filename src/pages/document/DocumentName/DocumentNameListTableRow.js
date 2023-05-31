@@ -89,9 +89,9 @@ export default function DocumentNameListTableRow({
             <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
           </Stack>
         </TableCell>
-        <TableCell>{description}</TableCell>
-        <TableCell align="center"> <Switch checked = { isActive } disabled size="small" /> </TableCell>  
-        <TableCell>{fDate(createdAt)}</TableCell>
+        {/* <TableCell>{description}</TableCell> */}
+        <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
+        <TableCell align="right" >{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />

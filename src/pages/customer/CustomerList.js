@@ -128,15 +128,9 @@ export default function CustomerList() {
 
   useEffect(() => {
     if (initial) {
-      // if (customers && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // }
-      // else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(customers);
     }
-  }, [customers, error, responseMessage, enqueueSnackbar, initial]);
+  }, [customers, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -245,20 +239,20 @@ export default function CustomerList() {
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
+              // rowCount={tableData.length}
+              // onSelectAllRows={(checked) =>
+              //   onSelectAllRows(
+              //     checked,
+              //     tableData.map((row) => row._id)
+              //   )
+              // }
+              // action={
+              //   <Tooltip title="Delete">
+              //     <IconButton color="primary" onClick={handleOpenConfirm}>
+              //       <Iconify icon="eva:trash-2-outline" />
+              //     </IconButton>
+              //   </Tooltip>
+              // }
             />
             
             <Scrollbar>
@@ -279,7 +273,7 @@ export default function CustomerList() {
                 />
 
                 <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  { dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
@@ -347,6 +341,7 @@ export default function CustomerList() {
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;

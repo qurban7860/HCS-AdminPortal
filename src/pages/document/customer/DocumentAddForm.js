@@ -10,15 +10,15 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Link, InputLabel,MenuItem , FormControl, Dialog}  from '@mui/material';
+import { Switch,Radio, RadioGroup,FormControlLabel,FormLabel, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField ,Link, InputLabel,MenuItem , FormControl, Dialog}  from '@mui/material';
 // routes
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
-import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
-import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
+import { getDocumentTypes , setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import { getDocumentCategories, setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -39,16 +39,17 @@ DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
 export default function DocumentAddForm({currentDocument}) {
-  const { documentNames } = useSelector((state) => state.documentName);
-  const { fileCategories } = useSelector((state) => state.fileCategory);
+  const { documentTypes } = useSelector((state) => state.documentType);
+  const { documentCategories } = useSelector((state) => state.documentCategory);
   // console.log("fileCategories : ", fileCategories, " documentNames : ", documentNames)
   const { machines } = useSelector((state) => state.machine);
   const { customer, customers } = useSelector((state) => state.customer);
   const { contacts } = useSelector((state) => state.contact);
   const { sites } = useSelector((state) => state.site);
 
-  const [ documentNameVal, setDocumentNameVal] = useState('')
-  const [ fileCategoryVal, setFileCategoryVal] = useState('')
+  const [ documentTypeVal, setDocumentTypeVal] = useState('')
+  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
+  const [ selectedValue, setSelectedValue] = useState('new')
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
   const [ nameVal, setNameVal] = useState("")
   const [ previewVal, setPreviewVal] = useState("")
@@ -84,17 +85,17 @@ export default function DocumentAddForm({currentDocument}) {
   
   useEffect(()=>{
     setNameVal("")
-    setDocumentNameVal("")
-    setFileCategoryVal("")
+    setDocumentTypeVal("")
+    setDocumentCategoryVal("")
     setCustomerAccessVal(false)
-    dispatch(getDocumentNames())
-    dispatch(getFileCategories())
+    dispatch(getDocumentTypes())
+    dispatch(getDocumentCategories())
   },[dispatch,customer])
 
   const AddCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
-    image: Yup.mixed()
+    images: Yup.mixed()
       .required("File is required!")
       .test(
         "fileType",
@@ -116,7 +117,7 @@ export default function DocumentAddForm({currentDocument}) {
     () => ({
       displayName: nameVal,
       description: '',
-      image: null,
+      images: null,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,22 +149,22 @@ export default function DocumentAddForm({currentDocument}) {
         if(nameVal){
           data.name = nameVal
         }
-        if(fileCategoryVal){
-          data.category = fileCategoryVal._id
+        if(documentCategoryVal){
+          data.documentCategory = documentCategoryVal._id
         }
         if(customerAccessVal === true || customerAccessVal === "true" ){
           data.customerAccess = true
         }else{
           data.customerAccess = false
         }
-        if(documentNameVal){
-          data.documentName = documentNameVal._id
+        if(documentTypeVal){
+          data.documentType = documentTypeVal._id
         }
         console.log("data : ",data)
         await postAndGet( dispatch, enqueueSnackbar ,addCustomerDocument(customer._id,data), getCustomerDocuments(customer._id));
         dispatch(setCustomerDocumentFormVisibility(false));
-        setFileCategoryVal("")
-        setDocumentNameVal("")
+        setDocumentCategoryVal("")
+        setDocumentTypeVal("")
         setCustomerAccessVal("")
         setNameVal("")
         setPreview(false);
@@ -180,11 +181,11 @@ export default function DocumentAddForm({currentDocument}) {
     dispatch(setCustomerDocumentFormVisibility(false));
   };
   const togleCategoryPage = ()=>{
-    dispatch(setFileCategoryFormVisibility(true))
+    dispatch(setDocumentCategoryFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(false));
   }
   const togleDocumentNamePage = ()=>{
-    dispatch(setDocumentNameFormVisibility(true))
+    dispatch(setDocumentTypeFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(false));
   }
   // const handleDrop = useCallback(
@@ -203,7 +204,7 @@ export default function DocumentAddForm({currentDocument}) {
   const handleClosePreview = () => { setPreview(false) };
 
   const handleRemoveFile = () => {
-    setValue('image', "");
+    setValue('images', "");
     setNameVal("")
   };
 
@@ -227,7 +228,7 @@ export default function DocumentAddForm({currentDocument}) {
       });
       if (file) {
         setPreviewVal(file.preview)
-        setValue('image', newFile, { shouldValidate: true });
+        setValue('images', newFile, { shouldValidate: true });
       }
 
     },
@@ -236,6 +237,9 @@ export default function DocumentAddForm({currentDocument}) {
 
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
+  };
+  const handleRadioChange = (event) => {
+    setSelectedValue(event.target.value);
   };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -254,13 +258,30 @@ export default function DocumentAddForm({currentDocument}) {
                 <Grid container lg={12}>
                   <FormHeading heading="New Document" />
                 </Grid>
+                  <FormControl>
+                    {/* <FormLabel id="demo-controlled-radio-buttons-group">Gender</FormLabel> */}
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-controlled-radio-buttons-group"
+                      name="controlled-radio-buttons-group"
+                      value={selectedValue}
+                      onChange={handleRadioChange}
+                    >
+                    <Grid item xs={12} sm={6}>
+                      <FormControlLabel item sm={6} value="new" control={<Radio />} label="New Document" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControlLabel item sm={6} value="newVersion" control={<Radio />} label="Upload new document against existing Document" />
+                    </Grid>
+                    </RadioGroup>
+                  </FormControl>
                 <Grid item xs={12} md={6} lg={12}>
                   <RHFUpload
                     required
                     // multiple
                     // thumbnail
                     onPreview={previewHandle}
-                    name="image"
+                    name="images"
                     maxSize={30145728}
                     onDelete={handleRemoveFile}
                     onDrop={handleDrop}
@@ -272,6 +293,7 @@ export default function DocumentAddForm({currentDocument}) {
                   />
                 </Grid>
                 <RHFTextField
+                  required
                   name="name"
                   value={nameVal}
                   label="Name"
@@ -285,20 +307,20 @@ export default function DocumentAddForm({currentDocument}) {
                       <Autocomplete
                         // freeSolo
                         // disabled={documentAvailable}
-                        value={documentNameVal || null}
-                        options={documentNames}
+                        value={documentTypeVal || null}
+                        options={documentTypes}
                         // isOptionEqualToValue={(option, value) => option.name === value.name}
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setDocumentNameVal(newValue);
+                            setDocumentTypeVal(newValue);
                           } else {
-                            setDocumentNameVal('');
+                            setDocumentTypeVal('');
                           }
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} label="Document Type" />}
+                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
@@ -306,15 +328,15 @@ export default function DocumentAddForm({currentDocument}) {
                       <Autocomplete
                         // freeSolo
                         // disabled={fileCategory}
-                        value={fileCategoryVal || null}
-                        options={fileCategories}
+                        value={documentCategoryVal || null}
+                        options={documentCategories}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
                         getOptionLabel={(option) => option.name}
                         onChange={(event, newValue) => {
                           if (newValue) {
-                            setFileCategoryVal(newValue);
+                            setDocumentCategoryVal(newValue);
                           } else {
-                            setFileCategoryVal('');
+                            setDocumentCategoryVal('');
                           }
                         }}
                         renderOption={(props, option) => (
@@ -323,13 +345,13 @@ export default function DocumentAddForm({currentDocument}) {
                           </li>
                         )}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} label="Document Category" />}
+                        renderInput={(params) => <TextField {...params} required label="Document Category" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid container lg={12} justifyContent="flex-end">
+                {/* <Grid container lg={12} justifyContent="flex-end">
                     <Grid item xs={6} sm={6} md={8} lg={2}>
                       <ViewFormSWitch
                         heading="Customer Access"
@@ -337,6 +359,14 @@ export default function DocumentAddForm({currentDocument}) {
                         onChange={handleChange}
                       />
                     </Grid>
+                </Grid> */}
+                <Grid container item lg={12} justifyContent="flex-end">
+                  <Grid item xs={6} sm={6} md={8} lg={3} sx={{display:'flex'}}>
+                   <Typography variant="body1" sx={{ display:'flex', alignItems:'center' }}>
+                        Customer Access
+                      </Typography>
+                    <Switch  checked={customerAccessVal} onChange={handleChange} />
+                  </Grid>
                 </Grid>
                 {/* <Grid container lg={6} spacing={3}>
                   <Grid item>

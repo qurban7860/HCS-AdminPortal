@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , deleteDocumentName , getDocumentNames , getDocumentName } from '../../../redux/slices/document/documentName';
+import {  setDocumentTypeEditFormVisibility , deleteDocumentType , getDocumentTypes , getDocumentType } from '../../../redux/slices/document/documentType';
 // paths
 import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
@@ -22,20 +22,20 @@ DocumentNameViewForm.propTypes = {
 };
 
 export default function DocumentNameViewForm({ currentDocumentName = null }) {
-  const { documentName } = useSelector((state) => state.documentName);
+  const { documentName } = useSelector((state) => state.documentType);
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
 
   const onDelete = async () => {
-    await dispatch(deleteDocumentName(documentName._id));
-    dispatch(getDocumentNames());
+    await dispatch(deleteDocumentType(documentName._id));
+    dispatch(getDocumentTypes());
   };
 
   const  handleEdit = async () => {
-    await dispatch(getDocumentName(documentName._id));
-    dispatch(setDocumentNameEditFormVisibility(true));
+    await dispatch(getDocumentType(documentName._id));
+    dispatch(setDocumentTypeEditFormVisibility(true));
   };
 
   const defaultValues = useMemo(

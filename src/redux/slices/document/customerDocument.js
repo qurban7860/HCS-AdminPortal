@@ -115,18 +115,20 @@ export function addCustomerDocument(customerId,params) {
           // }
           if(params?.displayName){
             formData.append('displayName', params?.displayName);
+            formData.append('name', params?.displayName);
           }
           if(params?.description){
             formData.append('description', params?.description);
           }
-          if(params?.category){
-            formData.append('category', params?.category);
+          if(params?.documentCategory){
+            formData.append('documentCategory', params?.documentCategory);
           }
-          if(params?.documentName){
-            formData.append('documentName', params?.documentName);
+          if(params?.documentType){
+            formData.append('documentType', params?.documentType);
+            formData.append('doctype', params?.documentType);
           }
-          if(params?.image){
-            formData.append('image', params?.image);
+          if(params?.images){
+            formData.append('images', params?.images);
           }
           if(params?.isActive){
             formData.append('isActive', params?.isActive);
@@ -151,6 +153,8 @@ export function updateCustomerDocument(customerDocumentId,params) {
                     displayName: params?.displayName,
                     customerAccess: params.customerAccess,
                     isActive: params.isActive,
+                    documentType:params.documentType,
+                    documentCategory:params.documentCategory,
                     description: params.description,
                   };
           if(params?.category){

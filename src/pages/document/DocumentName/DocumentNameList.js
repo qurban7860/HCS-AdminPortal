@@ -40,7 +40,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentNameListTableRow from './DocumentNameListTableRow';
 import DocumentNameListTableToolbar from './DocumentNameListTableToolbar';
-import documentName, { getDocumentName, deleteDocumentName, getDocumentNames  } from '../../../redux/slices/document/documentName';
+import documentName, { getDocumentType, deleteDocumentType, getDocumentTypes  } from '../../../redux/slices/document/documentType';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
 
@@ -50,7 +50,7 @@ import { fDate } from '../../../utils/formatTime';
 const TABLE_HEAD = [
   { id: 'name', label: 'Document Name', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'created_at', label: 'Created At', align: 'right' },
 
 ];
 
@@ -93,17 +93,16 @@ export default function DocumentNameList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customer } = useSelector((state) => state.customer);
-  const { documentNames, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentName);
-
+  const { documentTypes, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentType);
   useLayoutEffect(() => {
-    dispatch(getDocumentNames());
+    dispatch(getDocumentTypes());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(documentNames);
+      setTableData(documentTypes);
     }
-  }, [documentNames, error, responseMessage, enqueueSnackbar, initial]);
+  }, [documentTypes, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -141,8 +140,8 @@ export default function DocumentNameList() {
   const handleDeleteRow = async (id) => {
     try {
       // console.log(id);
-      await dispatch(deleteDocumentName(id));
-      dispatch(getDocumentNames());
+      await dispatch(deleteDocumentType(id));
+      dispatch(getDocumentTypes());
       setSelected([]);
 
       if (page > 0) {
@@ -198,7 +197,7 @@ export default function DocumentNameList() {
           }}
         >
           <Cover
-            name="Document Names"
+            name="Document Types"
             icon="ph:users-light"
           />
         </Card>

@@ -13,10 +13,9 @@ import { Switch, Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextF
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
-import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility ,getFileCategories } from '../../../redux/slices/document/fileCategory';
-import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames } from '../../../redux/slices/document/documentName';
-import { setCustomerDocumentEditFormVisibility, setCustomerDocumentFormVisibility } from '../../../redux/slices/document/customerDocument';
+import { addMachineDocument, setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { setDocumentCategoryFormVisibility , getDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { setDocumentTypeFormVisibility , getDocumentTypes } from '../../../redux/slices/document/documentType';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -43,16 +42,16 @@ DocumentAddForm.propTypes = {
 };
 export default function DocumentAddForm({currentDocument}) {
 
-  const { documentNames } = useSelector((state) => state.documentName);
-  const { fileCategories } = useSelector((state) => state.fileCategory);
-  const { machine , machines } = useSelector((state) => state.machine);
+  const { documentTypes } = useSelector((state) => state.documentType);
+  const { documentCategories } = useSelector((state) => state.documentCategory);
+  const { machine  } = useSelector((state) => state.machine);
   // console.log("machine : " , machine)
   const { customers } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
 
-  const [ documentNameVal, setDocumentNameVal] = useState('')
-  const [ fileCategoryVal, setFileCategoryVal] = useState('')
+  const [ documentTypeVal, setDocumentTypeVal] = useState('')
+  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const [ machineVal, setMachineVal] = useState('')
   const [ customerVal, setCustomerVal] = useState('')
   const [ siteVal, setSiteVal] = useState('')
@@ -63,36 +62,22 @@ export default function DocumentAddForm({currentDocument}) {
   const [ previewVal, setPreviewVal] = useState("")
   const navigate = useNavigate();
 
-  let documentAvailable 
-  if(documentNames && documentNames.length){
-    documentAvailable =  true 
-  }else{
-    documentAvailable =  true 
-  }
-
-  let fileCategory 
-  if(fileCategories && fileCategories.length){
-    fileCategory =  true 
-  }else{
-    fileCategory =  true 
-  }
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
  
   useEffect(()=>{
     setNameVal("")
-    setDocumentNameVal("")
-    setFileCategoryVal("")
+    setDocumentTypeVal("")
+    setDocumentCategoryVal("")
     setCustomerAccessVal(false)
-    dispatch(getDocumentNames());
-    dispatch(getFileCategories());
+    dispatch(getDocumentTypes());
+    dispatch(getDocumentCategories());
   },[dispatch,machine._id])
  // a note can be archived.  
   const AddMachineDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
-    image: Yup.mixed()
+    images: Yup.mixed()
       .required("File is required!")
       .test(
         "fileType",
@@ -113,7 +98,7 @@ export default function DocumentAddForm({currentDocument}) {
     () => ({
       displayName: nameVal,
       description: '',
-      image: null,
+      images: null,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -141,23 +126,23 @@ export default function DocumentAddForm({currentDocument}) {
   const onSubmit = async (data) => {
       try{
         data.displayName = nameVal
-        if(fileCategoryVal){
-          data.category = fileCategoryVal._id
+        if(documentCategoryVal){
+          data.documentCategory = documentCategoryVal._id
         }
         if(customerAccessVal === true || customerAccessVal === "true" ){
           data.customerAccess = true
         }else{
           data.customerAccess = false
         }
-        if(documentNameVal){
-          data.documentName = documentNameVal._id
+        if(documentTypeVal){
+          data.documentType = documentTypeVal._id
         }
         console.log("data : ", data)
 
         await dispatch(addMachineDocument(machine.customer._id, machine._id ,data));
         dispatch(setMachineDocumentFormVisibility(false));
-        setFileCategoryVal("")
-        setDocumentNameVal("")
+        setDocumentCategoryVal("")
+        setDocumentTypeVal("")
         setCustomerAccessVal("")
         setNameVal("")
         setPreview(false);
@@ -174,11 +159,11 @@ export default function DocumentAddForm({currentDocument}) {
     dispatch(setMachineDocumentFormVisibility(false));
   };
   const togleCategoryPage = ()=>{
-    dispatch(setFileCategoryFormVisibility(true))
+    dispatch(setDocumentCategoryFormVisibility(true))
     dispatch(setMachineDocumentFormVisibility(false));
   }
   const togleDocumentNamePage = ()=>{
-    dispatch(setDocumentNameFormVisibility(true))
+    dispatch(setDocumentTypeFormVisibility(true))
     dispatch(setMachineDocumentFormVisibility(false));
   }
 
@@ -195,7 +180,7 @@ export default function DocumentAddForm({currentDocument}) {
       });
       if (file) {
       setPreviewVal(file.preview)
-        setValue('image', newFile, { shouldValidate: true });
+        setValue('images', newFile, { shouldValidate: true });
       }
     },
     [setValue]
@@ -206,7 +191,7 @@ export default function DocumentAddForm({currentDocument}) {
   const handleClosePreview = () => { setPreview(false) };
 
   const handleRemoveFile = () => {
-    setValue('image', "", { shouldValidate: true });
+    setValue('images', "", { shouldValidate: true });
     setNameVal("")
   };
 
@@ -228,7 +213,7 @@ export default function DocumentAddForm({currentDocument}) {
                   // multiple
                   // thumbnail
                   onPreview={previewHandle}
-                  name="image"
+                  name="images"
                   maxSize={30145728}
                   onDelete={handleRemoveFile}
                   onDrop={handleDrop}
@@ -254,17 +239,17 @@ export default function DocumentAddForm({currentDocument}) {
               <Grid>
               <Autocomplete
                 // freeSolo
-                // disabled={documentAvailable}
-                value={documentNameVal || null}
-                options={documentNames}
+                // disabled
+                value={documentTypeVal || null}
+                options={documentTypes}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
-                    setDocumentNameVal(newValue);
+                    setDocumentTypeVal(newValue);
                   }
                   else{  
-                    setDocumentNameVal("");
+                    setDocumentTypeVal("");
                   }
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
@@ -278,16 +263,16 @@ export default function DocumentAddForm({currentDocument}) {
               <Autocomplete
                 // freeSolo
                 // disabled={fileCategory}
-                value={fileCategoryVal || null}
-                options={fileCategories}
+                value={documentCategoryVal || null}
+                options={documentCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
-                    setFileCategoryVal(newValue);
+                    setDocumentCategoryVal(newValue);
                   }
                   else{  
-                    setFileCategoryVal("");
+                    setDocumentCategoryVal("");
                   }
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
@@ -377,7 +362,7 @@ export default function DocumentAddForm({currentDocument}) {
                 ChipProps={{ size: 'small' }}
               /> */}
               </Box>
-              <Grid container lg={12} justifyContent="flex-end">
+              {/* <Grid container lg={12} justifyContent="flex-end">
                 <Grid item xs={6} sm={6} md={8} lg={2} justifyContent="flex-end">
                     <ViewFormSWitch
                       heading="Customer Access"
@@ -385,7 +370,15 @@ export default function DocumentAddForm({currentDocument}) {
                       onChange={handleChange}
                     /> 
                 </Grid>
-              </Grid>
+              </Grid> */}
+              <Grid container item lg={12} justifyContent="flex-end">
+                  <Grid item xs={6} sm={6} md={8} lg={3} sx={{display:'flex'}}>
+                   <Typography variant="body1" sx={{ display:'flex', alignItems:'center' }}>
+                        Customer Access
+                      </Typography>
+                    <Switch  checked={customerAccessVal} onChange={handleChange} />
+                  </Grid>
+                </Grid>
               <RHFTextField name="description" label="Description" minRows={3} multiline />
               
               {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
