@@ -7,11 +7,16 @@ import { CONFIG } from '../config-global';
 
 const containerStyle = {
   width: '100%',
-  height: '400px',
+  height: '800px',
 };
 
 const defaultCenter = {
   lat: -36.902893343776185,
+  lng: 174.92608245309523,
+};
+
+const reportDefaultCenter = {
+  lat: 26.902893343776185,
   lng: 174.92608245309523,
 };
 
@@ -81,8 +86,8 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={markerPositions.length > 0 ? markerPositions[0] : defaultCenter}
-      zoom={latlongArr.length > 0 ? 1 : 12}
+      center={markerPositions.length > 0 ? reportDefaultCenter : defaultCenter}
+      zoom={latlongArr.length > 0 ? 2 : 12}
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={onMapClick}
