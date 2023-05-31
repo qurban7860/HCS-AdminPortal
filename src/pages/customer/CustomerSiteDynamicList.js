@@ -300,7 +300,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                     transition: 'all 0.10s ease-in',
                   }}
                 >
-                  <Grid container xs={12} lg={4}>
+                  <Grid container 
+                  xs={12} lg={4} >
                     {index !== activeIndex ? (
                       <Card sx={{ display: 'block', width: 'auto' }}>
                         <CardActionArea>
@@ -338,12 +339,12 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                     <Grid item lg={4}>
                       <Card
                         sx={{
-                          display: { sm: 'none', md: 'block' },
-                          width: '400px',
-                          objectFit: 'cover',
-                          height: '100%',
-                          mx: { sm: 0, md: 3, lg: 3 },
-                          my: { sm: 1, md: 3 },
+                          // display: { sm: 'none', md: 'block' },
+                          // maxWidth: 'lg',
+                          // objectFit: 'cover',
+                          // height: '100%',
+                          // mx: { sm: 0, md: 3, lg: 3 },
+                          // my: { sm: 1, md: 3 },
                         }}
                       >
                         {!isMobile ? (
@@ -365,21 +366,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                     'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
                                   )
                             }
-                              {/* <CardMedia
-                                component={GoogleMaps}
-                                sx={{ objectFit: 'cover', display: 'block', width: 'auto' }}
-                                image={
-                                  site.lat && site.long ? ( 
-                                    <GoogleMaps 
-                                    lat={site.lat ? site.lat : 0} 
-                                    lng={site.long ? site.long : 0}
-                                    />
-                                  ) : (
-                                    'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
-                                  )
-                                }
-                                alt="customer's site photo was here"
-                              /> */}
                             </CardActionArea>
                           </>
                           ) : null}
