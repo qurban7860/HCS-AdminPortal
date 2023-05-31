@@ -12,8 +12,8 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , C
 // ROUTES
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames  } from '../../../redux/slices/document/documentName';
-import { addMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
+import { addDocumentType, setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
 import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 
 // components
@@ -29,7 +29,7 @@ DocumentNameAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
 export default function DocumentNameAddForm({currentDocument}) {
-  const { documentName, documentNames } = useSelector((state) => state.documentName);
+  const { documentType, documentTypes } = useSelector((state) => state.documentType);
   const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
   const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
 
@@ -71,10 +71,11 @@ export default function DocumentNameAddForm({currentDocument}) {
   },[]);
 
   const onSubmit = async (data) => {
+    console.log("Document Type : ", data);
       try{
-        await dispatch(addDocumentName(data));
+        await dispatch(addDocumentType(data));
         // dispatch(getDocumentNames())
-        dispatch(setDocumentNameFormVisibility(false))
+        dispatch(setDocumentTypeFormVisibility(false))
         if( machineDocumentEdit || customerDocumentEdit){
           dispatch(setMachineDocumentEditFormVisibility(true))
           dispatch(setCustomerDocumentEditFormVisibility(true))
@@ -83,6 +84,8 @@ export default function DocumentNameAddForm({currentDocument}) {
           dispatch(setCustomerDocumentFormVisibility(true))
         }
         reset();
+        enqueueSnackbar('Document Save Successfully!');
+        navigate(PATH_DOCUMENT.documentName.list)
       } catch(error){
         enqueueSnackbar('Document Save failed!');
         console.error(error);
@@ -91,8 +94,8 @@ export default function DocumentNameAddForm({currentDocument}) {
 
   const toggleCancel = () =>
   {
-    // navigate(PATH_DOCUMENT.documentName.list);
-    dispatch(setDocumentNameFormVisibility(false))
+    navigate(PATH_DOCUMENT.documentName.list);
+    dispatch(setDocumentTypeFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(true))
   };
@@ -102,7 +105,7 @@ export default function DocumentNameAddForm({currentDocument}) {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
             <Stack spacing={2}>
-              <FormHeading heading='New Document Name'/>
+              <FormHeading heading='New Document Type'/>
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               <RHFSwitch

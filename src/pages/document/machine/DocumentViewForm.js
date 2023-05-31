@@ -64,7 +64,8 @@ console.log("currentMachineDocument", currentMachineDocument)
       {
         displayName:              currentMachineDocument?.displayName || "",
         documentName:             currentMachineDocument?.documentName?.name || "",
-        category:                 currentMachineDocument?.category?.name || "",
+        docCategory:              currentMachineDocument?.docCategory?.name || "",
+        docType:                  currentMachineDocument?.docType?.name || "",
         customer:                 currentMachineDocument?.customer?.name,
         customerAccess:           currentMachineDocument?.customerAccess,
         isActiveVersion:          currentMachineDocument?.isActiveVersion,
@@ -131,8 +132,8 @@ const handleDownload = () => {
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
           <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-          <ViewFormField sm={6} heading="Document Type" param={defaultValues?.documentName} />
-          <ViewFormField sm={6} heading="Document Category" param={defaultValues?.category} />
+          <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+          <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
           {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
           <Grid item xs={12} sm={12} sx={{px:2,py:1, overflowWrap: "break-word",}}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
@@ -155,12 +156,12 @@ const handleDownload = () => {
           {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
           <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
           <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
-            { currentMachineDocument?.type.startsWith("image") ?
-            <Link href="#" underline="none"
+            {/* { currentMachineDocument?.type.startsWith("image") ?
+              <Link href="#" underline="none"
               component="button"
               title='Download File'
               onClick={handleDownload}
-            >
+               >
               <Box
                 component="img"
                 sx={{ m:2 }}
@@ -206,14 +207,14 @@ const handleDownload = () => {
                   </IconButton>
 
                 </Box>
-            </Link>: <Link href="#" underline="none"
-              sx={{ m:2 }}
-              component="button"
-              title='Download File'
-              onClick={handleDownload}
-            >
+                </Link>: <Link href="#" underline="none"
+                sx={{ m:2 }}
+                component="button"
+                title='Download File'
+                onClick={handleDownload}
+                >
               <Iconify width="50px" icon="ph:files-fill" />
-            </Link>}
+            </Link>} */}
               {/* <DownloadComponent Document={currentMachineDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>

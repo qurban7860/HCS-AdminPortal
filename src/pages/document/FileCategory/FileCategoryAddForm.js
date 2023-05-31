@@ -12,8 +12,8 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , C
 // ROUTES
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility , getFileCategories } from '../../../redux/slices/document/fileCategory';
-import { addMachineDocument, getMachineDocuments, getMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { addDocumentCategory, setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
+import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
 import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 
 // components
@@ -29,7 +29,7 @@ FileCategoryAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
 export default function FileCategoryAddForm({currentDocument}) {
-  const { fileCategories, fileCategory } = useSelector((state) => state.fileCategory);
+  const { documentCategory, documentCategories } = useSelector((state) => state.documentCategory);
   const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
   const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
   const navigate = useNavigate()
@@ -70,11 +70,12 @@ export default function FileCategoryAddForm({currentDocument}) {
   },[]);
 
   const onSubmit = async (data) => {
+    // console.log("Document category : ", data)
       try{
-        await dispatch(addFileCategory(data));
+        await dispatch(addDocumentCategory(data));
         // dispatch(getFileCategories());
         
-        dispatch(setFileCategoryFormVisibility(false))
+        dispatch(setDocumentCategoryFormVisibility(false))
         if( machineDocumentEdit || customerDocumentEdit){
           dispatch(setMachineDocumentEditFormVisibility(true))
           dispatch(setCustomerDocumentEditFormVisibility(true))
@@ -84,7 +85,7 @@ export default function FileCategoryAddForm({currentDocument}) {
         }
         reset();
       } catch(error){
-        enqueueSnackbar('File Category Save failed!');
+        enqueueSnackbar('Document Category Save failed!');
         console.error(error);
       }
   };
@@ -92,7 +93,7 @@ export default function FileCategoryAddForm({currentDocument}) {
   const toggleCancel = () => 
   {
     // navigate(PATH_DOCUMENT.documentName.list);
-    dispatch(setFileCategoryFormVisibility(false))
+    dispatch(setDocumentCategoryFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(true));
     dispatch(setCustomerDocumentFormVisibility(true));
   };

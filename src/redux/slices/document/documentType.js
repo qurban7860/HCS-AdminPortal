@@ -6,19 +6,19 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const regEx = /^[^2]*/
 const initialState = {
-  documentNameFormVisibility: false,
-  documentNameEditFormVisibility: false,
+  documentTypeFormVisibility: false,
+  documentTypeEditFormVisibility: false,
   intial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  documentNames: [],
-  documentName: null,
+  documentTypes: [],
+  documentType: null,
 };
 
 const slice = createSlice({
-  name: 'documentName',
+  name: 'documentType',
   initialState,
   reducers: {
     // START LOADING
@@ -27,13 +27,13 @@ const slice = createSlice({
       state.error = null;
     },
     // SET TOGGLE
-    setDocumentNameFormVisibility(state, action){
-      state.documentNameFormVisibility = action.payload;
+    setDocumentTypeFormVisibility(state, action){
+      state.documentTypeFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setDocumentNameEditFormVisibility(state, action){
-      state.documentNameEditFormVisibility = action.payload;
+    setDocumentTypeEditFormVisibility(state, action){
+      state.documentTypeEditFormVisibility = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -43,18 +43,18 @@ const slice = createSlice({
     },
 
     // GET Setting
-    getDocumentNamesSuccess(state, action) {
+    getDocumentTypesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.documentNames = action.payload;
+      state.documentTypes = action.payload;
       state.initial = true;
     },
 
     // GET Setting
-    getDocumentNameSuccess(state, action) {
+    getDocumentTypeSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.documentName = action.payload;
+      state.documentType = action.payload;
       state.initial = true;
     },
 
@@ -66,21 +66,20 @@ const slice = createSlice({
     },
 
     // RESET DOCUMENT NAME
-    resetDocumentName(state){
-      state.documentName = {};
+    resetDocumentType(state){
+      state.documentType = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET DOCUMENT NAME
-    resetDocumentNames(state){
-      state.documentNames = [];
+    resetDocumentTypes(state){
+      state.documentTypes = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
-
   },
 });
 
@@ -89,27 +88,28 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setDocumentNameFormVisibility,
-  setDocumentNameEditFormVisibility,
-  resetDocumentName,
-  resetDocumentNames,
+  setDocumentTypeFormVisibility,
+  setDocumentTypeEditFormVisibility,
+  resetDocumentType,
+  resetDocumentTypes,
   setResponseMessage,
 } = slice.actions;
 
-// ----------------------------Add Document Name------------------------------------------
+// ----------------------------Add Document Type------------------------------------------
 
-export function addDocumentName(params) {
+export function addDocumentType(params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
             const data = {
                 name: params.name,
                 description: params.description,
+                customerAccess:params.customerAccess,
                 isActive: params.isActive,
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/documentNames/`, data);
-      dispatch(slice.actions.setResponseMessage('Document Name saved successfully'));
-      dispatch(getDocumentNames());
+      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/documentType/`, data);
+      dispatch(slice.actions.setResponseMessage('Document Type saved successfully'));
+      dispatch(getDocumentTypes());
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -117,20 +117,21 @@ export function addDocumentName(params) {
   };
 }
 
-// ---------------------------------Update Document Name-------------------------------------
+// ---------------------------------Update Document Type-------------------------------------
 
-export function updateDocumentName(machineId,settingId,params) {
+export function updateDocumentType(Id,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        techParam: params.techParam,
-        techParamValue: params.techParamValue,
+        name: params.name,
+        description: params.description,
+        customerAccess:params.customerAccess,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
-      dispatch(slice.actions.setResponseMessage('Document Name updated successfully'));
-      dispatch(setDocumentNameEditFormVisibility (false));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/documentType/${Id}`, data, );
+      dispatch(slice.actions.setResponseMessage('Document Type updated successfully'));
+      dispatch(setDocumentTypeEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -138,21 +139,21 @@ export function updateDocumentName(machineId,settingId,params) {
   };
 }
 
-// -----------------------------------Get Document Names-----------------------------------
+// -----------------------------------Get Document Types-----------------------------------
 
-export function getDocumentNames() {
+export function getDocumentTypes() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/documentNames/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/documentType/` , 
       {
         params: {
           isArchived: false
         }
       }
       );
-      dispatch(slice.actions.getDocumentNamesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Document Name loaded successfully'));
+      dispatch(slice.actions.getDocumentTypesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -160,15 +161,15 @@ export function getDocumentNames() {
   };
 }
 
-// -------------------------------get Document Name---------------------------------------
+// -------------------------------get Document Type---------------------------------------
 
-export function getDocumentName(machineId,settingId) {
+export function getDocumentType(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`);
-      dispatch(slice.actions.getDocumentNameSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Document Name Loaded Successfuly'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/documentType/${Id}`);
+      dispatch(slice.actions.getDocumentTypeSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Type Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -176,13 +177,13 @@ export function getDocumentName(machineId,settingId) {
   };
 }
 
-// ---------------------------------archive Document Name-------------------------------------
+// ---------------------------------archive Document Type-------------------------------------
 
-export function deleteDocumentName(machineId,id) {
+export function deleteDocumentType(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/documentType/${Id}` , 
       {
           isArchived: true, 
       });

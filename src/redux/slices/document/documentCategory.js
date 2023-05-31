@@ -6,19 +6,19 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const regEx = /^[^2]*/
 const initialState = {
-  fileCategoryFormVisibility: false,
-  fileCategoryEditFormVisibility: false,
+  documentCategoryFormVisibility: false,
+  documentCategoryEditFormVisibility: false,
   intial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  fileCategories: [],
-  fileCategory: {},
+  documentCategories: [],
+  documentCategory: {},
 };
 
 const slice = createSlice({
-  name: 'fileCategory',
+  name: 'documentCategory',
   initialState,
   reducers: {
     // START LOADING
@@ -27,13 +27,13 @@ const slice = createSlice({
       state.error = null;
     },
     // SET TOGGLE
-    setFileCategoryFormVisibility(state, action){
-      state.fileCategoryFormVisibility = action.payload;
+    setDocumentCategoryFormVisibility(state, action){
+      state.documentCategoryFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setFileCategoryEditFormVisibility(state, action){
-      state.fileCategoryEditFormVisibility = action.payload;
+    setDocumentCategoryEditFormVisibility(state, action){
+      state.documentCategoryEditFormVisibility = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -42,19 +42,19 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET File Categorie
-    getFileCategoriesSuccess(state, action) {
+    // GET DOCUMENT Categorie
+    getDocumentCategoriesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.fileCategories = action.payload;
+      state.documentCategories = action.payload;
       state.initial = true;
     },
 
-    // GET File Categorie
-    getFileCategorySuccess(state, action) {
+    // GET DOCUMENT Categorie
+    getDocumentCategorySuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.fileCategory = action.payload;
+      state.documentCategory = action.payload;
       state.initial = true;
     },
 
@@ -66,17 +66,17 @@ const slice = createSlice({
     },
 
 
-    // RESET FILE CATEGORY
-    resetFileCategory(state){
-      state.fileCategory = {};
+    // RESET DOCUMENT CATEGORY
+    resetDocumentCategory(state){
+      state.documentCategory = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    // RESET FILE CATEGORY
+    // RESET DOCUMENT CATEGORY
     resetFileCategories(state){
-      state.fileCategories = [];
+      state.documentCategories = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -89,27 +89,28 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setFileCategoryFormVisibility,
-  setFileCategoryEditFormVisibility,
-  resetFileCategory,
-  resetFileCategories,
+  setDocumentCategoryFormVisibility,
+  setDocumentCategoryEditFormVisibility,
+  resetDocumentCategory,
+  resetDocumentCategories,
   setResponseMessage,
 } = slice.actions;
 
-// ----------------------------Add FileCategory------------------------------------------
+// ----------------------------Add Document Category------------------------------------------
 
-export function addFileCategory(params) {
+export function addDocumentCategory(params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
             const data = {
               name: params.name,
               description: params.description,
-              isActive: params.isActive
+              customerAccess:params.customerAccess,
+              isActive: params.isActive,
             }
       const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/categories/`, data);
-      dispatch(slice.actions.setResponseMessage('Document Name saved successfully'));
-      dispatch(getFileCategories());
+      dispatch(slice.actions.setResponseMessage('Document Category saved successfully'));
+      dispatch(getDocumentCategories());
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -117,20 +118,21 @@ export function addFileCategory(params) {
   };
 }
 
-// ---------------------------------Update FileCategory-------------------------------------
+// ---------------------------------Update Document Category-------------------------------------
 
-export function updateFileCategory(machineId,settingId,params) {
+export function updateDocumentCategory(Id,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        techParam: params.techParam,
-        techParamValue: params.techParamValue,
+        name: params.name,
+        description: params.description,
+        customerAccess:params.customerAccess,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
-      dispatch(slice.actions.setResponseMessage('File Category updated successfully'));
-      dispatch(setFileCategoryEditFormVisibility (false));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/categories/${Id}`, data );
+      dispatch(slice.actions.setResponseMessage('Document Category updated successfully'));
+      dispatch(setDocumentCategoryEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -140,7 +142,7 @@ export function updateFileCategory(machineId,settingId,params) {
 
 // -----------------------------------Get File Categories-----------------------------------
 
-export function getFileCategories() {
+export function getDocumentCategories() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -151,7 +153,7 @@ export function getFileCategories() {
         }
       }
       );
-      dispatch(slice.actions.getFileCategoriesSuccess(response.data));
+      dispatch(slice.actions.getDocumentCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('File Categories loaded successfully'));
     } catch (error) {
       console.log(error);
@@ -160,14 +162,14 @@ export function getFileCategories() {
   };
 }
 
-// -------------------------------get File Category---------------------------------------
+// -------------------------------get document Category---------------------------------------
 
-export function getFileCategory(machineId,settingId) {
+export function getDocumentCategory(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`);
-      dispatch(slice.actions.getFileCategorySuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/categories/${Id}`);
+      dispatch(slice.actions.getDocumentCategorySuccess(response.data));
       dispatch(slice.actions.setResponseMessage('File Category Loaded Successfuly'));
     } catch (error) {
       console.error(error);
@@ -176,13 +178,13 @@ export function getFileCategory(machineId,settingId) {
   };
 }
 
-// ---------------------------------archive File Category-------------------------------------
+// ---------------------------------archive document Category-------------------------------------
 
-export function deleteFileCategory(machineId,id) {
+export function deleteDocumentCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/categories/${id}` , 
       {
           isArchived: true, 
       });
