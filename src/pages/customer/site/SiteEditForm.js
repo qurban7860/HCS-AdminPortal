@@ -79,6 +79,7 @@ export default function SiteEditForm() {
     setFaxVal(site.fax)
   },[site])
 
+  /* eslint-disable */
   const EditSiteSchema = Yup.object().shape({
     name: Yup.string().min(2).max(40).required('Name is required'),
     customer: Yup.string(),
@@ -113,6 +114,7 @@ export default function SiteEditForm() {
     // primaryTechnicalContact: Yup.string().nullable(),
     isActive: Yup.boolean(),
   });
+/* eslint-enable */
 
 
   const defaultValues = useMemo(
