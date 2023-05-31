@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button, Breadcrumbs, Link } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button, Breadcrumbs, Dialog } from '@mui/material';
 // redux
 import {
   deleteSite,
@@ -63,7 +63,8 @@ export default function SiteViewForm({ currentSite = null }) {
   };
 
   const handleMap = async () => {
-    navigate(`/dashboard/map/${currentSite._id}`);
+    // navigate(`/dashboard/map/${currentSite._id}`);
+    setOpenPopover(true);
   };
 
   const defaultValues = useMemo(
@@ -129,14 +130,7 @@ export default function SiteViewForm({ currentSite = null }) {
         <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-        {/* <Grid container>
-          {defaultValues.lat && defaultValues.long && (
-            <GoogleMaps
-              lat={defaultValues.lat ? defaultValues.lat : 0}
-              lng={defaultValues.long ? defaultValues.long : 0}
-            />
-          )}
-        </Grid> */}
+
         <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
         <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
@@ -157,6 +151,27 @@ export default function SiteViewForm({ currentSite = null }) {
         </Grid>
         <ViewFormField />
         {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
+        <Dialog
+          open={openPopover}
+          onClose={handleClosePopover}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <Grid container lg={12}>
+            <GoogleMaps
+              lat={defaultValues.lat ? defaultValues.lat : 0}
+              lng={defaultValues.long ? defaultValues.long : 0}
+            />
+          </Grid>
+          {/* {defaultValues.lat && defaultValues.long && (
+            <Grid container lg={12}>
+              <GoogleMaps
+                lat={defaultValues.lat ? defaultValues.lat : 0}
+                lng={defaultValues.long ? defaultValues.long : 0}
+              />
+            </Grid>
+          )} */}
+        </Dialog>
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

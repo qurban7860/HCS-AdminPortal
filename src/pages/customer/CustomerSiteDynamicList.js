@@ -18,6 +18,7 @@ import {
   AccordionDetails,
   CardActionArea,
   Breadcrumbs,
+  Tooltip,
   Link,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -27,7 +28,7 @@ import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -233,29 +234,35 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           </Button>{' '}
           <Grid container>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer.root}
-              >
-                Customer
+              <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.root}>
+                Dashboard
               </Link>
               <Link
                 underline="none"
                 variant="subtitle2"
                 color="inherit"
-                href={PATH_DASHBOARD.customer.root}
+                href={PATH_DASHBOARD.customer.list}
+              >
+                Customers
+              </Link>
+              <Link
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.view}
               >
                 {customer.name}
               </Link>
+              <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.site}>
+                Sites
+              </Link>
               <Link
                 underline="none"
                 variant="subtitle2"
                 color="inherit"
-                href={PATH_DASHBOARD.customer.sites}
+                href={PATH_DASHBOARD.customer}
               >
-                Sites
+                {siteAddFormVisibility ? 'Add New Site' : customer.sites.name}
               </Link>
             </Breadcrumbs>
           </Grid>
@@ -308,7 +315,13 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                             <Box justifyContent="flex-start" sx={{ width: '200px' }}>
                               <CardContent sx={{ flex: '1 0 auto' }}>
                                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                  {site.name}
+                                  {site.name.length > 20 ? (
+                                    <Tooltip title={site.name} placement="top">
+                                      <span>{site.name.substring(0, 20)}...</span>
+                                    </Tooltip>
+                                  ) : (
+                                    site.name
+                                  )}
                                 </Typography>
                                 <Typography variant="body2">
                                   {site.email ? site.email : <br />}
@@ -356,33 +369,17 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                               />
                             </CardActionArea>
                             <CardActionArea>
-                            {site.lat && site.long ? ( 
-                                    <GoogleMaps 
-                                    lat={site.lat ? site.lat : 0} 
-                                    lng={site.long ? site.long : 0}
-                                    />
-                                  ) : (
-                                    'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
-                                  )
-                            }
-                              {/* <CardMedia
-                                component={GoogleMaps}
-                                sx={{ objectFit: 'cover', display: 'block', width: 'auto' }}
-                                image={
-                                  site.lat && site.long ? ( 
-                                    <GoogleMaps 
-                                    lat={site.lat ? site.lat : 0} 
-                                    lng={site.long ? site.long : 0}
-                                    />
-                                  ) : (
-                                    'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
-                                  )
-                                }
-                                alt="customer's site photo was here"
-                              /> */}
+                              {site.lat && site.long ? (
+                                <GoogleMaps
+                                  lat={site.lat ? site.lat : 0}
+                                  lng={site.long ? site.long : 0}
+                                />
+                              ) : (
+                                'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
+                              )}
                             </CardActionArea>
                           </>
-                          ) : null}
+                        ) : null}
                       </Card>
                     </Grid>
                     <Grid item lg={8}>

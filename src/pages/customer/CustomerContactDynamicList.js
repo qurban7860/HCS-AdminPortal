@@ -33,7 +33,10 @@ import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 // sections
 import {
-  getContacts, getContact, setContactFormVisibility } from '../../redux/slices/customer/contact';
+  getContacts,
+  getContact,
+  setContactFormVisibility,
+} from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
@@ -90,12 +93,13 @@ export default function CustomerContactList(currentContact = null) {
   const [expanded, setExpanded] = useState(false);
   // open the dialog and set the current contact to the contact that was clicked
   const handleOpenContact = (index) => {
-    if(index === activeIndex){
+    if (index === activeIndex) {
       setActiveIndex(null);
     } else {
       setActiveIndex(index);
       setOpenContact(true);
-    }}
+    }
+  };
   const handleCloseContact = () => setOpenContact(false);
 
   const handleAccordianClick = (index) => {
@@ -151,7 +155,7 @@ export default function CustomerContactList(currentContact = null) {
             startIcon={
               !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
             }
-            >
+          >
             {' '}
             New Contact{' '}
           </Button>
@@ -195,7 +199,7 @@ export default function CustomerContactList(currentContact = null) {
         justifyContent="flex-start"
         grid-template-rows="repeat(3, 1fr)"
         grid-template-columns="repeat(3, 1fr)"
-        >
+      >
         {!formVisibility &&
           !contactEditFormVisibility &&
           contacts.map((contact, index) => {
@@ -305,22 +309,6 @@ export default function CustomerContactList(currentContact = null) {
                     <Grid item lg={12}>
                       <Card sx={{ width: 'auto', height: 'auto', m: 2 }}>
                         <CardActionArea>
-                          {/* <CustomAvatar
-                            sx={{
-                              width: '100px',
-                              height: '100px',
-                              display: 'flex',
-                              marginTop: '60px',
-                              marginRight: 'auto',
-                              marginLeft: 'auto',
-                              marginBottom: '0px',
-                              boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                              fontSize: '40px',
-                              zIndex: '2',
-                            }}
-                            name={fullName[index]}
-                            alt={fullName[index]}
-                          /> */}
                           <CardMedia
                             component="img"
                             sx={{

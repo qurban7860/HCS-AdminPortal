@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 // @mui
-import { Container, Grid , Card } from '@mui/material';
+import { Container, Grid, Card } from '@mui/material';
 import { useTheme, styled } from '@mui/material/styles';
 // routes
 import { PATH_CUSTOMER } from '../../../indexroutes/paths';
@@ -15,10 +15,8 @@ export default function FileCategoryAdd() {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
-      <Container maxWidth={false}>
-        <DocumentNameAddForm />
-      </Container>
-    </>
+    <Container maxWidth={false}>
+      <DocumentNameAddForm />
+    </Container>
   );
 }
