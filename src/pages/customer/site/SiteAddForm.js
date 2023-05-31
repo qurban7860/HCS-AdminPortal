@@ -50,6 +50,7 @@ useEffect(()=>{
   // primaryBillingContact: Yup.string().nullable(),
   // primaryTechnicalContact: Yup.string().nullable(),
 },[])
+/* eslint-disable */
   const AddSiteSchema = Yup.object().shape({
     name: Yup.string().min(2).max(40).required('Name is required'),
     customer: Yup.string(),
@@ -62,15 +63,17 @@ useEffect(()=>{
     .max(25)
     .test('valid-lat', 'Invalid latitude(Valid values are -90 to 90)', (value) => {
       if (!value) return true;
-      const parsedValue = parseFloat(value);
-      return parsedValue >= -90 && parsedValue <= 90;
+      const trimmedValue = value.trim();
+      const parsedValue = parseFloat(trimmedValue);
+      return trimmedValue === parsedValue.toString() && !isNaN(parsedValue) && parsedValue >= -90 && parsedValue <= 90;
     }),
     long: Yup.string()
     .max(25)
     .test('valid-lat', 'Invalid longitude(Valid values are -180 to 180)', (value) => {
       if (!value) return true;
-      const parsedValue = parseFloat(value);
-      return parsedValue >= -180 && parsedValue <= 180;
+      const trimmedValue = value.trim();
+      const parsedValue = parseFloat(trimmedValue);
+      return trimmedValue === parsedValue.toString() && !isNaN(parsedValue) && parsedValue >= -90 && parsedValue <= 90;
     }),
     street: Yup.string(),
     suburb: Yup.string(),
@@ -82,6 +85,7 @@ useEffect(()=>{
     // primaryTechnicalContact: Yup.string().nullable(),
     isActive: Yup.boolean(),
   });
+/* eslint-enable */
 
   const defaultValues = useMemo(
     () => ({

@@ -61,7 +61,7 @@ export default function Reports() {
       </Card>
       <Grid container spacing={3} >
           <Grid item sm={12}>
-            <Card sx={{ height: '800', mb: 5}} >
+            <Card sx={{ height: '800px', mb: 5}} >
               
             <List
                 component="nav"

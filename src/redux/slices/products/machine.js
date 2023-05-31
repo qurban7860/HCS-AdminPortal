@@ -345,8 +345,7 @@ export function transferMachine(params) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
-
-      dispatch(getMachine(params.id));
+      dispatch(getMachine(response.data.Machine._id));
       dispatch(slice.actions.setMachineEditFormVisibility(false));
 
       // this.updateCustomerSuccess(response);
