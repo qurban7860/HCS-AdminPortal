@@ -23,7 +23,6 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import { getWithMsg } from '../../asset/dispatchRequests'
 
 const Loadable = (Component) => (props) =>
   (
@@ -52,12 +51,18 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const dispatch = useDispatch();
   const onDelete = async () => {
     // console.log("currentCustomerDocument : ",currentCustomerDocument)
+    try {
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
+    enqueueSnackbar('Document deleted successfully!');
     dispatch(getCustomerDocuments(customer._id))
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('Document delete failed!');
+    }
   };
 
   const  handleEdit = async () => {
-    await getWithMsg(dispatch, getCustomerDocument(currentCustomerDocument._id), enqueueSnackbar);
+    await (getCustomerDocument(currentCustomerDocument._id));
           dispatch(setCustomerDocumentEditFormVisibility(true));
   };
 
@@ -115,7 +120,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
     const handleDownload = () => {
        dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
-        console.log("res : ",res)
         if(regEx.test(res.status)){
           // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
           downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);

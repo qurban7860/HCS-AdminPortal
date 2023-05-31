@@ -322,8 +322,8 @@ useEffect(()=>{
               /> */}
               </Box>
               <Grid container lg={12} justifyContent="flex-end">
-                <Grid item xs={6} sm={6} md={8} lg={2} display="flex">
-                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', alignItems:'center' }}>
+                <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
                         Customer Access
                       </Typography>
                     <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />

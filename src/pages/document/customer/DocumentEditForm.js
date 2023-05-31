@@ -139,8 +139,9 @@ useEffect(()=>{
       }else{
         data.customerAccess = false
       }
-      console.log("data : ",data)
-      await dispatch(updateCustomerDocument(customerDocument?._id,data));
+      // console.log("data : ",data)
+      await dispatch(updateCustomerDocument(customerDocument?._id,data,customer._id));
+      enqueueSnackbar('Document saved successfully!');
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
@@ -322,8 +323,8 @@ useEffect(()=>{
               /> */}
               </Box>
               <Grid container lg={12} justifyContent="flex-end">
-                <Grid item xs={6} sm={6} md={8} lg={2} display="flex">
-                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', alignItems:'center' }}>
+                <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
                         Customer Access
                       </Typography>
                     <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
@@ -338,7 +339,7 @@ useEffect(()=>{
                     /> 
                 </Grid>
               </Grid> */}
-              <RHFTextField name="description" label="Description" minRows={8} multiline />
+              <RHFTextField name="description" label="Description" minRows={3} multiline />
               {/* <RHFUpload 
                   name="image"
                   maxSize={3145728}
