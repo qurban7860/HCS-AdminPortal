@@ -115,7 +115,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 7, md: 7 },
+              mt: { xs: 5, md: 5 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
@@ -144,6 +144,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               sx={{
                 ml: 'auto',
                 mt: 'auto',
+                mb: 2,
                 color: 'common.white',
               }}
               component="button"
@@ -163,6 +164,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
                 mt: 'auto',
                 color: 'common.white',
                 mx: 2,
+                mb: 2
               }}
               component="button"
               variant="body2"
