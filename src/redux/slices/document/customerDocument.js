@@ -150,12 +150,15 @@ export function updateCustomerDocument(customerDocumentId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
       const data = { 
-                    displayName: params?.displayName,
-                    customerAccess: params.customerAccess,
-                    isActive: params.isActive,
-                    documentType:params.documentType,
-                    documentCategory:params.documentCategory,
-                    description: params.description,
+                  displayName: params?.displayName,
+                  name: params?.displayName,
+                  customerAccess: params.customerAccess,
+                  // isActive: params.isActive,
+                  documentType:params.documentType,
+                  docType:params.documentType,
+                  documentCategory:params.documentCategory,
+                  docCategory:params.documentCategory,
+                  description: params.description,
                   };
           if(params?.category){
             data.category = params?.category

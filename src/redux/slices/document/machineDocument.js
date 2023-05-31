@@ -150,10 +150,13 @@ export function updateMachineDocument(machineDocumentId, params,machineId) {
     try {
       const data = { 
         displayName: params?.displayName,
+        name: params?.displayName,
         customerAccess: params.customerAccess,
-        isActive: params.isActive,
+        // isActive: params.isActive,
         documentType:params.documentType,
+        docType:params.documentType,
         documentCategory:params.documentCategory,
+        docCategory:params.documentCategory,
         description: params.description,
       };
 

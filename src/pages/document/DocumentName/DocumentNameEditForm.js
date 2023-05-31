@@ -25,9 +25,7 @@ import FormProvider, {
   RHFAutocomplete,
   RHFSwitch
 } from '../../../components/hook-form';
-import { setSettingEditFormVisibility , setSettingFormVisibility , updateSetting, getSetting } from '../../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
-import { getTechparams , getTechparamsByCategory } from '../../../redux/slices/products/machineTechParam';
+import { setDocumentTypeEditFormVisibility,  updateDocumentType, getSetting } from '../../../redux/slices/document/documentType';
 import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
 
@@ -35,12 +33,7 @@ import FormHeading from '../../components/FormHeading';
 
 export default function DocumentNameEditForm() {
 
-  const { setting, settings, settingEditFormVisibility, formVisibility ,error} = useSelector((state) => state.machineSetting);
-  const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
-  const [category, setCategory] = useState('');
-  const [techParam, setTechParam] = useState('');
-  const [paramData, setparamData] = useState([]);
+  const { documentType } = useSelector((state) => state.documentType);
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();

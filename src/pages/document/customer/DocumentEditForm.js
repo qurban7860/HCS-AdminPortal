@@ -83,8 +83,8 @@ export default function DocumentEditForm() {
 useEffect(()=>{
   setNameVal(customerDocument?.displayName)
   setCustomerAccessVal(customerDocument?.customerAccess)
-  setDocumentCategoryVal(customerDocument?.category)
-  setDocumentTypeVal(customerDocument?.documentName)
+  setDocumentCategoryVal(customerDocument?.docCategory)
+  setDocumentTypeVal(customerDocument?.docType)
 },[customerDocument])
 
   const EditCustomerDocumentSchema = Yup.object().shape({
@@ -216,13 +216,13 @@ useEffect(()=>{
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Type" />}
+                renderInput={(params) => <TextField {...params} required label="Document Type" />}
                 ChipProps={{ size: 'small' }}
               />
               
               <Autocomplete
                 // freeSolo
-                disabled
+                readOnly
                 value={documentCategoryVal || null}
                 options={documentCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -237,7 +237,7 @@ useEffect(()=>{
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Category" />}
+                renderInput={(params) => <TextField {...params} required label="Document Category" />}
                 ChipProps={{ size: 'small' }}
               />
               

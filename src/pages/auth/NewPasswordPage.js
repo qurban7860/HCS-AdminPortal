@@ -19,7 +19,7 @@ export default function NewPasswordPage() {
       <SentIcon sx={{ mb: 5, height: 96 }} />
 
       <Typography variant="h3" paragraph>
-        Request sent successfully!
+        Please Enter New Password!
       </Typography>
 
       {/* <Typography sx={{ color: 'text.secondary', mb: 5 }}>

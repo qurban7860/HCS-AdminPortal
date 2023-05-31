@@ -254,7 +254,7 @@ export default function DocumentAddForm({currentDocument}) {
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Type" />}
+                renderInput={(params) => <TextField {...params} required label="Document Type" />}
                 ChipProps={{ size: 'small' }}
               />
               <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} ><Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
@@ -277,7 +277,7 @@ export default function DocumentAddForm({currentDocument}) {
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Category" />}
+                renderInput={(params) => <TextField {...params} required  label="Document Category" />}
                 ChipProps={{ size: 'small' }}
               />
               <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage}><Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>

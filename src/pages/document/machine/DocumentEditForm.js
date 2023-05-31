@@ -83,8 +83,8 @@ export default function DocumentEditForm() {
 useEffect(()=>{
   setNameVal(machineDocument?.displayName)
   setCustomerAccessVal(machineDocument?.customerAccess)
-  setDocumentCategoryVal(machineDocument?.category)
-  setDocumentTypeVal(machineDocument?.documentName)
+  setDocumentCategoryVal(machineDocument?.docCategory)
+  setDocumentTypeVal(machineDocument?.docType)
 },[machineDocument])
 
   const EditMachineDocumentSchema = Yup.object().shape({
@@ -129,7 +129,7 @@ useEffect(()=>{
         data.displayName = nameVal
       }
       if(documentTypeVal){
-        data.documentName = documentTypeVal
+        data.documentType = documentTypeVal
       }
       // if(documentCategoryVal){
       //   data.category = documentCategoryVal._id
@@ -216,13 +216,13 @@ useEffect(()=>{
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Type" />}
+                renderInput={(params) => <TextField {...params} required label="Document Type" />}
                 ChipProps={{ size: 'small' }}
               />
               
               <Autocomplete
                 // freeSolo
-                disabled
+                readOnly
                 value={documentCategoryVal || null}
                 options={documentCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -237,7 +237,7 @@ useEffect(()=>{
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Category" />}
+                renderInput={(params) => <TextField {...params} required label="Document Category" />}
                 ChipProps={{ size: 'small' }}
               />
               
