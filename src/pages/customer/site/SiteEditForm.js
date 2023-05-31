@@ -87,8 +87,20 @@ export default function SiteEditForm() {
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     // fax: Yup.string(),
     website: Yup.string(),
-    lat: Yup.string().max(25),
-    long: Yup.string().max(25),
+    lat: Yup.string()
+    .max(25)
+    .test('valid-lat', 'Invalid latitude(Valid values are -90 to 90)', (value) => {
+      if (!value) return true;
+      const parsedValue = parseFloat(value);
+      return parsedValue >= -90 && parsedValue <= 90;
+    }),
+    long: Yup.string()
+    .max(25)
+    .test('valid-lat', 'Invalid longitude(Valid values are -180 to 180)', (value) => {
+      if (!value) return true;
+      const parsedValue = parseFloat(value);
+      return parsedValue >= -180 && parsedValue <= 180;
+    }),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
