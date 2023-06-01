@@ -26,8 +26,8 @@ import { setDocumentCategoryFormVisibility } from '../../../redux/slices/documen
 import DocumentAddForm from './DocumentAddForm'
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
-import DocumentNameAddForm from '../DocumentName/DocumentNameAddForm';
-import FileCategoryAddForm from '../FileCategory/FileCategoryAddForm';
+import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
+import FileCategoryAddForm from '../documentCategory/FileCategoryAddForm';
 import ListSwitch from '../../components/ListSwitch';
 
 import _mock from '../../../_mock';

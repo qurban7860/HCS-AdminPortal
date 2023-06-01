@@ -27,7 +27,7 @@ import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
-DocumentNameListTableRow.propTypes = {
+DocumentTypeListTableRow.propTypes = {
   row: PropTypes.object,
   style: PropTypes.object,
   selected: PropTypes.bool,
@@ -46,7 +46,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function DocumentNameListTableRow({
+export default function DocumentTypeListTableRow({
   row,
   style,
   selected,

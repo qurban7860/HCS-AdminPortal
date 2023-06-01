@@ -25,13 +25,13 @@ import FormProvider, {
   RHFAutocomplete,
   RHFSwitch
 } from '../../../components/hook-form';
-import { setDocumentTypeEditFormVisibility,  updateDocumentType, getSetting } from '../../../redux/slices/document/documentType';
+import { setDocumentTypeEditFormVisibility,  updateDocumentType } from '../../../redux/slices/document/documentType';
 import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentNameEditForm() {
+export default function DocumentTypeEditForm() {
 
   const { documentType } = useSelector((state) => state.documentType);
   const { machine } = useSelector((state) => state.machine);
@@ -40,43 +40,23 @@ export default function DocumentNameEditForm() {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  useLayoutEffect(() => {
-    setCategory(setting.techParam.category);
-    setTechParam(setting.techParam);
-  }, [dispatch , setting]);
 
-  // useLayoutEffect(() => {
-  //   const filterSetting = [];
-  //   settings.map((setting)=>(filterSetting.push(setting.techParam._id)))
-  //   const filteredsetting = techparamsByCategory.filter(item => !filterSetting.includes(item._id));
-  //   setparamData(filteredsetting);
-  //   }, [settings,techparamsByCategory]);
-  // const EditSettingSchema = Yup.object().shape({
-  //   techParamValue: Yup.string().max(20),
-  // });
-
-  useEffect(()=>{
-    if(category){
-      dispatch(getTechparamsByCategory(category._id));
-      
-    }
-  },[dispatch,category])
 
   const defaultValues = useMemo(
     () => ({
-      techParamValue: setting?.techParamValue || '',
-      isActive : setting?.isActive ,
+      name: documentType?.name || '',
+      isActive : documentType?.isActive ,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(50),
+  const EditDocumentNameSchema = Yup.object().shape({
+    name: Yup.string().max(50),
     isActive : Yup.boolean(),
   });
 
   const methods = useForm({
-    resolver: yupResolver(EditSettingSchema),
+    resolver: yupResolver(EditDocumentNameSchema),
     defaultValues,
   });
 
@@ -98,16 +78,14 @@ export default function DocumentNameEditForm() {
 
   const toggleCancel = () => 
   {
-    dispatch(setSettingEditFormVisibility (false));
+    dispatch(setDocumentTypeEditFormVisibility(false));
   };
 
   const onSubmit = async (data) => {
-    data.techParam = techParam || null
     try {
-      await dispatch(updateSetting( machine._id,setting._id,data));
+      await dispatch(updateDocumentType(documentType._id,data));
+      enqueueSnackbar('Document saved Successfully!');
       reset();
-      setCategory("")
-      setTechParam("")
     } catch (err) {
       enqueueSnackbar('Saving failed!');
       console.error(err.message);
