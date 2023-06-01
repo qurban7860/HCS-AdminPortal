@@ -92,7 +92,6 @@ export default function CustomerContactList(currentContact = null) {
   const [currentContactData, setCurrentContactData] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  // open the dialog and set the current contact to the contact that was clicked
   const handleOpenContact = (index) => {
     if (index === activeIndex) {
       setActiveIndex(null);
@@ -105,9 +104,6 @@ export default function CustomerContactList(currentContact = null) {
   const handleCloseContact = () => setOpenContact(false);
 
   const handleExpand = (index) => {
-    if (index !== activeIndex) {
-      setIsExpanded(false);
-    }
     setIsExpanded(true);
   };
 
@@ -120,7 +116,7 @@ export default function CustomerContactList(currentContact = null) {
   };
 
   const CardBase = styled(Card)(({ theme }) => ({
-    display: 'flex',
+    display: 'block',
     animation: 'fadeIn ease 0.8s',
     animationFillMode: 'forwards',
     position: 'relative',
@@ -225,7 +221,7 @@ export default function CustomerContactList(currentContact = null) {
             const borderTopVal = index !== 0 ? '0px solid white' : '';
             return (
               <>
-                <Grid item sx={{ display: 'inline-block' }}>
+                <Grid key={index} item sx={{ display: 'inline-block' }}>
                   {index !== activeIndex ? (
                     <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
                       <CardActionArea>
@@ -239,7 +235,7 @@ export default function CustomerContactList(currentContact = null) {
                             onClick={() => {
                               setCurrentContactData(contact);
                               // handleOpenContact(index);
-                              setIsExpanded(true);
+                              handleExpand(index);
                               // setOpenContact(true);
                             }}
                             underline="none"
@@ -320,27 +316,7 @@ export default function CustomerContactList(currentContact = null) {
                     </Card>
                   ) : null}
                 </Grid>
-                {isExpanded ? (
-                  <Grid
-                    item
-                    lg={8}
-                    sx={{
-                      display: 'flex',
-                      animation: 'fadeIn ease 0.8s',
-                      animationFillMode: 'forwards',
-                      position: 'relative',
-                      zIndex: '1',
-                      width: '100%',
-                      height: 'auto',
-                      overflow: 'hidden',
-                      borderRadius: '10px',
-                    }}
-                  >
-                    <CardBase>
-                      <ContactViewForm currentContact={currentContactData} />
-                    </CardBase>
-                  </Grid>
-                ) : null}
+
                 {/* <Dialog
                   open={openContact}
                   onClose={handleCloseContact}
@@ -378,6 +354,28 @@ export default function CustomerContactList(currentContact = null) {
               </>
             );
           })}
+        {isExpanded && (
+          <Grid
+            item
+            lg={12}
+            sx={{
+              display: 'block',
+              flexDirection: 'column',
+              animation: 'fadeIn ease 0.8s',
+              animationFillMode: 'forwards',
+              position: 'relative',
+              zIndex: '1',
+              width: '100%',
+              height: 'auto',
+              overflow: 'hidden',
+              borderRadius: '10px',
+            }}
+          >
+            <CardBase>
+              <ContactViewForm currentContact={currentContactData} />
+            </CardBase>
+          </Grid>
+        )}
         <Grid item lg={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
