@@ -42,7 +42,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+  console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const [ preview, setPreview] = useState(false)
@@ -50,7 +50,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onDelete = async () => {
-    // console.log("currentCustomerDocument : ",currentCustomerDocument)
     try {
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
     enqueueSnackbar('Document deleted successfully!');
@@ -62,7 +61,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   };
 
   const  handleEdit = async () => {
-    console.log("edit customer document call")
     await dispatch(getCustomerDocument(currentCustomerDocument._id));
           dispatch(setCustomerDocumentEditFormVisibility(true));
   };
@@ -161,10 +159,10 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
             <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
               <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Version Status
+              is Active
               </Typography>
               <Typography>
-                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
+                <Switch  checked={defaultValues?.isActive}  disabled/>
               </Typography>
             </Grid>
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}

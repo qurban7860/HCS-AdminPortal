@@ -44,10 +44,8 @@ import { getSites } from '../../../redux/slices/customer/site';
 export default function DocumentEditForm() {
 
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  console.log("customerDocument : ",customerDocument)
   const { documentTypes } = useSelector((state) => state.documentType);
   const { documentCategories } = useSelector((state) => state.documentCategory);
-  // console.log("machine : " , machine)
   const { customer } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
@@ -140,7 +138,6 @@ useEffect(()=>{
       }else{
         data.customerAccess = false
       }
-      // console.log("data : ",data)
       await dispatch(updateCustomerDocument(customerDocument?._id,data,customer._id));
       enqueueSnackbar('Document saved successfully!');
       reset();

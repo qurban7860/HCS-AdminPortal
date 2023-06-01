@@ -43,7 +43,6 @@ export default function DocumentAddForm({currentDocument}) {
   const { documentTypes } = useSelector((state) => state.documentType);
   const { documentCategories } = useSelector((state) => state.documentCategory);
   const { customerDocuments } = useSelector((state) => state.customerDocument);
-  // console.log("fileCategories : ", fileCategories, " documentNames : ", documentNames)
   const { machines } = useSelector((state) => state.machine);
   const { customer, customers } = useSelector((state) => state.customer);
   const { contacts } = useSelector((state) => state.contact);
@@ -61,7 +60,6 @@ export default function DocumentAddForm({currentDocument}) {
   const [ previewVal, setPreviewVal] = useState("")
   const [ preview, setPreview] = useState(false)
 
-  // console.log("custom.previe
   const [files, setFiles] = useState([]);
   const [ machineVal, setMachineVal] = useState('')
   const [ customerVal, setCustomerVal] = useState('')
@@ -179,7 +177,6 @@ export default function DocumentAddForm({currentDocument}) {
         if(descriptionVal){
           data.description = descriptionVal;
         }
-        console.log("data : ",data)
         if(selectedValue === "new"){
           await dispatch(addCustomerDocument(customer._id,data));
         }else{

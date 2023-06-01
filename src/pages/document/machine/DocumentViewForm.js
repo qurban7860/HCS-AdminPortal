@@ -147,10 +147,10 @@ const handleDownload = () => {
 
           <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
               <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Version Status
+              is Active
               </Typography>
               <Typography>
-                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
+                <Switch  checked={defaultValues?.isActive}  disabled/>
               </Typography>
             </Grid>
           {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
