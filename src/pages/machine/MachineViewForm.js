@@ -2,11 +2,17 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Divider, Switch, Card, Grid, Typography, Link ,Dialog } from '@mui/material';
+import { Divider, Switch, Card, Grid, Typography, Link, Dialog } from '@mui/material';
 // routes
-import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
 // slices
-import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag } from '../../redux/slices/products/machine';
+import {
+  getMachines,
+  getMachine,
+  deleteMachine,
+  setMachineEditFormVisibility,
+  setTransferMachineFlag,
+} from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
 import Iconify from '../../components/iconify';
@@ -17,35 +23,34 @@ import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import CommaJoinField from '../components/CommaJoinField';
 
-
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
-  console.log("machines", machine)
+  const { machine, machineEditFormFlag } = useSelector((state) => state.machine);
+  console.log('machines', machine);
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   useLayoutEffect(() => {
-    dispatch(setMachineEditFormVisibility(false))
-    if(machine?.customer){
-      dispatch(getCustomer(machine?.customer?._id))
+    dispatch(setMachineEditFormVisibility(false));
+    if (machine?.customer) {
+      dispatch(getCustomer(machine?.customer?._id));
     }
-  }, [ dispatch ,machine ])
+  }, [dispatch, machine]);
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
-  }
+  };
   const handleTransfer = () => {
     dispatch(setTransferMachineFlag(true));
     dispatch(setMachineEditFormVisibility(true));
-  }
+  };
   const handleViewCustomer = (id) => {
     navigate(PATH_DASHBOARD.customer.view(id));
   };
   const onDelete = async () => {
     await dispatch(deleteMachine(machine._id));
     dispatch(getMachines());
-    navigate(PATH_MACHINE.machine.list)
+    navigate(PATH_MACHINE.machine.list);
   };
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openInstallationSite, setOpenInstallationSite] = useState(false);
@@ -60,33 +65,32 @@ export default function MachineViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id:                       machine?._id || "",
-      name:                     machine?.name || "",
-      serialNo:                 machine?.serialNo || "",
-      parentMachine:            machine?.parentMachine?.name || "",
-      parentSerialNo:           machine?.parentMachine?.serialNo || "",
-      supplier:                 machine?.supplier?.name || "",
-      workOrderRef:             machine?.workOrderRef || "",
-      machineModel:             machine?.machineModel?.name || "",
-      status:                   machine?.status?.name || "",
-      customer:                 machine?.customer || "",
-      instalationSite:          machine?.instalationSite || "",
-      siteMilestone:            machine?.siteMilestone || "",
-      billingSite:              machine?.billingSite|| "",
-      description:              machine?.description || "",
-      customerTags:             machine?.customerTags || "",
-      accountManager:           machine?.accountManager || "",
-      projectManager:           machine?.projectManager || "",
-      supportManager:           machine?.supportManager || "",
-      isActive:                 machine?.isActive,
-      createdByFullName:        machine?.createdBy?.name ,
-      createdAt:                machine?.createdAt ,
-      createdIP:                machine?.createdIP ,
-      updatedByFullName:        machine?.updatedBy?.name ,
-      updatedAt:                machine?.updatedAt ,
-      updatedIP:                machine?.updatedIP ,
-    }
-    ),
+      id: machine?._id || '',
+      name: machine?.name || '',
+      serialNo: machine?.serialNo || '',
+      parentMachine: machine?.parentMachine?.name || '',
+      parentSerialNo: machine?.parentMachine?.serialNo || '',
+      supplier: machine?.supplier?.name || '',
+      workOrderRef: machine?.workOrderRef || '',
+      machineModel: machine?.machineModel?.name || '',
+      status: machine?.status?.name || '',
+      customer: machine?.customer || '',
+      instalationSite: machine?.instalationSite || '',
+      siteMilestone: machine?.siteMilestone || '',
+      billingSite: machine?.billingSite || '',
+      description: machine?.description || '',
+      customerTags: machine?.customerTags || '',
+      accountManager: machine?.accountManager || '',
+      projectManager: machine?.projectManager || '',
+      supportManager: machine?.supportManager || '',
+      isActive: machine?.isActive,
+      createdByFullName: machine?.createdBy?.name,
+      createdAt: machine?.createdAt,
+      createdIP: machine?.createdIP,
+      updatedByFullName: machine?.updatedBy?.name,
+      updatedAt: machine?.updatedAt,
+      updatedIP: machine?.updatedIP,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
@@ -94,7 +98,12 @@ export default function MachineViewForm() {
   return (
     <Card sx={{ p: 3 }}>
       <Grid container justifyContent="flex-end" alignContent="flex-end">
-        <ViewFormEditDeleteButtons sx={{ pt: 5 }} handleTransfer={handleTransfer} handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons
+          sx={{ pt: 5 }}
+          handleTransfer={handleTransfer}
+          handleEdit={handleEdit}
+          onDelete={onDelete}
+        />
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
       </Grid>
       <Grid container>
@@ -138,7 +147,11 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
         <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
+        <CommaJoinField
+          sm={6}
+          arrayParam={machine.machineConnections}
+          heading="Connected Machines"
+        />
         <ViewFormField
           sm={6}
           heading="Installation Site"
@@ -222,7 +235,7 @@ export default function MachineViewForm() {
         onClose={handleCloseCustomer}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-        >
+      >
         <Grid
           container
           item
@@ -234,7 +247,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-          >
+        >
           <Typography variant="h4" sx={{ px: 2 }}>
             Customer{' '}
           </Typography>{' '}
