@@ -33,8 +33,9 @@ import { Upload } from '../../../components/upload';
 import Cover from '../../components/Cover';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
-import { postAndGet } from '../../asset/dispatchRequests'
+
 // ----------------------------------------------------------------------
+
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
@@ -62,7 +63,6 @@ export default function DocumentAddForm({currentDocument}) {
   const [ siteVal, setSiteVal] = useState('')
   const [ contactVal, setContactVal] = useState('')
   const allowedExtension = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
-
   const navigate = useNavigate();
 
   // let documentAvailable
@@ -160,9 +160,9 @@ export default function DocumentAddForm({currentDocument}) {
         if(documentTypeVal){
           data.documentType = documentTypeVal._id
         }
-        console.log("data : ",data)
-        await postAndGet( dispatch, enqueueSnackbar ,addCustomerDocument(customer._id,data), getCustomerDocuments(customer._id));
-        dispatch(setCustomerDocumentFormVisibility(false));
+        // console.log("data : ",data)
+         await dispatch(addCustomerDocument(customer._id,data));
+        enqueueSnackbar('Customer document save successfully!');
         setDocumentCategoryVal("")
         setDocumentTypeVal("")
         setCustomerAccessVal("")
@@ -171,7 +171,7 @@ export default function DocumentAddForm({currentDocument}) {
         setPreviewVal("")
         reset();
       } catch(error){
-        enqueueSnackbar('Note Save failed!');
+        enqueueSnackbar('Customer document save failed!');
         console.error(error);
       }
   };
@@ -360,13 +360,13 @@ export default function DocumentAddForm({currentDocument}) {
                       />
                     </Grid>
                 </Grid> */}
-                <Grid container item lg={12} justifyContent="flex-end">
-                  <Grid item xs={6} sm={6} md={8} lg={3} sx={{display:'flex'}}>
-                   <Typography variant="body1" sx={{ display:'flex', alignItems:'center' }}>
-                        Customer Access
-                      </Typography>
-                    <Switch  checked={customerAccessVal} onChange={handleChange} />
-                  </Grid>
+                <Grid container lg={12} justifyContent="flex-end">
+                  <Grid  display="flex" justifyContent="flex-end">
+                     <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
+                          Customer Access
+                        </Typography>
+                      <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+                    </Grid>
                 </Grid>
                 {/* <Grid container lg={6} spacing={3}>
                   <Grid item>

@@ -371,14 +371,14 @@ export default function DocumentAddForm({currentDocument}) {
                     /> 
                 </Grid>
               </Grid> */}
-              <Grid container item lg={12} justifyContent="flex-end">
-                  <Grid item xs={6} sm={6} md={8} lg={3} sx={{display:'flex'}}>
-                   <Typography variant="body1" sx={{ display:'flex', alignItems:'center' }}>
+              <Grid container lg={12} justifyContent="flex-end">
+                <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
                         Customer Access
                       </Typography>
-                    <Switch  checked={customerAccessVal} onChange={handleChange} />
+                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
                   </Grid>
-                </Grid>
+              </Grid>
               <RHFTextField name="description" label="Description" minRows={3} multiline />
               
               {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}

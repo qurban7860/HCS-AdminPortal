@@ -45,8 +45,6 @@ import ListSwitch from '../../components/ListSwitch';
 import _mock from '../../../_mock';
 import EmptyContent from '../../../components/empty-content';
 import { fDate,fDateTime } from '../../../utils/formatTime';
-import { getWithNoMsg } from '../../asset/dispatchRequests'
-
 
 // ----------------------------------------------------------------------
 
@@ -121,7 +119,7 @@ console.log("customerDocuments : ",customerDocuments)
 
 useEffect(()=>{
   if(customer?._id){
-    getWithNoMsg(dispatch, getCustomerDocuments(customer?._id), enqueueSnackbar);
+    dispatch(getCustomerDocuments(customer?._id));
   }
   dispatch(setCustomerDocumentEditFormVisibility(false))
   dispatch(setCustomerDocumentFormVisibility(false))

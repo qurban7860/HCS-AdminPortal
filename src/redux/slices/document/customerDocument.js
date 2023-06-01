@@ -108,6 +108,7 @@ export const {
 export function addCustomerDocument(customerId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
+        try {
           const formData = new FormData();
           formData.append('customer', customerId);
           // if(params?.customerAccess){
@@ -139,16 +140,24 @@ export function addCustomerDocument(customerId,params) {
           'Content-Type':"multupart/form-data"
         }
       });
+      // if(RegExp.test(response.status)){
+        dispatch(getCustomerDocuments(customerId))
+        dispatch(setCustomerDocumentFormVisibility(false));
+      // }
 
-    return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
   };
 }
 
 // ---------------------------------Update Customer Document-------------------------------------
 
-export function updateCustomerDocument(customerDocumentId,params) {
+export function updateCustomerDocument(customerDocumentId,params,customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try {
       const data = { 
                   displayName: params?.displayName,
                   name: params?.displayName,
@@ -176,9 +185,13 @@ export function updateCustomerDocument(customerDocumentId,params) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
       if(regEx.test(response.status)){
         dispatch(setCustomerDocumentEditFormVisibility (false));
-        dispatch(getCustomerDocuments(customerDocumentId))
+        dispatch(getCustomerDocuments(customerId))
+        console.log("update response : ",response)
       }
-    return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
   };
 }
 
@@ -187,6 +200,7 @@ export function updateCustomerDocument(customerDocumentId,params) {
 export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
       {
         params: {
@@ -200,7 +214,10 @@ export function getCustomerDocuments(customerId) {
       if(regEx.test(response.status)){
         dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
       }
-    return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
   };
 }
 
@@ -209,11 +226,15 @@ export function getCustomerDocuments(customerId) {
 export function getCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`);
+      console.log("customerDocumentId response :", response)
       dispatch(slice.actions.getCustomerDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
-     
-    return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
   };
 }
 
