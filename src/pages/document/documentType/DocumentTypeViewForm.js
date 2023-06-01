@@ -17,11 +17,11 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
-DocumentNameViewForm.propTypes = {
-  currentDocumentName: PropTypes.object,
+DocumentTypeViewForm.propTypes = {
+  currentDocumentType: PropTypes.object,
 };
 
-export default function DocumentNameViewForm({ currentDocumentName = null }) {
+export default function DocumentTypeViewForm({ currentDocumentType = null }) {
   const { documentName } = useSelector((state) => state.documentType);
 
   const navigate = useNavigate();
@@ -41,16 +41,16 @@ export default function DocumentNameViewForm({ currentDocumentName = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        isActive:                 currentDocumentName?.isActive,
-        createdAt:                currentDocumentName?.createdAt || "",
-        createdByFullName:        currentDocumentName?.createdBy?.name || "",
-        createdIP:                currentDocumentName?.createdIP || "",
-        updatedAt:                currentDocumentName?.updatedAt || "",
-        updatedByFullName:        currentDocumentName?.updatedBy?.name || "",
-        updatedIP:                currentDocumentName?.updatedIP || "",
+        isActive:                 currentDocumentType?.isActive,
+        createdAt:                currentDocumentType?.createdAt || "",
+        createdByFullName:        currentDocumentType?.createdBy?.name || "",
+        createdIP:                currentDocumentType?.createdIP || "",
+        updatedAt:                currentDocumentType?.updatedAt || "",
+        updatedByFullName:        currentDocumentType?.updatedBy?.name || "",
+        updatedIP:                currentDocumentType?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentDocumentName, documentName]
+    [currentDocumentType, documentName]
   );
 
   return (

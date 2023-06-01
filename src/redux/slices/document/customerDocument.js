@@ -158,36 +158,54 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { 
-                  displayName: params?.displayName,
-                  name: params?.displayName,
-                  customerAccess: params.customerAccess,
-                  // isActive: params.isActive,
-                  documentType:params.documentType,
-                  docType:params.documentType,
-                  documentCategory:params.documentCategory,
-                  docCategory:params.documentCategory,
-                  description: params.description,
-                  };
-          if(params?.category){
-            data.category = params?.category
-          }
-          if(params?.documentName){
-            data.documentName = params?.documentName
-          }
-          // if(params?.image){
-          //   formData.append('image', params?.image);
-          // }
-          // if(params?.isActive){
-          //   formData.append('isActive', params?.isActive);
-          // }
-          console.log("Payload : ",params);
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, data);
-      if(regEx.test(response.status)){
-        dispatch(setCustomerDocumentEditFormVisibility (false));
+      // const data = { 
+      //             displayName: params?.displayName,
+      //             name: params?.displayName,
+      //             customerAccess: params.customerAccess,
+      //             // isActive: params.isActive,
+      //             documentType:params.documentType,
+      //             docType:params.documentType,
+      //             documentCategory:params.documentCategory,
+      //             docCategory:params.documentCategory,
+      //             description: params.description,
+      //             };
+      const formData = new FormData();
+      formData.append('customer', customerId);
+      // if(params?.customerAccess){
+        formData.append('customerAccess', params.customerAccess);
+        // }
+      if(params.newVersion){
+        formData.append('newVersion', params.newVersion);
+      }
+      if(params?.displayName){
+        formData.append('displayName', params?.displayName);
+        formData.append('name', params?.displayName);
+      }
+      if(params?.description){
+        formData.append('description', params?.description);
+      }
+      if(params?.documentCategory){
+        formData.append('documentCategory', params?.documentCategory);
+      }
+      if(params?.documentType){
+        formData.append('documentType', params?.documentType);
+        formData.append('doctype', params?.documentType);
+      }
+      if(params?.images){
+        formData.append('images', params?.images);
+      }
+      if(params?.isActive){
+        formData.append('isActive', params?.isActive);
+      }
+console.log("formData : ",params?.image);
+          // console.log("Payload : ",params);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, formData);
+      // if(regEx.test(response.status)){
+        dispatch(setCustomerDocumentEditFormVisibility(false));
+        dispatch(setCustomerDocumentFormVisibility(false));
         dispatch(getCustomerDocuments(customerId))
         console.log("update response : ",response)
-      }
+      // }
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

@@ -22,7 +22,7 @@ import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-DocumentNameListTableToolbar.propTypes = {
+DocumentTypeListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -32,7 +32,7 @@ DocumentNameListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function DocumentNameListTableToolbar({
+export default function DocumentTypeListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,

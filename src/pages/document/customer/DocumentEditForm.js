@@ -130,7 +130,7 @@ useEffect(()=>{
         data.displayName = nameVal
       }
       if(documentTypeVal){
-        data.documentName = documentTypeVal
+        data.documentType = documentTypeVal
       }
       // if(fileCategoryVal){
       //   data.category = fileCategoryVal._id

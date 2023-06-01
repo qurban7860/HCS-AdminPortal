@@ -38,8 +38,8 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import DocumentNameListTableRow from './DocumentNameListTableRow';
-import DocumentNameListTableToolbar from './DocumentNameListTableToolbar';
+import DocumentTypeListTableRow from './DocumentTypeListTableRow';
+import DocumentTypeListTableToolbar from './DocumentTypeListTableToolbar';
 import documentName, { getDocumentType, deleteDocumentType, getDocumentTypes  } from '../../../redux/slices/document/documentType';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
@@ -56,7 +56,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function DocumentNameList() {
+export default function DocumentTypeList() {
   const {
     page,
     order,
@@ -203,7 +203,7 @@ export default function DocumentNameList() {
         </Card>
 
         <Card sx={{ mt: 3 }}>
-          <DocumentNameListTableToolbar
+          <DocumentTypeListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -253,7 +253,7 @@ export default function DocumentNameList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <DocumentNameListTableRow
+                        <DocumentTypeListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
