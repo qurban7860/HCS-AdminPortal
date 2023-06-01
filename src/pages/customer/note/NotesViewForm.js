@@ -89,7 +89,6 @@ export default function NoteViewForm({currentNote = null}) {
             <Grid container>
               <ViewFormAudit defaultValues={defaultValues}/>
             </Grid>
-
       </Grid>
     </>
   );

@@ -89,8 +89,7 @@ export default function DocumentList() {
   const { fileCategories, fileCategory, documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
   const { documentName, documentNames, documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { customer } = useSelector((state) => state.customer);
-console.log("customerDocuments : ",customerDocuments)
-// console.log("customerDocumentEditFormVisibility : ",customerDocumentEditFormVisibility, "documentNameFormVisibility : ",documentNameFormVisibility, "fileCategoryFormVisibility : ",fileCategoryFormVisibility, " customerDocumentFormVisibility : ", customerDocumentFormVisibility)
+// console.log("customerDocuments : ",customerDocuments)
   const toggleChecked = async () =>
     {
       dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
@@ -327,7 +326,6 @@ useEffect(()=>{
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-// console.log(filterName)
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;

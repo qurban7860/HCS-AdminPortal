@@ -42,7 +42,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+  console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const [ preview, setPreview] = useState(false)
@@ -50,7 +50,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onDelete = async () => {
-    // console.log("currentCustomerDocument : ",currentCustomerDocument)
     try {
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
     enqueueSnackbar('Document deleted successfully!');
@@ -62,7 +61,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   };
 
   const  handleEdit = async () => {
-    console.log("edit customer document call")
     await dispatch(getCustomerDocument(currentCustomerDocument._id));
           dispatch(setCustomerDocumentEditFormVisibility(true));
   };
@@ -70,14 +68,14 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        displayName :                     currentCustomerDocument?.displayName || "",
+        displayName :             currentCustomerDocument?.displayName || "",
         documentName:             currentCustomerDocument?.documentName?.name || "",
         docCategory:              currentCustomerDocument?.docCategory?.name || "",
         docType:                  currentCustomerDocument?.docType?.name || "",
         customer:                 currentCustomerDocument?.customer?.name || "",
         customerAccess:           currentCustomerDocument?.customerAccess,
         isActiveVersion:          currentCustomerDocument?.isActiveVersion,
-        documentVersion:          currentCustomerDocument?.documentVersion,
+        documentVersion:          currentCustomerDocument?.documentVersions[0]?.versionNo || "",
         description:              currentCustomerDocument?.description,
         isActive:                 currentCustomerDocument?.isActive,
         createdAt:                currentCustomerDocument?.createdAt || "",
@@ -147,8 +145,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-            <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
-            <Grid item xs={12} sm={6}  sx={{px:2,py:1, overflowWrap: "break-word",display:"flex"}}>
+            {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
+            <Grid item xs={12} sm={12}  sx={{px:2,py:1, overflowWrap: "break-word",display:"flex"}}>
               <Grid>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Customer Access
@@ -161,10 +159,10 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
             <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
               <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Version Status
+              is Active
               </Typography>
               <Typography>
-                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
+                <Switch  checked={defaultValues?.isActive}  disabled/>
               </Typography>
             </Grid>
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}

@@ -69,7 +69,7 @@ console.log("currentMachineDocument", currentMachineDocument)
         customer:                 currentMachineDocument?.customer?.name,
         customerAccess:           currentMachineDocument?.customerAccess,
         isActiveVersion:          currentMachineDocument?.isActiveVersion,
-        documentVersion:          currentMachineDocument?.documentVersion,
+        documentVersion:          currentMachineDocument?.documentVersions[0]?.versionNo || "",
         description:              currentMachineDocument?.description,
         isActive:                 currentMachineDocument?.isActive,
         createdAt:                currentMachineDocument?.createdAt || "",
@@ -135,7 +135,7 @@ const handleDownload = () => {
           <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
           <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
           {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
-          <Grid item xs={12} sm={12} sx={{px:2,py:1, overflowWrap: "break-word",}}>
+          <Grid item xs={12} sm={12} lg={12} sx={{px:2,py:1, overflowWrap: "break-word",}}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
             Customer Access
             </Typography>
@@ -147,10 +147,10 @@ const handleDownload = () => {
 
           <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
               <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Version Status
+              is Active
               </Typography>
               <Typography>
-                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
+                <Switch  checked={defaultValues?.isActive}  disabled/>
               </Typography>
             </Grid>
           {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
