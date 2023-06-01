@@ -25,7 +25,7 @@ import ViewFormField from '../components/ViewFormField';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -91,16 +91,25 @@ export default function CustomerContactList(currentContact = null) {
   const [activeIndex, setActiveIndex] = useState(null);
   const [currentContactData, setCurrentContactData] = useState({});
   const [expanded, setExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   // open the dialog and set the current contact to the contact that was clicked
   const handleOpenContact = (index) => {
     if (index === activeIndex) {
       setActiveIndex(null);
+      setOpenContact(false);
     } else {
       setActiveIndex(index);
       setOpenContact(true);
     }
   };
   const handleCloseContact = () => setOpenContact(false);
+
+  const handleExpand = (index) => {
+    if (index !== activeIndex) {
+      setIsExpanded(false);
+    }
+    setIsExpanded(true);
+  };
 
   const handleAccordianClick = (index) => {
     if (index === activeIndex) {
@@ -110,10 +119,17 @@ export default function CustomerContactList(currentContact = null) {
     }
   };
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-    // console.log("Expended : ",expanded)
-  };
+  const CardBase = styled(Card)(({ theme }) => ({
+    display: 'flex',
+    animation: 'fadeIn ease 0.8s',
+    animationFillMode: 'forwards',
+    position: 'relative',
+    padding: '10px',
+  }));
+  // const handleChange = (panel) => (event, isExpanded) => {
+  //   setExpanded(isExpanded ? panel : false);
+  //   console.log('Expended : ', expanded);
+  // };
 
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
@@ -162,13 +178,16 @@ export default function CustomerContactList(currentContact = null) {
 
           <Grid container>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.root}>
+                Dashboard
+              </Link>
               <Link
                 underline="none"
                 variant="subtitle2"
                 color="inherit"
-                href={PATH_DASHBOARD.customer.root}
+                href={PATH_DASHBOARD.customer.list}
               >
-                Customer
+                Customers
               </Link>
               <Link
                 underline="none"
@@ -209,19 +228,21 @@ export default function CustomerContactList(currentContact = null) {
                 <Grid item sx={{ display: 'inline-block' }}>
                   {index !== activeIndex ? (
                     <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
-                      <Link
-                        onClick={() => {
-                          setCurrentContactData(contact);
-                          setOpenContact(true);
-                        }}
-                        underline="none"
-                      >
-                        <CardActionArea>
-                          <Grid
-                            container
-                            justifyContent="center"
-                            alignContent="center"
-                            sx={{ display: 'block' }}
+                      <CardActionArea>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          alignContent="center"
+                          sx={{ display: 'block' }}
+                        >
+                          <Link
+                            onClick={() => {
+                              setCurrentContactData(contact);
+                              // handleOpenContact(index);
+                              setIsExpanded(true);
+                              // setOpenContact(true);
+                            }}
+                            underline="none"
                           >
                             <Grid
                               item
@@ -293,13 +314,34 @@ export default function CustomerContactList(currentContact = null) {
                                 </Typography>
                               </CardContent>
                             </Grid>
-                          </Grid>
-                        </CardActionArea>
-                      </Link>
+                          </Link>
+                        </Grid>
+                      </CardActionArea>
                     </Card>
                   ) : null}
                 </Grid>
-                <Dialog
+                {isExpanded ? (
+                  <Grid
+                    item
+                    lg={8}
+                    sx={{
+                      display: 'flex',
+                      animation: 'fadeIn ease 0.8s',
+                      animationFillMode: 'forwards',
+                      position: 'relative',
+                      zIndex: '1',
+                      width: '100%',
+                      height: 'auto',
+                      overflow: 'hidden',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    <CardBase>
+                      <ContactViewForm currentContact={currentContactData} />
+                    </CardBase>
+                  </Grid>
+                ) : null}
+                {/* <Dialog
                   open={openContact}
                   onClose={handleCloseContact}
                   aria-labelledby="alert-dialog-title"
@@ -332,7 +374,7 @@ export default function CustomerContactList(currentContact = null) {
                       <ContactViewForm currentContact={currentContactData} />
                     </Grid>
                   </Grid>
-                </Dialog>
+                </Dialog> */}
               </>
             );
           })}

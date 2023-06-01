@@ -1,11 +1,15 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer, } from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getTechparamcategories, getTechparamcategory, deleteTechparamcategory } from '../../../redux/slices/products/machineTechParamCategory';
+import {
+  getTechparamcategories,
+  getTechparamcategory,
+  deleteTechparamcategory,
+} from '../../../redux/slices/products/machineTechParamCategory';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -33,7 +37,6 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  
 ];
 
 const STATUS_OPTIONS = [
@@ -83,17 +86,19 @@ export default function TechParamList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { techparamcategories, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparamcategory);
+  const { techparamcategories, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.techparamcategory
+  );
 
-  useLayoutEffect( () => {
-     dispatch(getTechparamcategories());
+  useLayoutEffect(() => {
+    dispatch(getTechparamcategories());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
       if (techparamcategories && !error) {
-        enqueueSnackbar(responseMessage); 
-      } 
+        enqueueSnackbar(responseMessage);
+      }
       // else {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
@@ -150,7 +155,7 @@ export default function TechParamList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -165,7 +170,7 @@ export default function TechParamList() {
         setPage(newPage);
       }
     }
-    handleClose()
+    handleClose();
   };
 
   const handleEditRow = async (id) => {
@@ -183,14 +188,17 @@ export default function TechParamList() {
     setFilterStatus([]);
   };
 
-
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
-          <Cover name='Technical Parameter Category List' icon='material-symbols:list-alt-outline' setting="enable" />
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <Cover
+            name="Technical Parameter Categories"
+            icon="material-symbols:list-alt-outline"
+            setting="enable"
+          />
         </Card>
-        <Card sx={{mt: 3 }}>
+        <Card sx={{ mt: 3 }}>
           <TechParamListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -203,7 +211,7 @@ export default function TechParamList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -222,7 +230,7 @@ export default function TechParamList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -249,7 +257,7 @@ export default function TechParamList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -268,10 +276,8 @@ export default function TechParamList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
           />
         </Card>
-        
       </Container>
 
       <ConfirmDialog
@@ -314,9 +320,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (produc) => produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    // (produc?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(produc?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (produc) =>
+        produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (produc?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(produc?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

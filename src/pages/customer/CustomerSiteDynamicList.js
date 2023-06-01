@@ -262,7 +262,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 color="inherit"
                 href={PATH_DASHBOARD.customer}
               >
-                {siteAddFormVisibility ? 'Add New Site' : customer.sites.name}
+                {siteAddFormVisibility ? 'Add New Site' : ''}
               </Link>
             </Breadcrumbs>
           </Grid>

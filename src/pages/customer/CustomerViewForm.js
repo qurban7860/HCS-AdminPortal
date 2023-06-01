@@ -20,20 +20,25 @@ import {
   Dialog,
   InputAdornment,
   Link,
-  Divider,
+  Breadcrumbs,
   Tooltip,
 } from '@mui/material';
 // global
 import { CONFIG } from '../../config-global';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
 
 // slices
-import { getCustomers, getCustomer, setCustomerEditFormVisibility, deleteCustomer } from '../../redux/slices/customer/customer';
+import {
+  getCustomers,
+  getCustomer,
+  setCustomerEditFormVisibility,
+  deleteCustomer,
+} from '../../redux/slices/customer/customer';
 import FormProvider, { RHFSwitch } from '../../components/hook-form';
 import { fDateTime } from '../../utils/formatTime';
 import ViewFormAudit from '../components/ViewFormAudit';
@@ -52,15 +57,13 @@ export default function CustomerViewForm() {
   //   dispatch(setCustomerEditFormVisibility(true));
   // };
 
-
-
-const handleEdit = () => {
+  const handleEdit = () => {
     dispatch(setCustomerEditFormVisibility(true));
-  }
-const onDelete = async () => {
-  await dispatch(deleteCustomer(customer._id));
-  navigate(PATH_DASHBOARD.customer.list)
-  }
+  };
+  const onDelete = async () => {
+    await dispatch(deleteCustomer(customer._id));
+    navigate(PATH_DASHBOARD.customer.list);
+  };
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -87,34 +90,114 @@ const onDelete = async () => {
     [customer]
   );
   return (
-    <Card sx={{ p: 3 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-      <Grid container>
-        <Tooltip title="Active">
-          <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        </Tooltip>
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
-        <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
-        <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
-        <ViewFormField sm={6} heading="Email" param={defaultValues?.mainSite?.email} />
-      </Grid>
-      <Grid container>
-        <ViewFormField
-          sm={6}
-          heading="Primary Billing Contact"
-          param={defaultValues?.primaryBillingContact?.firstName}
-          secondParam={defaultValues?.primaryBillingContact?.lastName}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Primary Technical Contact"
-          param={defaultValues?.primaryTechnicalContact?.firstName}
-          secondParam={defaultValues?.primaryTechnicalContact?.lastName}
-        />
-      </Grid>
+    <>
+      <Stack alignItems="flex-end" sx={{ mt: 5.5, padding: 2 }}>
+        <Button />
+        <Grid container>
+          <Breadcrumbs separator="›" aria-label="breadcrumb">
+            <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.root}>
+              Dashboard
+            </Link>
+            <Link
+              underline="none"
+              variant="subtitle2"
+              color="inherit"
+              href={PATH_DASHBOARD.customer.list}
+            >
+              Customers
+            </Link>
+            <Link
+              underline="none"
+              variant="subtitle2"
+              color="inherit"
+              href={PATH_DASHBOARD.customer.root}
+            >
+              {customer.name}
+            </Link>
+            <Link
+              underline="none"
+              variant="subtitle2"
+              color="inherit"
+              href={PATH_DASHBOARD.customer.root}
+            >
+              Information
+            </Link>
+          </Breadcrumbs>
+        </Grid>
+      </Stack>
+      <Card sx={{ p: 3 }}>
+        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <Grid container>
+          <Tooltip title="Active">
+            <ViewFormField sm={12} isActive={defaultValues.isActive} />
+          </Tooltip>
+          <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+          <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
+          <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
+          <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
+          <ViewFormField sm={6} heading="Email" param={defaultValues?.mainSite?.email} />
+        </Grid>
+        <Grid container>
+          <ViewFormField
+            sm={6}
+            heading="Primary Billing Contact"
+            param={defaultValues?.primaryBillingContact?.firstName}
+            secondParam={defaultValues?.primaryBillingContact?.lastName}
+          />
+          <ViewFormField
+            sm={6}
+            heading="Primary Technical Contact"
+            param={defaultValues?.primaryTechnicalContact?.firstName}
+            secondParam={defaultValues?.primaryTechnicalContact?.lastName}
+          />
+        </Grid>
 
-      {defaultValues.mainSite && (
+        {defaultValues.mainSite && (
+          <Grid container>
+            <Grid container sx={{ pt: '2rem' }}>
+              <Grid
+                item
+                xs={12}
+                sm={12}
+                sx={{
+                  backgroundImage: (theme) =>
+                    `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                }}
+              >
+                <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
+                  Address Information
+                </Typography>
+              </Grid>
+            </Grid>
+            <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
+            <ViewFormField
+              sm={6}
+              heading="Street"
+              param={defaultValues?.mainSite.address?.street}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Suburb"
+              param={defaultValues?.mainSite.address?.suburb}
+            />
+            <ViewFormField sm={6} heading="City" param={defaultValues?.mainSite.address?.city} />
+            <ViewFormField
+              sm={6}
+              heading="Post Code"
+              param={defaultValues?.mainSite.address?.postcode}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Region"
+              param={defaultValues?.mainSite.address?.region}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Country"
+              param={defaultValues?.mainSite.address?.country}
+            />
+          </Grid>
+        )}
         <Grid container>
           <Grid container sx={{ pt: '2rem' }}>
             <Grid
@@ -127,67 +210,35 @@ const onDelete = async () => {
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
-                Address Information
+                Howick Resources
               </Typography>
             </Grid>
           </Grid>
-          <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
-          <ViewFormField sm={6} heading="Street" param={defaultValues?.mainSite.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={defaultValues?.mainSite.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={defaultValues?.mainSite.address?.city} />
           <ViewFormField
             sm={6}
-            heading="Post Code"
-            param={defaultValues?.mainSite.address?.postcode}
+            heading="Account Manager"
+            param={defaultValues?.accountManager?.firstName}
+            secondParam={defaultValues?.accountManager?.lastName}
           />
-          <ViewFormField sm={6} heading="Region" param={defaultValues?.mainSite.address?.region} />
           <ViewFormField
             sm={6}
-            heading="Country"
-            param={defaultValues?.mainSite.address?.country}
+            heading="Project Manager"
+            param={defaultValues?.projectManager?.firstName}
+            secondParam={defaultValues?.projectManager?.lastName}
           />
+          <ViewFormField
+            sm={6}
+            heading="Suppport Manager"
+            param={defaultValues?.supportManager?.firstName}
+            secondParam={defaultValues?.supportManager?.lastName}
+          />
+          <ViewFormField />
+          {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
         </Grid>
-      )}
-      <Grid container>
-        <Grid container sx={{ pt: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
-              Howick Resources
-            </Typography>
-          </Grid>
+        <Grid container sx={{ pb: '1rem' }}>
+          <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
-        <ViewFormField
-          sm={6}
-          heading="Account Manager"
-          param={defaultValues?.accountManager?.firstName}
-          secondParam={defaultValues?.accountManager?.lastName}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Project Manager"
-          param={defaultValues?.projectManager?.firstName}
-          secondParam={defaultValues?.projectManager?.lastName}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Suppport Manager"
-          param={defaultValues?.supportManager?.firstName}
-          secondParam={defaultValues?.supportManager?.lastName}
-        />
-        <ViewFormField />
-        {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
-      </Grid>
-      <Grid container sx={{ pb: '1rem' }}>
-        <ViewFormAudit defaultValues={defaultValues} />
-      </Grid>
-    </Card>
+      </Card>
+    </>
   );
 }
