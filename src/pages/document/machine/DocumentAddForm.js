@@ -257,7 +257,7 @@ export default function DocumentAddForm({currentDocument}) {
                 renderInput={(params) => <TextField {...params} required label="Document Type" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} ><Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link>
+              {/* <Link  title="Add Document Name"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleDocumentNamePage} ><Typography variant="body" sx={{mt:1}}>Add new Document Name</Typography><Iconify icon="mdi:share" /></Link> */}
               </Grid>
               <Grid>
               <Autocomplete
@@ -280,7 +280,7 @@ export default function DocumentAddForm({currentDocument}) {
                 renderInput={(params) => <TextField {...params} required  label="Document Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              <Link  title="Add Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage}><Typography variant="body" >Add new Category</Typography><Iconify icon="mdi:share" /></Link>
+              {/* <Link  title="Add Document Category"  sx={{ color: 'blue' }}  component="button"  variant="body2"  onClick={togleCategoryPage}><Typography variant="body" >Add new Document Category</Typography><Iconify icon="mdi:share" /></Link> */}
               </Grid>
              
               {/* <Autocomplete

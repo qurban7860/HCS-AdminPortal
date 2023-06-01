@@ -126,7 +126,7 @@ useEffect(() => {
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = !machineDocuments.length && !machineDocumentFormVisibility && !machineDocumentEditFormVisibility;
+  const isNotFound = !machineDocuments.length && !machineDocumentFormVisibility && !machineDocumentEditFormVisibility && !documentTypeFormVisibility && !documentCategoryFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
