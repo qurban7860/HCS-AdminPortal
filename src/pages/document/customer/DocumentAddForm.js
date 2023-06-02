@@ -56,6 +56,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ descriptionVal, setDescriptionVal] = useState("")
   const [ readOnlyVal, setReadOnlyVal] = useState(false)
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ isActive, setIsActive] = useState(true)
   const [ nameVal, setNameVal] = useState("")
   const [ previewVal, setPreviewVal] = useState("")
   const [ preview, setPreview] = useState(false)
@@ -210,14 +211,17 @@ export default function DocumentAddForm({currentDocument}) {
   {
     dispatch(setCustomerDocumentFormVisibility(false));
   };
+
   const togleCategoryPage = ()=>{
     dispatch(setDocumentCategoryFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(false));
   }
+
   const togleDocumentNamePage = ()=>{
     dispatch(setDocumentTypeFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(false));
   }
+
   // const handleDrop = useCallback(
   //   (acceptedFiles) => {
   //     const newFiles = acceptedFiles.map((file) =>
@@ -268,6 +272,9 @@ export default function DocumentAddForm({currentDocument}) {
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
   };
+  const handleIsActiveChange = () => {
+    setIsActive(!isActive);
+  };
   const handleRadioChange = (event) => {
     setSelectedValue(event.target.value);
     if(event.target.value === "new"){
@@ -287,6 +294,16 @@ export default function DocumentAddForm({currentDocument}) {
   const handleChangeDescription = (event) => {
     setDescriptionVal(event.target.value);
   };
+  const objComparator = function(a, b) {
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {/* <Cover name="New Customer Document"/> */}
@@ -372,42 +389,26 @@ export default function DocumentAddForm({currentDocument}) {
                           </Grid>
                       </RadioGroup>
                   </FormControl>}
-                { (selectedValue === "new" || documentVal ) &&
-                  <Grid item xs={12} md={6} lg={12}>
-                    <RHFUpload
-                      required
-                      // multiple
-                      // thumbnail
-                      onPreview={previewHandle}
-                      name="images"
-                      maxSize={30145728}
-                      onDelete={handleRemoveFile}
-                      onDrop={handleDrop}
-                      onRemove={handleDrop}
-                      // onRemoveAll={handleRemoveAllFiles}
-                      // onUpload={() => console.log('ON UPLOAD')}
-                      // onDelete={handleRemoveFile}
-                      // onUpload={() => console.log('ON UPLOAD')}
-                    />
-                  </Grid>}
-                  { (selectedValue === "new" || documentVal ) &&
+                
+                  { (selectedValue === "new"  || (documentVal && selectedVersionValue !== "existingVersion")) &&
                 <RHFTextField
-                  required
-                  name="name"
-                  value={nameVal}
-                  label="Name"
-                  onChange={(e) => {
-                    setNameVal(e.target.value);
-                  }}
-                />}
-                { (selectedValue === "new" || documentVal ) &&
+                    required
+                    disabled={readOnlyVal}
+                    name="name"
+                    value={nameVal}
+                    label="Name"
+                    onChange={(e) => {
+                      setNameVal(e.target.value);
+                    }}
+                  />}
+                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
                     <Grid item lg={6}>
                       <Autocomplete
                         // freeSolo
-                        // disabled={readOnlyVal}
-                        readOnly={readOnlyVal}
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
                         value={documentTypeVal || null}
                         options={documentTypes}
                         // isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -428,8 +429,8 @@ export default function DocumentAddForm({currentDocument}) {
                     <Grid item lg={6}>
                       <Autocomplete
                         // freeSolo
-                        // disabled={readOnlyVal}
-                        readOnly={readOnlyVal}
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
                         value={documentCategoryVal || null}
                         options={documentCategories}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -454,17 +455,42 @@ export default function DocumentAddForm({currentDocument}) {
                   </Grid>
                 </Grid>}
 
+                { (selectedValue === "new" || documentVal ) && <RHFTextField value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
+
                 { (selectedValue === "new" || documentVal ) &&
-                <Grid container lg={12} justifyContent="flex-end">
-                  <Grid  display="flex" justifyContent="flex-end">
+                  <Grid item xs={12} md={6} lg={12}>
+                    <RHFUpload
+                      required
+                      // multiple
+                      // thumbnail
+                      onPreview={previewHandle}
+                      name="images"
+                      maxSize={30145728}
+                      onDelete={handleRemoveFile}
+                      onDrop={handleDrop}
+                      onRemove={handleDrop}
+                      // onRemoveAll={handleRemoveAllFiles}
+                      // onUpload={() => console.log('ON UPLOAD')}
+                      // onDelete={handleRemoveFile}
+                      // onUpload={() => console.log('ON UPLOAD')}
+                    />
+                  </Grid>}
+                { (selectedValue === "new" || documentVal ) &&
+                <Grid container lg={12} display="flex">
+                  <Grid  display="flex" >
                      <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
                           Customer Access
                         </Typography>
                       <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
                     </Grid>
+                    <Grid  display="flex" >
+                     <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
+                          isActive
+                        </Typography>
+                      <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
+                    </Grid>
                 </Grid>}
 
-                { (selectedValue === "new" || documentVal ) && <RHFTextField value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
 
                 {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />
                 {!!files.length && (
