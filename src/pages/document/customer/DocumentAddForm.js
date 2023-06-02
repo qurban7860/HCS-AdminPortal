@@ -254,7 +254,7 @@ export default function DocumentAddForm({currentDocument}) {
       const fileName = file.name.split(".");
 
       if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[fileName.length - 1])){
-        setNameVal(fileName[0])
+        // setNameVal(fileName[0])
       }
 
       const newFile = Object.assign(file, {
@@ -313,7 +313,7 @@ export default function DocumentAddForm({currentDocument}) {
         columnGap={2}
         // display="grid"
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-      >
+        >
         <Grid container xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
@@ -455,7 +455,8 @@ export default function DocumentAddForm({currentDocument}) {
                   </Grid>
                 </Grid>}
 
-                { (selectedValue === "new" || documentVal ) && <RHFTextField value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
+                        
+                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField disabled={readOnlyVal}  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
 
                 { (selectedValue === "new" || documentVal ) &&
                   <Grid item xs={12} md={6} lg={12}>

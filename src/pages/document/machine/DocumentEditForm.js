@@ -58,6 +58,8 @@ export default function DocumentEditForm() {
   const [ siteVal, setSiteVal] = useState('')
   const [ contactVal, setContactVal] = useState('')
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ isActive, setIsActive] = useState(false)
+
   const [ nameVal, setNameVal] = useState("")
 
   const navigate = useNavigate();
@@ -85,6 +87,7 @@ useEffect(()=>{
   setCustomerAccessVal(machineDocument?.customerAccess)
   setDocumentCategoryVal(machineDocument?.docCategory)
   setDocumentTypeVal(machineDocument?.docType)
+  setIsActive(machineDocument?.isActive)
 },[machineDocument])
 
   const EditMachineDocumentSchema = Yup.object().shape({
@@ -129,18 +132,15 @@ useEffect(()=>{
         data.displayName = nameVal
       }
       if(documentTypeVal){
-        data.documentType = documentTypeVal
+        data.documentType = documentTypeVal._id
       }
       // if(documentCategoryVal){
       //   data.category = documentCategoryVal._id
       // }
-      if(customerAccessVal === "true" || customerAccessVal === true){
-        data.customerAccess = true
-      }else{
-        data.customerAccess = false
-      }
+      data.customerAccess = customerAccessVal
+      data.isActive = isActive
       console.log("data : ",data)
-      await dispatch(updateMachineDocument(machineDocument?._id,data, machine?._id));
+      await dispatch(updateMachineDocument(machineDocument?._id , machine?._id ,data));
       reset();
     } catch (err) {
       enqueueSnackbar('Machine document save failed!');
@@ -187,6 +187,10 @@ useEffect(()=>{
     setCustomerAccessVal(!customerAccessVal);
   };
 
+  const handleIsActiveChange = () => {
+    setIsActive(!isActive);
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
@@ -196,8 +200,6 @@ useEffect(()=>{
               <FormHeading heading='Edit Document'/>
               <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
-
-              
 
               <Autocomplete
                 // freeSolo
@@ -240,105 +242,26 @@ useEffect(()=>{
                 renderInput={(params) => <TextField {...params} required label="Document Category" />}
                 ChipProps={{ size: 'small' }}
               />
-              
-              
-              {/* <Autocomplete
-                // freeSolo
-                value={machineVal || null}
-                options={machines}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setMachineVal(newValue);
-                  }
-                  else{  
-                    setMachineVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Machine" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-              
-              {/* <Autocomplete 
-                value={customerVal || null}
-                options={customers}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setCustomerVal(newValue);
-                  }
-                  else{ 
-                  setCustomerVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Customer" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-
-              {/* <Autocomplete 
-                // freeSolo
-                value={siteVal || null}
-                options={sites}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setSiteVal(newValue);
-                  }
-                  else{ 
-                  setSiteVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Site" />}
-                ChipProps={{ size: 'small' }}
-              />
-
-              <Autocomplete 
-                // freeSolo
-                value={contactVal || null}
-                options={contacts}
-                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setContactVal(newValue);
-                  }
-                  else{ 
-                  setContactVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Contact" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
               </Box>
-              <Grid container lg={12} justifyContent="flex-end">
+
+              <RHFTextField name="description" label="Description" minRows={8} multiline />
+
+              <Grid container lg={12} >
                 <Grid  display="flex" justifyContent="flex-end">
-                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
+                   <Typography variant="body1" sx={{ pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
                         Customer Access
                       </Typography>
                     <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
                   </Grid>
+
+                  <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
+                        isActive
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
+                  </Grid>
               </Grid>
-              {/* <Grid container lg={12} justifyContent="flex-end">
-                <Grid item xs={6} sm={6} md={8} lg={2} justifyContent="flex-end">
-                    <ViewFormSWitch
-                      heading="Customer Access"
-                      customerAccess={customerAccessVal}
-                      onChange={handleChange}
-                    /> 
-                </Grid>
-              </Grid> */}
-              <RHFTextField name="description" label="Description" minRows={8} multiline />
+
               {/* <RHFUpload 
                   name="image"
                   maxSize={3145728}
