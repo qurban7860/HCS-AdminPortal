@@ -147,7 +147,7 @@ const handleDownload = () => {
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
+          <Grid item xs={12} sm={6} sx={{display: "flex", alignItems:"flex-start"}}>
           { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
               <Link href="#" underline="none"
