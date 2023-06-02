@@ -170,10 +170,13 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
       //             description: params.description,
       //             };
       const formData = new FormData();
-      formData.append('customer', customerId);
+
       // if(params?.customerAccess){
         formData.append('customerAccess', params.customerAccess);
-        // }
+      // }
+
+        formData.append('isActive', params?.isActive);
+
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }
@@ -194,10 +197,8 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
       if(params?.images){
         formData.append('images', params?.images);
       }
-      if(params?.isActive){
-        formData.append('isActive', params?.isActive);
-      }
-console.log("formData : ",params?.image);
+
+// console.log("formData : ",params?.image);
           // console.log("Payload : ",params);
       const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, formData);
       // if(regEx.test(response.status)){

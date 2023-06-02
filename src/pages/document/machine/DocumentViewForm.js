@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
 import { styled, alpha } from '@mui/material/styles';
-import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton} from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton, Tooltip} from '@mui/material';
 // redux
 import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument} from '../../../redux/slices/document/machineDocument';
 // paths
@@ -131,30 +131,19 @@ const handleDownload = () => {
     <Grid sx={{mt:-2}}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container >
-          <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-          <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-          <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-          {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
-          <Grid item xs={12} sm={12} lg={12} sx={{px:2,py:1, overflowWrap: "break-word",}}>
-            <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-            Customer Access
-            </Typography>
-            <Typography>
-              <Switch  checked={defaultValues?.customerAccess}  disabled/>
-            </Typography>
-          </Grid>
-          <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
-
-          <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              is Active
-              </Typography>
-              <Typography>
-                <Switch  checked={defaultValues?.isActive}  disabled/>
-              </Typography>
+        <Grid sm={12} display="flex">
+              <Tooltip xs={6} sm={1.5} md={0.5} lg={0.3}>
+                <ViewFormField  documentIsActive={defaultValues.isActive}  />
+              </Tooltip>
+              <Tooltip xs={6} sm={1.5} md={0.5} lg={0.3}>
+                <ViewFormField  customerAccess={defaultValues?.customerAccess} />
+              </Tooltip>
             </Grid>
-          {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
-          <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
           <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
             {/* { currentMachineDocument?.type.startsWith("image") ?
               <Link href="#" underline="none"

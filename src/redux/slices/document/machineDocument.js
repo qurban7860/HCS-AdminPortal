@@ -144,45 +144,54 @@ export function addMachineDocument(customerId , machineId , params) {
 
 // ---------------------------------Update Machine Document-------------------------------------
 
-export function updateMachineDocument(machineDocumentId, params,machineId) {
+export function updateMachineDocument(machineDocumentId , machineId , params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = { 
-        displayName: params?.displayName,
-        name: params?.displayName,
-        customerAccess: params.customerAccess,
-        // isActive: params.isActive,
-        documentType:params.documentType,
-        docType:params.documentType,
-        documentCategory:params.documentCategory,
-        docCategory:params.documentCategory,
-        description: params.description,
-      };
+      // const data = { 
+      //   displayName: params?.displayName,
+      //   name: params?.displayName,
+      //   customerAccess: params.customerAccess,
+      //   // isActive: params.isActive,
+      //   documentType:params.documentType,
+      //   docType:params.documentType,
+      //   documentCategory:params.documentCategory,
+      //   docCategory:params.documentCategory,
+      //   description: params.description,
+      // };
 
-// if(params?.name){
-//   formData.append('name', params?.name);
-// }
-// if(params?.description){
-//   formData.append('description', params?.description);
-// }
-if(params?.category){
-data.category = params?.category
-}
-if(params?.documentName){
-data.documentName = params?.documentName
-}
-// if(params?.image){
-//   formData.append('image', params?.image);
-// }
-// if(params?.isActive){
-//   formData.append('isActive', params?.isActive);
-// }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`, data );
+      const formData = new FormData();
+      formData.append('isActive', params?.isActive);
+      // if(params?.customerAccess){
+        formData.append('customerAccess', params.customerAccess);
+        // }
+      if(params.newVersion){
+        formData.append('newVersion', params.newVersion);
+      }
+      if(params?.displayName){
+        formData.append('displayName', params?.displayName);
+        formData.append('name', params?.displayName);
+      }
+      if(params?.description){
+        formData.append('description', params?.description);
+      }
+      if(params?.documentCategory){
+        formData.append('documentCategory', params?.documentCategory);
+      }
+      if(params?.documentType){
+        formData.append('documentType', params?.documentType);
+        formData.append('doctype', params?.documentType);
+      }
+      if(params?.images){
+        formData.append('images', params?.images);
+      }
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`, formData);
       console.log("machineId : ", machineId)
       dispatch(getMachineDocuments(machineId))
       dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));
+      dispatch(setMachineDocumentFormVisibility(false));
       dispatch(setMachineDocumentEditFormVisibility (false));
     } catch (error) {
       console.log(error);
