@@ -42,7 +42,7 @@ import AddFormButtons from '../components/AddFormButtons';
 
 export default function MachineEditForm() {
 
-  const { machine, transferMachineFlag } = useSelector((state) => state.machine);
+  const { machine } = useSelector((state) => state.machine);
   const { users } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -198,13 +198,8 @@ const onSubmit = async (data) => {
   data.machineConnections = idsOnly
   // data.customerTags = chipData
     try{
-      if(transferMachineFlag){
-        await dispatch(transferMachine(data));
-        enqueueSnackbar('Transfer success!');
-      }else{
-        await dispatch(updateMachine(data));
-        enqueueSnackbar('Update success!');
-      }
+      await dispatch(updateMachine(data));
+      enqueueSnackbar('Update success!');
       setParMachineVal('');
       setParMachSerVal('');
       setSupplierVal('');
@@ -397,7 +392,7 @@ const handleKeyPress = (e) => {
                 options={machinestatuses}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.name ? option.name : ""}`}
-
+                getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred'}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setStatusVal(newValue);

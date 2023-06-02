@@ -144,7 +144,7 @@ export function deleteMachinestatus(id) {
 
 export function addMachineStatus(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetMachinestatus());
+      dispatch(slice.actions.resetMachineStatus());
       dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
