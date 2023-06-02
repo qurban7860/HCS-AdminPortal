@@ -139,7 +139,7 @@ useEffect(()=>{
       // }
       data.customerAccess = customerAccessVal
       data.isActive = isActive
-      console.log("data : ",data)
+      // console.log("data : ",data)
       await dispatch(updateMachineDocument(machineDocument?._id , machine?._id ,data));
       reset();
     } catch (err) {

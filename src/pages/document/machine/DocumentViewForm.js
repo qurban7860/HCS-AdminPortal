@@ -43,8 +43,9 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   const { machine , machines } = useSelector((state) => state.machine);
 const { enqueueSnackbar } = useSnackbar();
 // console.log(machineDocument)
-console.log("currentMachineDocument", currentMachineDocument)
+// console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
+  const [ preview, setPreview] = useState(false)
 
   const dispatch = useDispatch();
 
@@ -106,9 +107,11 @@ link.click();
 //   downloadBase64File(base64Data, fileName);
 // };
 
+const handleOpenPreview = () => {setPreview(true)};
+
 const handleDownload = () => {
    dispatch(getDocumentDownload(currentMachineDocument._id)).then(res => {
-    console.log("res : ",res)
+    // console.log("res : ",res)
     if(regEx.test(res.status)){
       // download(atob(res.data), `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`, { type: currentMachineDocument?.type});
       downloadBase64File(res.data, `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`);
@@ -145,6 +148,31 @@ const handleDownload = () => {
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
           <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
+          { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
+              file?.fileType.startsWith("image") ?
+              <Link href="#" underline="none"
+              component="button"
+              title='Download File'
+              onClick={() => handleDownload(file._id)}
+              >
+              <Box
+                onAbort={handleOpenPreview}
+                component="img"
+                sx={{ m:2 }}
+                alt={file.name}
+                src={`data:image/png;base64, ${file?.thumbnail}`}
+                />
+                <Typography>{file?.displayName?.length > 10 ? file?.displayName?.substring(0, 10) : file?.displayName } {file?.displayName?.length > 10 ? "..." :null}</Typography>
+            </Link> :
+            <Link href="#" underline="none"
+              sx={{ m:2 }}
+              component="button"
+              title='Download File'
+              onClick={() => handleDownload(file._id)}
+            >
+              <Iconify width="50px" icon="ph:files-fill" />
+            </Link>
+            ))}
             {/* { currentMachineDocument?.type.startsWith("image") ?
               <Link href="#" underline="none"
               component="button"

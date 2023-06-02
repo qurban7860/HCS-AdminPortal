@@ -23,7 +23,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
-  console.log("machines", machine)
+  // console.log("machines", machine)
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   useLayoutEffect(() => {
