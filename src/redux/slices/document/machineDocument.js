@@ -135,6 +135,8 @@ export function addMachineDocument(customerId , machineId , params) {
       const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getMachineDocuments(machineId));
+      dispatch(setMachineDocumentFormVisibility(false));
+      dispatch(setMachineDocumentEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
