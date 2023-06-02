@@ -166,6 +166,9 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
       // if(params?.customerAccess){
         formData.append('customerAccess', params.customerAccess);
         // }
+        // if(params?.customer){
+        // formData.append('customer', params.customer);
+        // }
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }

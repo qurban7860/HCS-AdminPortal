@@ -48,7 +48,7 @@ export default function DocumentAddForm({currentDocument}) {
   const { machine  } = useSelector((state) => state.machine);
   const { machineDocuments  } = useSelector((state) => state.machineDocument);
 
-  console.log("machine : " , machine)
+  // console.log("machine : " , machine)
   const { customers,  } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
@@ -135,15 +135,16 @@ export default function DocumentAddForm({currentDocument}) {
 
   const onSubmit = async (data) => {
       try{
-        if(machine?.customer?._id){
-          data.customer = machine?.customer?._id
-        }
-        data.displayName = nameVal
+        // if(machine?.customer?._id){
+        //   data.customer = machine?.customer?._id
+        // }
+    
         if(nameVal){
           data.name = nameVal
+          data.displayName = nameVal
         }
         if(documentCategoryVal){
-          data.documentCategory = documentCategoryVal._id
+          data.documentCategory = documentCategoryVal?._id
         }
         if(customerAccessVal === true || customerAccessVal === "true" ){
           data.customerAccess = true
@@ -151,15 +152,15 @@ export default function DocumentAddForm({currentDocument}) {
           data.customerAccess = false
         }
         if(documentTypeVal){
-          data.documentType = documentTypeVal._id
+          data.documentType = documentTypeVal?._id
         }
         if(descriptionVal){
           data.description = descriptionVal;
         }
-        console.log("data : ", data)
+        // console.log("data : ", data)
 
         if(selectedValue === "new"){
-          await dispatch(addMachineDocument(machine.customer._id, machine._id ,data));
+          await dispatch(addMachineDocument(machine?.customer?._id, machine._id ,data));
         }else{
           if(selectedVersionValue === "newVersion"){
             data.newVersion = true;

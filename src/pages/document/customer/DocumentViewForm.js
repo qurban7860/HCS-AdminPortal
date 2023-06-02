@@ -117,8 +117,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     //   downloadBase64File(base64Data, fileName);
     // };
 
-    const handleDownload = () => {
-       dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
+    const handleDownload = (Id) => {
+       dispatch(getDocumentDownload(Id)).then(res => {
         if(regEx.test(res.status)){
           // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
           downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
@@ -171,28 +171,32 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
-            <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
-            {/* { currentCustomerDocument?.type.startsWith("images") ?
-            <Link href="#" underline="none"
+            <Grid item xs={12} sm={6} sx={{display: "flex", alignItems:"flex-start"}}>
+            { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+              file?.fileType.startsWith("image") ?
+              <Link href="#" underline="none"
               component="button"
               title='Download File'
-              onClick={handleDownload}
-            >
+              onClick={() => handleDownload(file._id)}
+              >
               <Box
                 onAbort={handleOpenPreview}
                 component="img"
                 sx={{ m:2 }}
-                alt={defaultValues.displayName}
-                src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
+                alt={file.name}
+                src={`data:image/png;base64, ${file?.thumbnail}`}
                 />
-            </Link>: <Link href="#" underline="none"
+                <Typography>{file?.displayName?.length > 10 ? file?.displayName?.substring(0, 10) : file?.displayName } {file?.displayName?.length > 10 ? "..." :null}</Typography>
+            </Link> :
+            <Link href="#" underline="none"
               sx={{ m:2 }}
               component="button"
               title='Download File'
-              onClick={handleDownload}
+              onClick={() => handleDownload(file._id)}
             >
               <Iconify width="50px" icon="ph:files-fill" />
-            </Link>} */}
+            </Link>
+            ))}
               {/* <DownloadComponent Document={currentCustomerDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>

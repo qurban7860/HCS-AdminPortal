@@ -205,7 +205,6 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
         dispatch(setCustomerDocumentEditFormVisibility(false));
         dispatch(setCustomerDocumentFormVisibility(false));
         dispatch(getCustomerDocuments(customerId))
-        console.log("update response : ",response)
       // }
     } catch (error) {
       console.error(error);
@@ -247,7 +246,6 @@ export function getCustomerDocument(customerDocumentId) {
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`);
-      console.log("customerDocumentId response :", response)
       dispatch(slice.actions.getCustomerDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
     } catch (error) {
