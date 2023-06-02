@@ -88,7 +88,7 @@ export default function MachineListTableRow({
             <Link
               noWrap
               color="inherit"
-              variant="body1"
+              // variant="body1"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >
