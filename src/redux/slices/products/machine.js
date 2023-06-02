@@ -277,8 +277,7 @@ export function updateMachine(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-
+      console.log('params', params);
       const data = {
         serialNo: params.serialNo,
         name: params.name,
@@ -307,7 +306,6 @@ export function updateMachine(params) {
 
       dispatch(getMachine(params.id));
       dispatch(slice.actions.setMachineEditFormVisibility(false));
-
       // this.updateCustomerSuccess(response);
 
     } catch (error) {
@@ -324,14 +322,12 @@ export function transferMachine(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-
       const data = {
-        machine: params.id,
+        machine: params._id,
         name: params.name,
         supplier: params.supplier,
         workOrderRef: params.workOrderRef,
-        customer: params.customer,
+        customerId: params.customer?._id,
         billingSite: params.billingSite,
         instalationSite: params.instalationSite,
         siteMilestone: params.siteMilestone,
@@ -346,8 +342,9 @@ export function transferMachine(params) {
         data
       );
       dispatch(getMachine(response.data.Machine._id));
-      dispatch(slice.actions.setMachineEditFormVisibility(false));
-
+      // dispatch(slice.actions.setMachineEditFormVisibility(true));
+      // dispatch(slice.actions.setTransferMachineFlag(true));
+      // return response; // eslint-disable-line
       // this.updateCustomerSuccess(response);
 
     } catch (error) {

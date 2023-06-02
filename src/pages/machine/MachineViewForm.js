@@ -6,7 +6,7 @@ import { Divider, Switch, Card, Grid, Typography, Link ,Dialog } from '@mui/mate
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
-import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag } from '../../redux/slices/products/machine';
+import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag, updateMachine, transferMachine } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
 import Iconify from '../../components/iconify';
@@ -16,29 +16,46 @@ import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import CommaJoinField from '../components/CommaJoinField';
+import { useSnackbar } from '../../components/snackbar';
+import GoogleMaps from '../../assets/GoogleMaps';
 
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { machine , machineEditFormFlag } = useSelector((state) => state.machine);
-  // console.log("machines", machine)
+  const { enqueueSnackbar } = useSnackbar();
+  const { machine , machineEditFormFlag, transferMachineFlag } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
+  const [disableButton, setButtonDisable] = useState(false);
+  const baseUrl = window.location.origin;
   useLayoutEffect(() => {
+    if(machine.transferredMachine){
+      setButtonDisable(true);
+    }
     dispatch(setMachineEditFormVisibility(false))
     if(machine?.customer){
       dispatch(getCustomer(machine?.customer?._id))
     }
-  }, [ dispatch ,machine ])
+  }, [ dispatch ,machine, transferMachineFlag ]);
+
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
   }
-  const handleTransfer = () => {
-    dispatch(setTransferMachineFlag(true));
-    dispatch(setMachineEditFormVisibility(true));
-  }
+
+  const handleTransfer = async () => {
+    try {
+      const response = await dispatch(transferMachine(machine));
+      const machineId = response.data.Machine._id;
+      window.open(`${baseUrl}/machine/${machineId}/view`);
+    } catch (error) {
+      enqueueSnackbar('In-transfer machine cannot be transferred!', {variant: 'error'});
+      console.error("Error:", error);
+      // Handle the error here
+    }
+  };
+
   const handleViewCustomer = (id) => {
     navigate(PATH_DASHBOARD.customer.view(id));
   };
@@ -91,10 +108,29 @@ export default function MachineViewForm() {
     [machine]
   );
 
+  const latLongValues = [
+    {
+      lat: machine?.billingSite?.lat || "",
+      long: machine?.billingSite?.long || "",
+    },
+    {
+      lat: machine?.instalationSite?.lat || "",
+      long: machine?.instalationSite?.long || "",
+    }
+  ];
+
+  console.log('latLongValues--------->', latLongValues);
+
   return (
     <Card sx={{ p: 3 }}>
       <Grid container justifyContent="flex-end" alignContent="flex-end">
-        <ViewFormEditDeleteButtons sx={{ pt: 5 }} handleTransfer={handleTransfer} handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons 
+          sx={{ pt: 5 }} 
+          disableButton={disableButton} 
+          handleTransfer={handleTransfer} 
+          handleEdit={handleEdit} 
+          onDelete={onDelete} 
+        />
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
       </Grid>
       <Grid container>
@@ -213,6 +249,32 @@ export default function MachineViewForm() {
         <ViewFormField />
         {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
       </Grid>
+
+      <Grid container>
+        <Grid item container sx={{ pt: '2rem' }}>
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            sx={{
+              backgroundImage: (theme) =>
+                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+            }}
+          >
+            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
+              Sites Locations
+            </Typography>
+          </Grid>
+        </Grid>
+        <GoogleMaps
+              latlongArr={latLongValues}
+              mapHeight='400px'
+        />
+        
+    
+      </Grid>
+
+
       <Grid container sx={{ mt: 2 }}>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

@@ -26,7 +26,7 @@ GoogleMaps.propTypes = {
 };
 
 /* eslint-disable */
-export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) {
+export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [], mapHeight = '', center = '', zoom = '' }) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY || '',
@@ -34,7 +34,7 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
 
   const containerStyle = {
     width: '100%',
-    height: latlongArr.length > 0 ? '800px' : '400px',
+    height: !mapHeight ? (latlongArr.length > 0 ? '800px' : '400px') : mapHeight,
   };
   const dispatch = useDispatch();
   const [map, setMap] = useState(null);
@@ -86,7 +86,7 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={latlongArr.length > 0 ? reportDefaultCenter : markerPositions[0]}
-      zoom={latlongArr.length > 0 ? 2 : 12}
+      zoom={zoom ? zoom : (latlongArr.length > 0 ? 2 : 12) }
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={onMapClick}

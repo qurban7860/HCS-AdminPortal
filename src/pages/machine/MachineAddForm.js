@@ -395,6 +395,7 @@ const onSubmit = async (data) => {
                 options={machinestatuses}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.name ? option.name : ""}`}
+                getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred'}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setStatusVal(newValue);
