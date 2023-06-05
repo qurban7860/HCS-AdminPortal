@@ -19,7 +19,7 @@ import { getSuppliers } from '../../redux/slices/products/supplier';
 // global
 import { CONFIG } from '../../config-global';
 // slice
-import { getMachines,updateMachine, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
+import { getMachines,updateMachine, getMachine, setMachineEditFormVisibility, transferMachine, setTransferMachineFlag } from '../../redux/slices/products/machine';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
 // import { getContacts } from '../../redux/slices/customer/contact';
 // import { getSites } from '../../redux/slices/customer/site';
@@ -179,6 +179,7 @@ useLayoutEffect(() => {
   const toggleCancel = () =>
     {
       dispatch(setMachineEditFormVisibility(false));
+      dispatch(setTransferMachineFlag(false));
     };
 
 const onSubmit = async (data) => {
@@ -198,6 +199,7 @@ const onSubmit = async (data) => {
   // data.customerTags = chipData
     try{
       await dispatch(updateMachine(data));
+      enqueueSnackbar('Update success!');
       setParMachineVal('');
       setParMachSerVal('');
       setSupplierVal('');
@@ -213,7 +215,6 @@ const onSubmit = async (data) => {
       setCurrTag('');
       setMachineConnectionVal([]);
       reset();
-      enqueueSnackbar('Update success!');
     } catch(error){
       enqueueSnackbar('Saving failed!');
       console.error(error);
@@ -391,7 +392,7 @@ const handleKeyPress = (e) => {
                 options={machinestatuses}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.name ? option.name : ""}`}
-
+                getOptionDisabled={(option) => option.slug === 'intransfer' || option.slug === 'transferred'}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setStatusVal(newValue);

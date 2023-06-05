@@ -36,6 +36,7 @@ export default function StatusEditForm() {
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
     displayOrderNo: Yup.number().typeError("Display Order No. must be a number").nullable().transform((_, val) => (val !== "" ? Number(val) : null)),
+    slug: Yup.string().min(0).max(50),
   });
 
   const defaultValues = useMemo(
@@ -44,6 +45,7 @@ export default function StatusEditForm() {
         name:             machinestatus?.name || '',
         description:      machinestatus?.description || '',
         displayOrderNo:   machinestatus?.displayOrderNo || '',
+        slug:             machinestatus?.slug || '',
         isActive:         machinestatus.isActive ,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -101,6 +103,8 @@ export default function StatusEditForm() {
                 <RHFTextField name="name" label="Name" />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <RHFTextField name="displayOrderNo" label="Display Order No." type='number' />
+                <RHFTextField name="slug" label="Slug"/>
+
                 {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                       <option value="" defaultValue/>
                 </RHFSelect> */}

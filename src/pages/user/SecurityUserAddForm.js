@@ -364,7 +364,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="email" type="email" label="Email Address" sx={{my:3}} onChange={(e) => setEmail(e.target.value)} value={email} required/>
+              <RHFTextField name="email" type="email" label="Login/Email Address" sx={{my:3}} onChange={(e) => setEmail(e.target.value)} value={email} required/>
             </Box>
               <Box
               rowGap={3}
