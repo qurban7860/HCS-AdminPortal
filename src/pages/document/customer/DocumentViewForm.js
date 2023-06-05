@@ -117,11 +117,12 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     //   downloadBase64File(base64Data, fileName);
     // };
 
-    const handleDownload = (Id) => {
+    const handleDownload = (Id,extension) => {
+      // console.log("Id,extension : ", Id,extension)
        dispatch(getDocumentDownload(Id)).then(res => {
         if(regEx.test(res.status)){
           // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
-          downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
+          downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${extension}`);
           enqueueSnackbar(res.statusText);
         }else{
           enqueueSnackbar(res.statusText,{ variant: `error` })
@@ -177,7 +178,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
               <Link href="#" underline="none"
               component="button"
               title='Download File'
-              onClick={() => handleDownload(file._id)}
+              onClick={() => handleDownload(file._id, file.extension)}
               >
               <Box
                 onAbort={handleOpenPreview}
@@ -197,9 +198,107 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
               <Iconify width="50px" icon="ph:files-fill" />
             </Link>
             ))}
+            </Grid>
+            { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+              file?.fileType.startsWith("image") &&
+              <Link href="#" underline="none"
+              component="button"
+              title='Download File'
+              onClick={() => handleDownload(file._id)}
+              >
+              <Typography>name</Typography>
+            </Link>
+            ))}
+
+            {/* <Grid item sx={{ display: 'inline-block' }}>
+                    <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
+                      <Link
+                        component="button"
+                        title='Download File'
+                        onClick={() => handleDownload(file._id)}
+                        underline="none"
+                      >
+                        <CardActionArea>
+                          <Grid
+                            container
+                            justifyContent="center"
+                            alignContent="center"
+                            sx={{ display: 'block' }}
+                          >
+                            <Grid
+                              item
+                              justifyContent="center"
+                              sx={{ bgcolor: 'blue', alignContent: 'center' }}
+                            >
+                              <CardContent
+                                component={Stack}
+                                display="block"
+                                height="170px"
+                                sx={{ position: 'relative', zIndex: '1' }}
+                              >
+                                <CustomAvatar
+                                  sx={{
+                                    width: '100px',
+                                    height: '100px',
+                                    display: 'flex',
+                                    marginTop: '60px',
+                                    marginRight: 'auto',
+                                    marginLeft: 'auto',
+                                    marginBottom: '0px',
+                                    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+                                    fontSize: '40px',
+                                    zIndex: '2',
+                                  }}
+                                  name={file.name}
+                                  alt={file.name}
+                                />
+                                {file?.fileType.startsWith("image") &&
+                                <CardMedia
+                                  component="img"
+                                  sx={{
+                                    height: '170px',
+                                    opacity: '0.5',
+                                    display: 'block',
+                                    zIndex: '-1',
+                                    position: 'absolute',
+                                    top: '0',
+                                    left: '0',
+                                    right: '0',
+                                    bottom: '0',
+                                    width: '100%',
+                                    objectFit: 'cover',
+                                    objectPosition: 'center',
+                                  }}
+                                  alt={file.name}
+                                  image={`data:image/png;base64, ${file?.thumbnail}`}
+                                />
+                                }
+                              </CardContent>
+                            </Grid>
+                            <Grid
+                              item
+                              justifyContent="center"
+                              sx={{ display: 'block', textAlign: 'center', width: '200px' }}
+                            >
+                              <CardContent
+                                component={Stack}
+                                display="block"
+                                justifyContent="center"
+                                height="130px"
+                              >
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', p: 1 }}>
+                                  {fullName[index] ? fullName[index] : <br />}
+                                </Typography>
+                              </CardContent>
+                            </Grid>
+                          </Grid>
+                        </CardActionArea>
+                      </Link>
+                    </Card>
+                </Grid> */}
+
               {/* <DownloadComponent Document={currentCustomerDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
-            </Grid>
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
