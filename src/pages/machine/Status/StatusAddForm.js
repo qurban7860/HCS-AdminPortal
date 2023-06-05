@@ -36,6 +36,7 @@ export default function StatusAddForm() {
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
     displayOrderNo: Yup.number().typeError("Display Order No. must be a number").nullable().transform((_, val) => (val !== "" ? Number(val) : null)),
+    slug: Yup.string().min(0).max(50),
   });
 
   const defaultValues = useMemo(
@@ -93,6 +94,8 @@ export default function StatusAddForm() {
                 <RHFTextField name="name" label="Name" />
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
                 <RHFTextField name="displayOrderNo" label="Display Order No."  />
+                <RHFTextField name="slug" label="Slug"  />
+
                 {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                       <option value="" defaultValue/>
                 </RHFSelect> */}
