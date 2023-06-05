@@ -30,12 +30,12 @@ export default function DocumentTypeView() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
-useEffect(() => {
+useLayoutEffect(() => {
   dispatch(getDocumentType(id));
 },[id,dispatch])
 
   const { documentType } = useSelector((state) => state.documentType);
-
+  // console.log("documentType : ",documentType)
   return (
     <>
       <Container maxWidth={false }>

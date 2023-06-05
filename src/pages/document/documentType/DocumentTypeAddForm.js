@@ -23,7 +23,8 @@ import { countries } from '../../../assets/data';
 import FormProvider, {RHFTextField,RHFSwitch} from '../../../components/hook-form';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
-import Cover from '../../components/Cover'
+import { Cover } from '../../components/Cover';
+
 // ----------------------------------------------------------------------
 DocumentTypeAddForm.propTypes = {
   currentDocument: PropTypes.object,
@@ -41,12 +42,14 @@ export default function DocumentTypeAddForm({currentDocument}) {
     name: Yup.string().min(2).required("Name Field is required!"),
     description: Yup.string().max(10000),
     isActive : Yup.boolean(),
+    customerAccess: Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
       name: '',
       description: '',
       isActive: true,
+      customerAccess: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentDocument]
@@ -73,19 +76,11 @@ export default function DocumentTypeAddForm({currentDocument}) {
   const onSubmit = async (data) => {
     console.log("Document Type : ", data);
       try{
-        await dispatch(addDocumentType(data));
-        // dispatch(getDocumentNames())
-        dispatch(setDocumentTypeFormVisibility(false))
-        if( machineDocumentEdit || customerDocumentEdit){
-          dispatch(setMachineDocumentEditFormVisibility(true))
-          dispatch(setCustomerDocumentEditFormVisibility(true))
-        }else{
-          dispatch(setMachineDocumentFormVisibility(true))
-          dispatch(setCustomerDocumentFormVisibility(true))
-        }
+        const response = await dispatch(addDocumentType(data));
+        console.log("response : ",response);
         reset();
         enqueueSnackbar('Document Save Successfully!');
-        navigate(PATH_DOCUMENT.documentName.list)
+        navigate(PATH_DOCUMENT.documentType.list)
       } catch(error){
         enqueueSnackbar('Document Save failed!');
         console.error(error);
@@ -100,6 +95,17 @@ export default function DocumentTypeAddForm({currentDocument}) {
     dispatch(setCustomerDocumentFormVisibility(true))
   };
   return (
+    <Container maxWidth={false }>
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            // mt: '24px',
+          }}
+        >
+          <Cover name="New Document Type" /> 
+        </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
@@ -108,10 +114,21 @@ export default function DocumentTypeAddForm({currentDocument}) {
               <FormHeading heading='New Document Type'/>
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
+              <Grid display="flex">
+              <RHFSwitch name="customerAccess" labelPlacement="start" label={
+                <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                          mx: 0,
+                                          width: 1,
+                                          justifyContent: 'space-between',
+                                          mb: 0.5,
+                                          color: 'text.secondary'
+                                        }}> Customer Access
+                                        </Typography>
+                                        } />
+
+              <RHFSwitch name="isActive" labelPlacement="start" label={
                               <Typography
                                     variant="subtitle2"
                                     sx={{
@@ -123,11 +140,14 @@ export default function DocumentTypeAddForm({currentDocument}) {
                                         }}> Active
                                         </Typography>
                                         } />
-            </Stack>
+              
+              </Grid>
+              </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
         </Grid>
       </Grid>
     </FormProvider>
+    </Container>
   );
 }

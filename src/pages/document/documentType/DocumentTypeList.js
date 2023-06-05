@@ -73,7 +73,7 @@ export default function DocumentTypeList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
 
   const dispatch = useDispatch();
@@ -94,6 +94,9 @@ export default function DocumentTypeList() {
 
   const { customer } = useSelector((state) => state.customer);
   const { documentTypes, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentType);
+
+  console.log("documentTypes : ", documentTypes )
+
   useLayoutEffect(() => {
     dispatch(getDocumentTypes());
   }, [dispatch]);
