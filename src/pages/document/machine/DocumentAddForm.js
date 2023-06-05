@@ -63,6 +63,8 @@ export default function DocumentAddForm({currentDocument}) {
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
   const [ isActive, setIsActive] = useState(true)
   const [ nameVal, setNameVal] = useState("")
+  const [ displayNameVal, setDisplayNameVal] = useState("")
+
   const [ previewVal, setPreviewVal] = useState("")
   const [ preview, setPreview] = useState(false)
   const navigate = useNavigate();
@@ -139,10 +141,10 @@ export default function DocumentAddForm({currentDocument}) {
         //   data.customer = machine?.customer?._id
         // }
     
-        if(nameVal){
-          data.name = nameVal
-          data.displayName = nameVal
-        }
+        // if(nameVal){
+        // }
+        data.name = nameVal
+        data.displayName = displayNameVal
         data.isActive = isActive;
         if(documentCategoryVal){
           data.documentCategory = documentCategoryVal?._id
@@ -173,6 +175,7 @@ export default function DocumentAddForm({currentDocument}) {
         setDocumentTypeVal("")
         setCustomerAccessVal("")
         setNameVal("")
+        setDisplayNameVal("")
         setReadOnlyVal(false)
         setDocumentVal("")
         setSelectedValue("new")
@@ -206,7 +209,7 @@ export default function DocumentAddForm({currentDocument}) {
       const file = acceptedFiles[0];
       const fileName = file.name.split(".");
       if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[fileName.length - 1])){
-        // setNameVal(fileName[0])
+        setNameVal(fileName[0])
       }
       const newFile = Object.assign(file, {
         preview: URL.createObjectURL(file),
@@ -238,6 +241,7 @@ export default function DocumentAddForm({currentDocument}) {
       setReadOnlyVal(false)
       setDocumentVal('');
       setNameVal('');
+      setDisplayNameVal('');
       setDocumentTypeVal('');
       setDocumentCategoryVal("");
       setDescriptionVal('');
@@ -303,7 +307,7 @@ export default function DocumentAddForm({currentDocument}) {
                           if (newValue) {
                             const { _id, displayName } = newValue;
                             setDocumentVal({ _id, displayName });
-                            setNameVal(newValue.displayName);
+                            setDisplayNameVal(newValue.displayName);
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);
                             setCustomerAccessVal(newValue.customerAccess);
@@ -311,7 +315,7 @@ export default function DocumentAddForm({currentDocument}) {
                             setReadOnlyVal(true)
                           } else {
                             setDocumentVal('');
-                            setNameVal('');
+                            setDisplayNameVal('');
                             setDocumentTypeVal('');
                             setDocumentCategoryVal("");
                             setDescriptionVal('');
@@ -347,11 +351,11 @@ export default function DocumentAddForm({currentDocument}) {
                 <RHFTextField
                     required
                     disabled={readOnlyVal}
-                    name="name"
-                    value={nameVal}
+                    name="name"   
+                    value={displayNameVal}
                     label="Name"
                     onChange={(e) => {
-                      setNameVal(e.target.value);
+                      setDisplayNameVal(e.target.value);
                     }}
                   />}
                 { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) &&
@@ -429,7 +433,7 @@ export default function DocumentAddForm({currentDocument}) {
                       // onUpload={() => console.log('ON UPLOAD')}
                     />
                   </Grid>}
-                { (selectedValue === "new" || documentVal ) &&
+                { (selectedValue === "new") &&
                 <Grid container lg={12} display="flex">
                   <Grid  display="flex" >
                      <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>

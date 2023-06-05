@@ -58,6 +58,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
   const [ isActive, setIsActive] = useState(true)
   const [ nameVal, setNameVal] = useState("")
+  const [ displayNameVal, setDisplayNameVal] = useState('')
   const [ previewVal, setPreviewVal] = useState("")
   const [ preview, setPreview] = useState(false)
 
@@ -92,6 +93,7 @@ export default function DocumentAddForm({currentDocument}) {
     setSelectedValue("new")
     setSelectedVersionValue("newVersion")
     setNameVal("")
+    setDisplayNameVal("")
     setDocumentTypeVal("")
     setDocumentCategoryVal("")
     setCustomerAccessVal(false)
@@ -124,7 +126,7 @@ export default function DocumentAddForm({currentDocument}) {
 
   const defaultValues = useMemo(
     () => ({
-      displayName: nameVal,
+      displayName: displayNameVal,
       description: descriptionVal,
       images: null,
       isActive: true,
@@ -160,14 +162,14 @@ export default function DocumentAddForm({currentDocument}) {
   const onSubmit = async (data) => {
       try{
         data.customer = customer._id
-        data.displayName = nameVal
-        if(nameVal){
-          data.name = nameVal
-        }
-        data.isActive= isActive
+        data.displayName = displayNameVal
+        data.name = nameVal
+        // if(nameVal){
+        // }
         if(documentCategoryVal){
           data.documentCategory = documentCategoryVal._id
         }
+        data.isActive= isActive
         if(customerAccessVal === true || customerAccessVal === "true" ){
           data.customerAccess = true
         }else{
@@ -193,6 +195,7 @@ export default function DocumentAddForm({currentDocument}) {
         setDocumentTypeVal("")
         setCustomerAccessVal("")
         setNameVal("")
+        setDisplayNameVal("")
         setReadOnlyVal(false)
         setDocumentVal("")
         setSelectedValue("new")
@@ -255,7 +258,7 @@ export default function DocumentAddForm({currentDocument}) {
       const fileName = file.name.split(".");
 
       if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[fileName.length - 1])){
-        // setNameVal(fileName[0])
+        setNameVal(fileName[0])
       }
 
       const newFile = Object.assign(file, {
@@ -282,12 +285,14 @@ export default function DocumentAddForm({currentDocument}) {
       setReadOnlyVal(false)
       setDocumentVal('');
       setNameVal('');
+      setDisplayNameVal('');
       setDocumentTypeVal('');
       setDocumentCategoryVal("");
       setDescriptionVal('');
       setCustomerAccessVal(false);
       setReadOnlyVal(false)
     }
+    setValue('images', "");
   };
   const handleVersionRadioChange = (event) => {
     setSelectedVersionValue(event.target.value);
@@ -351,7 +356,7 @@ export default function DocumentAddForm({currentDocument}) {
                           if (newValue) {
                             const { _id, displayName } = newValue;
                             setDocumentVal({ _id, displayName });
-                            setNameVal(newValue.displayName);
+                            setDisplayNameVal(newValue.displayName);
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);
                             setCustomerAccessVal(newValue.customerAccess);
@@ -359,7 +364,7 @@ export default function DocumentAddForm({currentDocument}) {
                             setReadOnlyVal(true)
                           } else {
                             setDocumentVal('');
-                            setNameVal('');
+                            setDisplayNameVal('');
                             setDocumentTypeVal('');
                             setDocumentCategoryVal("");
                             setDescriptionVal('');
@@ -395,10 +400,10 @@ export default function DocumentAddForm({currentDocument}) {
                     required
                     disabled={readOnlyVal}
                     name="name"
-                    value={nameVal}
+                    value={displayNameVal}
                     label="Name"
                     onChange={(e) => {
-                      setNameVal(e.target.value);
+                      setDisplayNameVal(e.target.value);
                     }}
                   />}
                 { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) &&
@@ -474,7 +479,7 @@ export default function DocumentAddForm({currentDocument}) {
                       // onUpload={() => console.log('ON UPLOAD')}
                     />
                   </Grid>}
-                { (selectedValue === "new" || documentVal ) &&
+                { (selectedValue === "new" ) &&
                 <Grid container lg={12} display="flex">
                   <Grid  display="flex" >
                      <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>

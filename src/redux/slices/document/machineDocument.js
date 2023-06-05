@@ -174,10 +174,10 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }
-      if(params?.displayName){
+      // if(params?.displayName){
         formData.append('displayName', params?.displayName);
-        formData.append('name', params?.displayName);
-      }
+        formData.append('name', params?.name);
+      // }
       if(params?.description){
         formData.append('description', params?.description);
       }

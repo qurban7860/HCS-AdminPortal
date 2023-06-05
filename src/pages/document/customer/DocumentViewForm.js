@@ -183,7 +183,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 onAbort={handleOpenPreview}
                 component="img"
                 sx={{ m:2 }}
-                alt={file.name}
+                alt={file.DisplayName}
                 src={`data:image/png;base64, ${file?.thumbnail}`}
                 />
                 <Typography>{file?.displayName?.length > 10 ? file?.displayName?.substring(0, 10) : file?.displayName } {file?.displayName?.length > 10 ? "..." :null}</Typography>

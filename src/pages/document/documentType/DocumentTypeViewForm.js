@@ -23,13 +23,13 @@ DocumentTypeViewForm.propTypes = {
 
 export default function DocumentTypeViewForm({ currentDocumentType = null }) {
   const { documentType } = useSelector((state) => state.documentType);
-
+console.log("documentType : ",documentType)
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
 
   const onDelete = async () => {
-    await dispatch(deleteDocumentType(documentType._id));
+    await dispatch(deleteDocumentType(documentType?._id));
     navigate(PATH_DOCUMENT.documentType.list)
   };
 
@@ -43,7 +43,7 @@ export default function DocumentTypeViewForm({ currentDocumentType = null }) {
       {
         isActive:                 currentDocumentType?.isActive,
         name:                     currentDocumentType?.name,
-        description:              currentDocumentType?.description,
+        description:              currentDocumentType?.description || "",
         createdAt:                currentDocumentType?.createdAt || "",
         createdByFullName:        currentDocumentType?.createdBy?.name || "",
         createdIP:                currentDocumentType?.createdIP || "",
@@ -52,7 +52,7 @@ export default function DocumentTypeViewForm({ currentDocumentType = null }) {
         updatedIP:                currentDocumentType?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentDocumentType, documentType._id]
+    [currentDocumentType, documentType]
   );
 
   return (
