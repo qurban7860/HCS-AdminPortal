@@ -81,7 +81,7 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [], ma
       dispatch(setLatLongCoordinates(latLng));
     }
   };
-  console.log('position',markerPositions[0]);
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}

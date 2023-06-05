@@ -50,8 +50,8 @@ export default function MachineViewForm() {
       const machineId = response.data.Machine._id;
       window.open(`${baseUrl}/machine/${machineId}/view`);
     } catch (error) {
-      enqueueSnackbar('In-transfer machine cannot be transferred!', {variant: 'error'});
-      console.error("Error:", error);
+      enqueueSnackbar(error.Message, {variant: 'error'});
+      console.log("Error:", error);
       // Handle the error here
     }
   };
@@ -118,8 +118,6 @@ export default function MachineViewForm() {
       long: machine?.instalationSite?.long || "",
     }
   ];
-
-  console.log('latLongValues--------->', latLongValues);
 
   return (
     <Card sx={{ p: 3 }}>
