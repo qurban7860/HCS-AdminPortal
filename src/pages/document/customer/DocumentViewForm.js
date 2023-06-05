@@ -118,7 +118,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     // };
 
     const handleDownload = (Id,extension) => {
-      // console.log("Id,extension : ", Id,extension)
        dispatch(getDocumentDownload(Id)).then(res => {
         if(regEx.test(res.status)){
           // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
@@ -199,7 +198,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             </Link>
             ))}
             </Grid>
-            { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+            {/* { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") &&
               <Link href="#" underline="none"
               component="button"
@@ -208,7 +207,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
               >
               <Typography>name</Typography>
             </Link>
-            ))}
+            ))} */}
 
             {/* <Grid item sx={{ display: 'inline-block' }}>
                     <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>

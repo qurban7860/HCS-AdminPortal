@@ -164,6 +164,7 @@ export default function DocumentAddForm({currentDocument}) {
         if(nameVal){
           data.name = nameVal
         }
+        data.isActive= isActive
         if(documentCategoryVal){
           data.documentCategory = documentCategoryVal._id
         }
@@ -389,7 +390,6 @@ export default function DocumentAddForm({currentDocument}) {
                           </Grid>
                       </RadioGroup>
                   </FormControl>}
-                
                   { (selectedValue === "new"  || (documentVal && selectedVersionValue !== "existingVersion")) &&
                 <RHFTextField
                     required
@@ -454,10 +454,8 @@ export default function DocumentAddForm({currentDocument}) {
                     </Grid>
                   </Grid>
                 </Grid>}
-
                         
                 { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField disabled={readOnlyVal}  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
-
                 { (selectedValue === "new" || documentVal ) &&
                   <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload

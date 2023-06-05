@@ -177,7 +177,7 @@ export default function DocumentTypeList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DOCUMENT.documentName.view(id));
+    navigate(PATH_DOCUMENT.documentType.view(id));
   };
 
   const handleResetFilter = () => {
