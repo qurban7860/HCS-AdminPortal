@@ -129,6 +129,26 @@ const handleDownload = () => {
     }
   });
 };
+const document = {
+  icon: {
+    pdf: "bxs:file-pdf",
+    doc: "mdi:file-word",
+    docx: "mdi:file-word",
+    xls: "mdi:file-excel",
+    xlsx: "mdi:file-excel",
+    ppt: "mdi:file-powerpoint",
+    pptx: "mdi:file-powerpoint"
+  },
+  color: {
+    pdf: "#f44336",
+    doc: "#448aff",
+    docx: "#448aff",
+    xls: "#388e3c",
+    xlsx: "#388e3c",
+    ppt: "#e65100",
+    pptx: "#e65100"
+  }
+}
 
   return (
     <Grid sx={{mt:-2}}>
@@ -150,28 +170,34 @@ const handleDownload = () => {
           <Grid item xs={12} sm={6} sx={{display: "flex", alignItems:"flex-start"}}>
           { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
+            <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
               <Link href="#" underline="none"
-              component="button"
-              title='Download File'
-              onClick={() => handleDownload(file._id)}
+                component="button"
+                title='Download File'
+                // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
+                onClick={() => handleDownload(file._id, file.extension)}
+                >
+                  <Box
+                    onAbort={handleOpenPreview}
+                    component="img"
+                    sx={{ mx:3, mt:2 }}
+                    alt={file.DisplayName}
+                    src={`data:image/png;base64, ${file?.thumbnail}`}
+                    />
+                    <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link> 
+            </Card>:
+            <Card sx={{m:1, width:"130px", height:"155px"}}>
+              <Link href="#" underline="none"
+                
+                component="button"
+                title='Download File'
+                onClick={() => handleDownload(file._id)}
               >
-              <Box
-                onAbort={handleOpenPreview}
-                component="img"
-                sx={{ m:2 }}
-                alt={file.name}
-                src={`data:image/png;base64, ${file?.thumbnail}`}
-                />
-                <Typography>{file?.displayName?.length > 10 ? file?.displayName?.substring(0, 10) : file?.displayName } {file?.displayName?.length > 10 ? "..." :null}</Typography>
-            </Link> :
-            <Link href="#" underline="none"
-              sx={{ m:2 }}
-              component="button"
-              title='Download File'
-              onClick={() => handleDownload(file._id)}
-            >
-              <Iconify width="50px" icon="ph:files-fill" />
-            </Link>
+                <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]} />
+                <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link>
+            </Card>
             ))}
             {/* { currentMachineDocument?.type.startsWith("image") ?
               <Link href="#" underline="none"

@@ -136,6 +136,26 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         }
       });
     };
+    const document = {
+      icon: {
+        pdf: "bxs:file-pdf",
+        doc: "mdi:file-word",
+        docx: "mdi:file-word",
+        xls: "mdi:file-excel",
+        xlsx: "mdi:file-excel",
+        ppt: "mdi:file-powerpoint",
+        pptx: "mdi:file-powerpoint"
+      },
+      color: {
+        pdf: "#f44336",
+        doc: "#448aff",
+        docx: "#448aff",
+        xls: "#388e3c",
+        xlsx: "#388e3c",
+        ppt: "#e65100",
+        pptx: "#e65100"
+      }
+    }
 
   return (
 
@@ -194,12 +214,11 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             </Card>:
             <Card sx={{m:1, width:"130px", height:"155px"}}>
               <Link href="#" underline="none"
-                sx={{ m:2 }}
                 component="button"
                 title='Download File'
                 onClick={() => handleDownload(file._id)}
               >
-                <Iconify width="80px" height="113px" icon="ph:files-fill" />
+                <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
                 <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
               </Link>
             </Card>
