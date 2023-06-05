@@ -50,6 +50,7 @@ console.log("machinestatus : ", machinestatus)
         name:                     machinestatus?.name || '',
         description:              machinestatus?.description || '',
         displayOrderNo:           machinestatus?.displayOrderNo || '',
+        slug:                     machinestatus?.slug || '',
         isActive:                 machinestatus?.isActive ,
         createdByFullName:        machinestatus?.createdBy?.name || "",
         createdAt:                machinestatus?.createdAt || "",
@@ -74,6 +75,7 @@ console.log("machinestatus : ", machinestatus)
         <ViewFormField sm={12}   heading='Name'                 param={defaultValues?.name} />
         <ViewFormField sm={12}   heading='Description'          param={defaultValues?.description}/>
         <ViewFormField sm={12}   heading='Display Order No.'     numberParam={defaultValues?.displayOrderNo}/>
+        <ViewFormField sm={12}   heading='Slug'     numberParam={defaultValues?.slug}/>
         {/* <ViewFormSWitch  isActive={defaultValues.isActive}/> */}
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues}/>

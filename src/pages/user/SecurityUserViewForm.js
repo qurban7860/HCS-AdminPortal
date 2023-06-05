@@ -76,6 +76,11 @@ export default function SecurityUserViewForm() {
     navigate(PATH_DASHBOARD.user.edit(securityUser._id));
   }
 
+  const handleUpdatePassword = () => {
+    // dispatch(setSecurityUserEditFormVisibility(true));
+    navigate(PATH_DASHBOARD.user.userPassword);
+  }
+
   const onDelete = async () => {
     await dispatch(deleteSecurityUser(id));
     dispatch(getSecurityUsers());
@@ -120,7 +125,7 @@ export default function SecurityUserViewForm() {
           />
         </Card>
         <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+          <ViewFormEditDeleteButtons handleUpdatePassword={handleUpdatePassword} handleEdit={handleEdit} onDelete={onDelete} />
           {/* <Stack
             justifyContent="flex-end"
             direction="row"

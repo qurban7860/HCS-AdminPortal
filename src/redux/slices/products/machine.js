@@ -283,7 +283,6 @@ export function updateMachine(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      console.log('params', params);
       const data = {
         serialNo: params.serialNo,
         name: params.name,

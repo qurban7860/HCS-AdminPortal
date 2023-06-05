@@ -153,6 +153,7 @@ export function addMachineStatus(params) {
           description: params.description,
           displayOrderNo: params.displayOrderNo,
           isActive: params.isActive,
+          slug: params.slug,
         };
         /* eslint-enable */
         const response = await axios.post(`${CONFIG.SERVER_URL}products/statuses`, data);
@@ -178,7 +179,8 @@ export function updateMachinestatus(params,Id) {
         name: params.name,
         displayOrderNo: params.displayOrderNo,
         description: params.description,
-        isActive: params.isActive
+        isActive: params.isActive,
+        slug: params.slug,
       };
      /* eslint-enable */
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,

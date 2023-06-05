@@ -33,6 +33,8 @@ export default function MachineViewForm() {
   useLayoutEffect(() => {
     if(machine.transferredMachine){
       setButtonDisable(true);
+    }else{
+      setButtonDisable(false);
     }
     dispatch(setMachineEditFormVisibility(false))
     if(machine?.customer){
@@ -266,7 +268,7 @@ export default function MachineViewForm() {
         </Grid>
         <GoogleMaps
               latlongArr={latLongValues}
-              mapHeight='400px'
+              mapHeight='500px'
         />
         
     

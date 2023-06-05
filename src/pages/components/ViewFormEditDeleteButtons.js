@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 ViewFormEditDeleteButtons.propTypes = {
   handleTransfer: PropTypes.func,
+  handleUpdatePassword: PropTypes.func,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,
@@ -36,6 +37,7 @@ export default function ViewFormEditDeleteButtons({
   onDelete,
   handleEdit,
   handleTransfer,
+  handleUpdatePassword,
   type,
   sites,
   handleMap,
@@ -168,6 +170,27 @@ export default function ViewFormEditDeleteButtons({
         ) : (
           ''
         )}
+
+
+        {handleUpdatePassword ? (
+          <Button
+              onClick={() => {
+              handleUpdatePassword();
+            }}
+            variant="outlined"
+            title="Change Password"
+          >
+            <Tooltip
+              title="Change Password"
+              placement="top"
+              disableFocusListener
+              classes={{ tooltip: classes.tooltip }}
+            >
+              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:lock-reset" />
+            </Tooltip>
+          </Button>
+          ) : ( '' )
+        }
 
         <Button
             onClick={() => {
