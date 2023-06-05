@@ -133,15 +133,15 @@ const handleDownload = () => {
   return (
     <Grid sx={{mt:-2}}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-        <Grid container >
-        <Grid sm={12} display="flex">
-              <Tooltip xs={6} sm={1.5} md={0.5} lg={0.3}>
-                <ViewFormField  documentIsActive={defaultValues.isActive}  />
+          <Grid sm={12} display="flex">
+              <Tooltip >
+                <ViewFormField  isActive={defaultValues.isActive}  />
               </Tooltip>
-              <Tooltip xs={6} sm={1.5} md={0.5} lg={0.3}>
+              <Tooltip>
                 <ViewFormField  customerAccess={defaultValues?.customerAccess} />
               </Tooltip>
-            </Grid>
+          </Grid>
+        <Grid container >
             <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
             <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />

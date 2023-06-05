@@ -35,7 +35,7 @@ useLayoutEffect(() => {
 },[id,dispatch])
 
   const { documentType } = useSelector((state) => state.documentType);
-  console.log("documentType : ",documentType)
+  // console.log("documentType : ",documentType)
   return (
     <>
       <Container maxWidth={false }>

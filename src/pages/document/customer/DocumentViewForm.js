@@ -141,15 +141,16 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-        <Grid container>
-            <Grid sm={12} display="flex">
-              <Tooltip xs={6} sm={1.5} md={0.5} lg={0.3}>
-                <ViewFormField  documentIsActive={defaultValues.isActive}  />
+        <Grid  display="inline-flex">
+              <Tooltip >
+                <ViewFormField  isActive={defaultValues.isActive}  />
               </Tooltip>
-              <Tooltip xs={6} sm={1.5} md={0.5} lg={0.3}>
+              <Tooltip>
                 <ViewFormField  customerAccess={defaultValues?.customerAccess} />
               </Tooltip>
             </Grid>
+        <Grid container>
+            
             {/* <Tooltip title="Customer Access">
               <ViewFormField isActive={defaultValues.isActive} />
             </Tooltip> */}
@@ -174,28 +175,34 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <Grid item xs={12} sm={6} sx={{display: "flex", alignItems:"flex-start"}}>
             { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
+            <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
               <Link href="#" underline="none"
-              component="button"
-              title='Download File'
-              onClick={() => handleDownload(file._id, file.extension)}
-              >
-              <Box
-                onAbort={handleOpenPreview}
-                component="img"
+                component="button"
+                title='Download File'
+                // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
+                onClick={() => handleDownload(file._id, file.extension)}
+                >
+                  <Box
+                    onAbort={handleOpenPreview}
+                    component="img"
+                    sx={{ mx:3, mt:2 }}
+                    alt={file.DisplayName}
+                    src={`data:image/png;base64, ${file?.thumbnail}`}
+                    />
+                    <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link> 
+            </Card>:
+            <Card sx={{m:1, width:"130px", height:"155px"}}>
+              <Link href="#" underline="none"
                 sx={{ m:2 }}
-                alt={file.DisplayName}
-                src={`data:image/png;base64, ${file?.thumbnail}`}
-                />
-                <Typography>{file?.displayName?.length > 10 ? file?.displayName?.substring(0, 10) : file?.displayName } {file?.displayName?.length > 10 ? "..." :null}</Typography>
-            </Link> :
-            <Link href="#" underline="none"
-              sx={{ m:2 }}
-              component="button"
-              title='Download File'
-              onClick={() => handleDownload(file._id)}
-            >
-              <Iconify width="50px" icon="ph:files-fill" />
-            </Link>
+                component="button"
+                title='Download File'
+                onClick={() => handleDownload(file._id)}
+              >
+                <Iconify width="80px" height="113px" icon="ph:files-fill" />
+                <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link>
+            </Card>
             ))}
             </Grid>
             {/* { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(

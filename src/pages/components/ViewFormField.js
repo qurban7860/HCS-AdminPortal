@@ -185,7 +185,7 @@ export default function ViewFormField({
             >
               <Iconify
                 heading={customerAccess ? 'Allowed' : 'Disallowed'}
-                icon={customerAccess ? 'mdi:account-badge' : 'mdi:account-cancel-outline'}
+                icon={customerAccess ? 'mdi:security-account-outline' : 'mdi:security-account-outline'}
                 style={{ color: customerAccess ? 'green' : 'red' }}
                 width="30px"
               />
