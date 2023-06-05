@@ -29,8 +29,8 @@ export default function Setting() {
 
 
    // Functions to navigate to different pages
-   const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentName.list); };
-   const linkFileCategory = () => { navigate(PATH_DOCUMENT.fileCategory.list); };
+   const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentType.list); };
+   const linkFileCategory = () => { navigate(PATH_DOCUMENT.documentCategory.list); };
 
   return (
     <Container maxWidth={false}>
@@ -53,7 +53,7 @@ export default function Setting() {
                 aria-labelledby="nested-list-subheader"
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
-                    Document Settings
+                    Document Settings  (under Constrctuion)
                   </ListSubheader>
                 }
               >
@@ -61,14 +61,14 @@ export default function Setting() {
                   <ListItemIcon>
                     <Iconify icon="mdi:rename" />
                   </ListItemIcon>
-                  <ListItemText primary="Display Name" />
+                  <ListItemText primary="Document Type" />
                 </ListItemButton>
 
                 <ListItemButton onClick={linkFileCategory} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
                     <Iconify icon="ic:round-category" />
                   </ListItemIcon>
-                  <ListItemText primary="File Category" />
+                  <ListItemText primary="Document Category" />
                 </ListItemButton>
               </List>
             </Card>

@@ -150,7 +150,7 @@ export const MachineDocumentEditForm  = Loadable(lazy(()=> import('../pages/docu
 // Document Name
 export const DocumentNameAddForm      = Loadable(lazy(()=>   import('../pages/document/documentType/DocumentTypeAddForm')));
 export const DocumentNameList         = Loadable(lazy(()=>      import('../pages/document/documentType/DocumentTypeList')));
-export const DocumentNameViewForm     = Loadable(lazy(()=>  import('../pages/document/documentType/DocumentTypeViewForm')));
+export const DocumentNameViewForm     = Loadable(lazy(()=>  import('../pages/document/documentType/DocumentTypeView')));
 export const DocumentNameEditForm     = Loadable(lazy(()=>  import('../pages/document/documentType/DocumentTypeEditForm')));
 // export const documentNameView = Loadable(lazy(()=>      import('../pages/document/DocumentName/')));
 // export const documentNameEdit = Loadable(lazy(()=>      import('../pages/document/DocumentName/')));

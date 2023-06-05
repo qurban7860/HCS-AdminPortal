@@ -22,26 +22,28 @@ DocumentTypeViewForm.propTypes = {
 };
 
 export default function DocumentTypeViewForm({ currentDocumentType = null }) {
-  const { documentName } = useSelector((state) => state.documentType);
+  const { documentType } = useSelector((state) => state.documentType);
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
 
   const onDelete = async () => {
-    await dispatch(deleteDocumentType(documentName._id));
-    dispatch(getDocumentTypes());
+    await dispatch(deleteDocumentType(documentType._id));
+    navigate(PATH_DOCUMENT.documentType.list)
   };
 
   const  handleEdit = async () => {
-    await dispatch(getDocumentType(documentName._id));
-    dispatch(setDocumentTypeEditFormVisibility(true));
+    // await dispatch(getDocumentType(documentName._id));
+    navigate(PATH_DOCUMENT.documentType.view(documentType._id))
   };
 
   const defaultValues = useMemo(
     () => (
       {
         isActive:                 currentDocumentType?.isActive,
+        name:                     currentDocumentType?.name,
+        description:              currentDocumentType?.description,
         createdAt:                currentDocumentType?.createdAt || "",
         createdByFullName:        currentDocumentType?.createdBy?.name || "",
         createdIP:                currentDocumentType?.createdIP || "",
@@ -50,18 +52,18 @@ export default function DocumentTypeViewForm({ currentDocumentType = null }) {
         updatedIP:                currentDocumentType?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentDocumentType, documentName]
+    [currentDocumentType, documentType._id]
   );
 
   return (
-    <Card sx={{p:2,mx:2}}>
+    <Card sx={{p:2}}>
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
         <Grid container>
-            <ViewFormField sm={6} heading="Name" param="Name ..." />
-            <ViewFormField sm={12} heading="Description" param="Description ..." />
-            <ViewFormSWitch isActive={defaultValues.isActive}/>
-            <ViewFormAudit defaultValues={defaultValues}/>
+            <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+            <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+            <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/>
+            <ViewFormAudit  defaultValues={defaultValues}/>
         </Grid>
       </Grid>
     </Card>

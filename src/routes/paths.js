@@ -209,13 +209,13 @@ export const PATH_DOCUMENT = {
   new: path(ROOTS_DOCUMENT, '/document/new'),
   view: path(ROOTS_DOCUMENT, `/document/view`),
   edit: (id) => path(ROOTS_DOCUMENT, `/document/${id}/edit`),
-  documentName: {
+  documentType: {
     list: path(ROOTS_DOCUMENT, '/documentName/list'),
     new: path(ROOTS_DOCUMENT, '/documentName/new'),
     view: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/view`),
     edit: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/edit`),
   },
-  fileCategory: {
+  documentCategory: {
     list: path(ROOTS_DOCUMENT, '/fileCategory/list'),
     new: path(ROOTS_DOCUMENT, '/fileCategory/new'),
     view: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/view`),
