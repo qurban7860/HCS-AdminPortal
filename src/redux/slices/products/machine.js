@@ -31,6 +31,11 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+    },
+
     // SET TOGGLE
     setMachineEditFormVisibility(state, action){
       state.machineEditFormFlag = action.payload;
@@ -114,6 +119,7 @@ export default slice.reducer;
 // Actions
 export const {
   setMachineEditFormVisibility,
+  stopLoading,
   setTransferMachineFlag,
   resetCustomerMachines,
   resetMachine,
@@ -327,9 +333,6 @@ export function transferMachine(params) {
         name: params.name,
         supplier: params.supplier,
         workOrderRef: params.workOrderRef,
-        customerId: params.customer?._id,
-        billingSite: params.billingSite,
-        instalationSite: params.instalationSite,
         siteMilestone: params.siteMilestone,
         accountManager: params.accountManager,
         projectManager: params.projectManager,
@@ -341,15 +344,14 @@ export function transferMachine(params) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
-      dispatch(getMachine(response.data.Machine._id));
-      // dispatch(slice.actions.setMachineEditFormVisibility(true));
-      // dispatch(slice.actions.setTransferMachineFlag(true));
-      // return response; // eslint-disable-line
-      // this.updateCustomerSuccess(response);
+      dispatch(getMachine(response.data.Machine.parentMachineID));
+      return response; // eslint-disable-line
 
     } catch (error) {
+      dispatch(slice.actions.stopLoading());
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 
