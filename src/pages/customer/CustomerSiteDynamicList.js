@@ -350,14 +350,16 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                   <Grid container lg={12} justifyContent="space-evenly" alignItems="flex-start">
                     <Grid item lg={4}>
                       <Card
-                        sx={{
-                          display: { sm: 'none', md: 'block' },
-                          width: '400px',
-                          objectFit: 'cover',
-                          height: '100%',
-                          mx: { sm: 0, md: 3, lg: 3 },
-                          my: { sm: 1, md: 3 },
-                        }}
+                        sx={
+                          {
+                            // display: { sm: 'none', md: 'block' },
+                            // maxWidth: 'lg',
+                            // objectFit: 'cover',
+                            // height: '100%',
+                            // mx: { sm: 0, md: 3, lg: 3 },
+                            // my: { sm: 1, md: 3 },
+                          }
+                        }
                       >
                         {!isMobile ? (
                           <>

@@ -32,8 +32,8 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 // slice
 import {  setCustomerDocumentFormVisibility, setCustomerDocumentEdit, setCustomerDocumentEditFormVisibility, updateCustomerDocument  } from '../../../redux/slices/document/customerDocument';
 
-import { addFileCategory, setFileCategoryFormVisibility , setFileCategoryEditFormVisibility ,getFileCategories } from '../../../redux/slices/document/fileCategory';
-import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames } from '../../../redux/slices/document/documentName';
+import { setDocumentCategoryFormVisibility  } from '../../../redux/slices/document/documentCategory';
+import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -44,36 +44,38 @@ import { getSites } from '../../../redux/slices/customer/site';
 export default function DocumentEditForm() {
 
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  const { documentNames } = useSelector((state) => state.documentName);
-  const { fileCategories } = useSelector((state) => state.fileCategory);
-  // console.log("machine : " , machine)
+  const { documentTypes } = useSelector((state) => state.documentType);
+  const { documentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
 
-  const [ documentNameVal, setDocumentNameVal] = useState('')
-  const [ fileCategoryVal, setFileCategoryVal] = useState('')
+  const [ documentTypeVal, setDocumentTypeVal] = useState('')
+  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const [ machineVal, setMachineVal] = useState('')
   const [ customerVal, setCustomerVal] = useState('')
   const [ siteVal, setSiteVal] = useState('')
   const [ contactVal, setContactVal] = useState('')
+  const [ descriptionVal, setDescriptionVal] = useState("")
   const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ isActive, setIsActive] = useState(false)
+
   const [ nameVal, setNameVal] = useState("")
 
   const navigate = useNavigate();
 
   let documentAvailable 
-  if(documentNames && documentNames.length){
+  if(documentTypes && documentTypes.length){
     documentAvailable =  true 
   }else{
     documentAvailable =  true 
   }
 
-  let fileCategory 
-  if(fileCategories && fileCategories.length){
-    fileCategory =  true 
+  let documentCategory 
+  if(documentCategories && documentCategories.length){
+    documentCategory =  true 
   }else{
-    fileCategory =  true 
+    documentCategory =  true 
   }
 
   const dispatch = useDispatch();
@@ -83,8 +85,10 @@ export default function DocumentEditForm() {
 useEffect(()=>{
   setNameVal(customerDocument?.displayName)
   setCustomerAccessVal(customerDocument?.customerAccess)
-  setFileCategoryVal(customerDocument?.category)
-  setDocumentNameVal(customerDocument?.documentName)
+  setIsActive(customerDocument?.isActive)
+  setDocumentCategoryVal(customerDocument?.docCategory)
+  setDocumentTypeVal(customerDocument?.docType)
+  setDescriptionVal(customerDocument?.description)
 },[customerDocument])
 
   const EditCustomerDocumentSchema = Yup.object().shape({
@@ -128,19 +132,23 @@ useEffect(()=>{
       if(nameVal){
         data.displayName = nameVal
       }
-      if(documentNameVal){
-        data.documentName = documentNameVal
+      if(documentTypeVal){
+        data.documentType = documentTypeVal._id
       }
       // if(fileCategoryVal){
       //   data.category = fileCategoryVal._id
       // }
-      if(customerAccessVal === "true" || customerAccessVal === true){
-        data.customerAccess = true
-      }else{
-        data.customerAccess = false
+      if(descriptionVal){
+        data.description = descriptionVal
       }
-      console.log("data : ",data)
-      await dispatch(updateCustomerDocument(customerDocument?._id,data));
+        data.customerAccess = customerAccessVal
+        data.isActive = isActive
+      await dispatch(updateCustomerDocument(customerDocument?._id,data,customer._id));
+      enqueueSnackbar('Document saved successfully!');
+      setDescriptionVal("")
+      setNameVal("")
+      setDocumentCategoryVal("")
+      setDocumentTypeVal("")
       reset();
     } catch (err) {
       enqueueSnackbar('Saving failed!');
@@ -155,12 +163,12 @@ useEffect(()=>{
 
   const togleCategoryPage = ()=>{
     dispatch(setCustomerDocumentEdit(true))
-    dispatch(setFileCategoryFormVisibility(true))
+    dispatch(setDocumentCategoryFormVisibility(true))
     dispatch(setCustomerDocumentEditFormVisibility(false));
   }
   const togleDocumentNamePage = ()=>{
     dispatch(setCustomerDocumentEdit(true))
-    dispatch(setDocumentNameFormVisibility(true))
+    dispatch(setDocumentTypeFormVisibility(true))
     dispatch(setCustomerDocumentEditFormVisibility(false));
   }
 
@@ -186,6 +194,13 @@ useEffect(()=>{
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
   };
+  const handleIsActiveChange = () => {
+    setIsActive(!isActive);
+  };
+
+  const handleChangeDescription = (event) => {
+    setDescriptionVal(event.target.value);
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -202,143 +217,63 @@ useEffect(()=>{
               <Autocomplete
                 // freeSolo
                 // disabled
-                value={documentNameVal || null}
-                options={documentNames}
+                value={documentTypeVal || null}
+                options={documentTypes}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
-                    setDocumentNameVal(newValue);
+                    setDocumentTypeVal(newValue);
                   }
                   else{  
-                    setDocumentNameVal("");
+                    setDocumentTypeVal("");
                   }
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Type" />}
+                renderInput={(params) => <TextField {...params} required label="Document Type" />}
                 ChipProps={{ size: 'small' }}
               />
               
               <Autocomplete
                 // freeSolo
-                disabled
-                value={fileCategoryVal || null}
-                options={fileCategories}
+                readOnly
+                value={documentCategoryVal || null}
+                options={documentCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
-                    setFileCategoryVal(newValue);
+                    setDocumentCategoryVal(newValue);
                   }
                   else{  
-                    setFileCategoryVal("");
+                    setDocumentCategoryVal("");
                   }
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                 id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Document Category" />}
-                ChipProps={{ size: 'small' }}
-              />
-              
-              
-              {/* <Autocomplete
-                // freeSolo
-                value={machineVal || null}
-                options={machines}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setMachineVal(newValue);
-                  }
-                  else{  
-                    setMachineVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.serialNo}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Machine" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-              
-              {/* <Autocomplete 
-                value={customerVal || null}
-                options={customers}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setCustomerVal(newValue);
-                  }
-                  else{ 
-                  setCustomerVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Customer" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-
-              {/* <Autocomplete 
-                // freeSolo
-                value={siteVal || null}
-                options={sites}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setSiteVal(newValue);
-                  }
-                  else{ 
-                  setSiteVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Site" />}
+                renderInput={(params) => <TextField {...params} required label="Document Category" />}
                 ChipProps={{ size: 'small' }}
               />
 
-              <Autocomplete 
-                // freeSolo
-                value={contactVal || null}
-                options={contacts}
-                isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setContactVal(newValue);
-                  }
-                  else{ 
-                  setContactVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.firstName || ''} ${option.lastName || ''}`}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Contact" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
               </Box>
-              <Grid container lg={12} justifyContent="flex-end">
-                <Grid item xs={6} sm={6} md={8} lg={2} display="flex">
-                   <Typography variant="body1" sx={{ pl:2,pt:1, display:'flex', alignItems:'center' }}>
+              <RHFTextField value={descriptionVal} name="description" label="Description" onChange={handleChangeDescription} minRows={3} multiline />
+              <Grid container lg={12} >
+                <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
                         Customer Access
                       </Typography>
                     <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
                   </Grid>
+
+                  <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
+                        isActive
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
+                  </Grid>
               </Grid>
-              {/* <Grid container lg={12} justifyContent="flex-end">
-                <Grid item xs={6} sm={6} md={8} lg={2} justifyContent="flex-end">
-                    <ViewFormSWitch
-                      heading="Customer Access"
-                      customerAccess={customerAccessVal}
-                      onChange={handleChange}
-                    /> 
-                </Grid>
-              </Grid> */}
-              <RHFTextField name="description" label="Description" minRows={8} multiline />
+              
               {/* <RHFUpload 
                   name="image"
                   maxSize={3145728}

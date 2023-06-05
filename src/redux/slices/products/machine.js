@@ -31,6 +31,11 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+    },
+
     // SET TOGGLE
     setMachineEditFormVisibility(state, action){
       state.machineEditFormFlag = action.payload;
@@ -114,6 +119,7 @@ export default slice.reducer;
 // Actions
 export const {
   setMachineEditFormVisibility,
+  stopLoading,
   setTransferMachineFlag,
   resetCustomerMachines,
   resetMachine,
@@ -277,8 +283,6 @@ export function updateMachine(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-
       const data = {
         serialNo: params.serialNo,
         name: params.name,
@@ -307,7 +311,6 @@ export function updateMachine(params) {
 
       dispatch(getMachine(params.id));
       dispatch(slice.actions.setMachineEditFormVisibility(false));
-
       // this.updateCustomerSuccess(response);
 
     } catch (error) {
@@ -324,16 +327,11 @@ export function transferMachine(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-
       const data = {
-        machine: params.id,
+        machine: params._id,
         name: params.name,
         supplier: params.supplier,
         workOrderRef: params.workOrderRef,
-        customer: params.customer,
-        billingSite: params.billingSite,
-        instalationSite: params.instalationSite,
         siteMilestone: params.siteMilestone,
         accountManager: params.accountManager,
         projectManager: params.projectManager,
@@ -345,15 +343,14 @@ export function transferMachine(params) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
-
-      dispatch(getMachine(params.id));
-      dispatch(slice.actions.setMachineEditFormVisibility(false));
-
-      // this.updateCustomerSuccess(response);
+      dispatch(getMachine(response.data.Machine.parentMachineID));
+      return response; // eslint-disable-line
 
     } catch (error) {
+      dispatch(slice.actions.stopLoading());
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 

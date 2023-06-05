@@ -38,9 +38,9 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import DocumentNameListTableRow from './DocumentNameListTableRow';
-import DocumentNameListTableToolbar from './DocumentNameListTableToolbar';
-import documentName, { getDocumentName, deleteDocumentName, getDocumentNames  } from '../../../redux/slices/document/documentName';
+import DocumentTypeListTableRow from './DocumentTypeListTableRow';
+import DocumentTypeListTableToolbar from './DocumentTypeListTableToolbar';
+import documentName, { getDocumentType, deleteDocumentType, getDocumentTypes  } from '../../../redux/slices/document/documentType';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
 
@@ -50,13 +50,13 @@ import { fDate } from '../../../utils/formatTime';
 const TABLE_HEAD = [
   { id: 'name', label: 'Document Name', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'created_at', label: 'Created At', align: 'right' },
 
 ];
 
 // ----------------------------------------------------------------------
 
-export default function DocumentNameList() {
+export default function DocumentTypeList() {
   const {
     page,
     order,
@@ -73,7 +73,7 @@ export default function DocumentNameList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: '-createdAt',
   });
 
   const dispatch = useDispatch();
@@ -93,17 +93,19 @@ export default function DocumentNameList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customer } = useSelector((state) => state.customer);
-  const { documentNames, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentName);
+  const { documentTypes, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentType);
+
+  console.log("documentTypes : ", documentTypes )
 
   useLayoutEffect(() => {
-    dispatch(getDocumentNames());
+    dispatch(getDocumentTypes());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(documentNames);
+      setTableData(documentTypes);
     }
-  }, [documentNames, error, responseMessage, enqueueSnackbar, initial]);
+  }, [documentTypes, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -141,8 +143,8 @@ export default function DocumentNameList() {
   const handleDeleteRow = async (id) => {
     try {
       // console.log(id);
-      await dispatch(deleteDocumentName(id));
-      dispatch(getDocumentNames());
+      await dispatch(deleteDocumentType(id));
+      dispatch(getDocumentTypes());
       setSelected([]);
 
       if (page > 0) {
@@ -178,7 +180,7 @@ export default function DocumentNameList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DOCUMENT.documentName.view(id));
+    navigate(PATH_DOCUMENT.documentType.view(id));
   };
 
   const handleResetFilter = () => {
@@ -198,13 +200,13 @@ export default function DocumentNameList() {
           }}
         >
           <Cover
-            name="Document Names"
+            name="Document Types"
             icon="ph:users-light"
           />
         </Card>
 
         <Card sx={{ mt: 3 }}>
-          <DocumentNameListTableToolbar
+          <DocumentTypeListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -254,7 +256,7 @@ export default function DocumentNameList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <DocumentNameListTableRow
+                        <DocumentTypeListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}

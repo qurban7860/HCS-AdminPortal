@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
 import { styled, alpha } from '@mui/material/styles';
-import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton} from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton, Tooltip} from '@mui/material';
 // redux
 import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument} from '../../../redux/slices/document/machineDocument';
 // paths
@@ -43,8 +43,9 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   const { machine , machines } = useSelector((state) => state.machine);
 const { enqueueSnackbar } = useSnackbar();
 // console.log(machineDocument)
-console.log("currentMachineDocument", currentMachineDocument)
+// console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
+  const [ preview, setPreview] = useState(false)
 
   const dispatch = useDispatch();
 
@@ -64,11 +65,12 @@ console.log("currentMachineDocument", currentMachineDocument)
       {
         displayName:              currentMachineDocument?.displayName || "",
         documentName:             currentMachineDocument?.documentName?.name || "",
-        category:                 currentMachineDocument?.category?.name || "",
+        docCategory:              currentMachineDocument?.docCategory?.name || "",
+        docType:                  currentMachineDocument?.docType?.name || "",
         customer:                 currentMachineDocument?.customer?.name,
         customerAccess:           currentMachineDocument?.customerAccess,
         isActiveVersion:          currentMachineDocument?.isActiveVersion,
-        documentVersion:          currentMachineDocument?.documentVersion,
+        documentVersion:          currentMachineDocument?.documentVersions[0]?.versionNo || "",
         description:              currentMachineDocument?.description,
         isActive:                 currentMachineDocument?.isActive,
         createdAt:                currentMachineDocument?.createdAt || "",
@@ -105,9 +107,11 @@ link.click();
 //   downloadBase64File(base64Data, fileName);
 // };
 
+const handleOpenPreview = () => {setPreview(true)};
+
 const handleDownload = () => {
    dispatch(getDocumentDownload(currentMachineDocument._id)).then(res => {
-    console.log("res : ",res)
+    // console.log("res : ",res)
     if(regEx.test(res.status)){
       // download(atob(res.data), `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`, { type: currentMachineDocument?.type});
       downloadBase64File(res.data, `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`);
@@ -125,42 +129,82 @@ const handleDownload = () => {
     }
   });
 };
+const document = {
+  icon: {
+    pdf: "bxs:file-pdf",
+    doc: "mdi:file-word",
+    docx: "mdi:file-word",
+    xls: "mdi:file-excel",
+    xlsx: "mdi:file-excel",
+    ppt: "mdi:file-powerpoint",
+    pptx: "mdi:file-powerpoint"
+  },
+  color: {
+    pdf: "#f44336",
+    doc: "#448aff",
+    docx: "#448aff",
+    xls: "#388e3c",
+    xlsx: "#388e3c",
+    ppt: "#e65100",
+    pptx: "#e65100"
+  }
+}
 
   return (
     <Grid sx={{mt:-2}}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-        <Grid container >
-          <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-          <ViewFormField sm={6} heading="Document Type" param={defaultValues?.documentName} />
-          <ViewFormField sm={6} heading="Document Category" param={defaultValues?.category} />
-          {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
-          <Grid item xs={12} sm={12} sx={{px:2,py:1, overflowWrap: "break-word",}}>
-            <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-            Customer Access
-            </Typography>
-            <Typography>
-              <Switch  checked={defaultValues?.customerAccess}  disabled/>
-            </Typography>
+          <Grid sm={12} display="flex">
+              <Tooltip >
+                <ViewFormField  isActive={defaultValues.isActive}  />
+              </Tooltip>
+              <Tooltip>
+                <ViewFormField  customerAccess={defaultValues?.customerAccess} />
+              </Tooltip>
           </Grid>
-          <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
-
-          <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Version Status
-              </Typography>
-              <Typography>
-                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
-              </Typography>
-            </Grid>
-          {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
-          <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
-            { currentMachineDocument?.type.startsWith("image") ?
-            <Link href="#" underline="none"
+        <Grid container >
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+          <Grid item xs={12} sm={6} sx={{ mt:2 ,display: "flex", alignItems:"flex-start"}}>
+          { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
+              file?.fileType.startsWith("image") ?
+            <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
+              <Link href="#" underline="none"
+                component="button"
+                title='Download File'
+                // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
+                onClick={() => handleDownload(file._id, file.extension)}
+                >
+                  <Box
+                    onAbort={handleOpenPreview}
+                    component="img"
+                    sx={{ mx:3, mt:2 }}
+                    alt={file.DisplayName}
+                    src={`data:image/png;base64, ${file?.thumbnail}`}
+                    />
+                    <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link> 
+            </Card>:
+            <Card sx={{m:1, width:"130px", height:"155px"}}>
+              <Link href="#" underline="none"
+                
+                component="button"
+                title='Download File'
+                onClick={() => handleDownload(file._id)}
+              >
+                <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]} />
+                <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link>
+            </Card>
+            ))}
+            {/* { currentMachineDocument?.type.startsWith("image") ?
+              <Link href="#" underline="none"
               component="button"
               title='Download File'
               onClick={handleDownload}
-            >
+               >
               <Box
                 component="img"
                 sx={{ m:2 }}
@@ -206,14 +250,14 @@ const handleDownload = () => {
                   </IconButton>
 
                 </Box>
-            </Link>: <Link href="#" underline="none"
-              sx={{ m:2 }}
-              component="button"
-              title='Download File'
-              onClick={handleDownload}
-            >
+                </Link>: <Link href="#" underline="none"
+                sx={{ m:2 }}
+                component="button"
+                title='Download File'
+                onClick={handleDownload}
+                >
               <Iconify width="50px" icon="ph:files-fill" />
-            </Link>}
+            </Link>} */}
               {/* <DownloadComponent Document={currentMachineDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
             </Grid>

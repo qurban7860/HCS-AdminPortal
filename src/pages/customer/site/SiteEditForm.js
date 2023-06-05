@@ -79,6 +79,7 @@ export default function SiteEditForm() {
     setFaxVal(site.fax)
   },[site])
 
+  /* eslint-disable */
   const EditSiteSchema = Yup.object().shape({
     name: Yup.string().min(2).max(40).required('Name is required'),
     customer: Yup.string(),
@@ -87,8 +88,22 @@ export default function SiteEditForm() {
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     // fax: Yup.string(),
     website: Yup.string(),
-    lat: Yup.string().max(25),
-    long: Yup.string().max(25),
+    lat: Yup.string()
+    .max(25)
+    .test('valid-lat', 'Invalid latitude(Valid values are -90 to 90)', (value) => {
+      if (!value) return true;
+      const trimmedValue = value.trim();
+      const parsedValue = parseFloat(trimmedValue);
+      return trimmedValue === parsedValue.toString() && !isNaN(parsedValue) && parsedValue >= -90 && parsedValue <= 90;
+    }),
+    long: Yup.string()
+    .max(25)
+    .test('valid-lat', 'Invalid longitude(Valid values are -180 to 180)', (value) => {
+      if (!value) return true;
+      const trimmedValue = value.trim();
+      const parsedValue = parseFloat(trimmedValue);
+      return trimmedValue === parsedValue.toString() && !isNaN(parsedValue) && parsedValue >= -180 && parsedValue <= 180;
+    }),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
@@ -99,6 +114,7 @@ export default function SiteEditForm() {
     // primaryTechnicalContact: Yup.string().nullable(),
     isActive: Yup.boolean(),
   });
+/* eslint-enable */
 
 
   const defaultValues = useMemo(

@@ -148,18 +148,18 @@ export const MachineDocumentEditForm  = Loadable(lazy(()=> import('../pages/docu
 // export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
 
 // Document Name
-export const DocumentNameAddForm      = Loadable(lazy(()=>   import('../pages/document/DocumentName/DocumentNameAddForm')));
-export const DocumentNameList         = Loadable(lazy(()=>      import('../pages/document/DocumentName/DocumentNameList')));
-export const DocumentNameViewForm     = Loadable(lazy(()=>  import('../pages/document/DocumentName/DocumentNameViewForm')));
-export const DocumentNameEditForm     = Loadable(lazy(()=>  import('../pages/document/DocumentName/DocumentNameEditForm')));
+export const DocumentNameAddForm      = Loadable(lazy(()=>   import('../pages/document/documentType/DocumentTypeAddForm')));
+export const DocumentNameList         = Loadable(lazy(()=>      import('../pages/document/documentType/DocumentTypeList')));
+export const DocumentNameViewForm     = Loadable(lazy(()=>  import('../pages/document/documentType/DocumentTypeView')));
+export const DocumentNameEditForm     = Loadable(lazy(()=>  import('../pages/document/documentType/DocumentTypeEditForm')));
 // export const documentNameView = Loadable(lazy(()=>      import('../pages/document/DocumentName/')));
 // export const documentNameEdit = Loadable(lazy(()=>      import('../pages/document/DocumentName/')));
 
 // Fime Category
-export const FileCategoryAddForm      = Loadable(lazy(()=>  import('../pages/document/FileCategory/FileCategoryAddForm')));
-export const FileCategoryList         = Loadable(lazy(()=>     import('../pages/document/FileCategory/FileCategoryList')));
-export const FileCategoryViewForm     = Loadable(lazy(()=> import('../pages/document/FileCategory/FileCategoryViewForm')));
-export const FileCategoryEditForm     = Loadable(lazy(()=> import('../pages/document/FileCategory/FileCategoryEditForm')));
+export const FileCategoryAddForm      = Loadable(lazy(()=>  import('../pages/document/documentCategory/FileCategoryAddForm')));
+export const FileCategoryList         = Loadable(lazy(()=>     import('../pages/document/documentCategory/FileCategoryList')));
+export const FileCategoryViewForm     = Loadable(lazy(()=> import('../pages/document/documentCategory/FileCategoryViewForm')));
+export const FileCategoryEditForm     = Loadable(lazy(()=> import('../pages/document/documentCategory/FileCategoryEditForm')));
 // export const fileCategoryView = Loadable(lazy(()=>     import('../pages/')));
 // export const fileCategoryEdit = Loadable(lazy(()=>     import('../pages/')));
 

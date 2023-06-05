@@ -120,7 +120,7 @@ export default function Upload({
         sx={{
           ...(isDragActive && {
             opacity: 0.72,
-            height: '165px',
+            height: '115px',
           }),
           ...(isError && {
             color: 'error.main',
@@ -134,7 +134,7 @@ export default function Upload({
           }),
           ...(hasFile && {
             padding: '8% 0',
-            width: '100%',
+            width: '250px',
             height: '165px',
             // maxWidth:"100%",
             // height: "100%",
@@ -159,7 +159,7 @@ export default function Upload({
 
       <RejectionFiles fileRejections={fileRejections} />
 
-      {hasFile && onDelete && (
+      {/* {hasFile && onDelete && (
         <IconButton
           size="small"
           onClick={onDelete}
@@ -178,7 +178,7 @@ export default function Upload({
         >
           <Iconify icon="eva:close-fill" width={18} />
         </IconButton>
-      )}
+      )} */}
 
       {hasFile && onDelete && (
         <IconButton
@@ -186,9 +186,10 @@ export default function Upload({
           onClick={onDelete}
           sx={{
             top: 16,
-            right: 16,
+            // right: 16,
+            left: 210,
             zIndex: 9,
-            height: "150",
+            height: "160",
             position: 'absolute',
             color: (theme) => alpha(theme.palette.common.white, 0.8),
             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
@@ -207,7 +208,8 @@ export default function Upload({
           onClick={onPreview}
           sx={{
             top: 16,
-            right: 56,
+            // right: 56,
+            left: 176,
             zIndex: 9,
             height: "150",
             position: 'absolute',
@@ -292,7 +294,7 @@ function Placeholder({ sx, ...other }) {
       }}
       sx={{
         width: 1,
-        // height: "150px",
+        height: "150px",
         textAlign: {
           xs: 'center',
           md: 'left',
@@ -301,7 +303,7 @@ function Placeholder({ sx, ...other }) {
       }}
       {...other}
     >
-      <UploadIllustration sx={{ width: 420 }} />
+      <UploadIllustration sx={{ width: 220 }} />
 
       <div>
 

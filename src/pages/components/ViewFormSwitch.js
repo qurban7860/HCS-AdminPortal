@@ -45,6 +45,7 @@ ViewFormSWitch.propTypes = {
           
         ) : (
           <Switch
+          disabled
               sx={{ mb: 1 }} checked={isActiveVal || false}
               onChange={handleIsActiveChange}
               />

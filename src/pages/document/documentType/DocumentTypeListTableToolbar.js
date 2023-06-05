@@ -22,7 +22,7 @@ import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-DocumentNameListTableToolbar.propTypes = {
+DocumentTypeListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -32,7 +32,7 @@ DocumentNameListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function DocumentNameListTableToolbar({
+export default function DocumentTypeListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -42,7 +42,7 @@ export default function DocumentNameListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_DOCUMENT.documentName.new); };
+  const toggleAdd = () => { navigate(PATH_DOCUMENT.documentType.new); };
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >
       

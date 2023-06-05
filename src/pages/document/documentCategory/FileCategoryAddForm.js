@@ -12,8 +12,8 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , C
 // ROUTES
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addDocumentName, setDocumentNameFormVisibility , setDocumentNameEditFormVisibility , getDocumentNames  } from '../../../redux/slices/document/documentName';
-import { addMachineDocument, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
+import { addDocumentCategory, setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
+import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
 import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 
 // components
@@ -25,19 +25,18 @@ import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
 import Cover from '../../components/Cover'
 // ----------------------------------------------------------------------
-DocumentNameAddForm.propTypes = {
+FileCategoryAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
-export default function DocumentNameAddForm({currentDocument}) {
-  const { documentName, documentNames } = useSelector((state) => state.documentName);
+export default function FileCategoryAddForm({currentDocument}) {
+  const { documentCategory, documentCategories } = useSelector((state) => state.documentCategory);
   const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
   const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
-
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
- // a note can be archived.
-  const AddDocumentNameSchema = Yup.object().shape({
+ // a note can be archived.  
+  const AddFileCategorySchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
     description: Yup.string().max(10000),
     isActive : Yup.boolean(),
@@ -53,7 +52,7 @@ export default function DocumentNameAddForm({currentDocument}) {
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddDocumentNameSchema),
+    resolver: yupResolver(AddFileCategorySchema),
     defaultValues,
   });
 
@@ -71,10 +70,12 @@ export default function DocumentNameAddForm({currentDocument}) {
   },[]);
 
   const onSubmit = async (data) => {
+    // console.log("Document category : ", data)
       try{
-        await dispatch(addDocumentName(data));
-        // dispatch(getDocumentNames())
-        dispatch(setDocumentNameFormVisibility(false))
+        await dispatch(addDocumentCategory(data));
+        // dispatch(getFileCategories());
+        
+        dispatch(setDocumentCategoryFormVisibility(false))
         if( machineDocumentEdit || customerDocumentEdit){
           dispatch(setMachineDocumentEditFormVisibility(true))
           dispatch(setCustomerDocumentEditFormVisibility(true))
@@ -84,43 +85,30 @@ export default function DocumentNameAddForm({currentDocument}) {
         }
         reset();
       } catch(error){
-        enqueueSnackbar('Document Save failed!');
+        enqueueSnackbar('Document Category Save failed!');
         console.error(error);
       }
   };
 
-  const toggleCancel = () =>
+  const toggleCancel = () => 
   {
     // navigate(PATH_DOCUMENT.documentName.list);
-    dispatch(setDocumentNameFormVisibility(false))
-    dispatch(setMachineDocumentFormVisibility(true))
-    dispatch(setCustomerDocumentFormVisibility(true))
+    dispatch(setDocumentCategoryFormVisibility(false))
+    dispatch(setMachineDocumentFormVisibility(true));
+    dispatch(setCustomerDocumentFormVisibility(true));
   };
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+     
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
             <Stack spacing={2}>
-              <FormHeading heading='New Document Name'/>
+              <FormHeading heading='New File Category'/>
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
-                              <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                          mx: 0,
-                                          width: 1,
-                                          justifyContent: 'space-between',
-                                          mb: 0.5,
-                                          color: 'text.secondary'
-                                        }}> Active
-                                        </Typography>
-                                        } />
-            </Stack>
+              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+            </Stack>  
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
         </Grid>

@@ -125,7 +125,7 @@ export function Cover({
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 7, md: 6 },
+              mt: { xs: 5, md: 5 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
@@ -154,6 +154,7 @@ export function Cover({
               sx={{
                 ml: 'auto',
                 mt: 'auto',
+                mb: 2,
                 color: 'common.white',
               }}
               component="button"
@@ -173,6 +174,7 @@ export function Cover({
                 mt: 'auto',
                 color: 'common.white',
                 mx: 2,
+                mb: 2,
               }}
               component="button"
               variant="body2"

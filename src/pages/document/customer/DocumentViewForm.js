@@ -7,7 +7,7 @@ import download from 'downloadjs';
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
-import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link} from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link, Tooltip} from '@mui/material';
 // redux
 import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
@@ -23,7 +23,6 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import { getWithMsg } from '../../asset/dispatchRequests'
 
 const Loadable = (Component) => (props) =>
   (
@@ -43,7 +42,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+  console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const [ preview, setPreview] = useState(false)
@@ -51,26 +50,32 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onDelete = async () => {
-    // console.log("currentCustomerDocument : ",currentCustomerDocument)
+    try {
     await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
+    enqueueSnackbar('Document deleted successfully!');
     dispatch(getCustomerDocuments(customer._id))
+    } catch (err) {
+      console.log(err);
+      enqueueSnackbar('Document delete failed!');
+    }
   };
 
   const  handleEdit = async () => {
-    await getWithMsg(dispatch, getCustomerDocument(currentCustomerDocument._id), enqueueSnackbar);
+    await dispatch(getCustomerDocument(currentCustomerDocument._id));
           dispatch(setCustomerDocumentEditFormVisibility(true));
   };
 
   const defaultValues = useMemo(
     () => (
       {
-        displayName :                     currentCustomerDocument?.displayName || "",
+        displayName :             currentCustomerDocument?.displayName || "",
         documentName:             currentCustomerDocument?.documentName?.name || "",
-        category:                 currentCustomerDocument?.category?.name || "",
+        docCategory:              currentCustomerDocument?.docCategory?.name || "",
+        docType:                  currentCustomerDocument?.docType?.name || "",
         customer:                 currentCustomerDocument?.customer?.name || "",
         customerAccess:           currentCustomerDocument?.customerAccess,
         isActiveVersion:          currentCustomerDocument?.isActiveVersion,
-        documentVersion:          currentCustomerDocument?.documentVersion,
+        documentVersion:          currentCustomerDocument?.documentVersions[0]?.versionNo || "",
         description:              currentCustomerDocument?.description,
         isActive:                 currentCustomerDocument?.isActive,
         createdAt:                currentCustomerDocument?.createdAt || "",
@@ -112,12 +117,11 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     //   downloadBase64File(base64Data, fileName);
     // };
 
-    const handleDownload = () => {
-       dispatch(getDocumentDownload(currentCustomerDocument._id)).then(res => {
-        console.log("res : ",res)
+    const handleDownload = (Id,extension) => {
+       dispatch(getDocumentDownload(Id)).then(res => {
         if(regEx.test(res.status)){
           // download(atob(res.data), `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`, { type: currentCustomerDocument?.type});
-          downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
+          downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${extension}`);
           enqueueSnackbar(res.statusText);
         }else{
           enqueueSnackbar(res.statusText,{ variant: `error` })
@@ -132,17 +136,50 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         }
       });
     };
+    const document = {
+      icon: {
+        pdf: "bxs:file-pdf",
+        doc: "mdi:file-word",
+        docx: "mdi:file-word",
+        xls: "mdi:file-excel",
+        xlsx: "mdi:file-excel",
+        ppt: "mdi:file-powerpoint",
+        pptx: "mdi:file-powerpoint"
+      },
+      color: {
+        pdf: "#f44336",
+        doc: "#448aff",
+        docx: "#448aff",
+        xls: "#388e3c",
+        xlsx: "#388e3c",
+        ppt: "#e65100",
+        pptx: "#e65100"
+      }
+    }
 
   return (
 
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
+        <Grid  display="inline-flex">
+              <Tooltip >
+                <ViewFormField  isActive={defaultValues.isActive}  />
+              </Tooltip>
+              <Tooltip>
+                <ViewFormField  customerAccess={defaultValues?.customerAccess} />
+              </Tooltip>
+            </Grid>
         <Grid container>
-            <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.documentName} />
-            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.category} />
-            <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
-            <Grid item xs={12} sm={6}  sx={{px:2,py:1, overflowWrap: "break-word",display:"flex"}}>
+            
+            {/* <Tooltip title="Customer Access">
+              <ViewFormField isActive={defaultValues.isActive} />
+            </Tooltip> */}
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+            {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
+            {/* <Grid item xs={12} sm={12}  sx={{px:2,py:1, overflowWrap: "break-word",display:"flex"}}>
               <Grid>
                 <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
                 Customer Access
@@ -151,44 +188,142 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                   <Switch  checked={defaultValues?.customerAccess}  disabled/>
                 </Typography>
               </Grid>
-            </Grid>
-            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
-            <Grid item xs={12} sm={6} sx={{px:2,py:1, overflowWrap: "break-word",}}>
-              <Typography  variant="overline" sx={{ color: 'text.disabled' }}>
-              Version Status
-              </Typography>
-              <Typography>
-                <Switch  checked={defaultValues?.isActiveVersion}  disabled/>
-              </Typography>
-            </Grid>
+            </Grid> */}
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
-            <Grid item xs={12} sm={6} sx={{display: "flex",flexDirection:"column", alignItems:"flex-start"}}>
-            { currentCustomerDocument?.type.startsWith("image") ?
-            <Link href="#" underline="none"
+            <Grid item xs={12} sm={6} sx={{mt:2 ,display: "flex", alignItems:"flex-start"}}>
+            { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+              file?.fileType.startsWith("image") ?
+            <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
+              <Link href="#" underline="none"
+                component="button"
+                title='Download File'
+                // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
+                onClick={() => handleDownload(file._id, file.extension)}
+                >
+                  <Box
+                    onAbort={handleOpenPreview}
+                    component="img"
+                    sx={{ mx:3, mt:2 }}
+                    alt={file.DisplayName}
+                    src={`data:image/png;base64, ${file?.thumbnail}`}
+                    />
+                    <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link> 
+            </Card>:
+            <Card sx={{m:1, width:"130px", height:"155px"}}>
+              <Link href="#" underline="none"
+                component="button"
+                title='Download File'
+                onClick={() => handleDownload(file._id)}
+              >
+                <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
+                <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+              </Link>
+            </Card>
+            ))}
+            </Grid>
+            {/* { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+              file?.fileType.startsWith("image") &&
+              <Link href="#" underline="none"
               component="button"
               title='Download File'
-              onClick={handleDownload}
-            >
-              <Box
-                onAbort={handleOpenPreview}
-                component="img"
-                sx={{ m:2 }}
-                alt={defaultValues.displayName}
-                src={`data:image/png;base64, ${currentCustomerDocument?.content}`}
-                />
-            </Link>: <Link href="#" underline="none"
-              sx={{ m:2 }}
-              component="button"
-              title='Download File'
-              onClick={handleDownload}
-            >
-              <Iconify width="50px" icon="ph:files-fill" />
-            </Link>}
+              onClick={() => handleDownload(file._id)}
+              >
+              <Typography>name</Typography>
+            </Link>
+            ))} */}
+
+            {/* <Grid item sx={{ display: 'inline-block' }}>
+                    <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
+                      <Link
+                        component="button"
+                        title='Download File'
+                        onClick={() => handleDownload(file._id)}
+                        underline="none"
+                      >
+                        <CardActionArea>
+                          <Grid
+                            container
+                            justifyContent="center"
+                            alignContent="center"
+                            sx={{ display: 'block' }}
+                          >
+                            <Grid
+                              item
+                              justifyContent="center"
+                              sx={{ bgcolor: 'blue', alignContent: 'center' }}
+                            >
+                              <CardContent
+                                component={Stack}
+                                display="block"
+                                height="170px"
+                                sx={{ position: 'relative', zIndex: '1' }}
+                              >
+                                <CustomAvatar
+                                  sx={{
+                                    width: '100px',
+                                    height: '100px',
+                                    display: 'flex',
+                                    marginTop: '60px',
+                                    marginRight: 'auto',
+                                    marginLeft: 'auto',
+                                    marginBottom: '0px',
+                                    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+                                    fontSize: '40px',
+                                    zIndex: '2',
+                                  }}
+                                  name={file.name}
+                                  alt={file.name}
+                                />
+                                {file?.fileType.startsWith("image") &&
+                                <CardMedia
+                                  component="img"
+                                  sx={{
+                                    height: '170px',
+                                    opacity: '0.5',
+                                    display: 'block',
+                                    zIndex: '-1',
+                                    position: 'absolute',
+                                    top: '0',
+                                    left: '0',
+                                    right: '0',
+                                    bottom: '0',
+                                    width: '100%',
+                                    objectFit: 'cover',
+                                    objectPosition: 'center',
+                                  }}
+                                  alt={file.name}
+                                  image={`data:image/png;base64, ${file?.thumbnail}`}
+                                />
+                                }
+                              </CardContent>
+                            </Grid>
+                            <Grid
+                              item
+                              justifyContent="center"
+                              sx={{ display: 'block', textAlign: 'center', width: '200px' }}
+                            >
+                              <CardContent
+                                component={Stack}
+                                display="block"
+                                justifyContent="center"
+                                height="130px"
+                              >
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', p: 1 }}>
+                                  {fullName[index] ? fullName[index] : <br />}
+                                </Typography>
+                              </CardContent>
+                            </Grid>
+                          </Grid>
+                        </CardActionArea>
+                      </Link>
+                    </Card>
+                </Grid> */}
+
               {/* <DownloadComponent Document={currentCustomerDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
-            </Grid>
             {/* { currentCustomerDocument?.type.startsWith("image")  && (currentCustomerDocument?.customerAccess === true || currentCustomerDocument?.customerAccess === "true") ?
             <Image alt={defaultValues.name} src={currentCustomerDocument?.path} width="300px" height="300px"  sx={{mt:2, }}/> : null} */}
             {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}

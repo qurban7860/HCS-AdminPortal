@@ -99,7 +99,7 @@ export default function AuthLoginForm() {
       <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           
-        <RHFTextField type="email" name="email" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Email address"  autoComplete="username" required/>
+        <RHFTextField type="email" name="email" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Login/Email address"  autoComplete="username" required/>
 
         <RHFTextField
           name="password"

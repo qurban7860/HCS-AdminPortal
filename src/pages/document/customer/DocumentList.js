@@ -28,9 +28,9 @@ import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 
-import { setCustomerDocumentFormVisibility , setCustomerDocumentEditFormVisibility , updateCustomerDocument , getCustomerDocument, getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
-import { getDocumentName, getDocumentNames , setDocumentNameFormVisibility, setDocumentNameEditFormVisibility} from '../../../redux/slices/document/documentName';
-import { getFileCategories, setFileCategoryFormVisibility, setFileCategoryEditFormVisibility } from '../../../redux/slices/document/fileCategory';
+import { setCustomerDocumentFormVisibility , setCustomerDocumentEditFormVisibility , getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
+import {  setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import {  setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
 
 import { getMachines } from '../../../redux/slices/products/machine'
 import { getCustomers } from '../../../redux/slices/customer/customer'
@@ -38,15 +38,13 @@ import { getCustomers } from '../../../redux/slices/customer/customer'
 import DocumentAddForm from './DocumentAddForm'
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
-import DocumentNameAddForm from '../DocumentName/DocumentNameAddForm';
-import FileCategoryAddForm from '../FileCategory/FileCategoryAddForm';
+import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
+import FileCategoryAddForm from '../documentCategory/FileCategoryAddForm';
 import ListSwitch from '../../components/ListSwitch';
 
 import _mock from '../../../_mock';
 import EmptyContent from '../../../components/empty-content';
 import { fDate,fDateTime } from '../../../utils/formatTime';
-import { getWithNoMsg } from '../../asset/dispatchRequests'
-
 
 // ----------------------------------------------------------------------
 
@@ -88,11 +86,10 @@ export default function DocumentList() {
   const dispatch = useDispatch();
 
   const { error, responseMessage , customerDocuments, customerDocument, customerDocumentEditFormVisibility, customerDocumentFormVisibility } = useSelector((state) => state.customerDocument);
-  const { fileCategories, fileCategory, fileCategoryFormVisibility } = useSelector((state) => state.fileCategory);
-  const { documentName, documentNames, documentNameFormVisibility } = useSelector((state) => state.documentName);
+  const { fileCategories, fileCategory, documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
+  const { documentName, documentNames, documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { customer } = useSelector((state) => state.customer);
-console.log("customerDocuments : ",customerDocuments)
-// console.log("customerDocumentEditFormVisibility : ",customerDocumentEditFormVisibility, "documentNameFormVisibility : ",documentNameFormVisibility, "fileCategoryFormVisibility : ",fileCategoryFormVisibility, " customerDocumentFormVisibility : ", customerDocumentFormVisibility)
+// console.log("customerDocuments : ",customerDocuments)
   const toggleChecked = async () =>
     {
       dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
@@ -121,12 +118,12 @@ console.log("customerDocuments : ",customerDocuments)
 
 useEffect(()=>{
   if(customer?._id){
-    getWithNoMsg(dispatch, getCustomerDocuments(customer?._id), enqueueSnackbar);
+    dispatch(getCustomerDocuments(customer?._id));
   }
   dispatch(setCustomerDocumentEditFormVisibility(false))
   dispatch(setCustomerDocumentFormVisibility(false))
-  dispatch(setFileCategoryFormVisibility(false))
-  dispatch(setDocumentNameFormVisibility(false))
+  dispatch(setDocumentCategoryFormVisibility(false))
+  dispatch(setDocumentTypeFormVisibility(false))
    // eslint-disable-next-line react-hooks/exhaustive-deps
 },[dispatch,customer._id])
 
@@ -151,7 +148,7 @@ useEffect(()=>{
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !customerDocuments.length && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility && !documentNameFormVisibility && !fileCategoryFormVisibility;
+  const isNotFound = !customerDocuments.length && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility && !documentTypeFormVisibility && !documentCategoryFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
@@ -166,8 +163,8 @@ useEffect(()=>{
   return (
     <>
       {!customerDocumentEditFormVisibility &&
-        !documentNameFormVisibility &&
-        !fileCategoryFormVisibility && (
+        !documentTypeFormVisibility &&
+        !documentCategoryFormVisibility && (
           <Stack
             spacing={2}
             alignItems="center"
@@ -228,28 +225,28 @@ useEffect(()=>{
         )}
 
       {!customerDocumentEditFormVisibility &&
-        !documentNameFormVisibility &&
-        !fileCategoryFormVisibility &&
+        !documentTypeFormVisibility &&
+        !documentCategoryFormVisibility &&
         customerDocumentFormVisibility && <DocumentAddForm />}
       {!customerDocumentEditFormVisibility &&
         !customerDocumentFormVisibility &&
-        !documentNameFormVisibility &&
-        fileCategoryFormVisibility && <FileCategoryAddForm />}
+        !documentTypeFormVisibility &&
+        documentCategoryFormVisibility && <FileCategoryAddForm />}
       {!customerDocumentEditFormVisibility &&
         !customerDocumentFormVisibility &&
-        documentNameFormVisibility &&
-        !fileCategoryFormVisibility && <DocumentNameAddForm />}
+        documentTypeFormVisibility &&
+        !documentCategoryFormVisibility && <DocumentNameAddForm />}
       {customerDocumentEditFormVisibility &&
         !customerDocumentFormVisibility &&
-        !documentNameFormVisibility &&
-        !fileCategoryFormVisibility && <DocumentEditForm />}
+        !documentTypeFormVisibility &&
+        !documentCategoryFormVisibility && <DocumentEditForm />}
 
       {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
       <Card sx={{ mt: 2 }}>
         {!customerDocumentEditFormVisibility &&
           !customerDocumentFormVisibility &&
-          !documentNameFormVisibility &&
-          !fileCategoryFormVisibility &&
+          !documentTypeFormVisibility &&
+          !documentCategoryFormVisibility &&
           dataFiltered.map((document, index) => {
             const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
             return (
@@ -269,10 +266,10 @@ useEffect(()=>{
                         {document?.displayName || ''}
                       </Grid>
                       <Grid item xs={12} sm={4} md={2.4}>
-                        {document?.category?.name || ''}
+                        {document?.docType?.name || ''}
                       </Grid>
                       <Grid item xs={12} sm={4} md={2.4}>
-                        {document?.documentName?.name || ''}
+                        {document?.docCategory?.name || ''}
                       </Grid>
                       {/* <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
                     <ListSwitch isActive={document?.customerAccess} />
@@ -329,7 +326,6 @@ useEffect(()=>{
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-// console.log(filterName)
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;

@@ -21,8 +21,8 @@ import machineSettingReducer from './slices/products/machineTechParamValue';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
 import countReducer from './slices/dashboard/count';
-import documentNameReducer from './slices/document/documentName';
-import fileCategoryReducer from './slices/document/fileCategory';
+import documentTypeReducer from './slices/document/documentType';
+import documentCategoryReducer from './slices/document/documentCategory';
 import customerDocumentReducer from './slices/document/customerDocument';
 import machineDocumentReducer from './slices/document/machineDocument';
 import downloadDocumentReducer from './slices/document/downloadDocument';
@@ -158,14 +158,14 @@ export const countPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const documentNamePersistConfig = {
-  key: 'documentName',
+export const documentTypePersistConfig = {
+  key: 'documentType',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const fileCategoryPersistConfig = {
-  key: 'fileCategory',
+export const documentCategoryPersistConfig = {
+  key: 'documentCategory',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -215,8 +215,8 @@ const rootReducer = combineReducers({
   toolInstalled: persistReducer(machineToolInstalledPersistConfig, toolInstalledReducer),
   role: persistReducer(userRolesPersistConfig, roleReducer),
   count: persistReducer(countPersistConfig, countReducer),
-  documentName: persistReducer(documentNamePersistConfig, documentNameReducer),
-  fileCategory: persistReducer(fileCategoryPersistConfig, fileCategoryReducer),
+  documentType: persistReducer(documentTypePersistConfig, documentTypeReducer),
+  documentCategory: persistReducer(documentCategoryPersistConfig, documentCategoryReducer),
   customerDocument: persistReducer(customerDocumentPersistConfig, customerDocumentReducer),
   machineDocument: persistReducer(machineDocumentPersistConfig, machineDocumentReducer),
   downloadDocument: persistReducer(downloadDocumentPersistConfig, downloadDocumentReducer),

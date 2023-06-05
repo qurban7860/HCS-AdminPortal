@@ -15,6 +15,8 @@ ViewFormField.propTypes = {
   secondObjectParam: PropTypes.object,
   sm: PropTypes.number,
   isActive: PropTypes.bool,
+  customerAccess: PropTypes.bool,
+  documentIsActive: PropTypes.bool,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +50,8 @@ export default function ViewFormField({
   numberParam,
   sm,
   isActive,
+  customerAccess,
+  documentIsActive
 }) {
   const classes = useStyles({ isActive });
   const [anchorEl, setAnchorEl] = useState(null);
@@ -120,6 +124,100 @@ export default function ViewFormField({
                 color={isActive ? 'green' : 'red'}
               >
                 {isActive ? 'Active' : 'Inactive'}
+              </Typography>
+            </Popover>
+          </>
+        )}
+        {documentIsActive !== undefined && (
+          <>
+            <IconButton
+              aria-label={documentIsActive ? 'Active' : 'Inactive'}
+              onClick={handlePopoverOpen}
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            >
+              <Iconify
+                heading={documentIsActive ? 'Active' : 'Inactive'}
+                icon={documentIsActive ? 'basil:document-solid' : 'basil:document-solid'}
+                style={{ color: documentIsActive ? 'green' : 'red' }}
+                width="30px"
+              />
+            </IconButton>
+            <Popover
+              open={isPopoverOpen}
+              anchorEl={anchorEl}
+              onClose={handlePopoverClose}
+              anchorOrigin={{
+                vertical: 'center',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'center',
+                horizontal: 'left',
+              }}
+              id="mouse-over-popover"
+              sx={{
+                '& .MuiPaper-root': {
+                  bgcolor: 'transparent',
+                  boxShadow: 'none',
+                },
+                boxShadow: 'none',
+                pointerEvents: 'none',
+              }}
+            >
+              <Typography
+                variant="overline"
+                classes={{ root: classes.activeHover }}
+                color={documentIsActive ? 'green' : 'red'}
+              >
+                {documentIsActive ? 'Active' : 'Inactive'}
+              </Typography>
+            </Popover>
+          </>
+        )}
+        {customerAccess !== undefined && (
+          <>
+            <IconButton
+              aria-label={customerAccess ? 'Allowed' : 'Disallowed'}
+              onClick={handlePopoverOpen}
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            >
+              <Iconify
+                heading={customerAccess ? 'Allowed' : 'Disallowed'}
+                icon={customerAccess ? 'mdi:security-account-outline' : 'mdi:security-account-outline'}
+                style={{ color: customerAccess ? 'green' : 'red' }}
+                width="30px"
+              />
+            </IconButton>
+            <Popover
+              open={isPopoverOpen}
+              anchorEl={anchorEl}
+              onClose={handlePopoverClose}
+              anchorOrigin={{
+                vertical: 'center',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'center',
+                horizontal: 'left',
+              }}
+              id="mouse-over-popover"
+              sx={{
+                '& .MuiPaper-root': {
+                  bgcolor: 'transparent',
+                  boxShadow: 'none',
+                },
+                boxShadow: 'none',
+                pointerEvents: 'none',
+              }}
+            >
+              <Typography
+                variant="overline"
+                classes={{ root: classes.activeHover }}
+                color={customerAccess ? 'green' : 'red'}
+              >
+                {customerAccess ? 'Allowed' : 'Disallowed'}
               </Typography>
             </Popover>
           </>

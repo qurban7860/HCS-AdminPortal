@@ -84,14 +84,14 @@ export default function AccountPopover() {
   const [openPopover, setOpenPopover] = useState(null);
 
   const {
-     themeMode,
-     themeLayout,
-     themeStretch,
-     themeContrast,
-     themeDirection,
-     themeColorPresets,
-     onResetSetting,
-   } = useSettingsContext();
+    themeMode,
+    themeLayout,
+    themeStretch,
+    themeContrast,
+    themeDirection,
+    themeColorPresets,
+    onResetSetting,
+  } = useSettingsContext();
 
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
@@ -112,7 +112,7 @@ export default function AccountPopover() {
     }
   };
 
-// for settings drawer
+  // for settings drawer
   const [open, setOpen] = useState(false);
 
   const handleToggle = () => {
@@ -129,13 +129,13 @@ export default function AccountPopover() {
     navigate(path || setOpen(!open));
   };
 
-    const notDefault =
-      themeMode !== defaultSettings.themeMode ||
-      themeLayout !== defaultSettings.themeLayout ||
-      themeStretch !== defaultSettings.themeStretch ||
-      themeContrast !== defaultSettings.themeContrast ||
-      themeDirection !== defaultSettings.themeDirection ||
-      themeColorPresets !== defaultSettings.themeColorPresets;
+  const notDefault =
+    themeMode !== defaultSettings.themeMode ||
+    themeLayout !== defaultSettings.themeLayout ||
+    themeStretch !== defaultSettings.themeStretch ||
+    themeContrast !== defaultSettings.themeContrast ||
+    themeDirection !== defaultSettings.themeDirection ||
+    themeColorPresets !== defaultSettings.themeColorPresets;
 
   return (
     <>
@@ -169,9 +169,7 @@ export default function AccountPopover() {
             {user?.email}
           </Typography>
         </Box>
-
         <Divider sx={{ borderStyle: 'solid' }} />
-
         <Stack sx={{ p: 1 }}>
           {OPTIONS.map((option) => (
             <MenuItem key={option.label} onClick={() => handleClickItem(option.linkTo)}>
