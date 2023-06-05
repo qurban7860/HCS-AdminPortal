@@ -167,7 +167,7 @@ const document = {
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          <Grid item xs={12} sm={6} sx={{display: "flex", alignItems:"flex-start"}}>
+          <Grid item xs={12} sm={6} sx={{ mt:2 ,display: "flex", alignItems:"flex-start"}}>
           { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
             <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
