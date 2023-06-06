@@ -39,7 +39,7 @@ import DocumentAddForm from './DocumentAddForm'
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
-import FileCategoryAddForm from '../documentCategory/FileCategoryAddForm';
+import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
 import ListSwitch from '../../components/ListSwitch';
 
 import _mock from '../../../_mock';
@@ -231,7 +231,7 @@ useEffect(()=>{
       {!customerDocumentEditFormVisibility &&
         !customerDocumentFormVisibility &&
         !documentTypeFormVisibility &&
-        documentCategoryFormVisibility && <FileCategoryAddForm />}
+        documentCategoryFormVisibility && <DocumentCategoryAddForm />}
       {!customerDocumentEditFormVisibility &&
         !customerDocumentFormVisibility &&
         documentTypeFormVisibility &&

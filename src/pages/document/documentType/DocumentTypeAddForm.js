@@ -74,10 +74,10 @@ export default function DocumentTypeAddForm({currentDocument}) {
   },[]);
 
   const onSubmit = async (data) => {
-    console.log("Document Type : ", data);
+    // console.log("Document Type : ", data);
       try{
         const response = await dispatch(addDocumentType(data));
-        console.log("response : ",response);
+        // console.log("response : ",response);
         reset();
         enqueueSnackbar('Document Save Successfully!');
         navigate(PATH_DOCUMENT.documentType.list)
@@ -111,7 +111,6 @@ export default function DocumentTypeAddForm({currentDocument}) {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
             <Stack spacing={2}>
-              <FormHeading heading='New Document Type'/>
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               <Grid display="flex">

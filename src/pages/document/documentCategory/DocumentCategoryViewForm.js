@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Switch, Card, Grid, Stack, Typography, Button ,Tooltip} from '@mui/material';
 // redux
-import {  setDocumentTypeEditFormVisibility , deleteDocumentType , getDocumentTypes , getDocumentType } from '../../../redux/slices/document/documentType';
+import { deleteDocumentCategory  } from '../../../redux/slices/document/documentCategory';
 // paths
 import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
@@ -19,9 +19,9 @@ import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButton
 
 // ----------------------------------------------------------------------
 
-export default function DocumentTypeViewForm() {
-  const { documentType } = useSelector((state) => state.documentType);
-// console.log("documentType : ",documentType)
+export default function DocumentCategoryViewForm() {
+  const { documentCategory } = useSelector((state) => state.documentCategory);
+// console.log("documentCategory : ",documentCategory)
   const navigate = useNavigate();
 
   const dispatch = useDispatch(); 
@@ -29,36 +29,36 @@ export default function DocumentTypeViewForm() {
 
   const onDelete = async () => {
     try{
-      await dispatch(deleteDocumentType(documentType?._id));
-      navigate(PATH_DOCUMENT.documentType.list);
-      enqueueSnackbar('Document Type delete Successfully!');
+      await dispatch(deleteDocumentCategory(documentCategory?._id));
+      navigate(PATH_DOCUMENT.documentCategory.list);
+      enqueueSnackbar('Document Category delete Successfully!');
 
     }catch(error){
-      enqueueSnackbar('Document Type delete failed!');
+      enqueueSnackbar('Document Category delete failed!');
       console.error(error);
     }
   };
 
   const  handleEdit = async () => {
-    navigate(PATH_DOCUMENT.documentType.edit(documentType._id))
+    navigate(PATH_DOCUMENT.documentCategory.edit(documentCategory._id))
   };
 
   const defaultValues = useMemo(
     () => (
       {
-        isActive:                 documentType?.isActive,
-        customerAccess:           documentType?.customerAccess,
-        name:                     documentType?.name,
-        description:              documentType?.description || "",
-        createdAt:                documentType?.createdAt || "",
-        createdByFullName:        documentType?.createdBy?.name || "",
-        createdIP:                documentType?.createdIP || "",
-        updatedAt:                documentType?.updatedAt || "",
-        updatedByFullName:        documentType?.updatedBy?.name || "",
-        updatedIP:                documentType?.updatedIP || "",
+        isActive:                 documentCategory?.isActive,
+        customerAccess:           documentCategory?.customerAccess,
+        name:                     documentCategory?.name,
+        description:              documentCategory?.description || "",
+        createdAt:                documentCategory?.createdAt || "",
+        createdByFullName:        documentCategory?.createdBy?.name || "",
+        createdIP:                documentCategory?.createdIP || "",
+        updatedAt:                documentCategory?.updatedAt || "",
+        updatedByFullName:        documentCategory?.updatedBy?.name || "",
+        updatedIP:                documentCategory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [documentType]
+    [documentCategory]
   );
 
   return (
@@ -66,15 +66,14 @@ export default function DocumentTypeViewForm() {
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
           <Grid sm={12} display="flex">
-            <Tooltip >
+            <Tooltip>
               <ViewFormField  documentIsActive={defaultValues.isActive}  />
             </Tooltip>
-            <Tooltip >
+            <Tooltip>
               <ViewFormField  customerAccess={defaultValues?.customerAccess} />
             </Tooltip>
           </Grid>
         <Grid container>
-            
             <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
             {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}

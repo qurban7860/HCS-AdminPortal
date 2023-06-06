@@ -241,7 +241,7 @@ export default function Upload({
             },
           }}
         >
-          <Iconify icon={document.icon[fileExtension]} color={document.color[fileExtension]} width={60} sx={{ p:1, color: document.color[fileExtension] }} /><Typography variant='body2'>{file?.name}</Typography>
+          <Iconify icon={document.icon[fileExtension]} color={document.color[fileExtension]} width={60} sx={{ p:1, color: document.color[fileExtension] }} /><Typography variant='body2' width="170px">{file?.name}</Typography>
         </IconButton>
       )}
 

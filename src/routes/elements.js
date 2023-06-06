@@ -156,10 +156,10 @@ export const DocumentNameEditForm     = Loadable(lazy(()=>  import('../pages/doc
 // export const documentNameEdit = Loadable(lazy(()=>      import('../pages/document/DocumentName/')));
 
 // Fime Category
-export const FileCategoryAddForm      = Loadable(lazy(()=>  import('../pages/document/documentCategory/FileCategoryAddForm')));
-export const FileCategoryList         = Loadable(lazy(()=>     import('../pages/document/documentCategory/FileCategoryList')));
-export const FileCategoryViewForm     = Loadable(lazy(()=> import('../pages/document/documentCategory/FileCategoryViewForm')));
-export const FileCategoryEditForm     = Loadable(lazy(()=> import('../pages/document/documentCategory/FileCategoryEditForm')));
+export const DocumentCategoryAddForm      = Loadable(lazy(()=>  import('../pages/document/documentCategory/DocumentCategoryAddForm')));
+export const DocumentCategoryList         = Loadable(lazy(()=>     import('../pages/document/documentCategory/DocumentCategoryList')));
+export const DocumentCategoryView     = Loadable(lazy(()=> import('../pages/document/documentCategory/DocumentCategoryView')));
+export const DocumentCategoryEditForm     = Loadable(lazy(()=> import('../pages/document/documentCategory/DocumentCategoryEditForm')));
 // export const fileCategoryView = Loadable(lazy(()=>     import('../pages/')));
 // export const fileCategoryEdit = Loadable(lazy(()=>     import('../pages/')));
 
