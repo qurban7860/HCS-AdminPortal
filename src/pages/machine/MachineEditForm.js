@@ -281,7 +281,7 @@ export default function MachineEditForm() {
                 display="grid"
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
-                <RHFTextField name="serialNo" label="Serial No." />
+                <RHFTextField name="serialNo" label="Serial No." disabled/>
                 <RHFTextField name="name" label="Name" />
 
                 <Autocomplete
@@ -382,6 +382,7 @@ export default function MachineEditForm() {
 
                 <Autocomplete
                   // freeSolo
+                  disabled={!machine.machinemodel}
                   value={modelVal || null}
                   options={machineModels}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
