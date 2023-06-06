@@ -50,6 +50,13 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    getLoggedInSecurityUserSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.securityUsers = action.payload;
+      state.initial = true;
+    },
+
 
     // GET user
     getSecurityUserSuccess(state, action) {
@@ -185,6 +192,20 @@ export function getSecurityUser(id) {
 
 // ----------------------------------------------------------------------
 
+export function getLoggedInSecurityUser(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
+      // console.log("response: " ,response);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getLoggedInSecurityUserSuccess(response.data));
+      }
+      return response;
+  };
+}
+
+// ----------------------------------------------------------------------
+
 export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -203,15 +224,25 @@ export function deleteSecurityUser(id) {
 }
 //------------------------------------------------------------------------------
 
-export function SecurityUserPasswordUpdate(data,Id) {
+export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${Id}`,
-      data
-      );
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.setResponseMessage(response.data));
+      try{
+        if(isAdmin){
+          data.isAdmin = true
+        };
+
+        const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${Id}`,
+          data
+        );
+        if(regEx.test(response.status)){
+          dispatch(slice.actions.setResponseMessage(response.data));
+        }
+        return response; // eslint-disable-line
+      } catch (error) {
+        console.error(error);
+        throw error;
+        // dispatch(slice.actions.hasError(error.Message));
       }
-      return response;
   };
 }

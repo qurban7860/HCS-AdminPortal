@@ -186,7 +186,7 @@ export default function ViewFormEditDeleteButtons({
               disableFocusListener
               classes={{ tooltip: classes.tooltip }}
             >
-              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:lock-reset" />
+              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:account-key" />
             </Tooltip>
           </Button>
           ) : ( '' )
