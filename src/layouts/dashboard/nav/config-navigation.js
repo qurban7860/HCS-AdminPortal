@@ -54,7 +54,7 @@ const navConfig = [
       { title: 'Machines', path: PATH_MACHINE.machine.list, icon: ICONS.machines },
       { title: 'Security', path: PATH_DASHBOARD.user.list, icon: ICONS.user },
       { title: 'Setting', path: PATH_DASHBOARD.setting, icon: ICONS.setting },
-      { title: 'Documeent', path: PATH_DASHBOARD.document, icon: ICONS.document },
+      { title: 'Document', path: PATH_DASHBOARD.document, icon: ICONS.document },
       { title: 'Reports', path: PATH_DASHBOARD.reports, icon: ICONS.reports },
       // {
       //   title: 'Button Title',

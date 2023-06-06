@@ -45,7 +45,6 @@ export default function DocumentTypeListTableToolbar({
   const toggleAdd = () => { navigate(PATH_DOCUMENT.documentType.new); };
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >
-      
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={12} sm={9} sx={{display: 'inline-flex',}}>
           <TextField fullWidth value={filterName} onChange={onFilterName} placeholder="Search..." InputProps={{ startAdornment: (
@@ -56,7 +55,7 @@ export default function DocumentTypeListTableToolbar({
         </Grid>
           <Grid item xs={8} sm={3}>
             <Stack alignItems="flex-end" > 
-              <Button sx={{p:2}} onClick={toggleAdd} variant="contained" startIcon={ <Iconify icon="eva:plus-fill" /> } >Add Document Name</Button>
+              <Button sx={{p:2}} onClick={toggleAdd} variant="contained" startIcon={ <Iconify icon="eva:plus-fill" /> } >Add Document Type</Button>
             </Stack>
           </Grid>
       </Grid>

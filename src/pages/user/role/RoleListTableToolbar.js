@@ -18,7 +18,7 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // components
 import Iconify from '../../../components/iconify';
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ export default function DocumentCategoryListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_DOCUMENT.documentCategory.new); };
+  const toggleAdd = () => { navigate(PATH_DASHBOARD.role.new); };
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >
       
@@ -56,7 +56,7 @@ export default function DocumentCategoryListTableToolbar({
         </Grid>
           <Grid item xs={8} sm={3}>
             <Stack alignItems="flex-end" > 
-              <Button sx={{p:2}} onClick={toggleAdd} variant="contained" startIcon={ <Iconify icon="eva:plus-fill" /> } >Add Document Category</Button>
+              <Button sx={{p:2}} onClick={toggleAdd} variant="contained" startIcon={ <Iconify icon="eva:plus-fill" /> } >Add Role</Button>
             </Stack>
           </Grid>
       </Grid>

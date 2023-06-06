@@ -60,6 +60,11 @@ export const SecurityUserAdd = Loadable(lazy(() => import('../pages/user/Securit
 export const SecurityUserEdit = Loadable(lazy(() => import('../pages/user/SecurityUserEdit')))
 export const SecurityUserViewForm = Loadable(lazy(() => import('../pages/user/SecurityUserViewForm')));
 
+// SECURITY USERS ROLES
+export const RoleList = Loadable(lazy(() => import('../pages/user/role/RoleList')));
+export const RoleAdd = Loadable(lazy(() => import('../pages/user/role/RoleAddForm')));
+export const RoleEdit = Loadable(lazy(() => import('../pages/user/role/RoleEditForm')))
+export const RoleView = Loadable(lazy(() => import('../pages/user/role/RoleView')));
 
 //----------------------------------------------------------------
 

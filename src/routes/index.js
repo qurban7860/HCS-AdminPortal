@@ -93,7 +93,12 @@ import {
   ModelView,
   ModelEdit,
   ModelEditForm,
+// Role
 
+RoleList,
+RoleAdd,
+RoleView,
+RoleEdit,
   
   // Site
   SiteList,
@@ -206,7 +211,6 @@ export default function Router() {
         { path: 'setting', element: <Setting /> },
         { path: 'reports', element: <Reports /> },
         { path: 'document', element: <DocumentDashboard /> },
-
         {
           path: 'user',
           children: [
@@ -218,6 +222,15 @@ export default function Router() {
             { path: 'new', element: <SecurityUserAdd /> },
             { path: ':id/edit', element: <SecurityUserEdit /> },
             { path: ':id/view', element: <SecurityUserViewForm /> },
+          ],
+        },
+        {
+          path: 'role',
+          children: [
+            { path: 'list', element: <RoleList /> },
+            { path: 'new', element: <RoleAdd /> },
+            { path: ':id/edit', element: <RoleEdit />},
+            { path: ':id/view', element: <RoleView />}
           ],
         },
         {
@@ -423,7 +436,7 @@ export default function Router() {
         { path: ':id/edit', element: <DocumentNameEditForm />},
         { path: ':id/view', element: <DocumentNameViewForm />}, 
         {
-          path: 'fileCategory',
+          path: 'documentCategory',
           children: [
             { path: 'list', element: <DocumentCategoryList /> },
             { path: 'new', element: <DocumentCategoryAddForm /> },
@@ -432,7 +445,7 @@ export default function Router() {
           ],
         },
         {
-          path: 'documentName',
+          path: 'documentType',
           children: [
             { path: 'list', element: <DocumentNameList /> },
             { path: 'new', element: <DocumentNameAddForm /> },
