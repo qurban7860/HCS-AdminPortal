@@ -134,7 +134,6 @@ export function deleteMachineModel(id) {
 
 export function addMachineModel(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetMachinemodel());
       dispatch(slice.actions.startLoading());
         /* eslint-disable */
         let data = {
