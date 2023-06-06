@@ -20,6 +20,7 @@ import {
   Breadcrumbs,
   Tooltip,
   Link,
+  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SiteCarousel from './site/util/SiteCarousel';
@@ -262,7 +263,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 color="inherit"
                 href={PATH_DASHBOARD.customer}
               >
-                {siteAddFormVisibility ? 'Add New Site' : ''}
+                {siteAddFormVisibility ? 'New Site Form' : sites[activeIndex]?.name || 'Sites List'}
               </Link>
             </Breadcrumbs>
           </Grid>
@@ -348,21 +349,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                   sx={{ mt: -5 }}
                 >
                   <Grid container lg={12} justifyContent="space-evenly" alignItems="flex-start">
-                    <Grid item lg={4}>
-                      <Card
-                        sx={
-                          {
-                            // display: { sm: 'none', md: 'block' },
-                            // maxWidth: 'lg',
-                            // objectFit: 'cover',
-                            // height: '100%',
-                            // mx: { sm: 0, md: 3, lg: 3 },
-                            // my: { sm: 1, md: 3 },
-                          }
-                        }
-                      >
-                        {!isMobile ? (
-                          <>
+                    <Grid item lg={4} spacing={2}>
+                      {!isMobile && (
+                        <>
+                          <Card>
                             <CardActionArea>
                               <CardMedia
                                 component={SiteCarousel}
@@ -370,6 +360,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                 alt={site.name}
                               />
                             </CardActionArea>
+                          </Card>
+                          <br />
+                          <Card>
                             <CardActionArea>
                               {site.lat && site.long ? (
                                 <GoogleMaps
@@ -380,9 +373,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                 'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
                               )}
                             </CardActionArea>
-                          </>
-                        ) : null}
-                      </Card>
+                          </Card>
+                        </>
+                      )}
+                      {/* </Card> */}
                     </Grid>
                     <Grid item lg={8}>
                       <SiteViewForm currentSite={site} />

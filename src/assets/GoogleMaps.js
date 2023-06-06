@@ -26,7 +26,15 @@ GoogleMaps.propTypes = {
 };
 
 /* eslint-disable */
-export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [], mapHeight = '', center = '', zoom = '' }) {
+export default function GoogleMaps({
+  lat,
+  lng,
+  edit = false,
+  latlongArr = [],
+  mapHeight = '',
+  center = '',
+  zoom = '',
+}) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY || '',
@@ -62,7 +70,7 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [], ma
       setMarkerPositions(positions);
     }
   }, [map, latlongArr]);
-  
+
   const onLoad = (map) => {
     setMap(map);
   };
@@ -86,13 +94,18 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [], ma
     <GoogleMap
       mapContainerStyle={containerStyle}
       center={latlongArr.length > 0 ? reportDefaultCenter : markerPositions[0]}
-      zoom={zoom ? zoom : (latlongArr.length > 0 ? 2 : 12) }
+      zoom={zoom ? zoom : latlongArr.length > 0 ? 2 : 12}
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={onMapClick}
     >
       {markerPositions.map((position, index) => (
-        <Marker key={index} position={position} draggable={edit} ref={(ref) => markerRefs.current[index] = ref} />
+        <Marker
+          key={index}
+          position={position}
+          draggable={edit}
+          ref={(ref) => (markerRefs.current[index] = ref)}
+        />
       ))}
     </GoogleMap>
   ) : (

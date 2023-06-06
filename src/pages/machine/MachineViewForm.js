@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Divider, Switch, Card, Grid, Typography, Link, Dialog } from '@mui/material';
+import { Divider, Switch, Card, Grid, Typography, Link, Dialog, Box } from '@mui/material';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
 // slices
@@ -263,7 +263,7 @@ export default function MachineViewForm() {
       </Grid>
 
       <Grid container>
-        <Grid item container sx={{ pt: '2rem' }}>
+        <Grid item sx={{ pt: '2rem' }}>
           <Grid
             item
             xs={12}
@@ -278,13 +278,13 @@ export default function MachineViewForm() {
             </Typography>
           </Grid>
         </Grid>
+
         <GoogleMaps latlongArr={latLongValues} mapHeight="500px" />
       </Grid>
 
       <Grid container sx={{ mt: 2 }}>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
-
       <Dialog
         open={openCustomer}
         onClose={handleCloseCustomer}

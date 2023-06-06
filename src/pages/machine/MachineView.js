@@ -183,7 +183,7 @@ export default function MachineView({ editPage }) {
         }}
       >
         <Cover
-          photoURL={machine.name}
+          // photoURL={machine.name}
           name={machine?.name}
           serialNo={machine ? machine.serialNo : 'Serial Number'}
           icon="et:gears"

@@ -201,6 +201,16 @@ export default function CustomerContactList(currentContact = null) {
               >
                 Contacts
               </Link>
+              <Link
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.contacts}
+              >
+                {contactEditFormVisibility
+                  ? 'New Contact Form'
+                  : currentContactData.firstName || 'Contacts List'}
+              </Link>
             </Breadcrumbs>
           </Grid>
         </Stack>
@@ -354,12 +364,15 @@ export default function CustomerContactList(currentContact = null) {
               </>
             );
           })}
+        {/* expanding grid */}
+
         {isExpanded && (
           <Grid
+            animation="fadeIn ease 0.8s"
             item
             lg={12}
             sx={{
-              display: 'block',
+              display: 'flex',
               flexDirection: 'column',
               animation: 'fadeIn ease 0.8s',
               animationFillMode: 'forwards',
