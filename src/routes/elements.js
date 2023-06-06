@@ -130,6 +130,8 @@ export const ModelViewForm = Loadable(lazy(()=> import('../pages/machine/Model/M
 export const ModelView = Loadable(lazy(()=> import('../pages/machine/Model/ModelView')));
 export const ModelEditForm = Loadable(lazy(()=> import('../pages/machine/Model/ModelEditForm')));
 export const ModelEdit = Loadable(lazy(()=> import('../pages/machine/Model/ModelEdit')));
+// Document dashboard
+export const DocumentDashboard  = Loadable(lazy(()=>   import('../pages/document/dashboard/Document')));
 
 // Customer Documents
 export const CustomerDocumentAddForm  = Loadable(lazy(()=>   import('../pages/document/customer/DocumentAddForm')));

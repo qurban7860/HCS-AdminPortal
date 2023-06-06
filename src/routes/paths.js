@@ -43,6 +43,7 @@ export const PATH_DASHBOARD = {
     app: path(ROOTS_DASHBOARD, '/app'),
   },
   setting: path(ROOTS_DASHBOARD, '/setting'),
+  document: path(ROOTS_DASHBOARD, '/document'),
   reports: path(ROOTS_DASHBOARD, '/reports'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
@@ -77,7 +78,7 @@ export const PATH_DASHBOARD = {
   },
   site: {
     root: path(ROOTS_DASHBOARD, '/site'),
-    list: path(ROOTS_DASHBOARD, `/site/list`),
+    list: path(ROOTS_DASHBOARD, '/site/list'),
     new: path(ROOTS_DASHBOARD, '/site/new'),
     view: (id) => path(ROOTS_DASHBOARD, `/site/${id}/view`),
     edit: (id) => path(ROOTS_DASHBOARD, `/site/${id}/edit`),
@@ -97,6 +98,7 @@ export const PATH_DASHBOARD = {
     edit: (id) => path(ROOTS_DASHBOARD, `/note/${id}/edit`),
   },
 };
+
 
 export const PATH_CUSTOMER = {
   root: ROOTS_CUSTOMER,
@@ -138,66 +140,67 @@ export const PATH_MACHINE = {
   general: {
     app: path(ROOTS_MACHINE, '/app'),
   },
-  machine: {
+  machine:{
     new: path(ROOTS_MACHINE, '/new'),
     list: path(ROOTS_MACHINE, '/list'),
     view: (id) => path(ROOTS_MACHINE, `/${id}/view`),
     edit: (id) => path(ROOTS_MACHINE, `/${id}/edit`),
   },
-  supplier: {
+  supplier:{
     supplier: (ROOTS_MACHINE, '/machine/supplier/supplier'),
     list: (ROOTS_MACHINE, '/machine/supplier/list'),
     view: (id) => path(ROOTS_MACHINE, `/supplier/${id}/view`),
     supplieredit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/supplier/${id}/editform`),
   },
-  license: {
+  license:{
     license: (ROOTS_MACHINE, '/machine/license/license'),
-    list: (ROOTS_MACHINE, '/machine/license/list'),
+    list: (ROOTS_MACHINE, '/machine/license/list')
   },
-  categories: {
+  categories:{
     categories: (ROOTS_MACHINE, '/machine/categories/categories'),
     list: (ROOTS_MACHINE, '/machine/categories/list'),
     view: (id) => path(ROOTS_MACHINE, `/categories/${id}/view`),
     categoryedit: (id) => path(ROOTS_MACHINE, `/categories/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/categories/${id}/editform`),
   },
-  tool: {
+  tool:{
     tool: (ROOTS_MACHINE, '/machine/tool/tool'),
     list: (ROOTS_MACHINE, '/machine/tool/list'),
     view: (id) => path(ROOTS_MACHINE, `/tool/${id}/view`),
     tooledit: (id) => path(ROOTS_MACHINE, `/tool/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/tool/${id}/editform`),
   },
-  techParam: {
+  techParam:{
     techParam: (ROOTS_MACHINE, '/machine/machine-tech/params'),
     list: (ROOTS_MACHINE, '/machine/machine-tech/list'),
     view: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/view`),
     techparamcategoryedit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/machine-tech/${id}/editform`),
   },
-  machineStatus: {
+  machineStatus:{
     status: (ROOTS_MACHINE, '/machine/machine-status/status'),
     list: (ROOTS_MACHINE, '/machine/machine-status/list'),
     view: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/view`),
     statusedit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/machine-status/${id}/editform`),
   },
-  machineModel: {
+  machineModel:{
     model: (ROOTS_MACHINE, '/machine/machine-model/model'),
     list: (ROOTS_MACHINE, '/machine/machine-model/list'),
     view: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/view`),
     modeledit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/machine-model/${id}/editform`),
   },
-  parameters: {
+  parameters:{
     params: (ROOTS_MACHINE, '/machine/machine-parameters/params'),
     list: (ROOTS_MACHINE, '/machine/machine-parameters/list'),
     view: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/view`),
     parameteredit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/edit`),
     edit: (id) => path(ROOTS_MACHINE, `/machine-parameters/${id}/editform`),
   },
-};
+
+}
 
 export const PATH_DOCUMENT = {
   root: ROOTS_DOCUMENT,
@@ -208,17 +211,17 @@ export const PATH_DOCUMENT = {
   view: path(ROOTS_DOCUMENT, `/document/view`),
   edit: (id) => path(ROOTS_DOCUMENT, `/document/${id}/edit`),
   documentType: {
-    list: path(ROOTS_DOCUMENT, '/documentName/list'),
-    new: path(ROOTS_DOCUMENT, '/documentName/new'),
-    view: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/view`),
-    edit: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/edit`),
+    list: path(ROOTS_DOCUMENT, '/documentType/list'),
+    new: path(ROOTS_DOCUMENT, '/documentType/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/documentType/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/documentType/${id}/edit`),
   },
   documentCategory: {
-    list: path(ROOTS_DOCUMENT, '/fileCategory/list'),
-    new: path(ROOTS_DOCUMENT, '/fileCategory/new'),
-    view: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/view`),
-    edit: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/edit`),
-  },
+    list: path(ROOTS_DOCUMENT, '/documentCategory/list'),
+    new: path(ROOTS_DOCUMENT, '/documentCategory/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/documentCategory/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/documentCategory/${id}/edit`),
+  }
 };
 
 export const PATH_DOCS = {

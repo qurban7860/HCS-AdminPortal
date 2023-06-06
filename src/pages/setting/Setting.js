@@ -53,7 +53,7 @@ export default function Setting() {
                 aria-labelledby="nested-list-subheader"
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
-                    Document Settings  (under Constrctuion)
+                    Document Settings
                   </ListSubheader>
                 }
               >
