@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   documentTypes: [],
+  activeDocumentTypes: [],
   documentType: null,
 };
 
@@ -47,6 +48,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.documentTypes = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Setting
+    getActiveDocumentTypesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeDocumentTypes = action.payload;
       state.initial = true;
     },
 
@@ -153,6 +162,31 @@ export function getDocumentTypes() {
       }
       );
       dispatch(slice.actions.getDocumentTypesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+
+// -----------------------------------Get Active Document Types-----------------------------------
+
+export function getActiveDocumentTypes() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/documentType/` , 
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+        }
+      }
+      );
+      console.log("document type response: " , response)
+      dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
     } catch (error) {
       console.log(error);

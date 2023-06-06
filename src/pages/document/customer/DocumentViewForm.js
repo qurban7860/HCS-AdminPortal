@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState, Suspense, lazy } from 'react';
+import React, { useMemo, useState, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-extraneous-dependencies
@@ -104,18 +104,18 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     const byteArray = new Uint8Array(byteNumbers);
     // Create a Blob object from the Uint8Array
     const blob = new Blob([byteArray]);
-    const link = document.createElement('a');
+    const link = React.createElement('a');
     link.href = window.URL.createObjectURL(blob);
     link.download = fileName;
     link.target = '_blank';
     link.click();
   }
 
-    // const handleDownloadFile = (base64,) => {
-    //   const base64Data = base64;
-    //   const fileName = 'your_file_name.ext';
-    //   downloadBase64File(base64Data, fileName);
-    // };
+    const handleDownloadFile = (base64,) => {
+      const base64Data = base64;
+      const fileName = 'your_file_name.ext';
+      downloadBase64File(base64Data, fileName);
+    };
 
     const handleDownload = (fileId,fileName ,fileExtension) => {
        dispatch(getDocumentDownload(fileId)).then(res => {
@@ -179,7 +179,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
-            <Grid  sx={{mt:2 ,display: "flex", alignItems:"flex-start"}}>
+            <Grid item  sx={{ display: 'flex-inline' }}>
+            <Grid container justifyContent="flex-start" gap={1}>
               { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
               <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
@@ -204,14 +205,15 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 <Link href="#" underline="none"
                   component="button"
                   title='Download File'
-                  onClick={() => handleDownload(file._id)}
+                  onClick={() => handleDownload(file._id,file.name ,file.extension )}
                 >
                   <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
                   <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
                 </Link>
               </Card>
               ))}
-            </Grid><Link sx={{mt:"auto"}} href="#" underline="none">see more</Link>
+            </Grid>
+            </Grid><Link sx={{mt:"auto"}} href="#" >see more</Link>
             
           <Grid container sx={{ mt: 2 }}>
                 <ViewFormAudit  defaultValues={defaultValues}/>

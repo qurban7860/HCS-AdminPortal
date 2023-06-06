@@ -17,8 +17,8 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
-import { getDocumentTypes , setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
-import { getDocumentCategories, setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes , setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import { getActiveDocumentCategories, setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -40,8 +40,8 @@ DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
 export default function DocumentAddForm({currentDocument}) {
-  const { documentTypes } = useSelector((state) => state.documentType);
-  const { documentCategories } = useSelector((state) => state.documentCategory);
+  const { activeDocumentTypes } = useSelector((state) => state.documentType);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customerDocuments } = useSelector((state) => state.customerDocument);
   const { machines } = useSelector((state) => state.machine);
   const { customer, customers } = useSelector((state) => state.customer);
@@ -99,8 +99,8 @@ export default function DocumentAddForm({currentDocument}) {
     setCustomerAccessVal(false)
     setReadOnlyVal(false)
     setDescriptionVal("")
-    dispatch(getDocumentTypes())
-    dispatch(getDocumentCategories())
+    dispatch(getActiveDocumentTypes())
+    dispatch(getActiveDocumentCategories())
   },[dispatch,customer])
 
   const AddCustomerDocumentSchema = Yup.object().shape({
@@ -416,7 +416,7 @@ export default function DocumentAddForm({currentDocument}) {
                         disabled={readOnlyVal}
                         // readOnly={readOnlyVal}
                         value={documentTypeVal || null}
-                        options={documentTypes}
+                        options={activeDocumentTypes}
                         // isOptionEqualToValue={(option, value) => option.name === value.name}
                         getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
                         onChange={(event, newValue) => {
@@ -438,7 +438,7 @@ export default function DocumentAddForm({currentDocument}) {
                         disabled={readOnlyVal}
                         // readOnly={readOnlyVal}
                         value={documentCategoryVal || null}
-                        options={documentCategories}
+                        options={activeDocumentCategories}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
                         getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                         onChange={(event, newValue) => {

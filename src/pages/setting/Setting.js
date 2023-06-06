@@ -15,7 +15,7 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import { PATH_MACHINE, PATH_DOCUMENT } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DOCUMENT, PATH_DASHBOARD } from '../../routes/paths';
 import { useDispatch } from '../../redux/store';
 import { Cover } from '../components/Cover';
 import Iconify from '../../components/iconify';
@@ -31,6 +31,8 @@ export default function Setting() {
    // Functions to navigate to different pages
    const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentType.list); };
    const linkFileCategory = () => { navigate(PATH_DOCUMENT.documentCategory.list); };
+   const linkRole = () => { navigate(PATH_DASHBOARD.role.list); };
+
 
   return (
     <Container maxWidth={false}>
@@ -46,7 +48,7 @@ export default function Setting() {
       <Grid container spacing={3}>
         {/* Grid for displaying Settings related information */}
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={4} sx={{ ml: '22px' }}>
+          <Grid item xs={12} md={6} lg={4} sx={{ ml: '22px'}}>
             <Card sx={{ height: '234px', mt: '14px' }}>
               <List
                 component="nav"
@@ -69,6 +71,23 @@ export default function Setting() {
                     <Iconify icon="ic:round-category" />
                   </ListItemIcon>
                   <ListItemText primary="Document Category" />
+                </ListItemButton>
+              </List>
+            </Card>
+            <Card sx={{ height: '234px', mt: '14px' }}>
+              <List
+                component="nav"
+                aria-labelledby="nested-list-subheader"
+                subheader={
+                  <ListSubheader component="div" id="nested-list-subheader">
+                    Security Settings
+                  </ListSubheader>
+                }>
+                <ListItemButton onClick={linkRole} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="carbon:user-role" />
+                  </ListItemIcon>
+                  <ListItemText primary="Users Role" />
                 </ListItemButton>
               </List>
             </Card>

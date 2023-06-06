@@ -15,8 +15,8 @@ import { Switch,Radio, RadioGroup,FormControlLabel,FormLabel, Box, Button, Card,
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addMachineDocument,updateMachineDocument, setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
-import { setDocumentCategoryFormVisibility , getDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import { setDocumentTypeFormVisibility , getDocumentTypes } from '../../../redux/slices/document/documentType';
+import { setDocumentCategoryFormVisibility , getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { setDocumentTypeFormVisibility , getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -43,8 +43,8 @@ DocumentAddForm.propTypes = {
 };
 export default function DocumentAddForm({currentDocument}) {
 
-  const { documentTypes } = useSelector((state) => state.documentType);
-  const { documentCategories } = useSelector((state) => state.documentCategory);
+  const { activeDocumentTypes } = useSelector((state) => state.documentType);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { machine  } = useSelector((state) => state.machine);
   const { machineDocuments  } = useSelector((state) => state.machineDocument);
 
@@ -82,8 +82,8 @@ export default function DocumentAddForm({currentDocument}) {
     setCustomerAccessVal(false)
     setReadOnlyVal(false)
     setDescriptionVal("")
-    dispatch(getDocumentTypes());
-    dispatch(getDocumentCategories());
+    dispatch(getActiveDocumentTypes());
+    dispatch(getActiveDocumentCategories());
   },[dispatch,machine._id])
  // a note can be archived.  
   const AddMachineDocumentSchema = Yup.object().shape({
@@ -164,13 +164,15 @@ export default function DocumentAddForm({currentDocument}) {
 
         if(selectedValue === "new"){
           await dispatch(addMachineDocument(machine?.customer?._id, machine._id ,data));
+          enqueueSnackbar('Machine document save successfully!');
+
         }else{
           if(selectedVersionValue === "newVersion"){
             data.newVersion = true;
           }
           await dispatch(updateMachineDocument(documentVal._id, machine._id ,data));
+          enqueueSnackbar('Machine document updated successfully!');
         }
-        enqueueSnackbar('Machine document save successfully!');
         setDocumentCategoryVal("")
         setDocumentTypeVal("")
         setCustomerAccessVal("")
@@ -367,7 +369,7 @@ export default function DocumentAddForm({currentDocument}) {
                         disabled={readOnlyVal}
                         // readOnly={readOnlyVal}
                         value={documentTypeVal || null}
-                        options={documentTypes}
+                        options={activeDocumentTypes}
                         // isOptionEqualToValue={(option, value) => option.name === value.name}
                         getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
                         onChange={(event, newValue) => {
@@ -389,7 +391,7 @@ export default function DocumentAddForm({currentDocument}) {
                         disabled={readOnlyVal}
                         // readOnly={readOnlyVal}
                         value={documentCategoryVal || null}
-                        options={documentCategories}
+                        options={activeDocumentCategories}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
                         getOptionLabel={(option) => `${option.name ? option.name : ""}`}
                         onChange={(event, newValue) => {
