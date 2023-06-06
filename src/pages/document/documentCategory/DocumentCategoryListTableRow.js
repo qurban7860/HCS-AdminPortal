@@ -55,7 +55,7 @@ export default function DocumentCategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, description, isActive, createdAt } = row;
+  const { name, description,customerAccess, isActive, createdAt } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -90,6 +90,7 @@ export default function DocumentCategoryListTableRow({
           </Stack>
         </TableCell>
         {/* <TableCell>{description}</TableCell> */}
+        <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
         <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
         <TableCell align="right" >{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
