@@ -167,7 +167,7 @@ const document = {
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          <Grid item xs={12} sm={6} sx={{ mt:2 ,display: "flex", alignItems:"flex-start"}}>
+          <Grid sx={{ mt:2 ,display: "flex", alignItems:"flex-start"}}>
           { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
             <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
@@ -180,7 +180,8 @@ const document = {
                   <Box
                     onAbort={handleOpenPreview}
                     component="img"
-                    sx={{ mx:3, mt:2 }}
+                    width="80px" height="80px" 
+                    sx={{ mx:3, mt:2, objectFit:"cover" }}
                     alt={file.DisplayName}
                     src={`data:image/png;base64, ${file?.thumbnail}`}
                     />
@@ -260,7 +261,7 @@ const document = {
             </Link>} */}
               {/* <DownloadComponent Document={currentMachineDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
-            </Grid>
+            </Grid><Link href="#" underline="none" >see more</Link>
           {/* {currentMachineDocument?.type.startsWith("image") ?
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null} */}
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}

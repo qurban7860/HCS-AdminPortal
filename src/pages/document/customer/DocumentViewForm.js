@@ -192,11 +192,11 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             {/* <ViewFormField sm={6} heading="Customer Access" param={defaultValues?.customerAccess === true ? "Yes" : "No"} /> */}
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
-            <Grid item xs={12} sm={6} sx={{mt:2 ,display: "flex", alignItems:"flex-start"}}>
-            { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+            <Grid  sx={{mt:2 ,display: "flex", alignItems:"flex-start"}}>
+              { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
-            <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
-              <Link href="#" underline="none"
+              <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
+                <Link href="#" underline="none"
                 component="button"
                 title='Download File'
                 // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
@@ -205,25 +205,26 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                   <Box
                     onAbort={handleOpenPreview}
                     component="img"
-                    sx={{ mx:3, mt:2 }}
+                    width="80px" height="80px" 
+                    sx={{ mx:3, mt:2, objectFit:"cover" }}
                     alt={file.DisplayName}
                     src={`data:image/png;base64, ${file?.thumbnail}`}
                     />
                     <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
-              </Link> 
-            </Card>:
-            <Card sx={{m:1, width:"130px", height:"155px"}}>
-              <Link href="#" underline="none"
-                component="button"
-                title='Download File'
-                onClick={() => handleDownload(file._id)}
-              >
-                <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
-                <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
-              </Link>
-            </Card>
-            ))}
-            </Grid>
+                </Link> 
+              </Card>:
+              <Card sx={{m:1, width:"130px", height:"155px"}}>
+                <Link href="#" underline="none"
+                  component="button"
+                  title='Download File'
+                  onClick={() => handleDownload(file._id)}
+                >
+                  <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
+                  <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+                </Link>
+              </Card>
+              ))}
+            </Grid><Link sx={{mt:"auto"}} href="#" underline="none">see more</Link>
             {/* { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") &&
               <Link href="#" underline="none"
