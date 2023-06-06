@@ -192,7 +192,7 @@ const document = {
                 
                 component="button"
                 title='Download File'
-                onClick={() => handleDownload(file._id)}
+                onClick={() => handleDownload(file._id,file.name ,file.extension)}
               >
                 <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]} />
                 <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
@@ -202,7 +202,7 @@ const document = {
             
               {/* <DownloadComponent Document={currentMachineDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
-            </Grid><Link sx={{mt:"auto"}} href="#" underline="none" >see more</Link>
+            </Grid><Link sx={{mt:"auto"}} href="#" >see more</Link>
           {/* {currentMachineDocument?.type.startsWith("image") ?
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null} */}
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}

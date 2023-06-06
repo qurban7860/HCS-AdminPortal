@@ -19,10 +19,12 @@ import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
 DownloadDocument.propTypes = {
-  Document: PropTypes.object,
+ name: PropTypes.object,
+ extension: PropTypes.string,
+ fileId: PropTypes.string
 };
 
-export default function DownloadDocument({ Document = null }) {
+export default function DownloadDocument({ fileId, extension,name }) {
 //   const Loadable = (Component) => (props) =>
 //   (
 //     <Suspense fallback={<LoadingScreen />}>
@@ -59,10 +61,10 @@ export default function DownloadDocument({ Document = null }) {
         //     const DownloadComponent = module.default;
         //     // Render the DownloadComponent
         //   });
-        dispatch(getDocumentDownload(Document._id)).then(res => {
+        dispatch(getDocumentDownload(fileId)).then(res => {
             console.log("res : ",res)
             if(regEx.test(res.status)){
-              download(atob(res.data), `${Document?.displayName}.${Document?.extension}`, { type: Document?.type});
+              download(atob(res.data), `${name}.${extension}`, { type: extension});
             //   downloadBase64File(res.data, `${currentCustomerDocument?.displayName}.${currentCustomerDocument?.extension}`);
               enqueueSnackbar(res.statusText);
             }else{

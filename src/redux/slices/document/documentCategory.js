@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   documentCategories: [],
+  activeDocumentCategories:[],
   documentCategory: {},
 };
 
@@ -47,6 +48,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.documentCategories = action.payload;
+      state.initial = true;
+    },
+
+    getActiveDocumentCategoriesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeDocumentCategories = action.payload;
       state.initial = true;
     },
 
@@ -177,6 +185,34 @@ export function getDocumentCategory(Id) {
     }
   };
 }
+
+// -----------------------------------Get Active Document Categories-----------------------------------
+
+export function getActiveDocumentCategories() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/categories/` , 
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+        }
+      }
+      );
+      console.log("document category response: " , response)
+      dispatch(slice.actions.getActiveDocumentCategoriesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('File Categories loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+
+
+
 
 // ---------------------------------archive document Category-------------------------------------
 
