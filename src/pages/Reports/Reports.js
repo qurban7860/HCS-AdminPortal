@@ -59,20 +59,30 @@ export default function Reports() {
       >
         <Cover name="Reports" icon="material-symbols:list-alt-outline" />
       </Card>
-      <Grid container spacing={3}>
-        {/* Grid for displaying Settings related information */}
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={4} sx={{ ml: '22px' }}>
-            <Card sx={{ height: '234px', mt: '14px' }}>
-              <List
+      <Grid container spacing={3} >
+          <Grid item sm={12}>
+            <Card sx={{ height: '840px', mb: 5}} >
+              
+            <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
-                    Reports
+                    Sites Location
                   </ListSubheader>
                 }
-              >
+              /> 
+              {/* </List> */}
+
+
+            <GoogleMaps
+              latlongArr={latLongValues}
+            />
+
+
+               
+
+
                 {/* <ListItemButton onClick={} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
                     <Iconify icon="" />
@@ -86,15 +96,13 @@ export default function Reports() {
                   </ListItemIcon>
                   <ListItemText primary="" />
                 </ListItemButton> */}
-              </List>
             </Card>
-          </Grid>
         </Grid>
       </Grid>
       <Grid container spacing={0}>
-        <GoogleMaps
+        {/* <GoogleMaps
           latlongArr={latLongValues}
-        />
+        /> */}
 
       </Grid>
     </Container>

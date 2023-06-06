@@ -18,12 +18,26 @@ import {
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getMachinestatuses, getMachineStatus, deleteMachinestatus } from '../../../redux/slices/products/statuses';
+import {
+  getMachinestatuses,
+  getMachineStatus,
+  deleteMachinestatus,
+} from '../../../redux/slices/products/statuses';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
-import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../../components/table';
+import {
+  useTable,
+  getComparator,
+  emptyRows,
+  TableNoData,
+  TableSkeleton,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../../components/table';
 import Iconify from '../../../components/iconify/Iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
@@ -50,10 +64,7 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
 // ----------------------------------------------------------------------
-
-
 
 export default function StatusList() {
   const {
@@ -93,13 +104,13 @@ export default function StatusList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { machinestatuses, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinestatus);
+  const { machinestatuses, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.machinestatus
+  );
 
-  
-
-  useLayoutEffect( () => {
+  useLayoutEffect(() => {
     // console.log('Testing done')
-     dispatch(getMachinestatuses());
+    dispatch(getMachinestatuses());
   }, [dispatch]);
 
   useEffect(() => {
@@ -163,11 +174,11 @@ export default function StatusList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-      setSelected([]);
-      setTableData(deleteRows);
+    setSelected([]);
+    setTableData(deleteRows);
     if (page > 0) {
       if (selectedRows.length === dataInPage.length) {
         setPage(page - 1);
@@ -178,7 +189,7 @@ export default function StatusList() {
         setPage(newPage);
       }
     }
-    handleClose()
+    handleClose();
   };
 
   const handleEditRow = async (id) => {
@@ -199,8 +210,8 @@ export default function StatusList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-          <Cover name='Status List' icon='material-symbols:list-alt-outline' setting="enable" />
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <Cover name="Status" icon="material-symbols:list-alt-outline" setting="enable" />
         </Card>
         <Card sx={{ mt: 3 }}>
           <StatusListTableToolbar
@@ -233,7 +244,7 @@ export default function StatusList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small'sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -260,7 +271,7 @@ export default function StatusList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -273,7 +284,13 @@ export default function StatusList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom count={dataFiltered.length} page={page} rowsPerPage={rowsPerPage} onPageChange={onChangePage} onRowsPerPageChange={onChangeRowsPerPage} />
+          <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
         </Card>
       </Container>
 
@@ -317,9 +334,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterstatus) => filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||  
-    // (filterstatus?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (filterstatus) =>
+        filterstatus?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (filterstatus?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(filterstatus?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

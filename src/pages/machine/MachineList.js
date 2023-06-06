@@ -8,8 +8,34 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid,Container, Stack, Typography, DialogTitle, Dialog, InputAdornment , Table, Button, Tooltip, TableBody, IconButton, TableContainer,} from '@mui/material';
-import {useTable,getComparator,emptyRows,TableNoData,TableSkeleton,TableEmptyRows,TableHeadCustom,TableSelectedAction,TablePaginationCustom} from '../../components/table';
+import {
+  Box,
+  Card,
+  Grid,
+  Container,
+  Stack,
+  Typography,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
+  Table,
+  Button,
+  Tooltip,
+  TableBody,
+  IconButton,
+  TableContainer,
+} from '@mui/material';
+import {
+  useTable,
+  getComparator,
+  emptyRows,
+  TableNoData,
+  TableSkeleton,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../components/table';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -18,18 +44,33 @@ import MachineListTableToolbar from './MachineListTableToolbar';
 import { Cover } from '../components/Cover';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
-import { getMachines, deleteMachine, resetMachine, getMachine } from '../../redux/slices/products/machine';
-import { resetToolInstalled,resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
+import {
+  getMachines,
+  deleteMachine,
+  resetMachine,
+  getMachine,
+} from '../../redux/slices/products/machine';
+import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineTechParamValue';
 import { resetLicense, resetLicenses } from '../../redux/slices/products/license';
 import { resetNote, resetNotes } from '../../redux/slices/products/machineNote';
-import { resetMachineDocument, resetMachineDocuments } from '../../redux/slices/document/machineDocument';
+import {
+  resetMachineDocument,
+  resetMachineDocuments,
+} from '../../redux/slices/document/machineDocument';
 
 // routes
-import { PATH_DASHBOARD , PATH_MACHINE } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../components/hook-form';
+import FormProvider, {
+  RHFSelect,
+  RHFAutocomplete,
+  RHFTextField,
+  RHFMultiSelect,
+  RHFEditor,
+  RHFUpload,
+} from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset
@@ -39,7 +80,6 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 
 import { useSettingsContext } from '../../components/settings';
 import { fDate } from '../../utils/formatTime';
-
 
 // ----------------------------------------------------------------------
 const STATUS_OPTIONS = [
@@ -65,27 +105,44 @@ const TABLE_HEAD = [
 ];
 
 export default function MachineList() {
-  const {dense,page,order,orderBy,rowsPerPage,setPage,selected,setSelected,onSelectRow,onSelectAllRows,onSort,onChangeDense,onChangePage,onChangeRowsPerPage,} = useTable({ defaultOrderBy: '-createdAt', });
+  const {
+    dense,
+    page,
+    order,
+    orderBy,
+    rowsPerPage,
+    setPage,
+    selected,
+    setSelected,
+    onSelectRow,
+    onSelectAllRows,
+    onSort,
+    onChangeDense,
+    onChangePage,
+    onChangeRowsPerPage,
+  } = useTable({ defaultOrderBy: '-createdAt' });
   const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const { machines, isLoading, error, initial, responseMessage } = useSelector((state) => state.machine);
+  const { machines, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.machine
+  );
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
     dispatch(getMachines());
-    dispatch(resetMachine())
-    dispatch(resetToolInstalled())
-    dispatch(resetToolsInstalled())
-    dispatch(resetSetting())
-    dispatch(resetSettings())
-    dispatch(resetLicense())
-    dispatch(resetLicenses())
-    dispatch(resetNote())
-    dispatch(resetNotes())
-    dispatch(resetMachineDocument())
-    dispatch(resetMachineDocuments())
+    dispatch(resetMachine());
+    dispatch(resetToolInstalled());
+    dispatch(resetToolsInstalled());
+    dispatch(resetSetting());
+    dispatch(resetSettings());
+    dispatch(resetLicense());
+    dispatch(resetLicenses());
+    dispatch(resetNote());
+    dispatch(resetNotes());
+    dispatch(resetMachineDocument());
+    dispatch(resetMachineDocuments());
   }, [dispatch]);
 
   const { themeStretch } = useSettingsContext();
@@ -186,7 +243,7 @@ export default function MachineList() {
     <>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          {/* <MachineDashboardNavbar/> */}
+          {/* <MachineDashboardNavbar /> */}
         </Grid>
         <Card
           sx={{
@@ -324,14 +381,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (product) => product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
-    product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (product) =>
+        product?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.machineModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.status?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        product?.instalationSite?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(product?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
   return inputData;
 }

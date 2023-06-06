@@ -5,13 +5,13 @@ import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';
 
-const containerStyle = {
-  width: '100%',
-  height: '400px',
-};
-
 const defaultCenter = {
   lat: -36.902893343776185,
+  lng: 174.92608245309523,
+};
+
+const reportDefaultCenter = {
+  lat: 26.902893343776185,
   lng: 174.92608245309523,
 };
 
@@ -26,12 +26,24 @@ GoogleMaps.propTypes = {
 };
 
 /* eslint-disable */
-export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) {
+export default function GoogleMaps({
+  lat,
+  lng,
+  edit = false,
+  latlongArr = [],
+  mapHeight = '',
+  center = '',
+  zoom = '',
+}) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: CONFIG.GOOGLE_MAPS_API_KEY || '',
   });
 
+  const containerStyle = {
+    width: '100%',
+    height: !mapHeight ? (latlongArr.length > 0 ? '800px' : '400px') : mapHeight,
+  };
   const dispatch = useDispatch();
   const [map, setMap] = useState(null);
   const [markerPositions, setMarkerPositions] = useState([]);
@@ -58,7 +70,7 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
       setMarkerPositions(positions);
     }
   }, [map, latlongArr]);
-  
+
   const onLoad = (map) => {
     setMap(map);
   };
@@ -81,14 +93,19 @@ export default function GoogleMaps({ lat, lng, edit = false, latlongArr = [] }) 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={markerPositions.length > 0 ? markerPositions[0] : defaultCenter}
-      zoom={12}
+      center={latlongArr.length > 0 ? reportDefaultCenter : markerPositions[0]}
+      zoom={zoom ? zoom : latlongArr.length > 0 ? 2 : 12}
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={onMapClick}
     >
       {markerPositions.map((position, index) => (
-        <Marker key={index} position={position} draggable={edit} ref={(ref) => markerRefs.current[index] = ref} />
+        <Marker
+          key={index}
+          position={position}
+          draggable={edit}
+          ref={(ref) => (markerRefs.current[index] = ref)}
+        />
       ))}
     </GoogleMap>
   ) : (

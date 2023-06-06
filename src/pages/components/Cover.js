@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Typography ,Button, Grid, Link} from '@mui/material';
+import { Box, Typography, Button, Grid, Link } from '@mui/material';
 
 // utils
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
@@ -46,8 +46,6 @@ const StyledInfo = styled('div')(({ theme }) => ({
   },
 }));
 
-
-
 // ----------------------------------------------------------------------
 
 Cover.propTypes = {
@@ -56,14 +54,26 @@ Cover.propTypes = {
   name: PropTypes.string,
   role: PropTypes.string,
   setting: PropTypes.string,
-  photoURL:PropTypes.object,
+  photoURL: PropTypes.object,
   icon: PropTypes.string,
   serialNo: PropTypes.string,
   backLink: PropTypes.string,
   model: PropTypes.string,
   customer: PropTypes.string,
 };
-export function Cover({ tradingName, cover, name, serialNo, role, setting, photoURL, icon, backLink, model, customer }) {
+export function Cover({
+  tradingName,
+  cover,
+  name,
+  serialNo,
+  role,
+  setting,
+  photoURL,
+  icon,
+  backLink,
+  model,
+  customer,
+}) {
   const navigate = useNavigate();
   const { techparamcategory } = useSelector((state) => state.techparamcategory);
   const handleNavigate = () => {
@@ -74,6 +84,10 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
   };
 
   const isMobile = useResponsive('down', 'sm');
+  // name has a space ?
+  const nameNumMaxLength = name?.split(' ')[0];
+  const nameNumMaxLength2 = name?.split(' ')[1]?.substring(0, 10);
+  const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
 
   return (
     <StyledRoot
@@ -101,7 +115,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               width: { xs: 110, md: 110 },
               height: { xs: 110, md: 110 },
             }}
-            >
+          >
             {/* if the page is Howick, will show the howick logo */}
             {name !== 'HOWICK LTD.' ? null : <LogoAvatar />}
           </CustomAvatar>
@@ -111,16 +125,19 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
 
         {serialNo ? (
           <Typography
-            variant={isMobile ? 'h3' : 'h2'}
+            variant={isMobile && photoURL ? 'h3' : 'h2'}
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: 5, md: 5 },
+              mt: { xs: nameTitle.length > 15 ? 5 : 8, md: 7 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
-            >
-            {serialNo} {name ? ` / ${name}` : ''}
+          >
+            {/* serial numbers are not to meant to be longer than 6 digits (in a very long time), *we
+            are still on 5 digits */}
+            {serialNo && serialNo}
+            {name && name.length > 15 ? `/${nameTitle}` : ''}
           </Typography>
         ) : (
           <Typography
@@ -131,9 +148,9 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               mt: { xs: 7, md: 6 },
               display: { xs: 'flex', md: 'block' },
             }}
-            >
+          >
             {/* if in mobile/device, only the avatar will show up for customer */}
-            {isMobile && (name.length > 15) ? '' : name}
+            {isMobile && name?.length > 15 ? '' : name}
           </Typography>
         )}
 
@@ -150,7 +167,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
               component="button"
               variant="body2"
               onClick={handleBacklink}
-              >
+            >
               <Iconify icon="material-symbols:arrow-back-rounded" />
             </Link>
           ) : (
@@ -164,7 +181,7 @@ export function Cover({ tradingName, cover, name, serialNo, role, setting, photo
                 mt: 'auto',
                 color: 'common.white',
                 mx: 2,
-                mb: 2
+                mb: { xs: 0, md: 1 },
               }}
               component="button"
               variant="body2"

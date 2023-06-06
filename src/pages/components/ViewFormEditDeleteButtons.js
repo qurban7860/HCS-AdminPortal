@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 // eslint-disable-next-line
 import { makeStyles } from '@mui/styles';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -22,28 +23,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 ViewFormEditDeleteButtons.propTypes = {
+  handleTransfer: PropTypes.func,
+  handleUpdatePassword: PropTypes.func,
   handleEdit: PropTypes.func,
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
+  disableButton: PropTypes.bool, 
   handleMap: PropTypes.func,
 };
 export default function ViewFormEditDeleteButtons({
+  disableButton,
   onDelete,
   handleEdit,
+  handleTransfer,
+  handleUpdatePassword,
   type,
   sites,
   handleMap,
 }) {
+  const { isLoading } = useSelector((state) => state.machine);
   const classes = useStyles();
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
+  const handleOpenConfirm = (dialogType) => {
+    if(dialogType === 'delete'){
+      setOpenConfirm(true);
+    }
+    if(dialogType === 'transfer'){
+      setOpenTransferConfirm(true);
+    }
   };
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
+  const handleCloseConfirm = (dialogType) => {
+    if(dialogType === 'delete'){
+        setOpenConfirm(false);
+    }
+    if(dialogType === 'transfer'){
+      setOpenTransferConfirm(false);
+    }
   };
   const handleClosePopover = () => {
     setOpenPopover(null);
@@ -130,8 +149,51 @@ export default function ViewFormEditDeleteButtons({
           ''
         )}
 
+        {handleTransfer ? (
+          <Button
+            disabled={disableButton}
+            onClick={() => {
+              handleOpenConfirm('transfer');
+            }}
+            variant="outlined"
+            title="Transfer"
+          >
+            <Tooltip
+              title="Transfer Ownership"
+              placement="top"
+              disableFocusListener
+              classes={{ tooltip: classes.tooltip }}
+            >
+              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi-cog-transfer-outline" />
+            </Tooltip>
+          </Button>
+        ) : (
+          ''
+        )}
+
+
+        {handleUpdatePassword ? (
+          <Button
+              onClick={() => {
+              handleUpdatePassword();
+            }}
+            variant="outlined"
+            title="Change Password"
+          >
+            <Tooltip
+              title="Change Password"
+              placement="top"
+              disableFocusListener
+              classes={{ tooltip: classes.tooltip }}
+            >
+              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:lock-reset" />
+            </Tooltip>
+          </Button>
+          ) : ( '' )
+        }
+
         <Button
-          onClick={() => {
+            onClick={() => {
             handleEdit();
           }}
           variant="outlined"
@@ -149,8 +211,8 @@ export default function ViewFormEditDeleteButtons({
         {/* if not in the profile show this */}
         {onDelete ? (
           <Button
-            onClick={() => {
-              handleOpenConfirm();
+              onClick={() => {
+              handleOpenConfirm('delete');
             }}
             variant="outlined"
             color="error"
@@ -172,13 +234,33 @@ export default function ViewFormEditDeleteButtons({
       </Stack>
       <ConfirmDialog
         open={openConfirm}
-        onClose={handleCloseConfirm}
+        onClose={() => {
+          handleCloseConfirm('delete');
+        }}
         title="Delete"
-        content="Are you sure want to delete?"
+        content="Are you sure you want to delete?"
         action={
           <Button variant="contained" color="error" onClick={onDelete}>
             Delete
           </Button>
+        }
+      />
+      <ConfirmDialog
+        open={openTransferConfirm}
+        onClose={() => {
+          handleCloseConfirm('transfer');
+        }}
+        title="Ownership Transfer"
+        content="Are you sure you want to transfer machine ownership?"
+        action={
+          <LoadingButton
+            color="error"
+            variant="contained"
+            loading={isLoading}
+            onClick={handleTransfer}
+          >
+            Transfer
+          </LoadingButton>
         }
       />
     </>

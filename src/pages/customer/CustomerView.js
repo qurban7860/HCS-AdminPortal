@@ -160,7 +160,6 @@ export default function CustomerView({editPage}) {
           photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
           icon="ph:users-light"
         />
-
         <Tabs
           value={currentTab}
           onChange={(event, newValue) => setCurrentTab(newValue)}

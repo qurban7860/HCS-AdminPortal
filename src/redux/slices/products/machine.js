@@ -11,6 +11,7 @@ const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   machineEditFormFlag: false,
+  transferMachineFlag: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -30,9 +31,19 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+    },
+
     // SET TOGGLE
     setMachineEditFormVisibility(state, action){
       state.machineEditFormFlag = action.payload;
+    },
+
+    // SET TOGGLE
+    setTransferMachineFlag(state, action){
+      state.transferMachineFlag = action.payload;
     },
     
     // HAS ERROR
@@ -108,6 +119,8 @@ export default slice.reducer;
 // Actions
 export const {
   setMachineEditFormVisibility,
+  stopLoading,
+  setTransferMachineFlag,
   resetCustomerMachines,
   resetMachine,
   resetMachines,
@@ -270,8 +283,6 @@ export function updateMachine(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
-
       const data = {
         serialNo: params.serialNo,
         name: params.name,
@@ -300,12 +311,46 @@ export function updateMachine(params) {
 
       dispatch(getMachine(params.id));
       dispatch(slice.actions.setMachineEditFormVisibility(false));
-
       // this.updateCustomerSuccess(response);
 
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+
+}
+
+// --------------------------------------------------------------------------
+
+export function transferMachine(params) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+        machine: params._id,
+        name: params.name,
+        supplier: params.supplier,
+        workOrderRef: params.workOrderRef,
+        siteMilestone: params.siteMilestone,
+        accountManager: params.accountManager,
+        projectManager: params.projectManager,
+        supportManager: params.supportManager,
+        description: params.description,
+        customerTags: params.customerTags,
+      };
+     /* eslint-enable */
+      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
+        data
+      );
+      dispatch(getMachine(response.data.Machine.parentMachineID));
+      return response; // eslint-disable-line
+
+    } catch (error) {
+      dispatch(slice.actions.stopLoading());
+      console.error(error);
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 

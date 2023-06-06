@@ -1,14 +1,34 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
-import { useNavigate,useParams } from 'react-router-dom';
-import { useDispatch, useSelector,batch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector, batch } from 'react-redux';
 
 // @mui
-import {Switch, Card, Grid, Container, Typography, Modal , Fade, Box , Link ,Dialog,  DialogTitle, Stack,Button, Divider} from '@mui/material';
+import {
+  Switch,
+  Card,
+  Grid,
+  Container,
+  Typography,
+  Modal,
+  Fade,
+  Box,
+  Link,
+  Dialog,
+  DialogTitle,
+  Stack,
+  Button,
+  Divider,
+} from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
-import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
 // slices
-import { getSecurityUser,getSecurityUsers, deleteSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import {
+  getSecurityUser,
+  getSecurityUsers,
+  deleteSecurityUser,
+  setSecurityUserEditFormVisibility,
+} from '../../redux/slices/securityUser/securityUser';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
 import Iconify from '../../components/iconify';
@@ -16,11 +36,15 @@ import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import {Cover} from '../components/Cover';
+import { Cover } from '../components/Cover';
 import { useAuthContext } from '../../auth/useAuthContext';
-import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 import { useSnackbar } from '../../components/snackbar';
-import {  dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import {
+  dispatchReqAddAndView,
+  dispatchReqNavToList,
+  dispatchReqNoMsg,
+} from '../asset/dispatchRequests';
 import palette from '../../theme';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
@@ -28,10 +52,9 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
-
 export default function SecurityUserViewForm() {
-  const regEx = /^[^2]*/
-  const { securityUser , initial } = useSelector((state) => state.user);
+  const regEx = /^[^2]*/;
+  const { securityUser, initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
   const [openContact, setOpenContact] = useState(false);
@@ -52,62 +75,67 @@ export default function SecurityUserViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  useEffect(()=> {
-    if(id){
-      dispatchReqNoMsg(dispatch,getSecurityUser(id),enqueueSnackbar)
-  }
+  useEffect(() => {
+    if (id) {
+      dispatchReqNoMsg(dispatch, getSecurityUser(id), enqueueSnackbar);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[id,dispatch])
+  }, [id, dispatch]);
 
-    useEffect(()=>{
-      batch(() => {
-        if(securityUser && securityUser?.customer && securityUser?.customer?._id){
-          dispatch(getCustomer(securityUser?.customer?._id))
-        }
-        if(securityUser && securityUser?.contact && securityUser?.contact?._id){
-          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-        }})
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch,securityUser])
-
+  useEffect(() => {
+    batch(() => {
+      if (securityUser && securityUser?.customer && securityUser?.customer?._id) {
+        dispatch(getCustomer(securityUser?.customer?._id));
+      }
+      if (securityUser && securityUser?.contact && securityUser?.contact?._id) {
+        dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, securityUser]);
 
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_DASHBOARD.user.edit(securityUser._id));
-  }
+  };
+
+  const handleUpdatePassword = () => {
+    // dispatch(setSecurityUserEditFormVisibility(true));
+    navigate(PATH_DASHBOARD.user.userPassword);
+  };
 
   const onDelete = async () => {
     await dispatch(deleteSecurityUser(id));
     dispatch(getSecurityUsers());
-    navigate(PATH_DASHBOARD.user.list)
-  }
+    navigate(PATH_DASHBOARD.user.list);
+  };
 
   const handleViewCustomer = (Id) => {
     navigate(PATH_DASHBOARD.customer.view(Id));
   };
   const handlePassword = () => {
-    navigate(PATH_DASHBOARD.user.userPassword)
-  }
+    navigate(PATH_DASHBOARD.user.userPassword);
+  };
 
   const defaultValues = useMemo(
     () => ({
-      customer:                 securityUser?.customer?.name || "",
-      contact:                  securityUser?.contact?.firstName || "",
-      name:                     securityUser?.name || "",
-      phone:                    securityUser?.phone || "",
-      email:                    securityUser?.email || "",
-      login:                    securityUser?.login || "",
-      roles:                    securityUser?.roles ,
-      isActive:                 securityUser?.isActive,
-      createdByFullName:        securityUser?.createdBy?.name ,
-      createdAt:                securityUser?.createdAt ,
-      createdIP:                securityUser?.createdIP ,
-      updatedByFullName:        securityUser?.updatedBy?.name ,
-      updatedAt:                securityUser?.updatedAt ,
-      updatedIP:                securityUser?.updatedIP ,
-    }
-    ),
-    [securityUser] );
+      customer: securityUser?.customer?.name || '',
+      contact: securityUser?.contact?.firstName || '',
+      name: securityUser?.name || '',
+      phone: securityUser?.phone || '',
+      email: securityUser?.email || '',
+      login: securityUser?.login || '',
+      roles: securityUser?.roles,
+      isActive: securityUser?.isActive,
+      createdByFullName: securityUser?.createdBy?.name,
+      createdAt: securityUser?.createdAt,
+      createdIP: securityUser?.createdIP,
+      updatedByFullName: securityUser?.updatedBy?.name,
+      updatedAt: securityUser?.updatedAt,
+      updatedIP: securityUser?.updatedIP,
+    }),
+    [securityUser]
+  );
 
   return (
     <>
@@ -120,7 +148,11 @@ export default function SecurityUserViewForm() {
           />
         </Card>
         <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+          <ViewFormEditDeleteButtons
+            handleUpdatePassword={handleUpdatePassword}
+            handleEdit={handleEdit}
+            onDelete={onDelete}
+          />
           {/* <Stack
             justifyContent="flex-end"
             direction="row"
@@ -228,7 +260,7 @@ export default function SecurityUserViewForm() {
           </Typography>{' '}
           <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
+            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ p: 2 }}>
@@ -245,7 +277,7 @@ export default function SecurityUserViewForm() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -286,7 +318,7 @@ export default function SecurityUserViewForm() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -357,7 +389,7 @@ export default function SecurityUserViewForm() {
           </Typography>{' '}
           <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ ml: 'auto' }}>
             {' '}
-            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
+            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
         <Grid container sx={{ px: 2, py: 2 }}>
@@ -386,7 +418,7 @@ export default function SecurityUserViewForm() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
@@ -429,4 +461,4 @@ export default function SecurityUserViewForm() {
       </Dialog>
     </>
   );
-};
+}
