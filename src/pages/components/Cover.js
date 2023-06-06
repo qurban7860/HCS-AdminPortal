@@ -87,7 +87,7 @@ export function Cover({
   // name has a space ?
   const nameNumMaxLength = name?.split(' ')[0];
   const nameNumMaxLength2 = name?.split(' ')[1]?.substring(0, 10);
-  const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2}`;
+  const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
 
   return (
     <StyledRoot

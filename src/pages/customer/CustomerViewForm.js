@@ -161,7 +161,7 @@ export default function CustomerViewForm() {
                 sm={12}
                 sx={{
                   backgroundImage: (theme) =>
-                    `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                    `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
                 }}
               >
                 <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
@@ -206,7 +206,7 @@ export default function CustomerViewForm() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>

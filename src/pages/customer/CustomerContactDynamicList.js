@@ -15,8 +15,10 @@ import {
   CardMedia,
   Breadcrumbs,
   Dialog,
+  IconButton,
   Typography,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import ViewFormAudit from '../components/ViewFormAudit';
@@ -159,6 +161,8 @@ export default function CustomerContactList(currentContact = null) {
 
   return (
     <>
+      {contactEditFormVisibility && <ContactEditForm />}
+      {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
       {!contactEditFormVisibility && (
         <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
@@ -215,119 +219,112 @@ export default function CustomerContactList(currentContact = null) {
           </Grid>
         </Stack>
       )}
-      {contactEditFormVisibility && <ContactEditForm />}
-      {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
       <Grid
         container
-        lg={12}
-        spacing={3}
+        spacing={1}
+        direction="row"
         justifyContent="flex-start"
         grid-template-rows="repeat(3, 1fr)"
         grid-template-columns="repeat(3, 1fr)"
       >
-        {!formVisibility &&
-          !contactEditFormVisibility &&
-          contacts.map((contact, index) => {
-            const borderTopVal = index !== 0 ? '0px solid white' : '';
-            return (
-              <>
-                <Grid key={index} item sx={{ display: 'inline-block' }}>
-                  {index !== activeIndex ? (
-                    <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
-                      <CardActionArea>
-                        <Grid
-                          container
-                          justifyContent="center"
-                          alignContent="center"
-                          sx={{ display: 'block' }}
-                        >
-                          <Link
-                            onClick={() => {
-                              setCurrentContactData(contact);
-                              // handleOpenContact(index);
-                              handleExpand(index);
-                              // setOpenContact(true);
-                            }}
-                            underline="none"
-                          >
-                            <Grid
-                              item
-                              justifyContent="center"
-                              sx={{ bgcolor: 'blue', alignContent: 'center' }}
+        <Grid item lg={5} sx={{ display: 'flex-inline' }}>
+          <Grid container justifyContent="flex-start" gap={1}>
+            {!formVisibility &&
+              !contactEditFormVisibility &&
+              contacts.map((contact, index) => {
+                const borderTopVal = index !== 0 ? '0px solid white' : '';
+                return (
+                  <>
+                    {index !== activeIndex && (
+                      <Grid item key={index} lg={5}>
+                        <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
+                          <CardActionArea>
+                            <Link
+                              onClick={() => {
+                                setCurrentContactData(contact);
+                                // handleOpenContact(index);
+                                handleExpand(index);
+                                // setOpenContact(true);
+                              }}
+                              underline="none"
                             >
-                              <CardContent
-                                component={Stack}
-                                display="block"
-                                height="170px"
-                                sx={{ position: 'relative', zIndex: '1' }}
-                              >
-                                <CustomAvatar
-                                  sx={{
-                                    width: '100px',
-                                    height: '100px',
-                                    display: 'flex',
-                                    marginTop: '60px',
-                                    marginRight: 'auto',
-                                    marginLeft: 'auto',
-                                    marginBottom: '0px',
-                                    boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                                    fontSize: '40px',
-                                    zIndex: '2',
-                                  }}
-                                  name={fullName[index]}
-                                  alt={fullName[index]}
-                                />
-                                <CardMedia
-                                  component="img"
-                                  sx={{
-                                    height: '170px',
-                                    opacity: '0.5',
-                                    display: 'block',
-                                    zIndex: '-1',
-                                    position: 'absolute',
-                                    top: '0',
-                                    left: '0',
-                                    right: '0',
-                                    bottom: '0',
-                                    width: '100%',
-                                    objectFit: 'cover',
-                                    objectPosition: 'center',
-                                  }}
-                                  image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                  alt="customer's contact cover photo was here"
-                                />
-                              </CardContent>
-                            </Grid>
-                            <Grid
-                              item
-                              justifyContent="center"
-                              sx={{ display: 'block', textAlign: 'center', width: '200px' }}
-                            >
-                              <CardContent
-                                component={Stack}
-                                display="block"
+                              <Grid
+                                item
                                 justifyContent="center"
-                                height="130px"
+                                sx={{ bgcolor: 'blue', alignContent: 'center' }}
                               >
-                                <Typography variant="body1" sx={{ fontWeight: 'bold', p: 1 }}>
-                                  {fullName[index] ? fullName[index] : <br />}
-                                </Typography>
-                                <Typography variant="body2" color="text.secondary">
-                                  {contact.title ? contact.title : <br />}
-                                </Typography>
-                                <Typography variant="overline" color="secondary.main" pt={2}>
-                                  {contact.email ? contact.email : <br />}
-                                </Typography>
-                              </CardContent>
-                            </Grid>
-                          </Link>
-                        </Grid>
-                      </CardActionArea>
-                    </Card>
-                  ) : null}
-                </Grid>
+                                <CardContent
+                                  component={Stack}
+                                  display="block"
+                                  height="170px"
+                                  sx={{ position: 'relative', zIndex: '1' }}
+                                >
+                                  <CustomAvatar
+                                    sx={{
+                                      width: '100px',
+                                      height: '100px',
+                                      display: 'flex',
+                                      marginTop: '60px',
+                                      marginRight: 'auto',
+                                      marginLeft: 'auto',
+                                      marginBottom: '0px',
+                                      boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+                                      fontSize: '40px',
+                                      zIndex: '2',
+                                    }}
+                                    name={fullName[index]}
+                                    alt={fullName[index]}
+                                  />
+                                  <CardMedia
+                                    component="img"
+                                    sx={{
+                                      height: '170px',
+                                      opacity: '0.5',
+                                      display: 'block',
+                                      zIndex: '-1',
+                                      position: 'absolute',
+                                      top: '0',
+                                      left: '0',
+                                      right: '0',
+                                      bottom: '0',
+                                      width: '100%',
+                                      objectFit: 'cover',
+                                      objectPosition: 'center',
+                                    }}
+                                    image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                    alt="customer's contact cover photo was here"
+                                  />
+                                </CardContent>
+                              </Grid>
+                              <Grid
+                                item
+                                justifyContent="center"
+                                sx={{ display: 'block', textAlign: 'center', width: '200px' }}
+                              >
+                                <CardContent
+                                  component={Stack}
+                                  display="block"
+                                  justifyContent="center"
+                                  height="130px"
+                                >
+                                  <Typography variant="body1" sx={{ fontWeight: 'bold', p: 1 }}>
+                                    {fullName[index] ? fullName[index] : <br />}
+                                  </Typography>
+                                  <Typography variant="body2" color="text.secondary">
+                                    {contact.title ? contact.title : <br />}
+                                  </Typography>
+                                  <Typography variant="overline" color="secondary.main" pt={2}>
+                                    {contact.email ? contact.email : <br />}
+                                  </Typography>
+                                </CardContent>
+                              </Grid>
+                            </Link>
+                          </CardActionArea>
+                        </Card>
+                      </Grid>
+                    )}
 
-                {/* <Dialog
+                    {/* <Dialog
                   open={openContact}
                   onClose={handleCloseContact}
                   aria-labelledby="alert-dialog-title"
@@ -361,16 +358,17 @@ export default function CustomerContactList(currentContact = null) {
                     </Grid>
                   </Grid>
                 </Dialog> */}
-              </>
-            );
-          })}
+                  </>
+                );
+              })}
+          </Grid>
+        </Grid>
         {/* expanding grid */}
 
         {isExpanded && (
           <Grid
-            animation="fadeIn ease 0.8s"
             item
-            lg={12}
+            lg={7}
             sx={{
               display: 'flex',
               flexDirection: 'column',

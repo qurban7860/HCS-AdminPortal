@@ -45,7 +45,7 @@ const INFO = {
 };
 
 const SUCCESS = {
-  lighter: '#897a69',
+  lighter: '#897A69',
   light: '#0940B2',
   main: '#10079F',
   dark: '#10079F',

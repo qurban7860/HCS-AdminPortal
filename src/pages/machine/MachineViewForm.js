@@ -149,7 +149,7 @@ export default function MachineViewForm() {
             sm={12}
             sx={{
               backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
             }}
           >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -231,7 +231,7 @@ export default function MachineViewForm() {
             sm={12}
             sx={{
               backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
             }}
           >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -263,14 +263,14 @@ export default function MachineViewForm() {
       </Grid>
 
       <Grid container>
-        <Grid item sx={{ pt: '2rem' }}>
+        <Grid container sx={{ pt: '2rem' }}>
           <Grid
             item
             xs={12}
             sm={12}
             sx={{
               backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
             }}
           >
             <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -325,7 +325,7 @@ export default function MachineViewForm() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -366,7 +366,7 @@ export default function MachineViewForm() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
