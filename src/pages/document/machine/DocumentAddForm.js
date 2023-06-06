@@ -186,7 +186,7 @@ export default function DocumentAddForm({currentDocument}) {
         setDescriptionVal("")
         reset();
       } catch(error){
-        enqueueSnackbar('Machine Document Save failed!');
+        enqueueSnackbar('Machine Document Save failed!', { variant: `error` });
         console.error(error);
       }
   };

@@ -143,7 +143,7 @@ useEffect(()=>{
       await dispatch(updateMachineDocument(machineDocument?._id , machine?._id ,data));
       reset();
     } catch (err) {
-      enqueueSnackbar('Machine document save failed!');
+      enqueueSnackbar('Machine document save failed!', { variant: `error` });
       console.error(err.message);
     }
   };

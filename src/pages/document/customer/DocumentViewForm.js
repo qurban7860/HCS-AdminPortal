@@ -42,7 +42,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  console.log("currentCustomerDocument : ",currentCustomerDocument)
+  // console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
   const [ preview, setPreview] = useState(false)
@@ -56,7 +56,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     dispatch(getCustomerDocuments(customer._id))
     } catch (err) {
       console.log(err);
-      enqueueSnackbar('Document delete failed!');
+      enqueueSnackbar('Document delete failed!', { variant: `error` });
     }
   };
 

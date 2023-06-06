@@ -160,11 +160,11 @@ export default function CustomerNoteList() {
 // console.log(customer._id)
   useEffect(() => {
     if (initial) {
-      if (notes && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (notes && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(notes);
     }
   }, [notes, error,checked, customer, responseMessage, enqueueSnackbar, initial]);

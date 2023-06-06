@@ -95,7 +95,7 @@ export default function DocumentCategoryeEditForm() {
       enqueueSnackbar('Document Category updated Successfully!');
       reset();
     } catch (err) {
-      enqueueSnackbar('Document Category Updating failed!');
+      enqueueSnackbar('Document Category Updating failed!', { variant: `error` });
       console.error(err.message);
     }
   };
