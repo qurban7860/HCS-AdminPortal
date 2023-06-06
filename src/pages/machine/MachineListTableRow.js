@@ -24,7 +24,6 @@ import Label from '../../components/label';
 
 import { useSelector } from '../../redux/store';
 
-
 // ----------------------------------------------------------------------
 
 MachineListTableRow.propTypes = {
@@ -44,7 +43,17 @@ export default function MachineListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { serialNo,name ,parentMachine, machineModel ,customer, instalationSite ,status, isActive, createdAt } = row;
+  const {
+    serialNo,
+    name,
+    parentMachine,
+    machineModel,
+    customer,
+    instalationSite,
+    status,
+    isActive,
+    createdAt,
+  } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -88,7 +97,7 @@ export default function MachineListTableRow({
             <Link
               noWrap
               color="inherit"
-              // variant="body1"
+              variant="inherit"
               onClick={onViewRow}
               sx={{ cursor: 'pointer' }}
             >

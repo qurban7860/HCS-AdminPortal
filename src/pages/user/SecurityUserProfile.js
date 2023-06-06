@@ -2,16 +2,30 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Switch, Card, Grid, Container, Typography, Link ,Dialog, Stack,Button, Tabs} from '@mui/material';
+import {
+  Switch,
+  Card,
+  Grid,
+  Container,
+  Typography,
+  Link,
+  Dialog,
+  Stack,
+  Button,
+  Tabs,
+} from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
-import { _userAbout} from '../../_mock/arrays';
+import { _userAbout } from '../../_mock/arrays';
 import Iconify from '../../components/iconify';
 // Redux Slice
-import { getSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import {
+  getSecurityUser,
+  setSecurityUserEditFormVisibility,
+} from '../../redux/slices/securityUser/securityUser';
 // components
 // import { ProfileCover} from '../../sections/@dashboard/user/profile';
 import { useSnackbar } from '../../components/snackbar';
@@ -19,8 +33,12 @@ import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
-import { Cover } from '../components/Cover'
-import { dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
+import { Cover } from '../components/Cover';
+import {
+  dispatchReqAddAndView,
+  dispatchReqNavToList,
+  dispatchReqNoMsg,
+} from '../asset/dispatchRequests';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
@@ -30,13 +48,13 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 export default function SecurityUserProfile() {
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
-  const { securityUser , initial} = useSelector((state) => state.user);
+  const { securityUser, initial } = useSelector((state) => state.user);
   // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuthContext();
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem('userId');
   const [currentTab, setCurrentTab] = useState('profile');
   const [openCustomer, setOpenCustomer] = useState(false);
   const handleOpenCustomer = () => setOpenCustomer(true);
@@ -45,53 +63,53 @@ export default function SecurityUserProfile() {
   const handleOpenContact = () => setOpenContact(true);
   const handleCloseContact = () => setOpenContact(false);
 
-    useEffect(()=> {
-      if(userId ){
-        dispatchReqNoMsg(dispatch,getSecurityUser(userId),enqueueSnackbar)
-        // dispatch(getSecurityUser(userId))
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch,userId, initial])
-
-    useEffect(()=> {
-      batch(() => {
-        if(userId && securityUser?.customer?._id){
-          dispatch(getCustomer(securityUser?.customer?._id))
-        }
-        if(userId && securityUser?.contact?._id){
-          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-        }
-        });
-      },[dispatch,userId,securityUser])
-
-      const handleViewCustomer = (id) => {
-        navigate(PATH_DASHBOARD.customer.view(id));
-      };
-
-    const handleEdit = () => {
-      dispatch(setSecurityUserEditFormVisibility(true));
-      navigate(PATH_DASHBOARD.user.edit(securityUser?._id));
+  useEffect(() => {
+    if (userId) {
+      dispatchReqNoMsg(dispatch, getSecurityUser(userId), enqueueSnackbar);
+      // dispatch(getSecurityUser(userId))
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, userId, initial]);
 
-    const defaultValues = useMemo(
-      () => ({
-        customer:                 securityUser?.customer?.name || "",
-        contact:                  securityUser?.contact?.firstName || "",
-        name:                     securityUser?.name || "",
-        phone:                    securityUser?.phone || "",
-        email:                    securityUser?.email || "",
-        login:                    securityUser?.login || "",
-        roles:                    securityUser?.roles || [] ,
-        isActive:                 securityUser?.isActive || false,
-        createdByFullName:        securityUser?.createdBy?.name || "",
-        createdAt:                securityUser?.createdAt || "",
-        createdIP:                securityUser?.createdIP || "",
-        updatedByFullName:        securityUser?.updatedBy?.name || "",
-        updatedAt:                securityUser?.updatedAt || "",
-        updatedIP:                securityUser?.updatedIP || "",
+  useEffect(() => {
+    batch(() => {
+      if (userId && securityUser?.customer?._id) {
+        dispatch(getCustomer(securityUser?.customer?._id));
       }
-      ),
-      [securityUser] );
+      if (userId && securityUser?.contact?._id) {
+        dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
+      }
+    });
+  }, [dispatch, userId, securityUser]);
+
+  const handleViewCustomer = (id) => {
+    navigate(PATH_DASHBOARD.customer.view(id));
+  };
+
+  const handleEdit = () => {
+    dispatch(setSecurityUserEditFormVisibility(true));
+    navigate(PATH_DASHBOARD.user.edit(securityUser?._id));
+  };
+
+  const defaultValues = useMemo(
+    () => ({
+      customer: securityUser?.customer?.name || '',
+      contact: securityUser?.contact?.firstName || '',
+      name: securityUser?.name || '',
+      phone: securityUser?.phone || '',
+      email: securityUser?.email || '',
+      login: securityUser?.login || '',
+      roles: securityUser?.roles || [],
+      isActive: securityUser?.isActive || false,
+      createdByFullName: securityUser?.createdBy?.name || '',
+      createdAt: securityUser?.createdAt || '',
+      createdIP: securityUser?.createdIP || '',
+      updatedByFullName: securityUser?.updatedBy?.name || '',
+      updatedAt: securityUser?.updatedAt || '',
+      updatedIP: securityUser?.updatedIP || '',
+    }),
+    [securityUser]
+  );
   return (
     <>
       <Container maxWidth={false}>
@@ -215,7 +233,7 @@ export default function SecurityUserProfile() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -256,7 +274,7 @@ export default function SecurityUserProfile() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
@@ -357,7 +375,7 @@ export default function SecurityUserProfile() {
               sm={12}
               sx={{
                 backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
               }}
             >
               <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>

@@ -18,7 +18,9 @@ import {
   AccordionDetails,
   CardActionArea,
   Breadcrumbs,
+  Tooltip,
   Link,
+  Divider,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import SiteCarousel from './site/util/SiteCarousel';
@@ -27,7 +29,7 @@ import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -233,29 +235,35 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           </Button>{' '}
           <Grid container>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer.root}
-              >
-                Customer
+              <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.root}>
+                Dashboard
               </Link>
               <Link
                 underline="none"
                 variant="subtitle2"
                 color="inherit"
-                href={PATH_DASHBOARD.customer.root}
+                href={PATH_DASHBOARD.customer.list}
+              >
+                Customers
+              </Link>
+              <Link
+                underline="none"
+                variant="subtitle2"
+                color="inherit"
+                href={PATH_DASHBOARD.customer.view}
               >
                 {customer.name}
               </Link>
+              <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.site}>
+                Sites
+              </Link>
               <Link
                 underline="none"
                 variant="subtitle2"
                 color="inherit"
-                href={PATH_DASHBOARD.customer.sites}
+                href={PATH_DASHBOARD.customer}
               >
-                Sites
+                {siteAddFormVisibility ? 'New Site Form' : sites[activeIndex]?.name || 'Sites List'}
               </Link>
             </Breadcrumbs>
           </Grid>
@@ -300,8 +308,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                     transition: 'all 0.10s ease-in',
                   }}
                 >
-                  <Grid container 
-                  xs={12} lg={4} >
+                  <Grid container xs={12} lg={4}>
                     {index !== activeIndex ? (
                       <Card sx={{ display: 'block', width: 'auto' }}>
                         <CardActionArea>
@@ -309,7 +316,13 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                             <Box justifyContent="flex-start" sx={{ width: '200px' }}>
                               <CardContent sx={{ flex: '1 0 auto' }}>
                                 <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                  {site.name}
+                                  {site.name.length > 20 ? (
+                                    <Tooltip title={site.name} placement="top">
+                                      <span>{site.name.substring(0, 20)}...</span>
+                                    </Tooltip>
+                                  ) : (
+                                    site.name
+                                  )}
                                 </Typography>
                                 <Typography variant="body2">
                                   {site.email ? site.email : <br />}
@@ -336,19 +349,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                   sx={{ mt: -5 }}
                 >
                   <Grid container lg={12} justifyContent="space-evenly" alignItems="flex-start">
-                    <Grid item lg={4}>
-                      <Card
-                        sx={{
-                          // display: { sm: 'none', md: 'block' },
-                          // maxWidth: 'lg',
-                          // objectFit: 'cover',
-                          // height: '100%',
-                          // mx: { sm: 0, md: 3, lg: 3 },
-                          // my: { sm: 1, md: 3 },
-                        }}
-                      >
-                        {!isMobile ? (
-                          <>
+                    <Grid item lg={4} spacing={2}>
+                      {!isMobile && (
+                        <>
+                          <Card>
                             <CardActionArea>
                               <CardMedia
                                 component={SiteCarousel}
@@ -356,20 +360,23 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                 alt={site.name}
                               />
                             </CardActionArea>
+                          </Card>
+                          <br />
+                          <Card>
                             <CardActionArea>
-                            {site.lat && site.long ? ( 
-                                    <GoogleMaps 
-                                    lat={site.lat ? site.lat : 0} 
-                                    lng={site.long ? site.long : 0}
-                                    />
-                                  ) : (
-                                    'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
-                                  )
-                            }
+                              {site.lat && site.long ? (
+                                <GoogleMaps
+                                  lat={site.lat ? site.lat : 0}
+                                  lng={site.long ? site.long : 0}
+                                />
+                              ) : (
+                                'https://www.howickltd.com/asset/172/w800-h600-q80.jpeg'
+                              )}
                             </CardActionArea>
-                          </>
-                          ) : null}
-                      </Card>
+                          </Card>
+                        </>
+                      )}
+                      {/* </Card> */}
                     </Grid>
                     <Grid item lg={8}>
                       <SiteViewForm currentSite={site} />

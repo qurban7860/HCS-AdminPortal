@@ -35,26 +35,16 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
       show: false,
     },
     plotOptions: {
-      radialBar: {
-        hollow: {
-          size: '78%',
-        },
-        track: {
-          margin: 0,
-        },
-        dataLabels: {
-          name: {
+      pie: {
+        expandOnClick: false,
+        donut: {
+          size: '85%',
+          labels: {
             show: false,
-          },
-          value: {
-            offsetY: 6,
-            color: theme.palette.primary.main,
-            fontSize: '0px'
           },
         },
       },
     },
-    ...options,
   });
 
   return (
@@ -72,7 +62,7 @@ export default function AppWidget({ title, total, icon, color = 'primary', chart
       }}
       {...other}
     >
-      <Chart type="radialBar" series={[series]} options={chartOptions} width={86} height={86} />
+      <Chart type="polarArea" series={[series]} options={chartOptions} width={86} height={86} />
 
       <Box sx={{ ml: 3 }}>
         <Typography variant="h4"> {fNumber(total)}</Typography>

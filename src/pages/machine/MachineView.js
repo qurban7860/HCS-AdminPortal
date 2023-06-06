@@ -4,13 +4,28 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
-import { Typography, Tab, Card, Tabs, Container, Box, Button, Grid, Stack  ,tabsClasses } from '@mui/material';
+import {
+  Typography,
+  Tab,
+  Card,
+  Tabs,
+  Container,
+  Box,
+  Button,
+  Grid,
+  Stack,
+  tabsClasses,
+} from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getMachines, getMachine, setMachineEditFormVisibility } from '../../redux/slices/products/machine';
+import {
+  getMachines,
+  getMachine,
+  setMachineEditFormVisibility,
+} from '../../redux/slices/products/machine';
 // import { getSites } from '../../redux/slices/customer/site';
 // import { getContacts } from '../../redux/slices/customer/contact';
 
@@ -61,90 +76,87 @@ MachineView.propTypes = {
 };
 /* eslint-enable */
 
-
-export default function MachineView({editPage}) {
-
+export default function MachineView({ editPage }) {
   const { id } = useParams();
 
   const dispatch = useDispatch();
 
-  const {  machine , machines , machineEditFormFlag } = useSelector((state) => state.machine);
+  const { machine, machines, machineEditFormFlag } = useSelector((state) => state.machine);
   const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
+  const toggleEditFlag = () => setEditFlag((value) => !value);
 
-//   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
-//   const { contactEditFormVisibility } = useSelector((state) => state.contact);
-//   const { noteEditFormVisibility} = useSelector((state) => state.note);
+  //   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
+  //   const { contactEditFormVisibility } = useSelector((state) => state.contact);
+  //   const { noteEditFormVisibility} = useSelector((state) => state.note);
   const [currentTab, setCurrentTab] = useState('Machine-info');
-//   const [editFlag, setEditFlag] = useState(false);
-//   const toggleEditFlag = () => setEditFlag(value => !value);
+  //   const [editFlag, setEditFlag] = useState(false);
+  //   const toggleEditFlag = () => setEditFlag(value => !value);
 
-  const [currentComponent, setCurrentComponent] = useState(<MachineViewForm/>);
+  const [currentComponent, setCurrentComponent] = useState(<MachineViewForm />);
 
   const [machineFlag, setMachineFlag] = useState(true);
 
   useEffect(() => {
-    if(id !== 'null'){
+    if (id !== 'null') {
       dispatch(getMachine(id));
-    //   dispatch(getSites(id));
-    //   dispatch(getContacts(id));
+      //   dispatch(getSites(id));
+      //   dispatch(getContacts(id));
     }
   }, [dispatch, id]);
 
   useEffect(() => {
     /* eslint-disable */
-    if(machineEditFormFlag){
-      setCurrentComponent(<MachineEditForm/>);
-    }else{
+    if (machineEditFormFlag) {
+      setCurrentComponent(<MachineEditForm />);
+    } else {
       setMachineFlag(false);
-      setCurrentComponent(<MachineViewForm/>);
+      setCurrentComponent(<MachineViewForm />);
     }
     /* eslint-enable */
-  }, [dispatch,machineEditFormFlag, machine]);
-
+  }, [dispatch, machineEditFormFlag, machine]);
 
   const TABS = [
     {
-    //   disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
+      //   disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
       value: 'Machine-info',
       label: 'Machine Info',
       icon: <Iconify icon="mdi:window-open-variant" />,
-      component: currentComponent
+      component: currentComponent,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'settings',
       label: 'Settings',
       icon: <Iconify icon="mdi:cogs" />,
-      component: <MachineSettingList/>
+      component: <MachineSettingList />,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'license',
       label: 'License',
       icon: <Iconify icon="mdi:book-cog-outline" />,
-      component: <MachineLicenseList/>,
+      component: <MachineLicenseList />,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'toolsInstalled',
       label: 'Tools Installed',
       icon: <Iconify icon="mdi:folder-wrench" />,
-      component: <MachineToolsInstalledList/>,
+      component: <MachineToolsInstalledList />,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'notes',
       label: 'Notes',
       icon: <Iconify icon="mdi:note-multiple" />,
-      component: <MachineNoteList/>
+      component: <MachineNoteList />,
     },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
-      component: <DocumentList/>
+      component: <DocumentList />,
     },
     {
       // disabled: setMachineEditFormVisibility,
@@ -157,14 +169,12 @@ export default function MachineView({editPage}) {
       value: 'serviceHistory',
       label: 'Service History',
       icon: <Iconify icon="mdi:clipboard-text-clock" />,
-    }
+    },
   ];
 
   return (
     <Container maxWidth={false}>
-      {/* <CustomBreadcrumbs
-          heading="Machine View"
-        /> */}
+      {/* <CustomBreadcrumbs heading="Machine View" /> */}
       <Card
         sx={{
           mb: 3,
@@ -173,7 +183,7 @@ export default function MachineView({editPage}) {
         }}
       >
         <Cover
-          photoURL={machine.name ? '' : <LogoAvatar />}
+          // photoURL={machine.name}
           name={machine?.name}
           serialNo={machine ? machine.serialNo : 'Serial Number'}
           icon="et:gears"

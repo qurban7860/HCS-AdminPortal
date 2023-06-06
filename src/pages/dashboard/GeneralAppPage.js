@@ -1,16 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import Chart from "react-apexcharts";
+import Chart from 'react-apexcharts';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Typography, Container, Grid, Stack, Button, Card   } from '@mui/material';
+import { Typography, Container, Grid, Stack, Button, Card } from '@mui/material';
 import { AppShortcutRounded, CenterFocusStrong } from '@mui/icons-material';
-import ChartBar from '../../sections/_examples/extra/chart/ChartBar'
+import ChartBar from '../../sections/_examples/extra/chart/ChartBar';
 import ChartMixed from '../../sections/_examples/extra/chart/ChartMixed';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
-// 
+//
 import GoogleMaps from '../../assets/GoogleMaps';
 
 import {
@@ -37,18 +37,13 @@ import {
 } from '../../sections/@dashboard/general/app';
 // assets
 import { SeoIllustration } from '../../assets/illustrations';
-import MachineListTableToolbar from '../machine/MachineListTableToolbar'
+import MachineListTableToolbar from '../machine/MachineListTableToolbar';
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCount } from '../../redux/slices/dashboard/count'
-
-
-
-
+import { getCount } from '../../redux/slices/dashboard/count';
 
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
-
   const dispatch = useDispatch();
 
   const { user } = useAuthContext();
@@ -57,93 +52,93 @@ export default function GeneralAppPage() {
 
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
 
-  const modelWiseMachineNumber=[]
-  const modelWiseMachineModel = []
-  if(count && count?.modelWiseMachineCount){
+  const modelWiseMachineNumber = [];
+  const modelWiseMachineModel = [];
+  if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {
-      modelWiseMachineNumber.push(model.count)
-      modelWiseMachineModel.push(model._id)
+      modelWiseMachineNumber.push(model.count);
+      modelWiseMachineModel.push(model._id);
       return null;
-    })
+    });
   }
 
-  const countryWiseCustomerCountNumber=[]
-  const countryWiseCustomerCountCountries = []
-  if(count && count.countryWiseCustomerCount){
+  const countryWiseCustomerCountNumber = [];
+  const countryWiseCustomerCountCountries = [];
+  if (count && count.countryWiseCustomerCount) {
     count.countryWiseCustomerCount.map((customer) => {
-      countryWiseCustomerCountNumber.push(customer.count)
-      countryWiseCustomerCountCountries.push(customer._id)
+      countryWiseCustomerCountNumber.push(customer.count);
+      countryWiseCustomerCountCountries.push(customer._id);
       return null;
-    })
+    });
   }
 
-  const countryWiseSiteCountNumber=[]
-  const countryWiseSiteCountCountries = []
-  if(count && count.countryWiseSiteCount){
+  const countryWiseSiteCountNumber = [];
+  const countryWiseSiteCountCountries = [];
+  if (count && count.countryWiseSiteCount) {
     count.countryWiseSiteCount.map((site) => {
-      countryWiseSiteCountNumber.push(site.count)
-      countryWiseSiteCountCountries.push(site._id)
+      countryWiseSiteCountNumber.push(site.count);
+      countryWiseSiteCountCountries.push(site._id);
       return null;
-    })
+    });
   }
 
- const ModelData = {
+  const ModelData = {
     options: {
       chart: {
-        id: "basic-bar"
+        id: 'basic-bar',
       },
       xaxis: {
-        categories: modelWiseMachineModel
-      }
+        categories: modelWiseMachineModel,
+      },
     },
     series: [
       {
-        name: "Machine Models",
-        data: modelWiseMachineNumber
-      }
-    ]
+        name: 'Machine Models',
+        data: modelWiseMachineNumber,
+      },
+    ],
   };
 
   const CustomerData = {
     options: {
       chart: {
-        id: "basic-bar"
+        id: 'basic-bar',
       },
       xaxis: {
-        categories: countryWiseCustomerCountCountries
-      }
+        categories: countryWiseCustomerCountCountries,
+      },
     },
     series: [
       {
-        name: "Customers",
-        data: countryWiseCustomerCountNumber
-      }
-    ]
+        name: 'Customers',
+        data: countryWiseCustomerCountNumber,
+      },
+    ],
   };
 
   const SiteData = {
     options: {
       chart: {
-        id: "basic-bar"
+        id: 'basic-bar',
       },
       xaxis: {
-        categories: countryWiseSiteCountCountries
-      }
+        categories: countryWiseSiteCountCountries,
+      },
     },
     series: [
       {
-        name: "Sites",
-        data: countryWiseSiteCountNumber
-      }
-    ]
+        name: 'Sites',
+        data: countryWiseSiteCountNumber,
+      },
+    ],
   };
 
   useLayoutEffect(() => {
     dispatch(getCount());
   }, [dispatch]);
-console.log("ModelData.options : ",ModelData.options)
-console.log("ModelData.series : ",ModelData.series)
-console.log("CustomerData.options : ",CustomerData.options)
+  console.log('ModelData.options : ', ModelData.options);
+  console.log('ModelData.series : ', ModelData.series);
+  console.log('CustomerData.options : ', CustomerData.options);
 
   return (
     <Container
@@ -180,15 +175,11 @@ console.log("CustomerData.options : ",CustomerData.options)
           >
             <AppWelcome
               title={`CUSTOMER \n SERVICE & SUPPORT`}
-              // title={`Welcome back! \n ${user?.displayName}`}
               description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
             />
           </Grid>
         </Grid>
 
-        {/* <Grid item xs={12} md={12}>
-            <AppFeatured list={_appFeatured} />
-          </Grid> */}
         <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
           <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
@@ -198,7 +189,7 @@ console.log("CustomerData.options : ",CustomerData.options)
                 icon="mdi:account-group"
                 color="warning"
                 chart={{
-                  series: 48,
+                  series: countryWiseCustomerCountNumber,
                 }}
               />
               {/* <AppWidgetSummary
@@ -215,10 +206,10 @@ console.log("CustomerData.options : ",CustomerData.options)
               <AppWidget
                 title="Sites"
                 total={count?.siteCount || 0}
-                icon="eva:email-fill"
+                icon="mdi:office-building-marker"
                 color="bronze"
                 chart={{
-                  series: 75,
+                  series: countryWiseSiteCountNumber,
                 }}
               />
             </Grid>
@@ -231,7 +222,7 @@ console.log("CustomerData.options : ",CustomerData.options)
                 icon="mdi:window-shutter-settings"
                 color="info"
                 chart={{
-                  series: 75,
+                  series: modelWiseMachineNumber,
                 }}
               />
 
@@ -248,7 +239,7 @@ console.log("CustomerData.options : ",CustomerData.options)
                 icon="mdi:account"
                 color="error"
                 chart={{
-                  series: 75,
+                  series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
                 }}
               />
 
@@ -294,7 +285,6 @@ console.log("CustomerData.options : ",CustomerData.options)
                 <ChartMixed
                   options={ModelData.options}
                   series={ModelData.series}
-
                   height="300px"
                   width="100%"
                 />

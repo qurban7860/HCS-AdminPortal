@@ -1,11 +1,15 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card,Table,Button,TableBody,Container,TableContainer} from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getTechparams, getTechparam, deleteTechparams } from '../../../redux/slices/products/machineTechParam';
+import {
+  getTechparams,
+  getTechparam,
+  deleteTechparams,
+} from '../../../redux/slices/products/machineTechParam';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -33,7 +37,7 @@ import { fDate } from '../../../utils/formatTime';
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'category', label: 'Category', align: 'left' },
-  { id: 'isDisabled', label: 'Active', align: 'center'  },
+  { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -46,10 +50,7 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
 // ----------------------------------------------------------------------
-
-
 
 export default function StatusList() {
   const [tableData, setTableData] = useState([]);
@@ -82,15 +83,16 @@ export default function StatusList() {
 
   const [filterName, setFilterName] = useState('');
 
-
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { techparams, isLoading, error, initial, responseMessage } = useSelector((state) => state.techparam);
+  const { techparams, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.techparam
+  );
 
-  useLayoutEffect( () => {
-     dispatch(getTechparams());
+  useLayoutEffect(() => {
+    dispatch(getTechparams());
   }, [dispatch]);
 
   useEffect(() => {
@@ -141,7 +143,6 @@ export default function StatusList() {
   const handleDeleteRow = async (id) => {
     await dispatch(deleteTechparams(id));
     try {
-      
       dispatch(getTechparams());
       setSelected([]);
 
@@ -151,11 +152,11 @@ export default function StatusList() {
         }
       }
     } catch (err) {
-      console.log(err.message)
+      console.log(err.message);
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -170,7 +171,7 @@ export default function StatusList() {
         setPage(newPage);
       }
     }
-    handleClose()
+    handleClose();
   };
 
   const handleEditRow = async (id) => {
@@ -182,7 +183,7 @@ export default function StatusList() {
     await dispatch(getTechparam(id));
     navigate(PATH_MACHINE.parameters.view(id));
   };
- 
+
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
@@ -191,10 +192,14 @@ export default function StatusList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-          <Cover name='Technical Parameter List' icon='material-symbols:list-alt-outline' setting="enable" />
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <Cover
+            name="Technical Parameters"
+            icon="material-symbols:list-alt-outline"
+            setting="enable"
+          />
         </Card>
-            
+
         <Card sx={{ mt: 3 }}>
           <ParameterListTableToolbar
             filterName={filterName}
@@ -208,7 +213,7 @@ export default function StatusList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -227,7 +232,7 @@ export default function StatusList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small'sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -254,7 +259,7 @@ export default function StatusList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)} 
+                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                         />
                       ) : (
@@ -273,10 +278,8 @@ export default function StatusList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          
           />
         </Card>
-        
       </Container>
 
       <ConfirmDialog
@@ -319,10 +322,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterParameter) => filterParameter?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  || 
-    filterParameter?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||  
-    // (filterParameter?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(filterParameter?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (filterParameter) =>
+        filterParameter?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterParameter?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (filterParameter?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(filterParameter?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

@@ -18,8 +18,8 @@ const GREY = {
 };
 
 const PRIMARY = {
-  lighter: '#0084C9',
-  light: '#0084C9',
+  lighter: '#0940B2',
+  light: '#0940B2',
   main: '#0940B2',
   dark: '#10079F',
   darker: '#10079F',
@@ -45,7 +45,7 @@ const INFO = {
 };
 
 const SUCCESS = {
-  lighter: '#897a69',
+  lighter: '#897A69',
   light: '#0940B2',
   main: '#10079F',
   dark: '#10079F',
@@ -99,7 +99,7 @@ const HOWICKBURNIN = {
   main: '#D1ED18',
 };
 
- const COMMON = {
+const COMMON = {
   common: { black: '#000', white: '#fff' },
   primary: PRIMARY,
   secondary: SECONDARY,
