@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { useMemo, useState, useEffect, Suspense, lazy  } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-
+import download from 'downloadjs';
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -109,12 +109,12 @@ link.click();
 
 const handleOpenPreview = () => {setPreview(true)};
 
-const handleDownload = () => {
-   dispatch(getDocumentDownload(currentMachineDocument._id)).then(res => {
+const handleDownload = (fileId,fileName ,fileExtension) => {
+   dispatch(getDocumentDownload(fileId)).then(res => {
     // console.log("res : ",res)
     if(regEx.test(res.status)){
-      // download(atob(res.data), `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`, { type: currentMachineDocument?.type});
-      downloadBase64File(res.data, `${currentMachineDocument?.displayName}.${currentMachineDocument?.extension}`);
+      download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
+      // downloadBase64File(res.data, `${fileName}.${fileExtension}`);
       enqueueSnackbar(res.statusText);
     }else{
       enqueueSnackbar(res.statusText,{ variant: `error` })
@@ -174,8 +174,7 @@ const document = {
               <Link href="#" underline="none"
                 component="button"
                 title='Download File'
-                // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
-                onClick={() => handleDownload(file._id, file.extension)}
+                onClick={() => handleDownload(file._id, file.name, file.extension)}
                 >
                   <Box
                     onAbort={handleOpenPreview}
@@ -200,68 +199,10 @@ const document = {
               </Link>
             </Card>
             ))}
-            {/* { currentMachineDocument?.type.startsWith("image") ?
-              <Link href="#" underline="none"
-              component="button"
-              title='Download File'
-              onClick={handleDownload}
-               >
-              <Box
-                component="img"
-                sx={{ m:2 }}
-                alt={defaultValues.displayName}
-                src={`data:image/png;base64, ${currentMachineDocument?.content}`}
-                >
-                  <IconButton
-                    size="small"
-                    // onClick={onPreview}
-                    sx={{
-                      top: 16,
-                      right: 56,
-                      zIndex: 9,
-                      height: "150",
-                      position: 'absolute',
-                      color: (theme) => alpha(theme.palette.common.white, 0.8),
-                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                      '&:hover': {
-                        bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                      },
-                    }}
-                  >
-                    <Iconify icon="line-md:download-loop" width={18} />
-                  </IconButton>
-
-                  <IconButton
-                    size="small"
-                    // onClick={onDelete}
-                    sx={{
-                      top: 16,
-                      right: 16,
-                      zIndex: 9,
-                      height: "150",
-                      position: 'absolute',
-                      color: (theme) => alpha(theme.palette.common.white, 0.8),
-                      bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                      '&:hover': {
-                        bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                      },
-                    }}
-                  >
-                    <Iconify icon="icon-park-outline:preview-open" width={18} />
-                  </IconButton>
-
-                </Box>
-                </Link>: <Link href="#" underline="none"
-                sx={{ m:2 }}
-                component="button"
-                title='Download File'
-                onClick={handleDownload}
-                >
-              <Iconify width="50px" icon="ph:files-fill" />
-            </Link>} */}
+            
               {/* <DownloadComponent Document={currentMachineDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
-            </Grid><Link href="#" underline="none" >see more</Link>
+            </Grid><Link sx={{mt:"auto"}} href="#" underline="none" >see more</Link>
           {/* {currentMachineDocument?.type.startsWith("image") ?
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null} */}
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
