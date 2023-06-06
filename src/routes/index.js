@@ -110,7 +110,9 @@ import {
   NoteAdd,
   NoteEdit,
   NoteView,
-  // Customer document
+// DocumentDashboard    
+  DocumentDashboard, 
+// Customer document 
   CustomerDocumentAddForm  ,
   CustomerDocumentList     ,
   CustomerDocumentViewForm ,
@@ -130,8 +132,11 @@ import {
   DocumentCategoryList     ,
   DocumentCategoryView ,
   DocumentCategoryEditForm ,
+
 // Setting
+
   Setting,
+
 // Reports
   Reports,
 //   
@@ -200,6 +205,8 @@ export default function Router() {
         { path: 'app', element: <GeneralAppPage /> },
         { path: 'setting', element: <Setting /> },
         { path: 'reports', element: <Reports /> },
+        { path: 'document', element: <DocumentDashboard /> },
+
         {
           path: 'user',
           children: [

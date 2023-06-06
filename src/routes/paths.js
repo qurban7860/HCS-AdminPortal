@@ -43,6 +43,7 @@ export const PATH_DASHBOARD = {
     app: path(ROOTS_DASHBOARD, '/app'),
   },
   setting: path(ROOTS_DASHBOARD, '/setting'),
+  document: path(ROOTS_DASHBOARD, '/document'),
   reports: path(ROOTS_DASHBOARD, '/reports'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
@@ -210,16 +211,16 @@ export const PATH_DOCUMENT = {
   view: path(ROOTS_DOCUMENT, `/document/view`),
   edit: (id) => path(ROOTS_DOCUMENT, `/document/${id}/edit`),
   documentType: {
-    list: path(ROOTS_DOCUMENT, '/documentName/list'),
-    new: path(ROOTS_DOCUMENT, '/documentName/new'),
-    view: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/view`),
-    edit: (id) => path(ROOTS_DOCUMENT, `/documentName/${id}/edit`),
+    list: path(ROOTS_DOCUMENT, '/documentType/list'),
+    new: path(ROOTS_DOCUMENT, '/documentType/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/documentType/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/documentType/${id}/edit`),
   },
   documentCategory: {
-    list: path(ROOTS_DOCUMENT, '/fileCategory/list'),
-    new: path(ROOTS_DOCUMENT, '/fileCategory/new'),
-    view: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/view`),
-    edit: (id) => path(ROOTS_DOCUMENT, `/fileCategory/${id}/edit`),
+    list: path(ROOTS_DOCUMENT, '/documentCategory/list'),
+    new: path(ROOTS_DOCUMENT, '/documentCategory/new'),
+    view: (id) => path(ROOTS_DOCUMENT, `/documentCategory/${id}/view`),
+    edit: (id) => path(ROOTS_DOCUMENT, `/documentCategory/${id}/edit`),
   }
 };
 
