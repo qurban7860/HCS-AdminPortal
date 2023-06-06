@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getDocumentType } from '../../../redux/slices/document/documentType';
+import { getDocumentCategory} from '../../../redux/slices/document/documentCategory';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -19,28 +19,26 @@ import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBrea
 import { useSettingsContext } from '../../../components/settings';
 // sections
 import { Cover } from '../../components/Cover';
-import DocumentTypeViewForm from './DocumentTypeViewForm';
+import DocumentCategoryViewForm from './DocumentCategoryViewForm';
 /* eslint-disable */
 
 
 
 // ----------------------------------------------------------------------
 
-export default function DocumentTypeView() {
+export default function DocumentCategoryView() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
 useLayoutEffect(() => {
-  dispatch(getDocumentType(id));
+  dispatch(getDocumentCategory(id));
 },[id,dispatch])
 
-  const { documentType } = useSelector((state) => state.documentType);
-  // console.log("documentType : ",documentType)
+  const { documentCategory } = useSelector((state) => state.documentCategory);
+  // console.log("documentCategory : ",documentCategory)
   return (
     <>
       <Container maxWidth={false }>
-        
-
         <Card
           sx={{
             mb: 3,
@@ -49,10 +47,9 @@ useLayoutEffect(() => {
             // mt: '24px',
           }}
         >
-          <Cover name={documentType?.name} /> 
+          <Cover name={documentCategory?.name} /> 
         </Card>
-        
-        <DocumentTypeViewForm/>
+        <DocumentCategoryViewForm/>
       </Container>
     </>
   );

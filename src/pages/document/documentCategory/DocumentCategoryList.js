@@ -38,9 +38,9 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import DocumentTypeListTableRow from './DocumentTypeListTableRow';
-import DocumentTypeListTableToolbar from './DocumentTypeListTableToolbar';
-import documentName, { getDocumentType, deleteDocumentType, getDocumentTypes  } from '../../../redux/slices/document/documentType';
+import DocumentCategoryListTableRow from './DocumentCategoryListTableRow';
+import DocumentCategoryListTableToolbar from './DocumentCategoryListTableToolbar';
+import documentName, { deleteDocumentCategory, getDocumentCategories  } from '../../../redux/slices/document/documentCategory';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
 
@@ -56,7 +56,7 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-export default function DocumentTypeList() {
+export default function DocumentCategoryList() {
   const {
     page,
     order,
@@ -93,19 +93,19 @@ export default function DocumentTypeList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customer } = useSelector((state) => state.customer);
-  const { documentTypes, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentType);
+  const { documentCategories, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentCategory);
 
-  // console.log("documentTypes : ", documentTypes )
+  // console.log("documentCategories : ", documentCategories )
 
   useLayoutEffect(() => {
-    dispatch(getDocumentTypes());
+    dispatch(getDocumentCategories());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(documentTypes);
+      setTableData(documentCategories);
     }
-  }, [documentTypes, initial]);
+  }, [documentCategories, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -143,8 +143,8 @@ export default function DocumentTypeList() {
   const handleDeleteRow = async (id) => {
     try {
       // console.log(id);
-      await dispatch(deleteDocumentType(id));
-      dispatch(getDocumentTypes());
+      await dispatch(deleteDocumentCategory(id));
+      dispatch(getDocumentCategories());
       setSelected([]);
 
       if (page > 0) {
@@ -180,7 +180,7 @@ export default function DocumentTypeList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DOCUMENT.documentType.view(id));
+    navigate(PATH_DOCUMENT.documentCategory.view(id));
   };
 
   const handleResetFilter = () => {
@@ -200,13 +200,13 @@ export default function DocumentTypeList() {
           }}
         >
           <Cover
-            name="Document Types"
+            name="Document Categories"
             icon="ph:users-light"
           />
         </Card>
 
         <Card sx={{ mt: 3 }}>
-          <DocumentTypeListTableToolbar
+          <DocumentCategoryListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -256,7 +256,7 @@ export default function DocumentTypeList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <DocumentTypeListTableRow
+                        <DocumentCategoryListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}

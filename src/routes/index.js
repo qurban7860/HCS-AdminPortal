@@ -126,10 +126,10 @@ import {
   DocumentNameViewForm ,
   DocumentNameEditForm ,
 // File Category
-  FileCategoryAddForm  ,
-  FileCategoryList     ,
-  FileCategoryViewForm ,
-  FileCategoryEditForm ,
+  DocumentCategoryAddForm  ,
+  DocumentCategoryList     ,
+  DocumentCategoryView ,
+  DocumentCategoryEditForm ,
 // Setting
   Setting,
 // Reports
@@ -418,10 +418,10 @@ export default function Router() {
         {
           path: 'fileCategory',
           children: [
-            { path: 'list', element: <FileCategoryList /> },
-            { path: 'new', element: <FileCategoryAddForm /> },
-            { path: ':id/edit', element: <FileCategoryEditForm />},
-            { path: ':id/view', element: <FileCategoryViewForm />}
+            { path: 'list', element: <DocumentCategoryList /> },
+            { path: 'new', element: <DocumentCategoryAddForm /> },
+            { path: ':id/edit', element: <DocumentCategoryEditForm />},
+            { path: ':id/view', element: <DocumentCategoryView />}
           ],
         },
         {

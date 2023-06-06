@@ -13,7 +13,7 @@ import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , C
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addDocumentCategory, setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
-import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
 import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
 
 // components
@@ -23,36 +23,40 @@ import { countries } from '../../../assets/data';
 import FormProvider, {RHFTextField,RHFSwitch} from '../../../components/hook-form';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
-import Cover from '../../components/Cover'
+import { Cover } from '../../components/Cover';
+
 // ----------------------------------------------------------------------
-FileCategoryAddForm.propTypes = {
+DocumentCategoryAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
-export default function FileCategoryAddForm({currentDocument}) {
+export default function DocumentCategoryAddForm({currentDocument}) {
   const { documentCategory, documentCategories } = useSelector((state) => state.documentCategory);
   const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
   const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
+
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
- // a note can be archived.  
-  const AddFileCategorySchema = Yup.object().shape({
+ // a note can be archived.
+  const AddDocumentCategorySchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
     description: Yup.string().max(10000),
     isActive : Yup.boolean(),
+    customerAccess: Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
       name: '',
       description: '',
       isActive: true,
+      customerAccess: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentDocument]
   );
 
   const methods = useForm({
-    resolver: yupResolver(AddFileCategorySchema),
+    resolver: yupResolver(AddDocumentCategorySchema),
     defaultValues,
   });
 
@@ -70,49 +74,76 @@ export default function FileCategoryAddForm({currentDocument}) {
   },[]);
 
   const onSubmit = async (data) => {
-    // console.log("Document category : ", data)
+    // console.log("Document Category : ", data);
       try{
-        await dispatch(addDocumentCategory(data));
-        // dispatch(getFileCategories());
-        
-        dispatch(setDocumentCategoryFormVisibility(false))
-        if( machineDocumentEdit || customerDocumentEdit){
-          dispatch(setMachineDocumentEditFormVisibility(true))
-          dispatch(setCustomerDocumentEditFormVisibility(true))
-        }else{
-          dispatch(setMachineDocumentFormVisibility(true))
-          dispatch(setCustomerDocumentFormVisibility(true))
-        }
+        const response = await dispatch(addDocumentCategory(data));
+        // console.log("response : ",response);
         reset();
+        enqueueSnackbar('Document Save Successfully!');
+        navigate(PATH_DOCUMENT.documentCategory.list)
       } catch(error){
-        enqueueSnackbar('Document Category Save failed!');
+        enqueueSnackbar('Document Save failed!');
         console.error(error);
       }
   };
 
-  const toggleCancel = () => 
+  const toggleCancel = () =>
   {
-    // navigate(PATH_DOCUMENT.documentName.list);
-    dispatch(setDocumentCategoryFormVisibility(false))
-    dispatch(setMachineDocumentFormVisibility(true));
-    dispatch(setCustomerDocumentFormVisibility(true));
+    navigate(PATH_DOCUMENT.documentName.list);
   };
   return (
+    <Container maxWidth={false }>
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            // mt: '24px',
+          }}
+        >
+          <Cover name="New Document Category" /> 
+        </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-     
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
             <Stack spacing={2}>
-              <FormHeading heading='New File Category'/>
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-            </Stack>  
+              <Grid display="flex">
+              <RHFSwitch name="customerAccess" labelPlacement="start" label={
+                <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                          mx: 0,
+                                          width: 1,
+                                          justifyContent: 'space-between',
+                                          mb: 0.5,
+                                          color: 'text.secondary'
+                                        }}> Customer Access
+                                        </Typography>
+                                        } />
+
+              <RHFSwitch name="isActive" labelPlacement="start" label={
+                              <Typography
+                                    variant="subtitle2"
+                                    sx={{
+                                          mx: 0,
+                                          width: 1,
+                                          justifyContent: 'space-between',
+                                          mb: 0.5,
+                                          color: 'text.secondary'
+                                        }}> Active
+                                        </Typography>
+                                        } />
+              
+              </Grid>
+              </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
           </Card>
         </Grid>
       </Grid>
     </FormProvider>
+    </Container>
   );
 }

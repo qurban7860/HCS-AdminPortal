@@ -25,7 +25,7 @@ import FormProvider, {
   RHFAutocomplete,
   RHFSwitch
 } from '../../../components/hook-form';
-import { getDocumentTypes,  updateDocumentType } from '../../../redux/slices/document/documentType';
+import { getDocumentCategory,  updateDocumentCategory } from '../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
 import { Cover } from '../../components/Cover';
@@ -33,9 +33,9 @@ import { Cover } from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentTypeEditForm() {
+export default function DocumentCategoryeEditForm() {
 
-  const { documentType } = useSelector((state) => state.documentType);
+  const { documentCategory } = useSelector((state) => state.documentCategory);
 
   const dispatch = useDispatch();
 
@@ -45,10 +45,10 @@ export default function DocumentTypeEditForm() {
 
   const defaultValues = useMemo(
     () => ({
-      name: documentType?.name || '',
-      description: documentType?.description || '',
-      isActive : documentType?.isActive ,
-      customerAccess: documentType?.customerAccess,
+      name: documentCategory?.name || '',
+      description: documentCategory?.description || '',
+      isActive : documentCategory?.isActive ,
+      customerAccess: documentCategory?.customerAccess,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -83,19 +83,19 @@ export default function DocumentTypeEditForm() {
 
   const toggleCancel = () => 
   {
-    navigate(PATH_DOCUMENT.documentType.view(documentType._id))
+    navigate(PATH_DOCUMENT.documentCategory.view(documentCategory._id))
 
   };
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateDocumentType(documentType._id,data));
-      dispatch(getDocumentTypes(documentType._id));
-      navigate(PATH_DOCUMENT.documentType.view(documentType._id))
-      enqueueSnackbar('Document Type updated Successfully!');
+      await dispatch(updateDocumentCategory(documentCategory._id,data));
+      dispatch(getDocumentCategory(documentCategory._id));
+      navigate(PATH_DOCUMENT.documentCategory.view(documentCategory._id))
+      enqueueSnackbar('Document Category updated Successfully!');
       reset();
     } catch (err) {
-      enqueueSnackbar('Document Type Updating failed!');
+      enqueueSnackbar('Document Category Updating failed!');
       console.error(err.message);
     }
   };
@@ -111,14 +111,14 @@ export default function DocumentTypeEditForm() {
             // mt: '24px',
           }}
         >
-          <Cover name={documentType?.name} /> 
+          <Cover name={documentCategory?.name} /> 
         </Card>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={4}>
             <Grid item xs={18} md={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <FormHeading heading='Edit Document Type'/>
+                  <FormHeading heading='Edit Document Category'/>
                   <RHFTextField name="name" label="Name" />
                   <RHFTextField name="description" label="Description" minRows={8} multiline />
                   <Grid display="flex">
