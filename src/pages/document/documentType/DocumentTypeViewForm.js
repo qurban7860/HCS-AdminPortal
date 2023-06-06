@@ -34,7 +34,7 @@ export default function DocumentTypeViewForm() {
       enqueueSnackbar('Document Type delete Successfully!');
 
     }catch(error){
-      enqueueSnackbar('Document Type delete failed!');
+      enqueueSnackbar('Document Type delete failed!', { variant: `error` });
       console.error(error);
     }
   };

@@ -34,7 +34,7 @@ export default function DocumentCategoryViewForm() {
       enqueueSnackbar('Document Category delete Successfully!');
 
     }catch(error){
-      enqueueSnackbar('Document Category delete failed!');
+      enqueueSnackbar('Document Category delete failed!', { variant: `error` });
       console.error(error);
     }
   };

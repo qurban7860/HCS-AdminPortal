@@ -192,11 +192,11 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
   useEffect(() => {
     if (initial) {
-      if (sites && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (sites && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);

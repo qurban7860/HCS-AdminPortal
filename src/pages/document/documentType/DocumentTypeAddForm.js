@@ -82,7 +82,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
         enqueueSnackbar('Document Save Successfully!');
         navigate(PATH_DOCUMENT.documentType.list)
       } catch(error){
-        enqueueSnackbar('Document Save failed!');
+        enqueueSnackbar('Document Save failed!', { variant: `error` });
         console.error(error);
       }
   };

@@ -191,6 +191,7 @@ export default function DocumentAddForm({currentDocument}) {
 
         }
         enqueueSnackbar('Customer document save successfully!');
+        dispatch(setCustomerDocumentFormVisibility(false));
         setDocumentCategoryVal("")
         setDocumentTypeVal("")
         setCustomerAccessVal("")
@@ -206,7 +207,7 @@ export default function DocumentAddForm({currentDocument}) {
         setDescriptionVal("")
         reset();
       } catch(error){
-        enqueueSnackbar('Customer document save failed!');
+        enqueueSnackbar('Customer document save failed!', { variant: `error` });
         console.error(error);
       }
   };
