@@ -87,18 +87,18 @@ export default function ModelAddForm() {
 
   const onSubmit = async (data) => {   
     // console.log("data : ",data) 
-   await dispatchReqAddAndList(dispatch, addMachineModel(data),  reset, navigate, PATH_MACHINE.machineModel.list, enqueueSnackbar)
-      // try{
-      //   await dispatch(addMachineModel(data));
-      //   reset();
-      //   enqueueSnackbar('Create success!');
-      //   navigate(PATH_MACHINE.machineModel.list); 
-      //   // console.log(PATH_MACHINE.machineModel.list)
-      // } catch(error){
-      //   // enqueueSnackbar('Saving failed!');
-      //   enqueueSnackbar(error?.message)
-      //   console.error(error);
-      // }
+  //  await dispatchReqAddAndList(dispatch, addMachineModel(data),  reset, navigate, PATH_MACHINE.machineModel.list, enqueueSnackbar)
+      try{
+        await dispatch(addMachineModel(data));
+        reset();
+        enqueueSnackbar('Create success!');
+        navigate(PATH_MACHINE.machineModel.list); 
+        // console.log(PATH_MACHINE.machineModel.list)
+      } catch(error){
+        // enqueueSnackbar('Saving failed!');
+        enqueueSnackbar(error?.message)
+        console.error(error);
+      }
   };
   const toggleCancel = () => 
   {
