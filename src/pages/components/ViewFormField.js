@@ -75,7 +75,7 @@ export default function ViewFormField({
 
       <Typography
         variant={
-          heading === 'Serial No' || heading === 'Machine Model' || heading === 'Customer'
+          heading === 'Serial No' || heading === 'Machine Model' || heading === 'Customer' || heading === 'Machine'
             ? 'h4'
             : 'body1'
         }

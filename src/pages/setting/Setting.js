@@ -74,7 +74,7 @@ export default function Setting() {
                 </ListItemButton>
               </List>
             </Card>
-            <Card sx={{ height: '234px', mt: '14px' }}>
+            {/* <Card sx={{ height: '234px', mt: '14px' }}>
               <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
@@ -90,7 +90,7 @@ export default function Setting() {
                   <ListItemText primary="Users Role" />
                 </ListItemButton>
               </List>
-            </Card>
+            </Card> */}
           </Grid>
         </Grid>
       </Grid>

@@ -138,22 +138,6 @@ export const ModelEdit = Loadable(lazy(()=> import('../pages/machine/Model/Model
 // Document dashboard
 export const DocumentDashboard  = Loadable(lazy(()=>   import('../pages/document/dashboard/Document')));
 
-// Customer Documents
-export const CustomerDocumentAddForm  = Loadable(lazy(()=>   import('../pages/document/customer/DocumentAddForm')));
-export const CustomerDocumentList     = Loadable(lazy(()=>      import('../pages/document/customer/DocumentList')));
-export const CustomerDocumentViewForm = Loadable(lazy(()=>  import('../pages/document/customer/DocumentViewForm')));
-export const CustomerDocumentEditForm = Loadable(lazy(()=>  import('../pages/document/customer/DocumentEditForm')));
-// export const customerDocumentView     = Loadable(lazy(()=>      import('../pages/')));
-// export const customerDocumentEdit     = Loadable(lazy(()=>      import('../pages/')));
-
-// Machine Documents
-export const MachineDocumentAddForm   = Loadable(lazy(()=>  import('../pages/document/machine/DocumentAddForm')));
-export const MachineDocumentList      = Loadable(lazy(()=>     import('../pages/document/machine/DocumentList')));
-export const MachineDocumentViewForm  = Loadable(lazy(()=> import('../pages/document/machine/DocumentViewForm')));
-export const MachineDocumentEditForm  = Loadable(lazy(()=> import('../pages/document/machine/DocumentEditForm')));
-// export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
-// export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
-
 // Document Name
 export const DocumentNameAddForm      = Loadable(lazy(()=>   import('../pages/document/documentType/DocumentTypeAddForm')));
 export const DocumentNameList         = Loadable(lazy(()=>      import('../pages/document/documentType/DocumentTypeList')));
@@ -169,6 +153,24 @@ export const DocumentCategoryView     = Loadable(lazy(()=> import('../pages/docu
 export const DocumentCategoryEditForm     = Loadable(lazy(()=> import('../pages/document/documentCategory/DocumentCategoryEditForm')));
 // export const fileCategoryView = Loadable(lazy(()=>     import('../pages/')));
 // export const fileCategoryEdit = Loadable(lazy(()=>     import('../pages/')));
+
+// Customer Documents
+export const CustomerDocumentAddForm  = Loadable(lazy(()=>   import('../pages/document/customer/DocumentAddForm')));
+export const CustomerDocumentList     = Loadable(lazy(()=>      import('../pages/document/customer/DocumentList')));
+export const CustomerDocumentViewForm = Loadable(lazy(()=>  import('../pages/document/customer/DocumentViewForm')));
+export const CustomerDocumentEditForm = Loadable(lazy(()=>  import('../pages/document/customer/DocumentEditForm')));
+export const CustomerDocumentView = Loadable(lazy(()=>  import('../pages/document/dashboard/ViewCustomerDocument')));
+// export const customerDocumentView     = Loadable(lazy(()=>      import('../pages/')));
+// export const customerDocumentEdit     = Loadable(lazy(()=>      import('../pages/')));
+
+// Machine Documents
+export const MachineDocumentAddForm   = Loadable(lazy(()=>  import('../pages/document/machine/DocumentAddForm')));
+export const MachineDocumentList      = Loadable(lazy(()=>     import('../pages/document/machine/DocumentList')));
+export const MachineDocumentViewForm  = Loadable(lazy(()=> import('../pages/document/machine/DocumentViewForm')));
+export const MachineDocumentEditForm  = Loadable(lazy(()=> import('../pages/document/machine/DocumentEditForm')));
+export const MachineDocumentView  = Loadable(lazy(()=> import('../pages/document/dashboard/ViewMachineDocument')));
+// export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
+// export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
 
 // DASHBOARD: SETTINGS
 export const Setting = Loadable(lazy(() => import('../pages/setting/Setting')));

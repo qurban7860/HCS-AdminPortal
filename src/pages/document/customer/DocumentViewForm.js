@@ -10,7 +10,7 @@ import Image from 'mui-image';
 import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link, Tooltip} from '@mui/material';
 // redux
 import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
-import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
+import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument, resetCustomerDocument} from '../../../redux/slices/document/customerDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -64,6 +64,14 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     await dispatch(getCustomerDocument(currentCustomerDocument._id));
           dispatch(setCustomerDocumentEditFormVisibility(true));
   };
+
+  const linkCustomerDocumentView = async () => { 
+    navigate(PATH_DASHBOARD.document.customer(currentCustomerDocument._id)); 
+    dispatch(resetCustomerDocument())
+    // dispatch(resetCustomer())
+    await dispatch(getCustomerDocument(currentCustomerDocument?._id))
+    // await dispatch(getCustomer(currentMachineDocument.customer._id))
+   };
 
   const defaultValues = useMemo(
     () => (
@@ -161,18 +169,28 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-        <Grid  display="inline-flex">
-              <Tooltip >
-                <ViewFormField  isActive={defaultValues.isActive}  />
-              </Tooltip>
-              <Tooltip>
-                <ViewFormField  customerAccess={defaultValues?.customerAccess} />
-              </Tooltip>
-            </Grid>
-        <Grid container>
-            
+          <Grid  display="inline-flex">
+            <Tooltip >
+              <ViewFormField  isActive={defaultValues.isActive}  />
+            </Tooltip>
+            <Tooltip>
+              <ViewFormField  customerAccess={defaultValues?.customerAccess} />
+            </Tooltip>
+          </Grid>
+          <Grid container>
             <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Version" objectParam={
+                                    defaultValues.documentVersion ? (
+                                      <Typography display="flex">
+                                        {defaultValues.documentVersion}
+                                        <Link onClick={linkCustomerDocumentView} href='#' underline='none' ><Typography variant='body2' sx={{mt:0.45,ml:1}} >   More version  </Typography></Link>
+                                      </Typography>
+                                      
+                                    ) : (
+                                      ''
+                                    )
+                                  } 
+            />
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
@@ -180,40 +198,40 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
             <Grid item  sx={{ display: 'flex-inline' }}>
-            <Grid container justifyContent="flex-start" gap={1}>
-              { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
-              file?.fileType.startsWith("image") ?
-              <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
-                <Link href="#" underline="none"
-                component="button"
-                title='Download File'
-                // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
-                onClick={() => handleDownload(file._id,file.name ,file.extension)}
-                >
-                  <Box
-                    onAbort={handleOpenPreview}
-                    component="img"
-                    width="80px" height="80px" 
-                    sx={{ mx:3, mt:2, objectFit:"cover" }}
-                    alt={file.DisplayName}
-                    src={`data:image/png;base64, ${file?.thumbnail}`}
-                    />
-                    <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
-                </Link> 
-              </Card>:
-              <Card sx={{m:1, width:"130px", height:"155px"}}>
-                <Link href="#" underline="none"
+              <Grid container justifyContent="flex-start" gap={1}>
+                { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+                file?.fileType.startsWith("image") ?
+                <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
+                  <Link href="#" underline="none"
                   component="button"
                   title='Download File'
-                  onClick={() => handleDownload(file._id,file.name ,file.extension )}
-                >
-                  <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
-                  <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
-                </Link>
-              </Card>
-              ))}
+                  // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
+                  onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                  >
+                    <Box
+                      onAbort={handleOpenPreview}
+                      component="img"
+                      width="80px" height="80px" 
+                      sx={{ mx:3, mt:2, objectFit:"cover" }}
+                      alt={file.DisplayName}
+                      src={`data:image/png;base64, ${file?.thumbnail}`}
+                      />
+                      <Typography sx={{mt:0.7}}>{file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}</Typography>
+                  </Link> 
+                </Card>:
+                <Card sx={{m:1, width:"130px", height:"155px"}}>
+                  <Link href="#" underline="none"
+                    component="button"
+                    title='Download File'
+                    onClick={() => handleDownload(file._id,file.name ,file.extension )}
+                  >
+                    <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
+                    <Typography sx={{mt:0.5}}>{file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}</Typography>
+                  </Link>
+                </Card>
+                ))}
+              </Grid>
             </Grid>
-            </Grid><Link sx={{mt:"auto"}} href="#" >see more</Link>
             
           <Grid container sx={{ mt: 2 }}>
                 <ViewFormAudit  defaultValues={defaultValues}/>
