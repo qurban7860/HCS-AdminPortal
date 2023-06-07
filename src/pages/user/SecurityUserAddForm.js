@@ -47,8 +47,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const { roles } = useSelector((state) => state.role);
   const [ phone, setPhone] = useState('')
 
-const ROLES = [];
-roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
+  const ROLES = [];
+  roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const [roleVal, setRoleVal] = useState("");
   // roles.sort((a, b) => a > b);
@@ -72,7 +72,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   useEffect(() => {
       dispatch(getCustomers());
-      dispatch(getRoles())
+      dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 

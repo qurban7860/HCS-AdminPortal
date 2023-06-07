@@ -33,7 +33,7 @@ export default function SecurityUserChangePassword() {
   const { enqueueSnackbar } = useSnackbar();
   const dispatch = useDispatch();
   const ChangePassWordSchema = Yup.object().shape({
-    oldPassword: Yup.string().required('Old Password is required'),
+
     newPassword: Yup.string()
       .min(6, 'Password must be at least 6 characters')
       .required('New Password is required'),
@@ -42,7 +42,6 @@ export default function SecurityUserChangePassword() {
   
 
   const defaultValues = {
-    oldPassword: '',
     newPassword: '',
     confirmNewPassword: '',
   };
@@ -58,15 +57,27 @@ export default function SecurityUserChangePassword() {
     formState: { isSubmitting },
   } = methods;
 
-  const toggleCancel = (id)=>{
-    navigate(PATH_DASHBOARD.user.view(id));
+  const toggleCancel = () => {
+    navigate(PATH_DASHBOARD.user.view(securityUser._id));
   }
+  console.log('this is the component');
 
 
   const onSubmit = async (data) => {
-      if(userId){
-        await getWithMsg(dispatch, SecurityUserPasswordUpdate(data,userId), enqueueSnackbar);
+      try{
+        await dispatch(SecurityUserPasswordUpdate(data, userId, true));
         reset();
+        enqueueSnackbar('Update success!');
+        navigate(PATH_DASHBOARD.user.view(securityUser._id));
+      } catch (error) {
+        if(error.Message){
+          enqueueSnackbar(error.Message,{ variant: `error` })
+        }else if(error.message){
+          enqueueSnackbar(error.message,{ variant: `error` })
+        }else{
+          enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        }
+        console.log("Error:", error);
       }
   };
 
@@ -133,7 +144,7 @@ export default function SecurityUserChangePassword() {
                     Change Password
                   </LoadingButton> */}
                 </Stack>
-                <AddFormButtons isSubmitting={isSubmitting} saveButtonName="Change" toggleCancel={toggleCancel} />
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Card>
         </Grid>
       </Grid>
