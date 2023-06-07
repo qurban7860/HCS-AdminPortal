@@ -8,6 +8,7 @@ import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } f
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
+import { setTransferDialogBoxVisibility } from '../../redux/slices/products/machine';
 
 const useStyles = makeStyles((theme) => ({
   tooltip: {
@@ -42,10 +43,11 @@ export default function ViewFormEditDeleteButtons({
   sites,
   handleMap,
 }) {
-  const { isLoading } = useSelector((state) => state.machine);
+  const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
   const classes = useStyles();
+  const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
+  // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const handleOpenConfirm = (dialogType) => {
@@ -53,15 +55,15 @@ export default function ViewFormEditDeleteButtons({
       setOpenConfirm(true);
     }
     if(dialogType === 'transfer'){
-      setOpenTransferConfirm(true);
+      dispatch(setTransferDialogBoxVisibility(true));
     }
   };
   const handleCloseConfirm = (dialogType) => {
     if(dialogType === 'delete'){
-        setOpenConfirm(false);
+      setOpenConfirm(false);
     }
     if(dialogType === 'transfer'){
-      setOpenTransferConfirm(false);
+      dispatch(setTransferDialogBoxVisibility(false));
     }
   };
   const handleClosePopover = () => {
@@ -246,7 +248,7 @@ export default function ViewFormEditDeleteButtons({
         }
       />
       <ConfirmDialog
-        open={openTransferConfirm}
+        open={transferDialogBoxVisibility}
         onClose={() => {
           handleCloseConfirm('transfer');
         }}
