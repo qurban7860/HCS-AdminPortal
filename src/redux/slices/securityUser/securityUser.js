@@ -15,6 +15,7 @@ const initialState = {
   error: null,
   securityUsers: [],
   securityUser: null,
+  loggedInUser: null
 };
 
 const slice = createSlice({
@@ -53,7 +54,7 @@ const slice = createSlice({
     getLoggedInSecurityUserSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.securityUsers = action.payload;
+      state.loggedInUser = action.payload;
       state.initial = true;
     },
 
@@ -109,7 +110,8 @@ export const {
 export function addSecurityUser(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    dispatch(resetSecurityUser())
+    dispatch(resetSecurityUser());
+    try{
       const data = {
       customer: param.customer,
       contact: param.contact,
@@ -126,7 +128,11 @@ export function addSecurityUser(param) {
         dispatch(setSecurityUserFormVisibility(false))
         dispatch(getSecurityUsers());
       }
-    return response;
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 }
 
@@ -134,8 +140,9 @@ export function addSecurityUser(param) {
 
 export function updateSecurityUser(param,id) {
   return async (dispatch) => {
-    dispatch(resetSecurityUser())
+    dispatch(resetSecurityUser());
     dispatch(slice.actions.startLoading());
+    try{
       const data = {
         customer: param.customer,
         contact: param.contact,
@@ -154,6 +161,10 @@ export function updateSecurityUser(param,id) {
         dispatch(getSecurityUsers());
       }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 }
 
@@ -162,6 +173,7 @@ export function updateSecurityUser(param,id) {
 export function getSecurityUsers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{ 
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users`,
       {
         params: {
@@ -173,7 +185,11 @@ export function getSecurityUsers() {
         dispatch(slice.actions.getSecurityUsersSuccess(response.data));
       }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
     }
+  }
 }
 
 // ----------------------------------------------------------------------
@@ -181,12 +197,17 @@ export function getSecurityUsers() {
 export function getSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
       // console.log("response: " ,response);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getSecurityUserSuccess(response.data));
       }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 }
 
@@ -195,12 +216,17 @@ export function getSecurityUser(id) {
 export function getLoggedInSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{  
       const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}`);
-      // console.log("response: " ,response);
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getLoggedInSecurityUserSuccess(response.data));
+        // console.log("response: " ,response);
+        if(regEx.test(response.status)){
+          dispatch(slice.actions.getLoggedInSecurityUserSuccess(response.data));
+        }
+        return response;
+      } catch (error) {
+        console.error(error);
+        throw error;
       }
-      return response;
   };
 }
 
@@ -209,6 +235,7 @@ export function getLoggedInSecurityUser(id) {
 export function deleteSecurityUser(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    try{
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`,
       {
         isArchived: true, 
@@ -220,6 +247,10 @@ export function deleteSecurityUser(id) {
         dispatch(resetSecurityUser())
       }
       return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
 }
 //------------------------------------------------------------------------------
@@ -227,22 +258,22 @@ export function deleteSecurityUser(id) {
 export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-      try{
-        if(isAdmin){
-          data.isAdmin = true
-        };
+    try{
+      if(isAdmin){
+        data.isAdmin = true
+      };
 
-        const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${Id}`,
-          data
-        );
-        if(regEx.test(response.status)){
-          dispatch(slice.actions.setResponseMessage(response.data));
-        }
-        return response; // eslint-disable-line
-      } catch (error) {
-        console.error(error);
-        throw error;
-        // dispatch(slice.actions.hasError(error.Message));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/updatePassword/${Id}`,
+        data
+      );
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
       }
+      return response; // eslint-disable-line
+    } catch (error) {
+      console.error(error);
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
+    }
   };
 }

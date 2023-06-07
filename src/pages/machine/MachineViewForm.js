@@ -10,6 +10,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag, updateMachine, transferMachine } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
+import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import Iconify from '../../components/iconify';
 import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
@@ -23,28 +24,35 @@ import GoogleMaps from '../../assets/GoogleMaps';
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
+  const userId = localStorage.getItem('userId');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const { machine , machineEditFormFlag, transferMachineFlag } = useSelector((state) => state.machine);
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
+  const { loggedInUser } = useSelector((state) => state.user);
   const [disableButton, setButtonDisable] = useState(false);
   const baseUrl = window.location.origin;
-  const { user } = useAuthContext();
-  const isSuperAdmin = user?.roles?.some(role => role.roleType === 'SuperAdmin');
-
+  const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
+  
+  
   useLayoutEffect(() => {
+    dispatch(setMachineEditFormVisibility(false));
     if(machine.transferredMachine){
       setButtonDisable(true);
     }else{
       setButtonDisable(false);
     }
-    dispatch(setMachineEditFormVisibility(false))
+    if(userId){
+      dispatch(getLoggedInSecurityUser(userId));
+    }
     if(machine?.customer){
       dispatch(getCustomer(machine?.customer?._id))
     }
-  }, [ dispatch ,machine, transferMachineFlag ]);
+  }, [ dispatch ,machine, transferMachineFlag, userId ]);
+
+  
 
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));

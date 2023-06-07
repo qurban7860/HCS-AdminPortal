@@ -40,10 +40,10 @@ export default function SecurityUserEditForm() {
   const { error, securityUser } = useSelector((state) => state.user);
   const ROLES = [];
   const securityUserRoles = [];
-roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
-if(securityUser?.roles){
-  securityUser?.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
-}
+  roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
+  if(securityUser?.roles){
+    securityUser?.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
+  }
   const [ name, setName ] = useState("");
   const [ email, setEmail ] = useState("");
   const { customers } = useSelector((state) => state.customer);
@@ -60,6 +60,7 @@ if(securityUser?.roles){
 
 useEffect(() => {
     dispatch(getCustomers());
+    dispatch(getRoles());
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [dispatch]);
 
@@ -161,7 +162,7 @@ useEffect(() => {
       )
       data.roles = submitSecurityUserRoles;
       getWithMsg(dispatch, updateSecurityUser(data,securityUser._id), enqueueSnackbar)
-            navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+      navigate(PATH_DASHBOARD.user.view(defaultValues.id));
     //     dispatch(updateSecurityUser(data,securityUser._id))
     //     .then(res => {
     //     console.log("res : " , res)

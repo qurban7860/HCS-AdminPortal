@@ -8,7 +8,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
-import { getSecurityUser,getSecurityUsers, deleteSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import { getLoggedInSecurityUser, getSecurityUser,getSecurityUsers, deleteSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
 import Iconify from '../../components/iconify';
@@ -31,7 +31,8 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 
 export default function SecurityUserViewForm() {
   const regEx = /^[^2]*/
-  const { securityUser , initial } = useSelector((state) => state.user);
+  const userId = localStorage.getItem('userId');
+  const { securityUser, loggedInUser, initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
   const [openContact, setOpenContact] = useState(false);
@@ -48,11 +49,18 @@ export default function SecurityUserViewForm() {
 
   const { user } = useAuthContext();
   const { id } = useParams();
-  const isSuperAdmin = user?.roles?.some(role => role.roleType === 'SuperAdmin');
+  const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+ 
+  useLayoutEffect(() => {
+    if(userId){
+      dispatch(getLoggedInSecurityUser(userId));
+    }
+  }, [ dispatch, userId ]);
+  
   useEffect(()=> {
     if(id){
       dispatchReqNoMsg(dispatch,getSecurityUser(id),enqueueSnackbar)
@@ -60,16 +68,16 @@ export default function SecurityUserViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[id,dispatch])
 
-    useEffect(()=>{
-      batch(() => {
-        if(securityUser && securityUser?.customer && securityUser?.customer?._id){
-          dispatch(getCustomer(securityUser?.customer?._id))
-        }
-        if(securityUser && securityUser?.contact && securityUser?.contact?._id){
-          dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
-        }})
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dispatch,securityUser])
+  useEffect(()=>{
+    batch(() => {
+      if(securityUser && securityUser?.customer && securityUser?.customer?._id){
+        dispatch(getCustomer(securityUser?.customer?._id))
+      }
+      if(securityUser && securityUser?.contact && securityUser?.contact?._id){
+        dispatch(getContact(securityUser?.customer?._id,securityUser?.contact?._id))
+      }})
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch,securityUser])
 
 
   const handleEdit = () => {
