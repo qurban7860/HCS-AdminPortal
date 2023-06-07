@@ -9,7 +9,7 @@ import Image from 'mui-image';
 import { styled, alpha } from '@mui/material/styles';
 import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton, Tooltip} from '@mui/material';
 // redux
-import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument} from '../../../redux/slices/document/machineDocument';
+import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument,resetMachineDocument} from '../../../redux/slices/document/machineDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -20,6 +20,8 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import Iconify from '../../../components/iconify';
 import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
+import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
+import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
 import { useSnackbar } from '../../../components/snackbar';
 import LoadingScreen from '../../../components/loading-screen';
 
@@ -59,7 +61,15 @@ const { enqueueSnackbar } = useSnackbar();
     // console.log("machineDocument : ",machineDocument)
     dispatch(setMachineDocumentEditFormVisibility(true));
   };
-
+  const linkMachineDocumentView = async () => { 
+     navigate(PATH_DASHBOARD.document.machine(currentMachineDocument._id)); 
+     dispatch(resetMachineDocument())
+     dispatch(resetCustomer())
+    //  dispatch(resetMachine())
+     await dispatch(getMachineDocument(currentMachineDocument._id))
+    //  await dispatch(getMachine(currentMachineDocument.machine._id))
+     await dispatch(getCustomer(currentMachineDocument.customer._id))
+    };
   const defaultValues = useMemo(
     () => (
       {
@@ -163,7 +173,19 @@ const document = {
           </Grid>
         <Grid container >
             <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
+            {/* <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} /> */}
+            <ViewFormField sm={6} heading="Version" objectParam={
+                                    defaultValues.documentVersion ? (
+                                      <Typography display="flex">
+                                        {defaultValues.documentVersion}
+                                        <Link onClick={linkMachineDocumentView} href='#' underline='none' ><Typography variant='body2' sx={{mt:0.45,ml:1}} >   More version  </Typography></Link>
+                                      </Typography>
+                                      
+                                    ) : (
+                                      ''
+                                    )
+                                  } 
+            />
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
@@ -184,7 +206,7 @@ const document = {
                     alt={file.DisplayName}
                     src={`data:image/png;base64, ${file?.thumbnail}`}
                     />
-                    <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+                    <Typography sx={{mt:0.7}}>{file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}</Typography>
               </Link> 
             </Card>:
             <Card sx={{m:1, width:"130px", height:"155px"}}>
@@ -195,14 +217,14 @@ const document = {
                 onClick={() => handleDownload(file._id,file.name ,file.extension)}
               >
                 <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]} />
-                <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
+                <Typography sx={{mt:0.5}}>{file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}</Typography>
               </Link>
             </Card>
             ))}
             
               {/* <DownloadComponent Document={currentMachineDocument} /> */}
               {/* <Button variant="contained" sx={{color: "Black", backgroundColor: "#00e676", m:2}} startIcon={<Iconify icon="line-md:download-loop" />} onClick={handleDownload}> Download</Button> */}
-            </Grid><Link sx={{mt:"auto"}} href="#" >see more</Link>
+            </Grid>
           {/* {currentMachineDocument?.type.startsWith("image") ?
           <Image alt={defaultValues.name} src={currentMachineDocument?.path} width="300px" height="300px" sx={{mt:2, }} /> : null} */}
           {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}

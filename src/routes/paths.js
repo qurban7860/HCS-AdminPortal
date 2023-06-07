@@ -43,7 +43,11 @@ export const PATH_DASHBOARD = {
     app: path(ROOTS_DASHBOARD, '/app'),
   },
   setting: path(ROOTS_DASHBOARD, '/setting'),
-  document: path(ROOTS_DASHBOARD, '/document'),
+  document: {
+    dashboard: path(ROOTS_DASHBOARD, '/document/dashboard'),
+    customer: (id) => path(ROOTS_DASHBOARD, `/document/${id}/customer`),
+    machine: (id) => path(ROOTS_DASHBOARD, `/document/${id}/machine`),
+  },
   reports: path(ROOTS_DASHBOARD, '/reports'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),

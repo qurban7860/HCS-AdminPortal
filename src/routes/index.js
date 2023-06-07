@@ -115,19 +115,8 @@ RoleEdit,
   NoteAdd,
   NoteEdit,
   NoteView,
-// DocumentDashboard    
-  DocumentDashboard, 
-// Customer document 
-  CustomerDocumentAddForm  ,
-  CustomerDocumentList     ,
-  CustomerDocumentViewForm ,
-  CustomerDocumentEditForm ,
-//  machine document
-  MachineDocumentAddForm  ,
-  MachineDocumentList     ,
-  MachineDocumentViewForm ,
-  MachineDocumentEditForm ,
-// Document Name
+
+  // Document Name
   DocumentNameAddForm  ,
   DocumentNameList     ,
   DocumentNameViewForm ,
@@ -138,6 +127,21 @@ RoleEdit,
   DocumentCategoryView ,
   DocumentCategoryEditForm ,
 
+// Customer document 
+  CustomerDocumentAddForm  ,
+  CustomerDocumentList     ,
+  CustomerDocumentViewForm ,
+  CustomerDocumentEditForm ,
+//  machine document
+  MachineDocumentAddForm  ,
+  MachineDocumentList     ,
+  MachineDocumentViewForm ,
+  MachineDocumentEditForm ,
+
+  // DocumentDashboard    
+  DocumentDashboard, 
+  CustomerDocumentView,
+  MachineDocumentView,
 // Setting
 
   Setting,
@@ -211,6 +215,14 @@ export default function Router() {
         { path: 'setting', element: <Setting /> },
         { path: 'reports', element: <Reports /> },
         { path: 'document', element: <DocumentDashboard /> },
+        { path: 'document', element: <DocumentDashboard /> },
+        { path: 'document',
+          children: [
+           {path: 'dashboard',element: <DocumentDashboard />},
+           {path: ':id/customer',element: <CustomerDocumentView />},
+           {path: ':id/machine',element: <MachineDocumentView/>} ,
+          ]
+        },
         {
           path: 'user',
           children: [
