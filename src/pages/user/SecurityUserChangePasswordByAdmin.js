@@ -65,7 +65,7 @@ export default function SecurityUserChangePassword() {
 
   const onSubmit = async (data) => {
       try{
-        await dispatch(SecurityUserPasswordUpdate(data, userId, true));
+        await dispatch(SecurityUserPasswordUpdate(data, securityUser._id, true));
         reset();
         enqueueSnackbar('Update success!');
         navigate(PATH_DASHBOARD.user.view(securityUser._id));

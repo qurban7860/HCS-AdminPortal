@@ -91,9 +91,20 @@ export default function SecurityUserViewForm() {
   }
 
   const onDelete = async () => {
+    try{
     await dispatch(deleteSecurityUser(id));
     dispatch(getSecurityUsers());
     navigate(PATH_DASHBOARD.user.list)
+    } catch (error) {
+      if(error.Message){
+        enqueueSnackbar(error.Message,{ variant: `error` })
+      }else if(error.message){
+        enqueueSnackbar(error.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+      console.log("Error:", error);
+    }
   }
 
   const handleViewCustomer = (Id) => {
