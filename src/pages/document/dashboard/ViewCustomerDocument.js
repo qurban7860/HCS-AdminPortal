@@ -376,10 +376,11 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                     item
                     justifyContent="center"
                     sx={{ textAlign: 'center', width: '140px', mt:2 }}
-                    >
+                    ><Tooltip title={file.name} arrow >
                       <Typography variant="body1" >
                       {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
                       </Typography>
+                    </Tooltip>
                   </Grid>
                 </Card>
             :
@@ -454,10 +455,11 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                     item
                     justifyContent="center"
                     sx={{ textAlign: 'center', width: '140px', mt:2 }}
-                    >
+                    ><Tooltip title={file.name} arrow >
                       <Typography variant="body1" >
                       {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
                       </Typography>
+                    </Tooltip>
                   </Grid>
                 </Card>
                 }

@@ -85,12 +85,12 @@ export default function ViewFormField({
           <>
             <IconButton
               aria-label={isActive ? 'Active' : 'Inactive'}
-              onClick={handlePopoverOpen}
+              // onClick={handlePopoverOpen}
               onMouseEnter={handlePopoverOpen}
               onMouseLeave={handlePopoverClose}
             >
               <Iconify
-                heading={isActive ? 'Active' : 'Inactive'}
+                // heading={isActive ? 'Active' : 'Inactive'}
                 icon={isActive ? 'mdi:account-badge' : 'mdi:account-cancel-outline'}
                 style={{ color: isActive ? 'green' : 'red' }}
                 width="30px"
