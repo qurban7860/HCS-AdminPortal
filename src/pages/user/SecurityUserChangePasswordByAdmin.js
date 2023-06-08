@@ -60,7 +60,6 @@ export default function SecurityUserChangePassword() {
   const toggleCancel = () => {
     navigate(PATH_DASHBOARD.user.view(securityUser._id));
   }
-  console.log('this is the component');
 
 
   const onSubmit = async (data) => {
