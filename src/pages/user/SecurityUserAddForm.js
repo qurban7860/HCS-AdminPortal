@@ -189,25 +189,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
           <Card sx={{ pt: 10, pb: 5, px: 3 }}>
             {isEdit && (
               <Label
-                color={values.status =//     dispatch(updateSecurityUser(data,securityUser._id))
-    //     .then(res => {
-    //     console.log("res : " , res)
-    //     if(regEx.test(res.status)){
-    //       reset();
-    //       enqueueSnackbar(res.statusText)
-    //       dispatch(setSecurityUserEditFormVisibility(false))
-    //     }else{
-    //       enqueueSnackbar(res.statusText,{ variant: `error` })
-    //     }
-    //   }).catch(err => {
-    //     if(err.Message){
-    //       enqueueSnackbar(err.Message,{ variant: `error` })
-    //     }else if(err.message){
-    //       enqueueSnackbar(err.message,{ variant: `error` })
-    //     }else{
-    //       enqueueSnackbar("Something went wrong!",{ variant: `error` })
-    //     }
-    // });== 'active' ? 'success' : 'error'}
+                color={values.status === 'active' ? 'success' : 'error'}
                 sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
               >
                 {values.status}
