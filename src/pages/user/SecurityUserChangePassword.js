@@ -59,10 +59,10 @@ export default function SecurityUserChangePassword() {
   const toggleCancel = ()=>{
     navigate(PATH_DASHBOARD.general.app);
 }
-  const onSubmit =  (data) => {
+  const onSubmit = async (data) => {
       if(userId){
         try{
-          dispatch(SecurityUserPasswordUpdate(data,userId));
+          await dispatch(SecurityUserPasswordUpdate(data,userId));
           enqueueSnackbar('Password has been updated Successfully!');
           reset();
           navigate(PATH_DASHBOARD.user.view(userId));
