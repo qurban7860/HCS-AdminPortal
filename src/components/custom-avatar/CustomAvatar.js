@@ -20,7 +20,7 @@ const getColorByName = (name) => {
 
 // ----------------------------------------------------------------------
 
-const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children, sx, ...other }, ref) => {
+const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children,extension, sx, ...other }, ref) => {
   const theme = useTheme();
 
   const charAtName = getCharAtSecondName(name)
@@ -43,7 +43,8 @@ const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children, sx, .
         }}
         {...other}
       >
-        {name && charAtName}
+        {name && charAtName }
+        {extension}
         {children}
       </Avatar>
     ) : (
@@ -78,6 +79,7 @@ const CustomAvatar = forwardRef(({ color, name = '', BadgeProps, children, sx, .
 CustomAvatar.propTypes = {
   sx: PropTypes.object,
   name: PropTypes.string,
+  extension: PropTypes.string,
   children: PropTypes.node,
   BadgeProps: PropTypes.object,
   color: PropTypes.oneOf([
