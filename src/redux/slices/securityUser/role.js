@@ -102,8 +102,6 @@ export function addRole(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const data = {
-      // }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, params);
       dispatch(slice.actions.setResponseMessage('Role Saved successfully'));
     } catch (error) {
@@ -119,6 +117,7 @@ export function updateRole(param,id) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
+          
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
       dispatch(slice.actions.setResponseMessage('Role updated successfully'));

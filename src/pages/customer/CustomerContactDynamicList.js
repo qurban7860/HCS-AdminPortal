@@ -258,7 +258,7 @@ export default function CustomerContactList(currentContact = null) {
                                   display="block"
                                   height="170px"
                                   sx={{ position: 'relative', zIndex: '1' }}
-                                >
+                                  >
                                   <CustomAvatar
                                     sx={{
                                       width: '100px',
@@ -300,7 +300,7 @@ export default function CustomerContactList(currentContact = null) {
                                 item
                                 justifyContent="center"
                                 sx={{ display: 'block', textAlign: 'center', width: '200px' }}
-                              >
+                                >
                                 <CardContent
                                   component={Stack}
                                   display="block"
