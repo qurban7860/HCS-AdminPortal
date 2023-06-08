@@ -23,7 +23,7 @@ import { getWithMsg, dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoM
 // ----------------------------------------------------------------------
 
 export default function SecurityUserChangePassword() {
-  const { userId, user } = useAuthContext();
+  const userId = localStorage.getItem('userId');
   const navigate = useNavigate();
   // console.log("userId : " , userId)
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -59,9 +59,24 @@ export default function SecurityUserChangePassword() {
   const toggleCancel = ()=>{
     navigate(PATH_DASHBOARD.general.app);
 }
-  const onSubmit =  (data) => {
+  const onSubmit = async (data) => {
       if(userId){
-        dispatchReqEditAndView(dispatch, SecurityUserPasswordUpdate(data,userId),  reset, navigate, PATH_DASHBOARD.user, userId, enqueueSnackbar, "Password has been updated Successfully!")
+        try{
+          await dispatch(SecurityUserPasswordUpdate(data,userId));
+          enqueueSnackbar('Password has been updated Successfully!');
+          reset();
+          navigate(PATH_DASHBOARD.user.view(userId));
+          // dispatchReqEditAndView(dispatch, SecurityUserPasswordUpdate(data,userId),  reset, navigate, PATH_DASHBOARD.user, userId, enqueueSnackbar, "Password has been updated Successfully!")
+        } catch (error) {
+          if(error.Message){
+            enqueueSnackbar(error.Message,{ variant: `error` })
+          }else if(error.message){
+            enqueueSnackbar(error.message,{ variant: `error` })
+          }else{
+            enqueueSnackbar("Something went wrong!",{ variant: `error` })
+          }
+          console.log("Error:", error);
+        }
         //  getWithMsg(dispatch, SecurityUserPasswordUpdate(data,userId), enqueueSnackbar ,"Password has been updated Successfully!");
         // reset();
         // navigate(PATH_DASHBOARD.user.view(userId));
