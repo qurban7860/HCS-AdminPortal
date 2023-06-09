@@ -248,14 +248,34 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
+                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 44,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
                           onClick={
                             () => {
                               handleDownloadAndPreview(file._id,file.name,file.extension);
                             }
                           }
                           sx={{
-                            top: 7,
-                            left: 70,
+                            top: 4,
+                            left: 76,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -323,8 +343,8 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           size="small"
                           onClick={() => handleDownload(file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -338,22 +358,6 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <CardMedia
                         component="img"
                         sx={{
@@ -380,8 +384,8 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                     justifyContent="center"
                     sx={{ textAlign: 'center', width: '140px', mt:2 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>
@@ -402,10 +406,30 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
+                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 76,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
                           onClick={() => handleDownload(file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -419,30 +443,13 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        // name={file.extension}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <Iconify sx={{ 
                           height: '90px',
                           opacity: '0.6',
                           display: 'block',
                           zIndex: '-1',
                           position: 'absolute',
-                          top: '0',
+                          top: '5px',
                           left: '0',
                           right: '0',
                           bottom: '0',
@@ -459,8 +466,8 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                     justifyContent="center"
                     sx={{ textAlign: 'center', width: '140px', mt:2 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>

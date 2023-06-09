@@ -216,7 +216,8 @@ const document = {
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          <Grid sx={{ mt:2 ,display: "flex", alignItems:"flex-start"}}>
+          <Grid item  sx={{ display: 'flex-inline' }}>
+            <Grid container justifyContent="flex-start" gap={1}>
           { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
            
@@ -235,14 +236,34 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
+                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 44,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
                           onClick={
                             () => {
                               handleDownloadAndPreview(file._id,file.name,file.extension);
                             }
                           }
                           sx={{
-                            top: 7,
-                            left: 70,
+                            top: 4,
+                            left: 76,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -310,8 +331,8 @@ const document = {
                           size="small"
                           onClick={() => handleDownload(file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -325,22 +346,6 @@ const document = {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <CardMedia
                         component="img"
                         sx={{
@@ -389,10 +394,30 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
+                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 76,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
                           onClick={() => handleDownload(file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -406,23 +431,6 @@ const document = {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        // name={file.extension}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <Iconify sx={{ 
                           height: '90px',
                           opacity: '0.6',
@@ -454,6 +462,7 @@ const document = {
                 </Card>
             ))}
             </Grid>
+          </Grid>
           <Grid container sx={{ mt: '1rem' }}>
               <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>
