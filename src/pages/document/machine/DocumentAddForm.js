@@ -14,9 +14,10 @@ import { Switch,Radio, RadioGroup,FormControlLabel,FormLabel, Box, Button, Card,
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addMachineDocument,updateMachineDocument, setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { addMachineDocument,updateMachineDocument, setMachineDocumentFormVisibility, getMachineDocuments } from '../../../redux/slices/document/machineDocument';
 import { setDocumentCategoryFormVisibility , getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { setDocumentTypeFormVisibility , getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { addDocumentVersion, updateDocumentVersion } from '../../../redux/slices/document/documentVersion';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -229,14 +230,15 @@ export default function DocumentAddForm({currentDocument}) {
         if(selectedValue === "new"){
           await dispatch(addMachineDocument(machine?.customer?._id, machine._id ,data));
           enqueueSnackbar('Machine document save successfully!');
-
+        }else if (selectedVersionValue === "newVersion"){
+            await dispatch(addDocumentVersion(documentVal._id,data));
+          enqueueSnackbar('Machine document version updated successfully!');
         }else{
-          if(selectedVersionValue === "newVersion"){
-            data.newVersion = true;
-          }
-          await dispatch(updateMachineDocument(documentVal._id, machine._id ,data));
+          await dispatch(updateDocumentVersion(documentVal._id,documentVal?.documentVersions[0]?._id,data));
           enqueueSnackbar('Machine document updated successfully!');
-        }
+          }
+          dispatch(getMachineDocuments(machine._id))
+          dispatch(setMachineDocumentFormVisibility(false))
         setDocumentCategoryVal("")
         setDocumentTypeVal("")
         setCustomerAccessVal("")
@@ -375,7 +377,7 @@ export default function DocumentAddForm({currentDocument}) {
                         onChange={(event, newValue) => {
                           if (newValue) {
                             const { _id, displayName } = newValue;
-                            setDocumentVal({ _id, displayName });
+                            setDocumentVal(newValue);
                             setDisplayNameVal(newValue.displayName);
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);

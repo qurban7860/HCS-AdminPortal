@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
+import FormData from 'form-data';
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
@@ -105,17 +106,19 @@ export const {
 
 // ----------------------------Add Document Version------------------------------------------
 
-export function addDocumentVersion(params) {
+export function addDocumentVersion(documentId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-            const data = {
-                name: params.name,
-                description: params.description,
-                customerAccess:params.customerAccess,
-                isActive: params.isActive,
-            }
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/documentVersion/`, data);
+          const formData = new FormData();
+          
+          if(params?.description){
+            formData.append('description', params?.description);
+          }
+          if(params?.images){
+            formData.append('images', params?.images);
+          }
+      const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/`, formData);
       dispatch(slice.actions.setResponseMessage('Document Version saved successfully'));
       dispatch(getDocumentVersions());
     } catch (error) {
@@ -127,17 +130,16 @@ export function addDocumentVersion(params) {
 
 // ---------------------------------Update Document Version-------------------------------------
 
-export function updateDocumentVersion(Id,documentId,params) {
+export function updateDocumentVersion(documentId,Id,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        name: params.name,
-        description: params.description,
-        customerAccess:params.customerAccess,
-        isActive: params.isActive,
+      const formData = new FormData();
+      
+      if(params?.images){
+        formData.append('images', params?.images);
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${Id}`, data, );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${Id}`, formData, );
       dispatch(slice.actions.setResponseMessage('Document Version updated successfully'));
       dispatch(setDocumentVersionEditFormVisibility (false));
     } catch (error) {
