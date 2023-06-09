@@ -344,9 +344,11 @@ export default function DocumentAddForm({currentDocument}) {
                     </Grid>
                     </RadioGroup>
                   </FormControl>
-                  { selectedValue === "newVersion" && 
-                    <Grid item xs={12} lg={6}>
-                      <Autocomplete
+                  { selectedValue === "newVersion" &&
+                  <Grid container lg={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} lg={6}>
+                    <Autocomplete
                         // freeSolo
                         // disabled={documentAvailable}
                         value={documentVal || null}
@@ -361,7 +363,7 @@ export default function DocumentAddForm({currentDocument}) {
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);
                             setCustomerAccessVal(newValue.customerAccess);
-                            setDescriptionVal(newValue.description);
+                            // setDescriptionVal(newValue.description);
                             setReadOnlyVal(true)
                           } else {
                             setDocumentVal('');
@@ -379,7 +381,31 @@ export default function DocumentAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
-                  }
+                    {documentVal && <Grid item xs={12} lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
+                        value={documentTypeVal || null}
+                        options={activeDocumentTypes}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentTypeVal(newValue);
+                          } else {
+                            setDocumentTypeVal('');
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>}
+                    </Grid>
+                    </Grid>
+                      }
                   { documentVal &&  <FormControl >
                       <RadioGroup
                             row
@@ -396,7 +422,7 @@ export default function DocumentAddForm({currentDocument}) {
                           </Grid>
                       </RadioGroup>
                   </FormControl>}
-                  { (selectedValue === "new"  || (documentVal && selectedVersionValue !== "existingVersion")) &&
+                  { selectedValue === "new"  &&
                 <RHFTextField
                     required
                     disabled={readOnlyVal}
@@ -407,7 +433,7 @@ export default function DocumentAddForm({currentDocument}) {
                       setDisplayNameVal(e.target.value);
                     }}
                   />}
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) &&
+                { selectedValue === "new"  &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
                     <Grid item lg={6}>
@@ -461,7 +487,7 @@ export default function DocumentAddForm({currentDocument}) {
                   </Grid>
                 </Grid>}
                         
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField disabled={readOnlyVal}  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
+                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
                 { (selectedValue === "new" || documentVal ) &&
                   <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload

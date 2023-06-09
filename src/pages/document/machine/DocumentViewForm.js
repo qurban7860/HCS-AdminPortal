@@ -216,7 +216,8 @@ const document = {
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-          <Grid sx={{ mt:2 ,display: "flex", alignItems:"flex-start"}}>
+          <Grid item  sx={{ display: 'flex-inline' }}>
+            <Grid container justifyContent="flex-start" gap={1}>
           { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
            
@@ -325,22 +326,6 @@ const document = {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <CardMedia
                         component="img"
                         sx={{
@@ -406,23 +391,6 @@ const document = {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        // name={file.extension}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <Iconify sx={{ 
                           height: '90px',
                           opacity: '0.6',
@@ -454,6 +422,7 @@ const document = {
                 </Card>
             ))}
             </Grid>
+          </Grid>
           <Grid container sx={{ mt: '1rem' }}>
               <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>

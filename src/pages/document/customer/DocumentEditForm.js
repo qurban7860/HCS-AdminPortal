@@ -237,7 +237,7 @@ useEffect(()=>{
               
               <Autocomplete
                 // freeSolo
-                readOnly
+                disabled
                 value={documentCategoryVal || null}
                 options={documentCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}

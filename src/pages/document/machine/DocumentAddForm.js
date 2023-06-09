@@ -96,7 +96,71 @@ export default function DocumentAddForm({currentDocument}) {
         "Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx",
         (value) => {
           if (value && value?.name) {
-            const allowedExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx",  "xls", "xlsx", "ppt", "pptx" ];
+            const allowedExtensions = [  'png',
+            'jpeg',
+            'jpg',
+            'gif',
+            'bmp',
+            'webp',
+            'djvu',
+            'heic',
+            'heif',
+            'ico',
+            'jfif',
+            'jp2',
+            'jpe',
+            'jpeg',
+            'jpg',
+            'jps',
+            'mng',
+            'nef',
+            'nrw',
+            'orf',
+            'pam',
+            'pbm',
+            'pcd',
+            'pcx',
+            'pef',
+            'pes',
+            'pfm',
+            'pgm',
+            'picon',
+            'pict',
+            'png',
+            'pnm',
+            'ppm',
+            'psd',
+            'raf',
+            'ras',
+            'rw2',
+            'sfw',
+            'sgi',
+            'svg',
+            'tga',
+            'tiff',
+            'psd',
+            'jxr',
+            'wbmp',
+            'x3f',
+            'xbm',
+            'xcf',
+            'xpm',
+            'xwd',
+            'pdf',
+            'doc',
+            'docx',
+            'xls',
+            'xlsx',
+            'ppt',
+            'pptx',
+            'csv',
+            'txt',
+            'odp',
+            'ods',
+            'odt',
+            'ott',
+            'rtf',
+            'txt'];
             const fileExtension = value?.name?.split(".").pop().toLowerCase();
             return allowedExtensions.includes(fileExtension);
           }
@@ -277,9 +341,9 @@ export default function DocumentAddForm({currentDocument}) {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <Grid container lg={12}>
-                  <FormHeading heading="New Document" />
-                </Grid>
+                  <Grid container lg={12}>
+                    <FormHeading heading="New Document" />
+                  </Grid>
                   <FormControl >
                     <RadioGroup
                       row
@@ -296,9 +360,12 @@ export default function DocumentAddForm({currentDocument}) {
                     </Grid>
                     </RadioGroup>
                   </FormControl>
-                  { selectedValue === "newVersion" && 
-                    <Grid item xs={12} lg={6}>
-                      <Autocomplete
+
+                  { selectedValue === "newVersion" &&
+                  <Grid container lg={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} lg={6}>
+                    <Autocomplete
                         // freeSolo
                         // disabled={documentAvailable}
                         value={documentVal || null}
@@ -313,7 +380,7 @@ export default function DocumentAddForm({currentDocument}) {
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);
                             setCustomerAccessVal(newValue.customerAccess);
-                            setDescriptionVal(newValue.description);
+                            // setDescriptionVal(newValue.description);
                             setReadOnlyVal(true)
                           } else {
                             setDocumentVal('');
@@ -331,7 +398,31 @@ export default function DocumentAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
-                  }
+                    {documentVal && <Grid item xs={12} lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
+                        value={documentTypeVal || null}
+                        options={activeDocumentTypes}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentTypeVal(newValue);
+                          } else {
+                            setDocumentTypeVal('');
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>}
+                    </Grid>
+                    </Grid>
+                      }
                   { documentVal &&  <FormControl >
                       <RadioGroup
                             row
@@ -349,7 +440,7 @@ export default function DocumentAddForm({currentDocument}) {
                       </RadioGroup>
                   </FormControl>}
                 
-                  { (selectedValue === "new"  || (documentVal && selectedVersionValue !== "existingVersion")) &&
+                  { selectedValue === "new"   &&
                 <RHFTextField
                     required
                     disabled={readOnlyVal}
@@ -360,7 +451,7 @@ export default function DocumentAddForm({currentDocument}) {
                       setDisplayNameVal(e.target.value);
                     }}
                   />}
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) &&
+                { selectedValue === "new" &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
                     <Grid item lg={6}>
@@ -415,7 +506,7 @@ export default function DocumentAddForm({currentDocument}) {
                 </Grid>}
 
                         
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField disabled={readOnlyVal}  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
+                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField   value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
 
                 { (selectedValue === "new" || documentVal ) &&
                   <Grid item xs={12} md={6} lg={12}>
