@@ -211,6 +211,7 @@ export default function DocumentAddForm({currentDocument}) {
         data.name = nameVal
         data.displayName = displayNameVal
         data.isActive = isActive;
+        data.machine = machine._id;
         if(documentCategoryVal){
           data.documentCategory = documentCategoryVal?._id
         }

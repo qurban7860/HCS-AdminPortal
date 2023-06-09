@@ -111,7 +111,12 @@ export function addDocumentVersion(documentId,params) {
         dispatch(slice.actions.startLoading());
         try {
           const formData = new FormData();
-          
+          if(params?.customer){
+            formData.append('customer', params?.customer);
+          }
+          if(params?.machine){
+            formData.append('machine', params?.machine);
+          }
           if(params?.description){
             formData.append('description', params?.description);
           }
