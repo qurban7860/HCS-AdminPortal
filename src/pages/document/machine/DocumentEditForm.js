@@ -31,8 +31,8 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 
 // slice
 import { setMachineDocumentEdit, setMachineDocumentEditFormVisibility, updateMachineDocument  } from '../../../redux/slices/document/machineDocument';
-import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
-import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import { setDocumentCategoryFormVisibility, getDocumentCategories } from '../../../redux/slices/document/documentCategory';
+import { setDocumentTypeFormVisibility, getDocumentTypes } from '../../../redux/slices/document/documentType';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -64,20 +64,6 @@ export default function DocumentEditForm() {
 
   const navigate = useNavigate();
 
-  let documentAvailable 
-  if(documentTypes && documentTypes.length){
-    documentAvailable =  true 
-  }else{
-    documentAvailable =  true 
-  }
-
-  let documentCategory 
-  if(documentCategories && documentCategories.length){
-    documentCategory =  true 
-  }else{
-    documentCategory =  true 
-  }
-
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -88,7 +74,9 @@ useEffect(()=>{
   setDocumentCategoryVal(machineDocument?.docCategory)
   setDocumentTypeVal(machineDocument?.docType)
   setIsActive(machineDocument?.isActive)
-},[machineDocument])
+  // dispatch(getDocumentCategories())
+  dispatch(getDocumentTypes())
+},[dispatch, machineDocument])
 
   const EditMachineDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
