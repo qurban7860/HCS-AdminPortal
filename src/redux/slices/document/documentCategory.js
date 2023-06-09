@@ -116,7 +116,7 @@ export function addDocumentCategory(params) {
               customerAccess:params.customerAccess,
               isActive: params.isActive,
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/categories/`, data);
+      const response = await axios.post(`${CONFIG.SERVER_URL}documents/categories/`, data);
       dispatch(slice.actions.setResponseMessage('Document Category saved successfully'));
       dispatch(getDocumentCategories());
     } catch (error) {
@@ -138,7 +138,7 @@ export function updateDocumentCategory(Id,params) {
         customerAccess:params.customerAccess,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/categories/${Id}`, data );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/categories/${Id}`, data );
       dispatch(slice.actions.setResponseMessage('Document Category updated successfully'));
       dispatch(setDocumentCategoryEditFormVisibility (false));
     } catch (error) {
@@ -154,7 +154,7 @@ export function getDocumentCategories() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/categories/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , 
       {
         params: {
           isArchived: false
@@ -176,7 +176,7 @@ export function getDocumentCategory(Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/categories/${Id}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/${Id}`);
       dispatch(slice.actions.getDocumentCategorySuccess(response.data));
       dispatch(slice.actions.setResponseMessage('File Category Loaded Successfuly'));
     } catch (error) {
@@ -192,7 +192,7 @@ export function getActiveDocumentCategories() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/categories/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , 
       {
         params: {
           isArchived: false,
@@ -220,7 +220,7 @@ export function deleteDocumentCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/categories/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/categories/${id}` , 
       {
           isArchived: true, 
       });

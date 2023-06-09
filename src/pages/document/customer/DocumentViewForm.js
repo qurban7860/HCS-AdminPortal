@@ -10,7 +10,7 @@ import Image from 'mui-image';
 import { styled, alpha } from '@mui/material/styles';
 import { CardContent, IconButton ,Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link, Tooltip} from '@mui/material';
 // redux
-import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
+import { getDocumentDownload ,deleteDocumentFile} from '../../../redux/slices/document/documentFile';
 import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument, resetCustomerDocument} from '../../../redux/slices/document/customerDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -44,7 +44,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+  console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -121,9 +121,18 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       const fileName = 'your_file_name.ext';
       downloadBase64File(base64Data, fileName);
     };
-
-    const handleDownload = (fileId,fileName ,fileExtension) => {
-       dispatch(getDocumentDownload(fileId)).then(res => {
+    const handleDelete = async  (documentId, versionId, fileId )  => {
+      try{
+       await dispatch(deleteDocumentFile(documentId,versionId,fileId))
+            enqueueSnackbar("File deleted successfully!");
+        }catch(err) {
+       console.log(err);
+         enqueueSnackbar("File delete failed!",{ variant: `error` })
+     };
+    }
+    
+    const handleDownload = (documentId, versionId, fileId, fileName ,fileExtension) => {
+       dispatch(getDocumentDownload(documentId,versionId,fileId)).then(res => {
         if(regEx.test(res.status)){
           download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
           // downloadBase64File(res.data, `${fileName}.${fileExtension}`);
@@ -154,10 +163,10 @@ const handleDownloadImage = (fileName,fileExtension)=>{
      download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension});
 }
 
-const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
+const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileExtension) => {
   setImageName(fileName);
   setImageExtension(fileExtension);
-  dispatch(getDocumentDownload(fileId)).then(res => {
+  dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
    if(regEx.test(res.status)){
     setImageData(res.data)
     handleOpenPreview()
@@ -233,7 +242,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
               <Grid container justifyContent="flex-start" gap={1}>
                 { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
                 file?.fileType.startsWith("image") ?
-                <Card sx={{  height: '160px', width: '140px',m:1 }}>
+                <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -248,7 +257,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id )}
                           sx={{
                             top: 4,
                             left: 44,
@@ -270,7 +279,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview(file._id,file.name,file.extension);
+                              handleDownloadAndPreview(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id,file.name,file.extension);
                             }
                           }
                           sx={{
@@ -341,7 +350,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
@@ -382,7 +391,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
                       <Typography variant="body2" >
                       {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
@@ -406,7 +415,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id)}
                           sx={{
                             top: 4,
                             left: 76,
@@ -426,7 +435,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,

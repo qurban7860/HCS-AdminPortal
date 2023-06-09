@@ -6,20 +6,19 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const regEx = /^[^2]*/
 const initialState = {
-  documentTypeFormVisibility: false,
-  documentTypeEditFormVisibility: false,
+  documentVersionFormVisibility: false,
+  documentVersionEditFormVisibility: false,
   intial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  documentTypes: [],
-  activeDocumentTypes: [],
-  documentType: null,
+  documentVersions: [],
+  documentVersion: null,
 };
 
 const slice = createSlice({
-  name: 'documentType',
+  name: 'documentVersion',
   initialState,
   reducers: {
     // START LOADING
@@ -28,13 +27,13 @@ const slice = createSlice({
       state.error = null;
     },
     // SET TOGGLE
-    setDocumentTypeFormVisibility(state, action){
-      state.documentTypeFormVisibility = action.payload;
+    setDocumentVersionFormVisibility(state, action){
+      state.documentVersionFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setDocumentTypeEditFormVisibility(state, action){
-      state.documentTypeEditFormVisibility = action.payload;
+    setDocumentVersionEditFormVisibility(state, action){
+      state.documentVersionEditFormVisibility = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -44,26 +43,26 @@ const slice = createSlice({
     },
 
     // GET Setting
-    getDocumentTypesSuccess(state, action) {
+    getDocumentVersionsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.documentTypes = action.payload;
+      state.documentVersions = action.payload;
       state.initial = true;
     },
 
     // GET Active Setting
-    getActiveDocumentTypesSuccess(state, action) {
+    getActiveDocumentVersionsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.activeDocumentTypes = action.payload;
+      state.activeDocumentVersions = action.payload;
       state.initial = true;
     },
 
     // GET Setting
-    getDocumentTypeSuccess(state, action) {
+    getDocumentVersionSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.documentType = action.payload;
+      state.documentVersion = action.payload;
       state.initial = true;
     },
 
@@ -75,16 +74,16 @@ const slice = createSlice({
     },
 
     // RESET DOCUMENT NAME
-    resetDocumentType(state){
-      state.documentType = {};
+    resetDocumentVersion(state){
+      state.documentVersion = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
     // RESET DOCUMENT NAME
-    resetDocumentTypes(state){
-      state.documentTypes = [];
+    resetDocumentVersions(state){
+      state.documentVersions = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -97,16 +96,16 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setDocumentTypeFormVisibility,
-  setDocumentTypeEditFormVisibility,
-  resetDocumentType,
-  resetDocumentTypes,
+  setDocumentVersionFormVisibility,
+  setDocumentVersionEditFormVisibility,
+  resetDocumentVersion,
+  resetDocumentVersions,
   setResponseMessage,
 } = slice.actions;
 
-// ----------------------------Add Document Type------------------------------------------
+// ----------------------------Add Document Version------------------------------------------
 
-export function addDocumentType(params) {
+export function addDocumentVersion(params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
@@ -116,9 +115,9 @@ export function addDocumentType(params) {
                 customerAccess:params.customerAccess,
                 isActive: params.isActive,
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/documentType/`, data);
-      dispatch(slice.actions.setResponseMessage('Document Type saved successfully'));
-      dispatch(getDocumentTypes());
+      const response = await axios.post(`${CONFIG.SERVER_URL}documents/documentVersion/`, data);
+      dispatch(slice.actions.setResponseMessage('Document Version saved successfully'));
+      dispatch(getDocumentVersions());
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -126,9 +125,9 @@ export function addDocumentType(params) {
   };
 }
 
-// ---------------------------------Update Document Type-------------------------------------
+// ---------------------------------Update Document Version-------------------------------------
 
-export function updateDocumentType(Id,params) {
+export function updateDocumentVersion(Id,documentId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -138,9 +137,9 @@ export function updateDocumentType(Id,params) {
         customerAccess:params.customerAccess,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`, data, );
-      dispatch(slice.actions.setResponseMessage('Document Type updated successfully'));
-      dispatch(setDocumentTypeEditFormVisibility (false));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${Id}`, data, );
+      dispatch(slice.actions.setResponseMessage('Document Version updated successfully'));
+      dispatch(setDocumentVersionEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -148,21 +147,21 @@ export function updateDocumentType(Id,params) {
   };
 }
 
-// -----------------------------------Get Document Types-----------------------------------
+// -----------------------------------Get Document Versions-----------------------------------
 
-export function getDocumentTypes() {
+export function getDocumentVersions(Id,documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/` , 
       {
         params: {
           isArchived: false
         }
       }
       );
-      dispatch(slice.actions.getDocumentTypesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
+      dispatch(slice.actions.getDocumentVersionsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Versions loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -171,13 +170,13 @@ export function getDocumentTypes() {
 }
 
 
-// -----------------------------------Get Active Document Types-----------------------------------
+// -----------------------------------Get Active Document Versions-----------------------------------
 
-export function getActiveDocumentTypes() {
+export function getActiveDocumentVersions(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/` , 
       {
         params: {
           isArchived: false,
@@ -185,9 +184,9 @@ export function getActiveDocumentTypes() {
         }
       }
       );
-      console.log("document type response: " , response)
-      dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
+      console.log("document Version response: " , response)
+      dispatch(slice.actions.getActiveDocumentVersionsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Versions loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -195,15 +194,15 @@ export function getActiveDocumentTypes() {
   };
 }
 
-// -------------------------------get Document Type---------------------------------------
+// -------------------------------get Document Version---------------------------------------
 
-export function getDocumentType(Id) {
+export function getDocumentVersion(Id,documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/${Id}`);
-      dispatch(slice.actions.getDocumentTypeSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Document Type Loaded Successfuly'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${Id}`);
+      dispatch(slice.actions.getDocumentVersionSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Version Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -211,13 +210,13 @@ export function getDocumentType(Id) {
   };
 }
 
-// ---------------------------------archive Document Type-------------------------------------
+// ---------------------------------archive Document Version-------------------------------------
 
-export function deleteDocumentType(Id) {
+export function deleteDocumentVersion(Id,documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${Id}` , 
       {
           isArchived: true, 
       });

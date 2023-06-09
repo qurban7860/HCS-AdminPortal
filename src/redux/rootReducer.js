@@ -25,9 +25,9 @@ import documentTypeReducer from './slices/document/documentType';
 import documentCategoryReducer from './slices/document/documentCategory';
 import customerDocumentReducer from './slices/document/customerDocument';
 import machineDocumentReducer from './slices/document/machineDocument';
-import downloadDocumentReducer from './slices/document/downloadDocument';
+import documentFileReducer from './slices/document/documentFile';
 import machineConnectionsReducer from './slices/products/machineConnections';
-
+import documentVersionReducer from './slices/document/documentVersion';
 
 // ----------------------------------------------------------------------
 
@@ -182,14 +182,20 @@ export const customerDocumentPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const downloadDocumentPersistConfig = {
-  key: 'downloadDocument',
+export const documentFilePersistConfig = {
+  key: 'documentFile',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
 export const machineConnectionsPersistConfig={
   key: 'machineConnections',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
+export const documentVersionPersistConfig={
+  key: 'documentVersion',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -219,8 +225,9 @@ const rootReducer = combineReducers({
   documentCategory: persistReducer(documentCategoryPersistConfig, documentCategoryReducer),
   customerDocument: persistReducer(customerDocumentPersistConfig, customerDocumentReducer),
   machineDocument: persistReducer(machineDocumentPersistConfig, machineDocumentReducer),
-  downloadDocument: persistReducer(downloadDocumentPersistConfig, downloadDocumentReducer),
+  documentFile: persistReducer(documentFilePersistConfig, documentFileReducer),
   machineConnections: persistReducer(machineConnectionsPersistConfig, machineConnectionsReducer),
+  documentVersion: persistReducer(documentVersionPersistConfig, documentVersionReducer),
 });
 
 export default rootReducer;

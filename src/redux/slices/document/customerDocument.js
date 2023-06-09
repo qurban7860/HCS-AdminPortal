@@ -200,7 +200,7 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
 
 // console.log("formData : ",params?.image);
           // console.log("Payload : ",params);
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`, formData);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`, formData);
       // if(regEx.test(response.status)){
         dispatch(setCustomerDocumentEditFormVisibility(false));
         dispatch(setCustomerDocumentFormVisibility(false));
@@ -219,7 +219,7 @@ export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
       {
         params: {
           isArchived: false,
@@ -245,7 +245,7 @@ export function getCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`);
       dispatch(slice.actions.getCustomerDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
     } catch (error) {
@@ -261,7 +261,7 @@ export function deleteCustomerDocument(customerDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${customerDocumentId}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}` , 
       {
           isArchived: true, 
       });

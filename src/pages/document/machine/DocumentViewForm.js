@@ -22,7 +22,7 @@ import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import Iconify from '../../../components/iconify';
-import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
+import { getDocumentDownload, deleteDocumentFile } from '../../../redux/slices/document/documentFile';
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
 import { useSnackbar } from '../../../components/snackbar';
@@ -166,6 +166,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
  });
 };
 
+
 const document = {
   icon: {
     pdf: "bxs:file-pdf",
@@ -186,6 +187,15 @@ const document = {
     pptx: "#e65100"
   }
 }
+const handleDelete = async (documentId, versionId, fileId ) => {
+    try{
+      await dispatch(deleteDocumentFile(documentId,versionId,fileId))
+           enqueueSnackbar("File deleted successfully!");
+       }catch(err) {
+      console.log(err);
+        enqueueSnackbar("File delete failed!",{ variant: `error` })
+    };
+   }
 
   return (
     <Grid sx={{mt:-2}}>
@@ -236,7 +246,7 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
-                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
                           sx={{
                             top: 4,
                             left: 44,
@@ -394,7 +404,7 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
-                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
                           sx={{
                             top: 4,
                             left: 76,
