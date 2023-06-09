@@ -198,12 +198,13 @@ return async (dispatch) => {
 
 // ---------------------------------archive Document File-------------------------------------
 
-export function deleteDocumentFile(documentId,versionId, Id) {
+export function deleteDocumentFile(documentId,versionId, Id, customerId) {
 return async (dispatch) => {
   dispatch(slice.actions.startLoading());
   try {
-    const response = await axios.delete(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}/files/${Id}` , 
+    const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}/files/${Id}` , 
     {
+        customer: customerId,
         isArchived: true, 
     });
     dispatch(slice.actions.setResponseMessage(response.data));

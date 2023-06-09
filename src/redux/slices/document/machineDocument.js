@@ -132,7 +132,7 @@ export function addMachineDocument(customerId , machineId , params) {
             formData.append('images', params?.images);
           }
           // console.log("formData", formData);
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData );
+      const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getMachineDocuments(machineId));
       dispatch(setMachineDocumentFormVisibility(false));
@@ -192,7 +192,7 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
         formData.append('images', params?.images);
       }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`, formData);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`, formData);
       console.log("machineId : ", machineId)
       dispatch(getMachineDocuments(machineId))
       dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));
@@ -211,7 +211,7 @@ export function getMachineDocuments(machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files` , 
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
       {
         params: {
           isArchived: false,
@@ -235,7 +235,7 @@ export function getMachineDocument(machineDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`);
       // console.log("machine document : ", response)
       dispatch(slice.actions.getMachineDocumentSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document Loaded Successfuly'));
@@ -252,7 +252,7 @@ export function deleteMachineDocument(machineDocumentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}filemanager/files/${machineDocumentId}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}` , 
       {
           isArchived: true, 
       });

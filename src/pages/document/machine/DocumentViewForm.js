@@ -114,8 +114,8 @@ link.click();
 }
 
 
-const handleDownload = (fileId,fileName ,fileExtension) => {
-   dispatch(getDocumentDownload(fileId)).then(res => {
+const handleDownload = (documentId, versionId, fileId, fileName ,fileExtension) => {
+   dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
     if(regEx.test(res.status)){
       download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
       enqueueSnackbar(res.statusText);
@@ -141,14 +141,14 @@ const [ imageExtension, setImageExtension] = useState("")
 const handleOpenPreview = () => {setOnPreview(true)};
 const handleClosePreview = () => {setOnPreview(false)};
 
-const handleDownloadImage = (fileName,fileExtension)=>{
+const handleDownloadImage = (fileName ,fileExtension)=>{
      download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension});
 }
 
-const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
+const handleDownloadAndPreview = (documentId, versionId, fileId, fileName ,fileExtension) => {
   setImageName(fileName);
   setImageExtension(fileExtension);
-  dispatch(getDocumentDownload(fileId)).then(res => {
+  dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
    if(regEx.test(res.status)){
     setImageData(res.data)
     handleOpenPreview()
@@ -268,7 +268,7 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview(file._id,file.name,file.extension);
+                              handleDownloadAndPreview(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id,file.name,file.extension);
                             }
                           }
                           sx={{
@@ -339,7 +339,7 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(currentMachineDocument, currentMachineDocument?.documentVersions[0]._id ,file._id ,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
@@ -424,7 +424,7 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(currentMachineDocument, currentMachineDocument?.documentVersions[0]._id , file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,

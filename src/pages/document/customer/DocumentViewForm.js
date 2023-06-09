@@ -123,7 +123,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     };
     const handleDelete = async  (documentId, versionId, fileId )  => {
       try{
-       await dispatch(deleteDocumentFile(documentId,versionId,fileId))
+       await dispatch(deleteDocumentFile(documentId,versionId,fileId, customer?._id))
             enqueueSnackbar("File deleted successfully!");
         }catch(err) {
        console.log(err);
