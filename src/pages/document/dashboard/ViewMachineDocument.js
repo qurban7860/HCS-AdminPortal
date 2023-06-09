@@ -25,7 +25,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
+import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import { getMachineDocument , resetMachineDocument} from '../../../redux/slices/document/machineDocument';
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
@@ -248,6 +248,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   Version No. {files?.versionNo}
                 </Typography>
               </Grid>
+              <ViewFormField sm={12} heading="Description" param={files?.description} />
             </Grid>
               {files?.files?.map((file)=>(
               <Grid item  sx={{ display: 'flex-inline' }}>
