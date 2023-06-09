@@ -258,7 +258,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                             color: (theme) => alpha(theme.palette.common.white, 0.8),
                             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
                             '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.error.main, 0.88),
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
                             },
                           }}
                         >
@@ -416,7 +416,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                             color: (theme) => alpha(theme.palette.common.white, 0.8),
                             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
                             '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.error.main, 0.88),
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
                             },
                           }}
                         >

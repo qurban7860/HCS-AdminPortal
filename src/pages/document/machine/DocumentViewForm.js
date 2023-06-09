@@ -236,14 +236,34 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
+                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 44,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
                           onClick={
                             () => {
                               handleDownloadAndPreview(file._id,file.name,file.extension);
                             }
                           }
                           sx={{
-                            top: 7,
-                            left: 70,
+                            top: 4,
+                            left: 76,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -311,8 +331,8 @@ const document = {
                           size="small"
                           onClick={() => handleDownload(file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -374,10 +394,30 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
+                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 76,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
                           onClick={() => handleDownload(file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
