@@ -49,6 +49,7 @@ export default function RoleViewForm() {
         isActive:                 role?.isActive,
         customerAccess:           role?.customerAccess,
         name:                     role?.name,
+        roleType:                 role?.roleType || "",
         description:              role?.description || "",
         createdAt:                role?.createdAt || "",
         createdByFullName:        role?.createdBy?.name || "",
@@ -70,7 +71,9 @@ export default function RoleViewForm() {
             </Tooltip>
         <Grid container>
             <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+            <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+
             {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
             <ViewFormAudit  defaultValues={defaultValues}/>
         </Grid>

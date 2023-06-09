@@ -102,29 +102,44 @@ export function addRole(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, params);
+      const data = {
+        name: params.name,
+        roleType: params.roleType,
+        description: params.description,
+        allModules:  params.allModules,
+        allWriteAccess: params.allWriteAccess,
+        isActive: params.isActive,
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, data);
       dispatch(slice.actions.setResponseMessage('Role Saved successfully'));
+      return response;
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
 // ----------------------------------------------------------------------
 
-export function updateRole(param,id) {
+export function updateRole(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-          
-        }
+        name: params.name,
+        roleType: params.roleType,
+        description: params.description,
+        allModules:  params.allModules,
+        allWriteAccess: params.allWriteAccess,
+        isActive: params.isActive,
+      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
       dispatch(slice.actions.setResponseMessage('Role updated successfully'));
-
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

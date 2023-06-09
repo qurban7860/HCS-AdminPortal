@@ -39,7 +39,7 @@ export default function MachineViewForm() {
   
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));
-    if(machine.transferredMachine){
+    if(machine.transferredMachine || !machine.isActive){
       setButtonDisable(true);
     }else{
       setButtonDisable(false);

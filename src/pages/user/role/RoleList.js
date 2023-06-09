@@ -49,6 +49,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'role_type', label: 'Role Type', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
@@ -199,6 +200,7 @@ export default function RoleList() {
           }}
         >
           <Cover
+            generalSettings='enabled'
             name="Roles"
             icon="ph:users-light"
           />
