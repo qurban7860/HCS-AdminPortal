@@ -114,6 +114,7 @@ export function addMachineDocument(customerId , machineId , params) {
           }
             formData.append('machine', machineId);
             formData.append('customerAccess', params.customerAccess);
+            formData.append('isActive', params.isActive);
           if(params?.displayName){
             formData.append('displayName', params?.displayName);
             formData.append('name', params?.displayName);

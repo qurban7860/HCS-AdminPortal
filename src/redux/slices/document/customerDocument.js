@@ -113,6 +113,7 @@ export function addCustomerDocument(customerId,params) {
           formData.append('customer', customerId);
           // if(params?.customerAccess){
             formData.append('customerAccess', params.customerAccess);
+            formData.append('isActive', params?.isActive);
           // }
           if(params?.displayName){
             formData.append('displayName', params?.displayName);
@@ -131,11 +132,8 @@ export function addCustomerDocument(customerId,params) {
           if(params?.images){
             formData.append('images', params?.images);
           }
-          if(params?.isActive){
-            formData.append('isActive', params?.isActive);
-          }
 // console.log("formData : ",params?.image);
-      const response = await axios.post(`${CONFIG.SERVER_URL}filemanager/files`, formData,{
+      const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData,{
         headers: {
           'Content-Type':"multupart/form-data"
         }
@@ -174,7 +172,7 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
       // if(params?.customerAccess){
         formData.append('customerAccess', params.customerAccess);
       // }
-
+      formData.append('customer', customerId);
         formData.append('isActive', params?.isActive);
 
       if(params.newVersion){

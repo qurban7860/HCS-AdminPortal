@@ -400,7 +400,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                   </Grid>
                 </Card>
             :
-            <Card sx={{  height: '160px', width: '140px',m:1 }}>
+            <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -473,7 +473,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
                       <Typography variant="body2" >
                       {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}

@@ -108,8 +108,8 @@ export default function Document() {
     [machineDocument]
   );
 
-const handleDownload = (fileId,fileName ,fileExtension) => {
-   dispatch(getDocumentDownload(fileId)).then(res => {
+const handleDownload = (documentId, versionId, fileId,fileName ,fileExtension) => {
+   dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
     // console.log("res : ",res)
     if(regEx.test(res.status)){
       download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
@@ -141,10 +141,10 @@ const handleDownloadImage = (fileName,fileExtension)=>{
      download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension});
 }
 
-const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
+const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExtension) => {
   setImageName(fileName);
   setImageExtension(fileExtension);
-  dispatch(getDocumentDownload(fileId)).then(res => {
+  dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
    if(regEx.test(res.status)){
     setImageData(res.data)
     handleOpenPreview()
@@ -255,7 +255,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
               <Grid container justifyContent="flex-start" gap={1}>
                 
                 {file?.fileType.startsWith("image") ?
-                <Card sx={{  height: '160px', width: '140px',m:1 }}>
+                <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -272,12 +272,12 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview(file._id,file.name,file.extension);
+                              handleDownloadAndPreview( machineDocument._id, files._id, file._id, file.name,file.extension);
                             }
                           }
                           sx={{
-                            top: 7,
-                            left: 70,
+                            top: 4,
+                            left: 76,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -343,10 +343,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(machineDocument._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -360,22 +360,6 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <CardMedia
                         component="img"
                         sx={{
@@ -400,16 +384,16 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>
                 </Card>
             :
-            <Card sx={{  height: '160px', width: '140px',m:1 }}>
+            <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -424,10 +408,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(machineDocument._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -441,23 +425,6 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        // name={file.extension}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <Iconify sx={{ 
                           height: '90px',
                           opacity: '0.6',
@@ -479,10 +446,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>
