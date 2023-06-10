@@ -43,11 +43,10 @@ export default function Document() {
   const regEx = /^[^2]*/;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { machineDocument } = useSelector((state) => state.machineDocument);
+  const { machineDocument, machineDocumentHistory } = useSelector((state) => state.machineDocument);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-// console.log("customer machine", customer, machine)
-  // console.log("machineDocument : ",machineDocument)
+  console.log("machineDocumentHistory : ",machineDocumentHistory)
   const [ openCustomer, setOpenCustomer] = useState(false)
   const [ openMachine, setOpenMachine] = useState(false)
 
@@ -86,26 +85,26 @@ export default function Document() {
   const defaultValues = useMemo(
     () => (
       {
-        displayName :             machineDocument?.displayName || "",
-        documentName:             machineDocument?.documentName?.name || "",
-        docCategory:              machineDocument?.docCategory?.name || "",
-        docType:                  machineDocument?.docType?.name || "",
-        customer:                 machineDocument?.customer?.name || "",
-        machine:                  machineDocument?.machine?.name || "",
-        customerAccess:           machineDocument?.customerAccess,
-        isActiveVersion:          machineDocument?.isActiveVersion,
-        documentVersion:          machineDocument?.documentVersions?.length > 0 ? machineDocument?.documentVersions[0]?.versionNo : "",
-        description:              machineDocument?.description,
-        isActive:                 machineDocument?.isActive,
-        createdAt:                machineDocument?.createdAt || "",
-        createdByFullName:        machineDocument?.createdBy?.name || "",
-        createdIP:                machineDocument?.createdIP || "",
-        updatedAt:                machineDocument?.updatedAt || "",
-        updatedByFullName:        machineDocument?.updatedBy?.name || "",
-        updatedIP:                machineDocument?.updatedIP || "",
+        displayName :             machineDocumentHistory?.displayName || "",
+        documentName:             machineDocumentHistory?.documentName?.name || "",
+        docCategory:              machineDocumentHistory?.docCategory?.name || "",
+        docType:                  machineDocumentHistory?.docType?.name || "",
+        customer:                 machineDocumentHistory?.customer?.name || "",
+        machine:                  machineDocumentHistory?.machine?.name || "",
+        customerAccess:           machineDocumentHistory?.customerAccess,
+        isActiveVersion:          machineDocumentHistory?.isActiveVersion,
+        documentVersion:          machineDocumentHistory?.documentVersions?.length > 0 ? machineDocumentHistory?.documentVersions[0]?.versionNo : "",
+        description:              machineDocumentHistory?.description,
+        isActive:                 machineDocumentHistory?.isActive,
+        createdAt:                machineDocumentHistory?.createdAt || "",
+        createdByFullName:        machineDocumentHistory?.createdBy?.name || "",
+        createdIP:                machineDocumentHistory?.createdIP || "",
+        updatedAt:                machineDocumentHistory?.updatedAt || "",
+        updatedByFullName:        machineDocumentHistory?.updatedBy?.name || "",
+        updatedIP:                machineDocumentHistory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machineDocument]
+    [machineDocumentHistory]
   );
 
 const handleDownload = (documentId, versionId, fileId,fileName ,fileExtension) => {
@@ -232,7 +231,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
             <Grid container sx={{ mt: '1rem' ,mb: '-1rem'}}>
                 <ViewFormAudit defaultValues={defaultValues}/>
             </Grid>
-            {machineDocument && machineDocument?.documentVersions?.map((files)=>(
+            {machineDocumentHistory && machineDocumentHistory?.documentVersions?.map((files)=>(
           <Grid container>
             <Grid container sx={{ pt: '2rem' }}>
               <Grid
@@ -272,7 +271,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview( machineDocument._id, files._id, file._id, file.name,file.extension);
+                              handleDownloadAndPreview( machineDocumentHistory._id, files._id, file._id, file.name,file.extension);
                             }
                           }
                           sx={{
@@ -343,7 +342,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(machineDocument._id, files._id, file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(machineDocumentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
@@ -408,7 +407,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(machineDocument._id, files._id, file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(machineDocumentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,

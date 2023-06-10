@@ -16,6 +16,7 @@ const initialState = {
   isLoading: false,
   error: null,
   customerDocuments: [],
+  customerDocumentHistory: [],
   customerDocument: null,
 };
 
@@ -52,6 +53,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.customerDocuments = action.payload;
+      state.initial = true;
+    },
+
+    // GET Customer Documents
+    getCustomerDocumentHistorySuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.customerDocumentHistory = action.payload;
       state.initial = true;
     },
 
@@ -156,25 +165,12 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const data = { 
-      //             displayName: params?.displayName,
-      //             name: params?.displayName,
-      //             customerAccess: params.customerAccess,
-      //             // isActive: params.isActive,
-      //             documentType:params.documentType,
-      //             docType:params.documentType,
-      //             documentCategory:params.documentCategory,
-      //             docCategory:params.documentCategory,
-      //             description: params.description,
-      //             };
       const formData = new FormData();
-
       // if(params?.customerAccess){
         formData.append('customerAccess', params.customerAccess);
       // }
       formData.append('customer', customerId);
         formData.append('isActive', params?.isActive);
-
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }
@@ -195,9 +191,6 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
       if(params?.images){
         formData.append('images', params?.images);
       }
-
-// console.log("formData : ",params?.image);
-          // console.log("Payload : ",params);
       const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`, formData);
       // if(regEx.test(response.status)){
         dispatch(setCustomerDocumentEditFormVisibility(false));
@@ -211,7 +204,7 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
   };
 }
 
-// -----------------------------------Get Customer Document-----------------------------------
+// -----------------------------------Get Customer Documents-----------------------------------
 
 export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
@@ -230,6 +223,29 @@ export function getCustomerDocuments(customerId) {
       if(regEx.test(response.status)){
         dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
       }
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+
+// -----------------------------------Get Customer Document History-----------------------------------
+
+export function getCustomerDocumentHistory(customerDocumentId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`,
+      {
+        params: {
+          historical : true
+        }
+      }
+      );
+      dispatch(slice.actions.getCustomerDocumentHistorySuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Customer Document Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

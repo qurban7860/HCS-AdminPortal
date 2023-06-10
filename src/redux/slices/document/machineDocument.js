@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   machineDocument: {},
   machineDocuments: [],
+  machineDocumentHistory: [],
 };
 
 const slice = createSlice({
@@ -62,6 +63,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Machine Document
+    getMachineDocumentHistorySuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineDocumentHistory = action.payload;
+      state.initial = true;
+    },
+
+    
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -230,6 +240,7 @@ export function getMachineDocuments(machineId) {
   };
 }
 
+
 // -------------------------------get Machine Document---------------------------------------
 
 export function getMachineDocument(machineDocumentId) {
@@ -246,6 +257,28 @@ export function getMachineDocument(machineDocumentId) {
     }
   };
 }
+
+// -------------------------------get Machine Document---------------------------------------
+
+export function getMachineDocumentHistory(machineDocumentId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`,{
+        params: {
+          historical : true
+        }
+      });
+      // console.log("machine document : ", response)
+      dispatch(slice.actions.getMachineDocumentHistorySuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Machine Document History Loaded Successfuly'));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
 
 // ---------------------------------archive Machine Document -------------------------------------
 
