@@ -12,7 +12,7 @@ import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton,
   Dialog,
   CardMedia,} from '@mui/material';
 // redux
-import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument,resetMachineDocument} from '../../../redux/slices/document/machineDocument';
+import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument,resetMachineDocument, getMachineDocumentHistory} from '../../../redux/slices/document/machineDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -68,7 +68,7 @@ const { enqueueSnackbar } = useSnackbar();
      dispatch(resetMachineDocument())
      dispatch(resetCustomer())
     //  dispatch(resetMachine())
-     await dispatch(getMachineDocument(currentMachineDocument._id))
+     await dispatch(getMachineDocumentHistory(currentMachineDocument._id))
     //  await dispatch(getMachine(currentMachineDocument.machine._id))
      await dispatch(getCustomer(currentMachineDocument.customer._id))
     };
@@ -190,6 +190,7 @@ const document = {
 const handleDelete = async (documentId, versionId, fileId ) => {
     try{
       await dispatch(deleteDocumentFile(documentId,versionId,fileId))
+           await dispatch(getMachineDocuments(machine._id));
            enqueueSnackbar("File deleted successfully!");
        }catch(err) {
       console.log(err);

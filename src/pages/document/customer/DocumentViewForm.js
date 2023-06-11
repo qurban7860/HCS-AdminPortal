@@ -11,7 +11,7 @@ import { styled, alpha } from '@mui/material/styles';
 import { CardContent, IconButton ,Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link, Tooltip} from '@mui/material';
 // redux
 import { getDocumentDownload ,deleteDocumentFile} from '../../../redux/slices/document/documentFile';
-import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument, resetCustomerDocument} from '../../../redux/slices/document/customerDocument';
+import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument, resetCustomerDocument, getCustomerDocumentHistory} from '../../../redux/slices/document/customerDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -70,7 +70,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     navigate(PATH_DASHBOARD.document.customer(currentCustomerDocument._id)); 
     dispatch(resetCustomerDocument())
     // dispatch(resetCustomer())
-    await dispatch(getCustomerDocument(currentCustomerDocument?._id))
+    await dispatch(getCustomerDocumentHistory(currentCustomerDocument?._id))
     // await dispatch(getCustomer(currentMachineDocument.customer._id))
    };
 
@@ -121,10 +121,12 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       const fileName = 'your_file_name.ext';
       downloadBase64File(base64Data, fileName);
     };
+
     const handleDelete = async  (documentId, versionId, fileId )  => {
       try{
        await dispatch(deleteDocumentFile(documentId,versionId,fileId, customer?._id))
-            enqueueSnackbar("File deleted successfully!");
+          enqueueSnackbar("File deleted successfully!");
+          dispatch(getCustomerDocuments(customer._id))
         }catch(err) {
        console.log(err);
          enqueueSnackbar("File delete failed!",{ variant: `error` })
@@ -151,7 +153,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       });
     };
 
-    const [ onPreview, setOnPreview] = useState(false)
+const [ onPreview, setOnPreview] = useState(false)
 const [ imageData, setImageData] = useState(false)
 const [ imageName, setImageName] = useState("")
 const [ imageExtension, setImageExtension] = useState("")
@@ -183,7 +185,6 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
    }
  });
 };
-
 
     const document = {
       icon: {

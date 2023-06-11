@@ -43,9 +43,9 @@ export default function Document() {
   const regEx = /^[^2]*/;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { customerDocument } = useSelector((state) => state.customerDocument);
+  const { customerDocument, customerDocumentHistory } = useSelector((state) => state.customerDocument);
   const { customer } = useSelector((state) => state.customer);
-  console.log("customerDocument : ",customerDocument)
+  console.log("customerDocumentHistory : ",customerDocumentHistory)
   const [ openCustomer, setOpenCustomer] = useState(false)
   const [ openMachine, setOpenMachine] = useState(false)
 
@@ -72,25 +72,25 @@ export default function Document() {
   const defaultValues = useMemo(
     () => (
       {
-        displayName :             customerDocument?.displayName || "",
-        documentName:             customerDocument?.documentName?.name || "",
-        docCategory:              customerDocument?.docCategory?.name || "",
-        docType:                  customerDocument?.docType?.name || "",
-        customer:                 customerDocument?.customer?.name || "",
-        customerAccess:           customerDocument?.customerAccess,
-        isActiveVersion:          customerDocument?.isActiveVersion,
-        documentVersion:          customerDocument?.documentVersions?.length > 0 ? customerDocument?.documentVersions[0]?.versionNo : "",
-        description:              customerDocument?.description,
-        isActive:                 customerDocument?.isActive,
-        createdAt:                customerDocument?.createdAt || "",
-        createdByFullName:        customerDocument?.createdBy?.name || "",
-        createdIP:                customerDocument?.createdIP || "",
-        updatedAt:                customerDocument?.updatedAt || "",
-        updatedByFullName:        customerDocument?.updatedBy?.name || "",
-        updatedIP:                customerDocument?.updatedIP || "",
+        displayName :             customerDocumentHistory?.displayName || "",
+        documentName:             customerDocumentHistory?.documentName?.name || "",
+        docCategory:              customerDocumentHistory?.docCategory?.name || "",
+        docType:                  customerDocumentHistory?.docType?.name || "",
+        customer:                 customerDocumentHistory?.customer?.name || "",
+        customerAccess:           customerDocumentHistory?.customerAccess,
+        isActiveVersion:          customerDocumentHistory?.isActiveVersion,
+        documentVersion:          customerDocumentHistory?.documentVersions?.length > 0 ? customerDocumentHistory?.documentVersions[0]?.versionNo : "",
+        description:              customerDocumentHistory?.description,
+        isActive:                 customerDocumentHistory?.isActive,
+        createdAt:                customerDocumentHistory?.createdAt || "",
+        createdByFullName:        customerDocumentHistory?.createdBy?.name || "",
+        createdIP:                customerDocumentHistory?.createdIP || "",
+        updatedAt:                customerDocumentHistory?.updatedAt || "",
+        updatedByFullName:        customerDocumentHistory?.updatedBy?.name || "",
+        updatedIP:                customerDocumentHistory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customerDocument]
+    [customerDocumentHistory]
   );
 
 const handleDownload = ( documentId, versionId, fileId,fileName ,fileExtension) => {
@@ -208,7 +208,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
             <Grid container sx={{ mt: '1rem' ,mb: '-1rem'}}>
                 <ViewFormAudit defaultValues={defaultValues}/>
             </Grid>
-            {customerDocument && customerDocument?.documentVersions?.map((files)=>(
+            {customerDocumentHistory && customerDocumentHistory?.documentVersions?.map((files)=>(
           <Grid container>
             <Grid container sx={{ pt: '2rem' }}>
               <Grid
@@ -249,7 +249,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview(customerDocument._id, files._id, file._id ,file.name,file.extension);
+                              handleDownloadAndPreview(customerDocumentHistory._id, files._id, file._id ,file.name,file.extension);
                             }
                           }
                           sx={{
@@ -320,7 +320,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(customerDocument._id, files._id, file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(customerDocumentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
@@ -385,7 +385,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(customerDocument._id, files._id, file._id ,file.name ,file.extension)}
+                          onClick={() => handleDownload(customerDocumentHistory._id, files._id, file._id ,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
