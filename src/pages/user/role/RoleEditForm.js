@@ -50,7 +50,7 @@ export default function DocumentCategoryeEditForm() {
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
-    deleteAny: Yup.boolean(),
+    disableDelete: Yup.boolean(),
   });
 
 
@@ -62,7 +62,7 @@ export default function DocumentCategoryeEditForm() {
       isActive: role?.isActive || false,
       allModules: role?.allModules || false,
       allWriteAccess: role?.allWriteAccess || false,
-      deleteAny: role?.deleteAny || false
+      disableDelete: role?.disableDelete || false
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -164,7 +164,7 @@ export default function DocumentCategoryeEditForm() {
                       }}> All Write Access
                     </Typography>
                   } />
-                  <RHFSwitch name="deleteAny" labelPlacement="start" label={
+                  <RHFSwitch name="disableDelete" labelPlacement="start" label={
                     <Typography
                       variant="subtitle2"
                       sx={{
@@ -173,7 +173,7 @@ export default function DocumentCategoryeEditForm() {
                         justifyContent: 'space-between',
                         mb: 0.5,
                         color: 'text.secondary'
-                      }}> Delete Any
+                      }}> Disable Delete
                     </Typography>
                   } />
 

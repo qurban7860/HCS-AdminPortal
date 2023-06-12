@@ -41,7 +41,7 @@ export default function RoleAddForm({ currentRole }) {
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
-    deleteAny: Yup.boolean(),
+    disableDelete: Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
@@ -51,7 +51,7 @@ export default function RoleAddForm({ currentRole }) {
       isActive: true,
       allModules: false,
       allWriteAccess: false,
-      deleteAny: false,
+      disableDelete: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentRole]
@@ -147,7 +147,7 @@ export default function RoleAddForm({ currentRole }) {
                       }}> All Write Access
                     </Typography>
                   } />
-                  <RHFSwitch name="deleteAny" labelPlacement="start" label={
+                  <RHFSwitch name="disableDelete" labelPlacement="start" label={
                     <Typography
                       variant="subtitle2"
                       sx={{
@@ -156,7 +156,7 @@ export default function RoleAddForm({ currentRole }) {
                         justifyContent: 'space-between',
                         mb: 0.5,
                         color: 'text.secondary'
-                      }}> Delete Any
+                      }}> Disable Delete
                     </Typography>
                   } />
                 </Grid>

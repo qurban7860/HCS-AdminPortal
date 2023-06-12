@@ -53,7 +53,7 @@ export default function RoleViewForm() {
     () => (
       {
         isActive:                 role?.isActive,
-        deleteAny:                role?.deleteAny || false,
+        disableDelete:                role?.disableDelete || false,
         customerAccess:           role?.customerAccess,
         name:                     role?.name,
         roleType:                 role?.roleType || "",
@@ -73,7 +73,7 @@ export default function RoleViewForm() {
     <Card sx={{p:2}}>
       <Grid >
         <ViewFormEditDeleteButtons
-          disableDeleteButton={defaultValues.deleteAny} 
+          disableDeleteButton={defaultValues.disableDelete} 
           handleEdit={handleEdit}  
           onDelete={onDelete}
         />
