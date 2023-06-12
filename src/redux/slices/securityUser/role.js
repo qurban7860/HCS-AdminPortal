@@ -102,29 +102,46 @@ export function addRole(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, params);
+      const data = {
+        name: params.name,
+        roleType: params.roleType,
+        description: params.description,
+        allModules:  params.allModules,
+        allWriteAccess: params.allWriteAccess,
+        deleteAny: params.deleteAny,
+        isActive: params.isActive,
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, data);
       dispatch(slice.actions.setResponseMessage('Role Saved successfully'));
+      return response;
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
 // ----------------------------------------------------------------------
 
-export function updateRole(param,id) {
+export function updateRole(id, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-          
-        }
+        name: params.name,
+        roleType: params.roleType,
+        description: params.description,
+        allModules:  params.allModules,
+        allWriteAccess: params.allWriteAccess,
+        deleteAny: params.deleteAny,
+        isActive: params.isActive,
+      }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
       dispatch(slice.actions.setResponseMessage('Role updated successfully'));
-
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
@@ -172,13 +189,21 @@ export function getRole(id) {
 export function deleteRole(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}security/roles/${id}`);
-      dispatch(slice.actions.setResponseMessage(response.data));
+    try{
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`,
+      {
+        isArchived: true, 
+      }
+      );
       // state.responseMessage = response.data;
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+        dispatch(resetRole());
+      }
+      return response;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

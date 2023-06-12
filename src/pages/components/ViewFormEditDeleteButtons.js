@@ -30,11 +30,15 @@ ViewFormEditDeleteButtons.propTypes = {
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
-  disableButton: PropTypes.bool, 
+  disableTransferButton: PropTypes.bool, 
+  disablePasswordButton: PropTypes.bool, 
+  disableDeleteButton: PropTypes.bool, 
   handleMap: PropTypes.func,
 };
 export default function ViewFormEditDeleteButtons({
-  disableButton,
+  disableTransferButton = false,
+  disableDeleteButton = false,
+  disablePasswordButton = false,
   onDelete,
   handleEdit,
   handleTransfer,
@@ -153,7 +157,7 @@ export default function ViewFormEditDeleteButtons({
 
         {handleTransfer ? (
           <Button
-            disabled={disableButton}
+            disabled={disableTransferButton}
             onClick={() => {
               handleOpenConfirm('transfer');
             }}
@@ -176,7 +180,8 @@ export default function ViewFormEditDeleteButtons({
 
         {handleUpdatePassword ? (
           <Button
-              onClick={() => {
+            disabled={disablePasswordButton}
+            onClick={() => {
               handleUpdatePassword();
             }}
             variant="outlined"
@@ -213,7 +218,8 @@ export default function ViewFormEditDeleteButtons({
         {/* if not in the profile show this */}
         {onDelete ? (
           <Button
-              onClick={() => {
+            disabled={disableDeleteButton}
+            onClick={() => {
               handleOpenConfirm('delete');
             }}
             variant="outlined"

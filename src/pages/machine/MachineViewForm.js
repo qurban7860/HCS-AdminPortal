@@ -32,17 +32,17 @@ export default function MachineViewForm() {
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
-  const [disableButton, setButtonDisable] = useState(false);
+  const [disableTransferButton, setDisableTransferButton] = useState(false);
   const baseUrl = window.location.origin;
   const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
   
   
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));
-    if(machine.transferredMachine){
-      setButtonDisable(true);
+    if(machine.transferredMachine || !machine.isActive || !isSuperAdmin){
+      setDisableTransferButton(true);
     }else{
-      setButtonDisable(false);
+      setDisableTransferButton(false);
     }
     if(userId){
       dispatch(getLoggedInSecurityUser(userId));
@@ -50,7 +50,7 @@ export default function MachineViewForm() {
     if(machine?.customer){
       dispatch(getCustomer(machine?.customer?._id))
     }
-  }, [ dispatch ,machine, transferMachineFlag, userId ]);
+  }, [ dispatch ,machine, transferMachineFlag, userId, isSuperAdmin ]);
 
   
 
@@ -144,10 +144,10 @@ export default function MachineViewForm() {
       <Grid container justifyContent="flex-end" alignContent="flex-end">
         <ViewFormEditDeleteButtons 
           sx={{ pt: 5 }} 
-          disableButton={disableButton} 
+          disableTransferButton={disableTransferButton} 
           handleEdit={handleEdit} 
           onDelete={onDelete} 
-          {...(isSuperAdmin && { handleTransfer })}
+          handleTransfer={handleTransfer}
         />
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
       </Grid>

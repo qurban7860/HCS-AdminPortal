@@ -55,7 +55,7 @@ export default function RoleListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, description, isActive, createdAt } = row;
+  const { name, description, roleType, isActive, createdAt } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -89,7 +89,7 @@ export default function RoleListTableRow({
             <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
           </Stack>
         </TableCell>
-        {/* <TableCell>{description}</TableCell> */} 
+        <TableCell align="left" > {roleType} </TableCell> 
         <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
         <TableCell align="right" >{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
