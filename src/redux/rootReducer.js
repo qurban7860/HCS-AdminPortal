@@ -25,6 +25,7 @@ import documentTypeReducer from './slices/document/documentType';
 import documentCategoryReducer from './slices/document/documentCategory';
 import customerDocumentReducer from './slices/document/customerDocument';
 import machineDocumentReducer from './slices/document/machineDocument';
+import documentReducer from './slices/document/document';
 import documentFileReducer from './slices/document/documentFile';
 import machineConnectionsReducer from './slices/products/machineConnections';
 import documentVersionReducer from './slices/document/documentVersion';
@@ -176,6 +177,12 @@ export const machineDocumentPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const documentPersistConfig = {
+  key: 'document',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 export const customerDocumentPersistConfig = {
   key: 'customerDocument',
   storage,
@@ -225,6 +232,7 @@ const rootReducer = combineReducers({
   documentCategory: persistReducer(documentCategoryPersistConfig, documentCategoryReducer),
   customerDocument: persistReducer(customerDocumentPersistConfig, customerDocumentReducer),
   machineDocument: persistReducer(machineDocumentPersistConfig, machineDocumentReducer),
+  document: persistReducer(documentPersistConfig, documentReducer),
   documentFile: persistReducer(documentFilePersistConfig, documentFileReducer),
   machineConnections: persistReducer(machineConnectionsPersistConfig, machineConnectionsReducer),
   documentVersion: persistReducer(documentVersionPersistConfig, documentVersionReducer),
