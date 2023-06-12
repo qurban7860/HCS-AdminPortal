@@ -11,24 +11,23 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, Container} from '@mui/material';
-// global
-import { CONFIG } from '../../../config-global';
+
 // slice
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
+import { useSnackbar } from '../../../../components/snackbar';
+import Iconify from '../../../../components/iconify';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
   RHFSwitch
-} from '../../../components/hook-form';
-import { getDocumentCategory,  updateDocumentCategory } from '../../../redux/slices/document/documentCategory';
-import AddFormButtons from '../../components/AddFormButtons';
-import FormHeading from '../../components/FormHeading';
-import { Cover } from '../../components/Cover';
+} from '../../../../components/hook-form';
+import { getDocumentCategory,  updateDocumentCategory } from '../../../../redux/slices/document/documentCategory';
+import AddFormButtons from '../../../components/AddFormButtons';
+import FormHeading from '../../../components/FormHeading';
+import { Cover } from '../../../components/Cover';
 
 
 // ----------------------------------------------------------------------

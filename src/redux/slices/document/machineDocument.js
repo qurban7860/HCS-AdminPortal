@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   machineDocument: {},
   machineDocuments: [],
+  activeMachineDocuments: [],
   machineDocumentHistory: [],
 };
 
@@ -52,6 +53,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.machineDocuments = action.payload;
+      state.initial = true;
+    },
+
+    // Active GET MachineDocuments
+    getActiveMachineDocumentsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachineDocuments = action.payload;
       state.initial = true;
     },
 
@@ -232,6 +241,30 @@ export function getMachineDocuments(machineId) {
       );
       console.log(response);
       dispatch(slice.actions.getMachineDocumentsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// -----------------------------------Get Active Machine Document-----------------------------------
+
+export function getActiveMachineDocuments(machineId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          machine: machineId
+        }
+      }
+      );
+      dispatch(slice.actions.getActiveMachineDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
     } catch (error) {
       console.log(error);

@@ -6,16 +6,16 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Switch, Card, Grid, Stack, Typography, Button ,Tooltip} from '@mui/material';
 // redux
-import { deleteDocumentCategory  } from '../../../redux/slices/document/documentCategory';
+import { deleteDocumentCategory  } from '../../../../redux/slices/document/documentCategory';
 // paths
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { fDate,fDateTime } from '../../../utils/formatTime';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormSWitch from '../../components/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import { useSnackbar } from '../../../../components/snackbar';
+import { fDate,fDateTime } from '../../../../utils/formatTime';
+import ViewFormAudit from '../../../components/ViewFormAudit';
+import ViewFormField from '../../../components/ViewFormField';
+import ViewFormSWitch from '../../../components/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 

@@ -140,8 +140,12 @@ RoleEdit,
 
   // DocumentDashboard    
   DocumentDashboard, 
+  DocumentAddForm, 
+  DocumentEditForm, 
+  DocumentViewForm, 
   CustomerDocumentView,
   MachineDocumentView,
+
 // Setting
 
   Setting,
@@ -218,9 +222,12 @@ export default function Router() {
         { path: 'document', element: <DocumentDashboard /> },
         { path: 'document',
           children: [
-           {path: 'dashboard',element: <DocumentDashboard />},
-           {path: ':id/customer',element: <CustomerDocumentView />},
-           {path: ':id/machine',element: <MachineDocumentView/>} ,
+            {path: 'dashboard',element: <DocumentDashboard />},
+            { path: 'new', element: <DocumentAddForm /> },
+            { path: ':id/edit', element: <DocumentEditForm /> },
+            { path: ':id/view', element: <DocumentViewForm /> },
+            {path: ':id/customer',element: <CustomerDocumentView />},
+            {path: ':id/machine',element: <MachineDocumentView/>} ,
           ]
         },
         {

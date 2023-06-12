@@ -228,11 +228,9 @@ export function updateTechparam(params,id) {
       }else{
         data.category = null
       }
-      console.log("data : ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}`,
         data
       );
-      console.log("response : ",response)
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

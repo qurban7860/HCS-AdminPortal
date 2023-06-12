@@ -17,6 +17,7 @@ const initialState = {
   isLoading: false,
   error: null,
   contacts: [],
+  activeContacts: [],
   spContacts: [],
   contact: null,
 };
@@ -71,6 +72,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.contacts = action.payload;
+      state.initial = true;
+    },
+
+    // GET Contacts
+    getActiveContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeContacts = action.payload;
       state.initial = true;
     },
 
@@ -254,6 +263,29 @@ export function getContacts(customerID ) {
         }
         );
       dispatch(slice.actions.getContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ------------------------------ get Active Contacts ----------------------------------------
+
+export function getActiveContacts(customerID ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
+        {
+          params: {
+            isActive: true,
+            isArchived: false
+          }
+        }
+        );
+      dispatch(slice.actions.getActiveContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {
       console.log(error);

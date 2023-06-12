@@ -45,6 +45,9 @@ export const PATH_DASHBOARD = {
   setting: path(ROOTS_DASHBOARD, '/setting'),
   document: {
     dashboard: path(ROOTS_DASHBOARD, '/document/dashboard'),
+    new: path(ROOTS_DASHBOARD, `/document/new`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/document/${id}/edit`),
+    view: (id) => path(ROOTS_DASHBOARD, `/document/${id}/view`),
     customer: (id) => path(ROOTS_DASHBOARD, `/document/${id}/customer`),
     machine: (id) => path(ROOTS_DASHBOARD, `/document/${id}/machine`),
   },

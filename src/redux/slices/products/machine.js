@@ -18,6 +18,7 @@ const initialState = {
   error: null,
   machine: {},
   machines: [],
+  activeMachines: [],
   customerMachines:[],
   transferDialogBoxVisibility: false
 };
@@ -64,6 +65,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.machines = action.payload;
+      state.initial = true;
+    },
+    // GET Machines
+    getActiveMachinesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachines = action.payload;
       state.initial = true;
     },
 
@@ -155,6 +163,28 @@ export function getMachines() {
   };
 }
 
+
+// ----------------------------get Active Machines------------------------------------------
+
+export function getActiveMachines() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 
@@ -272,7 +302,6 @@ export function addMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
-        console.log("data : ", data);
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));

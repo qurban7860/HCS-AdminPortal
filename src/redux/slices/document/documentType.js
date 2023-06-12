@@ -185,7 +185,6 @@ export function getActiveDocumentTypes() {
         }
       }
       );
-      console.log("document type response: " , response)
       dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
     } catch (error) {
