@@ -34,8 +34,14 @@ export default function RoleViewForm() {
       enqueueSnackbar('Role delete Successfully!');
 
     }catch(error){
-      enqueueSnackbar('Role delete failed!', { variant: `error` });
-      console.error(error);
+      if(error.Message){
+        enqueueSnackbar(error.Message,{ variant: `error` })
+      }else if(error.message){
+        enqueueSnackbar(error.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+      console.log("Error:", error);
     }
   };
 
@@ -47,6 +53,7 @@ export default function RoleViewForm() {
     () => (
       {
         isActive:                 role?.isActive,
+        deleteAny:                role?.deleteAny || false,
         customerAccess:           role?.customerAccess,
         name:                     role?.name,
         roleType:                 role?.roleType || "",
@@ -65,7 +72,11 @@ export default function RoleViewForm() {
   return (
     <Card sx={{p:2}}>
       <Grid >
-        <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
+        <ViewFormEditDeleteButtons
+          disableDeleteButton={defaultValues.deleteAny} 
+          handleEdit={handleEdit}  
+          onDelete={onDelete}
+        />
             <Tooltip>
               <ViewFormField  isActive={defaultValues.isActive}  />
             </Tooltip>

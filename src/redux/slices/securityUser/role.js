@@ -108,6 +108,7 @@ export function addRole(params) {
         description: params.description,
         allModules:  params.allModules,
         allWriteAccess: params.allWriteAccess,
+        deleteAny: params.deleteAny,
         isActive: params.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, data);
@@ -132,6 +133,7 @@ export function updateRole(id, params) {
         description: params.description,
         allModules:  params.allModules,
         allWriteAccess: params.allWriteAccess,
+        deleteAny: params.deleteAny,
         isActive: params.isActive,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
@@ -187,13 +189,21 @@ export function getRole(id) {
 export function deleteRole(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}security/roles/${id}`);
-      dispatch(slice.actions.setResponseMessage(response.data));
+    try{
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`,
+      {
+        isArchived: true, 
+      }
+      );
       // state.responseMessage = response.data;
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.setResponseMessage(response.data));
+        dispatch(resetRole());
+      }
+      return response;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

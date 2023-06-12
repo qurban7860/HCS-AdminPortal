@@ -43,6 +43,17 @@ export default function DocumentCategoryeEditForm() {
 
   const navigate = useNavigate();
 
+  const EditRoleSchema = Yup.object().shape({
+    name: Yup.string().min(2).required("Name Field is required!"),
+    roleType: Yup.string().required("Role Type is required!"),
+    description: Yup.string().max(10000),
+    allModules: Yup.boolean(),
+    allWriteAccess: Yup.boolean(),
+    isActive: Yup.boolean(),
+    deleteAny: Yup.boolean(),
+  });
+
+
   const defaultValues = useMemo(
     () => ({
       name: role?.name || '',
@@ -51,18 +62,11 @@ export default function DocumentCategoryeEditForm() {
       isActive: role?.isActive || false,
       allModules: role?.allModules || false,
       allWriteAccess: role?.allWriteAccess || false,
+      deleteAny: role?.deleteAny || false
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditRoleSchema = Yup.object().shape({
-    name: Yup.string().min(2).required("Name Field is required!"),
-    roleType: Yup.string().required("Role Type is required!"),
-    description: Yup.string().max(10000),
-    allModules: Yup.boolean(),
-    allWriteAccess: Yup.boolean(),
-    isActive: Yup.boolean(),
-  });
 
   const methods = useForm({
     resolver: yupResolver(EditRoleSchema),
@@ -158,6 +162,18 @@ export default function DocumentCategoryeEditForm() {
                         mb: 0.5,
                         color: 'text.secondary'
                       }}> All Write Access
+                    </Typography>
+                  } />
+                  <RHFSwitch name="deleteAny" labelPlacement="start" label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary'
+                      }}> Delete Any
                     </Typography>
                   } />
 
