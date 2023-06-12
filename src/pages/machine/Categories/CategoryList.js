@@ -89,7 +89,7 @@ export default function CategoryList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
