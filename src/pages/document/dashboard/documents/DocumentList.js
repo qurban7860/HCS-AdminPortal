@@ -17,12 +17,12 @@ import {
   Stack,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../redux/store';
+import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+import { useSnackbar } from '../../../../components/snackbar';
+import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -33,22 +33,24 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../../components/table';
-import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog';
+} from '../../../../components/table';
+import Iconify from '../../../../components/iconify';
+import Scrollbar from '../../../../components/scrollbar';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
 import DocumentCategoryListTableRow from './DocumentListTableRow';
 import DocumentCategoryListTableToolbar from './DocumentListTableToolbar';
-import documentName, { getDocuments } from '../../../redux/slices/document/document';
-import { Cover } from '../../components/Cover';
-import { fDate } from '../../../utils/formatTime';
+import { getDocuments, deleteDocument } from '../../../../redux/slices/document/document';
+import { Cover } from '../../../components/Cover';
+import { fDate } from '../../../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Document Name', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'doctype', label: 'Type', align: 'center' },
+  { id: 'doccategory', label: 'Category', align: 'center' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
@@ -96,14 +98,14 @@ export default function DocumentList() {
   const { documents, isLoading, error, initial, responseMessage } = useSelector((state) => state.document);
 
   useLayoutEffect(() => {
-    dispatch(getDocument());
+    dispatch(getDocuments());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
       setTableData(documents);
     }
-  }, [documentCategories, initial]);
+  }, [documents, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -141,8 +143,8 @@ export default function DocumentList() {
   const handleDeleteRow = async (id) => {
     try {
       // console.log(id);
-      await dispatch(deleteDocumentCategory(id));
-      dispatch(getDocumentCategories());
+      await dispatch(deleteDocument(id));
+      dispatch(getDocuments());
       setSelected([]);
 
       if (page > 0) {
@@ -174,11 +176,11 @@ export default function DocumentList() {
 
   const handleEditRow = (id) => {
     // console.log(id);
-    navigate(PATH_DOCUMENT.documentName.edit(id));
+    navigate(PATH_DOCUMENT.document.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DOCUMENT.documentCategory.view(id));
+    navigate(PATH_DASHBOARD.document.view(id));
   };
 
   const handleResetFilter = () => {
@@ -198,7 +200,7 @@ export default function DocumentList() {
           }}
         >
           <Cover
-            name="Document Categories"
+            name="Documents List"
             icon="ph:users-light"
           />
         </Card>

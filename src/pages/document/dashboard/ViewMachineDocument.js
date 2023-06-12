@@ -46,7 +46,7 @@ export default function Document() {
   const { machineDocument, machineDocumentHistory } = useSelector((state) => state.machineDocument);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  console.log("machineDocumentHistory : ",machineDocumentHistory)
+  // console.log("machineDocumentHistory : ",machineDocumentHistory)
   const [ openCustomer, setOpenCustomer] = useState(false)
   const [ openMachine, setOpenMachine] = useState(false)
 

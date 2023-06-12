@@ -117,7 +117,7 @@ export function getTool(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/tools/${id}`);
       dispatch(slice.actions.getToolSuccess(response.data));
     } catch (error) {
-      console.error(error,"Slice Error");
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
     }
   };

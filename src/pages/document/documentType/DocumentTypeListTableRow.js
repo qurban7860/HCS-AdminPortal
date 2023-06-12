@@ -84,9 +84,9 @@ export default function DocumentTypeListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell>
+        <TableCell >
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
+            <Link noWrap  variant="body1" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
           </Stack>
         </TableCell>
         {/* <TableCell>{description}</TableCell> */}

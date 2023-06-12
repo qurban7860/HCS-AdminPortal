@@ -7,7 +7,7 @@ import { PATH_CUSTOMER } from '../../../routes/paths';
 // components
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import DocumentCategoryAddForm from './DocumentCategoryAddForm';
+import DocumentCategoryAddForm from './DocumentAddForm';
 
 // ----------------------------------------------------------------------
 

@@ -17,6 +17,7 @@ const initialState = {
   isLoading: false,
   error: null,
   sites: [],
+  activeSites: [],
   site: null,
   lat: '',
   long: '',
@@ -56,6 +57,15 @@ const slice = createSlice({
       state.sites = action.payload;
       state.initial = true;
     },
+
+    // GET Active Sites
+    getActiveSitesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSites = action.payload;
+      state.initial = true;
+    },
+
 
     // GET Site
     getSiteSuccess(state, action) {
@@ -252,10 +262,32 @@ export function getSites(customerID) {
         dispatch(slice.actions.getSitesSuccess(response.data));
         dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
       }
-      // else{
-        //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);
-        // }
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
 
+// ----------------------------------------------------------------------
+
+export function getActiveSites(customerID) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      let response = null;
+      if(customerID){
+        response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
+        {
+          params: {
+            isActive: true,
+            isArchived: false
+          }
+        }
+        );
+        dispatch(slice.actions.getActiveSitesSuccess(response.data));
+        dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
+      }
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -280,7 +312,6 @@ export function searchSites() {
       }
       );
       dispatch(slice.actions.getSitesSuccess(response.data));
-      console.log('response data----->', response.data);
       dispatch(slice.actions.setResponseMessage('Sites loaded successfully'));
       // else{
       //   response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/sites/search`);

@@ -191,7 +191,6 @@ export function getActiveDocumentVersions(documentId) {
         }
       }
       );
-      console.log("document Version response: " , response)
       dispatch(slice.actions.getActiveDocumentVersionsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Versions loaded successfully'));
     } catch (error) {

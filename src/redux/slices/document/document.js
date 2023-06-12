@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   document: {},
   documents: [],
+  activeDocuments: [],
   documentHistory: [],
 };
 
@@ -52,6 +53,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.documents = action.payload;
+      state.initial = true;
+    },
+
+    // GET ACTIVE Documents
+    getActiveDocumentsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeDocuments = action.payload;
       state.initial = true;
     },
 
@@ -114,7 +123,7 @@ export const {
 
 // ----------------------------Add Document------------------------------------------
 
-export function addeDocument(customerId , machineId , params) {
+export function addDocument(customerId , machineId , params) {
     return async (dispatch) => { 
         dispatch(slice.actions.startLoading());
         try {
@@ -204,7 +213,7 @@ export function updateDocument(documentId , params) {
   };
 }
 
-// -----------------------------------Get Document-----------------------------------
+// -----------------------------------Get Documents-----------------------------------
 
 export function getDocuments() {
   return async (dispatch) => {
@@ -217,7 +226,6 @@ export function getDocuments() {
         }
       }
       );
-      console.log(response);
       dispatch(slice.actions.getDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document loaded successfully'));
     } catch (error) {
@@ -227,6 +235,28 @@ export function getDocuments() {
   };
 }
 
+// -----------------------------------Get Active Documents-----------------------------------
+
+export function getActiveDocuments() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+        }
+      }
+      );
+      dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+} 
 
 // -------------------------------get Document---------------------------------------
 

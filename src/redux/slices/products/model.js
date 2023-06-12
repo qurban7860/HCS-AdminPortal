@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   machineModels: [],
+  activeMachineModels: [],
   machineModel: {},
 };
 
@@ -38,7 +39,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET  MODEL
+    // GET  MODELS
     getMachineModelsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -46,6 +47,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET  ACTIVE MODELS
+    getActiveMachineModelsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachineModels = action.payload;
+      state.initial = true;
+    },
+
+        
     // GET MODEL
     getMachinemodelSuccess(state, action) {
       state.isLoading = false;
@@ -100,6 +110,20 @@ export function getMachineModels (){
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data));
+      }
+      return response;
+  }
+}
+
+// ------------------------- get Active Machine Models ---------------------------------------------
+
+export function getActiveMachineModels (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveMachineModelsSuccess(response.data));
       }
       return response;
   }

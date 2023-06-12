@@ -119,7 +119,7 @@ export function getMachineStatus(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses/${id}`);
       dispatch(slice.actions.getMachinestatusSuccess(response.data));
     } catch (error) {
-      console.error(error,"Slice Error");
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
     }
   };
@@ -189,7 +189,7 @@ export function updateMachinestatus(params,Id) {
       dispatch(getMachineStatus(Id));
       dispatch(slice.actions.setMachinestatusesEditFormVisibility(false));
     } catch (error) {
-      console.error(error,"from statuses");
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
     }
   };

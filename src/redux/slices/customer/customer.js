@@ -15,6 +15,7 @@ const initialState = {
   isLoading: false,
   error: null,
   customers: [],
+  activeCustomers: [],
   customer: {},
 };
 
@@ -44,6 +45,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.customers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customers
+    getActiveCustomersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCustomers = action.payload;
       state.initial = true;
     },
 
@@ -113,6 +122,28 @@ export function getCustomers() {
   };
 }
 
+// ---------------------------- get Active Customers------------------------------------------
+
+export function getActiveCustomers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getActiveCustomersSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function getCustomer(id) {
@@ -160,7 +191,6 @@ export function addCustomer(params) {
       dispatch(slice.actions.resetCustomer());
       dispatch(slice.actions.startLoading());
       try {
-        console.log('params------>', params);
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -279,7 +309,6 @@ export function addCustomer(params) {
         if(!_.isEmpty(billingContact)){
           data.billingContact = billingContact;
           if(params.sameContactFlag){
-            console.log('same contact');
             data.technicalContact = billingContact;
           }
         }

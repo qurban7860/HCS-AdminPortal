@@ -200,7 +200,6 @@ export function getActiveDocumentCategories() {
         }
       }
       );
-      console.log("document category response: " , response)
       dispatch(slice.actions.getActiveDocumentCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('File Categories loaded successfully'));
     } catch (error) {

@@ -15,15 +15,15 @@ import {
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
-import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
+import { fDate } from '../../../../utils/formatTime';
+import { fCurrency } from '../../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
+import Iconify from '../../../../components/iconify';
+import MenuPopover from '../../../../components/menu-popover';
+import ConfirmDialog from '../../../../components/confirm-dialog';
+import Label from '../../../../components/label';
 
-import { useSelector } from '../../../redux/store';
+import { useSelector } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -55,7 +55,7 @@ export default function DocumentListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, description,customerAccess, isActive, createdAt } = row;
+  const { displayName, docType , docCategory , customerAccess, isActive, createdAt } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -84,12 +84,12 @@ export default function DocumentListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
-          </Stack>
+        <TableCell align='left'>
+            <Link noWrap  variant="body1" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {displayName}</Link>
+    
         </TableCell>
-        {/* <TableCell>{description}</TableCell> */}
+        <TableCell align="center" >{docType?.name}</TableCell>
+        <TableCell align="center" >{docCategory?.name}</TableCell>
         <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
         <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
         <TableCell align="right" >{fDate(createdAt)}</TableCell>

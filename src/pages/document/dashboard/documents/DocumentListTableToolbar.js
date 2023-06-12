@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // components
-import Iconify from '../../../components/iconify';
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import Iconify from '../../../../components/iconify';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -42,7 +42,7 @@ export default function DocumentListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_DOCUMENT.documentCategory.new); };
+  const toggleAdd = () => { navigate(PATH_DASHBOARD.document.new); };
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >
       
@@ -56,7 +56,7 @@ export default function DocumentListTableToolbar({
         </Grid>
           <Grid item xs={8} sm={3}>
             <Stack alignItems="flex-end" > 
-              <Button sx={{p:2}} onClick={toggleAdd} variant="contained" startIcon={ <Iconify icon="eva:plus-fill" /> } >Add Document Category</Button>
+              <Button sx={{p:2}} onClick={toggleAdd} variant="contained" startIcon={ <Iconify icon="eva:plus-fill" /> } >Add Document</Button>
             </Stack>
           </Grid>
       </Grid>
