@@ -37,7 +37,7 @@ export default function RoleAddForm({ currentRole }) {
   const AddRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
     roleType: Yup.string().required("Role Type is required!"),
-    description: Yup.string().max(10000),
+    description: Yup.string().max(10000).required("Description is required!"),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
