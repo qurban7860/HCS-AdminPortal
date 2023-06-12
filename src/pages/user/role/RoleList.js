@@ -73,7 +73,7 @@ export default function RoleList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();

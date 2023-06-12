@@ -72,7 +72,7 @@ export default function StatusList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'createdAt',
+    defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
