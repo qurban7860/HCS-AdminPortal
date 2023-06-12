@@ -25,7 +25,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
+import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import { getCustomerDocument , resetCustomerDocument} from '../../../redux/slices/document/customerDocument';
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
@@ -43,9 +43,9 @@ export default function Document() {
   const regEx = /^[^2]*/;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { customerDocument } = useSelector((state) => state.customerDocument);
+  const { customerDocument, customerDocumentHistory } = useSelector((state) => state.customerDocument);
   const { customer } = useSelector((state) => state.customer);
-  console.log("customerDocument : ",customerDocument)
+  console.log("customerDocumentHistory : ",customerDocumentHistory)
   const [ openCustomer, setOpenCustomer] = useState(false)
   const [ openMachine, setOpenMachine] = useState(false)
 
@@ -72,29 +72,29 @@ export default function Document() {
   const defaultValues = useMemo(
     () => (
       {
-        displayName :             customerDocument?.displayName || "",
-        documentName:             customerDocument?.documentName?.name || "",
-        docCategory:              customerDocument?.docCategory?.name || "",
-        docType:                  customerDocument?.docType?.name || "",
-        customer:                 customerDocument?.customer?.name || "",
-        customerAccess:           customerDocument?.customerAccess,
-        isActiveVersion:          customerDocument?.isActiveVersion,
-        documentVersion:          customerDocument?.documentVersions?.length > 0 ? customerDocument?.documentVersions[0]?.versionNo : "",
-        description:              customerDocument?.description,
-        isActive:                 customerDocument?.isActive,
-        createdAt:                customerDocument?.createdAt || "",
-        createdByFullName:        customerDocument?.createdBy?.name || "",
-        createdIP:                customerDocument?.createdIP || "",
-        updatedAt:                customerDocument?.updatedAt || "",
-        updatedByFullName:        customerDocument?.updatedBy?.name || "",
-        updatedIP:                customerDocument?.updatedIP || "",
+        displayName :             customerDocumentHistory?.displayName || "",
+        documentName:             customerDocumentHistory?.documentName?.name || "",
+        docCategory:              customerDocumentHistory?.docCategory?.name || "",
+        docType:                  customerDocumentHistory?.docType?.name || "",
+        customer:                 customerDocumentHistory?.customer?.name || "",
+        customerAccess:           customerDocumentHistory?.customerAccess,
+        isActiveVersion:          customerDocumentHistory?.isActiveVersion,
+        documentVersion:          customerDocumentHistory?.documentVersions?.length > 0 ? customerDocumentHistory?.documentVersions[0]?.versionNo : "",
+        description:              customerDocumentHistory?.description,
+        isActive:                 customerDocumentHistory?.isActive,
+        createdAt:                customerDocumentHistory?.createdAt || "",
+        createdByFullName:        customerDocumentHistory?.createdBy?.name || "",
+        createdIP:                customerDocumentHistory?.createdIP || "",
+        updatedAt:                customerDocumentHistory?.updatedAt || "",
+        updatedByFullName:        customerDocumentHistory?.updatedBy?.name || "",
+        updatedIP:                customerDocumentHistory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customerDocument]
+    [customerDocumentHistory]
   );
 
-const handleDownload = (fileId,fileName ,fileExtension) => {
-   dispatch(getDocumentDownload(fileId)).then(res => {
+const handleDownload = ( documentId, versionId, fileId,fileName ,fileExtension) => {
+   dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
     // console.log("res : ",res)
     if(regEx.test(res.status)){
       download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
@@ -126,10 +126,10 @@ const handleDownloadImage = (fileName,fileExtension)=>{
      download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension});
 }
 
-const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
+const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileExtension) => {
   setImageName(fileName);
   setImageExtension(fileExtension);
-  dispatch(getDocumentDownload(fileId)).then(res => {
+  dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
    if(regEx.test(res.status)){
     setImageData(res.data)
     handleOpenPreview()
@@ -208,7 +208,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
             <Grid container sx={{ mt: '1rem' ,mb: '-1rem'}}>
                 <ViewFormAudit defaultValues={defaultValues}/>
             </Grid>
-            {customerDocument && customerDocument?.documentVersions?.map((files)=>(
+            {customerDocumentHistory && customerDocumentHistory?.documentVersions?.map((files)=>(
           <Grid container>
             <Grid container sx={{ pt: '2rem' }}>
               <Grid
@@ -224,13 +224,15 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   Version No. {files?.versionNo}
                 </Typography>
               </Grid>
+            <ViewFormField sm={12} heading="Description" param={files?.description} />
+
             </Grid>
               {files?.files?.map((file)=>(
               <Grid item  sx={{ display: 'flex-inline' }}>
               <Grid container justifyContent="flex-start" gap={1}>
                 
                 {file?.fileType.startsWith("image") ?
-                <Card sx={{  height: '160px', width: '140px',m:1 }}>
+                <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -247,12 +249,12 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview(file._id,file.name,file.extension);
+                              handleDownloadAndPreview(customerDocumentHistory._id, files._id, file._id ,file.name,file.extension);
                             }
                           }
                           sx={{
-                            top: 7,
-                            left: 70,
+                            top: 4,
+                            left: 76,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -318,10 +320,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(customerDocumentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -335,22 +337,6 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <CardMedia
                         component="img"
                         sx={{
@@ -375,16 +361,16 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>
                 </Card>
             :
-            <Card sx={{  height: '160px', width: '140px',m:1 }}>
+            <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -399,10 +385,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(customerDocumentHistory._id, files._id, file._id ,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -416,23 +402,6 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        // name={file.extension}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <Iconify sx={{ 
                           height: '90px',
                           opacity: '0.6',
@@ -454,10 +423,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>

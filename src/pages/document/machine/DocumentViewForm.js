@@ -12,7 +12,7 @@ import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton,
   Dialog,
   CardMedia,} from '@mui/material';
 // redux
-import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument,resetMachineDocument} from '../../../redux/slices/document/machineDocument';
+import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument,resetMachineDocument, getMachineDocumentHistory} from '../../../redux/slices/document/machineDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -22,7 +22,7 @@ import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import Iconify from '../../../components/iconify';
-import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
+import { getDocumentDownload, deleteDocumentFile } from '../../../redux/slices/document/documentFile';
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
 import { useSnackbar } from '../../../components/snackbar';
@@ -68,7 +68,7 @@ const { enqueueSnackbar } = useSnackbar();
      dispatch(resetMachineDocument())
      dispatch(resetCustomer())
     //  dispatch(resetMachine())
-     await dispatch(getMachineDocument(currentMachineDocument._id))
+     await dispatch(getMachineDocumentHistory(currentMachineDocument._id))
     //  await dispatch(getMachine(currentMachineDocument.machine._id))
      await dispatch(getCustomer(currentMachineDocument.customer._id))
     };
@@ -114,8 +114,8 @@ link.click();
 }
 
 
-const handleDownload = (fileId,fileName ,fileExtension) => {
-   dispatch(getDocumentDownload(fileId)).then(res => {
+const handleDownload = (documentId, versionId, fileId, fileName ,fileExtension) => {
+   dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
     if(regEx.test(res.status)){
       download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
       enqueueSnackbar(res.statusText);
@@ -141,14 +141,14 @@ const [ imageExtension, setImageExtension] = useState("")
 const handleOpenPreview = () => {setOnPreview(true)};
 const handleClosePreview = () => {setOnPreview(false)};
 
-const handleDownloadImage = (fileName,fileExtension)=>{
+const handleDownloadImage = (fileName ,fileExtension)=>{
      download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension});
 }
 
-const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
+const handleDownloadAndPreview = (documentId, versionId, fileId, fileName ,fileExtension) => {
   setImageName(fileName);
   setImageExtension(fileExtension);
-  dispatch(getDocumentDownload(fileId)).then(res => {
+  dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
    if(regEx.test(res.status)){
     setImageData(res.data)
     handleOpenPreview()
@@ -165,6 +165,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
    }
  });
 };
+
 
 const document = {
   icon: {
@@ -186,6 +187,16 @@ const document = {
     pptx: "#e65100"
   }
 }
+const handleDelete = async (documentId, versionId, fileId ) => {
+    try{
+      await dispatch(deleteDocumentFile(documentId,versionId,fileId))
+           await dispatch(getMachineDocuments(machine._id));
+           enqueueSnackbar("File deleted successfully!");
+       }catch(err) {
+      console.log(err);
+        enqueueSnackbar("File delete failed!",{ variant: `error` })
+    };
+   }
 
   return (
     <Grid sx={{mt:-2}}>
@@ -221,7 +232,7 @@ const document = {
           { currentMachineDocument?.documentVersions[0]?.files?.map((file)=>(
               file?.fileType.startsWith("image") ?
            
-                <Card sx={{  height: '160px', width: '140px',m:1 }}>
+                <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -236,7 +247,7 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
-                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
                           sx={{
                             top: 4,
                             left: 44,
@@ -258,7 +269,7 @@ const document = {
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview(file._id,file.name,file.extension);
+                              handleDownloadAndPreview(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id,file.name,file.extension);
                             }
                           }
                           sx={{
@@ -329,7 +340,7 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(currentMachineDocument, currentMachineDocument?.documentVersions[0]._id ,file._id ,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
@@ -370,16 +381,16 @@ const document = {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>
                 </Card>
             :
-            <Card sx={{  height: '160px', width: '140px',m:1 }}>
+            <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -394,7 +405,7 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
-                          // onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
                           sx={{
                             top: 4,
                             left: 76,
@@ -414,7 +425,7 @@ const document = {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(currentMachineDocument, currentMachineDocument?.documentVersions[0]._id , file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
@@ -452,10 +463,10 @@ const document = {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow>
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>

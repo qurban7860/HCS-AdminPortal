@@ -25,7 +25,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
+import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import { getMachineDocument , resetMachineDocument} from '../../../redux/slices/document/machineDocument';
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
@@ -43,11 +43,10 @@ export default function Document() {
   const regEx = /^[^2]*/;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { machineDocument } = useSelector((state) => state.machineDocument);
+  const { machineDocument, machineDocumentHistory } = useSelector((state) => state.machineDocument);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-// console.log("customer machine", customer, machine)
-  // console.log("machineDocument : ",machineDocument)
+  console.log("machineDocumentHistory : ",machineDocumentHistory)
   const [ openCustomer, setOpenCustomer] = useState(false)
   const [ openMachine, setOpenMachine] = useState(false)
 
@@ -86,30 +85,30 @@ export default function Document() {
   const defaultValues = useMemo(
     () => (
       {
-        displayName :             machineDocument?.displayName || "",
-        documentName:             machineDocument?.documentName?.name || "",
-        docCategory:              machineDocument?.docCategory?.name || "",
-        docType:                  machineDocument?.docType?.name || "",
-        customer:                 machineDocument?.customer?.name || "",
-        machine:                  machineDocument?.machine?.name || "",
-        customerAccess:           machineDocument?.customerAccess,
-        isActiveVersion:          machineDocument?.isActiveVersion,
-        documentVersion:          machineDocument?.documentVersions?.length > 0 ? machineDocument?.documentVersions[0]?.versionNo : "",
-        description:              machineDocument?.description,
-        isActive:                 machineDocument?.isActive,
-        createdAt:                machineDocument?.createdAt || "",
-        createdByFullName:        machineDocument?.createdBy?.name || "",
-        createdIP:                machineDocument?.createdIP || "",
-        updatedAt:                machineDocument?.updatedAt || "",
-        updatedByFullName:        machineDocument?.updatedBy?.name || "",
-        updatedIP:                machineDocument?.updatedIP || "",
+        displayName :             machineDocumentHistory?.displayName || "",
+        documentName:             machineDocumentHistory?.documentName?.name || "",
+        docCategory:              machineDocumentHistory?.docCategory?.name || "",
+        docType:                  machineDocumentHistory?.docType?.name || "",
+        customer:                 machineDocumentHistory?.customer?.name || "",
+        machine:                  machineDocumentHistory?.machine?.name || "",
+        customerAccess:           machineDocumentHistory?.customerAccess,
+        isActiveVersion:          machineDocumentHistory?.isActiveVersion,
+        documentVersion:          machineDocumentHistory?.documentVersions?.length > 0 ? machineDocumentHistory?.documentVersions[0]?.versionNo : "",
+        description:              machineDocumentHistory?.description,
+        isActive:                 machineDocumentHistory?.isActive,
+        createdAt:                machineDocumentHistory?.createdAt || "",
+        createdByFullName:        machineDocumentHistory?.createdBy?.name || "",
+        createdIP:                machineDocumentHistory?.createdIP || "",
+        updatedAt:                machineDocumentHistory?.updatedAt || "",
+        updatedByFullName:        machineDocumentHistory?.updatedBy?.name || "",
+        updatedIP:                machineDocumentHistory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machineDocument]
+    [machineDocumentHistory]
   );
 
-const handleDownload = (fileId,fileName ,fileExtension) => {
-   dispatch(getDocumentDownload(fileId)).then(res => {
+const handleDownload = (documentId, versionId, fileId,fileName ,fileExtension) => {
+   dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
     // console.log("res : ",res)
     if(regEx.test(res.status)){
       download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
@@ -141,10 +140,10 @@ const handleDownloadImage = (fileName,fileExtension)=>{
      download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension});
 }
 
-const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
+const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExtension) => {
   setImageName(fileName);
   setImageExtension(fileExtension);
-  dispatch(getDocumentDownload(fileId)).then(res => {
+  dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
    if(regEx.test(res.status)){
     setImageData(res.data)
     handleOpenPreview()
@@ -232,7 +231,7 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
             <Grid container sx={{ mt: '1rem' ,mb: '-1rem'}}>
                 <ViewFormAudit defaultValues={defaultValues}/>
             </Grid>
-            {machineDocument && machineDocument?.documentVersions?.map((files)=>(
+            {machineDocumentHistory && machineDocumentHistory?.documentVersions?.map((files)=>(
           <Grid container>
             <Grid container sx={{ pt: '2rem' }}>
               <Grid
@@ -248,13 +247,14 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   Version No. {files?.versionNo}
                 </Typography>
               </Grid>
+              <ViewFormField sm={12} heading="Description" param={files?.description} />
             </Grid>
               {files?.files?.map((file)=>(
               <Grid item  sx={{ display: 'flex-inline' }}>
               <Grid container justifyContent="flex-start" gap={1}>
                 
                 {file?.fileType.startsWith("image") ?
-                <Card sx={{  height: '160px', width: '140px',m:1 }}>
+                <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -271,12 +271,12 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview(file._id,file.name,file.extension);
+                              handleDownloadAndPreview( machineDocumentHistory._id, files._id, file._id, file.name,file.extension);
                             }
                           }
                           sx={{
-                            top: 7,
-                            left: 70,
+                            top: 4,
+                            left: 76,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -342,10 +342,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(machineDocumentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -359,22 +359,6 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <CardMedia
                         component="img"
                         sx={{
@@ -399,16 +383,16 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>
                 </Card>
             :
-            <Card sx={{  height: '160px', width: '140px',m:1 }}>
+            <Card sx={{  height: '140px', width: '140px',m:1 }}>
                   <Grid
                     item
                     justifyContent="center"
@@ -423,10 +407,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(machineDocumentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
-                            top: 7,
-                            left: 105,
+                            top: 4,
+                            left: 108,
                             zIndex: 9,
                             height: "60",
                             position: 'absolute',
@@ -440,23 +424,6 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                           <Iconify icon="line-md:download-loop" width={18} />
                         </IconButton>
                       </Link>
-                      <CustomAvatar
-                        sx={{
-                          width: '50px',
-                          height: '50px',
-                          display: 'flex',
-                          marginTop: '55px',
-                          marginRight: 'auto',
-                          marginLeft: 'auto',
-                          marginBottom: '0px',
-                          boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                          fontSize: '25px',
-                          zIndex: '2',
-                        }}
-                        // name={file.extension}
-                        extension={file.extension}
-                        alt={file.extension}
-                      />
                       <Iconify sx={{ 
                           height: '90px',
                           opacity: '0.6',
@@ -478,10 +445,10 @@ const handleDownloadAndPreview = (fileId,fileName,fileExtension) => {
                   <Grid
                     item
                     justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt:2 }}
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
                     ><Tooltip title={file.name} arrow >
-                      <Typography variant="body1" >
-                      {file?.name?.length > 6 ? file?.name?.substring(0, 6) : file?.name } {file?.name?.length > 6 ? "..." :null}
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
                       </Typography>
                     </Tooltip>
                   </Grid>

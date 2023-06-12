@@ -6,21 +6,21 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const regEx = /^[^2]*/
 const initialState = {
-  machineDocumentFormVisibility: false,
-  machineDocumentEditFormVisibility: false,
-  machineDocumentEdit: false,
+  documentFormVisibility: false,
+  documentEditFormVisibility: false,
+  documentEdit: false,
   intial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  machineDocument: {},
-  machineDocuments: [],
-  machineDocumentHistory: [],
+  document: {},
+  documents: [],
+  documentHistory: [],
 };
 
 const slice = createSlice({
-  name: 'machineDocument',
+  name: 'document',
   initialState,
   reducers: {
     // START LOADING
@@ -29,16 +29,16 @@ const slice = createSlice({
       state.error = null;
     },
     // SET TOGGLE
-    setMachineDocumentFormVisibility(state, action){
-      state.machineDocumentFormVisibility = action.payload;
+    setDocumentFormVisibility(state, action){
+      state.documentFormVisibility = action.payload;
     },
 
     // SET TOGGLE
-    setMachineDocumentEditFormVisibility(state, action){
-      state.machineDocumentEditFormVisibility = action.payload;
+    setDocumentEditFormVisibility(state, action){
+      state.documentEditFormVisibility = action.payload;
     },
-    setMachineDocumentEdit(state, action){
-      state.machineDocumentEdit = action.payload;
+    setDocumentEdit(state, action){
+      state.documentEdit = action.payload;
     },
     // HAS ERROR
     hasError(state, action) {
@@ -47,27 +47,27 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET MachineDocuments
-    getMachineDocumentsSuccess(state, action) {
+    // GET Documents
+    getDocumentsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineDocuments = action.payload;
+      state.documents = action.payload;
       state.initial = true;
     },
 
-    // GET Machine Document
-    getMachineDocumentSuccess(state, action) {
+    // GET Document
+    getDocumentSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineDocument = action.payload;
+      state.document = action.payload;
       state.initial = true;
     },
 
-    // GET Machine Document
-    getMachineDocumentHistorySuccess(state, action) {
+    // GET Document
+    getDocumentHistorySuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machineDocumentHistory = action.payload;
+      state.documentHistory = action.payload;
       state.initial = true;
     },
 
@@ -80,17 +80,17 @@ const slice = createSlice({
     },
 
 
-    // RESET Machine Document
-    resetMachineDocument(state){
-      state.machineDocument = {};
+    // RESET Document
+    resetDocument(state){
+      state.document = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    // RESET Machine Documents
-    resetMachineDocuments(state){
-      state.machineDocuments = [];
+    // RESET Documents
+    resetDocuments(state){
+      state.documents = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -104,17 +104,17 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setMachineDocumentFormVisibility,
-  setMachineDocumentEditFormVisibility,
-  setMachineDocumentEdit,
-  resetMachineDocument,
-  resetMachineDocuments,
+  setDocumentFormVisibility,
+  setDocumentEditFormVisibility,
+  setDocumentEdit,
+  resetDocument,
+  resetDocuments,
   setResponseMessage,
 } = slice.actions;
 
-// ----------------------------Add Machine Document------------------------------------------
+// ----------------------------Add Document------------------------------------------
 
-export function addMachineDocument(customerId , machineId , params) {
+export function addeDocument(customerId , machineId , params) {
     return async (dispatch) => { 
         dispatch(slice.actions.startLoading());
         try {
@@ -122,7 +122,9 @@ export function addMachineDocument(customerId , machineId , params) {
           if(customerId){
             formData.append('customer', customerId);
           }
-            formData.append('machine', machineId);
+            if(machineId){
+              formData.append('machine', machineId);
+            }
             formData.append('customerAccess', params.customerAccess);
             formData.append('isActive', params.isActive);
           if(params?.displayName){
@@ -145,9 +147,9 @@ export function addMachineDocument(customerId , machineId , params) {
           // console.log("formData", formData);
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
-      dispatch(getMachineDocuments(machineId));
-      dispatch(setMachineDocumentFormVisibility(false));
-      dispatch(setMachineDocumentEditFormVisibility (false));
+      dispatch(getDocuments());
+      dispatch(setDocumentFormVisibility(false));
+      dispatch(setDocumentEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -155,33 +157,19 @@ export function addMachineDocument(customerId , machineId , params) {
   };
 }
 
-// ---------------------------------Update Machine Document-------------------------------------
+// ---------------------------------Update Document-------------------------------------
 
-export function updateMachineDocument(machineDocumentId , machineId , params) {
+export function updateDocument(documentId , params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      // const data = { 
-      //   displayName: params?.displayName,
-      //   name: params?.displayName,
-      //   customerAccess: params.customerAccess,
-      //   // isActive: params.isActive,
-      //   documentType:params.documentType,
-      //   docType:params.documentType,
-      //   documentCategory:params.documentCategory,
-      //   docCategory:params.documentCategory,
-      //   description: params.description,
-      // };
-
 
       const formData = new FormData();
       formData.append('isActive', params?.isActive);
       // if(params?.customerAccess){
         formData.append('customerAccess', params.customerAccess);
         // }
-        // if(params?.customer){
-        // formData.append('customer', params.customer);
-        // }
+
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }
@@ -203,12 +191,12 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
         formData.append('images', params?.images);
       }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`, formData);
-      console.log("machineId : ", machineId)
-      dispatch(getMachineDocuments(machineId))
-      dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));
-      dispatch(setMachineDocumentFormVisibility(false));
-      dispatch(setMachineDocumentEditFormVisibility (false));
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}`, formData);
+
+      dispatch(getDocuments())
+      dispatch(slice.actions.setResponseMessage(' Document updated successfully'));
+      dispatch(setDocumentFormVisibility(false));
+      dispatch(setDocumentEditFormVisibility (false));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -216,9 +204,9 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
   };
 }
 
-// -----------------------------------Get Machine Document-----------------------------------
+// -----------------------------------Get Document-----------------------------------
 
-export function getMachineDocuments(machineId) {
+export function getDocuments() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -226,13 +214,12 @@ export function getMachineDocuments(machineId) {
       {
         params: {
           isArchived: false,
-          machine: machineId
         }
       }
       );
       console.log(response);
-      dispatch(slice.actions.getMachineDocumentsSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
+      dispatch(slice.actions.getDocumentsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document loaded successfully'));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -241,16 +228,15 @@ export function getMachineDocuments(machineId) {
 }
 
 
-// -------------------------------get Machine Document---------------------------------------
+// -------------------------------get Document---------------------------------------
 
-export function getMachineDocument(machineDocumentId) {
+export function getDocument(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`);
-      // console.log("machine document : ", response)
-      dispatch(slice.actions.getMachineDocumentSuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Machine Document Loaded Successfuly'));
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${documentId}`);
+      dispatch(slice.actions.getDocumentSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -258,20 +244,19 @@ export function getMachineDocument(machineDocumentId) {
   };
 }
 
-// -------------------------------get Machine Document---------------------------------------
+// -------------------------------get Document---------------------------------------
 
-export function getMachineDocumentHistory(machineDocumentId) {
+export function getDocumentHistory(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`,{
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/${documentId}`,{
         params: {
           historical : true
         }
       });
-      // console.log("machine document : ", response)
-      dispatch(slice.actions.getMachineDocumentHistorySuccess(response.data));
-      dispatch(slice.actions.setResponseMessage('Machine Document History Loaded Successfuly'));
+      dispatch(slice.actions.getDocumentHistorySuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document History Loaded Successfuly'));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -280,17 +265,16 @@ export function getMachineDocumentHistory(machineDocumentId) {
 }
 
 
-// ---------------------------------archive Machine Document -------------------------------------
+// ---------------------------------archive Document -------------------------------------
 
-export function deleteMachineDocument(machineDocumentId) {
+export function deleteDocument(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}` , 
       {
           isArchived: true, 
       });
-      // console.log("response : ", response)
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);

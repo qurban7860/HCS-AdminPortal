@@ -19,6 +19,8 @@ import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/pa
 import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
 import { getActiveDocumentTypes , setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories, setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
+import { updateDocumentVersion, addDocumentVersion } from '../../../redux/slices/document/documentVersion';
+
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -51,6 +53,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ documentTypeVal, setDocumentTypeVal] = useState('')
   const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const [ documentVal, setDocumentVal] = useState('')
+  console.log("documentVal : ",documentVal)
   const [ selectedValue, setSelectedValue] = useState('new')
   const [ selectedVersionValue, setSelectedVersionValue] = useState("newVersion")
   const [ descriptionVal, setDescriptionVal] = useState("")
@@ -183,14 +186,13 @@ export default function DocumentAddForm({currentDocument}) {
         }
         if(selectedValue === "new"){
           await dispatch(addCustomerDocument(customer._id,data));
+        }else if (selectedVersionValue === "newVersion"){
+            await dispatch(addDocumentVersion(documentVal._id,data));
         }else{
-          if(selectedVersionValue === "newVersion"){
-            data.newVersion = true;
+          await dispatch(updateDocumentVersion(documentVal._id,documentVal?.documentVersions[0]?._id,data));
           }
-          await dispatch(updateCustomerDocument(documentVal._id,data,customer._id));
-
-        }
         enqueueSnackbar('Customer document save successfully!');
+        dispatch(getCustomerDocuments(customer?._id))
         dispatch(setCustomerDocumentFormVisibility(false));
         setDocumentCategoryVal("")
         setDocumentTypeVal("")
@@ -358,7 +360,7 @@ export default function DocumentAddForm({currentDocument}) {
                         onChange={(event, newValue) => {
                           if (newValue) {
                             const { _id, displayName } = newValue;
-                            setDocumentVal({ _id, displayName });
+                            setDocumentVal(newValue);
                             setDisplayNameVal(newValue.displayName);
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);
