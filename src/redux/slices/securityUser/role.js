@@ -108,7 +108,7 @@ export function addRole(params) {
         description: params.description,
         allModules:  params.allModules,
         allWriteAccess: params.allWriteAccess,
-        deleteAny: params.deleteAny,
+        disableDelete: params.disableDelete,
         isActive: params.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/roles`, data);
@@ -133,7 +133,7 @@ export function updateRole(id, params) {
         description: params.description,
         allModules:  params.allModules,
         allWriteAccess: params.allWriteAccess,
-        deleteAny: params.deleteAny,
+        disableDelete: params.disableDelete,
         isActive: params.isActive,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
