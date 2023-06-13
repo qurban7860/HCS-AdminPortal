@@ -19,6 +19,7 @@ GoogleMaps.propTypes = {
   lat: PropTypes.string,
   lng: PropTypes.string,
   edit: PropTypes.bool,
+  machineView: PropTypes.bool
   // latlongArr: PropTypes.arrayOf(PropTypes.shape({
   //   lat: PropTypes.string.isRequired,
   //   lng: PropTypes.string.isRequired,
@@ -30,6 +31,7 @@ export default function GoogleMaps({
   lat,
   lng,
   edit = false,
+  machineView = false,
   latlongArr = [],
   mapHeight = '',
   center = '',
@@ -93,8 +95,8 @@ export default function GoogleMaps({
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={latlongArr.length > 0 ? reportDefaultCenter : markerPositions[0]}
-      zoom={zoom ? zoom : latlongArr.length > 0 ? 2 : 12}
+      center={latlongArr.length > 0 ? (machineView ? markerPositions[0] : reportDefaultCenter) : markerPositions[0]}
+      zoom={zoom ? zoom : (latlongArr.length > 0 && !machineView ? 2 : 15)}
       onLoad={onLoad}
       onUnmount={onUnmount}
       onClick={onMapClick}
