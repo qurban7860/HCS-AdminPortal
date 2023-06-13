@@ -66,10 +66,9 @@ export default function TechParamCategoryAddForm() {
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.techParam.list); 
       } catch(error){
-        // enqueueSnackbar('Saving failed!');
-        if(error?.message){
-          enqueueSnackbar(error.message, { variant: `error` });
-        }
+        
+          enqueueSnackbar("Save Failed!", { variant: `error` });
+
         console.error(error);
       }
   };
