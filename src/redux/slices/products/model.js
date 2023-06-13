@@ -121,7 +121,13 @@ export function getActiveMachineModels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
 
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      });
       if(regEx.test(response.status)){
         dispatch(slice.actions.getActiveMachineModelsSuccess(response.data));
       }

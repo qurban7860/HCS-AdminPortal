@@ -144,7 +144,7 @@ export default function DocumentList() {
     try {
       // console.log(id);
       await dispatch(deleteDocument(id));
-      dispatch(getDocuments());
+      dispatch(deleteDocument());
       setSelected([]);
 
       if (page > 0) {

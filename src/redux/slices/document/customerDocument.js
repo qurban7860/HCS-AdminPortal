@@ -160,9 +160,10 @@ export function addCustomerDocument(customerId,params) {
         dispatch(getCustomerDocuments(customerId))
         dispatch(setCustomerDocumentFormVisibility(false));
       // }
-
+      console.log("add customer document try block!")
     } catch (error) {
       console.error(error);
+      console.log("add customer document catch block!")
       dispatch(slice.actions.hasError(error.Message));
     }
   };

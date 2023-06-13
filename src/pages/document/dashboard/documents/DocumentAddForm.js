@@ -57,6 +57,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ documentTypeVal, setDocumentTypeVal] = useState('')
   const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const [ documentVal, setDocumentVal] = useState('')
+  console.log("documentVal : ", documentVal)
   const [ selectedValue, setSelectedValue] = useState('new')
   const [ selectedVersionValue, setSelectedVersionValue] = useState("newVersion")
   const [ descriptionVal, setDescriptionVal] = useState("")
@@ -164,14 +165,18 @@ export default function DocumentAddForm({currentDocument}) {
         data.name = nameVal
         data.displayName = displayNameVal
         data.isActive = isActive;
-        data.machine = machineVal._id;
+        data.customerAccess = false
+        if(customerSiteVal){
+          data.site = customerSiteVal._id
+        }
+        if(customerContactVal){
+          data.contact = customerContactVal._id
+        } 
+        if(machineModelVal){
+          data.machineModel = machineModelVal._id
+        }
         if(documentCategoryVal){
           data.documentCategory = documentCategoryVal?._id
-        }
-        if(customerAccessVal === true || customerAccessVal === "true" ){
-          data.customerAccess = true
-        }else{
-          data.customerAccess = false
         }
         if(documentTypeVal){
           data.documentType = documentTypeVal?._id
@@ -205,6 +210,11 @@ export default function DocumentAddForm({currentDocument}) {
         setPreview(false);
         setPreviewVal("")
         setDescriptionVal("")
+        setMachineVal("")
+        setMachineModelVal("")
+        setCustomerVal("")
+        setCustomerSiteVal("")
+        setCustomerContactVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Machine Document Save failed!', { variant: `error` });
@@ -443,6 +453,10 @@ export default function DocumentAddForm({currentDocument}) {
                         onChange={(event, newValue) => {
                           if (newValue) {
                             setCustomerVal(newValue);
+                            setContactDisabled(false);
+                            setSiteDisabled(false);
+                            setCustomerContactVal("");
+                            setCustomerSiteVal("");
                           } else {
                             setCustomerVal('');
                             setContactDisabled(false);
@@ -527,7 +541,7 @@ export default function DocumentAddForm({currentDocument}) {
                         value={machineVal || null}
                         options={activeMachines}
                         // isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
+                        getOptionLabel={(option) =>  `${option.serialNo ? option.serialNo : ''}`}
                         onChange={(event, newValue) => {
                           if (newValue) {
                             setMachineVal(newValue);
