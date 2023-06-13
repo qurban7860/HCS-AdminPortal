@@ -30,6 +30,8 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
   const toggleEdit = () => {navigate(PATH_MACHINE.techParam.techparamcategoryedit(id))}
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
+
   const { techparamcategory } = useSelector((state) => state.techparamcategory);
 
   const { id } = useParams();
@@ -50,9 +52,15 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTechparamcategory, techparamcategory]
     );
-    const onDelete = () => {
-      dispatch(deleteTechparamcategory(id))
-      navigate(PATH_MACHINE.techParam.list)
+    const onDelete = async () => {
+      try{
+        await dispatch(deleteTechparamcategory(id))
+      enqueueSnackbar('Delete Success!');
+        navigate(PATH_MACHINE.techParam.list)
+      }catch(error){
+        console.log(error);
+      enqueueSnackbar('Delete failed!', { variant: `error` });
+      }
     }
   return (
     <Card sx={{ p: 3 }}>

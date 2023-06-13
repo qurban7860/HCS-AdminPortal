@@ -94,7 +94,7 @@ export const {
 
 // ----------------------------------------------------------------------
 
-export function getTechparamcategories (){
+export function getTechparamcategories(){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
@@ -149,7 +149,6 @@ export function deleteTechparamcategory(id) {
 
 export function addTechparamcategory(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetTechparamcategory());
       dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -169,6 +168,7 @@ export function addTechparamcategory(params) {
         const response = await axios.post(`${CONFIG.SERVER_URL}products/techparamcategories`, data);
 
         dispatch(slice.actions.getTechparamcategoriesSuccess(response.data.Techparamcategory));
+        dispatch(getTechparamcategories())
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
