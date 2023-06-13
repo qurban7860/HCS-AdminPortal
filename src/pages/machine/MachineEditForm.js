@@ -382,7 +382,7 @@ export default function MachineEditForm() {
 
                 <Autocomplete
                   // freeSolo
-                  disabled={!machine.machinemodel}
+                  disabled={!!machine.machineModel}
                   value={modelVal || null}
                   options={machineModels}
                   isOptionEqualToValue={(option, value) => option.name === value.name}

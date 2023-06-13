@@ -32,8 +32,8 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 // slice
 import {  setCustomerDocumentFormVisibility, setCustomerDocumentEdit, setCustomerDocumentEditFormVisibility, updateCustomerDocument  } from '../../../redux/slices/document/customerDocument';
 
-import { setDocumentCategoryFormVisibility  } from '../../../redux/slices/document/documentCategory';
-import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import { setDocumentCategoryFormVisibility, getDocumentCategories  } from '../../../redux/slices/document/documentCategory';
+import { setDocumentTypeFormVisibility, getDocumentTypes } from '../../../redux/slices/document/documentType';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -89,7 +89,9 @@ useEffect(()=>{
   setDocumentCategoryVal(customerDocument?.docCategory)
   setDocumentTypeVal(customerDocument?.docType)
   setDescriptionVal(customerDocument?.description)
-},[customerDocument])
+  // dispatch(getDocumentCategories())
+  dispatch(getDocumentTypes())
+},[dispatch,customerDocument])
 
   const EditCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
@@ -237,7 +239,7 @@ useEffect(()=>{
               
               <Autocomplete
                 // freeSolo
-                readOnly
+                disabled
                 value={documentCategoryVal || null}
                 options={documentCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}

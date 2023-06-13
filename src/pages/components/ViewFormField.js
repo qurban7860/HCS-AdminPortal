@@ -75,7 +75,10 @@ export default function ViewFormField({
 
       <Typography
         variant={
-          heading === 'Serial No' || heading === 'Machine Model' || heading === 'Customer'
+          heading === 'Serial No' ||
+          heading === 'Machine Model' ||
+          heading === 'Customer' ||
+          heading === 'Machine'
             ? 'h4'
             : 'body1'
         }
@@ -85,7 +88,7 @@ export default function ViewFormField({
           <>
             <IconButton
               aria-label={isActive ? 'Active' : 'Inactive'}
-              onClick={handlePopoverOpen}
+              // onClick={handlePopoverOpen}
               onMouseEnter={handlePopoverOpen}
               onMouseLeave={handlePopoverClose}
             >
@@ -110,6 +113,7 @@ export default function ViewFormField({
               }}
               id="mouse-over-popover"
               sx={{
+                marginTop: '.5rem',
                 '& .MuiPaper-root': {
                   bgcolor: 'transparent',
                   boxShadow: 'none',
@@ -148,15 +152,16 @@ export default function ViewFormField({
               anchorEl={anchorEl}
               onClose={handlePopoverClose}
               anchorOrigin={{
-                vertical: 'top',
+                vertical: 'center',
                 horizontal: 'center',
               }}
               transformOrigin={{
-                vertical: 'center',
+                vertical: 'bottom',
                 horizontal: 'center',
               }}
               id="mouse-over-popover"
               sx={{
+                marginTop: '.5rem',
                 '& .MuiPaper-root': {
                   bgcolor: 'transparent',
                   boxShadow: 'none',
@@ -204,6 +209,7 @@ export default function ViewFormField({
               }}
               id="mouse-over-popover"
               sx={{
+                marginTop: '.5rem',
                 '& .MuiPaper-root': {
                   bgcolor: 'transparent',
                   boxShadow: 'none',

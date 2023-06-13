@@ -19,6 +19,8 @@ import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/pa
 import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
 import { getActiveDocumentTypes , setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories, setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
+import { updateDocumentVersion, addDocumentVersion } from '../../../redux/slices/document/documentVersion';
+
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -51,6 +53,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ documentTypeVal, setDocumentTypeVal] = useState('')
   const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const [ documentVal, setDocumentVal] = useState('')
+  console.log("documentVal : ",documentVal)
   const [ selectedValue, setSelectedValue] = useState('new')
   const [ selectedVersionValue, setSelectedVersionValue] = useState("newVersion")
   const [ descriptionVal, setDescriptionVal] = useState("")
@@ -183,14 +186,13 @@ export default function DocumentAddForm({currentDocument}) {
         }
         if(selectedValue === "new"){
           await dispatch(addCustomerDocument(customer._id,data));
+        }else if (selectedVersionValue === "newVersion"){
+            await dispatch(addDocumentVersion(documentVal._id,data));
         }else{
-          if(selectedVersionValue === "newVersion"){
-            data.newVersion = true;
+          await dispatch(updateDocumentVersion(documentVal._id,documentVal?.documentVersions[0]?._id,data));
           }
-          await dispatch(updateCustomerDocument(documentVal._id,data,customer._id));
-
-        }
         enqueueSnackbar('Customer document save successfully!');
+        dispatch(getCustomerDocuments(customer?._id))
         dispatch(setCustomerDocumentFormVisibility(false));
         setDocumentCategoryVal("")
         setDocumentTypeVal("")
@@ -344,9 +346,11 @@ export default function DocumentAddForm({currentDocument}) {
                     </Grid>
                     </RadioGroup>
                   </FormControl>
-                  { selectedValue === "newVersion" && 
-                    <Grid item xs={12} lg={6}>
-                      <Autocomplete
+                  { selectedValue === "newVersion" &&
+                  <Grid container lg={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} lg={6}>
+                    <Autocomplete
                         // freeSolo
                         // disabled={documentAvailable}
                         value={documentVal || null}
@@ -356,12 +360,12 @@ export default function DocumentAddForm({currentDocument}) {
                         onChange={(event, newValue) => {
                           if (newValue) {
                             const { _id, displayName } = newValue;
-                            setDocumentVal({ _id, displayName });
+                            setDocumentVal(newValue);
                             setDisplayNameVal(newValue.displayName);
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);
                             setCustomerAccessVal(newValue.customerAccess);
-                            setDescriptionVal(newValue.description);
+                            // setDescriptionVal(newValue.description);
                             setReadOnlyVal(true)
                           } else {
                             setDocumentVal('');
@@ -379,7 +383,31 @@ export default function DocumentAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
-                  }
+                    {documentVal && <Grid item xs={12} lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
+                        value={documentTypeVal || null}
+                        options={activeDocumentTypes}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentTypeVal(newValue);
+                          } else {
+                            setDocumentTypeVal('');
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>}
+                    </Grid>
+                    </Grid>
+                      }
                   { documentVal &&  <FormControl >
                       <RadioGroup
                             row
@@ -396,7 +424,7 @@ export default function DocumentAddForm({currentDocument}) {
                           </Grid>
                       </RadioGroup>
                   </FormControl>}
-                  { (selectedValue === "new"  || (documentVal && selectedVersionValue !== "existingVersion")) &&
+                  { selectedValue === "new"  &&
                 <RHFTextField
                     required
                     disabled={readOnlyVal}
@@ -407,7 +435,7 @@ export default function DocumentAddForm({currentDocument}) {
                       setDisplayNameVal(e.target.value);
                     }}
                   />}
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) &&
+                { selectedValue === "new"  &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
                     <Grid item lg={6}>
@@ -461,7 +489,7 @@ export default function DocumentAddForm({currentDocument}) {
                   </Grid>
                 </Grid>}
                         
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField disabled={readOnlyVal}  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
+                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
                 { (selectedValue === "new" || documentVal ) &&
                   <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload

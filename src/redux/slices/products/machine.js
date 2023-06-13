@@ -19,6 +19,7 @@ const initialState = {
   machine: {},
   machines: [],
   customerMachines:[],
+  transferDialogBoxVisibility: false
 };
 
 const slice = createSlice({
@@ -34,6 +35,11 @@ const slice = createSlice({
     // STOP LOADING
     stopLoading(state) {
       state.isLoading = false;
+    },
+
+    // SET DIALOGBOX VISIBILITY
+    setTransferDialogBoxVisibility(state, action) {
+      state.transferDialogBoxVisibility = action.payload;
     },
 
     // SET TOGGLE
@@ -125,6 +131,7 @@ export const {
   resetMachine,
   resetMachines,
   setResponseMessage,
+  setTransferDialogBoxVisibility
 } = slice.actions;
 
 // ----------------------------------------------------------------------
@@ -343,6 +350,7 @@ export function transferMachine(params) {
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/transferMachine`,
         data
       );
+      dispatch(setTransferDialogBoxVisibility(false));
       dispatch(getMachine(response.data.Machine.parentMachineID));
       return response; // eslint-disable-line
 

@@ -95,9 +95,6 @@ export default function CustomerViewForm() {
         <Button />
         <Grid container>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
-            <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.root}>
-              Dashboard
-            </Link>
             <Link
               underline="none"
               variant="subtitle2"
@@ -113,14 +110,6 @@ export default function CustomerViewForm() {
               href={PATH_DASHBOARD.customer.root}
             >
               {customer.name}
-            </Link>
-            <Link
-              underline="none"
-              variant="subtitle2"
-              color="inherit"
-              href={PATH_DASHBOARD.customer.root}
-            >
-              Information
             </Link>
           </Breadcrumbs>
         </Grid>

@@ -7,10 +7,11 @@ import download from 'downloadjs';
 // @mui
 import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
-import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link, Tooltip} from '@mui/material';
+import { styled, alpha } from '@mui/material/styles';
+import { CardContent, IconButton ,Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link, Tooltip} from '@mui/material';
 // redux
-import { getDocumentDownload } from '../../../redux/slices/document/downloadDocument';
-import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument} from '../../../redux/slices/document/customerDocument';
+import { getDocumentDownload ,deleteDocumentFile} from '../../../redux/slices/document/documentFile';
+import { setCustomerDocumentEditFormVisibility , deleteCustomerDocument , getCustomerDocuments , getCustomerDocument, resetCustomerDocument, getCustomerDocumentHistory} from '../../../redux/slices/document/customerDocument';
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -23,6 +24,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 
 const Loadable = (Component) => (props) =>
   (
@@ -42,10 +44,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  // console.log("currentCustomerDocument : ",currentCustomerDocument)
+  console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-  const [ preview, setPreview] = useState(false)
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -64,6 +65,14 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     await dispatch(getCustomerDocument(currentCustomerDocument._id));
           dispatch(setCustomerDocumentEditFormVisibility(true));
   };
+
+  const linkCustomerDocumentView = async () => { 
+    navigate(PATH_DASHBOARD.document.customer(currentCustomerDocument._id)); 
+    dispatch(resetCustomerDocument())
+    // dispatch(resetCustomer())
+    await dispatch(getCustomerDocumentHistory(currentCustomerDocument?._id))
+    // await dispatch(getCustomer(currentMachineDocument.customer._id))
+   };
 
   const defaultValues = useMemo(
     () => (
@@ -89,10 +98,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     [currentCustomerDocument, customerDocument]
   );
 
-  const handleClosePreview = () => { setPreview(false) };
-
-  const handleOpenPreview = () => {setPreview(true)};
-
   const downloadBase64File = (base64Data, fileName) => {
         // Decode the Base64 file
     const decodedString = atob(base64Data);
@@ -117,8 +122,19 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
       downloadBase64File(base64Data, fileName);
     };
 
-    const handleDownload = (fileId,fileName ,fileExtension) => {
-       dispatch(getDocumentDownload(fileId)).then(res => {
+    const handleDelete = async  (documentId, versionId, fileId )  => {
+      try{
+       await dispatch(deleteDocumentFile(documentId,versionId,fileId, customer?._id))
+          enqueueSnackbar("File deleted successfully!");
+          dispatch(getCustomerDocuments(customer._id))
+        }catch(err) {
+       console.log(err);
+         enqueueSnackbar("File delete failed!",{ variant: `error` })
+     };
+    }
+    
+    const handleDownload = (documentId, versionId, fileId, fileName ,fileExtension) => {
+       dispatch(getDocumentDownload(documentId,versionId,fileId)).then(res => {
         if(regEx.test(res.status)){
           download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension});
           // downloadBase64File(res.data, `${fileName}.${fileExtension}`);
@@ -136,6 +152,40 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         }
       });
     };
+
+const [ onPreview, setOnPreview] = useState(false)
+const [ imageData, setImageData] = useState(false)
+const [ imageName, setImageName] = useState("")
+const [ imageExtension, setImageExtension] = useState("")
+
+const handleOpenPreview = () => {setOnPreview(true)};
+const handleClosePreview = () => {setOnPreview(false)};
+
+const handleDownloadImage = (fileName,fileExtension)=>{
+     download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension});
+}
+
+const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileExtension) => {
+  setImageName(fileName);
+  setImageExtension(fileExtension);
+  dispatch(getDocumentDownload(documentId, versionId, fileId)).then(res => {
+   if(regEx.test(res.status)){
+    setImageData(res.data)
+    handleOpenPreview()
+   }else{
+     enqueueSnackbar(res.statusText,{ variant: `error` })
+   }
+ }).catch(err => {
+   if(err.Message){
+     enqueueSnackbar(err.Message,{ variant: `error` })
+   }else if(err.message){
+     enqueueSnackbar(err.message,{ variant: `error` })
+   }else{
+     enqueueSnackbar("Something went wrong!",{ variant: `error` })
+   }
+ });
+};
+
     const document = {
       icon: {
         pdf: "bxs:file-pdf",
@@ -161,18 +211,28 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
       <Grid >
         <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-        <Grid  display="inline-flex">
-              <Tooltip >
-                <ViewFormField  isActive={defaultValues.isActive}  />
-              </Tooltip>
-              <Tooltip>
-                <ViewFormField  customerAccess={defaultValues?.customerAccess} />
-              </Tooltip>
-            </Grid>
-        <Grid container>
-            
+          <Grid  display="inline-flex">
+            <Tooltip >
+              <ViewFormField  isActive={defaultValues.isActive}  />
+            </Tooltip>
+            <Tooltip>
+              <ViewFormField  customerAccess={defaultValues?.customerAccess} />
+            </Tooltip>
+          </Grid>
+          <Grid container>
             <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Version" objectParam={
+                                    defaultValues.documentVersion ? (
+                                      <Typography display="flex">
+                                        {defaultValues.documentVersion}
+                                        {currentCustomerDocument?.documentVersions && currentCustomerDocument?.documentVersions?.length > 1 && <Link onClick={linkCustomerDocumentView} href='#' underline='none' ><Typography variant='body2' sx={{mt:0.45,ml:1}} >   More version  </Typography></Link>}
+                                      </Typography>
+                                      
+                                    ) : (
+                                      ''
+                                    )
+                                  } 
+            />
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
@@ -180,41 +240,251 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
 
             <Grid item  sx={{ display: 'flex-inline' }}>
-            <Grid container justifyContent="flex-start" gap={1}>
-              { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
-              file?.fileType.startsWith("image") ?
-              <Card sx={{m:1, width:"130px", height:"155px",justifyContent:"center" ,alignItems:"center"}}>
-                <Link href="#" underline="none"
-                component="button"
-                title='Download File'
-                // sx={{display:"flex",flexDirection:"column",justifyContent:"center" ,alignItems:"center"}}
-                onClick={() => handleDownload(file._id,file.name ,file.extension)}
-                >
-                  <Box
-                    onAbort={handleOpenPreview}
-                    component="img"
-                    width="80px" height="80px" 
-                    sx={{ mx:3, mt:2, objectFit:"cover" }}
-                    alt={file.DisplayName}
-                    src={`data:image/png;base64, ${file?.thumbnail}`}
-                    />
-                    <Typography sx={{mt:0.7}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
-                </Link> 
-              </Card>:
-              <Card sx={{m:1, width:"130px", height:"155px"}}>
-                <Link href="#" underline="none"
-                  component="button"
-                  title='Download File'
-                  onClick={() => handleDownload(file._id,file.name ,file.extension )}
-                >
-                  <Iconify sx={{ mx:3, mt:2 }} width="80px" height="113px" icon={document.icon[file.extension]} color={document.color[file.extension]}  />
-                  <Typography sx={{mt:0.5}}>{file?.name?.length > 10 ? file?.name?.substring(0, 10) : file?.name } {file?.name?.length > 10 ? "..." :null}</Typography>
-                </Link>
-              </Card>
-              ))}
+              <Grid container justifyContent="flex-start" gap={1}>
+                { currentCustomerDocument?.documentVersions[0]?.files?.map((file)=>(
+                file?.fileType.startsWith("image") ?
+                <Card sx={{  height: '140px', width: '140px',m:1 }}>
+                  <Grid
+                    item
+                    justifyContent="center"
+                    sx={{ bgcolor:"lightgray",alignContent: 'center', width:"140px" }}
+                    >
+                    <CardContent
+                      component={Stack}
+                      display="block"
+                      height="110px"
+                      sx={{ position: 'relative', zIndex: '1' }}
+                      >
+                      <Link>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id )}
+                          sx={{
+                            top: 4,
+                            left: 44,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
+                          onClick={
+                            () => {
+                              handleDownloadAndPreview(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id,file.name,file.extension);
+                            }
+                          }
+                          sx={{
+                            top: 4,
+                            left: 76,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+                            },
+                          }}
+                        >
+                          <Iconify icon="icon-park-outline:preview-open" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Dialog
+                        maxWidth="md"
+                        open={onPreview}
+                        onClose={handleClosePreview}
+                        aria-labelledby="keep-mounted-modal-title"
+                        aria-describedby="keep-mounted-modal-description"
+                        >
+                        <Grid
+                          container
+                          item
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            bgcolor: 'primary.main',
+                            color: 'primary.contrastText',
+                            padding: '10px',
+                          }}
+                        >
+                          <Typography variant="h4" sx={{ px: 2 }}>
+                            {`${imageName}.${imageExtension}`}
+                          </Typography>{' '}
+                          <Link onClick={handleClosePreview} href="#" underline="none" sx={{ ml: 'auto' }}>
+                            {' '}
+                            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
+                          </Link>
+                        </Grid>
+                        <Link>
+                            <IconButton
+                              size="small"
+                              onClick={() => handleDownloadImage(imageName ,imageExtension)}
+                              sx={{
+                                top: 70,
+                                right: 15,
+                                zIndex: 9,
+                                height: "60",
+                                position: 'absolute',
+                                color: (theme) => alpha(theme.palette.common.white, 0.8),
+                                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                                '&:hover': {
+                                  bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+                                },
+                              }}
+                            >
+                              <Iconify icon="line-md:download-loop" width={18} />
+                            </IconButton>
+                          </Link>
+                        <Box component="img" sx={{minWidth:"350px", minHeight:"350px"}} alt={file?.name}  src={`data:image/png;base64, ${imageData}`}/>
+                      </Dialog>
+                      <Link>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDownload(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 108,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+                            },
+                          }}
+                        >
+                          <Iconify icon="line-md:download-loop" width={18} />
+                        </IconButton>
+                      </Link>
+                      <CardMedia
+                        component="img"
+                        sx={{
+                          height: '110px',
+                          opacity: '0.6',
+                          display: 'block',
+                          zIndex: '-1',
+                          position: 'absolute',
+                          top: '0',
+                          left: '0',
+                          right: '0',
+                          bottom: '0',
+                          width: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center',
+                        }}
+                        image={`data:image/png;base64, ${file?.thumbnail}`}
+                        alt="customer's contact cover photo was here"
+                      />
+                    </CardContent>
+                  </Grid>
+                  <Grid
+                    item
+                    justifyContent="center"
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
+                    ><Tooltip title={file.name} arrow >
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
+                      </Typography>
+                    </Tooltip>
+                  </Grid>
+                </Card>
+            :
+            <Card sx={{  height: '140px', width: '140px',m:1 }}>
+                  <Grid
+                    item
+                    justifyContent="center"
+                    sx={{ bgcolor:"lightgray",alignContent: 'center', width:"140px" }}
+                    >
+                    <CardContent
+                      component={Stack}
+                      display="block"
+                      height="110px"
+                      sx={{ position: 'relative', zIndex: '1' }}
+                      >
+                      <Link>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id)}
+                          sx={{
+                            top: 4,
+                            left: 76,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
+                            },
+                          }}
+                        >
+                          <Iconify icon="material-symbols:delete" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Link>
+                        <IconButton
+                          size="small"
+                          onClick={() => handleDownload(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id,file.name ,file.extension)}
+                          sx={{
+                            top: 4,
+                            left: 108,
+                            zIndex: 9,
+                            height: "60",
+                            position: 'absolute',
+                            color: (theme) => alpha(theme.palette.common.white, 0.8),
+                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
+                            '&:hover': {
+                              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
+                            },
+                          }}
+                        >
+                          <Iconify icon="line-md:download-loop" width={18} />
+                        </IconButton>
+                      </Link>
+                      <Iconify sx={{ 
+                          height: '90px',
+                          opacity: '0.6',
+                          display: 'block',
+                          zIndex: '-1',
+                          position: 'absolute',
+                          top: '5px',
+                          left: '0',
+                          right: '0',
+                          bottom: '0',
+                          width: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center',
+                        }} 
+                        icon={document.icon[file.extension]} 
+                        color={document.color[file.extension]} />
+                    </CardContent>
+                  </Grid>
+                  <Grid
+                    item
+                    justifyContent="center"
+                    sx={{ textAlign: 'center', width: '140px', mt:0.7 }}
+                    ><Tooltip title={file.name} arrow >
+                      <Typography variant="body2" >
+                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name } {file?.name?.length > 15 ? "..." :null}
+                      </Typography>
+                    </Tooltip>
+                  </Grid>
+                </Card>
+                ))}
+              </Grid>
             </Grid>
-            </Grid><Link sx={{mt:"auto"}} href="#" >see more</Link>
-            
           <Grid container sx={{ mt: 2 }}>
                 <ViewFormAudit  defaultValues={defaultValues}/>
           </Grid>

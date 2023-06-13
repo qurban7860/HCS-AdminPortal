@@ -9,7 +9,7 @@ import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
 import { Switch, Card, Grid, Stack, Typography, Button ,Box, CardMedia, Dialog, Link} from '@mui/material';
 // redux
-import { getDocumentDownload } from '../../redux/slices/document/downloadDocument';
+import { getDocumentDownload } from '../../redux/slices/document/documentFile';
 // paths
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components

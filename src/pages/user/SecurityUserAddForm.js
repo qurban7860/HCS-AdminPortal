@@ -47,8 +47,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const { roles } = useSelector((state) => state.role);
   const [ phone, setPhone] = useState('')
 
-const ROLES = [];
-roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
+  const ROLES = [];
+  roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   const [roleVal, setRoleVal] = useState("");
   // roles.sort((a, b) => a > b);
@@ -72,7 +72,7 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
 
   useEffect(() => {
       dispatch(getCustomers());
-      dispatch(getRoles())
+      dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -138,47 +138,44 @@ roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
   }
 
   const onSubmit = async (data) => {
-        if(phone && phone.length > 7){
-          data.phone = phone ;
-        }
-        if(customerVal){
-          data.customer = customerVal._id;
-        }
-        if(contactVal){
-          data.contact = contactVal._id;
-        }
-        if(name){
-          data.name = name ;
-        }
-        if(email){
-          data.email = email ;
-        }
-        if(roleVal){
-          const roleId = []
-          roleVal.map((role)=>(roleId.push(role?._id)))
-          data.roles = roleId;
-        }
-        dispatchReqAddAndView(dispatch, addSecurityUser(data) , reset, navigate, PATH_DASHBOARD.user, 'user', enqueueSnackbar)
-        dispatch(resetContacts())
-      // dispatch(addSecurityUser(data)).then(res => {
-      //   if(regEx.test(res.status)){ 
-      //     enqueueSnackbar(res.statusText)
-      //     dispatch(resetContacts())
-      //     reset()
-      //     navigate(PATH_DASHBOARD.user.view(res.data.user._id));
-      //   }else{
-      //     enqueueSnackbar(res.statusText,{ variant: `error` })
-      //   }
-      // }).catch(err => {
-      //   if(err.Message){
-      //     enqueueSnackbar(err.Message,{ variant: `error` })
-      //   }else if(err.message){
-      //     enqueueSnackbar(err.message,{ variant: `error` })
-      //   }else{
-      //     enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      //   }
-      // });
+    if(phone && phone.length > 7){
+      data.phone = phone ;
+    }
+    if(customerVal){
+      data.customer = customerVal._id;
+    }
+    if(contactVal){
+      data.contact = contactVal._id;
+    }
+    if(name){
+      data.name = name ;
+    }
+    if(email){
+      data.email = email ;
+    }
+    if(roleVal){
+      const roleId = []
+      roleVal.map((role)=>(roleId.push(role?._id)))
+      data.roles = roleId;
+    }
 
+    try {
+      const response = await dispatch(addSecurityUser(data));
+      await dispatch(resetContacts());
+      reset();
+      navigate(PATH_DASHBOARD.user.view(response.data.user._id));   
+    } catch (error) {
+      if(error.Message){
+        enqueueSnackbar(error.Message,{ variant: `error` })
+      }else if(error.message){
+        enqueueSnackbar(error.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+      console.log("Error:", error);
+    }
+        // dispatchReqAddAndView(dispatch, addSecurityUser(data) , reset, navigate, PATH_DASHBOARD.user, 'user', enqueueSnackbar)
+        // dispatch(resetContacts())
   };
 
   const toggleCancel = ()=>{

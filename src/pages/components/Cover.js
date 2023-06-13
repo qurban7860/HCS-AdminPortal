@@ -90,11 +90,7 @@ export function Cover({
   const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
 
   return (
-    <StyledRoot
-      style={{
-        p: { xs: 0, md: 0 },
-      }}
-    >
+    <StyledRoot style={{ p: { xs: 0, md: 0 } }}>
       <StyledInfo
         style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'space-between' }}
       >

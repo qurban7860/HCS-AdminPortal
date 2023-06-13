@@ -14,8 +14,6 @@ import {
   CardContent,
   CardMedia,
   Breadcrumbs,
-  Dialog,
-  IconButton,
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -44,6 +42,7 @@ import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
 import EmptyContent from '../../components/empty-content';
+import Scrollbar from '../../components/scrollbar';
 
 // ----------------------------------------------------------------------
 
@@ -80,10 +79,6 @@ export default function CustomerContactList(currentContact = null) {
   const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } =
     useSelector((state) => state.contact);
   const [checked, setChecked] = useState(false);
-  const toggleChecked = () => {
-    setChecked((value) => !value);
-    dispatch(setContactFormVisibility(!formVisibility));
-  };
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -94,6 +89,7 @@ export default function CustomerContactList(currentContact = null) {
   const [currentContactData, setCurrentContactData] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+
   const handleOpenContact = (index) => {
     if (index === activeIndex) {
       setActiveIndex(null);
@@ -103,9 +99,30 @@ export default function CustomerContactList(currentContact = null) {
       setOpenContact(true);
     }
   };
+
+  const toggleChecked = () => {
+    setChecked((value) => !value);
+    dispatch(
+      setContactFormVisibility(
+        !checked ? { contactFormVisibility: true } : { contactFormVisibility: false }
+      )
+    );
+  };
+
+  const handleOpenEditContact = (index) => {
+    if (index === activeIndex) {
+      setActiveIndex(null);
+      setOpenContact(false);
+    } else {
+      setActiveIndex(index);
+      setOpenContact(true);
+    }
+  };
+
   const handleCloseContact = () => setOpenContact(false);
 
   const handleExpand = (index) => {
+    // setExpanded(!expanded);
     setIsExpanded(true);
   };
 
@@ -124,10 +141,6 @@ export default function CustomerContactList(currentContact = null) {
     position: 'relative',
     padding: '10px',
   }));
-  // const handleChange = (panel) => (event, isExpanded) => {
-  //   setExpanded(isExpanded ? panel : false);
-  //   console.log('Expended : ', expanded);
-  // };
 
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
@@ -159,66 +172,55 @@ export default function CustomerContactList(currentContact = null) {
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName || ''}`);
 
+  const shouldShowContactView = isExpanded && !contactEditFormVisibility;
+  const shouldShowContactEdit = contactEditFormVisibility && !formVisibility;
+  const shouldShowContactAdd = formVisibility && !contactEditFormVisibility;
+
   return (
     <>
-      {contactEditFormVisibility && <ContactEditForm />}
-      {formVisibility && !contactEditFormVisibility && <ContactAddForm />}
-      {!contactEditFormVisibility && (
-        <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-          <Button
-            onClick={toggleChecked}
-            variant="contained"
-            startIcon={
-              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
-            }
-          >
-            {' '}
-            New Contact{' '}
-          </Button>
+      <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
+        <Button
+          onClick={toggleChecked}
+          variant="contained"
+          startIcon={
+            !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+          }
+        >
+          New Contact
+        </Button>
+        <Grid container spacing={1}>
+          <Breadcrumbs separator="›" aria-label="breadcrumb">
+            <Link
+              underline="none"
+              variant="subtitle2"
+              color="inherit"
+              href={PATH_DASHBOARD.customer.root}
+            >
+              {customer.name}
+            </Link>
+            <Link
+              underline="none"
+              variant="subtitle2"
+              color="inherit"
+              href={PATH_DASHBOARD.customer.contacts}
+            >
+              Contacts
+            </Link>
+            <Link
+              underline="none"
+              variant="subtitle2"
+              color="inherit"
+              href={PATH_DASHBOARD.customer.contacts}
+            >
+              {Breadcrumbs.separator === activeIndex ? '›' : ''}
+              {contactEditFormVisibility
+                ? `Edit ${currentContactData.firstName}`
+                : currentContactData.firstName}
+            </Link>
+          </Breadcrumbs>
+        </Grid>
+      </Stack>
 
-          <Grid container>
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-              <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.root}>
-                Dashboard
-              </Link>
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer.list}
-              >
-                Customers
-              </Link>
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer.root}
-              >
-                {customer.name}
-              </Link>
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer.contacts}
-              >
-                Contacts
-              </Link>
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer.contacts}
-              >
-                {contactEditFormVisibility
-                  ? 'New Contact Form'
-                  : currentContactData.firstName || 'Contacts List'}
-              </Link>
-            </Breadcrumbs>
-          </Grid>
-        </Stack>
-      )}
       <Grid
         container
         spacing={1}
@@ -227,166 +229,163 @@ export default function CustomerContactList(currentContact = null) {
         grid-template-rows="repeat(3, 1fr)"
         grid-template-columns="repeat(3, 1fr)"
       >
-        <Grid item lg={5} sx={{ display: 'flex-inline' }}>
-          <Grid container justifyContent="flex-start" gap={1}>
-            {!formVisibility &&
-              !contactEditFormVisibility &&
-              contacts.map((contact, index) => {
+        <Grid item sm={12} lg={4.5}>
+          <Scrollbar
+            sx={{
+              height: { xs: 'calc(100vh - 200px)', md: 'calc(100vh - 200px)' },
+            }}
+          >
+            <Grid container justifyContent="flex-start" direction="column" gap={1}>
+              {/* {!formVisibility &&
+                contactEditFormVisibility && */}
+
+              {contacts.map((contact, index) => {
                 const borderTopVal = index !== 0 ? '0px solid white' : '';
                 return (
                   <>
                     {index !== activeIndex && (
-                      <Grid item key={index} lg={5}>
-                        <Card sx={{ display: 'flex', height: '300px', width: '200px' }}>
-                          <CardActionArea>
+                      <Grid item key={index} sm={12} lg={5} display="block">
+                        <Card
+                          raised
+                          sx={{
+                            display: 'flex',
+                            height: '200px',
+                            width: '450px',
+                            opacity: { activeIndex } === index ? '0.5' : '1',
+                          }}
+                        >
+                          <CardActionArea active={activeIndex === index}>
                             <Link
                               onClick={() => {
                                 setCurrentContactData(contact);
-                                // handleOpenContact(index);
-                                handleExpand(index);
-                                // setOpenContact(true);
+                                // handleExpand(index);
+                                if (!isExpanded) {
+                                  handleExpand(index);
+                                  setContactFormVisibility(false);
+                                } else {
+                                  setIsExpanded(false);
+                                }
                               }}
                               underline="none"
                             >
                               <Grid
-                                item
-                                justifyContent="center"
-                                sx={{ bgcolor: 'blue', alignContent: 'center' }}
+                                container
+                                direction="row"
+                                justifyContent="flex-start"
+                                alignItems="center"
                               >
-                                <CardContent
-                                  component={Stack}
-                                  display="block"
-                                  height="170px"
-                                  sx={{ position: 'relative', zIndex: '1' }}
-                                >
-                                  <CustomAvatar
-                                    sx={{
-                                      width: '100px',
-                                      height: '100px',
-                                      display: 'flex',
-                                      marginTop: '60px',
-                                      marginRight: 'auto',
-                                      marginLeft: 'auto',
-                                      marginBottom: '0px',
-                                      boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                                      fontSize: '40px',
-                                      zIndex: '2',
-                                    }}
-                                    name={fullName[index]}
-                                    alt={fullName[index]}
-                                  />
-                                  <CardMedia
-                                    component="img"
-                                    sx={{
-                                      height: '170px',
-                                      opacity: '0.5',
-                                      display: 'block',
-                                      zIndex: '-1',
-                                      position: 'absolute',
-                                      top: '0',
-                                      left: '0',
-                                      right: '0',
-                                      bottom: '0',
-                                      width: '100%',
-                                      objectFit: 'cover',
-                                      objectPosition: 'center',
-                                    }}
-                                    image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                    alt="customer's contact cover photo was here"
-                                  />
-                                </CardContent>
-                              </Grid>
-                              <Grid
-                                item
-                                justifyContent="center"
-                                sx={{ display: 'block', textAlign: 'center', width: '200px' }}
-                              >
-                                <CardContent
-                                  component={Stack}
-                                  display="block"
+                                <Grid
+                                  item
+                                  lg={6}
                                   justifyContent="center"
-                                  height="130px"
+                                  sx={{ display: 'block', textAlign: 'center', width: '200px' }}
                                 >
-                                  <Typography variant="body1" sx={{ fontWeight: 'bold', p: 1 }}>
-                                    {fullName[index] ? fullName[index] : <br />}
-                                  </Typography>
-                                  <Typography variant="body2" color="text.secondary">
-                                    {contact.title ? contact.title : <br />}
-                                  </Typography>
-                                  <Typography variant="overline" color="secondary.main" pt={2}>
-                                    {contact.email ? contact.email : <br />}
-                                  </Typography>
-                                </CardContent>
+                                  <CardContent
+                                    component={Stack}
+                                    display="block"
+                                    height="170px"
+                                    sx={{ position: 'relative', zIndex: '1' }}
+                                  >
+                                    <CustomAvatar
+                                      sx={{
+                                        width: '100px',
+                                        height: '100px',
+                                        display: 'flex',
+                                        marginRight: 'auto',
+                                        marginLeft: 'auto',
+                                        marginBottom: '0px',
+                                        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+                                        fontSize: '40px',
+                                        zIndex: '2',
+                                      }}
+                                      name={fullName[index]}
+                                      alt={fullName[index]}
+                                    />
+
+                                    <CardMedia
+                                      component="img"
+                                      sx={{
+                                        height: '250px',
+                                        opacity: '0.8',
+                                        display: 'flex',
+                                        zIndex: '-1',
+                                        position: 'absolute',
+                                        top: '-5',
+                                        left: '0',
+                                        right: '0',
+                                        bottom: '0',
+                                        width: '100%',
+                                        backgroundColor: 'secondary.main',
+                                        objectFit: 'cover',
+                                      }}
+                                      // image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                      alt="customer's contact cover photo was here"
+                                    />
+                                  </CardContent>
+                                </Grid>
+                                <Grid
+                                  item
+                                  lg={6}
+                                  justifyContent="flex-start"
+                                  sx={{ display: 'flex', textAlign: 'left', width: '200px' }}
+                                >
+                                  <CardContent
+                                    component={Stack}
+                                    display="block"
+                                    justifyContent="center"
+                                    height="200px"
+                                    my={2}
+                                  >
+                                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                                      {fullName[index].length >= 15
+                                        ? contact.firstName
+                                        : fullName[index]}
+                                    </Typography>
+                                    <Typography variant="body1" color="text.secondary">
+                                      {contact.title ? contact.title : <br />}
+                                    </Typography>
+                                    <Typography variant="body1" color="secondary.main" pt={2}>
+                                      {contact.email ? contact.email : <br />}
+                                    </Typography>
+                                  </CardContent>
+                                </Grid>
                               </Grid>
                             </Link>
                           </CardActionArea>
                         </Card>
                       </Grid>
                     )}
-
-                    {/* <Dialog
-                  open={openContact}
-                  onClose={handleCloseContact}
-                  aria-labelledby="alert-dialog-title"
-                  aria-describedby="alert-dialog-description"
-                >
-                  <Grid container lg={12} justifyContent="center">
-                    <Grid item lg={12}>
-                      <Card sx={{ width: 'auto', height: 'auto', m: 2 }}>
-                        <CardActionArea>
-                          <CardMedia
-                            component="img"
-                            sx={{
-                              height: '200px',
-                              width: '100%',
-                              display: 'block',
-                              top: '0',
-                              left: '0',
-                              right: '0',
-                              bottom: '0',
-                              zIndex: '-1',
-                              objectFit: 'cover',
-                            }}
-                            image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                            alt="customer's site photo was here"
-                          />
-                        </CardActionArea>
-                      </Card>
-                    </Grid>
-                    <Grid container lg={12}>
-                      <ContactViewForm currentContact={currentContactData} />
-                    </Grid>
-                  </Grid>
-                </Dialog> */}
                   </>
                 );
               })}
-          </Grid>
+            </Grid>
+          </Scrollbar>
         </Grid>
-        {/* expanding grid */}
-
-        {isExpanded && (
-          <Grid
-            item
-            lg={7}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              animation: 'fadeIn ease 0.8s',
-              animationFillMode: 'forwards',
-              position: 'relative',
-              zIndex: '1',
-              width: '100%',
-              height: 'auto',
-              overflow: 'hidden',
-              borderRadius: '10px',
-            }}
-          >
+        <Grid
+          item
+          lg={7.5}
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            animation: 'fadeIn ease 0.8s',
+            animationFillMode: 'forwards',
+            position: 'relative',
+            zIndex: '1',
+            width: '100%',
+            height: 'auto',
+            overflow: 'hidden',
+            borderRadius: '10px',
+          }}
+        >
+          {/* {formVisibility && !contactEditFormVisibility && <ContactAddForm />}) */}
+          {shouldShowContactView && (
             <CardBase>
               <ContactViewForm currentContact={currentContactData} />
             </CardBase>
-          </Grid>
-        )}
+          )}
+          {shouldShowContactEdit && <ContactEditForm />}
+          {shouldShowContactAdd && <ContactAddForm />}
+        </Grid>
         <Grid item lg={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>

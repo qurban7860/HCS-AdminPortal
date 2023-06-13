@@ -37,13 +37,13 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 export default function SecurityUserEditForm() {
   const regEx = /^[2][0-9][0-9]$/
   const { roles } = useSelector((state) => state.role);
-  const { error, securityUser } = useSelector((state) => state.user);
+  const { securityUser } = useSelector((state) => state.user);
   const ROLES = [];
   const securityUserRoles = [];
-roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
-if(securityUser?.roles){
-  securityUser?.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
-}
+  roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
+  if(securityUser?.roles){
+    securityUser?.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
+  }
   const [ name, setName ] = useState("");
   const [ email, setEmail ] = useState("");
   const { customers } = useSelector((state) => state.customer);
@@ -60,6 +60,7 @@ if(securityUser?.roles){
 
 useEffect(() => {
     dispatch(getCustomers());
+    dispatch(getRoles());
   // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [dispatch]);
 
@@ -142,45 +143,38 @@ useEffect(() => {
 
   const onSubmit = async (data) => {
     console.log("data : " , data)
-      data.customer = customerVal?._id || null
-      data.contact = contactVal?._id || null
-      if(phone && phone.length > 7 ){
-        data.phone = phone
+    data.customer = customerVal?._id || null
+    data.contact = contactVal?._id || null
+    if(phone && phone.length > 7 ){
+      data.phone = phone
+    }else{
+      data.phone = ""
+    }
+    if(name){
+      data.name = name ;
+    }
+    if(email){
+      data.email = email ;
+    }
+    // submitSecurityUserRoles.push(role?._id,role.name)
+    const submitSecurityUserRoles = data.roles.filter((role) =>
+    ROLES.some((Role) => Role.value === role)
+    )
+    data.roles = submitSecurityUserRoles;
+
+    try {  
+      await dispatch(updateSecurityUser(data,securityUser._id));
+      navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+    } catch (error) {
+      if(error.Message){
+        enqueueSnackbar(error.Message,{ variant: `error` })
+      }else if(error.message){
+        enqueueSnackbar(error.message,{ variant: `error` })
       }else{
-        data.phone = ""
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
       }
-      if(name){
-        data.name = name ;
-      }
-      if(email){
-        data.email = email ;
-      }
-      // submitSecurityUserRoles.push(role?._id,role.name)
-      const submitSecurityUserRoles = data.roles.filter((role) =>
-      ROLES.some((Role) => Role.value === role)
-      )
-      data.roles = submitSecurityUserRoles;
-      getWithMsg(dispatch, updateSecurityUser(data,securityUser._id), enqueueSnackbar)
-            navigate(PATH_DASHBOARD.user.view(defaultValues.id));
-    //     dispatch(updateSecurityUser(data,securityUser._id))
-    //     .then(res => {
-    //     console.log("res : " , res)
-    //     if(regEx.test(res.status)){
-    //       reset();
-    //       enqueueSnackbar(res.statusText)
-    //       dispatch(setSecurityUserEditFormVisibility(false))
-    //     }else{
-    //       enqueueSnackbar(res.statusText,{ variant: `error` })
-    //     }
-    //   }).catch(err => {
-    //     if(err.Message){
-    //       enqueueSnackbar(err.Message,{ variant: `error` })
-    //     }else if(err.message){
-    //       enqueueSnackbar(err.message,{ variant: `error` })
-    //     }else{
-    //       enqueueSnackbar("Something went wrong!",{ variant: `error` })
-    //     }
-    // });
+      console.log("Error:", error);
+    }
   };
 
   const toggleCancel = ()=>{

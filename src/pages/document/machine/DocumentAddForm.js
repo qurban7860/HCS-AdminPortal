@@ -14,9 +14,10 @@ import { Switch,Radio, RadioGroup,FormControlLabel,FormLabel, Box, Button, Card,
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
-import { addMachineDocument,updateMachineDocument, setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { addMachineDocument,updateMachineDocument, setMachineDocumentFormVisibility, getMachineDocuments } from '../../../redux/slices/document/machineDocument';
 import { setDocumentCategoryFormVisibility , getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { setDocumentTypeFormVisibility , getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { addDocumentVersion, updateDocumentVersion } from '../../../redux/slices/document/documentVersion';
 import { getMachines} from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getContacts } from '../../../redux/slices/customer/contact';
@@ -96,7 +97,71 @@ export default function DocumentAddForm({currentDocument}) {
         "Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx",
         (value) => {
           if (value && value?.name) {
-            const allowedExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx",  "xls", "xlsx", "ppt", "pptx" ];
+            const allowedExtensions = [  'png',
+            'jpeg',
+            'jpg',
+            'gif',
+            'bmp',
+            'webp',
+            'djvu',
+            'heic',
+            'heif',
+            'ico',
+            'jfif',
+            'jp2',
+            'jpe',
+            'jpeg',
+            'jpg',
+            'jps',
+            'mng',
+            'nef',
+            'nrw',
+            'orf',
+            'pam',
+            'pbm',
+            'pcd',
+            'pcx',
+            'pef',
+            'pes',
+            'pfm',
+            'pgm',
+            'picon',
+            'pict',
+            'png',
+            'pnm',
+            'ppm',
+            'psd',
+            'raf',
+            'ras',
+            'rw2',
+            'sfw',
+            'sgi',
+            'svg',
+            'tga',
+            'tiff',
+            'psd',
+            'jxr',
+            'wbmp',
+            'x3f',
+            'xbm',
+            'xcf',
+            'xpm',
+            'xwd',
+            'pdf',
+            'doc',
+            'docx',
+            'xls',
+            'xlsx',
+            'ppt',
+            'pptx',
+            'csv',
+            'txt',
+            'odp',
+            'ods',
+            'odt',
+            'ott',
+            'rtf',
+            'txt'];
             const fileExtension = value?.name?.split(".").pop().toLowerCase();
             return allowedExtensions.includes(fileExtension);
           }
@@ -146,6 +211,7 @@ export default function DocumentAddForm({currentDocument}) {
         data.name = nameVal
         data.displayName = displayNameVal
         data.isActive = isActive;
+        data.machine = machine._id;
         if(documentCategoryVal){
           data.documentCategory = documentCategoryVal?._id
         }
@@ -165,14 +231,15 @@ export default function DocumentAddForm({currentDocument}) {
         if(selectedValue === "new"){
           await dispatch(addMachineDocument(machine?.customer?._id, machine._id ,data));
           enqueueSnackbar('Machine document save successfully!');
-
+        }else if (selectedVersionValue === "newVersion"){
+            await dispatch(addDocumentVersion(documentVal._id,data));
+          enqueueSnackbar('Machine document version updated successfully!');
         }else{
-          if(selectedVersionValue === "newVersion"){
-            data.newVersion = true;
-          }
-          await dispatch(updateMachineDocument(documentVal._id, machine._id ,data));
+          await dispatch(updateDocumentVersion(documentVal._id,documentVal?.documentVersions[0]?._id,data));
           enqueueSnackbar('Machine document updated successfully!');
-        }
+          }
+          dispatch(getMachineDocuments(machine._id))
+          dispatch(setMachineDocumentFormVisibility(false))
         setDocumentCategoryVal("")
         setDocumentTypeVal("")
         setCustomerAccessVal("")
@@ -277,9 +344,9 @@ export default function DocumentAddForm({currentDocument}) {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <Grid container lg={12}>
-                  <FormHeading heading="New Document" />
-                </Grid>
+                  <Grid container lg={12}>
+                    <FormHeading heading="New Document" />
+                  </Grid>
                   <FormControl >
                     <RadioGroup
                       row
@@ -296,9 +363,12 @@ export default function DocumentAddForm({currentDocument}) {
                     </Grid>
                     </RadioGroup>
                   </FormControl>
-                  { selectedValue === "newVersion" && 
-                    <Grid item xs={12} lg={6}>
-                      <Autocomplete
+
+                  { selectedValue === "newVersion" &&
+                  <Grid container lg={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} lg={6}>
+                    <Autocomplete
                         // freeSolo
                         // disabled={documentAvailable}
                         value={documentVal || null}
@@ -308,12 +378,12 @@ export default function DocumentAddForm({currentDocument}) {
                         onChange={(event, newValue) => {
                           if (newValue) {
                             const { _id, displayName } = newValue;
-                            setDocumentVal({ _id, displayName });
+                            setDocumentVal(newValue);
                             setDisplayNameVal(newValue.displayName);
                             setDocumentTypeVal(newValue.docType);
                             setDocumentCategoryVal(newValue.docCategory);
                             setCustomerAccessVal(newValue.customerAccess);
-                            setDescriptionVal(newValue.description);
+                            // setDescriptionVal(newValue.description);
                             setReadOnlyVal(true)
                           } else {
                             setDocumentVal('');
@@ -331,7 +401,31 @@ export default function DocumentAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
-                  }
+                    {documentVal && <Grid item xs={12} lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
+                        value={documentTypeVal || null}
+                        options={activeDocumentTypes}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentTypeVal(newValue);
+                          } else {
+                            setDocumentTypeVal('');
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>}
+                    </Grid>
+                    </Grid>
+                      }
                   { documentVal &&  <FormControl >
                       <RadioGroup
                             row
@@ -349,7 +443,7 @@ export default function DocumentAddForm({currentDocument}) {
                       </RadioGroup>
                   </FormControl>}
                 
-                  { (selectedValue === "new"  || (documentVal && selectedVersionValue !== "existingVersion")) &&
+                  { selectedValue === "new"   &&
                 <RHFTextField
                     required
                     disabled={readOnlyVal}
@@ -360,7 +454,7 @@ export default function DocumentAddForm({currentDocument}) {
                       setDisplayNameVal(e.target.value);
                     }}
                   />}
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) &&
+                { selectedValue === "new" &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
                     <Grid item lg={6}>
@@ -415,7 +509,7 @@ export default function DocumentAddForm({currentDocument}) {
                 </Grid>}
 
                         
-                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField disabled={readOnlyVal}  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
+                { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField   value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
 
                 { (selectedValue === "new" || documentVal ) &&
                   <Grid item xs={12} md={6} lg={12}>
