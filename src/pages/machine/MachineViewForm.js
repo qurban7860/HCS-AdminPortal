@@ -1,6 +1,7 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import _ from 'lodash';
 // @mui
 import { Divider, Switch, Card, Grid, Typography, Link ,Dialog } from '@mui/material';
 // routes
@@ -33,10 +34,33 @@ export default function MachineViewForm() {
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
   const [disableTransferButton, setDisableTransferButton] = useState(false);
+  const [hasValid, setHasValid] = useState(false);
   const baseUrl = window.location.origin;
   const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
   
-  
+  const latLongValues = useMemo(() => [
+    {
+      lat: machine?.instalationSite?.lat || "",
+      long: machine?.instalationSite?.long || "",
+    },
+    {
+      lat: machine?.billingSite?.lat || "",
+      long: machine?.billingSite?.long || "",
+    }
+  ], [machine]);
+
+  useEffect(() => {
+    const hasValidArray = (array) => array.some((obj) => {
+      const lat = obj?.lat;
+      const long = obj?.long;
+      return lat !== undefined && long !== undefined && lat !== "" && long !== "";
+    });
+
+    const isValid = hasValidArray(latLongValues);
+    setHasValid(isValid);
+
+  }, [machine, latLongValues, setHasValid]);
+
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));
     if(machine.transferredMachine || !machine.isActive || !isSuperAdmin){
@@ -128,16 +152,8 @@ export default function MachineViewForm() {
     [machine]
   );
 
-  const latLongValues = [
-    {
-      lat: machine?.billingSite?.lat || "",
-      long: machine?.billingSite?.long || "",
-    },
-    {
-      lat: machine?.instalationSite?.lat || "",
-      long: machine?.instalationSite?.long || "",
-    }
-  ];
+  console.log('installation site---->', defaultValues.instalationSite);
+  console.log('billingSite---->', defaultValues.billingSite);
 
   return (
     <Card sx={{ p: 3 }}>
@@ -284,10 +300,16 @@ export default function MachineViewForm() {
             </Typography>
           </Grid>
         </Grid>
-        <GoogleMaps
+        { hasValid ? <GoogleMaps
+              machineView
               latlongArr={latLongValues}
               mapHeight='500px'
-        />
+          /> : 
+          <ViewFormField
+            sm={6}
+            heading="No Site Selected"
+          />
+        }
         
     
       </Grid>
