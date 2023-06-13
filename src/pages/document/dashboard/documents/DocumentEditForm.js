@@ -10,11 +10,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, Container} from '@mui/material';
-
-// slice
+import { Switch, Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem, Container} from '@mui/material';
+// global
+import { CONFIG } from '../../../../config-global';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
+import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import Iconify from '../../../../components/iconify';
@@ -22,45 +22,84 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch
+  RHFSwitch,
+  RHFUpload
 } from '../../../../components/hook-form';
-import { getDocumentCategory,  updateDocumentCategory } from '../../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../../components/AddFormButtons';
 import FormHeading from '../../../components/FormHeading';
-import { Cover } from '../../../components/Cover';
+import ViewFormSWitch from '../../../components/ViewFormSwitch';
+import {Cover} from '../../../components/Cover';
 
+// slice
+import { updateDocument } from '../../../../redux/slices/document/document';
+
+import { getDocumentCategories  } from '../../../../redux/slices/document/documentCategory';
+import { getDocumentTypes } from '../../../../redux/slices/document/documentType';
+import { getMachines} from '../../../../redux/slices/products/machine';
+import { getCustomers } from '../../../../redux/slices/customer/customer';
+import { getContacts } from '../../../../redux/slices/customer/contact';
+import { getSites } from '../../../../redux/slices/customer/site';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentCategoryeEditForm() {
+export default function DocumentEditForm() {
 
-  const { documentCategory } = useSelector((state) => state.documentCategory);
+  const { document } = useSelector((state) => state.document);
+  const { documentTypes } = useSelector((state) => state.documentType);
+  const { documentCategories } = useSelector((state) => state.documentCategory);
+  const { customer } = useSelector((state) => state.customer); 
+  const { contacts } = useSelector((state) => state.contact); 
+  const { sites } = useSelector((state) => state.site); 
+
+  const [ documentTypeVal, setDocumentTypeVal] = useState('')
+  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
+  const [ machineVal, setMachineVal] = useState('')
+  const [ customerVal, setCustomerVal] = useState('')
+  const [ siteVal, setSiteVal] = useState('')
+  const [ contactVal, setContactVal] = useState('')
+  const [ descriptionVal, setDescriptionVal] = useState("")
+  const [ customerAccessVal, setCustomerAccessVal] = useState(false)
+  const [ isActive, setIsActive] = useState(false)
+
+  const [ nameVal, setNameVal] = useState("")
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const navigate = useNavigate();
+useEffect(()=>{
+  setNameVal(document?.displayName)
+  setCustomerAccessVal(document?.customerAccess)
+  setIsActive(document?.isActive)
+  setDocumentCategoryVal(document?.docCategory)
+  setDocumentTypeVal(document?.docType)
+  setDescriptionVal(document?.description)
+  // dispatch(getDocumentCategories())
+  dispatch(getDocumentTypes())
+},[dispatch,document])
+
+  const EditCustomerDocumentSchema = Yup.object().shape({
+    displayName: Yup.string().max(50),
+    description: Yup.string().max(10000),
+    // image: Yup.mixed().required("Image Field is required!"),
+    isActive : Yup.boolean(),
+  });
 
   const defaultValues = useMemo(
     () => ({
-      name: documentCategory?.name || '',
-      description: documentCategory?.description || '',
-      isActive : documentCategory?.isActive ,
-      customerAccess: documentCategory?.customerAccess,
+      displayName: nameVal,
+      description: document?.description || "",
+      // image: null,
+      isActive: document?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditDocumentNameSchema = Yup.object().shape({
-    name: Yup.string().max(50),
-    description: Yup.string().max(1500),
-    isActive : Yup.boolean(),
-    customerAccess: Yup.boolean(),
-  });
 
   const methods = useForm({
-    resolver: yupResolver(EditDocumentNameSchema),
+    resolver: yupResolver(EditCustomerDocumentSchema),
     defaultValues,
   });
 
@@ -74,35 +113,79 @@ export default function DocumentCategoryeEditForm() {
 
   const values = watch();
 
-  // useEffect(() => {
-  //   if (site) {
-  //     reset(defaultValues);
-  //   }
-  // }, [site, reset, defaultValues]);
-
-  const toggleCancel = () => 
-  {
-    navigate(PATH_DOCUMENT.documentCategory.view(documentCategory._id))
-
-  };
+  
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateDocumentCategory(documentCategory._id,data));
-      dispatch(getDocumentCategory(documentCategory._id));
-      navigate(PATH_DOCUMENT.documentCategory.view(documentCategory._id))
-      enqueueSnackbar('Document Category updated Successfully!');
+      data.customer = customer._id
+      if(nameVal){
+        data.displayName = nameVal
+      }
+      if(documentTypeVal){
+        data.documentType = documentTypeVal._id
+      }
+      // if(fileCategoryVal){
+      //   data.category = fileCategoryVal._id
+      // }
+      if(descriptionVal){
+        data.description = descriptionVal
+      }
+        data.customerAccess = customerAccessVal
+        data.isActive = isActive
+      await dispatch(updateDocument(document?._id,data,customer._id));
+      enqueueSnackbar('Document saved successfully!');
+      navigate(PATH_DASHBOARD.document.view(document._id))
+      setDescriptionVal("")
+      setNameVal("")
+      setDocumentCategoryVal("")
+      setDocumentTypeVal("")
       reset();
     } catch (err) {
-      enqueueSnackbar('Document Category Updating failed!', { variant: `error` });
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
 
+  const toggleCancel = () => 
+  {
+    navigate(PATH_DASHBOARD.document.dashboard)
+  };
+
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      const file = acceptedFiles[0];
+
+      const newFile = Object.assign(file, {
+        preview: URL.createObjectURL(file),
+      });
+
+      if (file) {
+        setValue('image', newFile, { shouldValidate: true });
+      }
+    },
+    [setValue]
+  );
+
+  const handleRemoveFile = () => {
+    setValue('cover', null);
+  };
+
+  const handleChange = () => {
+    setCustomerAccessVal(!customerAccessVal);
+  };
+  const handleIsActiveChange = () => {
+    setIsActive(!isActive);
+  };
+
+  const handleChangeDescription = (event) => {
+    setDescriptionVal(event.target.value);
+  };
 
   return (
-    <Container maxWidth={false }>
-        <Card
+    <Container maxWidth={false}>
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+    <Card
           sx={{
             mb: 3,
             height: 160,
@@ -110,48 +193,94 @@ export default function DocumentCategoryeEditForm() {
             // mt: '24px',
           }}
         >
-          <Cover name={documentCategory?.name} /> 
+          <Cover
+            name={document?.displayName}
+            icon="ph:users-light"
+          />
         </Card>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={4}>
-            <Grid item xs={18} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
-                  <FormHeading heading='Edit Document Category'/>
-                  <RHFTextField name="name" label="Name" />
-                  <RHFTextField name="description" label="Description" minRows={8} multiline />
-                  <Grid display="flex">
-                  <RHFSwitch
-                    name="customerAccess"
-                    labelPlacement="start"
-                    label={
-                      <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                          Customer Access
-                        </Typography>
-                      </>
-                    } 
-                  />
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                          Active
-                        </Typography>
-                      </>
-                    } 
-                  />
-                  
+      <Grid container spacing={4}>
+        <Grid item xs={18} md={12}>
+          <Card sx={{ p: 3 }}>
+            <Stack spacing={3}>
+              <FormHeading heading='Edit Document'/>
+              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
+            <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
+
+              
+
+              <Autocomplete
+                // freeSolo
+                // disabled
+                value={documentTypeVal || null}
+                options={documentTypes}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setDocumentTypeVal(newValue);
+                  }
+                  else{  
+                    setDocumentTypeVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} required label="Document Type" />}
+                ChipProps={{ size: 'small' }}
+              />
+              
+              <Autocomplete
+                // freeSolo
+                disabled
+                value={documentCategoryVal || null}
+                options={documentCategories}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setDocumentCategoryVal(newValue);
+                  }
+                  else{  
+                    setDocumentCategoryVal("");
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} required label="Document Category" />}
+                ChipProps={{ size: 'small' }}
+              />
+
+              </Box>
+              <RHFTextField value={descriptionVal} name="description" label="Description" onChange={handleChangeDescription} minRows={3} multiline />
+              <Grid container lg={12} >
+                <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
+                        Customer Access
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
                   </Grid>
-                </Stack>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-              </Card>
-                  
-            </Grid>
-          </Grid>
-        </FormProvider>
+
+                  <Grid  display="flex" justifyContent="flex-end">
+                   <Typography variant="body1" sx={{ pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
+                        isActive
+                      </Typography>
+                    <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
+                  </Grid>
+              </Grid>
+              
+              {/* <RHFUpload 
+                  name="image"
+                  maxSize={3145728}
+                  onDrop={handleDrop}
+                  onRemove={handleDrop}
+               /> */}
+              {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+            </Stack>
+          </Card>
+        </Grid>
+      </Grid>
+    </FormProvider>
     </Container>
   );
 }

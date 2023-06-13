@@ -136,6 +136,15 @@ export function addDocument(customerId , machineId , params) {
             }
             formData.append('customerAccess', params.customerAccess);
             formData.append('isActive', params.isActive);
+          if(params.machineModel){
+            formData.append('machineModel', params?.machineModel);
+          }
+          if(params.contact){
+            formData.append('contact', params.contact);
+          }
+          if(params.site){
+            formData.append('site', params.site);
+          }
           if(params?.displayName){
             formData.append('displayName', params?.displayName);
             formData.append('name', params?.displayName);
