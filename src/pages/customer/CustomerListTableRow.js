@@ -22,7 +22,7 @@ import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Label from '../../components/label';
-
+import LinkTableCell from '../components/LinkTableCell';
 import { useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -97,20 +97,7 @@ export default function CustomerListTableRow({
             ''
           )}
         </TableCell>
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body2"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {' '}
-              {name}
-            </Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell align='left' onClick={onViewRow} param={name} />
         <TableCell>{tradingName}</TableCell>
         <TableCell>
           {Object.values(address ?? {})

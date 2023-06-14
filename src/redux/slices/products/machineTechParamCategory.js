@@ -133,7 +133,10 @@ export function deleteTechparamcategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparamcategories/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${id}` , 
+      {
+          isArchived: true, 
+      });
       // const response = await axios.delete(`${CONFIG.SERVER_URL}machines/suppliers`,ids);
       dispatch(slice.actions.setResponseMessage(response.data));
       // get again suppliers //search

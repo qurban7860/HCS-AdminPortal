@@ -131,7 +131,10 @@ export function deleteMachinestatus(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/statuses/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);

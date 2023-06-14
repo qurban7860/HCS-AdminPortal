@@ -244,6 +244,58 @@ export function getDocuments() {
   };
 }
 
+// ---------------------------- GET CUSTOMER DOCUMENTS------------------------------------
+
+export function getCustomerDocuments(customerId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          customer:customerId,
+          machine: null,
+        }
+      }
+      );
+      // console.log("response : ", response);
+      // if(regEx.test(response.status)){
+      dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
+      // }
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// -----------------------------------Get Machine Document-----------------------------------
+
+export function getMachineDocuments(machineId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          machine: machineId
+        }
+      }
+      );
+      console.log(response);
+      dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
 // -----------------------------------Get Active Documents-----------------------------------
 
 export function getActiveDocuments() {

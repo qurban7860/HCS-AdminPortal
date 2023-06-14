@@ -154,7 +154,10 @@ export function deleteMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
 
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/models/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${id}` , 
+      {
+          isArchived: true, 
+      });
 
       return response
   };

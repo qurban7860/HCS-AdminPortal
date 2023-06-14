@@ -22,7 +22,7 @@ import Iconify from '../../../components/iconify';
 import MenuPopover from '../../../components/menu-popover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
-
+import LinkTableCell from '../../components/LinkTableCell';
 import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -84,11 +84,7 @@ export default function DocumentTypeListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell >
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap  variant="body1" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell align="left" param={name} onClick={onViewRow} />
         {/* <TableCell>{description}</TableCell> */}
         <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
         <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  

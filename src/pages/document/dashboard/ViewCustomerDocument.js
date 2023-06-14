@@ -272,8 +272,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                         maxWidth="md"
                         open={onPreview}
                         onClose={handleClosePreview}
-                        aria-labelledby="keep-mounted-modal-title"
-                        aria-describedby="keep-mounted-modal-description"
+                        keepMounted
+                        aria-describedby="alert-dialog-slide-description"
                         >
                         <Grid
                           container
@@ -444,8 +444,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
       <Dialog
         open={openCustomer}
         onClose={handleCloseCustomer}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
       >
         <Grid
           container
