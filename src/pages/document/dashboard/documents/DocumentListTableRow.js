@@ -14,7 +14,7 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { styled } from '@mui/system';
+import { styled, alpha ,useTheme } from '@mui/material/styles';
 import { fDate } from '../../../../utils/formatTime';
 import { fCurrency } from '../../../../utils/formatNumber';
 // components
@@ -22,6 +22,8 @@ import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 import Label from '../../../../components/label';
+import LinkTableCell from '../../../components/LinkTableCell';
+
 
 import { useSelector } from '../../../../redux/store';
 
@@ -55,7 +57,7 @@ export default function DocumentListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { displayName, docType , docCategory , customerAccess, isActive, createdAt } = row;
+  const { displayName, docType , machine, customer, docCategory , customerAccess, isActive, createdAt } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -84,10 +86,9 @@ export default function DocumentListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell align='left'>
-            <Link noWrap  variant="body1" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {displayName}</Link>
-    
-        </TableCell>
+        <LinkTableCell align='left' param={displayName} onClick={onViewRow}/>
+        <TableCell align="center" >{machine?.serialNo}</TableCell>
+        <TableCell align="center" >{customer?.name}</TableCell>
         <TableCell align="center" >{docType?.name}</TableCell>
         <TableCell align="center" >{docCategory?.name}</TableCell>
         <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  

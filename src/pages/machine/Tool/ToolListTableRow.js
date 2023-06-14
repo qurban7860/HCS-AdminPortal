@@ -12,6 +12,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 import { useSelector } from '../../../redux/store';
+import LinkTableCell from '../../components/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -64,22 +65,8 @@ export default function ToolListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body1"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {' '}
-              {name}{' '}
-            </Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell align='left' onClick={onViewRow} param={name} />
         <TableCell align="center">
-          {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>

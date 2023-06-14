@@ -119,7 +119,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   // },[machineVal])
 
   const AddMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().max(6).required('Serial Number is required'),
+    serialNo: Yup.string().max(12).required('Serial Number is required'),
     name: Yup.string().max(30),
     // parentMachine: Yup.string(),
     // parentSerialNo: Yup.string(),

@@ -186,6 +186,29 @@ export function getActiveMachines() {
   };
 }
 
+// ----------------------------get Active Model Machines------------------------------------------
+
+export function getActiveModelMachines(modelId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          machineModel: modelId
+        }
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function getCustomerMachines(customerId) {

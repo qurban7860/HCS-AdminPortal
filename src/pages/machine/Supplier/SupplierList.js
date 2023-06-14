@@ -49,7 +49,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'ContactName', label: 'ContactName', align: 'left' },
+  { id: 'ContactName', label: 'Contact Name', align: 'left' },
   { id: 'city', label: 'City', align: 'left' },
   { id: 'country', label: 'Country', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },

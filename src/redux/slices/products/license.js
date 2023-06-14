@@ -164,7 +164,7 @@ export function deleteLicense(machineId, id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`, {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses/${id}`, {
         isArchived: true, 
       });
      

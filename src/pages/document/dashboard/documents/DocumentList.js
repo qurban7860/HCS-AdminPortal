@@ -38,8 +38,8 @@ import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
 import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
-import DocumentCategoryListTableRow from './DocumentListTableRow';
-import DocumentCategoryListTableToolbar from './DocumentListTableToolbar';
+import DocumentListTableRow from './DocumentListTableRow';
+import DocumentListTableToolbar from './DocumentListTableToolbar';
 import { getDocuments, deleteDocument } from '../../../../redux/slices/document/document';
 import { Cover } from '../../../components/Cover';
 import { fDate } from '../../../../utils/formatTime';
@@ -49,6 +49,8 @@ import { fDate } from '../../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'machine', label: 'Machine', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
   { id: 'doctype', label: 'Type', align: 'center' },
   { id: 'doccategory', label: 'Category', align: 'center' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
@@ -96,7 +98,7 @@ export default function DocumentList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { documents, isLoading, error, initial, responseMessage } = useSelector((state) => state.document);
-
+// console.log("documents : ",documents)
   useLayoutEffect(() => {
     dispatch(getDocuments());
   }, [dispatch]);
@@ -206,7 +208,7 @@ export default function DocumentList() {
         </Card>
 
         <Card sx={{ mt: 3 }}>
-          <DocumentCategoryListTableToolbar
+          <DocumentListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
@@ -256,7 +258,7 @@ export default function DocumentList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <DocumentCategoryListTableRow
+                        <DocumentListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}

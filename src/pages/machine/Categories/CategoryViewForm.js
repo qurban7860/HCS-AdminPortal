@@ -6,6 +6,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
 // redux
 import { getCategory, setCategoryEditFormVisibility, deleteCategory } from '../../../redux/slices/products/category';
+import { useSnackbar } from '../../../components/snackbar';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // Iconify
@@ -30,6 +31,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
     dispatch(setCategoryEditFormVisibility(true));
     navigate(PATH_MACHINE.categories.categoryedit(id));
   }
+  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
   const { category , editFormVisibility } = useSelector((state) => state.category);
@@ -59,6 +61,8 @@ export default function CategoryViewForm({ currentCategory = null }) {
 
     const onDelete= async () => {
       await dispatch(deleteCategory(id));
+      enqueueSnackbar("Category Deleted Successfullty!")
+      navigate(PATH_MACHINE.categories.list)
     }
   return (
     <Card sx={{p:2}}>

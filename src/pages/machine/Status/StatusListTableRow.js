@@ -7,6 +7,7 @@ import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate } from '../../../utils/formatTime';
+import LinkTableCell from '../../components/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -52,21 +53,8 @@ export default function StatusListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body1"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell onClick={onViewRow}  align='left' param={name}/>
         <TableCell align="center">
-          {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>

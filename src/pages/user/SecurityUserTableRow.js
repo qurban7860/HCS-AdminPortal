@@ -8,6 +8,7 @@ import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import LinkTableCell from '../components/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -54,27 +55,11 @@ export default function SecurityUserTableRow({ row, selected, onEditRow, onViewR
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body2"
-              onClick={onViewRow}
-              sx={{
-                cursor: 'pointer',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-              >
-              <CustomAvatar name={name} alt={name} sx={{ mr: 1 }} />
-              <Typography variant="body2" noWrap>
-                {`${name}`}
-              </Typography>
-            </Link>
+          <Stack direction="row" alignItems="center" >
+              <CustomAvatar name={name} alt={name}  sx={{ml:0.5,my:0.3}}/>
+            <LinkTableCell align='left' onClick={onViewRow} param={name} />
+            
           </Stack>
-        </TableCell>
 
         <TableCell align="left">{email}</TableCell>
 

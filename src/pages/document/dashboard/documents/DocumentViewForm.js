@@ -44,7 +44,7 @@ export default function Document() {
   const { document } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  console.log("document : ",document)
+  // console.log("document : ",document)
   const [ openCustomer, setOpenCustomer] = useState(false)
   const [ openMachine, setOpenMachine] = useState(false)
 
@@ -302,8 +302,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                         maxWidth="md"
                         open={onPreview}
                         onClose={handleClosePreview}
-                        aria-labelledby="keep-mounted-modal-title"
-                        aria-describedby="keep-mounted-modal-description"
+                        keepMounted
+                        aria-describedby="alert-dialog-slide-description"
                         >
                         <Grid
                           container
@@ -472,10 +472,11 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
         </Card>
       </Grid>
       <Dialog
+        disableEnforceFocus
         open={openCustomer}
         onClose={handleCloseCustomer}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
       >
         <Grid
           container
@@ -602,11 +603,12 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
         </Grid>
       </Dialog>
       <Dialog
+        disableEnforceFocus
         maxWidth="md"
         open={openMachine}
         onClose={handleCloseMachine}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
+        keepMounted
+        aria-describedby="alert-dialog-slide-description"
         >
         <Grid
           container

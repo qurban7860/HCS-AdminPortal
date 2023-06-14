@@ -21,7 +21,7 @@ import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-
+import LinkTableCell from '../../components/LinkTableCell';
 import { useSelector } from '../../../redux/store';
 
 
@@ -72,23 +72,8 @@ export default function ModelListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
 
-        <TableCell>
-          <Stack direction="row" alignItems="left" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="body1"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {name}
-            </Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell align='left' onClick={onViewRow} param={name} />
         <TableCell align="left">{category?.name || ''}</TableCell>
 
         <TableCell align="center">

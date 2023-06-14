@@ -14,15 +14,14 @@ import { Switch,Radio, RadioGroup,FormControlLabel,FormLabel, Box, Button, Card,
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
-import { getActiveDocuments, getDocuments, addDocument} from '../../../../redux/slices/document/document';
+import { getActiveDocuments, getDocuments, addDocument, getCustomerDocuments,getMachineDocuments} from '../../../../redux/slices/document/document';
 import { setDocumentCategoryFormVisibility , getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import { setDocumentTypeFormVisibility , getActiveDocumentTypes } from '../../../../redux/slices/document/documentType';
 import { addDocumentVersion, updateDocumentVersion } from '../../../../redux/slices/document/documentVersion';
-import { getActiveMachines } from '../../../../redux/slices/products/machine';
+import { getActiveMachines, resetMachines, getActiveModelMachines } from '../../../../redux/slices/products/machine';
 import { getActiveMachineModels } from '../../../../redux/slices/products/model';
 import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
-import { getActiveContacts } from '../../../../redux/slices/customer/contact';
-import { getActiveSites } from '../../../../redux/slices/customer/site';
+import { getActiveSites, resetSites } from '../../../../redux/slices/customer/site';
 // components
 import Iconify from '../../../../components/iconify';
 import { useSnackbar } from '../../../../components/snackbar';
@@ -71,7 +70,6 @@ export default function DocumentAddForm({currentDocument}) {
   // ------------------ customer values states ------------------------------
   const [ customerVal, setCustomerVal] = useState("")
   const [ customerSiteVal, setCustomerSiteVal] = useState("")
-  const [ customerContactVal, setCustomerContactVal] = useState("")
   // ------------------ machine values states ------------------------------
   const [ machineVal, setMachineVal] = useState("")
   const [ machineModelVal, setMachineModelVal] = useState("")
@@ -94,23 +92,55 @@ export default function DocumentAddForm({currentDocument}) {
     setDocumentTypeVal("")
     setDocumentCategoryVal("")
     setCustomerAccessVal(false)
+    setCustomerSiteVal("")
+    setCustomerVal("")
     setReadOnlyVal(false)
     setDescriptionVal("")
-    dispatch(getActiveDocuments())
+    setMachineVal("")
+    setMachineModelVal("")
     dispatch(getActiveDocumentTypes());
     dispatch(getActiveDocumentCategories());
-    dispatch(getActiveCustomers());
-    dispatch(getActiveMachines());
-    dispatch(getActiveMachineModels());
+    // dispatch(getActiveCustomers());
+    // dispatch(getActiveMachines());
+    // dispatch(getActiveMachineModels());
   },[dispatch,])
+
+  useEffect(()=>{
+    if(documentDependency === "machine" && activeMachines && activeMachines.length < 1){
+      dispatch(getActiveMachines());
+      dispatch(getActiveMachineModels());
+    }
+    if(documentDependency === "customer" && activeCustomers && activeCustomers.length < 1){
+      dispatch(getActiveCustomers());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch ,documentDependency])
+
+  useEffect(()=>{
+    if(documentDependency === "machine" && machineModelVal ){
+      dispatch(getActiveModelMachines(machineModelVal._id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[dispatch, machineModelVal])
 
   useEffect(()=>{
     if(customerVal?._id){
       dispatch(getActiveSites(customerVal._id))
-      dispatch(getActiveContacts(customerVal._id))
     }
   },[dispatch ,customerVal])
- // a note can be archived.  
+
+  useEffect(()=>{
+    if(customerVal?._id && selectedValue === "newVersion"){
+      dispatch(getCustomerDocuments(customerVal._id))
+    }
+  },[dispatch , customerVal , selectedValue]);
+
+  useEffect(()=>{
+    if(machineVal?._id && selectedValue === "newVersion"){
+      dispatch(getMachineDocuments(machineVal._id))
+    }
+  },[dispatch , machineVal , selectedValue]);
+
   const AddDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
@@ -168,9 +198,6 @@ export default function DocumentAddForm({currentDocument}) {
         data.customerAccess = false
         if(customerSiteVal){
           data.site = customerSiteVal._id
-        }
-        if(customerContactVal){
-          data.contact = customerContactVal._id
         } 
         if(machineModelVal){
           data.machineModel = machineModelVal._id
@@ -214,7 +241,6 @@ export default function DocumentAddForm({currentDocument}) {
         setMachineModelVal("")
         setCustomerVal("")
         setCustomerSiteVal("")
-        setCustomerContactVal("")
         reset();
       } catch(error){
         enqueueSnackbar('Machine Document Save failed!', { variant: `error` });
@@ -326,6 +352,141 @@ export default function DocumentAddForm({currentDocument}) {
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
+                <FormControl >
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-controlled-radio-buttons-group"
+                      name="controlled-radio-buttons-group"
+                      value={documentDependency}
+                      onChange={handleDependencyChange}
+                    >
+                    <Grid item xs={12} sm={6}>
+                      <FormControlLabel item sm={6} value="customer" control={<Radio />} label="Customer" />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControlLabel item sm={6} value="machine" control={<Radio />} label="Machine" />
+                    </Grid>
+                    </RadioGroup>
+                  </FormControl>
+                  { documentDependency === "customer" &&
+                <Grid container lg={12}>
+                  <Grid container spacing={2}>
+                    <Grid item lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        value={customerVal || null}
+                        options={activeCustomers}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setCustomerVal(newValue);
+                            setContactDisabled(false);
+                            setSiteDisabled(false);
+                            setCustomerSiteVal("");
+                            setMachineVal("");
+                            setMachineModelVal("");
+                          } else {
+                            setCustomerVal('');
+                            setContactDisabled(false);
+                            setSiteDisabled(false);
+                            setCustomerSiteVal("");
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Customer" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>
+                    <Grid item lg={6}>
+                        <Autocomplete
+                          // freeSolo
+                          disabled={siteDisabled}
+                          value={customerSiteVal|| null}
+                          options={activeSites}
+                          isOptionEqualToValue={(option, value) => option.name === value.name}
+                          getOptionLabel={(option) => `${option.name ? option.name : ""}`}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              setCustomerSiteVal(newValue);
+                              setContactDisabled(true);
+                            } else {
+                              setCustomerSiteVal('');
+                              setContactDisabled(false);
+                            }
+                          }}
+                          renderOption={(props, option) => (
+                            <li {...props} key={option._id}>
+                              {option.name}
+                            </li>
+                          )}
+                          id="controllable-states-demo"
+                          renderInput={(params) => <TextField {...params} required label="Site" />}
+                          ChipProps={{ size: 'small' }}
+                        />
+                      </Grid>
+                  </Grid>
+                </Grid>}
+
+                { documentDependency === "machine" &&
+                <Grid container lg={12}>
+                  <Grid container spacing={2}>
+                  <Grid item lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
+                        value={machineModelVal || null}
+                        options={activeMachineModels}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) => `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setMachineModelVal(newValue);
+                            setMachineVal("")
+                            setCustomerVal("");
+                          } else {
+                            setMachineModelVal('');
+                            setMachineVal("")
+                          }
+                        }}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>
+                            {option.name}
+                          </li>
+                        )}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Model" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>
+
+                    <Grid item lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        value={machineVal || null}
+                        options={activeMachines}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) =>  `${option.serialNo ? option.serialNo : ''}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setMachineVal(newValue);
+                          } else {
+                            setMachineVal('');
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} label="Machine" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>
+                    
+                  </Grid>
+                </Grid>}
+
+              {/* { selectedValue === "new" && */}
                   <FormControl >
                     <RadioGroup
                       row
@@ -342,6 +503,7 @@ export default function DocumentAddForm({currentDocument}) {
                     </Grid>
                     </RadioGroup>
                   </FormControl>
+                  {/* } */}
 
                   { selectedValue === "newVersion" &&
                   <Grid container lg={12}>
@@ -421,170 +583,6 @@ export default function DocumentAddForm({currentDocument}) {
                           </Grid>
                       </RadioGroup>
                   </FormControl>}
-
-                  { selectedValue === "new" &&
-                <FormControl >
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
-                      value={documentDependency}
-                      onChange={handleDependencyChange}
-                    >
-                    <Grid item xs={12} sm={6}>
-                      <FormControlLabel item sm={6} value="customer" control={<Radio />} label="Customer" />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControlLabel item sm={6} value="machine" control={<Radio />} label="Machine" />
-                    </Grid>
-                    </RadioGroup>
-                  </FormControl>}
-
-                { selectedValue === "new"  &&  documentDependency === "customer" &&
-                <Grid container lg={12}>
-                  <Grid container spacing={2}>
-                    <Grid item lg={6}>
-                      <Autocomplete
-                        // freeSolo
-                        value={customerVal || null}
-                        options={activeCustomers}
-                        // isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setCustomerVal(newValue);
-                            setContactDisabled(false);
-                            setSiteDisabled(false);
-                            setCustomerContactVal("");
-                            setCustomerSiteVal("");
-                          } else {
-                            setCustomerVal('');
-                            setContactDisabled(false);
-                            setSiteDisabled(false);
-                            setCustomerContactVal("");
-                            setCustomerSiteVal("");
-                          }
-                        }}
-                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Customer" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    </Grid>
-                    <Grid item lg={12}>
-                      <Typography variant='body2'>Please select site or contact only!</Typography>
-                    </Grid>
-                    <Grid item lg={12} container spacing={2} >
-                      <Grid item lg={6}>
-                        <Autocomplete
-                          // freeSolo
-                          disabled={siteDisabled}
-                          value={customerSiteVal|| null}
-                          options={activeSites}
-                          isOptionEqualToValue={(option, value) => option.name === value.name}
-                          getOptionLabel={(option) => `${option.name ? option.name : ""}`}
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              setCustomerSiteVal(newValue);
-                              setContactDisabled(true);
-                            } else {
-                              setCustomerSiteVal('');
-                              setContactDisabled(false);
-                            }
-                          }}
-                          renderOption={(props, option) => (
-                            <li {...props} key={option._id}>
-                              {option.name}
-                            </li>
-                          )}
-                          id="controllable-states-demo"
-                          renderInput={(params) => <TextField {...params} required label="Site" />}
-                          ChipProps={{ size: 'small' }}
-                        />
-                      </Grid>
-
-                      <Grid item lg={6}>
-                        <Autocomplete
-                          // freeSolo
-                          disabled={contactDisabled}
-                          value={customerContactVal || null}
-                          options={activeContacts}
-                          isOptionEqualToValue={(option, value) => option.name === value.name}
-                          getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              setCustomerContactVal(newValue);
-                              setSiteDisabled(true);
-                            } else {
-                              setCustomerContactVal('');
-                              setSiteDisabled(false);
-                            }
-                          }}
-                          renderOption={(props, option) => (
-                            <li {...props} key={option._id}>{`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}</li>
-                          )}
-                          id="controllable-states-demo"
-                          renderInput={(params) => <TextField {...params} required label="Contact" />}
-                          ChipProps={{ size: 'small' }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>}
-
-                { selectedValue === "new"  &&  documentDependency === "machine" &&
-                <Grid container lg={12}>
-                  <Grid container spacing={2}>
-                    <Grid item lg={6}>
-                      <Autocomplete
-                        // freeSolo
-                        value={machineVal || null}
-                        options={activeMachines}
-                        // isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) =>  `${option.serialNo ? option.serialNo : ''}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setMachineVal(newValue);
-                            // setMachineModelVal(newValue.machineModel);
-                          } else {
-                            setMachineVal('');
-                            // setMachineModelVal('');
-                          }
-                        }}
-                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Machine" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <Autocomplete
-                        // freeSolo
-                        disabled={readOnlyVal}
-                        // readOnly={readOnlyVal}
-                        value={machineModelVal || null}
-                        options={activeMachineModels}
-                        isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) => `${option.name ? option.name : ""}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setMachineModelVal(newValue);
-                          } else {
-                            setMachineModelVal('');
-                          }
-                        }}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>
-                            {option.name}
-                          </li>
-                        )}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Model" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    </Grid>
-                  </Grid>
-                </Grid>}
 
                 { selectedValue === "new"   &&
                 <RHFTextField

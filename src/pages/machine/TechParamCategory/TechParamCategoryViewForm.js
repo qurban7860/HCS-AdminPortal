@@ -54,8 +54,8 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
     );
     const onDelete = async () => {
       try{
-        await dispatch(deleteTechparamcategory(id))
-      enqueueSnackbar('Delete Success!');
+        await dispatch(deleteTechparamcategory(techparamcategory._id))
+      enqueueSnackbar('Deleted Successfully!');
         navigate(PATH_MACHINE.techParam.list)
       }catch(error){
         console.log(error);
