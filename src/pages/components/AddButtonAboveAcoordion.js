@@ -1,25 +1,63 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, DialogTitle, Dialog, InputAdornment,TextField } from '@mui/material';
+import { Button, Stack } from '@mui/material';
 import Iconify from '../../components/iconify';
+import ConfirmDialog from '../../components/confirm-dialog';
+
+export default function AddButtonAboveAccordion({
+  name,
+  toggleChecked,
+  FormVisibility,
+  toggleCancel,
+}) {
+  const [openConfirm, setOpenConfirm] = useState(false);
+
+  const handleOpenConfirm = () => {
+    if (FormVisibility) {
+      setOpenConfirm(true);
+    } else {
+      toggleChecked();
+    }
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+    // toggleCancel();
+  };
+  const onConfirm = () => {
+    setOpenConfirm(false);
+    toggleCancel();
+  };
+  return (
+    <>
+      <Button
+        onClick={handleOpenConfirm}
+        variant="contained"
+        color={!FormVisibility ? 'primary' : 'error'}
+        startIcon={
+          !FormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+        }
+      >
+        {!FormVisibility ? name : 'Close Add'}
+      </Button>
+      <ConfirmDialog
+        open={openConfirm}
+        onClose={handleCloseConfirm}
+        title="Cancel"
+        content="Are you sure you want to cancel?"
+        action={
+          <Button variant="contained" color="error" onClick={onConfirm}>
+            Confirm
+          </Button>
+        }
+      />
+    </>
+  );
+}
 
 AddButtonAboveAccordion.propTypes = {
   name: PropTypes.string,
   FormVisibility: PropTypes.bool,
   toggleChecked: PropTypes.func,
-  };
-export default function AddButtonAboveAccordion({name,toggleChecked,FormVisibility}) {
-    return (
-      <>
-        <Stack alignItems="flex-end" sx={{  px: 4,mb:2, mt:-1 }}>
-            <Button
-                onClick={toggleChecked}
-                variant="contained"
-                startIcon={!FormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />}
-                >
-                {name} 
-            </Button>
-        </Stack>
-      </>
-    )
-}
+  toggleCancel: PropTypes.func,
+};

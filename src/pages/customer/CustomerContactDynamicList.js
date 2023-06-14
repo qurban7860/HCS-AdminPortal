@@ -19,6 +19,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import ViewFormField from '../components/ViewFormField';
@@ -41,7 +42,6 @@ import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
-import EmptyContent from '../../components/empty-content';
 import Scrollbar from '../../components/scrollbar';
 
 // ----------------------------------------------------------------------
@@ -86,6 +86,7 @@ export default function CustomerContactList(currentContact = null) {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [activeCardIndex, setCardActiveIndex] = useState(null);
   const [currentContactData, setCurrentContactData] = useState({});
   const [expanded, setExpanded] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -102,11 +103,21 @@ export default function CustomerContactList(currentContact = null) {
 
   const toggleChecked = () => {
     setChecked((value) => !value);
-    dispatch(
-      setContactFormVisibility(
-        !checked ? { contactFormVisibility: true } : { contactFormVisibility: false }
-      )
-    );
+    if (checked) {
+      dispatch(setContactFormVisibility(false));
+    } else {
+      dispatch(setContactFormVisibility(true));
+      setIsExpanded(false);
+    }
+  };
+
+  const toggleCancel = () => {
+    dispatch(setContactFormVisibility(false));
+    setChecked(false);
+  };
+
+  const handleActiveCard = (index) => {
+    setCardActiveIndex(index);
   };
 
   const handleOpenEditContact = (index) => {
@@ -151,11 +162,6 @@ export default function CustomerContactList(currentContact = null) {
 
   useEffect(() => {
     if (initial) {
-      // if (contacts && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // } else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(contacts);
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
@@ -178,16 +184,13 @@ export default function CustomerContactList(currentContact = null) {
 
   return (
     <>
-      <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-        <Button
-          onClick={toggleChecked}
-          variant="contained"
-          startIcon={
-            !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
-          }
-        >
-          New Contact
-        </Button>
+      <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
+        <AddButtonAboveAccordion
+          name="New Contact"
+          toggleChecked={toggleChecked}
+          FormVisibility={formVisibility}
+          toggleCancel={toggleCancel}
+        />
         <Grid container spacing={1}>
           <Breadcrumbs separator="›" aria-label="breadcrumb">
             <Link
@@ -215,12 +218,12 @@ export default function CustomerContactList(currentContact = null) {
               {Breadcrumbs.separator === activeIndex ? '›' : ''}
               {contactEditFormVisibility
                 ? `Edit ${currentContactData.firstName}`
-                : currentContactData.firstName}
+                : isExpanded && currentContactData.firstName}
+              {formVisibility && !isExpanded && 'Add new contact'}
             </Link>
           </Breadcrumbs>
         </Grid>
       </Stack>
-
       <Grid
         container
         spacing={1}
@@ -229,39 +232,59 @@ export default function CustomerContactList(currentContact = null) {
         grid-template-rows="repeat(3, 1fr)"
         grid-template-columns="repeat(3, 1fr)"
       >
-        <Grid item sm={12} lg={4.5}>
+        <Grid item sm={12} lg={5}>
           <Scrollbar
+            snap
+            snapType="mandatory"
+            snapAlign="start"
             sx={{
               height: { xs: 'calc(100vh - 200px)', md: 'calc(100vh - 200px)' },
+              scrollSnapType: 'y mandatory',
+              scrollSnapAlign: 'start',
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': { display: 'none' },
+              '& .simplebar-content': { height: { xs: 'calc(100vh - 200px)', md: '100%' } },
             }}
           >
             <Grid container justifyContent="flex-start" direction="column" gap={1}>
-              {/* {!formVisibility &&
-                contactEditFormVisibility && */}
-
               {contacts.map((contact, index) => {
                 const borderTopVal = index !== 0 ? '0px solid white' : '';
                 return (
                   <>
                     {index !== activeIndex && (
-                      <Grid item key={index} sm={12} lg={5} display="block">
+                      <Grid
+                        item
+                        key={index}
+                        sm={12}
+                        lg={5}
+                        display="block"
+                        onClick={() => handleActiveCard(index)}
+                      >
                         <Card
-                          raised
                           sx={{
+                            border: activeCardIndex === index && '2px solid #D9D9D9',
+                            boxShadow:
+                              activeCardIndex === index && '0px 4px 4px rgba(127, 5, 35, 0.25)',
+                            opacity: activeCardIndex === index ? 1 : 0.6,
+                            backgroundColor: activeCardIndex === index && '#F9F9F9',
                             display: 'flex',
                             height: '200px',
                             width: '450px',
-                            opacity: { activeIndex } === index ? '0.5' : '1',
                           }}
                         >
                           <CardActionArea active={activeIndex === index}>
                             <Link
                               onClick={() => {
                                 setCurrentContactData(contact);
-                                // handleExpand(index);
-                                if (!isExpanded) {
+                                if (!isExpanded && !formVisibility) {
                                   handleExpand(index);
-                                  setContactFormVisibility(false);
+                                  setContactFormVisibility(!formVisibility);
+                                } else if (
+                                  isExpanded &&
+                                  currentContactData !== contact &&
+                                  !formVisibility
+                                ) {
+                                  handleExpand(index);
                                 } else {
                                   setIsExpanded(false);
                                 }
@@ -278,7 +301,11 @@ export default function CustomerContactList(currentContact = null) {
                                   item
                                   lg={6}
                                   justifyContent="center"
-                                  sx={{ display: 'block', textAlign: 'center', width: '200px' }}
+                                  sx={{
+                                    display: 'block',
+                                    textAlign: 'center',
+                                    width: '200px',
+                                  }}
                                 >
                                   <CardContent
                                     component={Stack}
@@ -306,7 +333,7 @@ export default function CustomerContactList(currentContact = null) {
                                       component="img"
                                       sx={{
                                         height: '250px',
-                                        opacity: '0.8',
+                                        opacity: '0.5',
                                         display: 'flex',
                                         zIndex: '-1',
                                         position: 'absolute',
@@ -318,7 +345,7 @@ export default function CustomerContactList(currentContact = null) {
                                         backgroundColor: 'secondary.main',
                                         objectFit: 'cover',
                                       }}
-                                      // image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                      image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
                                       alt="customer's contact cover photo was here"
                                     />
                                   </CardContent>
@@ -344,7 +371,7 @@ export default function CustomerContactList(currentContact = null) {
                                     <Typography variant="body1" color="text.secondary">
                                       {contact.title ? contact.title : <br />}
                                     </Typography>
-                                    <Typography variant="body1" color="secondary.main" pt={2}>
+                                    <Typography variant="overline" color="text.secondary" pt={2}>
                                       {contact.email ? contact.email : <br />}
                                     </Typography>
                                   </CardContent>
@@ -363,7 +390,7 @@ export default function CustomerContactList(currentContact = null) {
         </Grid>
         <Grid
           item
-          lg={7.5}
+          lg={7}
           sx={{
             display: 'flex',
             flexDirection: 'column',
