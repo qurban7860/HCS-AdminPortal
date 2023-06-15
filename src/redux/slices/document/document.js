@@ -104,7 +104,13 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
-
+    // RESET Active Documents
+    resetActiveDocuments(state){
+      state.activeDocuments = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    }
   },
 });
 
@@ -118,6 +124,7 @@ export const {
   setDocumentEdit,
   resetDocument,
   resetDocuments,
+  resetActiveDocuments,
   setResponseMessage,
 } = slice.actions;
 
@@ -147,7 +154,9 @@ export function addDocument(customerId , machineId , params) {
           }
           if(params?.displayName){
             formData.append('displayName', params?.displayName);
-            formData.append('name', params?.displayName);
+          }
+          if(params?.name){
+            formData.append('name', params?.name);
           }
           if(params?.description){
             formData.append('description', params?.description);

@@ -60,7 +60,7 @@ const slice = createSlice({
     getMachinemodelSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machinemodel = action.payload;
+      state.machineModel = action.payload;
       state.initial = true;
     },
 
@@ -86,6 +86,13 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    // RESET 
+    resetActiveMachineModels(state){
+      state.activeMachineModels = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -97,6 +104,7 @@ export const {
   setMachinemodelsEditFormVisibility,
   resetMachineModel,
   resetMachineModels,
+  resetActiveMachineModels,
   setResponseMessage,
 } = slice.actions;
 

@@ -117,6 +117,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET Active MACHINE
+    resetActiveMachines(state){
+      state.activeMachines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     // Reset Customer Machines
     resetCustomerMachines(state){
       state.customerMachines = [];
@@ -138,6 +146,7 @@ export const {
   resetCustomerMachines,
   resetMachine,
   resetMachines,
+  resetActiveMachines,
   setResponseMessage,
   setTransferDialogBoxVisibility
 } = slice.actions;
