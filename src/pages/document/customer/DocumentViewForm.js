@@ -22,7 +22,7 @@ import Cover from '../../components/Cover';
 import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
-import ViewFormSWitch from '../../components/ViewFormSwitch';
+import DeleteIconButton from '../../components/DeleteIconButton';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 
@@ -257,24 +257,9 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                       sx={{ position: 'relative', zIndex: '1' }}
                       >
                       <Link>
-                        <IconButton
-                          size="small"
+                     <DeleteIconButton 
                           onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id )}
-                          sx={{
-                            top: 4,
-                            left: 44,
-                            zIndex: 9,
-                            height: "60",
-                            position: 'absolute',
-                            color: (theme) => alpha(theme.palette.common.white, 0.8),
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
-                            },
-                          }}
-                        >
-                          <Iconify icon="material-symbols:delete" width={18} />
-                        </IconButton>
+                        />
                       </Link>
                       <Link>
                         <IconButton
@@ -415,24 +400,9 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                       sx={{ position: 'relative', zIndex: '1' }}
                       >
                       <Link>
-                        <IconButton
-                          size="small"
+                      <DeleteIconButton 
                           onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id)}
-                          sx={{
-                            top: 4,
-                            left: 76,
-                            zIndex: 9,
-                            height: "60",
-                            position: 'absolute',
-                            color: (theme) => alpha(theme.palette.common.white, 0.8),
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
-                            },
-                          }}
-                        >
-                          <Iconify icon="material-symbols:delete" width={18} />
-                        </IconButton>
+                          />
                       </Link>
                       <Link>
                         <IconButton
