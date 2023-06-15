@@ -281,115 +281,79 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               <>
                 <Grid item xs={12} lg={4}>
                   {index !== activeIndex ? (
-                    <AccordionSummary
-                      aria-controls="panel1a-content"
-                      id="panel1a-header"
-                      onClick={handleChange}
-                      // expandIcon={<Avatar alt={site.name} src={site.logo} sx={{ m: 1 }} />}
-                      sx={{
-                        '& .MuiAccordionSummary-content': {
-                          animation: 'transition.expandIn',
-                          ease: 'ease-in',
-                          transition: 'all 0.10s ease-in',
-                        },
-                      }}
-                    >
-                      <Card sx={{ display: 'block', width: 'auto' }}>
-                        <CardActionArea>
-                          <Grid container> {site.name}</Grid>
-                          <ListItem alignItems="flex-start" ScrollbarSize="small">
-                            <Box lg={4} sx={{ display: 'inline-flex' }}>
-                              <Box justifyContent="flex-start" sx={{ width: '200px' }}>
-                                <CardContent sx={{ flex: '1 0 auto' }}>
-                                  <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                                    {site.name.length > 20 ? (
-                                      <Tooltip title={site.name} placement="top">
-                                        <span>{site.name.substring(0, 20)}...</span>
-                                      </Tooltip>
-                                    ) : (
-                                      site.name
-                                    )}
-                                  </Typography>
-                                  <Typography variant="body2">
-                                    {site.email ? site.email : <br />}
-                                  </Typography>
-                                </CardContent>
-                              </Box>
-                              <Box lg={4}>
-                                <CardMedia
-                                  component="img"
-                                  sx={{
-                                    width: 200,
-                                    display: 'flex-inline',
-                                    justifyContent: 'flex-end',
-                                    objectFit: 'cover',
-                                  }}
-                                  image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                  alt="customer's site photo was here"
-                                />
-                              </Box>
+                    <Card sx={{ display: 'block', width: 'auto' }}>
+                      <CardActionArea>
+                        <Grid container> {site.name}</Grid>
+                        <ListItem alignItems="flex-start" ScrollbarSize="small">
+                          <Box lg={4} sx={{ display: 'inline-flex' }}>
+                            <Box justifyContent="flex-start" sx={{ width: '200px' }}>
+                              <CardContent sx={{ flex: '1 0 auto' }}>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                                  {site.name.length > 20 ? (
+                                    <Tooltip title={site.name} placement="top">
+                                      <span>{site.name.substring(0, 20)}...</span>
+                                    </Tooltip>
+                                  ) : (
+                                    site.name
+                                  )}
+                                </Typography>
+                                <Typography variant="body2">
+                                  {site.email ? site.email : <br />}
+                                </Typography>
+                              </CardContent>
                             </Box>
-                          </ListItem>
-                        </CardActionArea>
-                      </Card>
-                    </AccordionSummary>
+                            <Box lg={4}>
+                              <CardMedia
+                                component="img"
+                                sx={{
+                                  width: 200,
+                                  display: 'flex-inline',
+                                  justifyContent: 'flex-end',
+                                  objectFit: 'cover',
+                                }}
+                                image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                alt="customer's site photo was here"
+                              />
+                            </Box>
+                          </Box>
+                        </ListItem>
+                      </CardActionArea>
+                    </Card>
                   ) : null}
                 </Grid>
                 <Grid item lg={8}>
                   <Grid container justifyContent="flex-end">
-                    <Accordion
-                      key={site._id}
-                      expanded={expanded === index}
-                      onChange={handleChange(index)}
-                      sx={{
-                        padding: '0px',
-                        borderTop: borderTopVal,
-                        borderBottom: '0px solid white',
-                        boxShadow: 'none',
-                        borderRadius: '0px',
-                        '&:before': {
-                          display: 'none',
-                        },
-                      }}
-                    >
-                      <AccordionDetailsCustom
-                        expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                        aria-controls="panel1a-content"
-                        sx={{ mt: -5 }}
-                      >
-                        <Grid container>
-                          <SiteViewForm currentSite={site} />
-                        </Grid>
-                        <Grid item lg={8} spacing={2}>
-                          {!isMobile && (
-                            <>
-                              <Card>
-                                <CardActionArea>
-                                  {site.lat && site.long ? (
-                                    <GoogleMaps
-                                      lat={site.lat ? site.lat : 0}
-                                      lng={site.long ? site.long : 0}
-                                    />
-                                  ) : (
-                                    ''
-                                  )}
-                                </CardActionArea>
-                              </Card>
-                              <br />
-                              <Card>
-                                <CardActionArea>
-                                  <CardMedia
-                                    component={SiteCarousel}
-                                    image={<SiteCarousel />}
-                                    alt={site.name}
-                                  />
-                                </CardActionArea>
-                              </Card>
-                            </>
-                          )}
-                        </Grid>
-                      </AccordionDetailsCustom>
-                    </Accordion>
+                    <Grid container>
+                      <SiteViewForm currentSite={site} />
+                    </Grid>
+                    <Grid item lg={8} spacing={2}>
+                      {!isMobile && (
+                        <>
+                          <Card>
+                            <CardActionArea>
+                              {site.lat && site.long ? (
+                                <GoogleMaps
+                                  lat={site.lat ? site.lat : 0}
+                                  lng={site.long ? site.long : 0}
+                                />
+                              ) : (
+                                ''
+                              )}
+                            </CardActionArea>
+                          </Card>
+                          <br />
+                          <Card>
+                            <CardActionArea>
+                              <CardMedia
+                                component={SiteCarousel}
+                                image={<SiteCarousel />}
+                                alt={site.name}
+                              />
+                            </CardActionArea>
+                          </Card>
+                        </>
+                      )}
+                    </Grid>
                   </Grid>
                 </Grid>
               </>

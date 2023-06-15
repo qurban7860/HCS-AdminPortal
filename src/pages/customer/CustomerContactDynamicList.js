@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect, useMemo, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -28,7 +29,6 @@ import { getContacts, setContactFormVisibility } from '../../redux/slices/custom
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
-import ContactDialog from './contact/util/ContactDialog';
 import Scrollbar from '../../components/scrollbar';
 import useResponsive from '../../hooks/useResponsive';
 
@@ -97,13 +97,6 @@ const GridBaseCard2 = styled(Grid)(({ theme }) => ({
 export default function CustomerContactList(currentContact = null) {
   const { customer } = useSelector((state) => state.customer);
   const [openContact, setOpenContact] = useState(false);
-  const { dense, page, order, orderBy, rowsPerPage } = useTable({
-    defaultOrderBy: 'createdAt',
-  });
-  const [controlled, setControlled] = useState(false);
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
   const dispatch = useDispatch();
   const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } =
     useSelector((state) => state.contact);
@@ -117,7 +110,6 @@ export default function CustomerContactList(currentContact = null) {
   const [activeCardIndex, setCardActiveIndex] = useState(null);
   const [currentContactData, setCurrentContactData] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
-
   const isMobile = useResponsive('down', 'sm');
 
   const toggleChecked = () => {
@@ -146,14 +138,10 @@ export default function CustomerContactList(currentContact = null) {
   };
 
   const handleExpand = (index) => {
-    // setExpanded(!expanded);
     setIsExpanded(true);
   };
 
-  const handleCloseContact = () => setOpenContact(false);
-
   useLayoutEffect(() => {
-    // dispatch(setFormVisibility(checked));
     if (!formVisibility && !contactEditFormVisibility) {
       dispatch(getContacts(customer._id));
     }
@@ -227,7 +215,6 @@ export default function CustomerContactList(currentContact = null) {
           <Scrollbar
             snap
             snapOffset={100}
-            // if click on scrollbar do not close the accordion
             onClick={(e) => e.stopPropagation()}
             snapAlign="start"
             sx={{
@@ -262,7 +249,6 @@ export default function CustomerContactList(currentContact = null) {
                           width: { xs: '100%', lg: '100%' },
                         }}
                       >
-                        {/*  */}
                         <Card
                           sx={{
                             opacity: activeCardIndex !== index ? 1 : 0.6,
@@ -277,6 +263,7 @@ export default function CustomerContactList(currentContact = null) {
                         >
                           <CardActionArea active={activeIndex === index}>
                             <Link
+                              underline="none"
                               onClick={() => {
                                 setCurrentContactData(contact);
                                 setOpenContact(true);
@@ -294,7 +281,6 @@ export default function CustomerContactList(currentContact = null) {
                                   index = null;
                                 }
                               }}
-                              underline="none"
                             >
                               <Grid
                                 container
@@ -357,6 +343,7 @@ export default function CustomerContactList(currentContact = null) {
             </Grid>
           </Scrollbar>
         </Grid>
+
         {/* Conditional View Forms */}
         {!isMobile && (
           <GridBaseViewForm item lg={8}>
@@ -371,21 +358,6 @@ export default function CustomerContactList(currentContact = null) {
         )}
 
         {/* View form for mobile */}
-        {/* option 1 */}
-        {/* {isMobile && (
-          <>
-            <ContactDialog
-              openContact={openContact}
-              currentContactData={currentContactData}
-              handleCloseContact={handleCloseContact}
-            />
-            <GridBaseViewForm item lg={12}>
-              {shouldShowContactEdit && <ContactEditForm />}
-            </GridBaseViewForm>
-          </>
-        )} */}
-
-        {/* option 2 */}
         {isMobile && (
           <Grid item xs={12} lg={12}>
             {shouldShowContactView && (
