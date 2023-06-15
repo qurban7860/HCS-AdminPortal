@@ -49,10 +49,10 @@ import { fDate } from '../../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'machine', label: 'Machine', align: 'left' },
+  { id: 'doctype', label: 'Type', align: 'left' },
   { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'doctype', label: 'Type', align: 'center' },
-  { id: 'doccategory', label: 'Category', align: 'center' },
+  { id: 'machine', label: 'Machine', align: 'left' },
+  { id: 'doccategory', label: 'Category', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
@@ -331,16 +331,18 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-
   if (filterName) {
-    inputData = inputData.filter( (customer) => customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter( (document) => document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((document) => filterStatus.includes(document.status));
   }
 
   return inputData;

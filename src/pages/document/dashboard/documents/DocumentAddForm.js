@@ -14,14 +14,14 @@ import { Switch,Radio, RadioGroup,FormControlLabel,FormLabel, Box, Button, Card,
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
-import { getActiveDocuments, getDocuments, addDocument, getCustomerDocuments,getMachineDocuments} from '../../../../redux/slices/document/document';
+import { getActiveDocuments, getDocuments, addDocument, getCustomerDocuments,getMachineDocuments, resetActiveDocuments} from '../../../../redux/slices/document/document';
 import { setDocumentCategoryFormVisibility , getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import { setDocumentTypeFormVisibility , getActiveDocumentTypes } from '../../../../redux/slices/document/documentType';
 import { addDocumentVersion, updateDocumentVersion } from '../../../../redux/slices/document/documentVersion';
-import { getActiveMachines, resetMachines, getActiveModelMachines } from '../../../../redux/slices/products/machine';
+import { getActiveMachines, resetActiveMachines, getActiveModelMachines } from '../../../../redux/slices/products/machine';
 import { getActiveMachineModels } from '../../../../redux/slices/products/model';
 import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
-import { getActiveSites, resetSites } from '../../../../redux/slices/customer/site';
+import { getActiveSites, resetActiveSites } from '../../../../redux/slices/customer/site';
 // components
 import Iconify from '../../../../components/iconify';
 import { useSnackbar } from '../../../../components/snackbar';
@@ -195,7 +195,7 @@ export default function DocumentAddForm({currentDocument}) {
         data.name = nameVal
         data.displayName = displayNameVal
         data.isActive = isActive;
-        data.customerAccess = false
+        data.customerAccess = customerAccessVal
         if(customerSiteVal){
           data.site = customerSiteVal._id
         } 
@@ -301,6 +301,7 @@ export default function DocumentAddForm({currentDocument}) {
 
   const handleDependencyChange = (event) => {
     setDocumentDependency(event.target.value);
+
     if(event.target.value === "new"){
       setReadOnlyVal(false)
       setDocumentVal('');
@@ -312,6 +313,14 @@ export default function DocumentAddForm({currentDocument}) {
       setCustomerAccessVal(false);
       setReadOnlyVal(false)
     }
+    // if(event.target.value === "newVersion"){
+      setDocumentVal('');
+      setCustomerVal("");
+      setCustomerSiteVal("");
+      setMachineModelVal("");
+      setMachineVal('');
+      dispatch(resetActiveDocuments())
+    // }
   }
   const handleVersionRadioChange = (event) => {
     setSelectedVersionValue(event.target.value);
@@ -386,11 +395,17 @@ export default function DocumentAddForm({currentDocument}) {
                             setCustomerSiteVal("");
                             setMachineVal("");
                             setMachineModelVal("");
+                            dispatch(resetActiveSites())
+                            setDocumentVal('');
+                            dispatch(resetActiveDocuments())
                           } else {
                             setCustomerVal('');
                             setContactDisabled(false);
                             setSiteDisabled(false);
                             setCustomerSiteVal("");
+                            dispatch(resetActiveSites())
+                            setDocumentVal('');
+                            dispatch(resetActiveDocuments())
                           }
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
@@ -410,10 +425,11 @@ export default function DocumentAddForm({currentDocument}) {
                           onChange={(event, newValue) => {
                             if (newValue) {
                               setCustomerSiteVal(newValue);
-                              setContactDisabled(true);
+                              // setContactDisabled(true);
                             } else {
                               setCustomerSiteVal('');
-                              setContactDisabled(false);
+                              // setContactDisabled(false);
+
                             }
                           }}
                           renderOption={(props, option) => (
@@ -446,9 +462,16 @@ export default function DocumentAddForm({currentDocument}) {
                             setMachineModelVal(newValue);
                             setMachineVal("")
                             setCustomerVal("");
+                            setCustomerSiteVal("");
+                            dispatch(resetActiveMachines())
+                            setDocumentVal('');
+                            dispatch(resetActiveDocuments())
                           } else {
                             setMachineModelVal('');
                             setMachineVal("")
+                            dispatch(resetActiveMachines())
+                            setDocumentVal('');
+                            dispatch(resetActiveDocuments())
                           }
                         }}
                         renderOption={(props, option) => (
@@ -474,6 +497,8 @@ export default function DocumentAddForm({currentDocument}) {
                             setMachineVal(newValue);
                           } else {
                             setMachineVal('');
+                            setDocumentVal('');
+                            dispatch(resetActiveDocuments())
                           }
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}

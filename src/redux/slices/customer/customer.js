@@ -86,7 +86,13 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
-
+    // RESET Active CUSTOMERS
+    resetActiveCustomers(state){
+      state.activeCustomers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -98,6 +104,7 @@ export const {
   setCustomerEditFormVisibility,
   resetCustomer,
   resetCustomers,
+  resetActiveCustomers,
   setResponseMessage,
 } = slice.actions;
 

@@ -66,7 +66,6 @@ const slice = createSlice({
       state.initial = true;
     },
 
-
     // GET Site
     getSiteSuccess(state, action) {
       state.isLoading = false;
@@ -91,6 +90,13 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET Active SITES
+    resetActiveSites(state){
+      state.activeSites = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
@@ -117,6 +123,7 @@ export const {
   setResponseMessage,
   resetSite,
   resetSites,
+  resetActiveSites,
 } = slice.actions;
 
 // ----------------------------------------------------------------------
