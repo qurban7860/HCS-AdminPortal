@@ -95,7 +95,9 @@ export default function MachineListTableRow({
         <LinkTableCell align="left" onClick={onViewRow} param={serialNo}/>
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
-        <TableCell>{status?.name || ''}</TableCell>
+        <TableCell sx={{ color: status?.slug === 'transferred' ? 'red' : 'inherit' }}>
+          {status?.name || ''}
+        </TableCell>
         <TableCell>{customer?.name || ''}</TableCell>
         <TableCell>{instalationSite?.name || ''}</TableCell>
         <TableCell align="center">

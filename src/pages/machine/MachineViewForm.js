@@ -21,6 +21,8 @@ import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import CommaJoinField from '../components/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
 import GoogleMaps from '../../assets/GoogleMaps';
+// utils
+import { fDateTime , fDate } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
@@ -34,6 +36,7 @@ export default function MachineViewForm() {
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
   const [disableTransferButton, setDisableTransferButton] = useState(false);
+  const [disableEditButton, setDisableEditButton] = useState(false);
   const [hasValid, setHasValid] = useState(false);
   const baseUrl = window.location.origin;
   const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
@@ -67,6 +70,11 @@ export default function MachineViewForm() {
       setDisableTransferButton(true);
     }else{
       setDisableTransferButton(false);
+    }
+    if(machine.transferredMachine){
+      setDisableEditButton(true);
+    }else{
+      setDisableEditButton(false);
     }
     if(userId){
       dispatch(getLoggedInSecurityUser(userId));
@@ -131,9 +139,11 @@ export default function MachineViewForm() {
       machineModel:             machine?.machineModel?.name || "",
       status:                   machine?.status?.name || "",
       customer:                 machine?.customer || "",
-      instalationSite:          machine?.instalationSite || "",
       siteMilestone:            machine?.siteMilestone || "",
+      instalationSite:          machine?.instalationSite || "",
       billingSite:              machine?.billingSite|| "",
+      installationDate:         machine?.installationDate || "",
+      shippingDate:             machine?.shippingDate || "",
       description:              machine?.description || "",
       customerTags:             machine?.customerTags || "",
       accountManager:           machine?.accountManager || "",
@@ -152,15 +162,13 @@ export default function MachineViewForm() {
     [machine]
   );
 
-  console.log('installation site---->', defaultValues.instalationSite);
-  console.log('billingSite---->', defaultValues.billingSite);
-
   return (
     <Card sx={{ p: 3 }}>
       <Grid container justifyContent="flex-end" alignContent="flex-end">
         <ViewFormEditDeleteButtons 
           sx={{ pt: 5 }} 
-          disableTransferButton={disableTransferButton} 
+          disableTransferButton={disableTransferButton}
+          disableEditButton={disableEditButton} 
           handleEdit={handleEdit} 
           onDelete={onDelete} 
           handleTransfer={handleTransfer}
@@ -211,6 +219,11 @@ export default function MachineViewForm() {
         <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
         <ViewFormField
           sm={6}
+          heading="Work Order / Purchase Order"
+          param={defaultValues?.workOrderRef}
+        />
+        <ViewFormField
+          sm={6}
           heading="Installation Site"
           objectParam={
             defaultValues.instalationSite ? (
@@ -235,11 +248,8 @@ export default function MachineViewForm() {
             )
           }
         />
-        <ViewFormField
-          sm={6}
-          heading="Work Order / Perchase Order"
-          param={defaultValues?.workOrderRef}
-        />
+        <ViewFormField sm={6} heading="Installation Date" param={fDate(defaultValues?.installationDate)} />
+        <ViewFormField sm={6} heading="Shipping Date" param={fDate(defaultValues?.shippingDate)} />
 
         <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />

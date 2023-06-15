@@ -33,9 +33,17 @@ import { Cover } from '../../components/Cover';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentCategoryeEditForm() {
+export default function RoleEditForm() {
 
-  const { role } = useSelector((state) => state.role);
+  const { role, userRoleTypes } = useSelector((state) => state.role);
+  const [ roleType, setRoleType ] = useState('');
+
+  const roleTypesArray = useMemo(() => (
+    Object.keys(userRoleTypes).map((key) => ({
+      key,
+      name: userRoleTypes[key],
+    }))
+  ), [userRoleTypes]);
 
   const dispatch = useDispatch();
 
@@ -45,7 +53,6 @@ export default function DocumentCategoryeEditForm() {
 
   const EditRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
-    roleType: Yup.string().required("Role Type is required!"),
     description: Yup.string().max(10000).required("Description is required!"),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
@@ -58,7 +65,6 @@ export default function DocumentCategoryeEditForm() {
     () => ({
       name: role?.name || '',
       description: role?.description || '',
-      roleType: role?.roleType || '',
       isActive: role?.isActive || false,
       allModules: role?.allModules || false,
       allWriteAccess: role?.allWriteAccess || false,
@@ -83,11 +89,12 @@ export default function DocumentCategoryeEditForm() {
 
   const values = watch();
 
-  // useEffect(() => {
-  //   if (site) {
-  //     reset(defaultValues);
-  //   }
-  // }, [site, reset, defaultValues]);
+ useLayoutEffect(() => {
+  const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);
+    if (filteredRole) {
+      setRoleType(filteredRole);
+    }
+  }, [role, roleTypesArray]);
 
   const toggleCancel = () => {
     navigate(PATH_DASHBOARD.role.view(role._id))
@@ -96,6 +103,9 @@ export default function DocumentCategoryeEditForm() {
 
   const onSubmit = async (data) => {
     try {
+      if(roleType){
+        data.roleType = roleType.key;
+      }
       await dispatch(updateRole(role._id, data));
       dispatch(getRole(role._id));
       navigate(PATH_DASHBOARD.role.view(role._id))
@@ -125,9 +135,37 @@ export default function DocumentCategoryeEditForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <FormHeading heading='Edit Role' />
                 <RHFTextField name="name" label="Name" />
-                <RHFTextField name="roleType" label="Role Type" />
+                <Autocomplete 
+                  required
+                  value={roleType || null}
+                  options={roleTypesArray}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setRoleType(newValue);
+                    } else { 
+                      setRoleType("");
+                    }
+                  }}
+                  id="controllable-states-demo"
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.key}>
+                      {option.name}
+                    </li>
+                  )}
+                  renderInput={(params) => (
+                    <TextField {...params} name='roleTypes' label="Role Types" required/>
+                  )}
+                  ChipProps={{ size: 'small' }}
+                >
+                  {(option) => (
+                    <div key={option.key}>
+                      <span>{option.name}</span>
+                    </div>
+                  )}
+                </Autocomplete>                
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex">
                   <RHFSwitch

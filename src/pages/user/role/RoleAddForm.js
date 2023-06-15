@@ -27,16 +27,21 @@ import { Cover } from '../../components/Cover';
 RoleAddForm.propTypes = {
   currentRole: PropTypes.object,
 };
-export default function RoleAddForm({ currentRole }) {
-  const { role, roles } = useSelector((state) => state.role);
 
+export default function RoleAddForm({ currentRole }) {
+  const { userRoleTypes } = useSelector((state) => state.role);
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+  const [ roleType, setRoleType ] = useState('');
+  const mappedUserRoleTypes = Object.keys(userRoleTypes).map((key) => ({
+    key,
+    name: userRoleTypes[key],
+  }));
+  
   // a note can be archived.
   const AddRoleSchema = Yup.object().shape({
     name: Yup.string().min(2).required("Name Field is required!"),
-    roleType: Yup.string().required("Role Type is required!"),
     description: Yup.string().max(10000).required("Description is required!"),
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
@@ -46,7 +51,6 @@ export default function RoleAddForm({ currentRole }) {
   const defaultValues = useMemo(
     () => ({
       name: '',
-      roleType: '',
       description: '',
       isActive: true,
       allModules: false,
@@ -77,6 +81,9 @@ export default function RoleAddForm({ currentRole }) {
 
   const onSubmit = async (data) => {
     try {
+      if(roleType){
+        data.roleType = roleType.key;
+      }
       await dispatch(addRole(data));
       reset();
       enqueueSnackbar('Role Save Successfully!');
@@ -108,7 +115,37 @@ export default function RoleAddForm({ currentRole }) {
             <Card sx={{ p: 3 }} >
               <Stack spacing={2}>
                 <RHFTextField name="name" label="Name" />
-                <RHFTextField name="roleType" label="Role Type" />
+                <Autocomplete 
+                  // freeSolo
+                  required
+                  value={roleType || null}
+                  options={mappedUserRoleTypes}
+                  getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setRoleType(newValue);
+                    } else { 
+                      setRoleType("");
+                    }
+                  }}
+                  id="controllable-states-demo"
+                  renderOption={(props, option) => (
+                    <li {...props} key={option.key}>
+                      {option.name}
+                    </li>
+                  )}
+                  renderInput={(params) => (
+                    <TextField {...params} name='roleTypes' label="Role Types" required/>
+                  )}
+                  ChipProps={{ size: 'small' }}
+                >
+                  {(option) => (
+                    <div key={option.key}>
+                      <span>{option.name}</span>
+                    </div>
+                  )}
+                </Autocomplete>
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex" alignItems="end">
                   <RHFSwitch name="isActive" labelPlacement="start" label={

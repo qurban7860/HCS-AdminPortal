@@ -69,7 +69,7 @@ useEffect(()=>{
     }),
     long: Yup.string()
     .max(25)
-    .test('valid-lat', 'Invalid longitude(Valid values are -180 to 180)', (value) => {
+    .test('valid-long', 'Invalid longitude(Valid values are -180 to 180)', (value) => {
       if (!value) return true;
       const trimmedValue = value.trim();
       const parsedValue = parseFloat(trimmedValue);
