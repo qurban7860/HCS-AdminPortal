@@ -43,7 +43,7 @@ const slice = createSlice({
       state.transferDialogBoxVisibility = action.payload;
     },
 
-    // SET TOGGLE
+    // SET TOGGLE648ac5b7418fc12b70794fe4
     setMachineEditFormVisibility(state, action){
       state.machineEditFormFlag = action.payload;
     },
@@ -317,8 +317,14 @@ export function addMachine(params) {
           data.billingSite = params.billingSite;        
         }
         if(params.instalationSite){
-          data.instalationSite = params.instalationSite;        
+          data.instalationSite = params.instalationSite; 
         }
+        if(params.installationDate){
+          data.installationDate = params.installationDate;
+        } 
+        if(params.shippingDate){
+          data.shippingDate = params.shippingDate;
+        }    
         if(params.accountManager){
           data.accountManager = params.accountManager;        
         }
@@ -363,6 +369,8 @@ export function updateMachine(params) {
         customer: params.customer,
         billingSite: params.billingSite,
         instalationSite: params.instalationSite,
+        installationDate: params.installationDate,
+        shippingDate: params.shippingDate,
         siteMilestone: params.siteMilestone,
         accountManager: params.accountManager,
         projectManager: params.projectManager,

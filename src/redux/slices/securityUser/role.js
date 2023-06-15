@@ -15,6 +15,11 @@ const initialState = {
   error: null,
   roles: [],
   role: null,
+  userRoleTypes: {
+    SuperAdmin: 'Super Admin',
+    Manager: 'Manager',
+    Support: 'Support',
+  }
 };
 
 const slice = createSlice({
