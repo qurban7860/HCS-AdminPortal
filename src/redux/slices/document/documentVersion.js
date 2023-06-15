@@ -117,6 +117,12 @@ export function addDocumentVersion(documentId,params) {
           if(params?.machine){
             formData.append('machine', params?.machine);
           }
+          if(params?.machineModel){
+            formData.append('machineModel', params?.machineModel);
+          }
+          if(params?.site){
+            formData.append('site', params?.site);
+          }
           if(params?.description){
             formData.append('description', params?.description);
           }

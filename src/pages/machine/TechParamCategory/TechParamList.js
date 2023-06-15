@@ -69,8 +69,11 @@ export default function TechParamList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    // defaultOrderBy: 'name',
+    // modifiedOnSort('name')
   });
+
+// Modify the orderBy value to lowercase before comparing
 
   const dispatch = useDispatch();
 

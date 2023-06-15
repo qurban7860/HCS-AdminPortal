@@ -26,7 +26,7 @@ import ViewFormField from '../../../components/ViewFormField';
 import ViewFormSWitch from '../../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../components/ViewFormEditDeleteButtons';
 import { getDocumentDownload } from '../../../../redux/slices/document/documentFile';
-import { getDocument, getDocumentHistory, getDocuments, resetDocument, deleteDocument} from '../../../../redux/slices/document/document';
+import { getDocument, getDocumentHistory, getDocuments, resetDocument, deleteDocument, resetActiveDocuments} from '../../../../redux/slices/document/document';
 import { getCustomer, resetCustomer } from '../../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../../redux/slices/products/machine';
 import CustomAvatar from '../../../../components/custom-avatar/CustomAvatar';
@@ -49,7 +49,7 @@ export default function Document() {
   const [ openMachine, setOpenMachine] = useState(false)
 
   useEffect(() =>{
-    dispatch(resetDocument())
+    dispatch(resetActiveDocuments())
     dispatch(resetMachine())
     dispatch(resetCustomer())
     dispatch(getDocumentHistory(id))
@@ -102,6 +102,7 @@ export default function Document() {
         customerAccess:           documentHistory?.customerAccess,
         isActiveVersion:          documentHistory?.isActiveVersion,
         documentVersion:          documentHistory?.documentVersions?.length > 0 ? documentHistory?.documentVersions[0]?.versionNo : "",
+        versionPrefix:            documentHistory?.versionPrefix || "",
         description:              documentHistory?.description,
         isActive:                 documentHistory?.isActive,
         createdAt:                documentHistory?.createdAt || "",
@@ -213,7 +214,13 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
           </Grid>
           <Grid container >
             <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Active Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Active Version"  objectParam={
+                                    defaultValues.documentVersion ? (
+                                      <Typography display="flex">
+                                        {defaultValues.versionPrefix} {defaultValues.documentVersion}
+                                      </Typography>
+                                    ) : ( '' )
+                                  }/>
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={6} heading="Customer" objectParam={
