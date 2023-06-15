@@ -251,7 +251,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           mb: 3,
           height: 160,
           position: 'relative',
-          // mt: '24px',
         }}
       >
         <Cover name="New Customer" icon="mdi:user" />

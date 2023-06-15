@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Button, Stack } from '@mui/material';
 import Iconify from '../../components/iconify';
 import ConfirmDialog from '../../components/confirm-dialog';
+import useResponsive from '../../hooks/useResponsive';
 
 export default function AddButtonAboveAccordion({
   name,
@@ -11,7 +12,7 @@ export default function AddButtonAboveAccordion({
   toggleCancel,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false);
-
+  const isMobile = useResponsive('down', 'sm');
   const handleOpenConfirm = () => {
     if (FormVisibility) {
       setOpenConfirm(true);
@@ -37,6 +38,7 @@ export default function AddButtonAboveAccordion({
         startIcon={
           !FormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
         }
+        sx={{ mb: 3, ...(isMobile && { width: '100%' }) }}
       >
         {!FormVisibility ? name : 'Close Add'}
       </Button>

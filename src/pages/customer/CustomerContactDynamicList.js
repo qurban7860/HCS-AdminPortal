@@ -1,6 +1,3 @@
-import PropTypes from 'prop-types';
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useMemo, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
@@ -8,7 +5,6 @@ import {
   Stack,
   Card,
   Grid,
-  Button,
   Link,
   CardActionArea,
   CardContent,
@@ -16,61 +12,94 @@ import {
   Breadcrumbs,
   Typography,
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 import { styled } from '@mui/material/styles';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import ViewFormField from '../components/ViewFormField';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../components/table';
-import Iconify from '../../components/iconify';
 // sections
-import {
-  getContacts,
-  getContact,
-  setContactFormVisibility,
-} from '../../redux/slices/customer/contact';
+import { getContacts, setContactFormVisibility } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
-import _mock from '../../_mock';
+import ContactDialog from './contact/util/ContactDialog';
 import Scrollbar from '../../components/scrollbar';
+import useResponsive from '../../hooks/useResponsive';
 
-// ----------------------------------------------------------------------
+const CardBase = styled(Card)(({ theme }) => ({
+  display: 'block',
+  animation: 'fadeIn ease 0.8s',
+  animationFillMode: 'forwards',
+  position: 'relative',
+  padding: '10px',
+}));
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
-];
+const CustomAvatarBase = styled(CustomAvatar)(({ theme }) => ({
+  width: '100px',
+  height: '100px',
+  display: 'flex',
+  marginRight: 'auto',
+  marginLeft: 'auto',
+  marginBottom: '0px',
+  boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
+  fontSize: '40px',
+  zIndex: '2',
+}));
 
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
+const CardMediaBase = styled(CardMedia)(({ theme }) => ({
+  height: '250px',
+  opacity: '0.5',
+  display: 'flex',
+  zIndex: '-1',
+  position: 'absolute',
+  top: '-5',
+  left: '0',
+  right: '0',
+  bottom: '0',
+  width: '100%',
+  backgroundColor: 'secondary.main',
+  objectFit: 'cover',
+}));
+
+const GridBaseViewForm = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  animation: 'fadeIn ease 0.8s',
+  animationFillMode: 'forwards',
+  position: 'relative',
+  zIndex: '1',
+  width: '100%',
+  height: 'auto',
+  overflow: 'hidden',
+  borderRadius: '10px',
+}));
+
+const GridBaseCard1 = styled(Grid)(({ theme }) => ({
+  display: 'block',
+  textAlign: 'center',
+  width: '200px',
+}));
+
+const GridBaseCard2 = styled(Grid)(({ theme }) => ({
+  display: 'flex',
+  textAlign: 'left',
+  width: '200px',
 }));
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList(currentContact = null) {
   const { customer } = useSelector((state) => state.customer);
+  const [openContact, setOpenContact] = useState(false);
   const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: 'createdAt',
   });
-  const [openContact, setOpenContact] = useState(false);
   const [controlled, setControlled] = useState(false);
   const handleChangeControlled = (panel) => (event, isExpanded) => {
     setControlled(isExpanded ? panel : false);
@@ -82,31 +111,27 @@ export default function CustomerContactList(currentContact = null) {
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
-  const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [initialCardState, setInitialCardState] = useState(true); // this is for the initial card state
   const [activeCardIndex, setCardActiveIndex] = useState(null);
   const [currentContactData, setCurrentContactData] = useState({});
-  const [expanded, setExpanded] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const handleOpenContact = (index) => {
-    if (index === activeIndex) {
-      setActiveIndex(null);
-      setOpenContact(false);
-    } else {
-      setActiveIndex(index);
-      setOpenContact(true);
-    }
-  };
+  const isMobile = useResponsive('down', 'sm');
 
   const toggleChecked = () => {
     setChecked((value) => !value);
-    if (checked) {
+    if (checked || contactEditFormVisibility) {
       dispatch(setContactFormVisibility(false));
+      enqueueSnackbar('Please close the form before opening a new one', {
+        variant: 'warning',
+      });
+      setCardActiveIndex(null);
+      setIsExpanded(false);
     } else {
       dispatch(setContactFormVisibility(true));
+      setCardActiveIndex(null);
       setIsExpanded(false);
     }
   };
@@ -120,38 +145,12 @@ export default function CustomerContactList(currentContact = null) {
     setCardActiveIndex(index);
   };
 
-  const handleOpenEditContact = (index) => {
-    if (index === activeIndex) {
-      setActiveIndex(null);
-      setOpenContact(false);
-    } else {
-      setActiveIndex(index);
-      setOpenContact(true);
-    }
-  };
-
-  const handleCloseContact = () => setOpenContact(false);
-
   const handleExpand = (index) => {
     // setExpanded(!expanded);
     setIsExpanded(true);
   };
 
-  const handleAccordianClick = (index) => {
-    if (index === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(index);
-    }
-  };
-
-  const CardBase = styled(Card)(({ theme }) => ({
-    display: 'block',
-    animation: 'fadeIn ease 0.8s',
-    animationFillMode: 'forwards',
-    position: 'relative',
-    padding: '10px',
-  }));
+  const handleCloseContact = () => setOpenContact(false);
 
   useLayoutEffect(() => {
     // dispatch(setFormVisibility(checked));
@@ -166,18 +165,10 @@ export default function CustomerContactList(currentContact = null) {
     }
   }, [contacts, error, responseMessage, enqueueSnackbar, initial]);
 
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-  });
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName || ''}`);
 
+  // conditions for rendering the contact view, edit, and add forms
   const shouldShowContactView = isExpanded && !contactEditFormVisibility;
   const shouldShowContactEdit = contactEditFormVisibility && !formVisibility;
   const shouldShowContactAdd = formVisibility && !contactEditFormVisibility;
@@ -224,26 +215,30 @@ export default function CustomerContactList(currentContact = null) {
           </Breadcrumbs>
         </Grid>
       </Stack>
-      <Grid
-        container
-        spacing={1}
-        direction="row"
-        justifyContent="flex-start"
-        grid-template-rows="repeat(3, 1fr)"
-        grid-template-columns="repeat(3, 1fr)"
-      >
-        <Grid item sm={12} lg={5}>
+      <Grid container spacing={1} direction="row" justifyContent="flex-start">
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={12}
+          lg={4}
+          sx={{ display: formVisibility && isMobile && 'none' }}
+        >
           <Scrollbar
             snap
-            snapType="mandatory"
+            snapOffset={100}
+            // if click on scrollbar do not close the accordion
+            onClick={(e) => e.stopPropagation()}
             snapAlign="start"
             sx={{
-              height: { xs: 'calc(100vh - 200px)', md: 'calc(100vh - 200px)' },
+              height: { xs: '20vh', md: 'calc(100vh - 100px)' },
               scrollSnapType: 'y mandatory',
               scrollSnapAlign: 'start',
               scrollbarWidth: 'none',
               '&::-webkit-scrollbar': { display: 'none' },
               '& .simplebar-content': { height: { xs: 'calc(100vh - 200px)', md: '100%' } },
+              border: '1px solid #D9D9D9',
+              borderRadius: '15px',
             }}
           >
             <Grid container justifyContent="flex-start" direction="column" gap={1}>
@@ -255,27 +250,36 @@ export default function CustomerContactList(currentContact = null) {
                       <Grid
                         item
                         key={index}
+                        xs={12}
                         sm={12}
-                        lg={5}
-                        display="block"
-                        onClick={() => handleActiveCard(index)}
+                        md={12}
+                        lg={4}
+                        display={{ xs: 'flex', lg: 'block' }}
+                        onClick={() => {
+                          handleActiveCard(index);
+                        }}
+                        sx={{
+                          width: { xs: '100%', lg: '100%' },
+                        }}
                       >
+                        {/*  */}
                         <Card
                           sx={{
+                            opacity: activeCardIndex !== index ? 1 : 0.6,
                             border: activeCardIndex === index && '2px solid #D9D9D9',
                             boxShadow:
                               activeCardIndex === index && '0px 4px 4px rgba(127, 5, 35, 0.25)',
-                            opacity: activeCardIndex === index ? 1 : 0.6,
-                            backgroundColor: activeCardIndex === index && '#F9F9F9',
-                            display: 'flex',
-                            height: '200px',
-                            width: '450px',
+
+                            backgroundColor: activeCardIndex === index && '#EDE7D9',
+                            height: isMobile ? '100px' : '200px',
+                            width: '100%',
                           }}
                         >
                           <CardActionArea active={activeIndex === index}>
                             <Link
                               onClick={() => {
                                 setCurrentContactData(contact);
+                                setOpenContact(true);
                                 if (!isExpanded && !formVisibility) {
                                   handleExpand(index);
                                   setContactFormVisibility(!formVisibility);
@@ -287,6 +291,7 @@ export default function CustomerContactList(currentContact = null) {
                                   handleExpand(index);
                                 } else {
                                   setIsExpanded(false);
+                                  index = null;
                                 }
                               }}
                               underline="none"
@@ -297,71 +302,35 @@ export default function CustomerContactList(currentContact = null) {
                                 justifyContent="flex-start"
                                 alignItems="center"
                               >
-                                <Grid
-                                  item
-                                  lg={6}
-                                  justifyContent="center"
-                                  sx={{
-                                    display: 'block',
-                                    textAlign: 'center',
-                                    width: '200px',
-                                  }}
-                                >
-                                  <CardContent
-                                    component={Stack}
-                                    display="block"
-                                    height="170px"
-                                    sx={{ position: 'relative', zIndex: '1' }}
-                                  >
-                                    <CustomAvatar
-                                      sx={{
-                                        width: '100px',
-                                        height: '100px',
-                                        display: 'flex',
-                                        marginRight: 'auto',
-                                        marginLeft: 'auto',
-                                        marginBottom: '0px',
-                                        boxShadow: '0px 0px 10px 0px rgba(0,0,0,0.3)',
-                                        fontSize: '40px',
-                                        zIndex: '2',
-                                      }}
-                                      name={fullName[index]}
-                                      alt={fullName[index]}
-                                    />
+                                {!isMobile && (
+                                  <GridBaseCard1 item lg={4} justifyContent="center">
+                                    <CardContent
+                                      component={Stack}
+                                      display="block"
+                                      height="170px"
+                                      sx={{ position: 'relative', zIndex: '1' }}
+                                    >
+                                      <CustomAvatarBase
+                                        name={fullName[index]}
+                                        alt={fullName[index]}
+                                      />
 
-                                    <CardMedia
-                                      component="img"
-                                      sx={{
-                                        height: '250px',
-                                        opacity: '0.5',
-                                        display: 'flex',
-                                        zIndex: '-1',
-                                        position: 'absolute',
-                                        top: '-5',
-                                        left: '0',
-                                        right: '0',
-                                        bottom: '0',
-                                        width: '100%',
-                                        backgroundColor: 'secondary.main',
-                                        objectFit: 'cover',
-                                      }}
-                                      image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                      alt="customer's contact cover photo was here"
-                                    />
-                                  </CardContent>
-                                </Grid>
-                                <Grid
-                                  item
-                                  lg={6}
-                                  justifyContent="flex-start"
-                                  sx={{ display: 'flex', textAlign: 'left', width: '200px' }}
-                                >
+                                      <CardMediaBase
+                                        component="img"
+                                        image="/assets/images/covers/bg.jpg"
+                                        alt="customer's contact cover photo was here"
+                                      />
+                                    </CardContent>
+                                  </GridBaseCard1>
+                                )}
+
+                                <GridBaseCard2 item lg={8} justifyContent="flex-start">
                                   <CardContent
                                     component={Stack}
                                     display="block"
                                     justifyContent="center"
                                     height="200px"
-                                    my={2}
+                                    my={{ xs: 0, lg: 2 }}
                                   >
                                     <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
                                       {fullName[index].length >= 15
@@ -375,7 +344,7 @@ export default function CustomerContactList(currentContact = null) {
                                       {contact.email ? contact.email : <br />}
                                     </Typography>
                                   </CardContent>
-                                </Grid>
+                                </GridBaseCard2>
                               </Grid>
                             </Link>
                           </CardActionArea>
@@ -388,31 +357,46 @@ export default function CustomerContactList(currentContact = null) {
             </Grid>
           </Scrollbar>
         </Grid>
-        <Grid
-          item
-          lg={7}
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            animation: 'fadeIn ease 0.8s',
-            animationFillMode: 'forwards',
-            position: 'relative',
-            zIndex: '1',
-            width: '100%',
-            height: 'auto',
-            overflow: 'hidden',
-            borderRadius: '10px',
-          }}
-        >
-          {/* {formVisibility && !contactEditFormVisibility && <ContactAddForm />}) */}
-          {shouldShowContactView && (
-            <CardBase>
-              <ContactViewForm currentContact={currentContactData} />
-            </CardBase>
-          )}
-          {shouldShowContactEdit && <ContactEditForm />}
-          {shouldShowContactAdd && <ContactAddForm />}
-        </Grid>
+        {/* Conditional View Forms */}
+        {!isMobile && (
+          <GridBaseViewForm item lg={8}>
+            {shouldShowContactView && (
+              <CardBase>
+                <ContactViewForm currentContact={currentContactData} />
+              </CardBase>
+            )}
+            {shouldShowContactEdit && <ContactEditForm />}
+            {shouldShowContactAdd && <ContactAddForm />}
+          </GridBaseViewForm>
+        )}
+
+        {/* View form for mobile */}
+        {/* option 1 */}
+        {/* {isMobile && (
+          <>
+            <ContactDialog
+              openContact={openContact}
+              currentContactData={currentContactData}
+              handleCloseContact={handleCloseContact}
+            />
+            <GridBaseViewForm item lg={12}>
+              {shouldShowContactEdit && <ContactEditForm />}
+            </GridBaseViewForm>
+          </>
+        )} */}
+
+        {/* option 2 */}
+        {isMobile && (
+          <Grid item xs={12} lg={12}>
+            {shouldShowContactView && (
+              <CardBase>
+                <ContactViewForm currentContact={currentContactData} />
+              </CardBase>
+            )}
+            {shouldShowContactEdit && <ContactEditForm />}
+            {shouldShowContactAdd && <ContactAddForm />}
+          </Grid>
+        )}
         <Grid item lg={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>

@@ -30,7 +30,7 @@ ViewFormEditDeleteButtons.propTypes = {
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
-  disableButton: PropTypes.bool, 
+  disableButton: PropTypes.bool,
   handleMap: PropTypes.func,
 };
 export default function ViewFormEditDeleteButtons({
@@ -51,18 +51,18 @@ export default function ViewFormEditDeleteButtons({
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const handleOpenConfirm = (dialogType) => {
-    if(dialogType === 'delete'){
+    if (dialogType === 'delete') {
       setOpenConfirm(true);
     }
-    if(dialogType === 'transfer'){
+    if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(true));
     }
   };
   const handleCloseConfirm = (dialogType) => {
-    if(dialogType === 'delete'){
+    if (dialogType === 'delete') {
       setOpenConfirm(false);
     }
-    if(dialogType === 'transfer'){
+    if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(false));
     }
   };
@@ -173,10 +173,9 @@ export default function ViewFormEditDeleteButtons({
           ''
         )}
 
-
         {handleUpdatePassword ? (
           <Button
-              onClick={() => {
+            onClick={() => {
               handleUpdatePassword();
             }}
             variant="outlined"
@@ -191,11 +190,12 @@ export default function ViewFormEditDeleteButtons({
               <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:account-key" />
             </Tooltip>
           </Button>
-          ) : ( '' )
-        }
+        ) : (
+          ''
+        )}
 
         <Button
-            onClick={() => {
+          onClick={() => {
             handleEdit();
           }}
           variant="outlined"
@@ -213,7 +213,7 @@ export default function ViewFormEditDeleteButtons({
         {/* if not in the profile show this */}
         {onDelete ? (
           <Button
-              onClick={() => {
+            onClick={() => {
               handleOpenConfirm('delete');
             }}
             variant="outlined"
@@ -234,6 +234,7 @@ export default function ViewFormEditDeleteButtons({
           ''
         )}
       </Stack>
+
       <ConfirmDialog
         open={openConfirm}
         onClose={() => {
