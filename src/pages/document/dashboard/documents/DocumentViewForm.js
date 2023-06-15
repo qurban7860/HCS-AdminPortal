@@ -26,7 +26,7 @@ import ViewFormField from '../../../components/ViewFormField';
 import ViewFormSWitch from '../../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../../components/ViewFormEditDeleteButtons';
 import { getDocumentDownload } from '../../../../redux/slices/document/documentFile';
-import { getDocument, getDocuments, resetDocument, deleteDocument} from '../../../../redux/slices/document/document';
+import { getDocument, getDocumentHistory, getDocuments, resetDocument, deleteDocument, resetActiveDocuments} from '../../../../redux/slices/document/document';
 import { getCustomer, resetCustomer } from '../../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../../redux/slices/products/machine';
 import CustomAvatar from '../../../../components/custom-avatar/CustomAvatar';
@@ -41,7 +41,7 @@ export default function Document() {
   const regEx = /^[^2]*/;
   const { enqueueSnackbar } = useSnackbar();
 
-  const { document } = useSelector((state) => state.document);
+  const { document, documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   // console.log("document : ",document)
@@ -49,23 +49,23 @@ export default function Document() {
   const [ openMachine, setOpenMachine] = useState(false)
 
   useEffect(() =>{
-    dispatch(resetDocument())
+    dispatch(resetActiveDocuments())
     dispatch(resetMachine())
     dispatch(resetCustomer())
-    dispatch(getDocument(id))
+    dispatch(getDocumentHistory(id))
   },[id,dispatch])
 
   useEffect(() =>{
-    if(document?.machine){
-      dispatch(getMachine(document.machine._id))
+    if(documentHistory?.machine){
+      dispatch(getMachine(documentHistory.machine._id))
     }
-  },[document,dispatch])
+  },[documentHistory,dispatch])
 
   useEffect(() =>{
-    if(document?.customer){
-      dispatch(getCustomer(document.customer._id))
+    if(documentHistory?.customer){
+      dispatch(getCustomer(documentHistory.customer._id))
     }
-  },[document,dispatch])
+  },[documentHistory,dispatch])
 
   const onDelete = async () => {
     await dispatch(deleteDocument(id));
@@ -90,29 +90,30 @@ export default function Document() {
   const defaultValues = useMemo(
     () => (
       {
-        displayName :             document?.displayName || "",
-        documentName:             document?.documentName?.name || "",
-        docCategory:              document?.docCategory?.name || "",
-        docType:                  document?.docType?.name || "",
-        customer:                 document?.customer?.name || "",
-        site:                     document?.site?.name || "",
-        contact:                  document?.contact?.name || "",
-        machine:                  document?.machine?.serialNo || "",
-        model:                    document?.machineModel?.name || "",
-        customerAccess:           document?.customerAccess,
-        isActiveVersion:          document?.isActiveVersion,
-        documentVersion:          document?.documentVersions?.length > 0 ? document?.documentVersions[0]?.versionNo : "",
-        description:              document?.description,
-        isActive:                 document?.isActive,
-        createdAt:                document?.createdAt || "",
-        createdByFullName:        document?.createdBy?.name || "",
-        createdIP:                document?.createdIP || "",
-        updatedAt:                document?.updatedAt || "",
-        updatedByFullName:        document?.updatedBy?.name || "",
-        updatedIP:                document?.updatedIP || "",
+        displayName :             documentHistory?.displayName || "",
+        documentName:             documentHistory?.documentName?.name || "",
+        docCategory:              documentHistory?.docCategory?.name || "",
+        docType:                  documentHistory?.docType?.name || "",
+        customer:                 documentHistory?.customer?.name || "",
+        site:                     documentHistory?.site?.name || "",
+        contact:                  documentHistory?.contact?.name || "",
+        machine:                  documentHistory?.machine?.serialNo || "",
+        model:                    documentHistory?.machineModel?.name || "",
+        customerAccess:           documentHistory?.customerAccess,
+        isActiveVersion:          documentHistory?.isActiveVersion,
+        documentVersion:          documentHistory?.documentVersions?.length > 0 ? documentHistory?.documentVersions[0]?.versionNo : "",
+        versionPrefix:            documentHistory?.versionPrefix || "",
+        description:              documentHistory?.description,
+        isActive:                 documentHistory?.isActive,
+        createdAt:                documentHistory?.createdAt || "",
+        createdByFullName:        documentHistory?.createdBy?.name || "",
+        createdIP:                documentHistory?.createdIP || "",
+        updatedAt:                documentHistory?.updatedAt || "",
+        updatedByFullName:        documentHistory?.updatedBy?.name || "",
+        updatedIP:                documentHistory?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [document]
+    [documentHistory]
   );
 
 const handleDownload = (documentId, versionId, fileId,fileName ,fileExtension) => {
@@ -213,7 +214,13 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
           </Grid>
           <Grid container >
             <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField sm={6} heading="Active Version" numberParam={defaultValues?.documentVersion} />
+            <ViewFormField sm={6} heading="Active Version"  objectParam={
+                                    defaultValues.documentVersion ? (
+                                      <Typography display="flex">
+                                        {defaultValues.versionPrefix} {defaultValues.documentVersion}
+                                      </Typography>
+                                    ) : ( '' )
+                                  }/>
             <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField sm={6} heading="Customer" objectParam={
@@ -239,7 +246,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
             <Grid container sx={{ mt: '1rem' ,mb: '-1rem'}}>
                 <ViewFormAudit defaultValues={defaultValues}/>
             </Grid>
-            {document && document?.documentVersions?.map((files)=>(
+            {documentHistory && documentHistory?.documentVersions?.map((files)=>(
           <Grid container>
             <Grid container sx={{ pt: '2rem' }}>
               <Grid
@@ -279,7 +286,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                           size="small"
                           onClick={
                             () => {
-                              handleDownloadAndPreview( document._id, files._id, file._id, file.name,file.extension);
+                              handleDownloadAndPreview( documentHistory._id, files._id, file._id, file.name,file.extension);
                             }
                           }
                           sx={{
@@ -350,7 +357,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(document._id, files._id, file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(documentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
@@ -415,7 +422,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                       <Link>
                         <IconButton
                           size="small"
-                          onClick={() => handleDownload(document._id, files._id, file._id,file.name ,file.extension)}
+                          onClick={() => handleDownload(documentHistory._id, files._id, file._id,file.name ,file.extension)}
                           sx={{
                             top: 4,
                             left: 108,
