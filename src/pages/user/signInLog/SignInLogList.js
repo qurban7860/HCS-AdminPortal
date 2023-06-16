@@ -38,9 +38,9 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import RoleListTableRow from './RoleListTableRow';
-import RoleListTableToolbar from './RoleListTableToolbar';
-import { deleteRole, getRoles ,getRole } from '../../../redux/slices/securityUser/role';
+import RoleListTableRow from './SignInLogListTableRow';
+import RoleListTableToolbar from './SignInLogListTableToolbar';
+import { getSignInLogs } from '../../../redux/slices/securityUser/securityUser';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
 
@@ -48,15 +48,15 @@ import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'role_type', label: 'Role Type', align: 'left' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
+  { id: 'user', label: 'User Name', align: 'left' },
+  { id: 'userIP', label: 'User IP', align: 'left' },
+  { id: 'loginTime', label: 'Logout Time', align: 'left' },
+  { id: 'logoutTime', label: 'Logout Time', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function RoleList() {
+export default function SignInLogList() {
   const {
     page,
     order,
@@ -73,7 +73,7 @@ export default function RoleList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: '-loginTime',
   });
 
   const dispatch = useDispatch();
@@ -92,20 +92,19 @@ export default function RoleList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customer } = useSelector((state) => state.customer);
-  const { roles, isLoading, initial, responseMessage } = useSelector((state) => state.role);
+  const userId = localStorage.getItem('userId');
 
-  // console.log("roles : ", roles )
+  const { signInLogs, isLoading, initial, responseMessage } = useSelector((state) => state.user);
 
   useLayoutEffect(() => {
-    dispatch(getRoles());
-  }, [dispatch]);
+    dispatch(getSignInLogs(userId));
+  }, [dispatch, userId]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(roles);
+      setTableData(signInLogs);
     }
-  }, [roles, initial]);
+  }, [signInLogs, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -140,51 +139,6 @@ export default function RoleList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      // console.log(id);
-      await dispatch(deleteRole(id));
-      dispatch(getRoles());
-      setSelected([]);
-
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (error) {
-      if(error.Message){
-        enqueueSnackbar(error.Message,{ variant: `error` })
-      }else if(error.message){
-        enqueueSnackbar(error.message,{ variant: `error` })
-      }else{
-        enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      }
-      console.log("Error:", error);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
-  const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_DASHBOARD.role.edit(id));
-  };
 
   const handleViewRow = (id) => {
     navigate(PATH_DASHBOARD.role.view(id));
@@ -208,7 +162,7 @@ export default function RoleList() {
         >
           <Cover
             generalSettings='enabled'
-            name="Roles"
+            name="Sign In Logs"
             icon="ph:users-light"
           />
         </Card>
@@ -269,7 +223,7 @@ export default function RoleList() {
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
+                          // onDeleteRow={() => handleDeleteRow(row._id)}
                           // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
@@ -314,7 +268,7 @@ export default function RoleList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              // handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >
@@ -340,9 +294,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (role) => role?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    role?.roleType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    fDate(role?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter( (logs) => logs?.user?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    logs?.loginIP?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    fDate(logs?.loginTime)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0   ||
+    fDate(logs?.logoutTime)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 );
   }
 
   if (filterStatus.length) {

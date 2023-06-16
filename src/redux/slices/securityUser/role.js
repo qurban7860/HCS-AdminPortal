@@ -111,8 +111,8 @@ export function addRole(params) {
         name: params.name,
         roleType: params.roleType,
         description: params.description,
-        allModules:  params.allModules,
-        allWriteAccess: params.allWriteAccess,
+        // allModules:  params.allModules,
+        // allWriteAccess: params.allWriteAccess,
         disableDelete: params.disableDelete,
         isActive: params.isActive,
       }
@@ -136,8 +136,8 @@ export function updateRole(id, params) {
         name: params.name,
         roleType: params.roleType,
         description: params.description,
-        allModules:  params.allModules,
-        allWriteAccess: params.allWriteAccess,
+        // allModules:  params.allModules,
+        // allWriteAccess: params.allWriteAccess,
         disableDelete: params.disableDelete,
         isActive: params.isActive,
       }

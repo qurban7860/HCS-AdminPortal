@@ -15,7 +15,8 @@ const initialState = {
   error: null,
   securityUsers: [],
   securityUser: null,
-  loggedInUser: null
+  loggedInUser: null,
+  signInLogs: []
 };
 
 const slice = createSlice({
@@ -67,6 +68,14 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Active Sign in Logs
+    getSignInLogsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.signInLogs = action.payload;
+      state.initial = true;
+    },
+
     // SET RES MESSAGE
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -86,6 +95,14 @@ const slice = createSlice({
     // RESET SECURITY USERS
     resetSecurityUsers(state){
       state.securityUsers = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
+    // RESET SIGNINLOGS
+    resetSignInLogs(state){
+      state.signInLogs = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -273,6 +290,21 @@ export function SecurityUserPasswordUpdate(data, Id, isAdmin) {
       console.error(error);
       throw error;
       // dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ----------------------------------------------------------------------
+
+export function getSignInLogs(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/users/${id}/signinlogs/`);
+      dispatch(slice.actions.getSignInLogsSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
