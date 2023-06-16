@@ -32,6 +32,7 @@ export default function Setting() {
    const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentType.list); };
    const linkFileCategory = () => { navigate(PATH_DOCUMENT.documentCategory.list); };
    const linkRole = () => { navigate(PATH_DASHBOARD.role.list); };
+   const linkSignInLogs = () => { navigate(PATH_DASHBOARD.user.signInLogList); };
 
 
   return (
@@ -87,8 +88,14 @@ export default function Setting() {
                   <ListItemIcon>
                     <Iconify icon="carbon:user-role" />
                   </ListItemIcon>
-                  <ListItemText primary="Users Role" />
+                  <ListItemText primary="User Roles" />
                 </ListItemButton>
+                {/* <ListItemButton onClick={linkSignInLogs} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="carbon:user-role" />
+                  </ListItemIcon>
+                  <ListItemText primary="User Sign In Logs" />
+                </ListItemButton> */}
               </List>
             </Card>
           </Grid>

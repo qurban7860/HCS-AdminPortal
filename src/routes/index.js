@@ -152,6 +152,7 @@ RoleEdit,
 
 // Reports
   Reports,
+  SignInLogList,
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -241,6 +242,8 @@ export default function Router() {
             { path: 'new', element: <SecurityUserAdd /> },
             { path: ':id/edit', element: <SecurityUserEdit /> },
             { path: ':id/view', element: <SecurityUserViewForm /> },
+            { path: 'signInLogList', element: <SignInLogList /> },
+
           ],
         },
         {

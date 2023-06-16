@@ -64,6 +64,8 @@ export const PATH_DASHBOARD = {
     view: (id) => path(ROOTS_DASHBOARD, `/user/${id}/view`),
     edit: (id) => path(ROOTS_DASHBOARD, `/user/${id}/edit`),
     demoEdit: path(ROOTS_DASHBOARD, `/user/reece-chung/edit`),
+    signInLogList: path(ROOTS_DASHBOARD, '/user/signInLogList'),
+
   },
   role: {
     new: path(ROOTS_DASHBOARD, '/role/new'),
