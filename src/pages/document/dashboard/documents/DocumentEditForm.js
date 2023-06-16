@@ -44,7 +44,7 @@ import { getSites } from '../../../../redux/slices/customer/site';
 
 export default function DocumentEditForm() {
 
-  const { document } = useSelector((state) => state.document);
+  const { document, documentHistory } = useSelector((state) => state.document);
   const { documentTypes } = useSelector((state) => state.documentType);
   const { documentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer); 
@@ -70,15 +70,15 @@ export default function DocumentEditForm() {
   const { enqueueSnackbar } = useSnackbar();
 
 useEffect(()=>{
-  setNameVal(document?.displayName)
-  setCustomerAccessVal(document?.customerAccess)
-  setIsActive(document?.isActive)
-  setDocumentCategoryVal(document?.docCategory)
-  setDocumentTypeVal(document?.docType)
-  setDescriptionVal(document?.description)
+  setNameVal(documentHistory?.displayName)
+  setCustomerAccessVal(documentHistory?.customerAccess)
+  setIsActive(documentHistory?.isActive)
+  setDocumentCategoryVal(documentHistory?.docCategory)
+  setDocumentTypeVal(documentHistory?.docType)
+  setDescriptionVal(documentHistory?.description)
   // dispatch(getDocumentCategories())
   dispatch(getDocumentTypes())
-},[dispatch,document])
+},[dispatch,documentHistory])
 
   const EditCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
@@ -90,9 +90,9 @@ useEffect(()=>{
   const defaultValues = useMemo(
     () => ({
       displayName: nameVal,
-      description: document?.description || "",
+      description: documentHistory?.description || "",
       // image: null,
-      isActive: document?.isActive,
+      isActive: documentHistory?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -132,9 +132,9 @@ useEffect(()=>{
       }
         data.customerAccess = customerAccessVal
         data.isActive = isActive
-      await dispatch(updateDocument(document?._id,data,customer._id));
+      await dispatch(updateDocument(documentHistory?._id,data,customer._id));
       enqueueSnackbar('Document saved successfully!');
-      navigate(PATH_DASHBOARD.document.view(document._id))
+      navigate(PATH_DASHBOARD.document.view(documentHistory._id))
       setDescriptionVal("")
       setNameVal("")
       setDocumentCategoryVal("")
@@ -194,7 +194,7 @@ useEffect(()=>{
           }}
         >
           <Cover
-            name={document?.displayName}
+            name={documentHistory?.displayName}
             icon="ph:users-light"
           />
         </Card>

@@ -154,10 +154,11 @@ export function addDocument(customerId , machineId , params) {
           }
           if(params?.displayName){
             formData.append('displayName', params?.displayName);
+            formData.append('name', params?.displayName);
           }
-          if(params?.name){
-            formData.append('name', params?.name);
-          }
+          // if(params?.name){
+          //   formData.append('name', params?.name);
+          // }
           if(params?.description){
             formData.append('description', params?.description);
           }

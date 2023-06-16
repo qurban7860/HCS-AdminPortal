@@ -85,6 +85,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         customerAccess:           currentCustomerDocument?.customerAccess,
         isActiveVersion:          currentCustomerDocument?.isActiveVersion,
         documentVersion:          currentCustomerDocument?.documentVersions[0]?.versionNo || "",
+        versionPrefix:            currentCustomerDocument?.versionPrefix || "",
         description:              currentCustomerDocument?.description,
         isActive:                 currentCustomerDocument?.isActive,
         createdAt:                currentCustomerDocument?.createdAt || "",
@@ -224,7 +225,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
             <ViewFormField sm={6} heading="Version" objectParam={
                                     defaultValues.documentVersion ? (
                                       <Typography display="flex">
-                                        {defaultValues.documentVersion}
+                                        {defaultValues.versionPrefix} {defaultValues.documentVersion}
                                         {currentCustomerDocument?.documentVersions && currentCustomerDocument?.documentVersions?.length > 1 && <Link onClick={linkCustomerDocumentView} href='#' underline='none' ><Typography variant='body2' sx={{mt:0.45,ml:1}} >   More version  </Typography></Link>}
                                       </Typography>
                                       

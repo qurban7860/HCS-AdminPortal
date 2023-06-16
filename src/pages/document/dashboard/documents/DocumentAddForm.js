@@ -106,11 +106,11 @@ export default function DocumentAddForm({currentDocument}) {
   },[dispatch,])
 
   useEffect(()=>{
-    if(documentDependency === "machine" && activeMachines && activeMachines.length < 1){
-      dispatch(getActiveMachines());
+    if(documentDependency === "machine" ){
+      // dispatch(getActiveMachines());
       dispatch(getActiveMachineModels());
     }
-    if(documentDependency === "customer" && activeCustomers && activeCustomers.length < 1){
+    if(documentDependency === "customer" ){
       dispatch(getActiveCustomers());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -128,7 +128,7 @@ export default function DocumentAddForm({currentDocument}) {
       dispatch(getActiveSites(customerVal._id))
     }
   },[dispatch ,customerVal])
-
+// ------------------------- customer documents ---------------------------------------
   useEffect(()=>{
     if(customerVal?._id && selectedValue === "newVersion"){
       dispatch(getCustomerDocuments(customerVal._id))
@@ -196,11 +196,17 @@ export default function DocumentAddForm({currentDocument}) {
         data.displayName = displayNameVal
         data.isActive = isActive;
         data.customerAccess = customerAccessVal
+        if(customerVal ){
+          data.customer = customerVal._id
+        }
         if(customerSiteVal){
           data.site = customerSiteVal._id
         } 
-        if(machineModelVal){
+        if(machineModelVal && !machineVal){
           data.machineModel = machineModelVal._id
+        }
+        if(machineVal){
+          data.machine= machineVal._id
         }
         if(documentCategoryVal){
           data.documentCategory = documentCategoryVal?._id
@@ -211,17 +217,18 @@ export default function DocumentAddForm({currentDocument}) {
         if(descriptionVal){
           data.description = descriptionVal;
         }
-        // console.log("data : ", data)
-
         if(selectedValue === "new"){
           await dispatch(addDocument(customerVal?._id, machineVal._id ,data));
           enqueueSnackbar('Machine document save successfully!');
+          navigate(PATH_DASHBOARD.document.dashboard);
         }else if (selectedVersionValue === "newVersion"){
             await dispatch(addDocumentVersion(documentVal._id,data));
           enqueueSnackbar('Machine document version updated successfully!');
+          navigate(PATH_DASHBOARD.document.dashboard);
         }else{
           await dispatch(updateDocumentVersion(documentVal._id,documentVal?.documentVersions[0]?._id,data));
           enqueueSnackbar('Machine document updated successfully!');
+          navigate(PATH_DASHBOARD.document.dashboard);
           }
           dispatch(getDocuments())
         setDocumentCategoryVal("")
@@ -319,6 +326,8 @@ export default function DocumentAddForm({currentDocument}) {
       setCustomerSiteVal("");
       setMachineModelVal("");
       setMachineVal('');
+      dispatch(resetActiveSites());
+      dispatch(resetActiveMachines())
       dispatch(resetActiveDocuments())
     // }
   }
@@ -438,7 +447,7 @@ export default function DocumentAddForm({currentDocument}) {
                             </li>
                           )}
                           id="controllable-states-demo"
-                          renderInput={(params) => <TextField {...params} required label="Site" />}
+                          renderInput={(params) => <TextField {...params} label="Site" />}
                           ChipProps={{ size: 'small' }}
                         />
                       </Grid>
@@ -503,7 +512,7 @@ export default function DocumentAddForm({currentDocument}) {
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} label="Machine" />}
+                        renderInput={(params) => <TextField {...params}  label="Machine" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
