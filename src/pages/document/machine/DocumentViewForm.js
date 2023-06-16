@@ -28,6 +28,7 @@ import { getMachine, resetMachine } from '../../../redux/slices/products/machine
 import { useSnackbar } from '../../../components/snackbar';
 import LoadingScreen from '../../../components/loading-screen';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
+import DeleteIconButton from '../../components/DeleteIconButton';
 
   const Loadable = (Component) => (props) =>
   (
@@ -246,24 +247,9 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                       sx={{ position: 'relative', zIndex: '1' }}
                       >
                       <Link>
-                        <IconButton
-                          size="small"
+                      <DeleteIconButton 
                           onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
-                          sx={{
-                            top: 4,
-                            left: 44,
-                            zIndex: 9,
-                            height: "60",
-                            position: 'absolute',
-                            color: (theme) => alpha(theme.palette.common.white, 0.8),
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
-                            },
-                          }}
-                        >
-                          <Iconify icon="material-symbols:delete" width={18} />
-                        </IconButton>
+                      />
                       </Link>
                       <Link>
                         <IconButton
@@ -404,24 +390,9 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                       sx={{ position: 'relative', zIndex: '1' }}
                       >
                       <Link>
-                        <IconButton
-                          size="small"
+                      <DeleteIconButton 
                           onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
-                          sx={{
-                            top: 4,
-                            left: 76,
-                            zIndex: 9,
-                            height: "60",
-                            position: 'absolute',
-                            color: (theme) => alpha(theme.palette.common.white, 0.8),
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
-                            },
-                          }}
-                        >
-                          <Iconify icon="material-symbols:delete" width={18} />
-                        </IconButton>
+                      />
                       </Link>
                       <Link>
                         <IconButton
