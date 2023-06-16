@@ -49,6 +49,8 @@ export default function ViewFormEditDeleteButtons({
   sites,
   handleMap,
 }) {
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -56,6 +58,14 @@ export default function ViewFormEditDeleteButtons({
   // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const disableDelete = userRoles.some(role => role?.disableDelete === true);
+  
+  if(disableDelete){
+    disableDeleteButton = true;
+   }else{
+    disableDeleteButton = false
+   }
+
   const handleOpenConfirm = (dialogType) => {
     if(dialogType === 'delete'){
       setOpenConfirm(true);

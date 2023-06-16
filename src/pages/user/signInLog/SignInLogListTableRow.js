@@ -55,7 +55,7 @@ export default function SignInLogListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { loginTime, user, loginIP } = row;
+  const { loginTime, user, loginIP, logoutTime } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -86,8 +86,10 @@ export default function SignInLogListTableRow({
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         {/* <LinkTableCell align="left" onClick={onViewRow} param={name} /> */}
         <TableCell align="left" > {user?.name ? user?.name : '' } </TableCell> 
-        <TableCell align="center" > {fDateTime(loginTime)} </TableCell>  
-        <TableCell align="right" >{loginIP}</TableCell>
+        <TableCell align="left" > {loginIP} </TableCell>  
+
+        <TableCell align="left" > {fDateTime(loginTime)} </TableCell>  
+        <TableCell align="left" >{fDateTime(logoutTime)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />

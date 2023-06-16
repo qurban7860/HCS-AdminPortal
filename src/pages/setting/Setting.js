@@ -90,12 +90,12 @@ export default function Setting() {
                   </ListItemIcon>
                   <ListItemText primary="User Roles" />
                 </ListItemButton>
-                {/* <ListItemButton onClick={linkSignInLogs} sx={{ color: 'text.disabled' }}>
+                <ListItemButton onClick={linkSignInLogs} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
-                    <Iconify icon="carbon:user-role" />
+                    <Iconify icon="mdi:clipboard-text" />
                   </ListItemIcon>
-                  <ListItemText primary="User Sign In Logs" />
-                </ListItemButton> */}
+                  <ListItemText primary="User SignIn Logs" />
+                </ListItemButton>
               </List>
             </Card>
           </Grid>

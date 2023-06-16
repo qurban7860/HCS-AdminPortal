@@ -49,9 +49,9 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'user', label: 'User Name', align: 'left' },
-  { id: 'loginTime', label: 'Login Time', align: 'left' },
-  { id: 'logoutTime', label: 'Logout Time', align: 'center' },
-  { id: 'logoutTime', label: 'Logout Time', align: 'right' },
+  { id: 'userIP', label: 'User IP', align: 'left' },
+  { id: 'loginTime', label: 'Logout Time', align: 'left' },
+  { id: 'logoutTime', label: 'Logout Time', align: 'left' },
 ];
 
 // ----------------------------------------------------------------------
@@ -73,7 +73,7 @@ export default function SignInLogList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: 'name',
+    defaultOrderBy: '-loginTime',
   });
 
   const dispatch = useDispatch();
@@ -94,9 +94,7 @@ export default function SignInLogList() {
 
   const userId = localStorage.getItem('userId');
 
-  const { signInLogs, isLoading, initial, responseMessage } = useSelector((state) => state.securityUser);
-
-  // console.log("signInLogs : ", signInLogs )
+  const { signInLogs, isLoading, initial, responseMessage } = useSelector((state) => state.user);
 
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
@@ -225,7 +223,7 @@ export default function SignInLogList() {
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
+                          // onDeleteRow={() => handleDeleteRow(row._id)}
                           // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
@@ -270,7 +268,7 @@ export default function SignInLogList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              // handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >
@@ -296,9 +294,10 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (role) => role?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    role?.roleType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    fDate(role?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter( (logs) => logs?.user?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    logs?.loginIP?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+    fDate(logs?.loginTime)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0   ||
+    fDate(logs?.logoutTime)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 );
   }
 
   if (filterStatus.length) {
