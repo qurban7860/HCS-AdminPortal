@@ -5,6 +5,7 @@ import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } from '@mui/material';
+import green from '@mui/material/colors/green';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
@@ -24,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 ViewFormEditDeleteButtons.propTypes = {
+  handleVerification: PropTypes.func,
+  isVerified: PropTypes.bool,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleEdit: PropTypes.func,
@@ -41,6 +44,8 @@ export default function ViewFormEditDeleteButtons({
   disableDeleteButton = false,
   disablePasswordButton = false,
   disableEditButton = false,
+  isVerified ,
+  handleVerification,
   onDelete,
   handleEdit,
   handleTransfer,
@@ -53,10 +58,15 @@ export default function ViewFormEditDeleteButtons({
   const classes = useStyles();
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
+
   // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const handleOpenConfirm = (dialogType) => {
+    if(dialogType === 'Verification'){
+      setOpenVerificationConfirm(true);
+    }
     if(dialogType === 'delete'){
       setOpenConfirm(true);
     }
@@ -65,6 +75,9 @@ export default function ViewFormEditDeleteButtons({
     }
   };
   const handleCloseConfirm = (dialogType) => {
+    if(dialogType === 'Verification'){
+      setOpenVerificationConfirm(false);
+    }
     if(dialogType === 'delete'){
       setOpenConfirm(false);
     }
@@ -106,6 +119,27 @@ export default function ViewFormEditDeleteButtons({
           },
         }}
       >
+          {handleVerification  ? (
+          <Button
+            onClick={() => {
+              handleOpenConfirm('Verification');
+            }}
+            variant="outlined"
+            title="Verification"
+            color={isVerified ? 'primary' : 'error'}
+          >
+            <Tooltip
+              title="Machine Verification"
+              placement="top"
+              disableFocusListener
+              classes={{ tooltip: classes.tooltip }}
+            >
+              <Iconify sx={{ height: '24px', width: '24px' }} icon="ic:round-verified-user" />
+            </Tooltip>
+          </Button>
+        ) : (
+          ''
+        )}
         {sites && !isMobile ? (
           <Button
             onClick={() => {
@@ -243,6 +277,19 @@ export default function ViewFormEditDeleteButtons({
           ''
         )}
       </Stack>
+      <ConfirmDialog
+        open={openVerificationConfirm}
+        onClose={() => {
+          handleCloseConfirm('Verification');
+        }}
+        title="Verification"
+        content="Are you sure you want to Verify Machine Informaton?"
+        action={
+          <Button variant="contained" color="success" onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}>
+            Verified
+          </Button>
+        }
+      />
       <ConfirmDialog
         open={openConfirm}
         onClose={() => {
