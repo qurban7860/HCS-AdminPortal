@@ -195,6 +195,27 @@ export function getActiveMachines() {
   };
 }
 
+// -------------------------Machine Verification---------------------------------------
+
+export function setMachineVerification(Id, verificationValue) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${Id}`, 
+      {
+        params: {
+          isVerified: !verificationValue,
+        }
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
 // ----------------------------get Active Model Machines------------------------------------------
 
 export function getActiveModelMachines(modelId) {
