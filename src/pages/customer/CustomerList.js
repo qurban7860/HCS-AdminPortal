@@ -42,16 +42,39 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import CustomerStepper from './CustomerStepper';
-import { getCustomers, deleteCustomer, getCustomer ,resetCustomer,resetCustomers } from '../../redux/slices/customer/customer';
-import { resetSite,resetSites, setSiteEditFormVisibility, setSiteFormVisibility     } from '../../redux/slices/customer/site';
-import { resetContact,resetContacts, setContactEditFormVisibility,setContactFormVisibility} from '../../redux/slices/customer/contact';
-import { resetNote,resetNotes ,setNoteEditFormVisibility,setNoteFormVisibility } from '../../redux/slices/customer/note';
-import { resetCustomerDocument, resetCustomerDocuments } from '../../redux/slices/document/customerDocument';
+import {
+  getCustomers,
+  deleteCustomer,
+  getCustomer,
+  resetCustomer,
+  resetCustomers,
+} from '../../redux/slices/customer/customer';
+import {
+  resetSite,
+  resetSites,
+  setSiteEditFormVisibility,
+  setSiteFormVisibility,
+} from '../../redux/slices/customer/site';
+import {
+  resetContact,
+  resetContacts,
+  setContactEditFormVisibility,
+  setContactFormVisibility,
+} from '../../redux/slices/customer/contact';
+import {
+  resetNote,
+  resetNotes,
+  setNoteEditFormVisibility,
+  setNoteFormVisibility,
+} from '../../redux/slices/customer/note';
+import {
+  resetCustomerDocument,
+  resetCustomerDocuments,
+} from '../../redux/slices/document/customerDocument';
 import { resetCustomerMachines } from '../../redux/slices/products/machine';
 
 import { Cover } from '../components/Cover';
 import { fDate } from '../../utils/formatTime';
-
 
 // ----------------------------------------------------------------------
 
@@ -62,7 +85,6 @@ const TABLE_HEAD = [
   { id: 'mainSiteAddress', label: 'Address', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
-
 ];
 
 // ----------------------------------------------------------------------
@@ -98,32 +120,33 @@ export default function CustomerList() {
   const [filterName, setFilterName] = useState('');
   const [filterAddress, setAddress] = useState('');
 
-
   const [tableData, setTableData] = useState([]);
 
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customers, isLoading, error, initial, responseMessage } = useSelector((state) => state.customer);
+  const { customers, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.customer
+  );
   useLayoutEffect(() => {
     dispatch(getCustomers());
-    dispatch(resetCustomer())
-    dispatch(resetSite())
-    dispatch(resetSites())
-    dispatch(resetContact())
-    dispatch(resetContacts())
-    dispatch(resetNote())
-    dispatch(resetNotes())
+    dispatch(resetCustomer());
+    dispatch(resetSite());
+    dispatch(resetSites());
+    dispatch(resetContact());
+    dispatch(resetContacts());
+    dispatch(resetNote());
+    dispatch(resetNotes());
     dispatch(resetCustomerDocument());
     dispatch(resetCustomerDocuments());
-    dispatch(resetCustomerMachines())
+    dispatch(resetCustomerMachines());
     dispatch(setSiteFormVisibility(false));
     dispatch(setSiteEditFormVisibility(false));
     dispatch(setContactFormVisibility(false));
     dispatch(setContactEditFormVisibility(false));
     dispatch(setNoteFormVisibility(false));
-    dispatch(setNoteEditFormVisibility(false))
+    dispatch(setNoteEditFormVisibility(false));
   }, [dispatch]);
 
   useEffect(() => {
@@ -220,7 +243,7 @@ export default function CustomerList() {
           sx={{
             mb: 3,
             height: 160,
-            position: 'relative'
+            position: 'relative',
           }}
         >
           <Cover name="Customers" icon="ph:users-light" />
@@ -234,7 +257,7 @@ export default function CustomerList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
-            />
+          />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
@@ -254,7 +277,7 @@ export default function CustomerList() {
               //   </Tooltip>
               // }
             />
-            
+
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
@@ -273,7 +296,7 @@ export default function CustomerList() {
                 />
 
                 <TableBody>
-                  { dataFiltered
+                  {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
@@ -352,12 +375,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (customer) => customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    customer?.tradingName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
-    customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (customer) =>
+        customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        customer?.tradingName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >=
+          0 ||
+        // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

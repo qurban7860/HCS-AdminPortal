@@ -4,34 +4,15 @@ import * as Yup from 'yup';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
-import {
-  Switch,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  Container,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
-  Breadcrumbs,
-  Tooltip,
-} from '@mui/material';
-// global
-import { CONFIG } from '../../config-global';
+import { Card, Grid, Stack, Typography, Button, Link, Breadcrumbs, Tooltip } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import Iconify from '../../components/iconify';
-
 // slices
 import {
   getCustomers,
@@ -43,8 +24,8 @@ import FormProvider, { RHFSwitch } from '../../components/hook-form';
 import { fDateTime } from '../../utils/formatTime';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
-import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 
 // ----------------------------------------------------------------------
 

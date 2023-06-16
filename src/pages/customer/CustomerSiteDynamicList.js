@@ -59,6 +59,7 @@ import CommaJoinField from '../components/CommaJoinField';
 import _mock from '../../_mock';
 import SiteViewForm from './site/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
+import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 
 // ----------------------------------------------------------------------
 
@@ -99,31 +100,16 @@ const _accordions = [...Array(8)].map((_, index) => ({
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
-    defaultOrderBy: 'createdAt',
-  });
-
+  const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
+  const [filterName, setFilterName] = useState('');
+  const [tableData, setTableData] = useState([]);
+  const [filterStatus, setFilterStatus] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [expanded, setExpanded] = useState(false);
   const [controlled, setControlled] = useState(false);
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
+  const [isExpanded, setIsExpanded] = useState(false);
+  const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
   const {
     sites,
@@ -148,46 +134,12 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     },
   }));
 
-  const AccordionSummaryCustom = styled((props) => <AccordionSummary {...props} />)(
-    ({ theme }) => ({
-      backgroundColor:
-        theme.palette.mode === 'light' ? 'rgba(0, 0, 0, .07)' : 'rgba(255, 255, 255, .07)',
-      borderBottom: `solid 1px ${theme.palette.divider}`,
-      minHeight: 56,
-    })
-  );
-
-  const AccordionDetailsCustom = styled((props) => <AccordionDetails {...props} />)(
-    ({ theme }) => ({
-      padding: theme.spacing(1),
-      // borderTop: `solid 1px ${theme.palette.divider}`,
-    })
-  );
-
   const toggleChecked = async () => {
     dispatch(setSiteFormVisibility(!siteAddFormVisibility));
   };
 
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
-  const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [expanded, setExpanded] = useState(false);
-
-  // const handleAccordianClick = (accordianIndex) => {
-  //   setActiveIndex(accordianIndex);
-  //   // if (accordianIndex === activeIndex) {
-  //   //   setActiveIndex(null);
-  //   // } else {
-  //   //   setActiveIndex(accordianIndex);
-  //   // }
-  // };
-
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-    // console.log("Expended : ",expanded)
+  const handleExpand = (index) => {
+    setIsExpanded(true);
   };
 
   useEffect(() => {
@@ -198,26 +150,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
   useEffect(() => {
     if (initial) {
-      // if (sites && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // } else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-  // console.log("sites", sites);
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-  });
 
-  const isMobile = useResponsive('down', 'sm');
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
+  // conditions for rendering the contact view, edit, and add forms
+  const shouldShowSiteView = isExpanded && !siteEditFormVisibility;
+  const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
+  const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
   const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
   return (
     <>
@@ -237,29 +177,16 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           >
             New Site
           </Button>
-          <Grid container>
-            <Breadcrumbs separator={'›' || ''} aria-label="breadcrumb">
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer.view}
-              >
-                {customer.name}
-              </Link>
-              <Link underline="none" variant="subtitle2" color="inherit" href={PATH_CUSTOMER.site}>
-                Sites
-              </Link>
-              <Link
-                underline="none"
-                variant="subtitle2"
-                color="inherit"
-                href={PATH_DASHBOARD.customer}
-              >
-                {siteAddFormVisibility ? 'New Site Form' : sites[activeIndex]?.name}
-              </Link>
-            </Breadcrumbs>
-          </Grid>
+          <BreadcrumbsProducer
+            underline="none"
+            step={1}
+            name={customer.name}
+            path={PATH_DASHBOARD.customer.view}
+            name2="Sites"
+            path2={PATH_CUSTOMER.site}
+            name3={siteAddFormVisibility ? 'New Site Form' : sites[activeIndex]?.name}
+            path3={PATH_DASHBOARD.customer}
+          />
         </Stack>
       )}
       <Grid
