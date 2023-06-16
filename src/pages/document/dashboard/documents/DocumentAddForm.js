@@ -98,6 +98,9 @@ export default function DocumentAddForm({currentDocument}) {
     setDescriptionVal("")
     setMachineVal("")
     setMachineModelVal("")
+    dispatch(resetActiveDocuments())
+    dispatch(resetActiveMachines)
+    dispatch(resetActiveSites)
     dispatch(getActiveDocumentTypes());
     dispatch(getActiveDocumentCategories());
     // dispatch(getActiveCustomers());
@@ -134,12 +137,15 @@ export default function DocumentAddForm({currentDocument}) {
       dispatch(getCustomerDocuments(customerVal._id))
     }
   },[dispatch , customerVal , selectedValue]);
-
+// ------------------------- machine documents ---------------------------------------
   useEffect(()=>{
     if(machineVal?._id && selectedValue === "newVersion"){
-      dispatch(getMachineDocuments(machineVal._id))
+      dispatch(getMachineDocuments(machineVal._id,machineModelVal._id))
     }
-  },[dispatch , machineVal , selectedValue]);
+    if(machineModelVal._id && !machineVal && selectedValue === "newVersion"){
+      dispatch(getMachineDocuments(null,machineModelVal._id))
+    }
+  },[dispatch , machineVal , machineModelVal, selectedValue]);
 
   const AddDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
@@ -419,7 +425,7 @@ export default function DocumentAddForm({currentDocument}) {
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Customer" />}
+                        renderInput={(params) => <TextField {...params} required label="Select Customer" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
@@ -447,7 +453,7 @@ export default function DocumentAddForm({currentDocument}) {
                             </li>
                           )}
                           id="controllable-states-demo"
-                          renderInput={(params) => <TextField {...params} label="Site" />}
+                          renderInput={(params) => <TextField {...params} label="Select Site" />}
                           ChipProps={{ size: 'small' }}
                         />
                       </Grid>
@@ -489,7 +495,7 @@ export default function DocumentAddForm({currentDocument}) {
                           </li>
                         )}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Model" />}
+                        renderInput={(params) => <TextField {...params} required label="Select Model" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
@@ -512,7 +518,7 @@ export default function DocumentAddForm({currentDocument}) {
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params}  label="Machine" />}
+                        renderInput={(params) => <TextField {...params}  label="Select Machine" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
@@ -572,7 +578,7 @@ export default function DocumentAddForm({currentDocument}) {
                           }}
                           renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.displayName ? option.displayName : ""}`}</li>)}
                           id="controllable-states-demo"
-                          renderInput={(params) => <TextField {...params} required label="Documents" />}
+                          renderInput={(params) => <TextField {...params} required label="Select  Document" />}
                           ChipProps={{ size: 'small' }}
                         />
                       </Grid>
