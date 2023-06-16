@@ -27,7 +27,6 @@ import {
 // import { LocalizationProvider, DatePicker } from '@mui/lab';
 
 import { DatePicker } from '@mui/x-date-pickers';
-import moment from 'moment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 

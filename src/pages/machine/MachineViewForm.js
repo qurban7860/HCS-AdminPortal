@@ -1,14 +1,13 @@
-import { useLayoutEffect, useEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import _ from 'lodash';
 // @mui
 import { Divider, Switch, Card, Grid, Typography, Link ,Dialog } from '@mui/material';
 // routes
 import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
 // slices
 import { useAuthContext } from '../../auth/useAuthContext';
-import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag, updateMachine, transferMachine } from '../../redux/slices/products/machine';
+import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag, updateMachine, transferMachine, setMachineVerification } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
 import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
@@ -21,8 +20,6 @@ import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import CommaJoinField from '../components/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
 import GoogleMaps from '../../assets/GoogleMaps';
-// utils
-import { fDateTime , fDate } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
@@ -36,45 +33,16 @@ export default function MachineViewForm() {
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
   const [disableTransferButton, setDisableTransferButton] = useState(false);
-  const [disableEditButton, setDisableEditButton] = useState(false);
-  const [hasValid, setHasValid] = useState(false);
   const baseUrl = window.location.origin;
   const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
   
-  const latLongValues = useMemo(() => [
-    {
-      lat: machine?.instalationSite?.lat || "",
-      long: machine?.instalationSite?.long || "",
-    },
-    {
-      lat: machine?.billingSite?.lat || "",
-      long: machine?.billingSite?.long || "",
-    }
-  ], [machine]);
-
-  useEffect(() => {
-    const hasValidArray = (array) => array.some((obj) => {
-      const lat = obj?.lat;
-      const long = obj?.long;
-      return lat !== undefined && long !== undefined && lat !== "" && long !== "";
-    });
-
-    const isValid = hasValidArray(latLongValues);
-    setHasValid(isValid);
-
-  }, [machine, latLongValues, setHasValid]);
-
+  
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));
     if(machine.transferredMachine || !machine.isActive || !isSuperAdmin){
       setDisableTransferButton(true);
     }else{
       setDisableTransferButton(false);
-    }
-    if(machine.transferredMachine){
-      setDisableEditButton(true);
-    }else{
-      setDisableEditButton(false);
     }
     if(userId){
       dispatch(getLoggedInSecurityUser(userId));
@@ -116,6 +84,10 @@ export default function MachineViewForm() {
     dispatch(getMachines());
     navigate(PATH_MACHINE.machine.list)
   };
+  const handleVerification  = async () => {
+    await dispatch(setMachineVerification(machine._id, machine?.isVerified));
+    dispatch(getMachine(machine._id));
+  };
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openInstallationSite, setOpenInstallationSite] = useState(false);
   const [openBilingSite, setOpenBilingSite] = useState(false);
@@ -139,11 +111,9 @@ export default function MachineViewForm() {
       machineModel:             machine?.machineModel?.name || "",
       status:                   machine?.status?.name || "",
       customer:                 machine?.customer || "",
-      siteMilestone:            machine?.siteMilestone || "",
       instalationSite:          machine?.instalationSite || "",
+      siteMilestone:            machine?.siteMilestone || "",
       billingSite:              machine?.billingSite|| "",
-      installationDate:         machine?.installationDate || "",
-      shippingDate:             machine?.shippingDate || "",
       description:              machine?.description || "",
       customerTags:             machine?.customerTags || "",
       accountManager:           machine?.accountManager || "",
@@ -162,13 +132,25 @@ export default function MachineViewForm() {
     [machine]
   );
 
+  const latLongValues = [
+    {
+      lat: machine?.billingSite?.lat || "",
+      long: machine?.billingSite?.long || "",
+    },
+    {
+      lat: machine?.instalationSite?.lat || "",
+      long: machine?.instalationSite?.long || "",
+    }
+  ];
+
   return (
     <Card sx={{ p: 3 }}>
       <Grid container justifyContent="flex-end" alignContent="flex-end">
         <ViewFormEditDeleteButtons 
           sx={{ pt: 5 }} 
-          disableTransferButton={disableTransferButton}
-          disableEditButton={disableEditButton} 
+          isVerified={machine?.isVerified}
+          handleVerification={handleVerification}
+          disableTransferButton={disableTransferButton} 
           handleEdit={handleEdit} 
           onDelete={onDelete} 
           handleTransfer={handleTransfer}
@@ -219,11 +201,6 @@ export default function MachineViewForm() {
         <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
         <ViewFormField
           sm={6}
-          heading="Work Order / Purchase Order"
-          param={defaultValues?.workOrderRef}
-        />
-        <ViewFormField
-          sm={6}
           heading="Installation Site"
           objectParam={
             defaultValues.instalationSite ? (
@@ -248,8 +225,11 @@ export default function MachineViewForm() {
             )
           }
         />
-        <ViewFormField sm={6} heading="Installation Date" param={fDate(defaultValues?.installationDate)} />
-        <ViewFormField sm={6} heading="Shipping Date" param={fDate(defaultValues?.shippingDate)} />
+        <ViewFormField
+          sm={6}
+          heading="Work Order / Perchase Order"
+          param={defaultValues?.workOrderRef}
+        />
 
         <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
@@ -310,16 +290,10 @@ export default function MachineViewForm() {
             </Typography>
           </Grid>
         </Grid>
-        { hasValid ? <GoogleMaps
-              machineView
+        <GoogleMaps
               latlongArr={latLongValues}
               mapHeight='500px'
-          /> : 
-          <ViewFormField
-            sm={6}
-            heading="No Site Selected"
-          />
-        }
+        />
         
     
       </Grid>
