@@ -148,7 +148,8 @@ export default function MachineViewForm() {
       <Grid container justifyContent="flex-end" alignContent="flex-end">
         <ViewFormEditDeleteButtons 
           sx={{ pt: 5 }} 
-          isVerified={machine?.isVerified}
+          verificationCount={machine?.verifications?.length}
+          isVerified={machine?.verifications?.find((verified)=>verified.verifiedBy===userId)}
           handleVerification={handleVerification}
           disableTransferButton={disableTransferButton} 
           handleEdit={handleEdit} 

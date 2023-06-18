@@ -38,6 +38,7 @@ import {
   getCustomer,
   setCustomerEditFormVisibility,
   deleteCustomer,
+  setCustomerVerification
 } from '../../redux/slices/customer/customer';
 import FormProvider, { RHFSwitch } from '../../components/hook-form';
 import { fDateTime } from '../../utils/formatTime';
@@ -52,6 +53,7 @@ export default function CustomerViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { customer } = useSelector((state) => state.customer);
+  const userId = localStorage.getItem('userId');
   // console.log("customer : ",customer)
   // const toggleEdit = () => {
   //   dispatch(setCustomerEditFormVisibility(true));
@@ -64,7 +66,9 @@ export default function CustomerViewForm() {
     await dispatch(deleteCustomer(customer._id));
     navigate(PATH_DASHBOARD.customer.list);
   };
-
+  const handleVerification  = async () => {
+    await dispatch(setCustomerVerification(customer._id));
+  };
   const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
@@ -126,7 +130,13 @@ export default function CustomerViewForm() {
         </Grid>
       </Stack>
       <Card sx={{ p: 3 }}>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons 
+          verificationCount={customer?.verifications?.length}
+          isVerified={customer?.verifications?.find((verified)=>verified.verifiedBy===userId)}
+          handleVerification={handleVerification} 
+          handleEdit={handleEdit} 
+          onDelete={onDelete} 
+          />
         <Grid container>
           <Tooltip title="Active">
             <ViewFormField sm={12} isActive={defaultValues.isActive} />

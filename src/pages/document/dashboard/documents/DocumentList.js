@@ -49,9 +49,9 @@ import { fDate } from '../../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'doctype', label: 'Type', align: 'left' },
   { id: 'customer', label: 'Customer', align: 'left' },
   { id: 'machine', label: 'Machine', align: 'left' },
+  { id: 'doctype', label: 'Type', align: 'left' },
   { id: 'doccategory', label: 'Category', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
