@@ -10,14 +10,29 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link, Autocomplete , TextField} from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
+  Link,
+  Autocomplete,
+  TextField,
+} from '@mui/material';
 // global
 import { CONFIG } from '../../config-global';
 // slice
-import { updateCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import {
+  updateCustomer,
+  setCustomerEditFormVisibility,
+} from '../../redux/slices/customer/customer';
 import { getContacts, getSPContacts } from '../../redux/slices/customer/contact';
 import { getSites } from '../../redux/slices/customer/site';
-
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -29,26 +44,22 @@ import FormProvider, {
   RHFSelect,
   RHFMultiSelect,
   RHFTextField,
-  RHFSwitch
-
+  RHFSwitch,
 } from '../../components/hook-form';
 import ViewFormSWitch from '../components/ViewFormSwitch';
 
-
 // ----------------------------------------------------------------------
 
-
 export default function CustomerEditForm() {
-
   const { error, customer } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
   const { contacts, spContacts } = useSelector((state) => state.contact);
-  const [accountManVal, setAccountManVal] = useState('')
-  const [supportManVal, setSupportManVal] = useState('')
-  const [projectManVal, setProjectManVal] = useState('')
-  const [billingContactVal , setBillingContactVal] = useState('')
-  const [technicalContactVal, setTechnicalContactVal] = useState('')
-  const [siteVal, setSiteVal] = useState('')
+  const [accountManVal, setAccountManVal] = useState('');
+  const [supportManVal, setSupportManVal] = useState('');
+  const [projectManVal, setProjectManVal] = useState('');
+  const [billingContactVal, setBillingContactVal] = useState('');
+  const [technicalContactVal, setTechnicalContactVal] = useState('');
+  const [siteVal, setSiteVal] = useState('');
 
   const dispatch = useDispatch();
 
@@ -70,7 +81,6 @@ export default function CustomerEditForm() {
     // primaryTechnicalContact: Yup.string().nullable(),
   });
 
-
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
@@ -87,7 +97,7 @@ export default function CustomerEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customer]
   );
-// customer. === null || customer. === undefined  ? null : customer.,
+  // customer. === null || customer. === undefined  ? null : customer.,
   const methods = useForm({
     resolver: yupResolver(EditCustomerSchema),
     defaultValues,
@@ -107,34 +117,32 @@ export default function CustomerEditForm() {
     dispatch(getContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
-    setSiteVal(customer?.mainSite)
-    setAccountManVal(customer?.accountManager)
-    setSupportManVal(customer?.supportManager)
-    setProjectManVal(customer?.projectManager)
-    setBillingContactVal(customer?.primaryBillingContact)
-    setTechnicalContactVal(customer?.primaryTechnicalContact)
+    setSiteVal(customer?.mainSite);
+    setAccountManVal(customer?.accountManager);
+    setSupportManVal(customer?.supportManager);
+    setProjectManVal(customer?.projectManager);
+    setBillingContactVal(customer?.primaryBillingContact);
+    setTechnicalContactVal(customer?.primaryTechnicalContact);
   }, [dispatch, customer]);
 
   useEffect(() => {
     if (customer) {
       reset(defaultValues);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [customer]);
+  }, [customer, reset, defaultValues]);
 
-  const toggleCancel = () =>
-    {
-      dispatch(setCustomerEditFormVisibility(false));
-    };
+  const toggleCancel = () => {
+    dispatch(setCustomerEditFormVisibility(false));
+  };
 
   const onSubmit = async (data) => {
     // console.log("customer : ",data);
-      data.mainSite = siteVal?._id || null;
-      data.accountManager = accountManVal?._id || null;
-      data.projectManager = projectManVal?._id || null;
-      data.supportManager = supportManVal?._id || null;
-      data.primaryBillingContact = billingContactVal?._id || null;
-      data.primaryTechnicalContact= technicalContactVal?._id || null;
+    data.mainSite = siteVal?._id || null;
+    data.accountManager = accountManVal?._id || null;
+    data.projectManager = projectManVal?._id || null;
+    data.supportManager = supportManVal?._id || null;
+    data.primaryBillingContact = billingContactVal?._id || null;
+    data.primaryTechnicalContact = technicalContactVal?._id || null;
     try {
       dispatch(updateCustomer(data));
       reset();
@@ -379,8 +387,27 @@ export default function CustomerEditForm() {
                 </RHFSelect> */}
               </Box>
 
-                { customer?.type !== "SP" ? <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> : null}
-
+              {customer?.type !== 'SP' ? (
+                <RHFSwitch
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Active
+                    </Typography>
+                  }
+                />
+              ) : null}
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

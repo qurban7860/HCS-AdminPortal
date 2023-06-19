@@ -1,11 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // @mui
 import { Stack, Card, CardMedia, Grid, CardActionArea, Link } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import {
   CardBase,
   GridBaseViewForm,
@@ -19,8 +17,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import { useTable, getComparator, TableNoData } from '../../components/table';
+import { TableNoData } from '../../components/table';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
@@ -69,7 +66,6 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       enqueueSnackbar('Please close the form before opening a new one', {
         variant: 'warning',
       });
-      setCardActiveIndex(null);
       setIsExpanded(false);
     } else {
       dispatch(setSiteFormVisibility(true));
@@ -127,12 +123,12 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           name2="Sites"
           path3={PATH_DASHBOARD.customer}
           name3={
-            <>
+            <Stack>
               {siteEditFormVisibility
                 ? `Edit ${currentSiteData.name}`
                 : isExpanded && currentSiteData.name}
               {siteAddFormVisibility && !isExpanded && 'New Site Form'}
-            </>
+            </Stack>
           }
         />
       </Stack>
@@ -241,21 +237,23 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
         {/* Google Maps View */}
         {isMobile && googleMapsVisibility && (
           <Grid item md={12}>
-            <Card>
-              <CardActionArea>
-                {currentSiteData.lat && currentSiteData.long && (
-                  <GoogleMaps
-                    lat={currentSiteData.lat ? currentSiteData.lat : 0}
-                    lng={currentSiteData.long ? currentSiteData.long : 0}
-                  />
-                )}
-              </CardActionArea>
-            </Card>
+            <Grid container direction="row" gap={1}>
+              <Card>
+                <CardActionArea>
+                  {currentSiteData.lat && currentSiteData.long && (
+                    <GoogleMaps
+                      mapHeight="400px"
+                      lat={currentSiteData.lat ? currentSiteData.lat : 0}
+                      lng={currentSiteData.long ? currentSiteData.long : 0}
+                    />
+                  )}
+                </CardActionArea>
+              </Card>
+            </Grid>
           </Grid>
         )}
 
         {/* Conditional View Forms */}
-
         <GridBaseViewForm item lg={8}>
           {shouldShowSiteView && (
             <CardBase>

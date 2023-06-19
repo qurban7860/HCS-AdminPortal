@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button, Breadcrumbs, Dialog } from '@mui/material';
+import { Grid, Button, Dialog } from '@mui/material';
 // redux
 import {
   deleteSite,
@@ -17,13 +17,10 @@ import {
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import GoogleMaps from '../../../assets/GoogleMaps';
-import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
-import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -145,7 +142,6 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
           />
         </Grid>
         <ViewFormField />
-        {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
         <Dialog
           open={openPopover}
           onClose={handleClosePopover}

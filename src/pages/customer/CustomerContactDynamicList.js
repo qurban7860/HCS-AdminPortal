@@ -49,7 +49,6 @@ export default function CustomerContactList(currentContact = null) {
       enqueueSnackbar('Please close the form before opening a new one', {
         variant: 'warning',
       });
-      setCardActiveIndex(null);
       setIsExpanded(false);
     } else {
       dispatch(setContactFormVisibility(true));
@@ -106,12 +105,12 @@ export default function CustomerContactList(currentContact = null) {
           name2="Contacts"
           path2={PATH_DASHBOARD.customer.contacts}
           name3={
-            <>
+            <Stack>
               {contactEditFormVisibility
                 ? `Edit ${currentContactData.firstName}`
                 : isExpanded && currentContactData.firstName}
               {formVisibility && !isExpanded && 'Add new contact'}
-            </>
+            </Stack>
           }
           path3={PATH_DASHBOARD.customer.contacts}
         />

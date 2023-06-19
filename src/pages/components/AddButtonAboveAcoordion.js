@@ -10,6 +10,7 @@ export default function AddButtonAboveAccordion({
   toggleChecked,
   FormVisibility,
   toggleCancel,
+  isCustomer,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const isMobile = useResponsive('down', 'sm');
@@ -38,7 +39,7 @@ export default function AddButtonAboveAccordion({
         startIcon={
           !FormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
         }
-        sx={{ mb: 3, ...(isMobile && { width: '100%' }) }}
+        sx={{ mb: 3, ...(isMobile && { width: '100%' }), opacity: isCustomer ? 0 : 1 }}
       >
         {!FormVisibility ? name : 'Close Add'}
       </Button>
@@ -62,4 +63,5 @@ AddButtonAboveAccordion.propTypes = {
   FormVisibility: PropTypes.bool,
   toggleChecked: PropTypes.func,
   toggleCancel: PropTypes.func,
+  isCustomer: PropTypes.bool,
 };

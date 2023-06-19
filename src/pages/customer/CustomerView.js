@@ -2,39 +2,35 @@ import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
-
 // @mui
-import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack, Typography,tabsClasses } from '@mui/material';
+import {
+  Tab,
+  Card,
+  Tabs,
+  Container,
+  Box,
+  Button,
+  Grid,
+  Stack,
+  Typography,
+  tabsClasses,
+} from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import {  getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import { getSites } from '../../redux/slices/customer/site';
 import { getContacts } from '../../redux/slices/customer/contact';
-
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
-// mock
-import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from '../../_mock/arrays';
 // components
 import Iconify from '../../components/iconify';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import { useSettingsContext } from '../../components/settings';
 // sections
 import { Cover } from '../components/Cover';
 
 import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
 import useResponsive from '../../hooks/useResponsive';
-
-
+import UnderDevelopment from '../components/UnderDevelopment';
 import CustomerEditForm from './CustomerEditForm';
 // import CustomerSiteList from './CustomerSiteList';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';
@@ -49,8 +45,7 @@ CustomerView.propTypes = {
   editPage: PropTypes.bool,
 };
 
-export default function CustomerView({editPage}) {
-
+export default function CustomerView({ editPage }) {
   const { id } = useParams();
 
   const dispatch = useDispatch();
@@ -60,21 +55,20 @@ export default function CustomerView({editPage}) {
   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
 
   const { contactEditFormVisibility } = useSelector((state) => state.contact);
-  const { noteEditFormVisibility} = useSelector((state) => state.note);
+  const { noteEditFormVisibility } = useSelector((state) => state.note);
   const [currentTab, setCurrentTab] = useState('customer-info');
 
   const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
+  const toggleEditFlag = () => setEditFlag((value) => !value);
 
-
-  const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm/>);
+  const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
 
   const [customerFlag, setCustomerFlag] = useState(true);
 
   const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
-    if(id !== 'null'){
+    if (id !== 'null') {
       dispatch(getCustomer(id));
       dispatch(getSites(id));
       dispatch(getContacts(id));
@@ -82,13 +76,13 @@ export default function CustomerView({editPage}) {
   }, [dispatch, id]);
 
   useEffect(() => {
-    if(customerEditFormFlag){
-      setCurrentComponent(<CustomerEditForm/>);
-    }else{
+    if (customerEditFormFlag) {
+      setCurrentComponent(<CustomerEditForm />);
+    } else {
       setCustomerFlag(false);
-      setCurrentComponent(<CustomerViewForm/>);
+      setCurrentComponent(<CustomerViewForm />);
     }
-  }, [dispatch, customerEditFormFlag, customer]);
+  }, [dispatch, customerEditFormFlag, customer, id]);
 
   const TABS = [
     {
@@ -145,16 +139,13 @@ export default function CustomerView({editPage}) {
 
   return (
     <Container maxWidth={false}>
-      {/* <CustomBreadcrumbs
-          heading="Customer View"
-        /> */}
       <Card
         sx={{
           mb: 3,
           height: 160,
           position: 'relative',
         }}
-        >
+      >
         <Cover
           name={customer ? customer.name : 'New Customer'}
           photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
@@ -196,50 +187,9 @@ export default function CustomerView({editPage}) {
       {TABS.map(
         (tab) =>
           tab.value === currentTab && (
-            <Box key={tab.value} height='100vh'>
+            <Box key={tab.value} height="100vh">
               {' '}
-              {tab.component ? (
-                tab.component
-              ) : (
-                <Grid container sx={{ justifyContent: 'center' }}>
-                  <Grid
-                    item
-                    sx={{
-                      opacity: '30%',
-                      marginTop: '50px',
-                      height: '40vh',
-                      display: 'flex',
-                    }}
-                    >
-                    <img
-                      src="/assets/illustrations/characters/character_5.png"
-                      alt="UNDER CONSTRUCTION"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    sx={{
-                      display: 'block',
-                      justifyContent: 'center',
-                      textAlign: 'center',
-                      width: '50%',
-                      height: '40vh',
-                      opacity: '30%',
-                      position: 'relative',
-                      margin: '20px',
-                    }}
-                  >
-                    <Typography variant="h1">UNDER DEVELOPMENT..</Typography>
-                    <Typography variant="body1" >
-                      While we are still working on completing our website, we invite you to check
-                      back soon for updates. In the meantime, please feel free to contact us
-                      directly if you have any questions or concerns. We appreciate your patience
-                      and understanding during this time, and we look forward to serving you better
-                      through our new website. Thank you for your interest in our company.
-                    </Typography>
-                  </Grid>
-                </Grid>
-              )}{' '}
+              {tab.component ? tab.component : <UnderDevelopment />}
             </Box>
           )
       )}

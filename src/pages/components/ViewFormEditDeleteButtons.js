@@ -87,7 +87,6 @@ export default function ViewFormEditDeleteButtons({
         spacing={2}
         sx={{
           mb: -5,
-          // mt:1,
           mr: 3,
           '& .MuiButton-root': {
             minWidth: '32px',
@@ -109,7 +108,7 @@ export default function ViewFormEditDeleteButtons({
               onMouseLeave={handlePopoverClose}
             >
               <Iconify
-                heading="Opem Map"
+                heading="Open Map"
                 icon="mdi:google-maps"
                 style={{ color: 'red' }}
                 width="30px"
