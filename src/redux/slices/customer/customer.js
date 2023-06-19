@@ -333,6 +333,23 @@ export function addCustomer(params) {
     };
 
 }
+// ------------------------ Customer Verification ----------------------------------------
+
+export function setCustomerVerification(customerId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}`,{
+        isVarified: true,
+      });
+      dispatch(getCustomer(customerId));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+
+}
 
 // --------------------------------------------------------------------------
 

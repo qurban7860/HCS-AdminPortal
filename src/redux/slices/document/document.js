@@ -281,9 +281,9 @@ export function getCustomerDocuments(customerId) {
   };
 }
 
-// -----------------------------------Get Machine Document-----------------------------------
+// ---------------------------- GET machineModel DOCUMENTS------------------------------------
 
-export function getMachineDocuments(machineId) {
+export function getMachineModelDocuments(machineModelId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -292,7 +292,62 @@ export function getMachineDocuments(machineId) {
         params: {
           isActive: true,
           isArchived: false,
-          machine: machineId
+          machineModel:machineModelId,
+        }
+      }
+      );
+      // console.log("response : ", response);
+      // if(regEx.test(response.status)){
+      dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
+      // }
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ---------------------------- GET CUSTOMER Site DOCUMENTS------------------------------------
+
+
+export function getCustomerSiteDocuments(customerSite) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          customer:customerSite,
+          machine: null,
+        }
+      }
+      );
+      // console.log("response : ", response);
+      // if(regEx.test(response.status)){
+      dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
+      // }
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// -----------------------------------Get Machine Document-----------------------------------
+
+export function getMachineDocuments(machineId, machineModelId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          machine: machineId,
+          machineModel: machineModelId
         }
       }
       );

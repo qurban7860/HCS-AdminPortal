@@ -14,22 +14,20 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { styled, alpha ,useTheme } from '@mui/material/styles';
-import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
+import { styled } from '@mui/system';
+import { fDate, fDateTime } from '../../../utils/formatTime';
+import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../../components/iconify';
-import MenuPopover from '../../../../components/menu-popover';
-import ConfirmDialog from '../../../../components/confirm-dialog';
-import Label from '../../../../components/label';
-import LinkTableCell from '../../../components/LinkTableCell';
-
-
-import { useSelector } from '../../../../redux/store';
+import Iconify from '../../../components/iconify';
+import MenuPopover from '../../../components/menu-popover';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import Label from '../../../components/label';
+import LinkTableCell from '../../components/LinkTableCell';
+import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
 
-DocumentListTableRow.propTypes = {
+SignInLogListTableRow.propTypes = {
   row: PropTypes.object,
   style: PropTypes.object,
   selected: PropTypes.bool,
@@ -48,7 +46,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function DocumentListTableRow({
+export default function SignInLogListTableRow({
   row,
   style,
   selected,
@@ -57,7 +55,7 @@ export default function DocumentListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { displayName, docType , machine, customer, docCategory , customerAccess, isActive, createdAt } = row;
+  const { loginTime, user, loginIP, logoutTime } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -86,14 +84,12 @@ export default function DocumentListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <LinkTableCell align='left' param={displayName} onClick={onViewRow}/>
-        <TableCell align="left" >{customer?.name}</TableCell>
-        <TableCell align="left" >{machine?.serialNo}</TableCell>
-        <TableCell align="left" >{docType?.name}</TableCell>
-        <TableCell align="left" >{docCategory?.name}</TableCell>
-        <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
-        <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
-        <TableCell align="right" >{fDate(createdAt)}</TableCell>
+        {/* <LinkTableCell align="left" onClick={onViewRow} param={name} /> */}
+        <TableCell align="left" > {user?.name ? user?.name : '' } </TableCell> 
+        <TableCell align="left" > {loginIP} </TableCell>  
+
+        <TableCell align="left" > {fDateTime(loginTime)} </TableCell>  
+        <TableCell align="left" >{fDateTime(logoutTime)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />

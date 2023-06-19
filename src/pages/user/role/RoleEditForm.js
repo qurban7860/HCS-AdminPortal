@@ -178,30 +178,6 @@ export default function RoleEditForm() {
                         </Typography>
                       </>
                     } />
-                  <RHFSwitch name="allModules" labelPlacement="start" label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary'
-                      }}> All Modules
-                    </Typography>
-                  } />
-                  <RHFSwitch name="allWriteAccess" labelPlacement="start" label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary'
-                      }}> All Write Access
-                    </Typography>
-                  } />
                   <RHFSwitch name="disableDelete" labelPlacement="start" label={
                     <Typography
                       variant="subtitle2"
