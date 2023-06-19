@@ -34,8 +34,14 @@ export default function RoleViewForm() {
       enqueueSnackbar('Role delete Successfully!');
 
     }catch(error){
-      enqueueSnackbar('Role delete failed!', { variant: `error` });
-      console.error(error);
+      if(error.Message){
+        enqueueSnackbar(error.Message,{ variant: `error` })
+      }else if(error.message){
+        enqueueSnackbar(error.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+      console.log("Error:", error);
     }
   };
 
@@ -47,8 +53,10 @@ export default function RoleViewForm() {
     () => (
       {
         isActive:                 role?.isActive,
+        disableDelete:                role?.disableDelete || false,
         customerAccess:           role?.customerAccess,
         name:                     role?.name,
+        roleType:                 role?.roleType || "",
         description:              role?.description || "",
         createdAt:                role?.createdAt || "",
         createdByFullName:        role?.createdBy?.name || "",
@@ -64,13 +72,19 @@ export default function RoleViewForm() {
   return (
     <Card sx={{p:2}}>
       <Grid >
-        <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
+        <ViewFormEditDeleteButtons
+          disableDeleteButton={defaultValues.disableDelete} 
+          handleEdit={handleEdit}  
+          onDelete={onDelete}
+        />
             <Tooltip>
               <ViewFormField  isActive={defaultValues.isActive}  />
             </Tooltip>
         <Grid container>
             <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+            <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+
             {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
             <ViewFormAudit  defaultValues={defaultValues}/>
         </Grid>

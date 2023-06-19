@@ -24,6 +24,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 
 import { useSelector } from '../../../redux/store';
+import LinkTableCell from '../../components/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -84,11 +85,7 @@ export default function DocumentCategoryListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={name} /> 
         {/* <TableCell>{description}</TableCell> */}
         <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
         <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  

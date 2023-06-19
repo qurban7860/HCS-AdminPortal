@@ -6,10 +6,10 @@ import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getRole} from '../../../redux/slices/securityUser/role';
+import { getDocumentCategory} from '../../../redux/slices/document/documentCategory';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -19,23 +19,23 @@ import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBrea
 import { useSettingsContext } from '../../../components/settings';
 // sections
 import { Cover } from '../../components/Cover';
-import RoleViewForm from './RoleViewForm';
+import DocumentViewForm from './DocumentViewForm';
 /* eslint-disable */
 
 
 
 // ----------------------------------------------------------------------
 
-export default function RoleView() {
+export default function DocumentView() {
   const dispatch = useDispatch();
 
   const { id } = useParams(); 
 useLayoutEffect(() => {
-  dispatch(getRole(id));
+  dispatch(getDocumentCategory(id));
 },[id,dispatch])
 
-  const { role } = useSelector((state) => state.role);
-  // console.log("role : ",role)
+  const { documentCategory } = useSelector((state) => state.documentCategory);
+  // console.log("documentCategory : ",documentCategory)
   return (
     <>
       <Container maxWidth={false }>
@@ -47,12 +47,9 @@ useLayoutEffect(() => {
             // mt: '24px',
           }}
         >
-          <Cover 
-            name={role?.name}
-            generalSettings="enabled"
-            backLink={PATH_DASHBOARD.role.list}/> 
+          <Cover name={documentCategory?.name} /> 
         </Card>
-        <RoleViewForm/>
+        <DocumentViewForm/>
       </Container>
     </>
   );

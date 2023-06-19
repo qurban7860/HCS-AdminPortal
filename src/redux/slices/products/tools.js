@@ -117,7 +117,7 @@ export function getTool(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/tools/${id}`);
       dispatch(slice.actions.getToolSuccess(response.data));
     } catch (error) {
-      console.error(error,"Slice Error");
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
     }
   };
@@ -127,7 +127,10 @@ export function deleteTool(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/tools/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);

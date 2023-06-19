@@ -60,6 +60,7 @@ Cover.propTypes = {
   backLink: PropTypes.string,
   model: PropTypes.string,
   customer: PropTypes.string,
+  generalSettings: PropTypes.string
 };
 export function Cover({
   tradingName,
@@ -73,11 +74,15 @@ export function Cover({
   backLink,
   model,
   customer,
+  generalSettings
 }) {
   const navigate = useNavigate();
   const { techparamcategory } = useSelector((state) => state.techparamcategory);
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
+  };
+  const handleSettingsNavigate = () => {
+    navigate(PATH_DASHBOARD.setting);
   };
   const handleBacklink = () => {
     navigate(backLink);
@@ -182,6 +187,25 @@ export function Cover({
               component="button"
               variant="body2"
               onClick={handleNavigate}
+            >
+              <Iconify icon="mdi:cog" />
+            </Link>
+          ) : (
+            ' '
+          )}
+          {generalSettings ? (
+            <Link
+              title="Settings"
+              sx={{
+                cursor: 'hover',
+                mt: 'auto',
+                color: 'common.white',
+                mx: 2,
+                mb: { xs: 0, md: 1 },
+              }}
+              component="button"
+              variant="body2"
+              onClick={handleSettingsNavigate}
             >
               <Iconify icon="mdi:cog" />
             </Link>

@@ -16,6 +16,7 @@ const initialState = {
   isLoading: false,
   error: null,
   customerDocuments: [],
+  activeCustomerDocuments: [],
   customerDocumentHistory: [],
   customerDocument: null,
 };
@@ -53,6 +54,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.customerDocuments = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customer Documents
+    getActiveCustomerDocumentsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCustomerDocuments = action.payload;
       state.initial = true;
     },
 
@@ -151,9 +160,10 @@ export function addCustomerDocument(customerId,params) {
         dispatch(getCustomerDocuments(customerId))
         dispatch(setCustomerDocumentFormVisibility(false));
       // }
-
+      console.log("add customer document try block!")
     } catch (error) {
       console.error(error);
+      console.log("add customer document catch block!")
       dispatch(slice.actions.hasError(error.Message));
     }
   };
@@ -222,6 +232,33 @@ export function getCustomerDocuments(customerId) {
       // console.log("response : ", response);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getCustomerDocumentsSuccess(response.data));
+      }
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// -----------------------------------Get Active Customer Documents-----------------------------------
+
+export function getActiveCustomerDocuments(customerId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          customer:customerId,
+          machine: null,
+        }
+      }
+      );
+      // console.log("response : ", response);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveCustomerDocumentsSuccess(response.data));
       }
     } catch (error) {
       console.error(error);

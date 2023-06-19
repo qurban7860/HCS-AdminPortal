@@ -83,6 +83,7 @@ const { enqueueSnackbar } = useSnackbar();
         customerAccess:           currentMachineDocument?.customerAccess,
         isActiveVersion:          currentMachineDocument?.isActiveVersion,
         documentVersion:          currentMachineDocument?.documentVersions[0]?.versionNo || "",
+        versionPrefix:            currentMachineDocument?.versionPrefix || "",
         description:              currentMachineDocument?.description,
         isActive:                 currentMachineDocument?.isActive,
         createdAt:                currentMachineDocument?.createdAt || "",
@@ -215,7 +216,7 @@ const handleDelete = async (documentId, versionId, fileId ) => {
             <ViewFormField sm={6} heading="Version" objectParam={
                                     defaultValues.documentVersion ? (
                                       <Typography display="flex">
-                                        {defaultValues.documentVersion}
+                                        {defaultValues.versionPrefix} {defaultValues.documentVersion}
                                         {currentMachineDocument?.documentVersions && currentMachineDocument?.documentVersions?.length > 1 && <Link onClick={linkMachineDocumentView} href='#' underline='none' ><Typography variant='body2' sx={{mt:0.45,ml:1}} >   More version  </Typography></Link>}
                                       </Typography>
                                       

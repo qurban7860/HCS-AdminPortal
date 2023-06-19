@@ -68,7 +68,7 @@ export default function Reports() {
                 aria-labelledby="nested-list-subheader"
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
-                    Sites Location
+                    Site Locations
                   </ListSubheader>
                 }
               /> 

@@ -151,11 +151,14 @@ export function AuthProvider({ children }) {
       password,
     })
 
-    const { accessToken, user, userId } = response.data;
+    const { accessToken, user, userId, roles } = response.data;
+
+    
+    const rolesArrayString = JSON.stringify(user.roles);
     localStorage.setItem('email', user.email);
     localStorage.setItem('name', user.displayName);
     localStorage.setItem('userId', userId);
-
+    localStorage.setItem('userRoles', rolesArrayString);
 
     setSession(accessToken);
 

@@ -146,10 +146,10 @@ export default function SecurityUserViewForm() {
         </Card>
         <Card sx={{ p: 3 }}>
           <ViewFormEditDeleteButtons 
-            // handleUpdatePassword={handleUpdatePassword} 
             handleEdit={handleEdit} 
+            handleUpdatePassword={handleUpdatePassword} 
             onDelete={onDelete} 
-            {...(isSuperAdmin && { handleUpdatePassword })}
+            disablePasswordButton={!isSuperAdmin}
           />
           {/* <Stack
             justifyContent="flex-end"

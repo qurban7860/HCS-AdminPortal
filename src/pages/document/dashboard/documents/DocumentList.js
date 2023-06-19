@@ -1,18 +1,28 @@
+import { Helmet } from 'react-helmet-async';
+import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
-// redux
-import { useDispatch, useSelector } from 'react-redux';
-// routes
 import {
-  getTechparamcategories,
-  getTechparamcategory,
-  deleteTechparamcategory,
-} from '../../../redux/slices/products/machineTechParamCategory';
-import { PATH_MACHINE } from '../../../routes/paths';
+  Switch,
+  Grid,
+  Card,
+  Table,
+  Button,
+  Tooltip,
+  TableBody,
+  Container,
+  IconButton,
+  TableContainer,
+  Stack,
+} from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../../../redux/store';
+// routes
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
+import { useSnackbar } from '../../../../components/snackbar';
+import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -23,36 +33,36 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../../components/table';
-import Scrollbar from '../../../components/scrollbar';
-import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
+} from '../../../../components/table';
+import Iconify from '../../../../components/iconify';
+import Scrollbar from '../../../../components/scrollbar';
+import ConfirmDialog from '../../../../components/confirm-dialog';
 // sections
-import TechParamListTableRow from './TechParamListTableRow';
-import TechParamListTableToolbar from './TechParamListTableToolbar';
-import { Cover } from '../../components/Cover';
-import { fDate } from '../../../utils/formatTime';
+import DocumentListTableRow from './DocumentListTableRow';
+import DocumentListTableToolbar from './DocumentListTableToolbar';
+import { getDocuments, deleteDocument } from '../../../../redux/slices/document/document';
+import { Cover } from '../../../components/Cover';
+import { fDate } from '../../../../utils/formatTime';
+
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'isDisabled', label: 'Active', align: 'center' },
-  { id: 'createdAt', label: 'Created At', align: 'right' },
-];
+  { id: 'doctype', label: 'Type', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'machine', label: 'Machine', align: 'left' },
+  { id: 'doccategory', label: 'Category', align: 'left' },
+  { id: 'customerAccess', label: 'Customer Access', align: 'center' },
+  { id: 'active', label: 'Active', align: 'center' },
+  { id: 'created_at', label: 'Created At', align: 'right' },
 
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function TechParamList() {
+export default function DocumentList() {
   const {
-    dense,
     page,
     order,
     orderBy,
@@ -65,17 +75,15 @@ export default function TechParamList() {
     onSelectAllRows,
     //
     onSort,
-    onChangeDense,
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    // defaultOrderBy: 'name',
-    // modifiedOnSort('name')
+    defaultOrderBy: '-createdAt',
   });
 
-// Modify the orderBy value to lowercase before comparing
-
   const dispatch = useDispatch();
+
+  const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -89,25 +97,17 @@ export default function TechParamList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { techparamcategories, isLoading, error, initial, responseMessage } = useSelector(
-    (state) => state.techparamcategory
-  );
-
+  const { documents, isLoading, error, initial, responseMessage } = useSelector((state) => state.document);
+// console.log("documents : ",documents)
   useLayoutEffect(() => {
-    dispatch(getTechparamcategories());
+    dispatch(getDocuments());
   }, [dispatch]);
 
   useEffect(() => {
     if (initial) {
-      // if (techparamcategories && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // }
-      // else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
-      setTableData(techparamcategories);
+      setTableData(documents);
     }
-  }, [techparamcategories, error, responseMessage, enqueueSnackbar, initial]);
+  }, [documents, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -118,7 +118,7 @@ export default function TechParamList() {
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  const denseHeight = dense ? 60 : 80;
+  const denseHeight = 60;
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
@@ -144,8 +144,9 @@ export default function TechParamList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      await dispatch(deleteTechparamcategory(id));
-      dispatch(getTechparamcategories());
+      // console.log(id);
+      await dispatch(deleteDocument(id));
+      dispatch(deleteDocument());
       setSelected([]);
 
       if (page > 0) {
@@ -158,7 +159,7 @@ export default function TechParamList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows, handleClose) => {
+  const handleDeleteRows = (selectedRows) => {
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
     setTableData(deleteRows);
@@ -173,17 +174,15 @@ export default function TechParamList() {
         setPage(newPage);
       }
     }
-    handleClose();
   };
 
-  const handleEditRow = async (id) => {
-    await dispatch(getTechparamcategory(id));
-    navigate(PATH_MACHINE.techParam.edit(id));
+  const handleEditRow = (id) => {
+    // console.log(id);
+    navigate(PATH_DOCUMENT.document.edit(id));
   };
 
-  const handleViewRow = async (id) => {
-    await dispatch(getTechparamcategory(id));
-    navigate(PATH_MACHINE.techParam.view(id));
+  const handleViewRow = (id) => {
+    navigate(PATH_DASHBOARD.document.view(id));
   };
 
   const handleResetFilter = () => {
@@ -194,27 +193,32 @@ export default function TechParamList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Card
+          sx={{
+            mb: 3,
+            height: 160,
+            position: 'relative',
+            // mt: '24px',
+          }}
+        >
           <Cover
-            name="Technical Parameter Categories"
-            icon="material-symbols:list-alt-outline"
-            setting="enable"
+            name="Documents List"
+            icon="ph:users-light"
           />
         </Card>
+
         <Card sx={{ mt: 3 }}>
-          <TechParamListTableToolbar
+          <DocumentListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
             onFilterName={handleFilterName}
             onFilterStatus={handleFilterStatus}
-            statusOptions={STATUS_OPTIONS}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-
+            <TableSelectedAction
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -230,7 +234,7 @@ export default function TechParamList() {
                   </IconButton>
                 </Tooltip>
               }
-            /> */}
+            />
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
@@ -254,7 +258,7 @@ export default function TechParamList() {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) =>
                       row ? (
-                        <TechParamListTableRow
+                        <DocumentListTableRow
                           key={row._id}
                           row={row}
                           selected={selected.includes(row._id)}
@@ -262,11 +266,18 @@ export default function TechParamList() {
                           onDeleteRow={() => handleDeleteRow(row._id)}
                           // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
+                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
+
+                  {/* <TableEmptyRows
+                    height={denseHeight}
+                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                  /> */}
+
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -297,7 +308,7 @@ export default function TechParamList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRow(selected);
+              handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >
@@ -312,8 +323,7 @@ export default function TechParamList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData ? inputData?.map((el, index) => [el, index]) : [];
-
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -321,18 +331,18 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-
   if (filterName) {
-    inputData = inputData.filter(
-      (produc) =>
-        produc?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (produc?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(produc?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
+    inputData = inputData.filter( (document) => document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
+    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((document) => filterStatus.includes(document.status));
   }
 
   return inputData;

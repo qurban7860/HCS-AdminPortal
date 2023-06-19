@@ -95,9 +95,14 @@ export default function ModelAddForm() {
         navigate(PATH_MACHINE.machineModel.list); 
         // console.log(PATH_MACHINE.machineModel.list)
       } catch(error){
-        // enqueueSnackbar('Saving failed!');
-        enqueueSnackbar(error?.message)
-        console.error(error);
+        if(error.Message){
+          enqueueSnackbar(error.Message,{ variant: `error` })
+        }else if(error.message){
+          enqueueSnackbar(error.message,{ variant: `error` })
+        }else{
+          enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        }
+        console.log("Error:", error);
       }
   };
   const toggleCancel = () => 

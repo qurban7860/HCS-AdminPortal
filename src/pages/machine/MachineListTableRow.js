@@ -21,7 +21,7 @@ import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Label from '../../components/label';
-
+import LinkTableCell from '../components/LinkTableCell';
 import { useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -92,22 +92,12 @@ export default function MachineListTableRow({
             ''
           )}
         </TableCell>
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link
-              noWrap
-              color="inherit"
-              variant="inherit"
-              onClick={onViewRow}
-              sx={{ cursor: 'pointer' }}
-            >
-              {serialNo || ''}
-            </Link>
-          </Stack>
-        </TableCell>
+        <LinkTableCell align="left" onClick={onViewRow} param={serialNo}/>
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
-        <TableCell>{status?.name || ''}</TableCell>
+        <TableCell sx={{ color: status?.slug === 'transferred' ? 'red' : 'inherit' }}>
+          {status?.name || ''}
+        </TableCell>
         <TableCell>{customer?.name || ''}</TableCell>
         <TableCell>{instalationSite?.name || ''}</TableCell>
         <TableCell align="center">

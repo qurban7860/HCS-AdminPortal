@@ -22,7 +22,7 @@ import Iconify from '../../../components/iconify';
 import MenuPopover from '../../../components/menu-popover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
-
+import LinkTableCell from '../../components/LinkTableCell';
 import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -55,7 +55,7 @@ export default function RoleListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, description, isActive, createdAt } = row;
+  const { name, description, roleType, isActive, createdAt } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -84,12 +84,8 @@ export default function RoleListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Link noWrap color="inherit" variant="subtitle2" onClick={onViewRow} sx={{ cursor: 'pointer' }} > {name}</Link>
-          </Stack>
-        </TableCell>
-        {/* <TableCell>{description}</TableCell> */} 
+        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <TableCell align="left" > {roleType} </TableCell> 
         <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
         <TableCell align="right" >{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">

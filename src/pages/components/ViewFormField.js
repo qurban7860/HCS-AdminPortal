@@ -82,7 +82,7 @@ export default function ViewFormField({
             ? 'h4'
             : 'body1'
         }
-        style={{ display: 'flex', alignItems: 'center' }}
+        style={{ display: 'flex', alignItems: 'center' , whiteSpace: "pre"}}
       >
         {isActive !== undefined && (
           <>

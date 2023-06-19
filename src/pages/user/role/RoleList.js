@@ -49,6 +49,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'role_type', label: 'Role Type', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
@@ -72,7 +73,7 @@ export default function RoleList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-createdAt',
+    defaultOrderBy: 'name',
   });
 
   const dispatch = useDispatch();
@@ -92,7 +93,7 @@ export default function RoleList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customer } = useSelector((state) => state.customer);
-  const { roles, isLoading, error, initial, responseMessage } = useSelector((state) => state.role);
+  const { roles, isLoading, initial, responseMessage } = useSelector((state) => state.role);
 
   // console.log("roles : ", roles )
 
@@ -151,8 +152,15 @@ export default function RoleList() {
           setPage(page - 1);
         }
       }
-    } catch (err) {
-      console.log(err.message);
+    } catch (error) {
+      if(error.Message){
+        enqueueSnackbar(error.Message,{ variant: `error` })
+      }else if(error.message){
+        enqueueSnackbar(error.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
+      console.log("Error:", error);
     }
   };
 
@@ -199,6 +207,7 @@ export default function RoleList() {
           }}
         >
           <Cover
+            generalSettings='enabled'
             name="Roles"
             icon="ph:users-light"
           />

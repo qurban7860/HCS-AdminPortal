@@ -117,6 +117,12 @@ export function addDocumentVersion(documentId,params) {
           if(params?.machine){
             formData.append('machine', params?.machine);
           }
+          if(params?.machineModel){
+            formData.append('machineModel', params?.machineModel);
+          }
+          if(params?.site){
+            formData.append('site', params?.site);
+          }
           if(params?.description){
             formData.append('description', params?.description);
           }
@@ -135,7 +141,7 @@ export function addDocumentVersion(documentId,params) {
 
 // ---------------------------------Update Document Version-------------------------------------
 
-export function updateDocumentVersion(documentId,Id,params) {
+export function updateDocumentVersion(documentId,versionId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -144,7 +150,7 @@ export function updateDocumentVersion(documentId,Id,params) {
       if(params?.images){
         formData.append('images', params?.images);
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${Id}`, formData, );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}`, formData, );
       dispatch(slice.actions.setResponseMessage('Document Version updated successfully'));
       dispatch(setDocumentVersionEditFormVisibility (false));
     } catch (error) {
@@ -191,7 +197,6 @@ export function getActiveDocumentVersions(documentId) {
         }
       }
       );
-      console.log("document Version response: " , response)
       dispatch(slice.actions.getActiveDocumentVersionsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Document Versions loaded successfully'));
     } catch (error) {

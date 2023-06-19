@@ -14,20 +14,22 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { borderRadius, styled } from '@mui/system';
-import { fDate } from '../../utils/formatTime';
-import { fCurrency } from '../../utils/formatNumber';
+import { styled, alpha ,useTheme } from '@mui/material/styles';
+import { fDate } from '../../../../utils/formatTime';
+import { fCurrency } from '../../../../utils/formatNumber';
 // components
-import Iconify from '../../components/iconify';
-import MenuPopover from '../../components/menu-popover';
-import ConfirmDialog from '../../components/confirm-dialog';
-import Label from '../../components/label';
-import LinkTableCell from '../components/LinkTableCell';
-import { useSelector } from '../../redux/store';
+import Iconify from '../../../../components/iconify';
+import MenuPopover from '../../../../components/menu-popover';
+import ConfirmDialog from '../../../../components/confirm-dialog';
+import Label from '../../../../components/label';
+import LinkTableCell from '../../../components/LinkTableCell';
+
+
+import { useSelector } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
-CustomerListTableRow.propTypes = {
+DocumentListTableRow.propTypes = {
   row: PropTypes.object,
   style: PropTypes.object,
   selected: PropTypes.bool,
@@ -39,14 +41,14 @@ CustomerListTableRow.propTypes = {
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
+    backgroundColor: "#f4f6f866",
   },
 }));
 
-export default function CustomerListTableRow({
+export default function DocumentListTableRow({
   row,
   style,
   selected,
@@ -55,14 +57,8 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isActive, type, createdAt } = row;
-  const address = [];
-  if (mainSite?.address?.city) {
-    address.push(mainSite?.address?.city);
-  }
-  if (mainSite?.address?.country) {
-    address.push(mainSite?.address?.country);
-  }
+  const { displayName, docType , machine, customer, docCategory , customerAccess, isActive, createdAt } = row;
+  
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -90,32 +86,20 @@ export default function CustomerListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell align="right">
-          {type === 'SP' ? (
-            <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled', mr: -2 }} width="15px" />
-          ) : (
-            ''
-          )}
-        </TableCell>
-        <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell>{tradingName}</TableCell>
-        <TableCell>
-          {Object.values(address ?? {})
-            .map((value) => (typeof value === 'string' ? value.trim() : ''))
-            .filter((value) => value !== '')
-            .join(', ')}
-        </TableCell>
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell>{fDate(createdAt)}</TableCell>
+        <LinkTableCell align='left' param={displayName} onClick={onViewRow}/>
+        <TableCell align="left" >{docType?.name}</TableCell>
+        <TableCell align="left" >{customer?.name}</TableCell>
+        <TableCell align="left" >{machine?.serialNo}</TableCell>
+        <TableCell align="left" >{docCategory?.name}</TableCell>
+        <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
+        <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
+        <TableCell align="right" >{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </StyledTableRow>
+      </StyledTableRow> 
 
       {/* <MenuPopover
         open={openPopover}

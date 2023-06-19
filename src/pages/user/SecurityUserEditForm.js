@@ -286,6 +286,7 @@ useEffect(() => {
             <Autocomplete
                 // freeSolo
                 required
+                disabled
                 value={customerVal || null}
                 options={customers}
                 getOptionLabel={(option) => option.name}
@@ -306,8 +307,8 @@ useEffect(() => {
                   }
                 }}
                 id="controllable-states-demo"
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
-                renderInput={(params) => <TextField {...params} label="Customer" required disabled/>}
+                // renderOption={(props, option) => (<li  {...props} key={option.id}>{option.name}</li>)}
+                renderInput={(params) => <TextField {...params} label="Customer" required />}
                 ChipProps={{ size: 'small' }}
               >
                 {(option) => (
@@ -320,8 +321,8 @@ useEffect(() => {
                 // freeSolo
                 value={ contactVal || null}
                 options={contacts}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option?.firstName || ""} ${option?.lastName || ""}`}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
                   if(newValue){
                   setContactVal(newValue);
@@ -337,16 +338,16 @@ useEffect(() => {
                   }
                 }}
                 id="controllable-states-demo"
-                renderOption={(props, option) => (<li  {...props} key={option.id}>{option.firstName} {option.lastName}</li>)}
+                // renderOption={(props, option) => (<li  {...props} key={option.id}>{option.firstName} {option.lastName}</li>)}
                 renderInput={(params) => <TextField {...params} label="Contact"/>}
                 ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
+              />
+                {/* {(option) => (
                   <div key={option._id}>
                     <span>{`${option.firstName} ${option.lastName}`}</span>
                   </div>
                 )}
-              </Autocomplete>
+              </Autocomplete> */}
               <RHFTextField name="name" label="Full Name" onChange={(e) => setName(e.target.value)} value={name} required/>
               <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium" defaultCountry="NZ" onChange={handlePhoneChange} forceCallingCode/>
               </Box>

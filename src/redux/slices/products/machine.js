@@ -18,6 +18,7 @@ const initialState = {
   error: null,
   machine: {},
   machines: [],
+  activeMachines: [],
   customerMachines:[],
   transferDialogBoxVisibility: false
 };
@@ -42,7 +43,7 @@ const slice = createSlice({
       state.transferDialogBoxVisibility = action.payload;
     },
 
-    // SET TOGGLE
+    // SET TOGGLE648ac5b7418fc12b70794fe4
     setMachineEditFormVisibility(state, action){
       state.machineEditFormFlag = action.payload;
     },
@@ -64,6 +65,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.machines = action.payload;
+      state.initial = true;
+    },
+    // GET Machines
+    getActiveMachinesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachines = action.payload;
       state.initial = true;
     },
 
@@ -109,6 +117,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET Active MACHINE
+    resetActiveMachines(state){
+      state.activeMachines = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     // Reset Customer Machines
     resetCustomerMachines(state){
       state.customerMachines = [];
@@ -130,6 +146,7 @@ export const {
   resetCustomerMachines,
   resetMachine,
   resetMachines,
+  resetActiveMachines,
   setResponseMessage,
   setTransferDialogBoxVisibility
 } = slice.actions;
@@ -155,6 +172,51 @@ export function getMachines() {
   };
 }
 
+
+// ----------------------------get Active Machines------------------------------------------
+
+export function getActiveMachines() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
+
+// ----------------------------get Active Model Machines------------------------------------------
+
+export function getActiveModelMachines(modelId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          machineModel: modelId
+        }
+      });
+      dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+    }
+  };
+}
 
 // ----------------------------------------------------------------------
 
@@ -255,8 +317,14 @@ export function addMachine(params) {
           data.billingSite = params.billingSite;        
         }
         if(params.instalationSite){
-          data.instalationSite = params.instalationSite;        
+          data.instalationSite = params.instalationSite; 
         }
+        if(params.installationDate){
+          data.installationDate = params.installationDate;
+        } 
+        if(params.shippingDate){
+          data.shippingDate = params.shippingDate;
+        }    
         if(params.accountManager){
           data.accountManager = params.accountManager;        
         }
@@ -272,7 +340,6 @@ export function addMachine(params) {
         if(params.customerTags){
           data.customerTags = params.customerTags;        
         }
-        console.log("data : ", data);
         const response = await axios.post(`${CONFIG.SERVER_URL}products/machines`, data);
 
         dispatch(slice.actions.getMachineSuccess(response.data.Machine));
@@ -302,6 +369,8 @@ export function updateMachine(params) {
         customer: params.customer,
         billingSite: params.billingSite,
         instalationSite: params.instalationSite,
+        installationDate: params.installationDate,
+        shippingDate: params.shippingDate,
         siteMilestone: params.siteMilestone,
         accountManager: params.accountManager,
         projectManager: params.projectManager,

@@ -81,7 +81,7 @@ export default function TechParamCategoryEditForm() {
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.techParam.view(id));
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

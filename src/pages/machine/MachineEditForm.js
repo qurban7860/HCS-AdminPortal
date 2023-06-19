@@ -25,6 +25,7 @@ import {
   Dialog,
   InputAdornment,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers } from '../../redux/slices/customer/customer';
@@ -84,7 +85,11 @@ export default function MachineEditForm() {
   const [modelVal, setModelVal] = useState('');
   const [customerVal, setCustomerVal] = useState('');
   const [installVal, setInstallVal] = useState('');
-  const [billingVal, setBillingVal] = useState('');
+  const [billingVal, setBillingVal] = useState('');  
+  const [shippingDate, setShippingDate] = useState(null);
+  const [installationDate, setInstallationDate] = useState(null);
+  const [disableInstallationDate, setInstallationDateToggle] = useState(true);
+  const [disableShippingDate, setShippingDateToggle ] = useState(true);
   const [accoVal, setAccoManVal] = useState('');
   const [projVal, setProjManVal] = useState('');
   const [suppVal, setSuppManVal] = useState('');
@@ -116,6 +121,12 @@ export default function MachineEditForm() {
     setSuppManVal(machine?.supportManager);
     setMachineConnectionVal(machine?.machineConnections);
     setConnections(machine?.machineConnections);
+    if(machine?.instalationSite){
+      setInstallationDateToggle(false);
+      setShippingDateToggle(false);
+    }
+    setInstallationDate(machine?.installationDate);
+    setShippingDate(machine?.shippingDate);
   }, [dispatch, machine]);
 
   useLayoutEffect(() => {
@@ -162,6 +173,8 @@ export default function MachineEditForm() {
       instalationSite: installVal?._id || null,
       billingSite: billingVal?._id || null,
       siteMilestone: machine?.siteMilestone || '',
+      installationDate,
+      shippingDate,
       accountManager: accoVal?._id || null,
       projectManager: projVal?._id || null,
       supportManager: suppVal?._id || null,
@@ -203,6 +216,8 @@ export default function MachineEditForm() {
   };
 
   const onSubmit = async (data) => {
+    console.log('installationDate------->', installationDate);
+    console.log('shippingDate------->', shippingDate);
     data.parentMachine = parMachineVal?._id || null;
     data.parentSerialNo = parMachSerVal?.serialNo || null;
     data.supplier = supplierVal?._id || null;
@@ -214,6 +229,8 @@ export default function MachineEditForm() {
     data.accountManager = accoVal?._id || null;
     data.projectManager = projVal?._id || null;
     data.supportManager = suppVal?._id || null;
+    data.installationDate = installationDate;
+    data.shippingDate = shippingDate;
     const idsOnly = machineConnectionVal.map((obj) => obj._id);
     data.machineConnections = idsOnly;
     // data.customerTags = chipData
@@ -234,6 +251,8 @@ export default function MachineEditForm() {
       setChipData([]);
       setCurrTag('');
       setMachineConnectionVal([]);
+      setShippingDate(null);
+      setInstallationDate(null);
       reset();
     } catch (error) {
       enqueueSnackbar('Saving failed!');
@@ -493,8 +512,12 @@ export default function MachineEditForm() {
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setInstallVal(newValue);
+                      setInstallationDateToggle(false);
+                      setShippingDateToggle(false);
                     } else {
                       setInstallVal('');
+                      setInstallationDateToggle(true);
+                      setShippingDateToggle(true);
                     }
                   }}
                   renderOption={(props, option) => (
@@ -523,6 +546,28 @@ export default function MachineEditForm() {
                   id="controllable-states-demo"
                   renderInput={(params) => <TextField {...params} label="Billing Site" />}
                   ChipProps={{ size: 'small' }}
+                />
+              </Box>
+
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
+                <DatePicker
+                  label="Installation Date"
+                  value={installationDate  || new Date()}
+                  disabled={disableInstallationDate}
+                  onChange={(newValue) => setInstallationDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <DatePicker
+                  label="Shipping Date"
+                  value={shippingDate || new Date()}
+                  disabled={disableShippingDate}                    
+                  onChange={(newValue) => setShippingDate(newValue)}
+                  renderInput={(params) => <TextField {...params} />}
                 />
               </Box>
 

@@ -30,11 +30,17 @@ ViewFormEditDeleteButtons.propTypes = {
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
-  disableButton: PropTypes.bool,
+  disableTransferButton: PropTypes.bool,
+  disablePasswordButton: PropTypes.bool,
+  disableDeleteButton: PropTypes.bool,
+  disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
 };
 export default function ViewFormEditDeleteButtons({
-  disableButton,
+  disableTransferButton = false,
+  disableDeleteButton = false,
+  disablePasswordButton = false,
+  disableEditButton = false,
   onDelete,
   handleEdit,
   handleTransfer,
@@ -69,6 +75,7 @@ export default function ViewFormEditDeleteButtons({
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
+
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
     setIsPopoverOpen(true);
@@ -147,7 +154,7 @@ export default function ViewFormEditDeleteButtons({
 
         {handleTransfer ? (
           <Button
-            disabled={disableButton}
+            disabled={disableTransferButton}
             onClick={() => {
               handleOpenConfirm('transfer');
             }}
@@ -169,6 +176,7 @@ export default function ViewFormEditDeleteButtons({
 
         {handleUpdatePassword ? (
           <Button
+            disabled={disablePasswordButton}
             onClick={() => {
               handleUpdatePassword();
             }}
@@ -189,6 +197,7 @@ export default function ViewFormEditDeleteButtons({
         )}
 
         <Button
+          disabled={disableEditButton}
           onClick={() => {
             handleEdit();
           }}
@@ -204,9 +213,11 @@ export default function ViewFormEditDeleteButtons({
             <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:pencil" />
           </Tooltip>
         </Button>
+
         {/* if not in the profile show this */}
         {onDelete ? (
           <Button
+            disabled={disableDeleteButton}
             onClick={() => {
               handleOpenConfirm('delete');
             }}

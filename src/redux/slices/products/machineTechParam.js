@@ -168,7 +168,10 @@ export function deleteTechparams(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/techparams/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);
@@ -228,11 +231,9 @@ export function updateTechparam(params,id) {
       }else{
         data.category = null
       }
-      console.log("data : ",data)
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparams/${id}`,
         data
       );
-      console.log("response : ",response)
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

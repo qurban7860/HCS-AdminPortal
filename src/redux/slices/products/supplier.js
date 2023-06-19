@@ -126,7 +126,10 @@ export function deleteSupplier(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/suppliers/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${id}` , 
+      {
+          isArchived: true, 
+      });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
       console.error(error);

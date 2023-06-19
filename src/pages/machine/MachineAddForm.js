@@ -24,6 +24,14 @@ import {
   Dialog,
   InputAdornment,
 } from '@mui/material';
+// import { LocalizationProvider, DatePicker } from '@mui/lab';
+
+import { DatePicker } from '@mui/x-date-pickers';
+import moment from 'moment';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+
+
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers } from '../../redux/slices/customer/customer';
@@ -91,6 +99,10 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [projVal, setProjManVal] = useState('');
   const [suppVal, setSuppManVal] = useState('');
   const [currTag, setCurrTag] = useState('');
+  const [shippingDate, setShippingDate] = useState(null);
+  const [installationDate, setInstallationDate] = useState(null);
+  const [disableInstallationDate, setInstallationDateToggle] = useState(true);
+  const [disableShippingDate, setShippingDateToggle ] = useState(true);
   const [machineConnectionVal, setMachineConnectionVal] = useState([]);
 
   const [chipData, setChipData] = useState([]);
@@ -119,7 +131,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   // },[machineVal])
 
   const AddMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().max(6).required('Serial Number is required'),
+    serialNo: Yup.string().max(12).required('Serial Number is required'),
     name: Yup.string().max(30),
     // parentMachine: Yup.string(),
     // parentSerialNo: Yup.string(),
@@ -153,6 +165,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       customer: customerVal._id || null,
       instalationSite: installVal?._id || null,
       billingSite: billingVal?._id || null,
+      installationDate,
+      shippingDate,
       siteMilestone: '',
       accountManager: accoVal?._id || null,
       projectManager: projVal?._id || null,
@@ -193,6 +207,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     data.accountManager = accoVal?._id || null;
     data.projectManager = projVal?._id || null;
     data.supportManager = suppVal?._id || null;
+    data.installationDate = installationDate;
+    data.shippingDate = shippingDate;
     // data.customerTags = chipData
     const idsOnly = machineConnectionVal.map((obj) => obj._id);
     data.machineConnections = idsOnly;
@@ -212,6 +228,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       setMachineConnectionVal('');
       // setChipData([]);
       setCurrTag('');
+      setShippingDate(null);
+      setInstallationDate(null);
       reset();
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machine.list);
@@ -498,8 +516,12 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       onChange={(event, newValue) => {
                         if (newValue) {
                           setInstallVal(newValue);
+                          setInstallationDateToggle(false);
+                          setShippingDateToggle(false);
                         } else {
                           setInstallVal('');
+                          setInstallationDateToggle(true);
+                          setShippingDateToggle(true);
                         }
                       }}
                       renderOption={(props, option) => (
@@ -531,6 +553,29 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       renderInput={(params) => <TextField {...params} label="Billing Site" />}
                       ChipProps={{ size: 'small' }}
                     />
+                  </Box>
+
+                  <Box
+                    rowGap={3}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                  >
+                    <DatePicker
+                      label="Installation Date"
+                      value={installationDate  || new Date()}
+                      disabled={disableInstallationDate}
+                      onChange={(newValue) => setInstallationDate(newValue)}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <DatePicker
+                      label="Shipping Date"
+                      value={shippingDate || new Date()}
+                      disabled={disableShippingDate}                    
+                      onChange={(newValue) => setShippingDate(newValue)}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+
                   </Box>
 
                   <Box

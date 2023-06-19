@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   machineModels: [],
+  activeMachineModels: [],
   machineModel: {},
 };
 
@@ -38,7 +39,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET  MODEL
+    // GET  MODELS
     getMachineModelsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -46,11 +47,20 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET  ACTIVE MODELS
+    getActiveMachineModelsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachineModels = action.payload;
+      state.initial = true;
+    },
+
+        
     // GET MODEL
     getMachinemodelSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.machinemodel = action.payload;
+      state.machineModel = action.payload;
       state.initial = true;
     },
 
@@ -76,6 +86,13 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    // RESET 
+    resetActiveMachineModels(state){
+      state.activeMachineModels = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -87,6 +104,7 @@ export const {
   setMachinemodelsEditFormVisibility,
   resetMachineModel,
   resetMachineModels,
+  resetActiveMachineModels,
   setResponseMessage,
 } = slice.actions;
 
@@ -100,6 +118,26 @@ export function getMachineModels (){
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data));
+      }
+      return response;
+  }
+}
+
+// ------------------------- get Active Machine Models ---------------------------------------------
+
+export function getActiveMachineModels (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      });
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveMachineModelsSuccess(response.data));
       }
       return response;
   }
@@ -124,7 +162,10 @@ export function deleteMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
 
-      const response = await axios.delete(`${CONFIG.SERVER_URL}products/models/${id}`);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${id}` , 
+      {
+          isArchived: true, 
+      });
 
       return response
   };
