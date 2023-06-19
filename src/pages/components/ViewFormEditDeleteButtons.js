@@ -4,6 +4,7 @@ import { LoadingButton } from '@mui/lab';
 import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
 import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
@@ -116,6 +117,16 @@ export default function ViewFormEditDeleteButtons({
   };
   const [anchorEl, setAnchorEl] = useState(null);
   const { isMobile } = useResponsive('down', 'sm');
+
+  const methods = useForm();
+
+  const {
+    reset,
+    setError,
+    handleSubmit,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+  } = methods;
+
   return (
     <>
       <Stack
@@ -290,6 +301,7 @@ export default function ViewFormEditDeleteButtons({
         {onDelete ? (
           <Button
             disabled={disableDeleteButton}
+           
             onClick={() => {
               handleOpenConfirm('delete');
             }}
@@ -331,9 +343,15 @@ export default function ViewFormEditDeleteButtons({
         title="Delete"
         content="Are you sure you want to delete?"
         action={
-          <Button variant="contained" color="error" onClick={onDelete}>
+          <LoadingButton 
+          variant="contained" 
+          color="error" 
+          loading={isSubmitSuccessful || isSubmitting}
+          disabled={isSubmitting}
+          onClick={handleSubmit(onDelete)} 
+          >
             Delete
-          </Button>
+          </LoadingButton>
         }
       />
       <ConfirmDialog

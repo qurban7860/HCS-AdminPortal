@@ -143,8 +143,12 @@ export function AuthProvider({ children }) {
   // LOGIN
 
   const login = useCallback(async (email, password) => {
-
-    localStorage.clear();
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('name');
+    localStorage.removeItem('userRoles');
+    localStorage.removeItem('accessToken');
+    // localStorage.clear();
 
     const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, {
       email,
@@ -197,7 +201,12 @@ export function AuthProvider({ children }) {
     const response = await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
 
     setSession(null);
-    localStorage.clear();
+    localStorage.removeItem('userId');
+    localStorage.removeItem('email');
+    localStorage.removeItem('name');
+    localStorage.removeItem('userRoles');
+    localStorage.removeItem('accessToken');
+    // localStorage.clear();
 
     dispatch({
       type: 'LOGOUT',

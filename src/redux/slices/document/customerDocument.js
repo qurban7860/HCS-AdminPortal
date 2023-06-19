@@ -30,6 +30,11 @@ const slice = createSlice({
       state.isLoading = true;
       state.error = null;
     },
+
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+        },
     // SET TOGGLE
     setCustomerDocumentFormVisibility(state, action){
       state.customerDocumentFormVisibility = action.payload;
@@ -317,9 +322,12 @@ export function deleteCustomerDocument(customerDocumentId) {
           isArchived: true, 
       });
       dispatch(slice.actions.setResponseMessage(response.data));
+    dispatch(slice.actions.stopLoading());
+
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      dispatch(slice.actions.stopLoading());
     }
   };
 }

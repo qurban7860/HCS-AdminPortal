@@ -29,6 +29,10 @@ const slice = createSlice({
       state.isLoading = true;
       state.error = null;
     },
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+    },
     // SET TOGGLE
     setMachineDocumentFormVisibility(state, action){
       state.machineDocumentFormVisibility = action.payload;
@@ -325,9 +329,13 @@ export function deleteMachineDocument(machineDocumentId) {
       });
       // console.log("response : ", response)
       dispatch(slice.actions.setResponseMessage(response.data));
+    dispatch(slice.actions.stopLoading());
+
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+    dispatch(slice.actions.stopLoading());
+
     }
   };
 }

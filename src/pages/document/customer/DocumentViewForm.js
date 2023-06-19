@@ -43,7 +43,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
 
   const regEx = /^[^2]*/;
-  const { customerDocument } = useSelector((state) => state.customerDocument);
+  const { customerDocument , isLoading} = useSelector((state) => state.customerDocument);
   // console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
@@ -274,7 +274,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                             top: 4,
                             left: 76,
                             zIndex: 9,
-                            height: "60",
+                            width: 28,
+                            height: 28,
                             position: 'absolute',
                             color: (theme) => alpha(theme.palette.common.white, 0.8),
                             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
@@ -321,7 +322,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                                 top: 70,
                                 right: 15,
                                 zIndex: 9,
-                                height: "60",
+                                width: 28,
+                                height: 28,
                                 position: 'absolute',
                                 color: (theme) => alpha(theme.palette.common.white, 0.8),
                                 bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
@@ -343,7 +345,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                             top: 4,
                             left: 108,
                             zIndex: 9,
-                            height: "60",
+                            width: 28,
+                            height: 28,
                             position: 'absolute',
                             color: (theme) => alpha(theme.palette.common.white, 0.8),
                             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
@@ -414,7 +417,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                             top: 4,
                             left: 108,
                             zIndex: 9,
-                            height: "60",
+                            width: 28,
+                            height: 28,
                             position: 'absolute',
                             color: (theme) => alpha(theme.palette.common.white, 0.8),
                             bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
