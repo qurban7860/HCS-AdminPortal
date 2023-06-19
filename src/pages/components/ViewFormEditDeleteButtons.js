@@ -138,44 +138,41 @@ export default function ViewFormEditDeleteButtons({
         }}
       >
           {handleVerification  ? (
-            <ThemeProvider theme={theme} >
-           
-          <Button
-            onClick={() => {
-              handleOpenConfirm('Verification');
-            }}
-            variant="outlined"
-            color={isVerified ? 'success' : 'primary'}
-            sx={{ position: 'relative', zIndex: '1' }}
-          >
-                        {verificationCount && <IconButton
-                          size="small"
-                          sx={{
-                            width: '24px', 
-                            height:'24px',
-                            bottom: 20,
-                            left: 20,
-                            zIndex: 9,
-                            position: 'absolute',
-                            color: (themee) => alpha(themee.palette.common.white, 0.8),
-                            bgcolor: (themee) => alpha(themee.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (themee) => alpha(themee.palette.grey[900], 0.98),
-                            },
-                          }}
-                        > <Typography  variant='body2' >{verificationCount > 99 ? 99 : verificationCount }</Typography></IconButton>}
-            <Tooltip
-              title="Machine Verification"
-              placement="top"
-              disableFocusListener
-              classes={{ tooltip: classes.tooltip }}
+          <ThemeProvider theme={theme} >
+            <Button
+              onClick={() => {
+                handleOpenConfirm('Verification');
+              }}
+              variant="outlined"
+              color={isVerified ? 'success' : 'primary'}
+              sx={{ position: 'relative', zIndex: '1' }}
             >
-            
-
-              <Iconify sx={{ height: '24px', width: '24px' }} icon="ic:round-verified-user" />
-            </Tooltip>
-          </Button>
-            </ThemeProvider>
+                           <IconButton
+                            size="small"
+                            sx={{
+                              width: '24px', 
+                              height:'24px',
+                              bottom: 20,
+                              left: 20,
+                              zIndex: 9,
+                              position: 'absolute',
+                              color: (themee) => alpha(themee.palette.common.white, 0.8),
+                              bgcolor: (themee) => alpha(themee.palette.grey[900], 0.72),
+                              '&:hover': {
+                                bgcolor: (themee) => alpha(themee.palette.grey[900], 0.98),
+                              },
+                            }}
+                          > <Typography  variant='body2' >{verificationCount > 99 ? 99 : verificationCount }</Typography></IconButton>
+              <Tooltip
+                title="Machine Verification"
+                placement="top"
+                disableFocusListener
+                classes={{ tooltip: classes.tooltip }}
+              >
+                <Iconify sx={{ height: '24px', width: '24px' }} icon="ic:round-verified-user" />
+              </Tooltip>
+            </Button>
+          </ThemeProvider>
         ) : (
           ''
         )}
@@ -321,7 +318,7 @@ export default function ViewFormEditDeleteButtons({
         content="Are you sure you want to Verify Machine Informaton?"
         action={
           <Button variant="contained" color="primary" onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}>
-            Verified
+            Verify
           </Button>
         }
       />

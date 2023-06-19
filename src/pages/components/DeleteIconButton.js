@@ -7,8 +7,9 @@ import Iconify from '../../components/iconify';
 
 DeleteIconButton.propTypes = {
     onClick: PropTypes.func,
+    left: PropTypes.number
   };
-export default function DeleteIconButton({onClick}) {
+export default function DeleteIconButton({onClick, left}) {
 
     const [openConfirm, setOpenConfirm] = useState(false);
     const handleOpenConfirm = () => {
@@ -25,7 +26,7 @@ export default function DeleteIconButton({onClick}) {
         onClick={handleOpenConfirm}
         sx={{
           top: 4,
-          left: 44,
+          left: {left},
           zIndex: 9,
           height: "60",
           position: 'absolute',
