@@ -8,12 +8,13 @@ import { Paper, Button } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    // width: '100%',
+    width: '100%',
     height: '200px',
     objectFit: 'cover',
     carousel: {
+      width: '100%',
       position: 'relative',
-
+      objectFit: 'cover',
       buttonWrapper: {
         position: 'absolute',
         backgroundColor: 'transparent',
@@ -25,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
           },
         },
       },
-
       fullHeightHoverWrapper: {
         height: '100%',
         top: '0',
@@ -46,11 +46,9 @@ const useStyles = makeStyles((theme) => ({
           opacity: '0.6 !important',
         },
       },
-      // Applies to the "next" button wrapper
       next: {
         right: 0,
       },
-      // Applies to the "prev" button wrapper
       prev: {
         left: 0,
       },

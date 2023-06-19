@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Card, Grid, Link, CardActionArea } from '@mui/material';
+import { Stack, Grid, Link, CardActionArea } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -24,7 +24,6 @@ import ContactViewForm from './contact/ContactViewForm';
 import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
-import Scrollbar from '../../components/scrollbar';
 import useResponsive from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
@@ -65,7 +64,9 @@ export default function CustomerContactList(currentContact = null) {
   };
 
   const handleActiveCard = (index) => {
-    setCardActiveIndex(index);
+    if (!contactEditFormVisibility) {
+      setCardActiveIndex(index);
+    }
   };
 
   const handleExpand = (index) => {
@@ -81,25 +82,10 @@ export default function CustomerContactList(currentContact = null) {
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName || ''}`);
 
-  // conditions for rendering the contact view, edit, and add forms
+  // var conditions for rendering the contact view, edit, and add forms
   const shouldShowContactView = isExpanded && !contactEditFormVisibility;
   const shouldShowContactEdit = contactEditFormVisibility && !formVisibility;
   const shouldShowContactAdd = formVisibility && !contactEditFormVisibility;
-
-  // conditions for rendering the contact view, edit, and add forms
-  const handleCardConditions = (Index, Contact) => {
-    setCurrentContactData(Contact);
-    setOpenContact(true);
-    if (!isExpanded && !formVisibility) {
-      handleExpand(Index);
-      setContactFormVisibility(!formVisibility);
-    } else if (isExpanded && currentContactData !== Contact && !formVisibility) {
-      handleExpand(Index);
-    } else {
-      setIsExpanded(false);
-      Index = null;
-    }
-  };
 
   return (
     <>
@@ -172,10 +158,30 @@ export default function CustomerContactList(currentContact = null) {
                           condition2={activeCardIndex === index}
                           isMobile={isMobile}
                         >
-                          <CardActionArea active={activeIndex === index}>
+                          <CardActionArea
+                            active={activeIndex === index}
+                            disabled={contactEditFormVisibility}
+                          >
                             <Link
                               underline="none"
-                              onClick={() => handleCardConditions(index, contact)}
+                              disabled={contactEditFormVisibility}
+                              onClick={() => {
+                                setCurrentContactData(contact);
+                                setOpenContact(true);
+                                if (!isExpanded && !formVisibility) {
+                                  handleExpand(index);
+                                  setContactFormVisibility(!formVisibility);
+                                } else if (
+                                  isExpanded &&
+                                  currentContactData !== contact &&
+                                  !formVisibility
+                                ) {
+                                  handleExpand(index);
+                                } else {
+                                  setIsExpanded(false);
+                                  index = null;
+                                }
+                              }}
                             >
                               <Grid
                                 container

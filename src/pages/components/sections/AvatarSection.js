@@ -7,7 +7,7 @@ import {
   CardMediaBase,
 } from '../../../theme/styles/customer-styles';
 
-function AvatarSection({ name, image, ...props }) {
+function AvatarSection({ name, image, isSite, ...props }) {
   return (
     <GridBaseCard1 item lg={4} justifyContent="center">
       <CardContent
@@ -16,7 +16,7 @@ function AvatarSection({ name, image, ...props }) {
         height="170px"
         sx={{ position: 'relative', zIndex: '1' }}
       >
-        <CustomAvatarBase name={name} alt={name} />
+        {!isSite && <CustomAvatarBase name={name} alt={name} />}
 
         <CardMediaBase
           component="img"
@@ -29,8 +29,9 @@ function AvatarSection({ name, image, ...props }) {
 }
 
 AvatarSection.propTypes = {
-  name: PropTypes.string,
+  name: PropTypes.node,
   image: PropTypes.node,
+  isSite: PropTypes.bool,
 };
 
 export default AvatarSection;

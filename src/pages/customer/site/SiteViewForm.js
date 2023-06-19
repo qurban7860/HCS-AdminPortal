@@ -31,7 +31,7 @@ SiteViewForm.propTypes = {
   currentSite: PropTypes.object,
 };
 
-export default function SiteViewForm({ currentSite = null }) {
+export default function SiteViewForm({ currentSite = null, handleMap }) {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const navigate = useNavigate();
@@ -60,11 +60,6 @@ export default function SiteViewForm({ currentSite = null }) {
   const handleEdit = async () => {
     await dispatch(getSite(customer._id, currentSite._id));
     dispatch(setSiteEditFormVisibility(true));
-  };
-
-  const handleMap = async () => {
-    // navigate(`/dashboard/map/${currentSite._id}`);
-    setOpenPopover(true);
   };
 
   const defaultValues = useMemo(
@@ -190,3 +185,8 @@ export default function SiteViewForm({ currentSite = null }) {
     </Grid>
   );
 }
+
+SiteViewForm.propTypes = {
+  currentSite: PropTypes.object,
+  handleMap: PropTypes.func,
+};

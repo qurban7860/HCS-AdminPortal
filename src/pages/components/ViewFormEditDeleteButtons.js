@@ -101,12 +101,7 @@ export default function ViewFormEditDeleteButtons({
         }}
       >
         {sites && !isMobile ? (
-          <Button
-            onClick={() => {
-              handleMap();
-            }}
-            sx={{ display: { sm: 'block', md: 'none' } }}
-          >
+          <Button onClick={handleMap} sx={{ display: { sm: 'block', md: 'none' } }}>
             <IconButton
               aria-label="google-maps"
               onClick={handlePopoverOpen}
