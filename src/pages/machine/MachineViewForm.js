@@ -21,13 +21,12 @@ import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
 import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import Iconify from '../../components/iconify';
-import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import CommaJoinField from '../components/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
+import FormLabel from '../components/FormLabel';
 import GoogleMaps from '../../assets/GoogleMaps';
 // utils
 import { fDateTime, fDate } from '../../utils/formatTime';
@@ -185,21 +184,7 @@ export default function MachineViewForm() {
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
       </Grid>
       <Grid container>
-        <Grid item container sx={{ py: '1rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Key Details
-            </Typography>
-          </Grid>
-        </Grid>
+        <FormLabel content="Key Details" />
         <Grid container>
           <Card sx={{ width: '100%', p: '1rem' }}>
             <Grid container>
@@ -273,21 +258,7 @@ export default function MachineViewForm() {
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
-        <Grid item container sx={{ pt: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Howick Resources
-            </Typography>
-          </Grid>
-        </Grid>
+        <FormLabel content="Howick Resources" />
 
         <ViewFormField
           sm={6}
@@ -312,21 +283,7 @@ export default function MachineViewForm() {
       </Grid>
 
       <Grid container>
-        <Grid item container sx={{ pt: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Sites Locations
-            </Typography>
-          </Grid>
-        </Grid>
+        <FormLabel content="Sites Locations" />
         {hasValid ? (
           <GoogleMaps machineView latlongArr={latLongValues} mapHeight="500px" />
         ) : (
@@ -371,21 +328,7 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
           <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid item container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Address Information
-              </Typography>
-            </Grid>
-          </Grid>
+          <FormLabel content="Address Information" />
           <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
           <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
           <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
@@ -412,21 +355,7 @@ export default function MachineViewForm() {
           />
         </Grid>
         <Grid item container sx={{ px: 2, pb: 3 }}>
-          <Grid item container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Howick Resources{' '}
-              </Typography>
-            </Grid>
-          </Grid>
+          <FormLabel content="Howick Resources" />
           <ViewFormField
             sm={6}
             heading="Account Manager"
