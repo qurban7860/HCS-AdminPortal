@@ -44,7 +44,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
 
   const regEx = /^[^2]*/;
   const { customerDocument } = useSelector((state) => state.customerDocument);
-  console.log("currentCustomerDocument : ",currentCustomerDocument)
+  // console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
 
@@ -258,6 +258,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                       >
                       <Link>
                      <DeleteIconButton 
+                          left={44}
                           onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id )}
                         />
                       </Link>
@@ -401,6 +402,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileE
                       >
                       <Link>
                       <DeleteIconButton 
+                      left={76}
                           onClick={() => handleDelete(currentCustomerDocument._id, currentCustomerDocument?.documentVersions[0]._id, file._id)}
                           />
                       </Link>

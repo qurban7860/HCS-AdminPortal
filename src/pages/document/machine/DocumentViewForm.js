@@ -248,6 +248,7 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                       >
                       <Link>
                       <DeleteIconButton 
+                          left={44}
                           onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
                       />
                       </Link>
@@ -391,6 +392,7 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                       >
                       <Link>
                       <DeleteIconButton 
+                          left={76}
                           onClick={() => handleDelete(currentMachineDocument._id, currentMachineDocument?.documentVersions[0]._id,file._id)}
                       />
                       </Link>
