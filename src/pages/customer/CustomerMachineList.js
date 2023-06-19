@@ -3,7 +3,26 @@ import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Switch, Stack, Card, Grid, Table, Button, Tooltip, TableBody, Container, IconButton, TableContainer, DialogTitle, Dialog,  Typography, Accordion, AccordionSummary, AccordionDetails, Link } from '@mui/material';
+import {
+  Switch,
+  Stack,
+  Card,
+  Grid,
+  Table,
+  Button,
+  Tooltip,
+  TableBody,
+  Container,
+  IconButton,
+  TableContainer,
+  DialogTitle,
+  Dialog,
+  Typography,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Link,
+} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -11,8 +30,19 @@ import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../components/table';
+import {
+  useTable,
+  getComparator,
+  emptyRows,
+  TableNoData,
+  TableSkeleton,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../components/table';
 import Iconify from '../../components/iconify';
+import FormLabel from '../components/FormLabel';
 // sections
 import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slices/products/machine';
 
@@ -20,7 +50,6 @@ import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slice
 import _mock from '../../_mock';
 import EmptyContent from '../../components/empty-content';
 import ViewFormField from '../components/ViewFormField';
-import ListSwitch from '../components/ListSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +98,7 @@ export default function CustomerContactList() {
     setControlled(isExpanded ? panel : false);
   };
   const dispatch = useDispatch();
-  const { customer, error, initial, responseMessage, } = useSelector((state) => state.customer);
+  const { customer, error, initial, responseMessage } = useSelector((state) => state.customer);
   const { customerMachines, machine } = useSelector((state) => state.machine);
   // console.log("customerMachines : ",customerMachines)
   const [checked, setChecked] = useState(false);
@@ -91,14 +120,14 @@ export default function CustomerContactList() {
   const [machineData, setMachineData] = useState({});
   const address = {};
   // console.log("machineData", machineData);
-  const handleOpenMachine = () =>  setOpenMachine(true);
+  const handleOpenMachine = () => setOpenMachine(true);
   const handleCloseMachine = () => setOpenMachine(false);
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -109,8 +138,8 @@ export default function CustomerContactList() {
     setDescriptionExpanded(!descriptionExpanded);
   };
   useEffect(() => {
-      dispatch(getCustomerMachines(customer._id));
-  }, [dispatch, checked, customer, ]);
+    dispatch(getCustomerMachines(customer._id));
+  }, [dispatch, checked, customer]);
 
   useEffect(() => {
     if (initial) {
@@ -132,7 +161,7 @@ export default function CustomerContactList() {
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = !customerMachines.length ;
+  const isNotFound = !customerMachines.length;
   const handleViewMachine = (id) => {
     navigate(PATH_MACHINE.machine.view(id));
   };
@@ -155,110 +184,136 @@ export default function CustomerContactList() {
       )} */}
       <Card>
         {customerMachines.map((customerMachine, index) => {
-                address.city = customerMachine?.instalationSite?.address?.city
-                address.region = customerMachine?.instalationSite?.address?.region
-                address.country = customerMachine?.instalationSite?.address?.country
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return (
-              <Accordion expanded={false} focusVisible={false}
-                key={customerMachine._id}
-                // expanded={expanded === index}
-                // onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal, }}
-                >
-                <AccordionSummary
-                 aria-controls="panel1a-content"
-                 focusVisible={false}
-                 sx={{ cursor: 'unset !important' }}
+          address.city = customerMachine?.instalationSite?.address?.city;
+          address.region = customerMachine?.instalationSite?.address?.region;
+          address.country = customerMachine?.instalationSite?.address?.country;
+          const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+          return (
+            <Accordion
+              expanded={false}
+              focusVisible={false}
+              key={customerMachine._id}
+              // expanded={expanded === index}
+              // onChange={handleChange(index)}
+              sx={{ borderTop: borderTopVal }}
+            >
+              <AccordionSummary
+                aria-controls="panel1a-content"
+                focusVisible={false}
+                sx={{ cursor: 'unset !important' }}
                 //  sx={{ pointerEvents: "none"}}
-                  // expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  // onClick={() => handleAccordianClick(index)}
-                >
-                  {index !== activeIndex ? (
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} sm={6} md={2} >
-                        {customerMachine?.serialNo &&
-                          <Link
-                          onClick={()=>{
+                // expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                // onClick={() => handleAccordianClick(index)}
+              >
+                {index !== activeIndex ? (
+                  <Grid container spacing={1}>
+                    <Grid item xs={12} sm={6} md={2}>
+                      {customerMachine?.serialNo && (
+                        <Link
+                          onClick={() => {
                             setDescriptionExpanded(false);
                             setOpenMachine(true);
-                            setMachineData(customerMachine)
+                            setMachineData(customerMachine);
                           }}
                           href="#"
-                          underline="none">
-                          <Typography >{customerMachine?.serialNo}</Typography>
-                          </Link>}
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={2}>
-                      <Typography >{customerMachine?.name}</Typography>
-                      </Grid>
-                      <Grid item xs={12} sm={6} md={2} display={{ sm: 'none', md: 'block' }}  >
-                      <Typography >{customerMachine?.machineModel?.name}</Typography>
-                      </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        md={6}
-                        display={{ sm: 'none', md: 'none', lg: 'block' }}
-                      >
-                      <Typography >{Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}</Typography>
-                        {/* {customerMachine?.instalationSite?.address?.city ? customerMachine?.instalationSite?.address?.city : ""}
+                          underline="none"
+                        >
+                          <Typography>{customerMachine?.serialNo}</Typography>
+                        </Link>
+                      )}
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2}>
+                      <Typography>{customerMachine?.name}</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={2} display={{ sm: 'none', md: 'block' }}>
+                      <Typography>{customerMachine?.machineModel?.name}</Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sm={6}
+                      md={6}
+                      display={{ sm: 'none', md: 'none', lg: 'block' }}
+                    >
+                      <Typography>
+                        {Object.values(address ?? {})
+                          .map((value) => (typeof value === 'string' ? value.trim() : ''))
+                          .filter((value) => value !== '')
+                          .join(', ')}
+                      </Typography>
+                      {/* {customerMachine?.instalationSite?.address?.city ? customerMachine?.instalationSite?.address?.city : ""}
                         {customerMachine?.instalationSite?.address?.region?.trim() !== undefined  ? ", " : ''}
                         {customerMachine?.instalationSite?.address?.region ? customerMachine?.instalationSite?.address?.region : ""}
                         {customerMachine?.instalationSite?.address?.country?.trim() !== undefined   ? ", " : ''}
                         {customerMachine?.instalationSite?.address?.country ? customerMachine?.instalationSite?.address?.country : ""} */}
-                      </Grid>
                     </Grid>
-                  ) : null}
-                </AccordionSummary>
-                {/* <AccordionDetails sx={{ mt: -5 }}> */}
-                {/* </AccordionDetails> */}
-              </Accordion>
-            );
-          })}
+                  </Grid>
+                ) : null}
+              </AccordionSummary>
+              {/* <AccordionDetails sx={{ mt: -5 }}> */}
+              {/* </AccordionDetails> */}
+            </Accordion>
+          );
+        })}
         {isNotFound && <EmptyContent title="No data" sx={{ color: '#DFDFDF' }} />}
         <Dialog
-        maxWidth="md"
-        open={openMachine}
-        onClose={handleCloseMachine}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
+          maxWidth="md"
+          open={openMachine}
+          onClose={handleCloseMachine}
+          aria-labelledby="keep-mounted-modal-title"
+          aria-describedby="keep-mounted-modal-description"
         >
-        <Grid
-          container
-          item
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Machine{' '}
-          </Typography>{' '}
-          <Link onClick={() => handleCloseMachine()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify sx={{color:"white"}} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        <Grid container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={6} heading="Serial No"                   param={machineData?.serialNo} />
-          <ViewFormField sm={6} heading="Name"                        param={machineData?.name} />
-          <ViewFormField sm={6} heading="Previous Machine Serial No"  param={machineData?.parentSerialNo}/>
-          <ViewFormField sm={6} heading="Previous Machine"            param={machineData?.parentMachine?.name} />
-          <ViewFormField sm={6} heading="Supplier"                    param={machineData?.supplier?.name} />
-          <ViewFormField sm={6} heading="Machine Model"               param={machineData?.machineModel?.name} />
-          {/* <ViewFormField sm={6} heading="Status"                      param={machineData?.status?.name} /> */}
-          {/* <ViewFormField sm={6} heading="Work Order / Perchase Order" param={machineData?.workOrderRef} /> */}
-          {/* <ViewFormField sm={12} heading="Customer"                   param={machineData?.customer?.name }/> */}
-          <ViewFormField sm={6} heading="Installation Site"           param={machineData?.instalationSite?.name}/>
-          <ViewFormField sm={6} heading="Billing Site"                param={machineData?.billingSite?.name}/>
-          <ViewFormField sm={12} heading="Nearby Milestone"           param={machineData?.siteMilestone} />
-          {/* <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
+          <Grid
+            container
+            item
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              bgcolor: 'primary.main',
+              color: 'primary.contrastText',
+              padding: '10px',
+            }}
+          >
+            <Typography variant="h4" sx={{ px: 2 }}>
+              Machine{' '}
+            </Typography>{' '}
+            <Link
+              onClick={() => handleCloseMachine()}
+              href="#"
+              underline="none"
+              sx={{ ml: 'auto' }}
+            >
+              {' '}
+              <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
+            </Link>
+          </Grid>
+          <Grid container sx={{ px: 2, pt: 2 }}>
+            <ViewFormField sm={6} heading="Serial No" param={machineData?.serialNo} />
+            <ViewFormField sm={6} heading="Name" param={machineData?.name} />
+            <ViewFormField
+              sm={6}
+              heading="Previous Machine Serial No"
+              param={machineData?.parentSerialNo}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Previous Machine"
+              param={machineData?.parentMachine?.name}
+            />
+            <ViewFormField sm={6} heading="Supplier" param={machineData?.supplier?.name} />
+            <ViewFormField sm={6} heading="Machine Model" param={machineData?.machineModel?.name} />
+            {/* <ViewFormField sm={6} heading="Status"                      param={machineData?.status?.name} /> */}
+            {/* <ViewFormField sm={6} heading="Work Order / Perchase Order" param={machineData?.workOrderRef} /> */}
+            {/* <ViewFormField sm={12} heading="Customer"                   param={machineData?.customer?.name }/> */}
+            <ViewFormField
+              sm={6}
+              heading="Installation Site"
+              param={machineData?.instalationSite?.name}
+            />
+            <ViewFormField sm={6} heading="Billing Site" param={machineData?.billingSite?.name} />
+            <ViewFormField sm={12} heading="Nearby Milestone" param={machineData?.siteMilestone} />
+            {/* <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
             <Typography  variant="overline" sx={{ color: 'text.disabled' }}> Description </Typography>
             {machineData?.description && <Typography variant="body1" component="p" >
                 {descriptionExpanded ? machineData?.description : `${machineData?.description.slice(0, 90)}...`}{machineData?.description?.length > 90 && (
@@ -267,65 +322,54 @@ export default function CustomerContactList() {
                 </Button>)}
             </Typography>}
           </Grid> */}
-
-        </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
-          <Grid item container sx={{ py: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
+          </Grid>
+          <Grid item container sx={{ px: 2, pb: 3 }}>
+            <FormLabel content="Howick Resources" />
+            <ViewFormField
+              sm={6}
+              heading="Account Manager"
+              param={machineData?.accountManager?.firstName}
+              secondParam={machineData?.accountManager?.lastName}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Project Manager"
+              param={machineData?.projectManager?.firstName}
+              secondParam={machineData?.projectManager?.lastName}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Suppport Manager"
+              param={machineData?.supportManager?.firstName}
+              secondParam={machineData?.supportManager?.lastName}
+            />
+          </Grid>
+          <Grid
+            item
+            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+            sm={12}
+          >
+            <Link
+              onClick={() => handleViewMachine(machineData._id)}
+              href="#"
+              underline="none"
               sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
+                ml: 'auto',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                px: 3,
+                pb: 3,
               }}
             >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Howick Resources{' '}
+              {' '}
+              <Typography variant="body" sx={{ px: 2 }}>
+                Go to Machine
               </Typography>
-            </Grid>
+              <Iconify icon="mdi:share" />
+            </Link>
           </Grid>
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={machineData?.accountManager?.firstName}
-            secondParam={machineData?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={machineData?.projectManager?.firstName}
-            secondParam={machineData?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={machineData?.supportManager?.firstName}
-            secondParam={machineData?.supportManager?.lastName}
-          />
-        </Grid>
-        <Grid item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} sm={12}>
-          <Link
-            onClick={() => handleViewMachine(machineData._id)}
-            href="#"
-            underline="none"
-            sx={{
-              ml: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              px: 3,
-              pb: 3,
-            }}
-          >
-            {' '}
-            <Typography variant="body" sx={{ px: 2 }}>
-              Go to Machine
-            </Typography>
-            <Iconify icon="mdi:share" />
-          </Link>
-        </Grid>
-      </Dialog>
+        </Dialog>
       </Card>
     </>
   );
@@ -346,12 +390,15 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (customerMachine) => customerMachine.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+      (customerMachine) =>
+        customerMachine.name.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customerMachine) => filterStatus.includes(customerMachine.status));
+    inputData = inputData.filter((customerMachine) =>
+      filterStatus.includes(customerMachine.status)
+    );
   }
 
   return inputData;
