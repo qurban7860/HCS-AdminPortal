@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useState } from 'react';
 import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
-import { createTheme, ThemeProvider, styled, alpha } from '@mui/material/styles';
+import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
@@ -35,10 +35,10 @@ ViewFormEditDeleteButtons.propTypes = {
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
-  disableTransferButton: PropTypes.bool,
-  disablePasswordButton: PropTypes.bool,
-  disableDeleteButton: PropTypes.bool,
-  disableEditButton: PropTypes.bool,
+  disableTransferButton: PropTypes.bool, 
+  disablePasswordButton: PropTypes.bool, 
+  disableDeleteButton: PropTypes.bool, 
+  disableEditButton: PropTypes.bool, 
   handleMap: PropTypes.func,
 };
 export default function ViewFormEditDeleteButtons({
@@ -46,7 +46,7 @@ export default function ViewFormEditDeleteButtons({
   disableDeleteButton = false,
   disablePasswordButton = false,
   disableEditButton = false,
-  isVerified,
+  isVerified ,
   verificationCount,
   handleVerification,
   onDelete,
@@ -67,46 +67,45 @@ export default function ViewFormEditDeleteButtons({
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const theme = createTheme({
     palette: {
-      success: green,
+        success: green,
     },
-  });
+});
   // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-  const disableDelete = userRoles.some((role) => role?.disableDelete === true);
-
-  if (disableDelete) {
+  const disableDelete = userRoles.some(role => role?.disableDelete === true);
+  
+  if(disableDelete){
     disableDeleteButton = true;
-  } else {
-    disableDeleteButton = false;
-  }
+   }else{
+    disableDeleteButton = false
+   }
 
   const handleOpenConfirm = (dialogType) => {
-    if (dialogType === 'Verification' && !isVerified) {
+    if(dialogType === 'Verification' && !isVerified ){
       setOpenVerificationConfirm(true);
     }
-    if (dialogType === 'delete') {
+    if(dialogType === 'delete'){
       setOpenConfirm(true);
     }
-    if (dialogType === 'transfer') {
+    if(dialogType === 'transfer'){
       dispatch(setTransferDialogBoxVisibility(true));
     }
   };
   const handleCloseConfirm = (dialogType) => {
-    if (dialogType === 'Verification') {
+    if(dialogType === 'Verification'){
       setOpenVerificationConfirm(false);
     }
-    if (dialogType === 'delete') {
+    if(dialogType === 'delete'){
       setOpenConfirm(false);
     }
-    if (dialogType === 'transfer') {
+    if(dialogType === 'transfer'){
       dispatch(setTransferDialogBoxVisibility(false));
     }
   };
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
-
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
     setIsPopoverOpen(true);
@@ -125,6 +124,7 @@ export default function ViewFormEditDeleteButtons({
         spacing={2}
         sx={{
           mb: -5,
+          // mt:1,
           mr: 3,
           '& .MuiButton-root': {
             minWidth: '32px',
@@ -137,8 +137,8 @@ export default function ViewFormEditDeleteButtons({
           },
         }}
       >
-        {handleVerification ? (
-          <ThemeProvider theme={theme}>
+          {handleVerification  ? (
+          <ThemeProvider theme={theme} >
             <Button
               onClick={() => {
                 handleOpenConfirm('Verification');
@@ -147,29 +147,23 @@ export default function ViewFormEditDeleteButtons({
               color={isVerified ? 'success' : 'primary'}
               sx={{ position: 'relative', zIndex: '1' }}
             >
-              {verificationCount && (
-                <IconButton
-                  size="small"
-                  sx={{
-                    width: '24px',
-                    height: '24px',
-                    bottom: 20,
-                    left: 20,
-                    zIndex: 9,
-                    position: 'absolute',
-                    color: (themee) => alpha(themee.palette.common.white, 0.8),
-                    bgcolor: (themee) => alpha(themee.palette.grey[900], 0.72),
-                    '&:hover': {
-                      bgcolor: (themee) => alpha(themee.palette.grey[900], 0.98),
-                    },
-                  }}
-                >
-                  {' '}
-                  <Typography variant="body2">
-                    {verificationCount > 99 ? 99 : verificationCount}
-                  </Typography>
-                </IconButton>
-              )}
+                          {isVerified && <IconButton
+                            size="small"
+                            sx={{
+                              width: '24px', 
+                              height:'24px',
+                              bottom: 20,
+                              left: 20,
+                              zIndex: 9,
+                              position: 'absolute',
+                              color: (themee) => alpha(themee.palette.common.white, 0.8),
+                              bgcolor: (themee) => alpha(themee.palette.grey[900], 0.72),
+                              '&:hover': {
+                                bgcolor: (themee) => alpha(themee.palette.grey[900], 0.98),
+                              },
+                            }}
+                          > <Typography  variant='body2' >{verificationCount > 99 ? 99 : verificationCount }</Typography>
+                          </IconButton>}
               <Tooltip
                 title="Machine Verification"
                 placement="top"
@@ -184,7 +178,12 @@ export default function ViewFormEditDeleteButtons({
           ''
         )}
         {sites && !isMobile ? (
-          <Button onClick={handleMap} sx={{ display: { sm: 'block', md: 'none' } }}>
+          <Button
+            onClick={() => {
+              handleMap();
+            }}
+            sx={{ display: { sm: 'block', md: 'none' } }}
+          >
             <IconButton
               aria-label="google-maps"
               onClick={handlePopoverOpen}
@@ -192,7 +191,7 @@ export default function ViewFormEditDeleteButtons({
               onMouseLeave={handlePopoverClose}
             >
               <Iconify
-                heading="Open Map"
+                heading="Opem Map"
                 icon="mdi:google-maps"
                 style={{ color: 'red' }}
                 width="30px"
@@ -250,6 +249,7 @@ export default function ViewFormEditDeleteButtons({
           ''
         )}
 
+
         {handleUpdatePassword ? (
           <Button
             disabled={disablePasswordButton}
@@ -267,9 +267,8 @@ export default function ViewFormEditDeleteButtons({
               <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:account-key" />
             </Tooltip>
           </Button>
-        ) : (
-          ''
-        )}
+          ) : ( '' )
+        }
 
         <Button
           disabled={disableEditButton}
@@ -287,7 +286,6 @@ export default function ViewFormEditDeleteButtons({
             <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:pencil" />
           </Tooltip>
         </Button>
-
         {/* if not in the profile show this */}
         {onDelete ? (
           <Button
@@ -312,7 +310,6 @@ export default function ViewFormEditDeleteButtons({
           ''
         )}
       </Stack>
-
       <ConfirmDialog
         open={openVerificationConfirm}
         onClose={() => {
@@ -321,15 +318,8 @@ export default function ViewFormEditDeleteButtons({
         title="Verification"
         content="Are you sure you want to Verify Machine Informaton?"
         action={
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => {
-              handleVerification();
-              handleCloseConfirm('Verification');
-            }}
-          >
-            Verified
+          <Button variant="contained" color="primary" onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}>
+            Verify
           </Button>
         }
       />

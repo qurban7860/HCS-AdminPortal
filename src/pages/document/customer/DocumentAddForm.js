@@ -53,7 +53,7 @@ export default function DocumentAddForm({currentDocument}) {
   const [ documentTypeVal, setDocumentTypeVal] = useState('')
   const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const [ documentVal, setDocumentVal] = useState('')
-  console.log("documentVal : ",documentVal)
+  // console.log("documentVal : ",documentVal)
   const [ selectedValue, setSelectedValue] = useState('new')
   const [ selectedVersionValue, setSelectedVersionValue] = useState("newVersion")
   const [ descriptionVal, setDescriptionVal] = useState("")
