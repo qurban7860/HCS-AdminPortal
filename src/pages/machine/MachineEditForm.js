@@ -138,7 +138,7 @@ export default function MachineEditForm() {
   }, [dispatch, customerVal]);
 
   const EditMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().required('Serial Number is required').max(20),
+    serialNo: Yup.string().required('Serial Number is required').max(10),
     name: Yup.string().max(50),
     // parentMachine: Yup.string(),
     // parentSerialNo: Yup.string(),
