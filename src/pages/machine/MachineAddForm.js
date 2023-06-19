@@ -30,7 +30,6 @@ import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
-
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers } from '../../redux/slices/customer/customer';
@@ -101,7 +100,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [shippingDate, setShippingDate] = useState(null);
   const [installationDate, setInstallationDate] = useState(null);
   const [disableInstallationDate, setInstallationDateToggle] = useState(true);
-  const [disableShippingDate, setShippingDateToggle ] = useState(true);
+  const [disableShippingDate, setShippingDateToggle] = useState(true);
   const [machineConnectionVal, setMachineConnectionVal] = useState([]);
 
   const [chipData, setChipData] = useState([]);
@@ -267,158 +266,157 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { themeStretch } = useSettingsContext();
 
   return (
-    <>
-      <Container maxWidth={themeStretch ? false : 'xl'}>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Card sx={{ mb: 3, height: 150, position: 'relative', mt: '24px' }}>
-            <Cover name="New Machine" icon="material-symbols:list-alt-outline" setting="enable" />
-          </Card>
-          <Grid container>
-            <Grid item xs={18} md={12} sx={{ mt: 3 }}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={6}>
-                  <Box
-                    sx={{ mb: -3 }}
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                  >
-                    <RHFTextField name="serialNo" label="Serial No." />
-                    <RHFTextField name="name" label="Name" />
-                    <Autocomplete
-                      // freeSolo
-                      value={parMachSerVal || null}
-                      options={machines}
-                      isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                      getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
-                      id="controllable-states-demo"
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setParMachineVal(newValue);
-                          setParMachSerVal(newValue);
-                          setSupplierVal(newValue.supplier);
-                          setModelVal(newValue.machineModel);
-                        } else {
-                          setParMachineVal('');
-                          setParMachSerVal('');
-                          setSupplierVal('');
-                          setModelVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${
-                          option.serialNo ? option.serialNo : ''
-                        }`}</li>
-                      )}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Previous Machine Serial No." />
-                      )}
-                      ChipProps={{ size: 'small' }}
-                    />
-                    <Autocomplete
-                      // freeSolo
-                      readOnly
-                      value={parMachineVal || null}
-                      options={machines}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setParMachineVal(newValue);
-                          setParMachSerVal(newValue);
-                          setSupplierVal(newValue.supplier);
-                          setModelVal(newValue.machineModel);
-                        } else {
-                          setParMachineVal('');
-                          setParMachSerVal('');
-                          setSupplierVal('');
-                          setModelVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>
-                          {option.serialNo}
-                        </li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Previous Machine" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-                  </Box>
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                  >
-                    <Autocomplete
-                      // freeSolo
-                      value={supplierVal || null}
-                      options={suppliers}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setSupplierVal(newValue);
-                        } else {
-                          setSupplierVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Supplier" />}
-                      ChipProps={{ size: 'small' }}
-                    />
+    <Container maxWidth={themeStretch ? false : 'xl'}>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Card sx={{ mb: 3, height: 150, position: 'relative', mt: '24px' }}>
+          <Cover name="New Machine" icon="material-symbols:list-alt-outline" setting="enable" />
+        </Card>
+        <Grid container>
+          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={6}>
+                <Box
+                  sx={{ mb: -3 }}
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name="serialNo" label="Serial No." />
+                  <RHFTextField name="name" label="Name" />
+                  <Autocomplete
+                    // freeSolo
+                    value={parMachSerVal || null}
+                    options={machines}
+                    isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                    getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
+                    id="controllable-states-demo"
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setParMachineVal(newValue);
+                        setParMachSerVal(newValue);
+                        setSupplierVal(newValue.supplier);
+                        setModelVal(newValue.machineModel);
+                      } else {
+                        setParMachineVal('');
+                        setParMachSerVal('');
+                        setSupplierVal('');
+                        setModelVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${
+                        option.serialNo ? option.serialNo : ''
+                      }`}</li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Previous Machine Serial No." />
+                    )}
+                    ChipProps={{ size: 'small' }}
+                  />
+                  <Autocomplete
+                    // freeSolo
+                    readOnly
+                    value={parMachineVal || null}
+                    options={machines}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setParMachineVal(newValue);
+                        setParMachSerVal(newValue);
+                        setSupplierVal(newValue.supplier);
+                        setModelVal(newValue.machineModel);
+                      } else {
+                        setParMachineVal('');
+                        setParMachSerVal('');
+                        setSupplierVal('');
+                        setModelVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>
+                        {option.serialNo}
+                      </li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Previous Machine" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                </Box>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <Autocomplete
+                    // freeSolo
+                    value={supplierVal || null}
+                    options={suppliers}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setSupplierVal(newValue);
+                      } else {
+                        setSupplierVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Supplier" />}
+                    ChipProps={{ size: 'small' }}
+                  />
 
-                    <Autocomplete
-                      // freeSolo
-                      value={modelVal || null}
-                      options={machineModels}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setModelVal(newValue);
-                        } else {
-                          setModelVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Model" />}
-                      ChipProps={{ size: 'small' }}
-                    />
+                  <Autocomplete
+                    // freeSolo
+                    value={modelVal || null}
+                    options={machineModels}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setModelVal(newValue);
+                      } else {
+                        setModelVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Model" />}
+                    ChipProps={{ size: 'small' }}
+                  />
 
-                    <Autocomplete
-                      multiple
-                      name="connection"
-                      id="tags-outlined"
-                      value={machineConnectionVal || null}
-                      options={machineConnections}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      filterSelectedOptions
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setMachineConnectionVal(newValue);
-                        } else {
-                          setMachineConnectionVal([]);
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Connected Machines" placeholder="Search" />
-                      )}
-                    />
+                  <Autocomplete
+                    multiple
+                    name="connection"
+                    id="tags-outlined"
+                    value={machineConnectionVal || null}
+                    options={machineConnections}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    filterSelectedOptions
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setMachineConnectionVal(newValue);
+                      } else {
+                        setMachineConnectionVal([]);
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    renderInput={(params) => (
+                      <TextField {...params} label="Connected Machines" placeholder="Search" />
+                    )}
+                  />
 
-                    {/* <Autocomplete
+                  {/* <Autocomplete
                 // freeSolo
                 value={ machineConnectionVal || null}
                 options={machineConnections}
@@ -446,255 +444,254 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                 ChipProps={{ size: 'small' }}
               /> */}
 
-                    <Autocomplete
-                      // freeSolo
-                      value={statusVal || null}
-                      options={machinestatuses}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      getOptionDisabled={(option) =>
-                        option.slug === 'intransfer' || option.slug === 'transferred'
+                  <Autocomplete
+                    // freeSolo
+                    value={statusVal || null}
+                    options={machinestatuses}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    getOptionDisabled={(option) =>
+                      option.slug === 'intransfer' || option.slug === 'transferred'
+                    }
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setStatusVal(newValue);
+                      } else {
+                        setStatusVal('');
                       }
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setStatusVal(newValue);
-                        } else {
-                          setStatusVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Status" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-                    <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
-                  </Box>
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                  >
-                    <Autocomplete
-                      sx={{ my: -3 }}
-                      value={customerVal || null}
-                      options={customers}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setCustomerVal(newValue);
-                        } else {
-                          setCustomerVal('');
-                          dispatch(resetSites());
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Customer" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-                  </Box>
-
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                  >
-                    <Autocomplete
-                      // freeSolo
-                      value={installVal || null}
-                      options={sites}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setInstallVal(newValue);
-                          setInstallationDateToggle(false);
-                          setShippingDateToggle(false);
-                        } else {
-                          setInstallVal('');
-                          setInstallationDateToggle(true);
-                          setShippingDateToggle(true);
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Instalation Site" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-
-                    <Autocomplete
-                      // freeSolo
-                      sx={{ mb: -3 }}
-                      value={billingVal || null}
-                      options={sites}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
-                      getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setBillingVal(newValue);
-                        } else {
-                          setBillingVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Billing Site" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-                  </Box>
-
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                  >
-                    <DatePicker
-                      label="Installation Date"
-                      value={installationDate  || new Date()}
-                      disabled={disableInstallationDate}
-                      onChange={(newValue) => setInstallationDate(newValue)}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                    <DatePicker
-                      label="Shipping Date"
-                      value={shippingDate || new Date()}
-                      disabled={disableShippingDate}                    
-                      onChange={(newValue) => setShippingDate(newValue)}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-
-                  </Box>
-
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                    sx={{ mt: -3 }}
-                  >
-                    <RHFTextField
-                      name="siteMilestone"
-                      label="Nearby Milestone"
-                      multiline
-                      sx={{ my: -3 }}
-                    />
-                  </Box>
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                  >
-                    <Autocomplete
-                      // freeSolo
-                      value={accoVal || null}
-                      options={spContacts}
-                      isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                      getOptionLabel={(option) =>
-                        `${option.firstName ? option.firstName : ''} ${
-                          option.lastName ? option.lastName : ''
-                        }`
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Status" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                  <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
+                </Box>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                >
+                  <Autocomplete
+                    sx={{ my: -3 }}
+                    value={customerVal || null}
+                    options={customers}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setCustomerVal(newValue);
+                      } else {
+                        setCustomerVal('');
+                        dispatch(resetSites());
                       }
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setAccoManVal(newValue);
-                        } else {
-                          setAccoManVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${
-                          option.firstName ? option.firstName : ''
-                        } ${option.lastName ? option.lastName : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Account Manager" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-                    <Autocomplete
-                      // freeSolo
-                      value={projVal || null}
-                      options={spContacts}
-                      isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                      getOptionLabel={(option) =>
-                        `${option.firstName ? option.firstName : ''} ${
-                          option.lastName ? option.lastName : ''
-                        }`
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Customer" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                </Box>
+
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <Autocomplete
+                    // freeSolo
+                    value={installVal || null}
+                    options={sites}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setInstallVal(newValue);
+                        setInstallationDateToggle(false);
+                        setShippingDateToggle(false);
+                      } else {
+                        setInstallVal('');
+                        setInstallationDateToggle(true);
+                        setShippingDateToggle(true);
                       }
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setProjManVal(newValue);
-                        } else {
-                          setProjManVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${
-                          option.firstName ? option.firstName : ''
-                        } ${option.lastName ? option.lastName : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Project Manager" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-                    <Autocomplete
-                      // freeSolo
-                      value={suppVal || null}
-                      options={spContacts}
-                      isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                      getOptionLabel={(option) =>
-                        `${option.firstName ? option.firstName : ''} ${
-                          option.lastName ? option.lastName : ''
-                        }`
-                      }
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setSuppManVal(newValue);
-                        } else {
-                          setSuppManVal('');
-                        }
-                      }}
-                      renderOption={(props, option) => (
-                        <li {...props} key={option._id}>{`${
-                          option.firstName ? option.firstName : ''
-                        } ${option.lastName ? option.lastName : ''}`}</li>
-                      )}
-                      id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Support Manager" />}
-                      ChipProps={{ size: 'small' }}
-                    />
-                  </Box>
-                  <Box
-                    rowGap={3}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Instalation Site" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+
+                  <Autocomplete
+                    // freeSolo
                     sx={{ mb: -3 }}
-                  >
-                    <RHFTextField
-                      name="description"
-                      label="Description"
-                      minRows={8}
-                      multiline
-                      sx={{ mt: -3 }}
-                    />
-                  </Box>
-                  {/* -------------------------start add chips------------------------- */}
-                  {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
+                    value={billingVal || null}
+                    options={sites}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setBillingVal(newValue);
+                      } else {
+                        setBillingVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Billing Site" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                </Box>
 
-                  {/* <Card
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <DatePicker
+                    label="Installation Date"
+                    value={installationDate || new Date()}
+                    disabled={disableInstallationDate}
+                    onChange={(newValue) => setInstallationDate(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                  <DatePicker
+                    label="Shipping Date"
+                    value={shippingDate || new Date()}
+                    disabled={disableShippingDate}
+                    onChange={(newValue) => setShippingDate(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+                </Box>
+
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                  sx={{ mt: -3 }}
+                >
+                  <RHFTextField
+                    name="siteMilestone"
+                    label="Nearby Milestone"
+                    multiline
+                    sx={{ my: -3 }}
+                  />
+                </Box>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
+                  <Autocomplete
+                    // freeSolo
+                    value={accoVal || null}
+                    options={spContacts}
+                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    getOptionLabel={(option) =>
+                      `${option.firstName ? option.firstName : ''} ${
+                        option.lastName ? option.lastName : ''
+                      }`
+                    }
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setAccoManVal(newValue);
+                      } else {
+                        setAccoManVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${
+                        option.firstName ? option.firstName : ''
+                      } ${option.lastName ? option.lastName : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                  <Autocomplete
+                    // freeSolo
+                    value={projVal || null}
+                    options={spContacts}
+                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    getOptionLabel={(option) =>
+                      `${option.firstName ? option.firstName : ''} ${
+                        option.lastName ? option.lastName : ''
+                      }`
+                    }
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setProjManVal(newValue);
+                      } else {
+                        setProjManVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${
+                        option.firstName ? option.firstName : ''
+                      } ${option.lastName ? option.lastName : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                  <Autocomplete
+                    // freeSolo
+                    value={suppVal || null}
+                    options={spContacts}
+                    isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
+                    getOptionLabel={(option) =>
+                      `${option.firstName ? option.firstName : ''} ${
+                        option.lastName ? option.lastName : ''
+                      }`
+                    }
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setSuppManVal(newValue);
+                      } else {
+                        setSuppManVal('');
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${
+                        option.firstName ? option.firstName : ''
+                      } ${option.lastName ? option.lastName : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
+                    ChipProps={{ size: 'small' }}
+                  />
+                </Box>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                  sx={{ mb: -3 }}
+                >
+                  <RHFTextField
+                    name="description"
+                    label="Description"
+                    minRows={8}
+                    multiline
+                    sx={{ mt: -3 }}
+                  />
+                </Box>
+                {/* -------------------------start add chips------------------------- */}
+                {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
+
+                {/* <Card
                       sx={{ di  splay: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
                       {chipDat  a.map((data,index) =>
                           <Lis  tItem key={index}>
@@ -720,34 +717,33 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     </>
                   }
                 /> */}
-                  {/* -------------------------end add chips------------------------- */}
-                  <RHFSwitch
-                    sx={{ my: -3 }}
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        Active
-                      </Typography>
-                    }
-                  />
-                </Stack>
+                {/* -------------------------end add chips------------------------- */}
+                <RHFSwitch
+                  sx={{ my: -3 }}
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      Active
+                    </Typography>
+                  }
+                />
+              </Stack>
 
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-              </Card>
-            </Grid>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            </Card>
           </Grid>
-        </FormProvider>
-      </Container>
-    </>
+        </Grid>
+      </FormProvider>
+    </Container>
   );
 }

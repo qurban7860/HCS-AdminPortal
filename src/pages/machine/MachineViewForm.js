@@ -2,25 +2,32 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Divider, Switch, Card, Grid, Typography, Link ,Dialog } from '@mui/material';
+import { Divider, Switch, Card, Grid, Typography, Link, Dialog } from '@mui/material';
 // routes
-import { PATH_MACHINE , PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
 // slices
 import { useAuthContext } from '../../auth/useAuthContext';
-import { getMachines, getMachine, deleteMachine, setMachineEditFormVisibility, setTransferMachineFlag, updateMachine, transferMachine, setMachineVerification } from '../../redux/slices/products/machine';
+import {
+  getMachines,
+  getMachine,
+  deleteMachine,
+  setMachineEditFormVisibility,
+  setTransferMachineFlag,
+  updateMachine,
+  transferMachine,
+  setMachineVerification,
+} from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
 import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import Iconify from '../../components/iconify';
-import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormSwitch from '../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import CommaJoinField from '../components/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
+import FormLabel from '../components/FormLabel';
 import GoogleMaps from '../../assets/GoogleMaps';
-
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
@@ -28,35 +35,34 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine , machineEditFormFlag, transferMachineFlag } = useSelector((state) => state.machine);
+  const { machine, machineEditFormFlag, transferMachineFlag } = useSelector(
+    (state) => state.machine
+  );
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
   const [disableTransferButton, setDisableTransferButton] = useState(false);
   const baseUrl = window.location.origin;
-  const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
-  
-  
+  const isSuperAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
+
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));
-    if(machine.transferredMachine || !machine.isActive || !isSuperAdmin){
+    if (machine.transferredMachine || !machine.isActive || !isSuperAdmin) {
       setDisableTransferButton(true);
-    }else{
+    } else {
       setDisableTransferButton(false);
     }
-    if(userId){
+    if (userId) {
       dispatch(getLoggedInSecurityUser(userId));
     }
-    if(machine?.customer){
-      dispatch(getCustomer(machine?.customer?._id))
+    if (machine?.customer) {
+      dispatch(getCustomer(machine?.customer?._id));
     }
-  }, [ dispatch ,machine, transferMachineFlag, userId, isSuperAdmin ]);
-
-  
+  }, [dispatch, machine, transferMachineFlag, userId, isSuperAdmin]);
 
   const handleEdit = () => {
     dispatch(setMachineEditFormVisibility(true));
-  }
+  };
 
   const handleTransfer = async () => {
     try {
@@ -64,14 +70,14 @@ export default function MachineViewForm() {
       const machineId = response.data.Machine._id;
       window.open(`${baseUrl}/machine/${machineId}/view`);
     } catch (error) {
-      if(error.Message){
-        enqueueSnackbar(error.Message,{ variant: `error` })
-      }else if(error.message){
-        enqueueSnackbar(error.message,{ variant: `error` })
-      }else{
-        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      if (error.Message) {
+        enqueueSnackbar(error.Message, { variant: `error` });
+      } else if (error.message) {
+        enqueueSnackbar(error.message, { variant: `error` });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: `error` });
       }
-      console.log("Error:", error);
+      console.log('Error:', error);
       // Handle the error here
     }
   };
@@ -82,9 +88,9 @@ export default function MachineViewForm() {
   const onDelete = async () => {
     await dispatch(deleteMachine(machine._id));
     dispatch(getMachines());
-    navigate(PATH_MACHINE.machine.list)
+    navigate(PATH_MACHINE.machine.list);
   };
-  const handleVerification  = async () => {
+  const handleVerification = async () => {
     await dispatch(setMachineVerification(machine._id, machine?.isVerified));
     dispatch(getMachine(machine._id));
   };
@@ -101,79 +107,64 @@ export default function MachineViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id:                       machine?._id || "",
-      name:                     machine?.name || "",
-      serialNo:                 machine?.serialNo || "",
-      parentMachine:            machine?.parentMachine?.name || "",
-      parentSerialNo:           machine?.parentMachine?.serialNo || "",
-      supplier:                 machine?.supplier?.name || "",
-      workOrderRef:             machine?.workOrderRef || "",
-      machineModel:             machine?.machineModel?.name || "",
-      status:                   machine?.status?.name || "",
-      customer:                 machine?.customer || "",
-      instalationSite:          machine?.instalationSite || "",
-      siteMilestone:            machine?.siteMilestone || "",
-      billingSite:              machine?.billingSite|| "",
-      description:              machine?.description || "",
-      customerTags:             machine?.customerTags || "",
-      accountManager:           machine?.accountManager || "",
-      projectManager:           machine?.projectManager || "",
-      supportManager:           machine?.supportManager || "",
-      isActive:                 machine?.isActive,
-      createdByFullName:        machine?.createdBy?.name ,
-      createdAt:                machine?.createdAt ,
-      createdIP:                machine?.createdIP ,
-      updatedByFullName:        machine?.updatedBy?.name ,
-      updatedAt:                machine?.updatedAt ,
-      updatedIP:                machine?.updatedIP ,
-    }
-    ),
+      id: machine?._id || '',
+      name: machine?.name || '',
+      serialNo: machine?.serialNo || '',
+      parentMachine: machine?.parentMachine?.name || '',
+      parentSerialNo: machine?.parentMachine?.serialNo || '',
+      supplier: machine?.supplier?.name || '',
+      workOrderRef: machine?.workOrderRef || '',
+      machineModel: machine?.machineModel?.name || '',
+      status: machine?.status?.name || '',
+      customer: machine?.customer || '',
+      instalationSite: machine?.instalationSite || '',
+      siteMilestone: machine?.siteMilestone || '',
+      billingSite: machine?.billingSite || '',
+      description: machine?.description || '',
+      customerTags: machine?.customerTags || '',
+      accountManager: machine?.accountManager || '',
+      projectManager: machine?.projectManager || '',
+      supportManager: machine?.supportManager || '',
+      isActive: machine?.isActive,
+      createdByFullName: machine?.createdBy?.name,
+      createdAt: machine?.createdAt,
+      createdIP: machine?.createdIP,
+      updatedByFullName: machine?.updatedBy?.name,
+      updatedAt: machine?.updatedAt,
+      updatedIP: machine?.updatedIP,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
 
   const latLongValues = [
     {
-      lat: machine?.billingSite?.lat || "",
-      long: machine?.billingSite?.long || "",
+      lat: machine?.billingSite?.lat || '',
+      long: machine?.billingSite?.long || '',
     },
     {
-      lat: machine?.instalationSite?.lat || "",
-      long: machine?.instalationSite?.long || "",
-    }
+      lat: machine?.instalationSite?.lat || '',
+      long: machine?.instalationSite?.long || '',
+    },
   ];
 
   return (
     <Card sx={{ p: 3 }}>
       <Grid container justifyContent="flex-end" alignContent="flex-end">
-        <ViewFormEditDeleteButtons 
-          sx={{ pt: 5 }} 
+        <ViewFormEditDeleteButtons
+          sx={{ pt: 5 }}
           verificationCount={machine?.verifications?.length}
-          isVerified={machine?.verifications?.find((verified)=>verified.verifiedBy===userId)}
+          isVerified={machine?.verifications?.find((verified) => verified.verifiedBy === userId)}
           handleVerification={handleVerification}
-          disableTransferButton={disableTransferButton} 
-          handleEdit={handleEdit} 
-          onDelete={onDelete} 
+          disableTransferButton={disableTransferButton}
+          handleEdit={handleEdit}
+          onDelete={onDelete}
           handleTransfer={handleTransfer}
         />
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
       </Grid>
       <Grid container>
-        <Grid item container sx={{ py: '1rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Key Details
-            </Typography>
-          </Grid>
-        </Grid>
+        <FormLabel content="Key Details" />
         <Grid container>
           <Card sx={{ width: '100%', p: '1rem' }}>
             <Grid container>
@@ -199,7 +190,11 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
         <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
+        <CommaJoinField
+          sm={6}
+          arrayParam={machine.machineConnections}
+          heading="Connected Machines"
+        />
         <ViewFormField
           sm={6}
           heading="Installation Site"
@@ -237,21 +232,7 @@ export default function MachineViewForm() {
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
       </Grid>
       <Grid container>
-        <Grid item container sx={{ pt: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Howick Resources
-            </Typography>
-          </Grid>
-        </Grid>
+        <FormLabel content="Howick Resources" />
 
         <ViewFormField
           sm={6}
@@ -276,29 +257,9 @@ export default function MachineViewForm() {
       </Grid>
 
       <Grid container>
-        <Grid item container sx={{ pt: '2rem' }}>
-          <Grid
-            item
-            xs={12}
-            sm={12}
-            sx={{
-              backgroundImage: (theme) =>
-                `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-            }}
-          >
-            <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-              Sites Locations
-            </Typography>
-          </Grid>
-        </Grid>
-        <GoogleMaps
-              latlongArr={latLongValues}
-              mapHeight='500px'
-        />
-        
-    
+        <FormLabel content="Sites Locations" />
+        <GoogleMaps latlongArr={latLongValues} mapHeight="500px" />
       </Grid>
-
 
       <Grid container sx={{ mt: 2 }}>
         <ViewFormAudit defaultValues={defaultValues} />
@@ -309,7 +270,7 @@ export default function MachineViewForm() {
         onClose={handleCloseCustomer}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
-        >
+      >
         <Grid
           container
           item
@@ -321,7 +282,7 @@ export default function MachineViewForm() {
             color: 'primary.contrastText',
             padding: '10px',
           }}
-          >
+        >
           <Typography variant="h4" sx={{ px: 2 }}>
             Customer{' '}
           </Typography>{' '}
@@ -337,21 +298,7 @@ export default function MachineViewForm() {
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
           <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid item container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Address Information
-              </Typography>
-            </Grid>
-          </Grid>
+          <FormLabel content="Address Information" />
           <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
           <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
           <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
@@ -378,21 +325,7 @@ export default function MachineViewForm() {
           />
         </Grid>
         <Grid item container sx={{ px: 2, pb: 3 }}>
-          <Grid item container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Howick Resources{' '}
-              </Typography>
-            </Grid>
-          </Grid>
+          <FormLabel content="Howick Resources" />
           <ViewFormField
             sm={6}
             heading="Account Manager"

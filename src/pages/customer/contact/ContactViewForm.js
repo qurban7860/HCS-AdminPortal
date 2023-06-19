@@ -15,15 +15,19 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 
-import { getContacts, getContact, setContactEditFormVisibility, deleteContact } from '../../../redux/slices/customer/contact';
+import {
+  getContacts,
+  getContact,
+  setContactEditFormVisibility,
+  deleteContact,
+} from '../../../redux/slices/customer/contact';
 // Iconify
 import Iconify from '../../../components/iconify';
-import { fDate,fDateTime } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-
 
 // ----------------------------------------------------------------------
 
@@ -65,51 +69,55 @@ export default function ContactViewForm({ currentContact = null }) {
 
   const defaultValues = useMemo(
     () => ({
-      firstName:                currentContact ? currentContact.firstName : contact?.firstName || '',
-      lastName:                 currentContact ? currentContact.lastName : contact?.lastName || '',
-      title:                    currentContact ? currentContact.title : contact?.title || '',
-      contactTypes:             currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
-      phone:                    currentContact ? currentContact.phone : contact?.phone || '',
-      email:                    currentContact ? currentContact.email : contact?.email || '',
-      street:                   currentContact ? currentContact.address?.street : contact?.address.street || '',
-      suburb:                   currentContact ? currentContact.address?.suburb : contact?.address.suburb || '',
-      city:                     currentContact ? currentContact.address?.city : contact?.address.city || '',
-      postcode:                 currentContact ? currentContact.address?.postcode : contact?.address.postcode || '',
-      region:                   currentContact ? currentContact.address?.region : contact?.address.region || '',
-      country:                  currentContact ? currentContact.address?.country : contact?.address.country || '',
-      isActive:                 currentContact.isActive,
-      createdAt:                currentContact?.createdAt || "",
-      createdByFullName:        currentContact?.createdBy?.name || "",
-      createdIP:                currentContact?.createdIP || "",
-      updatedAt:                currentContact?.updatedAt || "",
-      updatedByFullName:        currentContact?.updatedBy?.name || "",
-      updatedIP:                currentContact?.updatedIP || "",
+      firstName: currentContact ? currentContact.firstName : contact?.firstName || '',
+      lastName: currentContact ? currentContact.lastName : contact?.lastName || '',
+      title: currentContact ? currentContact.title : contact?.title || '',
+      contactTypes: currentContact ? currentContact.contactTypes : contact?.contactTypes || [],
+      phone: currentContact ? currentContact.phone : contact?.phone || '',
+      email: currentContact ? currentContact.email : contact?.email || '',
+      street: currentContact ? currentContact.address?.street : contact?.address.street || '',
+      suburb: currentContact ? currentContact.address?.suburb : contact?.address.suburb || '',
+      city: currentContact ? currentContact.address?.city : contact?.address.city || '',
+      postcode: currentContact ? currentContact.address?.postcode : contact?.address.postcode || '',
+      region: currentContact ? currentContact.address?.region : contact?.address.region || '',
+      country: currentContact ? currentContact.address?.country : contact?.address.country || '',
+      isActive: currentContact.isActive,
+      createdAt: currentContact?.createdAt || '',
+      createdByFullName: currentContact?.createdBy?.name || '',
+      createdIP: currentContact?.createdIP || '',
+      updatedAt: currentContact?.updatedAt || '',
+      updatedByFullName: currentContact?.updatedBy?.name || '',
+      updatedIP: currentContact?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentContact, contact]
   );
 
   return (
-    <Grid >
-          <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
-          <Grid container >
-          <ViewFormField sm={12} isActive={defaultValues.isActive}/>
-          <ViewFormField sm={6} heading='First Name'    param={defaultValues?.firstName}/>
-          <ViewFormField sm={6} heading='Last Name'     param={defaultValues?.lastName}/>
-          <ViewFormField sm={6} heading='Title'         param={defaultValues?.title}/>
-          <ViewFormField sm={6} heading='Contact Types' param={defaultValues?.contactTypes.toString()}/>
-          <ViewFormField sm={6} heading='Phone'         param={defaultValues?.phone}/>
-          <ViewFormField sm={6} heading='Email'         param={defaultValues?.email}/>
-          <ViewFormField sm={6} heading='Street'        param={defaultValues?.street}/>
-          <ViewFormField sm={6} heading='Suburb'        param={defaultValues?.suburb}/>
-          <ViewFormField sm={6} heading='City'          param={defaultValues?.city}/>
-          <ViewFormField sm={6} heading='Region'        param={defaultValues?.region}/>
-          <ViewFormField sm={6} heading='Post Code'     param={defaultValues?.postcode}/>
-          <ViewFormField sm={6} heading='Country'       param={defaultValues?.country}/>
-          <ViewFormField />
-          </Grid>
-          {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
-            <ViewFormAudit defaultValues={defaultValues}/>
+    <Grid>
+      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+      <Grid container>
+        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        <ViewFormField sm={6} heading="First Name" param={defaultValues?.firstName} />
+        <ViewFormField sm={6} heading="Last Name" param={defaultValues?.lastName} />
+        <ViewFormField sm={6} heading="Title" param={defaultValues?.title} />
+        <ViewFormField
+          sm={6}
+          heading="Contact Types"
+          param={defaultValues?.contactTypes.toString()}
+        />
+        <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
+        <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
+        <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />
+        <ViewFormField sm={6} heading="Suburb" param={defaultValues?.suburb} />
+        <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
+        <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
+        <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
+        <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewFormField />
       </Grid>
+      {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
+      <ViewFormAudit defaultValues={defaultValues} />
+    </Grid>
   );
 }

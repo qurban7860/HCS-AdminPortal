@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button, Breadcrumbs, Dialog } from '@mui/material';
+import { Grid, Button, Dialog } from '@mui/material';
 // redux
 import {
   deleteSite,
@@ -17,13 +17,10 @@ import {
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import GoogleMaps from '../../../assets/GoogleMaps';
-import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
-import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -31,7 +28,7 @@ SiteViewForm.propTypes = {
   currentSite: PropTypes.object,
 };
 
-export default function SiteViewForm({ currentSite = null }) {
+export default function SiteViewForm({ currentSite = null, handleMap }) {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   const navigate = useNavigate();
@@ -60,11 +57,6 @@ export default function SiteViewForm({ currentSite = null }) {
   const handleEdit = async () => {
     await dispatch(getSite(customer._id, currentSite._id));
     dispatch(setSiteEditFormVisibility(true));
-  };
-
-  const handleMap = async () => {
-    // navigate(`/dashboard/map/${currentSite._id}`);
-    setOpenPopover(true);
   };
 
   const defaultValues = useMemo(
@@ -150,7 +142,6 @@ export default function SiteViewForm({ currentSite = null }) {
           />
         </Grid>
         <ViewFormField />
-        {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
         <Dialog
           open={openPopover}
           onClose={handleClosePopover}
@@ -190,3 +181,8 @@ export default function SiteViewForm({ currentSite = null }) {
     </Grid>
   );
 }
+
+SiteViewForm.propTypes = {
+  currentSite: PropTypes.object,
+  handleMap: PropTypes.func,
+};

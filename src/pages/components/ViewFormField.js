@@ -51,7 +51,7 @@ export default function ViewFormField({
   sm,
   isActive,
   customerAccess,
-  documentIsActive
+  documentIsActive,
 }) {
   const classes = useStyles({ isActive });
   const [anchorEl, setAnchorEl] = useState(null);
@@ -75,7 +75,10 @@ export default function ViewFormField({
 
       <Typography
         variant={
-          heading === 'Serial No' || heading === 'Machine Model' || heading === 'Customer' || heading === 'Machine'
+          heading === 'Serial No' ||
+          heading === 'Machine Model' ||
+          heading === 'Customer' ||
+          heading === 'Machine'
             ? 'h4'
             : 'body1'
         }
@@ -90,8 +93,8 @@ export default function ViewFormField({
               onMouseLeave={handlePopoverClose}
             >
               <Iconify
-                // heading={isActive ? 'Active' : 'Inactive'}
-                icon={isActive ? 'mdi:account-badge' : 'mdi:account-cancel-outline'}
+                heading={isActive ? 'Active' : 'Inactive'}
+                icon={isActive ? 'mdi:check-circle' : 'mdi:checkbox-multiple-blank-circle-outline'}
                 style={{ color: isActive ? 'green' : 'red' }}
                 width="30px"
               />
@@ -101,15 +104,16 @@ export default function ViewFormField({
               anchorEl={anchorEl}
               onClose={handlePopoverClose}
               anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'right',
+                vertical: 'bottom',
+                horizontal: 'center',
               }}
               transformOrigin={{
                 vertical: 'center',
-                horizontal: 'left',
+                horizontal: 'center',
               }}
               id="mouse-over-popover"
               sx={{
+                marginTop: '.5rem',
                 '& .MuiPaper-root': {
                   bgcolor: 'transparent',
                   boxShadow: 'none',
@@ -149,14 +153,15 @@ export default function ViewFormField({
               onClose={handlePopoverClose}
               anchorOrigin={{
                 vertical: 'center',
-                horizontal: 'right',
+                horizontal: 'center',
               }}
               transformOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
+                vertical: 'bottom',
+                horizontal: 'center',
               }}
               id="mouse-over-popover"
               sx={{
+                marginTop: '.5rem',
                 '& .MuiPaper-root': {
                   bgcolor: 'transparent',
                   boxShadow: 'none',
@@ -185,7 +190,7 @@ export default function ViewFormField({
             >
               <Iconify
                 heading={customerAccess ? 'Allowed' : 'Disallowed'}
-                icon={customerAccess ? 'mdi:security-account-outline' : 'mdi:security-account-outline'}
+                icon={customerAccess ? 'mdi:book-check' : 'mdi:book-cancel-outline'}
                 style={{ color: customerAccess ? 'green' : 'red' }}
                 width="30px"
               />
@@ -195,15 +200,16 @@ export default function ViewFormField({
               anchorEl={anchorEl}
               onClose={handlePopoverClose}
               anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'right',
+                vertical: 'bottom',
+                horizontal: 'center',
               }}
               transformOrigin={{
                 vertical: 'center',
-                horizontal: 'left',
+                horizontal: 'center',
               }}
               id="mouse-over-popover"
               sx={{
+                marginTop: '.5rem',
                 '& .MuiPaper-root': {
                   bgcolor: 'transparent',
                   boxShadow: 'none',
