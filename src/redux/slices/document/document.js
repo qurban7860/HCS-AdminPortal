@@ -258,7 +258,7 @@ export function getDocuments() {
   };
 }
 
-// ---------------------------- GET CUSTOMER DOCUMENTS------------------------------------
+// ---------------------------- GET CUSTOMER Active DOCUMENTS------------------------------------
 
 export function getCustomerDocuments(customerId) {
   return async (dispatch) => {
@@ -314,7 +314,7 @@ export function getMachineModelDocuments(machineModelId) {
 // ---------------------------- GET CUSTOMER Site DOCUMENTS------------------------------------
 
 
-export function getCustomerSiteDocuments(customerSite) {
+export function getCustomerSiteDocuments(customerSiteId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -323,7 +323,7 @@ export function getCustomerSiteDocuments(customerSite) {
         params: {
           isActive: true,
           isArchived: false,
-          customer:customerSite,
+          site:customerSiteId,
           machine: null,
         }
       }
