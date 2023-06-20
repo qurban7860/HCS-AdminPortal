@@ -14,7 +14,7 @@ import { Switch,Radio, RadioGroup,FormControlLabel,FormLabel, Box, Button, Card,
 // PATH
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
-import { getActiveDocuments, getDocuments, addDocument, getCustomerDocuments,getMachineDocuments, resetActiveDocuments} from '../../../../redux/slices/document/document';
+import { getActiveDocuments, getDocuments, addDocument, getCustomerDocuments,getMachineDocuments, resetActiveDocuments, getCustomerSiteDocuments} from '../../../../redux/slices/document/document';
 import { setDocumentCategoryFormVisibility , getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import { setDocumentTypeFormVisibility , getActiveDocumentTypes } from '../../../../redux/slices/document/documentType';
 import { addDocumentVersion, updateDocumentVersion } from '../../../../redux/slices/document/documentVersion';
@@ -133,10 +133,19 @@ export default function DocumentAddForm({currentDocument}) {
   },[dispatch ,customerVal])
 // ------------------------- customer documents ---------------------------------------
   useEffect(()=>{
-    if(customerVal?._id && selectedValue === "newVersion"){
+    if(!customerSiteVal  && customerVal?._id && selectedValue === "newVersion"){
       dispatch(getCustomerDocuments(customerVal._id))
     }
-  },[dispatch , customerVal , selectedValue]);
+  },[dispatch , customerVal , customerSiteVal , selectedValue]);
+
+  // ------------------------- customer Site documents ---------------------------------------
+  useEffect(()=>{
+    if(customerSiteVal?._id && selectedValue === "newVersion"){
+      dispatch(getCustomerSiteDocuments(customerSiteVal._id))
+      console.log("customerSiteVal._id : ",customerSiteVal._id)
+    }
+  },[dispatch , customerSiteVal , selectedValue]);
+
 // ------------------------- machine documents ---------------------------------------
   useEffect(()=>{
     if(machineVal?._id && selectedValue === "newVersion"){
