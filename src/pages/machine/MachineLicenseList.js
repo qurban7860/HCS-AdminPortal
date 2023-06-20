@@ -152,11 +152,11 @@ export default function MachineLicenseList() {
 
   useEffect(() => {
     if (initial) {
-      if (licenses && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (licenses && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(licenses);
     }
   }, [licenses, error, responseMessage, enqueueSnackbar, initial]);

@@ -140,11 +140,11 @@ export default function MachineNoteList() {
 
   useEffect(() => {
     if (initial) {
-      if (notes && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (notes && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(notes);
     }
   }, [notes, error,checked, machine, responseMessage, enqueueSnackbar, initial]);

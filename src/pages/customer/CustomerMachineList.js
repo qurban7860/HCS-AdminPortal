@@ -103,7 +103,8 @@ export default function CustomerContactList() {
   const dispatch = useDispatch();
   const { customer, error, initial, responseMessage } = useSelector((state) => state.customer);
   const { customerMachines, machine } = useSelector((state) => state.machine);
-  // console.log("customerMachines : ",customerMachines)
+
+  console.log("customerMachines : ",customerMachines)
   const [checked, setChecked] = useState(false);
   // const toggleChecked = () =>
   //   {
@@ -224,14 +225,14 @@ export default function CustomerContactList() {
                     <Grid item xs={12} sm={6} md={2}>
                       <Typography>{customerMachine?.name}</Typography>
                     </Grid>
-                    <Grid item xs={12} sm={6} md={2} display={{ sm: 'none', md: 'block' }}>
+                    <Grid item xs={12} sm={6} md={3} display={{ sm: 'none', md: 'block' }}>
                       <Typography>{customerMachine?.machineModel?.name}</Typography>
                     </Grid>
                     <Grid
                       item
                       xs={12}
-                      sm={6}
-                      md={6}
+                      sm={5}
+                      md={5}
                       display={{ sm: 'none', md: 'none', lg: 'block' }}
                     >
                       <Typography>
