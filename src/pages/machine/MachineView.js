@@ -31,18 +31,9 @@ import {
 
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-// _mock_
-import {
-  _userAbout,
-  _userFeeds,
-  _userFriends,
-  _userGallery,
-  _userFollowers,
-} from '../../_mock/arrays';
 // components
 import Iconify from '../../components/iconify';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import { useSettingsContext } from '../../components/settings';
+import UnderDevelopment from '../components/UnderDevelopment';
 // sections
 import { Cover } from '../components/Cover';
 
@@ -228,51 +219,7 @@ export default function MachineView({ editPage }) {
       {TABS.map(
         (tab) =>
           tab.value === currentTab && (
-            <Box key={tab.value}>
-              {' '}
-              {tab.component ? (
-                tab.component
-              ) : (
-                <Grid container sx={{ justifyContent: 'center' }}>
-                  <Grid
-                    item
-                    sx={{
-                      opacity: '30%',
-                      marginTop: '50px',
-                      height: '40vh',
-                      display: 'flex',
-                    }}
-                  >
-                    <img
-                      src="/assets/illustrations/characters/character_5.png"
-                      alt="UNDER CONSTRUCTION"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    sx={{
-                      display: 'block',
-                      justifyContent: 'center',
-                      textAlign: 'center',
-                      width: '50%',
-                      height: '40vh',
-                      opacity: '30%',
-                      position: 'relative',
-                      margin: '20px',
-                    }}
-                  >
-                    <Typography variant="h1">UNDER DEVELOPMENT..</Typography>
-                    <Typography variant="body1">
-                      While we are still working on completing our website, we invite you to check
-                      back soon for updates. In the meantime, please feel free to contact us
-                      directly if you have any questions or concerns. We appreciate your patience
-                      and understanding during this time, and we look forward to serving you better
-                      through our new website. Thank you for your interest in our company.
-                    </Typography>
-                  </Grid>
-                </Grid>
-              )}{' '}
-            </Box>
+            <Box key={tab.value}> {tab.component ? tab.component : <UnderDevelopment />} </Box>
           )
       )}
     </Container>

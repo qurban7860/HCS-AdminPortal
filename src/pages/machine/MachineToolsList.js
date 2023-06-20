@@ -17,7 +17,9 @@ import {
   DialogTitle,
   Dialog,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -44,15 +46,13 @@ import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './ToolsInstalled/SiteListTableRow';
 import SiteListTableToolbar from './ToolsInstalled/SiteListTableToolbar';
-import { getSites, deleteSite, getSite,setFormVisibility } from '../../redux/slices/customer/site';
+import { getSites, deleteSite, getSite, setFormVisibility } from '../../redux/slices/customer/site';
 import SiteAddForm from './ToolsInstalled/SiteAddForm';
 import SiteEditForm from './ToolsInstalled/SiteEditForm';
 
 import _mock from '../../_mock';
 import SiteViewForm from './ToolsInstalled/SiteViewForm';
 import EmptyContent from '../../components/empty-content';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +63,6 @@ const TABLE_HEAD = [
   { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -115,41 +114,41 @@ export default function MachineToolsList() {
     defaultOrderBy: 'createdAt',
   });
 
-
   const [controlled, setControlled] = useState(false);
-
   const handleChangeControlled = (panel) => (event, isExpanded) => {
     setControlled(isExpanded ? panel : false);
   };
   const dispatch = useDispatch();
 
-  const { sites, isLoading, error, initial, responseMessage, siteEditFormVisibility, siteAddFormVisibility } = useSelector((state) => state.site);
+  const {
+    sites,
+    isLoading,
+    error,
+    initial,
+    responseMessage,
+    siteEditFormVisibility,
+    siteAddFormVisibility,
+  } = useSelector((state) => state.site);
 
   const { customer } = useSelector((state) => state.customer);
 
-  const toggleChecked = async () =>
-    {
-      dispatch(setFormVisibility(!siteAddFormVisibility));
-    };
+  const toggleChecked = async () => {
+    dispatch(setFormVisibility(!siteAddFormVisibility));
+  };
 
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -157,7 +156,7 @@ export default function MachineToolsList() {
   };
 
   useEffect(() => {
-    if(!siteAddFormVisibility && !siteEditFormVisibility){
+    if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
@@ -172,8 +171,6 @@ export default function MachineToolsList() {
       setTableData(sites);
     }
   }, [sites, error, responseMessage, enqueueSnackbar, initial]);
-
-
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -196,7 +193,6 @@ export default function MachineToolsList() {
         {!siteEditFormVisibility && (
           <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
             <Button
-              // alignItems
               onClick={toggleChecked}
               variant="contained"
               startIcon={

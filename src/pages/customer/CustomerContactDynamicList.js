@@ -100,11 +100,15 @@ export default function CustomerContactList(currentContact = null) {
           step={1}
           step2
           step3
-          name={customer.name}
-          path={PATH_DASHBOARD.customer.root}
-          name2="Contacts"
-          path2={PATH_DASHBOARD.customer.contacts}
-          name3={
+          step4
+          path={PATH_DASHBOARD.customer.list}
+          name="Customers"
+          path2={PATH_DASHBOARD.customer.root}
+          name2={customer.name}
+          path3={PATH_DASHBOARD.customer.contacts}
+          name3="Contacts"
+          path4={PATH_DASHBOARD.customer.contacts}
+          name4={
             <Stack>
               {contactEditFormVisibility
                 ? `Edit ${currentContactData.firstName}`
@@ -112,10 +116,13 @@ export default function CustomerContactList(currentContact = null) {
               {formVisibility && !isExpanded && 'Add new contact'}
             </Stack>
           }
-          path3={PATH_DASHBOARD.customer.contacts}
         />
       </Stack>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
+        <Grid item lg={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
+
         <Grid
           item
           xs={12}
@@ -241,9 +248,6 @@ export default function CustomerContactList(currentContact = null) {
             {shouldShowContactAdd && <ContactAddForm />}
           </Grid>
         )}
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </Grid>
     </>
   );

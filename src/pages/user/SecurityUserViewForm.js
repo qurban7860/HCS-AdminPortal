@@ -1,24 +1,8 @@
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
-
 // @mui
-import {
-  Switch,
-  Card,
-  Grid,
-  Container,
-  Typography,
-  Modal,
-  Fade,
-  Box,
-  Link,
-  Dialog,
-  DialogTitle,
-  Stack,
-  Button,
-  Divider,
-} from '@mui/material';
+import { Card, Grid, Typography, Link, Dialog, Button } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
@@ -33,7 +17,6 @@ import {
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
 import Iconify from '../../components/iconify';
-import ViewFormSubtitle from '../components/ViewFormSubtitle';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
@@ -47,6 +30,8 @@ import {
   dispatchReqNoMsg,
 } from '../asset/dispatchRequests';
 import palette from '../../theme';
+import DialogLabel from '../components/Dialog/DialogLabel';
+import DialogLink from '../components/Dialog/DialogLink';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import FormLabel from '../components/FormLabel';
@@ -89,8 +74,7 @@ export default function SecurityUserViewForm() {
     if (id) {
       dispatchReqNoMsg(dispatch, getSecurityUser(id), enqueueSnackbar);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, dispatch]);
+  }, [id, dispatch, enqueueSnackbar]);
 
   useEffect(() => {
     batch(() => {
@@ -101,7 +85,6 @@ export default function SecurityUserViewForm() {
         dispatch(getContact(securityUser?.customer?._id, securityUser?.contact?._id));
       }
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, securityUser]);
 
   const handleEdit = () => {
@@ -175,34 +158,6 @@ export default function SecurityUserViewForm() {
             onDelete={onDelete}
             disablePasswordButton={!isSuperAdmin}
           />
-          {/* <Stack
-            justifyContent="flex-end"
-            direction="row"
-            spacing={2}
-            sx={{ mb: -4, mt: -1, mr: 2 }}
-          >
-            <Button
-              onClick={() => handleEdit()}
-              variant="outlined"
-              startIcon={<Iconify icon="eva:edit-fill" />}
-            >
-              Edit
-            </Button>
-            {user?.email !== securityUser?.login ? (
-              <Button
-                onClick={() => {
-                  handleOpenConfirm();
-                }}
-                variant="outlined"
-                color="error"
-                startIcon={<Iconify icon="eva:trash-2-fill" />}
-              >
-                Delete
-              </Button>
-            ) : (
-              ''
-            )}
-          </Stack> */}
           <ConfirmDialog
             open={openConfirm}
             onClose={handleCloseConfirm}
@@ -220,12 +175,10 @@ export default function SecurityUserViewForm() {
               sm={6}
               heading="Customer"
               objectParam={
-                defaultValues?.customer ? (
+                defaultValues?.customer && (
                   <Link onClick={handleOpenCustomer} href="#" underline="none">
                     {defaultValues?.customer}
                   </Link>
-                ) : (
-                  ''
                 )
               }
             />
@@ -234,12 +187,10 @@ export default function SecurityUserViewForm() {
               sm={6}
               heading="Contact"
               objectParam={
-                defaultValues?.contact ? (
+                defaultValues?.contact && (
                   <Link onClick={handleOpenContact} href="#" underline="none">
                     {defaultValues?.contact}
                   </Link>
-                ) : (
-                  ''
                 )
               }
             />
@@ -266,24 +217,7 @@ export default function SecurityUserViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Customer
-          </Typography>
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
+        <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
         <Grid container sx={{ p: 2 }}>
           <ViewFormField sm={12} heading="Name" param={customer?.name} />
           <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
@@ -302,18 +236,16 @@ export default function SecurityUserViewForm() {
             sm={6}
             heading="Primary Biling Contact"
             param={
-              customer?.primaryBillingContact
-                ? `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-                : ''
+              customer?.primaryBillingContact &&
+              `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
             }
           />
           <ViewFormField
             sm={6}
             heading="Primary Technical Contact"
             param={
-              customer?.primaryTechnicalContact
-                ? `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-                : ''
+              customer?.primaryTechnicalContact &&
+              `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
             }
           />
         </Grid>
@@ -338,27 +270,7 @@ export default function SecurityUserViewForm() {
             secondParam={customer?.supportManager?.lastName}
           />
         </Grid>
-        <Grid item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} sm={12}>
-          <Link
-            onClick={() => handleViewCustomer(customer._id)}
-            href="#"
-            underline="none"
-            sx={{
-              ml: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              px: 3,
-              pb: 3,
-            }}
-          >
-            {' '}
-            <Typography variant="body" sx={{ px: 2 }}>
-              Go to customer
-            </Typography>
-            <Iconify icon="mdi:share" />
-          </Link>
-        </Grid>
+        <DialogLink content=" Go to customer" onClick={() => handleViewCustomer(customer._id)} />
       </Dialog>
       <Dialog
         open={openContact}
@@ -366,73 +278,56 @@ export default function SecurityUserViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Contact
-          </Typography>
-          <Link onClick={() => handleCloseContact()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
+        <DialogLabel content="Contact" onClick={() => handleCloseContact()} />
         <Grid container sx={{ px: 2, py: 2 }}>
           <ViewFormField
             sm={6}
             heading="First Name"
-            param={contact?.firstName ? contact?.firstName : ''}
+            param={contact?.firstName && contact?.firstName}
           />
           <ViewFormField
             sm={6}
             heading="Last Name"
-            param={contact?.lastName ? contact?.lastName : ''}
+            param={contact?.lastName && contact?.lastName}
           />
-          <ViewFormField sm={6} heading="Title" param={contact?.title ? contact?.title : ''} />
+          <ViewFormField sm={6} heading="Title" param={contact?.title && contact?.title} />
           <ViewFormField
             sm={6}
             heading="Contact Types"
-            param={contact?.contactTypes ? contact?.contactTypes.toString() : ''}
+            param={contact?.contactTypes && contact?.contactTypes.toString()}
           />
-          <ViewFormField sm={6} heading="Phone" param={contact?.phone ? contact?.phone : ''} />
-          <ViewFormField sm={6} heading="Email" param={contact?.email ? contact?.email : ''} />
+          <ViewFormField sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
+          <ViewFormField sm={6} heading="Email" param={contact?.email && contact?.email} />
           <FormLabel content="Address Information" />
           <ViewFormField
             sm={6}
             heading="Street"
-            param={contact?.address?.street ? contact?.address?.street : ''}
+            param={contact?.address?.street && contact?.address?.street}
           />
           <ViewFormField
             sm={6}
             heading="Suburb"
-            param={contact?.address?.suburb ? contact?.address?.suburb : ''}
+            param={contact?.address?.suburb && contact?.address?.suburb}
           />
           <ViewFormField
             sm={6}
             heading="City"
-            param={contact?.address?.city ? contact?.address?.city : ''}
+            param={contact?.address?.city && contact?.address?.city}
           />
           <ViewFormField
             sm={6}
             heading="Region"
-            param={contact?.address?.region ? contact?.address?.region : ''}
+            param={contact?.address?.region && contact?.address?.region}
           />
           <ViewFormField
             sm={6}
             heading="Post Code"
-            param={contact?.address?.postcode ? contact?.address?.postcode : ''}
+            param={contact?.address?.postcode && contact?.address?.postcode}
           />
           <ViewFormField
             sm={6}
             heading="Country"
-            param={contact?.address?.country ? contact?.address?.country : ''}
+            param={contact?.address?.country && contact?.address?.country}
           />
           <ViewFormField />
         </Grid>

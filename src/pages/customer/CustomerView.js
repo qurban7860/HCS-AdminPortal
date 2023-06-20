@@ -47,24 +47,16 @@ CustomerView.propTypes = {
 
 export default function CustomerView({ editPage }) {
   const { id } = useParams();
-
   const dispatch = useDispatch();
-
   const { customer, customerEditFormFlag } = useSelector((state) => state.customer);
-
   const { site, siteEditFormVisibility } = useSelector((state) => state.site);
-
   const { contactEditFormVisibility } = useSelector((state) => state.contact);
   const { noteEditFormVisibility } = useSelector((state) => state.note);
   const [currentTab, setCurrentTab] = useState('customer-info');
-
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag((value) => !value);
-
   const [currentComponent, setCurrentComponent] = useState(<CustomerViewForm />);
-
   const [customerFlag, setCustomerFlag] = useState(true);
-
   const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {

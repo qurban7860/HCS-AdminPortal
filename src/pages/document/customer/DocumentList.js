@@ -3,7 +3,19 @@ import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Card, Grid, Button, TextField, Typography, InputAdornment, Accordion, AccordionSummary, AccordionDetails, Divider } from '@mui/material';
+import {
+  Stack,
+  Card,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Divider,
+} from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
@@ -23,32 +35,28 @@ import {
   TablePaginationCustom,
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../../components/confirm-dialog';
+import BreadcrumbsProducer from '../../components/BreadcrumbsProducer';
 // sections
-
-import { setCustomerDocumentFormVisibility , setCustomerDocumentEditFormVisibility , getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
-import {  setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
-import {  setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
-
-import { getMachines } from '../../../redux/slices/products/machine'
-import { getCustomers } from '../../../redux/slices/customer/customer'
-
-import DocumentAddForm from './DocumentAddForm'
+import {
+  setCustomerDocumentFormVisibility,
+  setCustomerDocumentEditFormVisibility,
+  getCustomerDocuments,
+} from '../../../redux/slices/document/customerDocument';
+import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
+import { getMachines } from '../../../redux/slices/products/machine';
+import { getCustomers } from '../../../redux/slices/customer/customer';
+import DocumentAddForm from './DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
-import ListSwitch from '../../components/ListSwitch';
-
 import _mock from '../../../_mock';
-import EmptyContent from '../../../components/empty-content';
-import { fDate,fDateTime } from '../../../utils/formatTime';
+import SearchInputAndAddButton from '../../components/SearchInputAndAddButton';
+import AddButtonAboveAccordion from '../../components/AddButtonAboveAcoordion';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
-
-
 
 const _accordions = [...Array(8)].map((_, index) => ({
   id: _mock.id(index),
@@ -82,50 +90,53 @@ export default function DocumentList() {
     defaultOrderBy: '-createdAt',
   });
 
-
   const dispatch = useDispatch();
 
-  const { error, responseMessage , customerDocuments, customerDocument, customerDocumentEditFormVisibility, customerDocumentFormVisibility } = useSelector((state) => state.customerDocument);
-  const { fileCategories, fileCategory, documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
-  const { documentName, documentNames, documentTypeFormVisibility } = useSelector((state) => state.documentType);
+  const {
+    error,
+    responseMessage,
+    customerDocuments,
+    customerDocument,
+    customerDocumentEditFormVisibility,
+    customerDocumentFormVisibility,
+  } = useSelector((state) => state.customerDocument);
+  const { fileCategories, fileCategory, documentCategoryFormVisibility } = useSelector(
+    (state) => state.documentCategory
+  );
+  const { documentName, documentNames, documentTypeFormVisibility } = useSelector(
+    (state) => state.documentType
+  );
   const { customer } = useSelector((state) => state.customer);
-// console.log("customerDocuments : ",customerDocuments)
-  const toggleChecked = async () =>
-    {
-      dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
-    };
+  // console.log("customerDocuments : ",customerDocuments)
+  const toggleChecked = async () => {
+    dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
+  };
   const { themeStretch } = useSettingsContext();
-
+  const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [activeIndex, setActiveIndex] = useState(null);
-
   const [expanded, setExpanded] = useState(false);
-
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
-useEffect(()=>{
-  if(customer?._id){
-    dispatch(getCustomerDocuments(customer?._id));
-  }
-  dispatch(setCustomerDocumentEditFormVisibility(false))
-  dispatch(setCustomerDocumentFormVisibility(false))
-  dispatch(setDocumentCategoryFormVisibility(false))
-  dispatch(setDocumentTypeFormVisibility(false))
-   // eslint-disable-next-line react-hooks/exhaustive-deps
-},[dispatch,customer._id])
+  useEffect(() => {
+    if (customer?._id) {
+      dispatch(getCustomerDocuments(customer?._id));
+    }
+    dispatch(setCustomerDocumentEditFormVisibility(false));
+    dispatch(setCustomerDocumentFormVisibility(false));
+    dispatch(setDocumentCategoryFormVisibility(false));
+    dispatch(setDocumentTypeFormVisibility(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, customer._id]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -133,7 +144,7 @@ useEffect(()=>{
 
   useEffect(() => {
     setTableData(customerDocuments);
-  }, [customerDocuments, error, responseMessage ]);
+  }, [customerDocuments, error, responseMessage]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -143,12 +154,15 @@ useEffect(()=>{
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
 
-  const isNotFound = !customerDocuments.length && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility && !documentTypeFormVisibility && !documentCategoryFormVisibility;
+  const isNotFound =
+    !customerDocuments.length &&
+    !customerDocumentFormVisibility &&
+    !customerDocumentEditFormVisibility &&
+    !documentTypeFormVisibility &&
+    !documentCategoryFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
@@ -159,75 +173,54 @@ useEffect(()=>{
     setFilterStatus([]);
   };
 
+  const toggleCancel = () => {
+    dispatch(setCustomerDocumentFormVisibility(false));
+    setChecked(false);
+  };
 
   return (
     <>
       {!customerDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         !documentCategoryFormVisibility && (
-          <Stack
-            spacing={2}
-            alignItems="center"
-            direction={{ xs: 'column', md: 'row' }}
-            sx={{ py: 2 }}
-          >
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
-                <Grid item xs={12} sm={8}>
-                  {!customerDocumentFormVisibility && (
-                    <TextField
-                      fullWidth
-                      value={filterName}
-                      onChange={handleFilterName}
-                      placeholder="Search..."
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  )}
-                </Grid>
-                {isFiltered && (
-                  <Button
-                    color="error"
-                    sx={{ flexShrink: 0, ml: 1 }}
-                    onClick={handleResetFilter}
-                    startIcon={<Iconify icon="eva:trash-2-outline" />}
-                  >
-                    {' '}
-                    Clear{' '}
-                  </Button>
-                )}
-              </Grid>
-              <Grid item xs={8} sm={3}>
-                <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
-                  <Button
-                    sx={{ p: 1 }}
-                    onClick={toggleChecked}
-                    variant="contained"
-                    startIcon={
-                      !customerDocumentFormVisibility ? (
-                        <Iconify icon="eva:plus-fill" />
-                      ) : (
-                        <Iconify icon="eva:minus-fill" />
-                      )
-                    }
-                  >
-                    New Document
-                  </Button>
-                </Stack>
-              </Grid>
-            </Grid>
-          </Stack>
+          <SearchInputAndAddButton
+            searchFormVisibility={customerDocumentFormVisibility}
+            filterName={filterName}
+            handleFilterName={handleFilterName}
+            addButtonName="Add Document"
+            isFiltered={isFiltered}
+            handleResetFilter={handleResetFilter}
+            toggleChecked={toggleChecked}
+            toggleCancel={toggleCancel}
+            FormVisibility={customerDocumentFormVisibility}
+            step
+            step2
+            step3
+            step4
+            path={PATH_DASHBOARD.customer.list}
+            name="Customers"
+            path2={PATH_DASHBOARD.customer.view}
+            name2={customer.name}
+            path3={PATH_DASHBOARD.customer.document}
+            name3={
+              <Stack>
+                {customerDocumentFormVisibility
+                  ? `Edit ${customerDocument?.name}`
+                  : !expanded && documentName}
+                {!customerDocumentFormVisibility && !expanded && 'Documents'}
+              </Stack>
+            }
+          />
         )}
 
       {!customerDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         !documentCategoryFormVisibility &&
-        customerDocumentFormVisibility && <DocumentAddForm />}
+        customerDocumentFormVisibility && (
+          <Grid item md={12}>
+            <DocumentAddForm />
+          </Grid>
+        )}
       {!customerDocumentEditFormVisibility &&
         !customerDocumentFormVisibility &&
         !documentTypeFormVisibility &&
@@ -239,7 +232,11 @@ useEffect(()=>{
       {customerDocumentEditFormVisibility &&
         !customerDocumentFormVisibility &&
         !documentTypeFormVisibility &&
-        !documentCategoryFormVisibility && <DocumentEditForm />}
+        !documentCategoryFormVisibility && (
+          <Grid item md={12}>
+            <DocumentEditForm />
+          </Grid>
+        )}
 
       {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
       <Card sx={{ mt: 2 }}>
@@ -295,29 +292,6 @@ useEffect(()=>{
 
         <TableNoData isNotFound={isNotFound} />
       </Card>
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      /> */}
     </>
   );
 }
@@ -335,11 +309,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter((document) => document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0
+    inputData = inputData.filter(
+      (document) =>
+        document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

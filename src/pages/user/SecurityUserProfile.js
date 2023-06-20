@@ -39,6 +39,9 @@ import {
   dispatchReqNavToList,
   dispatchReqNoMsg,
 } from '../asset/dispatchRequests';
+import DialogLabel from '../components/Dialog/DialogLabel';
+import DialogLink from '../components/Dialog/DialogLink';
+import FormLabel from '../components/FormLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
@@ -156,12 +159,10 @@ export default function SecurityUserProfile() {
               sm={6}
               heading="Customer"
               objectParam={
-                defaultValues?.customer ? (
+                defaultValues?.customer && (
                   <Link onClick={handleOpenCustomer} href="#" underline="none">
                     {defaultValues?.customer}
                   </Link>
-                ) : (
-                  ''
                 )
               }
             />
@@ -169,12 +170,10 @@ export default function SecurityUserProfile() {
               sm={6}
               heading="Contact"
               objectParam={
-                defaultValues?.contact ? (
+                defaultValues?.contact && (
                   <Link onClick={handleOpenContact} href="#" underline="none">
                     {defaultValues?.contact}
                   </Link>
-                ) : (
-                  ''
                 )
               }
             />
@@ -200,25 +199,7 @@ export default function SecurityUserProfile() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Customer{' '}
-          </Typography>{' '}
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
+        <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
         <Grid container sx={{ p: 2 }}>
           <ViewFormField sm={12} heading="Name" param={customer?.name} />
           <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
@@ -226,21 +207,7 @@ export default function SecurityUserProfile() {
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
           <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <Grid container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Address Information
-              </Typography>
-            </Grid>
-          </Grid>
+          <FormLabel content="Address Information" />
           <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
           <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
           <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
@@ -251,37 +218,21 @@ export default function SecurityUserProfile() {
             sm={6}
             heading="Primary Biling Contact"
             param={
-              customer?.primaryBillingContact
-                ? `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-                : ''
+              customer?.primaryBillingContact &&
+              `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
             }
           />
           <ViewFormField
             sm={6}
             heading="Primary Technical Contact"
             param={
-              customer?.primaryTechnicalContact
-                ? `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-                : ''
+              customer?.primaryTechnicalContact &&
+              `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
             }
           />
         </Grid>
         <Grid container sx={{ px: 2, pb: 3 }}>
-          <Grid container sx={{ py: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Howick Resources
-              </Typography>
-            </Grid>
-          </Grid>
+          <FormLabel content="Howick Resources" />
           <ViewFormField
             sm={6}
             heading="Account Manager"
@@ -301,117 +252,64 @@ export default function SecurityUserProfile() {
             secondParam={customer?.supportManager?.lastName}
           />
         </Grid>
-        <Grid item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} sm={12}>
-          <Link
-            onClick={() => handleViewCustomer(customer._id)}
-            href="#"
-            underline="none"
-            sx={{
-              ml: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              px: 3,
-              pb: 3,
-            }}
-          >
-            {' '}
-            <Typography variant="body" sx={{ px: 2 }}>
-              Go to customer
-            </Typography>
-            <Iconify icon="mdi:share" />
-          </Link>
-        </Grid>
+        <DialogLink content="Go to customer" onClick={() => handleViewCustomer(customer._id)} />
       </Dialog>
-
       <Dialog
         open={openContact}
         onClose={handleCloseContact}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Contact{' '}
-          </Typography>{' '}
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
+        <DialogLabel content="Contact" onClick={() => handleCloseContact()} />
         <Grid container sx={{ px: 2, py: 2 }}>
           <ViewFormField
             sm={6}
             heading="First Name"
-            param={contact?.firstName ? contact?.firstName : ''}
+            param={contact?.firstName && contact?.firstName}
           />
           <ViewFormField
             sm={6}
             heading="Last Name"
-            param={contact?.lastName ? contact?.lastName : ''}
+            param={contact?.lastName && contact?.lastName}
           />
-          <ViewFormField sm={6} heading="Title" param={contact?.title ? contact?.title : ''} />
+          <ViewFormField sm={6} heading="Title" param={contact?.title && contact?.title} />
           <ViewFormField
             sm={6}
             heading="Contact Types"
-            param={contact?.contactTypes ? contact?.contactTypes.toString() : ''}
+            param={contact?.contactTypes && contact?.contactTypes.toString()}
           />
-          <ViewFormField sm={6} heading="Phone" param={contact?.phone ? contact?.phone : ''} />
-          <ViewFormField sm={6} heading="Email" param={contact?.email ? contact?.email : ''} />
-          <Grid container sx={{ pt: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
-                Address Information
-              </Typography>
-            </Grid>
-          </Grid>
+          <ViewFormField sm={6} heading="Phone" param={contact?.phone && contact?.phone} />
+          <ViewFormField sm={6} heading="Email" param={contact?.email && contact?.email} />
+          <FormLabel content="Address Information" />
           <ViewFormField
             sm={6}
             heading="Street"
-            param={contact?.address?.street ? contact?.address?.street : ''}
+            param={contact?.address?.street && contact?.address?.street}
           />
           <ViewFormField
             sm={6}
             heading="Suburb"
-            param={contact?.address?.suburb ? contact?.address?.suburb : ''}
+            param={contact?.address?.suburb && contact?.address?.suburb}
           />
           <ViewFormField
             sm={6}
             heading="City"
-            param={contact?.address?.city ? contact?.address?.city : ''}
+            param={contact?.address?.city && contact?.address?.city}
           />
           <ViewFormField
             sm={6}
             heading="Region"
-            param={contact?.address?.region ? contact?.address?.region : ''}
+            param={contact?.address?.region && contact?.address?.region}
           />
           <ViewFormField
             sm={6}
             heading="Post Code"
-            param={contact?.address?.postcode ? contact?.address?.postcode : ''}
+            param={contact?.address?.postcode && contact?.address?.postcode}
           />
           <ViewFormField
             sm={6}
             heading="Country"
-            param={contact?.address?.country ? contact?.address?.country : ''}
+            param={contact?.address?.country && contact?.address?.country}
           />
           <ViewFormField />
         </Grid>

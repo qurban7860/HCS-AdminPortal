@@ -129,7 +129,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   // },[machineVal])
 
   const AddMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().required('Serial Number is required').max(10),
+    // keep the serial no. at 6 characters, all machines, decoilers, and custom all have 5 characters,
+    // we are yet to see a machine with 6 characters, so, 6th is reserved for future use.
+    serialNo: Yup.string().max(6).required('Serial Number is required'),
     name: Yup.string().max(30),
     // parentMachine: Yup.string(),
     // parentSerialNo: Yup.string(),
