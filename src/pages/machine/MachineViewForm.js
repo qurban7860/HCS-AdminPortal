@@ -24,6 +24,8 @@ import Iconify from '../../components/iconify';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import DialogLabel from '../components/Dialog/DialogLabel';
+import DialogLink from '../components/Dialog/DialogLink';
 import CommaJoinField from '../components/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
 import FormLabel from '../components/FormLabel';
@@ -78,7 +80,6 @@ export default function MachineViewForm() {
         enqueueSnackbar('Something went wrong!', { variant: `error` });
       }
       console.log('Error:', error);
-      // Handle the error here
     }
   };
 
@@ -133,7 +134,6 @@ export default function MachineViewForm() {
       updatedAt: machine?.updatedAt,
       updatedIP: machine?.updatedIP,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
 
@@ -174,12 +174,10 @@ export default function MachineViewForm() {
                 sm={4}
                 heading="Customer"
                 objectParam={
-                  defaultValues.customer ? (
+                  defaultValues.customer && (
                     <Link onClick={handleOpenCustomer} href="#" underline="none">
                       {defaultValues.customer?.name}
                     </Link>
-                  ) : (
-                    ''
                   )
                 }
               />
@@ -199,12 +197,10 @@ export default function MachineViewForm() {
           sm={6}
           heading="Installation Site"
           objectParam={
-            defaultValues.instalationSite ? (
+            defaultValues.instalationSite && (
               <Link onClick={handleOpenInstallationSite} href="#" underline="none">
                 {defaultValues.instalationSite?.name}
               </Link>
-            ) : (
-              ''
             )
           }
         />
@@ -212,12 +208,10 @@ export default function MachineViewForm() {
           sm={6}
           heading="Billing Site"
           objectParam={
-            defaultValues.billingSite ? (
+            defaultValues.billingSite && (
               <Link onClick={handleOpenBillingSite} href="#" underline="none">
                 {defaultValues.billingSite?.name}
               </Link>
-            ) : (
-              ''
             )
           }
         />
@@ -226,7 +220,6 @@ export default function MachineViewForm() {
           heading="Work Order / Perchase Order"
           param={defaultValues?.workOrderRef}
         />
-
         <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
@@ -271,26 +264,7 @@ export default function MachineViewForm() {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          item
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Customer{' '}
-          </Typography>{' '}
-          <Link onClick={() => handleCloseCustomer()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
+        <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
         <Grid item container sx={{ px: 2, pt: 2 }}>
           <ViewFormField sm={12} heading="Name" param={customer?.name} />
           <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
@@ -309,18 +283,16 @@ export default function MachineViewForm() {
             sm={6}
             heading="Primary Biling Contact"
             param={
-              customer?.primaryBillingContact
-                ? `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-                : ''
+              customer?.primaryBillingContact &&
+              `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
             }
           />
           <ViewFormField
             sm={6}
             heading="Primary Technical Contact"
             param={
-              customer?.primaryTechnicalContact
-                ? `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-                : ''
+              customer?.primaryTechnicalContact &&
+              `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
             }
           />
         </Grid>
@@ -345,60 +317,15 @@ export default function MachineViewForm() {
             secondParam={customer?.supportManager?.lastName}
           />
         </Grid>
-        <Grid item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} sm={12}>
-          <Link
-            onClick={() => handleViewCustomer(customer._id)}
-            href="#"
-            underline="none"
-            sx={{
-              ml: 'auto',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              px: 3,
-              pb: 3,
-            }}
-          >
-            {' '}
-            <Typography variant="body" sx={{ px: 2 }}>
-              Go to customer
-            </Typography>
-            <Iconify icon="mdi:share" />
-          </Link>
-        </Grid>
+        <DialogLink content="Go to customer" onClick={() => handleViewCustomer(customer._id)} />
       </Dialog>
-
       <Dialog
         open={openInstallationSite}
         onClose={handleCloseInstallationSite}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          item
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Installation Site{' '}
-          </Typography>{' '}
-          <Link
-            onClick={() => handleCloseInstallationSite()}
-            href="#"
-            underline="none"
-            sx={{ ml: 'auto' }}
-          >
-            {' '}
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
+        <DialogLabel content="Installation Site" onClick={() => handleCloseInstallationSite()} />
         <Grid item container sx={{ p: 2 }}>
           <ViewFormField sm={12} heading="Name" param={defaultValues?.instalationSite?.name} />
           <ViewFormField sm={6} heading="Phone" param={defaultValues?.instalationSite?.phone} />
@@ -437,37 +364,13 @@ export default function MachineViewForm() {
           />
         </Grid>
       </Dialog>
-
       <Dialog
         open={openBilingSite}
         onClose={handleCloseBillingSite}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            Billing Site{' '}
-          </Typography>{' '}
-          <Link
-            onClick={() => handleCloseBillingSite()}
-            href="#"
-            underline="none"
-            sx={{ ml: 'auto' }}
-          >
-            {' '}
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
+        <DialogLabel content="Billing Site" onClick={() => handleCloseBillingSite()} />
         <Grid item container sx={{ p: 2 }}>
           <ViewFormField sm={12} heading="Name" param={defaultValues?.billingSite?.name} />
           <ViewFormField sm={6} heading="Phone" param={defaultValues?.billingSite?.phone} />

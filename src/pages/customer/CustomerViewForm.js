@@ -94,7 +94,7 @@ export default function CustomerViewForm() {
           step={1}
           step2
           path={PATH_DASHBOARD.customer.root}
-          name="Customer"
+          name="Customers"
           path2={PATH_DASHBOARD.customer.view}
           name2={customer?.name}
         />

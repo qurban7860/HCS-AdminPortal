@@ -11,12 +11,10 @@ import { styled, alpha } from '@mui/material/styles';
 import {
   CardContent,
   IconButton,
-  Switch,
   Card,
   Grid,
   Stack,
   Typography,
-  Button,
   Box,
   CardMedia,
   Dialog,
@@ -42,13 +40,11 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import LoadingScreen from '../../../components/loading-screen';
 import Iconify from '../../../components/iconify';
 import { fDate, fDateTime } from '../../../utils/formatTime';
-import Cover from '../../components/Cover';
 import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import DeleteIconButton from '../../components/DeleteIconButton';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 
 const Loadable = (Component) => (props) =>
   (

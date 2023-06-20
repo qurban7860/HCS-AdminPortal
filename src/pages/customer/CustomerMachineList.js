@@ -43,6 +43,9 @@ import {
 } from '../../components/table';
 import Iconify from '../../components/iconify';
 import FormLabel from '../components/FormLabel';
+import DialogLabel from '../components/Dialog/DialogLabel';
+import DialogLink from '../components/Dialog/DialogLink';
+import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 // sections
 import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slices/products/machine';
 
@@ -143,11 +146,6 @@ export default function CustomerContactList() {
 
   useEffect(() => {
     if (initial) {
-      // if (contacts && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // } else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(customerMachines);
     }
   }, [customerMachines, error, responseMessage, enqueueSnackbar, initial]);
@@ -168,6 +166,7 @@ export default function CustomerContactList() {
 
   return (
     <>
+      <AddButtonAboveAccordion isCustomer="true" />
       {/* {!contactEditFormVisibility && (
         <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
           <Button
@@ -237,7 +236,7 @@ export default function CustomerContactList() {
                     >
                       <Typography>
                         {Object.values(address ?? {})
-                          .map((value) => (typeof value === 'string' ? value.trim() : ''))
+                          .map((value) => typeof value === 'string' && value.trim())
                           .filter((value) => value !== '')
                           .join(', ')}
                       </Typography>
@@ -250,12 +249,12 @@ export default function CustomerContactList() {
                   </Grid>
                 ) : null}
               </AccordionSummary>
-              {/* <AccordionDetails sx={{ mt: -5 }}> */}
-              {/* </AccordionDetails> */}
             </Accordion>
           );
         })}
-        {isNotFound && <EmptyContent title="No data" sx={{ color: '#DFDFDF' }} />}
+        <Grid item lg={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
         <Dialog
           maxWidth="md"
           open={openMachine}
@@ -263,31 +262,7 @@ export default function CustomerContactList() {
           aria-labelledby="keep-mounted-modal-title"
           aria-describedby="keep-mounted-modal-description"
         >
-          <Grid
-            container
-            item
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
-              padding: '10px',
-            }}
-          >
-            <Typography variant="h4" sx={{ px: 2 }}>
-              Machine{' '}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleCloseMachine()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
+          <DialogLabel content="Machine" onClick={() => handleCloseMachine()} />
           <Grid container sx={{ px: 2, pt: 2 }}>
             <ViewFormField sm={6} heading="Serial No" param={machineData?.serialNo} />
             <ViewFormField sm={6} heading="Name" param={machineData?.name} />
@@ -344,31 +319,7 @@ export default function CustomerContactList() {
               secondParam={machineData?.supportManager?.lastName}
             />
           </Grid>
-          <Grid
-            item
-            sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-            sm={12}
-          >
-            <Link
-              onClick={() => handleViewMachine(machineData._id)}
-              href="#"
-              underline="none"
-              sx={{
-                ml: 'auto',
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                px: 3,
-                pb: 3,
-              }}
-            >
-              {' '}
-              <Typography variant="body" sx={{ px: 2 }}>
-                Go to Machine
-              </Typography>
-              <Iconify icon="mdi:share" />
-            </Link>
-          </Grid>
+          <DialogLink content="Go to Machine" onClick={() => handleViewMachine(machineData._id)} />
         </Dialog>
       </Card>
     </>

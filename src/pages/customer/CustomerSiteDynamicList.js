@@ -117,12 +117,15 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           step={1}
           step2
           step3
-          path={PATH_DASHBOARD.customer.view}
-          name={customer.name}
-          path2={PATH_CUSTOMER.site}
-          name2="Sites"
-          path3={PATH_DASHBOARD.customer}
-          name3={
+          step4
+          path={PATH_DASHBOARD.customer.list}
+          name="Customers"
+          path2={PATH_DASHBOARD.customer.view}
+          name2={customer.name}
+          name3="Sites"
+          path3={PATH_DASHBOARD.customer.sites}
+          path4={PATH_DASHBOARD.customer}
+          name4={
             <Stack>
               {siteEditFormVisibility
                 ? `Edit ${currentSiteData.name}`
