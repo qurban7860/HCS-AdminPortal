@@ -13,6 +13,7 @@ import {
   getSites,
   setSiteEditFormVisibility,
 } from '../../../redux/slices/customer/site';
+import { useSnackbar } from '../../../components/snackbar';
 
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -24,13 +25,16 @@ import ViewFormField from '../../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
+
 SiteViewForm.propTypes = {
   currentSite: PropTypes.object,
+  handleMap: PropTypes.func,
+  setIsExpanded: PropTypes.func,
 };
-
-export default function SiteViewForm({ currentSite = null, handleMap }) {
+export default function SiteViewForm({ currentSite = null, handleMap, setIsExpanded }) {
   const { site } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -48,10 +52,17 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteSite(customer._id, currentSite._id));
-    handleCloseConfirm();
-    dispatch(getSites(customer._id));
-    // dispatch(getContacts());
+    try {
+      await dispatch(deleteSite(customer._id, currentSite._id));
+      // handleCloseConfirm();
+      dispatch(getSites(customer._id));
+      enqueueSnackbar("Site deleted Succefully!");
+      setIsExpanded(false);
+    } catch (e) {
+        console.log(e)
+      enqueueSnackbar("Site delete Failed!");
+    }
+
   };
 
   const handleEdit = async () => {
@@ -166,7 +177,7 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
-        <ConfirmDialog
+        {/* <ConfirmDialog
           open={openConfirm}
           onClose={handleCloseConfirm}
           title="Delete"
@@ -176,13 +187,10 @@ export default function SiteViewForm({ currentSite = null, handleMap }) {
               Delete
             </Button>
           }
-        />
+        /> */}
       </Grid>
     </Grid>
   );
 }
 
-SiteViewForm.propTypes = {
-  currentSite: PropTypes.object,
-  handleMap: PropTypes.func,
-};
+
