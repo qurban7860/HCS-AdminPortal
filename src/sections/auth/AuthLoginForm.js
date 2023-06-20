@@ -68,12 +68,12 @@ export default function AuthLoginForm() {
     }
     try {
       if (uremember) {
-        localStorage.setItem("email", data.email);
-        localStorage.setItem("password", data.password);
+        localStorage.setItem("UserEmail", data.email);
+        localStorage.setItem("UserPassword", data.password);
         localStorage.setItem("remember", data.remember);
       } else {
-        localStorage.removeItem("email");
-        localStorage.removeItem("password");
+        localStorage.removeItem("UserEmail");
+        localStorage.removeItem("UserPassword");
         localStorage.removeItem("remember");
       }
     const response =   await login(data.email, data.password);

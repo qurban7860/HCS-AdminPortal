@@ -1,33 +1,46 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import {  IconButton , Button} from '@mui/material';
+import { IconButton } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import { styled, alpha } from '@mui/material/styles';
+import { useForm } from 'react-hook-form';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 
 DeleteIconButton.propTypes = {
-    onClick: PropTypes.func,
+  onClick: PropTypes.func,
+  left: PropTypes.number,
+};
+
+export default function DeleteIconButton({ onClick, left }) {
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const handleOpenConfirm = () => {
+    setOpenConfirm(true);
   };
-export default function DeleteIconButton({onClick}) {
+  const handleCloseConfirm = () => {
+    setOpenConfirm(false);
+  };
 
-    const [openConfirm, setOpenConfirm] = useState(false);
-    const handleOpenConfirm = () => {
-          setOpenConfirm(true);
-      };
-      const handleCloseConfirm = () => {
-          setOpenConfirm(false);
-      };
+  const methods = useForm();
 
-    return (
-        <>
-        <IconButton
+  const {
+    reset,
+    setError,
+    handleSubmit,
+    formState: { errors, isSubmitting, isSubmitSuccessful },
+  } = methods;
+
+  return (
+    <>
+      <IconButton
         size="small"
         onClick={handleOpenConfirm}
         sx={{
           top: 4,
-          left: 44,
+          left: { left },
           zIndex: 9,
-          height: "60",
+          width: 28,
+          height: 28,
           position: 'absolute',
           color: (theme) => alpha(theme.palette.common.white, 0.8),
           bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
@@ -46,11 +59,17 @@ export default function DeleteIconButton({onClick}) {
         title="Delete"
         content="Are you sure you want to delete?"
         action={
-          <Button variant="contained" color="error" onClick={onClick}>
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={isSubmitSuccessful || isSubmitting}
+            disabled={isSubmitting}
+            onClick={handleSubmit(onClick)}
+          >
             Delete
-          </Button>
+          </LoadingButton>
         }
       />
-        </>
-    )
+    </>
+  );
 }

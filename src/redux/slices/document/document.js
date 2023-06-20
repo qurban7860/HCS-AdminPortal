@@ -29,6 +29,10 @@ const slice = createSlice({
       state.isLoading = true;
       state.error = null;
     },
+    // STOP LOADING
+    stopLoading(state) {
+      state.isLoading = false;
+        },
     // SET TOGGLE
     setDocumentFormVisibility(state, action){
       state.documentFormVisibility = action.payload;
