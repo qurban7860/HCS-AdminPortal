@@ -18,6 +18,9 @@ import { CONFIG } from '../../../config-global';
 import {
   updateContact,
   setContactEditFormVisibility,
+  resetContact,
+  getContacts,
+  getContact
 } from '../../../redux/slices/customer/contact';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -161,10 +164,15 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       }
       await dispatch(updateContact(customer._id, data));
       reset();
-      // navigate(PATH_DASHBOARD.contact.list);
+      dispatch(setContactEditFormVisibility(false));
+      dispatch(resetContact())
+      dispatch(getContacts(customer._id));
+      dispatch(getContact(customer._id, contact._id));
+
+      enqueueSnackbar('Contact updated Successfully!');
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
-      console.error(err.message);
+      enqueueSnackbar('Update failed!',{variant:"error"});
+      console.error(err);
     }
   };
 

@@ -17,7 +17,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData } from '../../components/table';
 // sections
-import { getContacts, setContactFormVisibility } from '../../redux/slices/customer/contact';
+import { getContacts, setContactEditFormVisibility, setContactFormVisibility, getContact } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
@@ -45,16 +45,20 @@ export default function CustomerContactList(currentContact = null) {
   const toggleChecked = () => {
     setChecked((value) => !value);
     if (checked || contactEditFormVisibility) {
-      dispatch(setContactFormVisibility(false));
-      enqueueSnackbar('Please close the form before opening a new one', {
-        variant: 'warning',
-      });
+      dispatch(setContactEditFormVisibility(false));
+      // enqueueSnackbar('Please close the form before opening a new one', {
+        //   variant: 'warning',
+        // });
+      // dispatch(setContactFormVisibility(!formVisibility));
+      dispatch(setContactFormVisibility(true));
+      setCardActiveIndex(null);
       setIsExpanded(false);
     } else {
       dispatch(setContactFormVisibility(true));
       setCardActiveIndex(null);
       setIsExpanded(false);
     }
+    
   };
 
   const toggleCancel = () => {
@@ -171,8 +175,8 @@ export default function CustomerContactList(currentContact = null) {
                             <Link
                               underline="none"
                               disabled={contactEditFormVisibility}
-                              onClick={() => {
-                                setCurrentContactData(contact);
+                              onClick={async ()  => {
+                                await dispatch(getContact(customer._id,contact._id));
                                 setOpenContact(true);
                                 if (!isExpanded && !formVisibility) {
                                   handleExpand(index);
@@ -228,10 +232,10 @@ export default function CustomerContactList(currentContact = null) {
           <GridBaseViewForm item lg={8}>
             {shouldShowContactView && (
               <CardBase>
-                <ContactViewForm currentContact={currentContactData} />
+                <ContactViewForm setIsExpanded={setIsExpanded} />
               </CardBase>
             )}
-            {shouldShowContactEdit && <ContactEditForm />}
+            {shouldShowContactEdit && <ContactEditForm setIsExpanded={setIsExpanded} />}
             {shouldShowContactAdd && <ContactAddForm />}
           </GridBaseViewForm>
         )}
@@ -241,10 +245,10 @@ export default function CustomerContactList(currentContact = null) {
           <Grid item xs={12} lg={12}>
             {shouldShowContactView && (
               <CardBase>
-                <ContactViewForm currentContact={currentContactData} />
+                <ContactViewForm setIsExpanded={setIsExpanded}/>
               </CardBase>
             )}
-            {shouldShowContactEdit && <ContactEditForm />}
+            {shouldShowContactEdit && <ContactEditForm isExpanded={isExpanded} />}
             {shouldShowContactAdd && <ContactAddForm />}
           </Grid>
         )}
