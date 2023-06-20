@@ -222,9 +222,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                   />
                                 )}
                                 <DetailsSection
-                                  content={site.name}
-                                  content2={site?.address?.city ? site?.address?.city : <br />}
-                                  content3={site?.website ? site?.website : <br />}
+                                  content={Site.name}
+                                  content2={Site?.address?.city ? Site?.address?.city : <br />}
+                                  content3={Site?.website ? Site?.website : <br />}
                                 />
                               </Grid>
                             </Link>
