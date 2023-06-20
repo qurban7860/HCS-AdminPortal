@@ -112,10 +112,16 @@ export default function CustomerViewForm() {
               handleEdit={handleEdit}
               onDelete={onDelete}
             />
+             <Grid display="inline-flex" >
+                  <Tooltip title="Active">
+                    <ViewFormField sm={12} isActive={defaultValues.isActive} verifiedBy={customer?.verifications}/>
+                  </Tooltip>
+                  <Tooltip title="Verified By">
+                    <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} varified varifiedBy={customer?.verifications} />
+                  </Tooltip>
+                </Grid>
             <Grid container>
-              <Tooltip title="Active">
-                <ViewFormField sm={12} isActive={defaultValues.isActive} />
-              </Tooltip>
+               
               <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
               <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
               <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />

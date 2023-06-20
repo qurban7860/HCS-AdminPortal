@@ -158,23 +158,6 @@ export default function ViewFormEditDeleteButtons({
               color={isVerified ? 'success' : 'primary'}
               sx={{ position: 'relative', zIndex: '1' }}
             >
-                          {isVerified && <IconButton
-                            size="small"
-                            sx={{
-                              width: '24px', 
-                              height:'24px',
-                              bottom: 20,
-                              left: 20,
-                              zIndex: 9,
-                              position: 'absolute',
-                              color: (themee) => alpha(themee.palette.common.white, 0.8),
-                              bgcolor: (themee) => alpha(themee.palette.grey[900], 0.72),
-                              '&:hover': {
-                                bgcolor: (themee) => alpha(themee.palette.grey[900], 0.98),
-                              },
-                            }}
-                          > <Typography  variant='body2' >{verificationCount > 99 ? 99 : verificationCount }</Typography>
-                          </IconButton>}
               <Tooltip
                 title="Machine Verification"
                 placement="top"
