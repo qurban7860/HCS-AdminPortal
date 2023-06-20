@@ -184,7 +184,6 @@ export function deleteTechparams(id) {
 
 export function addTechparam(params) {
     return async (dispatch) => {
-      dispatch(slice.actions.resetTechparam());
       dispatch(slice.actions.startLoading());
       try {
         

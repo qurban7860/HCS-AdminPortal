@@ -160,11 +160,11 @@ useLayoutEffect(() => {
 
   useEffect(() => {
     if (initial) {
-      if (toolsInstalled && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (toolsInstalled && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(toolsInstalled);
     }
   }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial]);
