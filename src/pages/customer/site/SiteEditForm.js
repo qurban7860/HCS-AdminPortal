@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { updateSite, setSiteEditFormVisibility } from '../../../redux/slices/customer/site';
+import { updateSite, setSiteEditFormVisibility, getSite, getSites } from '../../../redux/slices/customer/site';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
@@ -36,7 +36,7 @@ import { countries } from '../../../assets/data';
 
 export default function SiteEditForm() {
 
-  const { error, site } = useSelector((state) => state.site);
+  const { site } = useSelector((state) => state.site);
   const {  customer } = useSelector((state) => state.customer);
 
   const { contacts } = useSelector((state) => state.contact);
@@ -203,9 +203,12 @@ export default function SiteEditForm() {
       }
       // console.log("Site Data : ",data)
       await dispatch(updateSite(data,customer._id,site._id));
+      // await dispatch(getSites(customer._id));
+      await dispatch(getSite(customer._id,site._id));
+      enqueueSnackbar('Site saved Successfully!');
       reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Site save failed!',{variant:"error"});
       console.error(err.message);
     }
   };

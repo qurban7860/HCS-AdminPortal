@@ -40,7 +40,8 @@ import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const [checked, setChecked] = useState(false);
   const [openSite, setOpenSite] = useState(false);
-  const [currentSiteData, setCurrentSiteData] = useState({});
+  const { site } = useSelector((state) => state.site);
+  // const [site, setCurrentSiteData] = useState({});
   const { enqueueSnackbar } = useSnackbar();
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeCardIndex, setCardActiveIndex] = useState(null);
@@ -62,10 +63,11 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const toggleChecked = async () => {
     setChecked((value) => !value);
     if (checked || siteEditFormVisibility) {
-      dispatch(setSiteFormVisibility(false));
-      enqueueSnackbar('Please close the form before opening a new one', {
-        variant: 'warning',
-      });
+      dispatch(setSiteEditFormVisibility(false));
+      // enqueueSnackbar('Please close the form before opening a new one', {
+      //   variant: 'warning',
+      // });
+      dispatch(setSiteFormVisibility(true));
       setIsExpanded(false);
     } else {
       dispatch(setSiteFormVisibility(true));
@@ -128,8 +130,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           name4={
             <Stack>
               {siteEditFormVisibility
-                ? `Edit ${currentSiteData.name}`
-                : isExpanded && currentSiteData.name}
+                ? `Edit ${site.name}`
+                : isExpanded && site.name}
               {siteAddFormVisibility && !isExpanded && 'New Site Form'}
             </Stack>
           }
@@ -154,7 +156,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             disabled={siteEditFormVisibility}
           >
             <Grid container justifyContent="flex-start" direction="column" gap={1}>
-              {sites.map((site, index) => {
+              {sites.map((Site, index) => {
                 const borderTopVal = index !== 0 ? '0px solid white' : '';
                 return (
                   <>
@@ -188,15 +190,15 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                             <Link
                               underline="none"
                               disabled={siteEditFormVisibility}
-                              onClick={() => {
-                                setCurrentSiteData(site);
+                              onClick={async () => {
+                                await dispatch(getSite(customer._id,Site._id))
                                 setOpenSite(true);
                                 if (!isExpanded && !siteAddFormVisibility) {
                                   handleExpand(index);
                                   setSiteFormVisibility(!siteAddFormVisibility);
                                 } else if (
                                   isExpanded &&
-                                  currentSiteData !== site &&
+                                  site  &&
                                   !siteAddFormVisibility
                                 ) {
                                   handleExpand(index);
@@ -220,9 +222,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                   />
                                 )}
                                 <DetailsSection
-                                  content={site.name}
-                                  content2={site?.address?.city ? site?.address?.city : <br />}
-                                  content3={site?.website ? site?.website : <br />}
+                                  content={Site.name}
+                                  content2={Site?.address?.city ? Site?.address?.city : <br />}
+                                  content3={Site?.website ? Site?.website : <br />}
                                 />
                               </Grid>
                             </Link>
@@ -243,11 +245,11 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             <Grid container direction="row" gap={1}>
               <Card>
                 <CardActionArea>
-                  {currentSiteData.lat && currentSiteData.long && (
+                  {site.lat && site.long && (
                     <GoogleMaps
                       mapHeight="400px"
-                      lat={currentSiteData.lat ? currentSiteData.lat : 0}
-                      lng={currentSiteData.long ? currentSiteData.long : 0}
+                      lat={site.lat ? site.lat : 0}
+                      lng={site.long ? site.long : 0}
                     />
                   )}
                 </CardActionArea>
@@ -261,10 +263,11 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           {shouldShowSiteView && (
             <CardBase>
               <SiteViewForm
-                currentSite={currentSiteData}
+                currentSite={site}
                 handleMap={() => {
                   handleGoogleMapsVisibility(true);
                 }}
+                setIsExpanded={setIsExpanded}
               />
               <Grid item lg={12} spacing={2}>
                 {!isMobile && (
@@ -272,10 +275,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                     <Grid item md={12}>
                       <Card>
                         <CardActionArea>
-                          {currentSiteData.lat && currentSiteData.long && (
+                          {site.lat && site.long && (
                             <GoogleMaps
-                              lat={currentSiteData.lat ? currentSiteData.lat : 0}
-                              lng={currentSiteData.long ? currentSiteData.long : 0}
+                              lat={site.lat ? site.lat : 0}
+                              lng={site.long ? site.long : 0}
                             />
                           )}
                         </CardActionArea>
