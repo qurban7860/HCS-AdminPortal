@@ -336,6 +336,7 @@ export function addCustomer(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+      throw error;
       }
     };
 
@@ -353,6 +354,7 @@ export function setCustomerVerification(customerId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

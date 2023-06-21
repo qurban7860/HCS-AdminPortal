@@ -133,10 +133,10 @@ export default function CustomerViewForm() {
             />
              <Grid display="inline-flex" >
                 <Tooltip title="Active">
-                  <ViewFormField sm={12} isActive={defaultValues.isActive} verifiedBy={customer?.verifications}/>
+                  <ViewFormField sm={12} isActive={defaultValues.isActive} />
                 </Tooltip>
                 <Tooltip title="Verified By">
-                  <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} verified verifiedBy={customer?.verifications} />
+                  <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} verified customerVerifiedBy={customer?.verifications} />
                 </Tooltip>
               </Grid>
             <Grid container>

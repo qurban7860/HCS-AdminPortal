@@ -57,12 +57,11 @@ export default function Reports() {
           position: 'relative',
         }}
       >
-        <Cover name="Reports" icon="material-symbols:list-alt-outline" />
+        <Cover name="Site Map" icon="material-symbols:list-alt-outline" />
       </Card>
       <Grid container spacing={3} >
           <Grid item sm={12}>
             <Card sx={{ height: '840px', mb: 5}} >
-              
             <List
                 component="nav"
                 aria-labelledby="nested-list-subheader"
@@ -73,16 +72,9 @@ export default function Reports() {
                 }
               /> 
               {/* </List> */}
-
-
             <GoogleMaps
               latlongArr={latLongValues}
             />
-
-
-               
-
-
                 {/* <ListItemButton onClick={} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
                     <Iconify icon="" />

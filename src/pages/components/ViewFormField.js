@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // eslint-disable-next-line
 import { makeStyles } from '@mui/styles';
 import { Typography, Grid, Popover, IconButton, MenuItem , Box, Divider} from '@mui/material';
@@ -18,8 +18,10 @@ ViewFormField.propTypes = {
   sm: PropTypes.number,
   isActive: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
+  machineVerificationCount: PropTypes.number,
   verified: PropTypes.bool,
-  verifiedBy: PropTypes.array,
+  machineVerifiedBy: PropTypes.array,
+  customerVerifiedBy: PropTypes.array,
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
 };
@@ -56,14 +58,25 @@ export default function ViewFormField({
   sm,
   isActive,
   customerVerificationCount,
+  machineVerificationCount,
   verified,
-  verifiedBy,
+  customerVerifiedBy,
+  machineVerifiedBy,
   customerAccess,
   documentIsActive,
 }) {
   const classes = useStyles({ isActive });
   const [anchorEl, setAnchorEl] = useState(null);
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+  const [verifiedBy, setVerifiedBy] = useState([]);
+  
+useEffect(()=>{
+  if(customerVerifiedBy){
+    setVerifiedBy(customerVerifiedBy)
+  }else if(machineVerifiedBy){
+    setVerifiedBy(machineVerifiedBy)
+  }
+},[customerVerifiedBy, machineVerifiedBy]);
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -154,15 +167,15 @@ export default function ViewFormField({
         {verified > 0  && (
           <>
             <IconButton
-              aria-label={customerVerificationCount > 0 ? 'Verified' : 'Not Verified'}
+              aria-label={customerVerificationCount || machineVerificationCount > 0 ? 'Verified' : 'Not Verified'}
               onClick={handlePopoverOpen}
               onMouseEnter={handlePopoverOpen}
               onMouseLeave={handlePopoverClose}
             >
               <Iconify
-                heading={customerVerificationCount > 0 ? 'Verified' : 'Not Verified'}
-                icon="bi:person-check"
-                style={{ color: customerVerificationCount > 0 ? 'green' : 'red' }}
+                heading={customerVerificationCount  || machineVerificationCount > 0 ? 'Verified' : 'Not Verified'}
+                icon={customerVerificationCount && "bi:person-check" || machineVerificationCount && "carbon:settings-check"}
+                style={{ color: customerVerificationCount || machineVerificationCount > 0 ? 'green' : 'red' }}
                 width="30px"
               />
               <Popover
@@ -191,11 +204,12 @@ export default function ViewFormField({
               <Typography
                 variant="overline"
                 classes={{ root: classes.activeHover }}
-                color={customerVerificationCount > 0 ? 'green' : 'red'}
+                color={customerVerificationCount || machineVerificationCount > 0 ? 'green' : 'red'}
               >
-                {customerVerificationCount > 0 ? 'Verified' : 'Not Verified'}
+                {customerVerificationCount || machineVerificationCount > 0 ? 'Verified' : 'Not Verified'}
               </Typography>
-            </Popover><Popover
+            </Popover>
+            <Popover
               open={isPopoverOpen}
               anchorEl={anchorEl}
               onClose={handlePopoverClose}
@@ -221,13 +235,14 @@ export default function ViewFormField({
               <Typography
                 variant="overline"
                 classes={{ root: classes.activeHover }}
-                color={customerVerificationCount > 0 ? 'green' : 'red'}
+                color={customerVerificationCount || machineVerificationCount > 0 ? 'green' : 'red'}
               >
-                {customerVerificationCount > 0 ? 'Verified' : 'Not Verified'}
+                {customerVerificationCount || machineVerificationCount > 0 ? 'Verified' : 'Not Verified'}
               </Typography>
             </Popover>
             </IconButton>
-            {customerVerificationCount > 0  && <IconButton
+            {(customerVerificationCount || machineVerificationCount) > 0  && 
+            <IconButton
                             onClick={handleVerifiedPopoverOpen}
                             size="small"
                             sx={{
@@ -244,7 +259,7 @@ export default function ViewFormField({
                               },
                             }}
                           > 
-                            <Typography  variant='body2' >{customerVerificationCount > 99 ? 99 : customerVerificationCount }</Typography>
+                            <Typography  variant='body2' >{(customerVerificationCount || machineVerificationCount) > 99 ? 99 : customerVerificationCount || machineVerificationCount }</Typography>
                           </IconButton>}
           </>
         )}
