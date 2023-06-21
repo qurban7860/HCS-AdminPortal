@@ -39,12 +39,12 @@ import AddFormButtons from '../../components/AddFormButtons';
 
 export default function ModelEditForm() {
 
-  const { machinemodel } = useSelector((state) => state.machinemodel);
+  const { machineModel } = useSelector((state) => state.machinemodel);
   const { categories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const [category, setCategory] = useState("")
   const navigate = useNavigate();
-  // console.log("machineModel : ", machinemodel)
+  // console.log("machineModel : ", machineModel)
 
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
@@ -54,11 +54,11 @@ export default function ModelEditForm() {
   // }, [dispatch, id]);
 
   useEffect(() => {
-    if (machinemodel) {
+    if (machineModel) {
       reset(defaultValues);
-      setCategory(machinemodel.category);
+      setCategory(machineModel.category);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }}, [machinemodel])
+  }}, [machineModel])
 
   const EditModelSchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required') ,
@@ -70,14 +70,14 @@ export default function ModelEditForm() {
   const defaultValues = useMemo(
     () => (
       {
-        name:             machinemodel?.name || '',
-        description:      machinemodel?.description || '',
-        displayOrderNo:   machinemodel?.displayOrderNo || '',
-        // category:      machinemodel?.category || '',
-        isActive:         machinemodel?.isActive,
+        name:             machineModel?.name || '',
+        description:      machineModel?.description || '',
+        displayOrderNo:   machineModel?.displayOrderNo || '',
+        // category:      machineModel?.category || '',
+        isActive:         machineModel?.isActive,
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [machinemodel]
+    [machineModel]
     );
 
   const { themeStretch } = useSettingsContext();

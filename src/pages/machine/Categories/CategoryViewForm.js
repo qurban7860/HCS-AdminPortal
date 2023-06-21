@@ -48,10 +48,10 @@ export default function CategoryViewForm({ currentCategory = null }) {
         name:category?.name || '',
         description:category?.description || '',
         isActive: category.isActive,
-        createdByFullName:        category?.createdBy?.fullName || "",
+        createdByFullName:        category?.createdBy?.name || "",
         createdAt:                category?.createdAt || "",
         createdIP:                category?.createdIP || "",
-        updatedByFullName:        category?.updatedBy?.fullName || "",
+        updatedByFullName:        category?.updatedBy?.name || "",
         updatedAt:                category?.updatedAt || "",
         updatedIP:                category?.updatedIP || "",
       }),
@@ -71,9 +71,9 @@ export default function CategoryViewForm({ currentCategory = null }) {
           <ViewFormField sm={12}   isActive={defaultValues.isActive}/>
           <ViewFormField sm={6}   heading='Name'          param={defaultValues?.name} />
           <ViewFormField sm={6}   heading='Description'   param={defaultValues?.description}/>
-          {/* <Grid item xs={12} sm={12} >
+          <Grid item xs={12} sm={12} >
             <ViewFormSwitch isActive={defaultValues.isActive}/>
-          </Grid> */}
+          </Grid>
           <Grid container sx={{mt:2}}>
             <ViewFormAudit defaultValues={defaultValues}/>
           </Grid>

@@ -628,7 +628,7 @@ export default function DocumentAddForm({currentDocument}) {
                             <FormControlLabel value="newVersion" control={<Radio />} label="New Version" />
                           </Grid>
                           <Grid item xs={12} sm={6}>
-                            <FormControlLabel value="existingVersion" control={<Radio />} label="Existing Version" />
+                            <FormControlLabel value="existingVersion" control={<Radio />} label="Current Version" />
                           </Grid>
                       </RadioGroup>
                   </FormControl>}

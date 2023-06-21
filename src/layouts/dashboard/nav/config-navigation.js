@@ -55,7 +55,7 @@ const navConfig = [
       { title: 'Security', path: PATH_DASHBOARD.user.list, icon: ICONS.user },
       { title: 'Settings', path: PATH_DASHBOARD.setting, icon: ICONS.setting },
       { title: 'Document', path: PATH_DASHBOARD.document.dashboard, icon: ICONS.document },
-      { title: 'Reports', path: PATH_DASHBOARD.reports, icon: ICONS.reports },
+      { title: 'Site Map', path: PATH_DASHBOARD.reports, icon: ICONS.reports },
       // {
       //   title: 'Button Title',
       //   path: '/PATH_DASHBOARD.customer.new',

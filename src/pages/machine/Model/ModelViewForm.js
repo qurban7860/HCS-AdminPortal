@@ -53,8 +53,8 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
 
   const { enqueueSnackbar } = useSnackbar();
 
-  const { machinemodel } = useSelector((state) => state.machinemodel);
-// console.log("machinemodel : ", machinemodel)
+  const { machineModel } = useSelector((state) => state.machinemodel);
+console.log("machinemodel : ", machineModel)
   const { id } = useParams();
 
   const dispatch = useDispatch()
@@ -63,20 +63,20 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const defaultValues = useMemo(
     () => (
       {
-        name:                     machinemodel?.name || '',
-        description:              machinemodel?.description || '',
-        displayOrderNo:           machinemodel?.displayOrderNo || '',
-        category:                 machinemodel?.category || '',
-        isActive:                 machinemodel?.isActive,
-        createdByFullName:        machinemodel?.createdBy?.name || "",
-        createdAt:                machinemodel?.createdAt || "",
-        createdIP:                machinemodel?.createdIP || "",
-        updatedByFullName:        machinemodel?.updatedBy?.name || "",
-        updatedAt:                machinemodel?.updatedAt || "",
-        updatedIP:                machinemodel?.updatedIP || "",
+        name:                     machineModel?.name || '',
+        description:              machineModel?.description || '',
+        displayOrderNo:           machineModel?.displayOrderNo || '',
+        category:                 machineModel?.category || '',
+        isActive:                 machineModel?.isActive,
+        createdByFullName:        machineModel?.createdBy?.name || "",
+        createdAt:                machineModel?.createdAt || "",
+        createdIP:                machineModel?.createdIP || "",
+        updatedByFullName:        machineModel?.updatedBy?.name || "",
+        updatedAt:                machineModel?.updatedAt || "",
+        updatedIP:                machineModel?.updatedIP || "",
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentMachinemodel, machinemodel]
+    [currentMachinemodel, machineModel]
     );
 
     const onDelete = () => {
@@ -91,7 +91,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         <ViewFormField sm={6}   heading='Category Name'        param={defaultValues?.category?.name} />
         <ViewFormField sm={6}   heading='Name'                 param={defaultValues?.name}/>
         <ViewFormField sm={6}   heading='Description'          param={defaultValues?.description}/>
-        {/* <ViewFormSWitch  isActive={defaultValues.isActive} /> */}
+        <ViewFormSWitch  isActive={defaultValues.isActive} />
         <Grid container sx={{mt:2}}>
           <ViewFormAudit defaultValues={defaultValues}/>
         </Grid>
