@@ -57,9 +57,16 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
         await dispatch(deleteTechparamcategory(techparamcategory._id))
       enqueueSnackbar('Deleted Successfully!');
         navigate(PATH_MACHINE.techParam.list)
-      }catch(error){
-        console.log(error);
-      enqueueSnackbar('Delete failed!', { variant: `error` });
+      } catch (err) {
+        // if(err.Message){
+        //   enqueueSnackbar(err.Message,{ variant: `error` })
+        // }else if(err.message){
+        //   enqueueSnackbar(err.message,{ variant: `error` })
+        // }else{
+        //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        // }
+        enqueueSnackbar("Techparam category delete failed!",{ variant: `error` })
+        console.log("Error:", err);
       }
     }
   return (

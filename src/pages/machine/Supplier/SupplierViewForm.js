@@ -86,8 +86,20 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     [currentSupplier, supplier]
     );
     const onDelete = () => {
-      dispatch(deleteSupplier(id))
-      navigate(PATH_MACHINE.supplier.list)
+      try{
+        dispatch(deleteSupplier(id));
+        navigate(PATH_MACHINE.supplier.list);
+      } catch (err) {
+        // if(err.Message){
+        //   enqueueSnackbar(err.Message,{ variant: `error` })
+        // }else if(err.message){
+        //   enqueueSnackbar(err.message,{ variant: `error` })
+        // }else{
+        //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        // }
+        enqueueSnackbar("Supplier failed!",{ variant: `error` })
+        console.log("Error:", err);
+      }
     }
   return (
     <Card sx={{ p: 2 }}>

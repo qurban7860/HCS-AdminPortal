@@ -28,19 +28,11 @@ StatusViewForm.propTypes = {
 export default function StatusViewForm({ currentMachinestatus = null }) {
 
   const [editFlag, setEditFlag] = useState(false);
-
-  const toggleEdit = () => {
-    navigate(PATH_MACHINE.machineStatus.statusedit(id));
-  }
-
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
-
   const { machinestatus } = useSelector((state) => state.machinestatus);
-console.log("machinestatus : ", machinestatus)
   const { id } = useParams();
-
   const dispatch = useDispatch()
   
 
@@ -62,10 +54,28 @@ console.log("machinestatus : ", machinestatus)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentMachinestatus, machinestatus]
     );
-    const onDelete = () => {
-      dispatch(deleteMachinestatus(id))
-      navigate(PATH_MACHINE.machineStatus.list)
+
+  const onDelete = () => {
+    try{
+      dispatch(deleteMachinestatus(id));
+      navigate(PATH_MACHINE.machineStatus.list);
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Status delete failed!",{ variant: `error` })
+      console.log("Error:", err);
     }
+  }
+
+
+  const toggleEdit = () => {
+    navigate(PATH_MACHINE.machineStatus.statusedit(id));
+  }
 
   return (
     <Card sx={{ p: 2 }}>

@@ -102,7 +102,8 @@ export function getSuppliers (){
       dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -117,6 +118,7 @@ export function getSupplier(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -134,6 +136,7 @@ export function deleteSupplier(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -196,6 +199,7 @@ export function addSupplier(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 
@@ -235,6 +239,7 @@ export function updateSupplier(params,Id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

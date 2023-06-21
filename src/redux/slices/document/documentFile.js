@@ -211,6 +211,7 @@ return async (dispatch) => {
   } catch (error) {
     console.error(error);
     dispatch(slice.actions.hasError(error.Message));
+    throw error;
   }
 };
 }

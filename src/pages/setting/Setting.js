@@ -94,7 +94,7 @@ export default function Setting() {
                   <ListItemIcon>
                     <Iconify icon="mdi:clipboard-text" />
                   </ListItemIcon>
-                  <ListItemText primary="User SignIn Logs" />
+                  <ListItemText primary="User Sign In Logs" />
                 </ListItemButton>
               </List>
             </Card>

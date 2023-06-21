@@ -111,7 +111,8 @@ export function getTechparamcategories(){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -125,6 +126,7 @@ export function getTechparamcategory(id) {
       dispatch(slice.actions.getTechparamcategorySuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -144,6 +146,7 @@ export function deleteTechparamcategory(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -175,6 +178,7 @@ export function addTechparamcategory(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 
@@ -202,6 +206,7 @@ export function updateTechparamcategory(params,Id) {
 
     } catch (error) {
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

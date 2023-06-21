@@ -246,6 +246,7 @@ export function updateSite(params,customerId,Id) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
 
   };
@@ -363,6 +364,7 @@ export function deleteSite(customerID, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

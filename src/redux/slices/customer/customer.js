@@ -28,6 +28,12 @@ const slice = createSlice({
       state.isLoading = true;
     },
 
+    // STOP LOADING
+    stopLoading(state) {
+      console.log('loading working');
+      state.isLoading = false;
+    },
+
     // SET TOGGLE
     setCustomerEditFormVisibility(state, action){
       state.customerEditFormFlag = action.payload;
@@ -187,6 +193,7 @@ export function deleteCustomer(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -406,8 +413,10 @@ export function updateCustomer(params) {
       // this.updateCustomerSuccess(response);
 
     } catch (error) {
+      dispatch(slice.actions.stopLoading());
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 

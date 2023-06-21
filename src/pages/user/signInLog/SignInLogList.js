@@ -50,7 +50,7 @@ import { fDate } from '../../../utils/formatTime';
 const TABLE_HEAD = [
   { id: 'user', label: 'User Name', align: 'left' },
   { id: 'userIP', label: 'User IP', align: 'left' },
-  { id: 'loginTime', label: 'Logout Time', align: 'left' },
+  { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
 ];
 

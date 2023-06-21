@@ -16,6 +16,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
+import { useSnackbar } from '../../../components/snackbar';
 
 // ----------------------------------------------------------------------
 LicenseViewForm.propTypes = {
@@ -35,6 +36,8 @@ export default function LicenseViewForm({ currentLicense = null }) {
 
   const [openPopover, setOpenPopover] = useState(null);
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -48,10 +51,22 @@ export default function LicenseViewForm({ currentLicense = null }) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteLicense(machine._id, currentLicense._id));
-    handleCloseConfirm();
-    dispatch(getLicenses(machine._id));
-    // dispatch(getContacts());
+    try{
+      await dispatch(deleteLicense(machine._id, currentLicense._id));
+      handleCloseConfirm();
+      dispatch(getLicenses(machine._id));
+      // dispatch(getContacts());
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("License delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
 
   const  handleEdit = async () => {

@@ -60,9 +60,21 @@ export default function CategoryViewForm({ currentCategory = null }) {
     );
 
     const onDelete= async () => {
-      await dispatch(deleteCategory(id));
-      enqueueSnackbar("Category Deleted Successfullty!")
-      navigate(PATH_MACHINE.categories.list)
+      try{  
+        await dispatch(deleteCategory(id));
+        enqueueSnackbar("Category Deleted Successfullty!");
+        navigate(PATH_MACHINE.categories.list);
+      } catch (err) {
+        // if(err.Message){
+        //   enqueueSnackbar(err.Message,{ variant: `error` })
+        // }else if(err.message){
+        //   enqueueSnackbar(err.message,{ variant: `error` })
+        // }else{
+        //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        // }
+        enqueueSnackbar("Category delete failed!",{ variant: `error` })
+        console.log("Error:", err);
+      }
     }
   return (
     <Card sx={{p:2}}>

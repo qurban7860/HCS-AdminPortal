@@ -118,6 +118,7 @@ export function addToolInstalled(machineId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -139,6 +140,7 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -161,6 +163,7 @@ export function getToolsInstalled(machineId) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -177,6 +180,7 @@ export function getToolInstalled(machineId,Id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -195,6 +199,7 @@ export function deleteToolInstalled(machineId,id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

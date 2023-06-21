@@ -439,6 +439,7 @@ export function deleteDocument(documentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

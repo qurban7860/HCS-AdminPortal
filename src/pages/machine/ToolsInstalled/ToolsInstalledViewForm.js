@@ -18,6 +18,8 @@ import ViewFormField from '../../components/ViewFormField';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import ViewFormSwitch from '../../components/ViewFormSwitch';
+import { useSnackbar } from '../../../components/snackbar';
+
 // ----------------------------------------------------------------------
 ToolsInstalledViewForm.propTypes = {
   currentTool: PropTypes.object,
@@ -28,6 +30,8 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const dispatch = useDispatch(); 
+  const { enqueueSnackbar } = useSnackbar();
+
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -46,8 +50,20 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteToolInstalled(machine._id, currentTool._id));
-    dispatch(getToolsInstalled(machine._id));
+    try{
+      await dispatch(deleteToolInstalled(machine._id, currentTool._id));
+      dispatch(getToolsInstalled(machine._id));
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Tool installed delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
 
   const  handleEdit = async () => {

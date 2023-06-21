@@ -227,6 +227,7 @@ export function deleteDocumentCategory(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

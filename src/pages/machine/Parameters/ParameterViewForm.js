@@ -78,8 +78,20 @@ useLayoutEffect(()=>{
     );
 
     const onDelete = () => {
-      dispatch(deleteTechparams(id))
-      navigate(PATH_MACHINE.parameters.list)
+      try{
+      dispatch(deleteTechparams(id));
+      navigate(PATH_MACHINE.parameters.list);
+      } catch (err) {
+        // if(err.Message){
+        //   enqueueSnackbar(err.Message,{ variant: `error` })
+        // }else if(err.message){
+        //   enqueueSnackbar(err.message,{ variant: `error` })
+        // }else{
+        //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        // }
+        enqueueSnackbar("Parameter value delete failed!",{ variant: `error` })
+        console.log("Error:", err);
+      }
     }
 
   return (

@@ -10,6 +10,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import Iconify from '../../../components/iconify';
+import { useSnackbar } from '../../../components/snackbar';
 
 NoteViewForm.propTypes = {
   currentNote: PropTypes.object,
@@ -18,6 +19,7 @@ export default function NoteViewForm({currentNote = null}) {
   const { note, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.machinenote);
   const dispatch = useDispatch();
   const { machine } = useSelector((state) => state.machine);
+  const { enqueueSnackbar } = useSnackbar();
   const  handleEdit = async () => {
     await dispatch(getNote(machine._id,currentNote._id));
     dispatch(setNoteEditFormVisibility(true));
@@ -30,9 +32,21 @@ export default function NoteViewForm({currentNote = null}) {
     setOpenConfirm(false);
   };
   const onDelete = async () => {
-    await dispatch(deleteNote(machine._id,currentNote._id));
-    handleCloseConfirm();
-    dispatch(getNotes(machine._id));
+    try{
+      await dispatch(deleteNote(machine._id,currentNote._id));
+      handleCloseConfirm();
+      dispatch(getNotes(machine._id));
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Note delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
   const defaultValues = useMemo(
     () => ({

@@ -34,6 +34,8 @@ export default function CustomerViewForm() {
   const navigate = useNavigate();
   const { customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const userId = localStorage.getItem('userId');
+  const { enqueueSnackbar } = useSnackbar();
+
   // console.log("customer : ",customer)
   // const toggleEdit = () => {
   //   dispatch(setCustomerEditFormVisibility(true));
@@ -53,13 +55,24 @@ export default function CustomerViewForm() {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteCustomer(customer._id));
-    navigate(PATH_DASHBOARD.customer.list);
+    try{
+      await dispatch(deleteCustomer(customer._id));
+      navigate(PATH_DASHBOARD.customer.list);
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Customer delete failed!",{ variant: `error` });
+      console.log("Error:", err);
+    }
   };
   const handleVerification = async () => {
     await dispatch(setCustomerVerification(customer._id));
   };
-  const { enqueueSnackbar } = useSnackbar();
 
   const defaultValues = useMemo(
     () => ({
