@@ -10,6 +10,7 @@ import { green } from '@mui/material/colors';
 import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
+import MenuPopover from '../../components/menu-popover';
 import useResponsive from '../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../redux/slices/products/machine';
 
@@ -29,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 ViewFormEditDeleteButtons.propTypes = {
   handleVerification: PropTypes.func,
   isVerified: PropTypes.bool,
-  verificationCount: PropTypes.number,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleEdit: PropTypes.func,
@@ -48,7 +48,6 @@ export default function ViewFormEditDeleteButtons({
   disablePasswordButton = false,
   disableEditButton = false,
   isVerified ,
-  verificationCount,
   handleVerification,
   onDelete,
   handleEdit,
@@ -159,23 +158,6 @@ export default function ViewFormEditDeleteButtons({
               color={isVerified ? 'success' : 'primary'}
               sx={{ position: 'relative', zIndex: '1' }}
             >
-                          {isVerified && <IconButton
-                            size="small"
-                            sx={{
-                              width: '24px', 
-                              height:'24px',
-                              bottom: 20,
-                              left: 20,
-                              zIndex: 9,
-                              position: 'absolute',
-                              color: (themee) => alpha(themee.palette.common.white, 0.8),
-                              bgcolor: (themee) => alpha(themee.palette.grey[900], 0.72),
-                              '&:hover': {
-                                bgcolor: (themee) => alpha(themee.palette.grey[900], 0.98),
-                              },
-                            }}
-                          > <Typography  variant='body2' >{verificationCount > 99 ? 99 : verificationCount }</Typography>
-                          </IconButton>}
               <Tooltip
                 title="Verification"
                 placement="top"
