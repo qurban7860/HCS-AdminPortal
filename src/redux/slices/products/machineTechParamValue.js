@@ -113,6 +113,7 @@ export function addSetting(machineId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -134,6 +135,7 @@ export function updateSetting(machineId,settingId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -156,6 +158,7 @@ export function getSettings(id) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -172,6 +175,7 @@ export function getSetting(machineId,settingId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -192,6 +196,7 @@ export function deleteSetting(machineId,id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

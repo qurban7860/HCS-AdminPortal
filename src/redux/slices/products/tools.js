@@ -104,7 +104,8 @@ export function getTools (){
       dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -119,6 +120,7 @@ export function getTool(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -135,6 +137,7 @@ export function deleteTool(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -158,6 +161,7 @@ export function addTool(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 }
@@ -185,6 +189,7 @@ export function updateTool(params) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

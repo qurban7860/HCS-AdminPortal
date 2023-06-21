@@ -65,14 +65,21 @@ export default function ContactViewForm({ currentContact = null, setIsExpanded, 
 
   const onDelete = async () => {
     try {
-        await dispatch(deleteContact(customer._id, contact._id));
+      await dispatch(deleteContact(customer._id, contact._id));
       setIsExpanded(false);
       enqueueSnackbar("Contact deleted Successfully!");
       dispatch(getContacts(customer._id));
       // setCurrentContactData({})
-    } catch(error) {
-      console.log(error)
-      enqueueSnackbar("Contact delete Failed!",{variant: "error"});
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Contact delete failed!",{ variant: `error` })
+      console.log("Error:", err);
     }
   };
 

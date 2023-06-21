@@ -156,6 +156,7 @@ export function updateNote(customerId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -216,6 +217,7 @@ export function deleteNote(customerId,id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

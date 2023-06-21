@@ -161,13 +161,17 @@ export function getMachineModel(id) {
 export function deleteMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-
+    try{
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/models/${id}` , 
       {
           isArchived: true, 
       });
-
-      return response
+      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 

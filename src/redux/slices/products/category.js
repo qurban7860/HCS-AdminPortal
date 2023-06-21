@@ -105,7 +105,8 @@ export function getCategories (){
       // dispatch(slice.actions)
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -121,6 +122,7 @@ export function getCategory(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -140,6 +142,7 @@ export function deleteCategory(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -166,6 +169,7 @@ export function addCategory(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 }
@@ -191,6 +195,7 @@ export function updateCategory(params,Id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

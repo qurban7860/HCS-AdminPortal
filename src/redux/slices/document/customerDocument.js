@@ -328,6 +328,7 @@ export function deleteCustomerDocument(customerDocumentId) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       dispatch(slice.actions.stopLoading());
+      throw error;
     }
   };
 }

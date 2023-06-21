@@ -347,7 +347,7 @@ export default function ViewFormEditDeleteButtons({
           <LoadingButton 
           variant="contained" 
           color="error" 
-          loading={isSubmitSuccessful || isSubmitting}
+          loading={(isSubmitSuccessful || isSubmitting) && isLoading}
           disabled={isSubmitting}
           onClick={handleSubmit(onDelete)} 
           >

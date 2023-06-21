@@ -114,9 +114,10 @@ export function addLicense (machineId, supplyData){
     dispatch(slice.actions.startLoading());
     try{
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
-    } catch (e) {
-      console.log(e);
-      dispatch(slice.actions.hasError(e.Message))
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -138,7 +139,8 @@ export function getLicenses (machineId){
       dispatch(slice.actions.setResponseMessage('Licenses loaded successfully'));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message))
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   }
 }
@@ -154,6 +156,7 @@ export function getLicense(machineId, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -173,6 +176,7 @@ export function deleteLicense(machineId, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -199,6 +203,7 @@ export function updateLicense(params,Id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

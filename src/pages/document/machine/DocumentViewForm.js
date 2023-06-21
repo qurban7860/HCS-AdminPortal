@@ -48,15 +48,27 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   const regEx = /^[^2]*/;
   const { machineDocument } = useSelector((state) => state.machineDocument);
   const { machine , machines } = useSelector((state) => state.machine);
-const { enqueueSnackbar } = useSnackbar();
-// console.log(machineDocument)
-// console.log("currentMachineDocument", currentMachineDocument)
+  const { enqueueSnackbar } = useSnackbar();
+  // console.log(machineDocument)
+  // console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const onDelete = async () => {
-    await dispatch(deleteMachineDocument(currentMachineDocument._id));
-    await dispatch(getMachineDocuments(machine._id));
+    try{
+      await dispatch(deleteMachineDocument(currentMachineDocument._id));
+      await dispatch(getMachineDocuments(machine._id));
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Document delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
 
   const  handleEdit = async () => {

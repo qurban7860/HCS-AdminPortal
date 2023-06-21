@@ -26,7 +26,6 @@ import { fDate, fDateTime } from '../../../utils/formatTime';
 // routes
 // import { PATH_DASHBOARD } from '../../routes/paths';
 // components
-// import { useSnackbar } from '../../components/snackbar';
 // import { getNotes, getNote } from '../../redux/slices/note';
 import {
   getNotes,
@@ -40,6 +39,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSwitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import { useSnackbar } from '../../../components/snackbar';
 
 NoteViewForm.propTypes = {
   currentNote: PropTypes.object,
@@ -48,6 +48,8 @@ export default function NoteViewForm({ currentNote = null }) {
   const { note } = useSelector((state) => state.note);
   const dispatch = useDispatch();
   const { customer } = useSelector((state) => state.customer);
+  const { enqueueSnackbar } = useSnackbar();
+
 
   const handleEdit = async () => {
     await dispatch(getNote(customer._id, currentNote._id));
@@ -71,9 +73,21 @@ export default function NoteViewForm({ currentNote = null }) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteNote(customer._id, currentNote._id));
-    handleCloseConfirm();
-    dispatch(getNotes(customer._id));
+    try{
+      await dispatch(deleteNote(customer._id, currentNote._id));
+      handleCloseConfirm();
+      dispatch(getNotes(customer._id));
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Notes delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
 
   const defaultValues = useMemo(

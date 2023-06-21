@@ -87,9 +87,21 @@ export default function MachineViewForm() {
     navigate(PATH_DASHBOARD.customer.view(id));
   };
   const onDelete = async () => {
-    await dispatch(deleteMachine(machine._id));
-    dispatch(getMachines());
-    navigate(PATH_MACHINE.machine.list);
+    try{
+      await dispatch(deleteMachine(machine._id));
+      dispatch(getMachines());
+      navigate(PATH_MACHINE.machine.list);
+    } catch (err) {
+    // if(err.Message){
+    //     enqueueSnackbar(err.Message,{ variant: `error` })
+    //   }else if(err.message){
+    //     enqueueSnackbar(err.message,{ variant: `error` })
+    //   }else{
+    //     enqueueSnackbar("Something went wrong!",{ variant: `error` })
+    //   }
+      enqueueSnackbar("Machine delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
   const handleVerification = async () => {
     await dispatch(setMachineVerification(machine._id, machine?.isVerified));

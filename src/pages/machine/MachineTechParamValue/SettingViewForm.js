@@ -16,7 +16,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormSWitch from '../../components/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-
+import { useSnackbar } from '../../../components/snackbar';
 
 // ----------------------------------------------------------------------
 SettingViewForm.propTypes = {
@@ -29,6 +29,7 @@ export default function SettingViewForm({ currentSetting = null }) {
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -43,10 +44,22 @@ export default function SettingViewForm({ currentSetting = null }) {
   };
 
   const onDelete = async () => {
-    await dispatch(deleteSetting(machine._id, currentSetting._id));
-    handleCloseConfirm();
-    dispatch(getSettings(machine._id));
-    // dispatch(getContacts());
+    try{
+      await dispatch(deleteSetting(machine._id, currentSetting._id));
+      handleCloseConfirm();
+      dispatch(getSettings(machine._id));
+      // dispatch(getContacts());
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Settings delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
 
   const  handleEdit = async () => {

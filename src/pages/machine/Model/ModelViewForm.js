@@ -80,8 +80,21 @@ console.log("machinemodel : ", machineModel)
     );
 
     const onDelete = () => {
-      dispatch(deleteMachineModel(id))
-      navigate(PATH_MACHINE.machineModel.list)
+      try{
+        dispatch(deleteMachineModel(id));
+        navigate(PATH_MACHINE.machineModel.list);
+      } catch (err) {
+        // if(err.Message){
+        //   enqueueSnackbar(err.Message,{ variant: `error` })
+        // }else if(err.message){
+        //   enqueueSnackbar(err.message,{ variant: `error` })
+        // }else{
+        //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        // }
+
+        enqueueSnackbar("Model delete failed!",{ variant: `error` })
+        console.log("Error:", err);
+      }
     }
   return (
     <Card sx={{ p: 2 }}>

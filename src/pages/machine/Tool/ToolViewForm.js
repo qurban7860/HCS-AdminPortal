@@ -79,8 +79,20 @@ export default function ToolViewForm({ currentTool = null }) {
     );
 
     const onDelete = () => {
-      dispatch(deleteTool(id))
-      navigate(PATH_MACHINE.tool.list)
+      try{
+        dispatch(deleteTool(id))
+        navigate(PATH_MACHINE.tool.list);
+      } catch (err) {
+        // if(err.Message){
+        //   enqueueSnackbar(err.Message,{ variant: `error` })
+        // }else if(err.message){
+        //   enqueueSnackbar(err.message,{ variant: `error` })
+        // }else{
+        //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+        // }
+        enqueueSnackbar("Tool delete failed!",{ variant: `error` })
+        console.log("Error:", err);
+      }
     }
 
   return (

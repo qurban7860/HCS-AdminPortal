@@ -103,13 +103,14 @@ export default function SecurityUserViewForm() {
       dispatch(getSecurityUsers());
       navigate(PATH_DASHBOARD.user.list);
     } catch (error) {
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
-      }
+      // if (error.Message) {
+      //   enqueueSnackbar(error.Message, { variant: `error` });
+      // } else if (error.message) {
+      //   enqueueSnackbar(error.message, { variant: `error` });
+      // } else {
+      //   enqueueSnackbar('Something went wrong!', { variant: `error` });
+      // }
+      enqueueSnackbar("User delete failed!",{ variant: `error` })
       console.log('Error:', error);
     }
   };

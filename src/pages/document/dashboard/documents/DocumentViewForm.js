@@ -68,9 +68,21 @@ export default function Document() {
   },[documentHistory,dispatch])
 
   const onDelete = async () => {
-    await dispatch(deleteDocument(id));
-    await dispatch(getDocuments());
-    navigate(PATH_DASHBOARD.document.dashboard);
+    try{
+      await dispatch(deleteDocument(id));
+      await dispatch(getDocuments());
+      navigate(PATH_DASHBOARD.document.dashboard);
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar("Document delete failed!",{ variant: `error` })
+      console.log("Error:", err);
+    }
   };
 
   const  handleEdit = async () => {
