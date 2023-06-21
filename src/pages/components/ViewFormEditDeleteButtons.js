@@ -10,6 +10,7 @@ import { green } from '@mui/material/colors';
 import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
+import MenuPopover from '../../components/menu-popover';
 import useResponsive from '../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../redux/slices/products/machine';
 
@@ -29,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 ViewFormEditDeleteButtons.propTypes = {
   handleVerification: PropTypes.func,
   isVerified: PropTypes.bool,
-  verificationCount: PropTypes.number,
   handleTransfer: PropTypes.func,
   handleUpdatePassword: PropTypes.func,
   handleEdit: PropTypes.func,
@@ -48,7 +48,6 @@ export default function ViewFormEditDeleteButtons({
   disablePasswordButton = false,
   disableEditButton = false,
   isVerified ,
-  verificationCount,
   handleVerification,
   onDelete,
   handleEdit,

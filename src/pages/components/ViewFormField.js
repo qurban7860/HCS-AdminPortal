@@ -2,10 +2,11 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // eslint-disable-next-line
 import { makeStyles } from '@mui/styles';
-import { Typography, Grid, Popover, IconButton } from '@mui/material';
+import { Typography, Grid, Popover, IconButton, MenuItem , Box, Divider} from '@mui/material';
 import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
+import MenuPopover from '../../components/menu-popover';
 
 ViewFormField.propTypes = {
   heading: PropTypes.string,
@@ -17,8 +18,8 @@ ViewFormField.propTypes = {
   sm: PropTypes.number,
   isActive: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
-  varified: PropTypes.bool,
-  varifiedBy: PropTypes.array,
+  verified: PropTypes.bool,
+  verifiedBy: PropTypes.array,
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
 };
@@ -55,8 +56,8 @@ export default function ViewFormField({
   sm,
   isActive,
   customerVerificationCount,
-  varified,
-  varifiedBy,
+  verified,
+  verifiedBy,
   customerAccess,
   documentIsActive,
 }) {
@@ -150,7 +151,7 @@ export default function ViewFormField({
             </Popover>
           </>
         )}
-        {varified > 0  && (
+        {verified > 0  && (
           <>
             <IconButton
               aria-label={customerVerificationCount > 0 ? 'Verified' : 'Not Verified'}
@@ -244,22 +245,7 @@ export default function ViewFormField({
                             }}
                           > 
                             <Typography  variant='body2' >{customerVerificationCount > 99 ? 99 : customerVerificationCount }</Typography>
-                            {/* <Popover
-                              id={id}
-                              open={open}
-                              anchorEl={verifiedAnchorEl}
-                              onClose={handleVerifiedPopoverClose}
-                              anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
-                              }}
-                              sx={{ marginTop: '.5rem'}}
-                            >
-                              <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
-                            </Popover> */}
                           </IconButton>}
-            
-            
           </>
         )}
         {documentIsActive !== undefined && (
@@ -368,6 +354,34 @@ export default function ViewFormField({
         {numberParam || ''}
         &nbsp;
       </Typography>
+      {/* <MenuPopover
+        open={handleVerifiedPopover}
+        // onClose={handleVerifiedPopoverClose}
+        arrow="right-top"
+        //sx={{ width: 140 }}
+      >
+        <MenuItem  sx={{ color: 'error.main' }}>
+          <Iconify icon="eva:trash-2-outline" />
+        </MenuItem>
+
+        <MenuItem>
+          <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+        </MenuItem>
+      </MenuPopover>  */}
+      <MenuPopover open={verifiedAnchorEl} onClose={handleVerifiedPopoverClose} sx={{ minWidth: 260 , p: 0}}>
+        <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
+          <Box sx={{ flexGrow: 1 }}>
+            <Typography variant="subtitle1">Verified By</Typography>
+            {verifiedBy?.map((user)=>(
+              user?.verifiedBy?.name && <>
+              <Divider sx={{ borderStyle: 'solid' }} />
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                {user?.verifiedBy?.name}
+              </Typography>
+              </>))}
+          </Box>
+        </Box>
+      </MenuPopover>
     </Grid>
   );
 }

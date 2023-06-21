@@ -104,9 +104,8 @@ export default function CustomerViewForm() {
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons
-              verificationCount={customer?.verifications?.length}
               isVerified={customer?.verifications?.find(
-                (verified) => verified.verifiedBy === userId
+                (verified) => verified?.verifiedBy === userId
               )}
               handleVerification={handleVerification}
               handleEdit={handleEdit}
@@ -117,7 +116,7 @@ export default function CustomerViewForm() {
                     <ViewFormField sm={12} isActive={defaultValues.isActive} verifiedBy={customer?.verifications}/>
                   </Tooltip>
                   <Tooltip title="Verified By">
-                    <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} varified varifiedBy={customer?.verifications} />
+                    <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} verified verifiedBy={customer?.verifications} />
                   </Tooltip>
                 </Grid>
             <Grid container>
