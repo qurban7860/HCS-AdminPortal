@@ -152,11 +152,11 @@ export default function ViewFormField({
               anchorEl={anchorEl}
               onClose={handlePopoverClose}
               anchorOrigin={{
-                vertical: 'center',
+                vertical: 'bottom',
                 horizontal: 'center',
               }}
               transformOrigin={{
-                vertical: 'bottom',
+                vertical: 'center',
                 horizontal: 'center',
               }}
               id="mouse-over-popover"

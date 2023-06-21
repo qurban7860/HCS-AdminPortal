@@ -55,7 +55,7 @@ export default function DocumentTypeListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, description , customerAccess , isActive, createdAt } = row;
+  const { name, docCategory, description , customerAccess , isActive, createdAt } = row;
   
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -85,7 +85,7 @@ export default function DocumentTypeListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" param={name} onClick={onViewRow} />
-        {/* <TableCell>{description}</TableCell> */}
+        <TableCell align="left" >{docCategory?.name}</TableCell>
         <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
         <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
         <TableCell align="right" >{fDate(createdAt)}</TableCell>

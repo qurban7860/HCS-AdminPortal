@@ -206,7 +206,7 @@ export default function DocumentList() {
             name3={
               <Stack>
                 {customerDocumentFormVisibility
-                  ? `Edit ${customerDocument?.name}`
+                  ? `Edit ${customerDocument?.displayName}`
                   : !expanded && documentName}
                 {!customerDocumentFormVisibility && !expanded && 'Documents'}
               </Stack>
