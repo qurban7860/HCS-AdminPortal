@@ -15,6 +15,7 @@ import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/pa
 import { addDocumentType, setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
 import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
+import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -33,19 +34,23 @@ export default function DocumentTypeAddForm({currentDocument}) {
   const { documentType, documentTypes } = useSelector((state) => state.documentType);
   const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
   const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
 
+  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
   const navigate = useNavigate()
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
  // a note can be archived.
   const AddDocumentTypeSchema = Yup.object().shape({
-    name: Yup.string().min(2).required("Name Field is required!"),
+    // category: Yup.string().min(2).required("Category is required!"),
+    name: Yup.string().min(2).required("Name is required!"),
     description: Yup.string().max(10000),
     isActive : Yup.boolean(),
     customerAccess: Yup.boolean(),
   });
   const defaultValues = useMemo(
     () => ({
+      category:'',
       name: '',
       description: '',
       isActive: true,
@@ -69,13 +74,17 @@ export default function DocumentTypeAddForm({currentDocument}) {
   } = methods;
 
   useEffect(() => {
+      dispatch(getActiveDocumentCategories())
       reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  },[dispatch]);
 
   const onSubmit = async (data) => {
     // console.log("Document Type : ", data);
       try{
+        if(documentCategoryVal){
+          data.docCategory= documentCategoryVal._id 
+        }
         const response = await dispatch(addDocumentType(data));
         // console.log("response : ",response);
         reset();
@@ -111,6 +120,30 @@ export default function DocumentTypeAddForm({currentDocument}) {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
             <Stack spacing={2}>
+            {/* <Grid item lg={6}> */}
+                      <Autocomplete
+                        // freeSolo
+                        value={documentCategoryVal || null}
+                        options={activeDocumentCategories}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) => `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentCategoryVal(newValue);
+                          } else {
+                            setDocumentCategoryVal('');
+                          }
+                        }}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>
+                            {option.name}
+                          </li>
+                        )}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Category" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    {/* </Grid> */}
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               <Grid display="flex">

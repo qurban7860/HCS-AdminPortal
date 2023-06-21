@@ -26,6 +26,7 @@ import FormProvider, {
   RHFSwitch
 } from '../../../components/hook-form';
 import { getDocumentTypes,  updateDocumentType } from '../../../redux/slices/document/documentType';
+import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
 import { Cover } from '../../components/Cover';
@@ -36,12 +37,19 @@ import { Cover } from '../../components/Cover';
 export default function DocumentTypeEditForm() {
 
   const { documentType } = useSelector((state) => state.documentType);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
+  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
 
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
+  useEffect(() => {
+    dispatch(getActiveDocumentCategories())
+    setDocumentCategoryVal(documentType.docCategory)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+},[dispatch]);
 
   const defaultValues = useMemo(
     () => ({
@@ -89,6 +97,9 @@ export default function DocumentTypeEditForm() {
 
   const onSubmit = async (data) => {
     try {
+      if(documentCategoryVal){
+        data.docCategory = documentCategoryVal._id
+      }
       await dispatch(updateDocumentType(documentType._id,data));
       dispatch(getDocumentTypes(documentType._id));
       navigate(PATH_DOCUMENT.documentType.view(documentType._id))
@@ -119,6 +130,28 @@ export default function DocumentTypeEditForm() {
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
                   <FormHeading heading='Edit Document Type'/>
+                  <Autocomplete
+                        // freeSolo
+                        value={documentCategoryVal || null}
+                        options={activeDocumentCategories}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) => `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentCategoryVal(newValue);
+                          } else {
+                            setDocumentCategoryVal('');
+                          }
+                        }}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>
+                            {option.name}
+                          </li>
+                        )}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Category" />}
+                        ChipProps={{ size: 'small' }}
+                      />
                   <RHFTextField name="name" label="Name" />
                   <RHFTextField name="description" label="Description" minRows={8} multiline />
                   <Grid display="flex">

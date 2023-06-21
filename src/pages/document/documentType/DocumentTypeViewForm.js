@@ -49,6 +49,7 @@ export default function DocumentTypeViewForm() {
         isActive:                 documentType?.isActive,
         customerAccess:           documentType?.customerAccess,
         name:                     documentType?.name,
+        category:                 documentType?.docCategory?.name,
         description:              documentType?.description || "",
         createdAt:                documentType?.createdAt || "",
         createdByFullName:        documentType?.createdBy?.name || "",
@@ -74,7 +75,7 @@ export default function DocumentTypeViewForm() {
             </Tooltip>
           </Grid>
         <Grid container>
-            
+            <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
             <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
             {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
