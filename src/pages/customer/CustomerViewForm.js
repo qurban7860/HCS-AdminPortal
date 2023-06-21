@@ -71,7 +71,13 @@ export default function CustomerViewForm() {
     }
   };
   const handleVerification = async () => {
-    await dispatch(setCustomerVerification(customer._id));
+    try {
+      await dispatch(setCustomerVerification(customer._id));
+      enqueueSnackbar("Customer Verified!");
+    }catch(error){
+      console.log(error)
+      enqueueSnackbar("Customer Verify failed!");
+    }
   };
 
   const defaultValues = useMemo(
@@ -119,20 +125,20 @@ export default function CustomerViewForm() {
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons
               isVerified={customer?.verifications?.find(
-                (verified) => verified?.verifiedBy === userId
+                (verified) => verified?.verifiedBy?._id === userId
               )}
               handleVerification={handleVerification}
               handleEdit={handleEdit}
               onDelete={onDelete}
             />
              <Grid display="inline-flex" >
-                  <Tooltip title="Active">
-                    <ViewFormField sm={12} isActive={defaultValues.isActive} verifiedBy={customer?.verifications}/>
-                  </Tooltip>
-                  <Tooltip title="Verified By">
-                    <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} verified verifiedBy={customer?.verifications} />
-                  </Tooltip>
-                </Grid>
+                <Tooltip title="Active">
+                  <ViewFormField sm={12} isActive={defaultValues.isActive} verifiedBy={customer?.verifications}/>
+                </Tooltip>
+                <Tooltip title="Verified By">
+                  <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} verified verifiedBy={customer?.verifications} />
+                </Tooltip>
+              </Grid>
             <Grid container>
                
               <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
