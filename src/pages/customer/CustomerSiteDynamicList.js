@@ -63,12 +63,12 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const toggleChecked = async () => {
     setChecked((value) => !value);
     if (checked || siteEditFormVisibility) {
-      dispatch(setSiteEditFormVisibility(false));
-      // enqueueSnackbar('Please close the form before opening a new one', {
-      //   variant: 'warning',
-      // });
-      dispatch(setSiteFormVisibility(true));
-      setIsExpanded(false);
+      // dispatch(setSiteEditFormVisibility(false));
+      enqueueSnackbar('Please close the form before opening a new one', {
+        variant: 'warning',
+      });
+      // dispatch(setSiteFormVisibility(true));
+      // setIsExpanded(false);
     } else {
       dispatch(setSiteFormVisibility(true));
       setCardActiveIndex(null);
