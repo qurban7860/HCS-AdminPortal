@@ -54,6 +54,7 @@ import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm
 import _mock from '../../../_mock';
 import SearchInputAndAddButton from '../../components/SearchInputAndAddButton';
 import AddButtonAboveAccordion from '../../components/AddButtonAboveAcoordion';
+import ListSwitch from '../../components/ListSwitch';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -259,7 +260,7 @@ export default function DocumentList() {
                 >
                   {index !== activeIndex ? (
                     <Grid container>
-                      <Grid item xs={12} sm={4} md={2.4}>
+                      <Grid item xs={12} sm={4} md={4.4}>
                         {document?.displayName || ''}
                       </Grid>
                       <Grid item xs={12} sm={4} md={2.4}>
@@ -268,14 +269,14 @@ export default function DocumentList() {
                       <Grid item xs={12} sm={4} md={2.4}>
                         {document?.docCategory?.name || ''}
                       </Grid>
-                      {/* <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
+                      <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={1.4}>
                     <ListSwitch isActive={document?.customerAccess} />
-                  </Grid> */}
+                  </Grid>
                       <Grid
                         item
                         xs={12}
                         display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
-                        md={2.4}
+                        md={1.4}
                       >
                         {fDate(document?.createdAt || '')}
                       </Grid>

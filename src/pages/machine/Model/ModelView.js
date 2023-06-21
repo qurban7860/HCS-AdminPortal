@@ -49,7 +49,7 @@ export default function ModelViewPage({editPage}) {
   const [currentComponent, setCurrentComponent] = useState(<ModelViewForm/>);
 
   const [machinemodelFlag, setMachinemodelFlag] = useState(true);
-  const {machinemodel} = useSelector((state) => state.machinemodel);
+  const {machineModel} = useSelector((state) => state.machinemodel);
 
   useLayoutEffect(() => {
     dispatch(setMachinemodelsEditFormVisibility(editFlag));
@@ -62,7 +62,7 @@ export default function ModelViewPage({editPage}) {
       setMachinemodelFlag(false);
       setCurrentComponent(<ModelViewForm/>);
     }
-  }, [editPage, machinemodelEditFormFlag, machinemodel]);
+  }, [editPage, machinemodelEditFormFlag, machineModel]);
 
 
   return (
@@ -76,8 +76,8 @@ export default function ModelViewPage({editPage}) {
           }}
         >
           <Cover
-            model={machinemodel?.name}
-            name={machinemodel?.name}
+            model={machineModel?.name}
+            name={machineModel?.name}
             setting="enable"
             backLink={PATH_MACHINE.machineModel.list}
           />

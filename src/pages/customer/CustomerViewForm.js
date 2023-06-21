@@ -51,6 +51,7 @@ export default function CustomerViewForm() {
       setIsExpanded(true);
     }
   };
+
   const onDelete = async () => {
     await dispatch(deleteCustomer(customer._id));
     navigate(PATH_DASHBOARD.customer.list);
@@ -94,7 +95,7 @@ export default function CustomerViewForm() {
           step={1}
           step2
           path={PATH_DASHBOARD.customer.root}
-          name="Customers"
+          name="Customer"
           path2={PATH_DASHBOARD.customer.view}
           name2={customer?.name}
         />

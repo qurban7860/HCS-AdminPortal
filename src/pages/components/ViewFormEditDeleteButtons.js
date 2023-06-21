@@ -98,6 +98,7 @@ export default function ViewFormEditDeleteButtons({
       setOpenVerificationConfirm(false);
     }
     if(dialogType === 'delete'){
+      reset();
       setOpenConfirm(false);
     }
     if(dialogType === 'transfer'){
@@ -176,7 +177,7 @@ export default function ViewFormEditDeleteButtons({
                           > <Typography  variant='body2' >{verificationCount > 99 ? 99 : verificationCount }</Typography>
                           </IconButton>}
               <Tooltip
-                title="Machine Verification"
+                title="Verification"
                 placement="top"
                 disableFocusListener
                 classes={{ tooltip: classes.tooltip }}

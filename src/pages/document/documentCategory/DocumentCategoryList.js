@@ -40,6 +40,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentCategoryListTableRow from './DocumentCategoryListTableRow';
 import DocumentCategoryListTableToolbar from './DocumentCategoryListTableToolbar';
+import BreadcrumbsProducer from '../../components/BreadcrumbsProducer';
 import documentName, { deleteDocumentCategory, getDocumentCategories  } from '../../../redux/slices/document/documentCategory';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
@@ -48,7 +49,7 @@ import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Document Name', align: 'left' },
+  { id: 'name', label: 'Name', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
@@ -205,7 +206,6 @@ export default function DocumentCategoryList() {
             icon="ph:users-light"
           />
         </Card>
-
         <Card sx={{ mt: 3 }}>
           <DocumentCategoryListTableToolbar
             filterName={filterName}
