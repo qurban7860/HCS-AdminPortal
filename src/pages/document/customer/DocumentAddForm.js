@@ -17,7 +17,7 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
-import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories, resetDocumentCategories} from '../../../redux/slices/document/documentCategory';
 import { updateDocumentVersion, addDocumentVersion } from '../../../redux/slices/document/documentVersion';
 
@@ -88,7 +88,8 @@ export default function DocumentAddForm({currentDocument}) {
     setCustomerAccessVal(false)
     setReadOnlyVal(false)
     setDescriptionVal("")
-    dispatch(getActiveDocumentCategories())
+    dispatch(resetActiveDocumentTypes());
+    // dispatch(getActiveDocumentCategories())
     // dispatch(getActiveDocumentTypes())
   },[dispatch,customer])
   console.log("getActiveDocumentCategories")
@@ -96,7 +97,7 @@ export default function DocumentAddForm({currentDocument}) {
 useEffect(()=>{
   if(documentCategoryVal?._id){
     console.log("getActiveDocumentCategories")
-    dispatch(getActiveDocumentCategories())
+    dispatch(getActiveDocumentTypesWithCategory(documentCategoryVal?._id))
   }
 },[documentCategoryVal, dispatch])
 
@@ -360,11 +361,12 @@ useEffect(()=>{
                             setDescriptionVal('');
                             setCustomerAccessVal(false);
                             setReadOnlyVal(false)
+                            dispatch(resetActiveDocumentTypes());
                           }
                         }}
                         renderOption={(props, option) => (<li  {...props} key={option._id}>{`${option.displayName ? option.displayName : ""}`}</li>)}
                         id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Documents" />}
+                        renderInput={(params) => <TextField {...params} required label="Select Document" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
@@ -428,29 +430,6 @@ useEffect(()=>{
                         // freeSolo
                         disabled={readOnlyVal}
                         // readOnly={readOnlyVal}
-                        value={documentTypeVal || null}
-                        options={activeDocumentTypes}
-                        // isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setDocumentTypeVal(newValue);
-                          } else {
-                            setDocumentTypeVal('');
-                            dispatchEvent(resetDocumentCategories())
-                          }
-                        }}
-                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <Autocomplete
-                        // freeSolo
-                        disabled={readOnlyVal}
-                        // readOnly={readOnlyVal}
                         value={documentCategoryVal || null}
                         options={activeDocumentCategories}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -460,6 +439,8 @@ useEffect(()=>{
                             setDocumentCategoryVal(newValue);
                           } else {
                             setDocumentCategoryVal('');
+                            dispatch(resetActiveDocumentTypes());
+                            setDocumentTypeVal('');
                           }
                         }}
                         renderOption={(props, option) => (
@@ -469,6 +450,28 @@ useEffect(()=>{
                         )}
                         id="controllable-states-demo"
                         renderInput={(params) => <TextField {...params} required label="Document Category" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>
+                    <Grid item lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
+                        value={documentTypeVal || null}
+                        options={activeDocumentTypes}
+                        // isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentTypeVal(newValue);
+                          } else {
+                            setDocumentTypeVal('');
+                          }
+                        }}
+                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
