@@ -18,6 +18,7 @@ ViewFormField.propTypes = {
   secondObjectParam: PropTypes.object,
   sm: PropTypes.number,
   isActive: PropTypes.bool,
+  deleteDisabled: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
   machineVerificationCount: PropTypes.number,
   verified: PropTypes.bool,
@@ -58,6 +59,7 @@ export default function ViewFormField({
   numberParam,
   sm,
   isActive,
+  deleteDisabled,
   customerVerificationCount,
   machineVerificationCount,
   verified,
@@ -99,7 +101,6 @@ useEffect(()=>{
 
   const isPopoverOpen = Boolean(anchorEl);
   const { isMobile } = useResponsive();
-
   return (
     <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>
@@ -165,6 +166,55 @@ useEffect(()=>{
             </Popover>
           </>
         )}
+        {deleteDisabled !== undefined && (
+          <>
+            <IconButton
+              aria-label={deleteDisabled ? 'Delete Disabled' : 'Delete Enabled'}
+              // onClick={handlePopoverOpen}
+              onMouseEnter={handlePopoverOpen}
+              onMouseLeave={handlePopoverClose}
+            >
+              <Iconify
+                heading={deleteDisabled ? 'Delete Disabled' : 'Delete Enabled'}
+                icon={deleteDisabled ? 'mdi:delete-forever' : 'mdi:delete'}
+                style={{ color: deleteDisabled ? 'green' : 'red' }}
+                width="30px"
+              />
+            </IconButton>
+            <Popover
+              open={isPopoverOpen}
+              anchorEl={anchorEl}
+              onClose={handlePopoverClose}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+              }}
+              transformOrigin={{
+                vertical: 'center',
+                horizontal: 'center',
+              }}
+              id="mouse-over-popover"
+              sx={{
+                marginTop: '.5rem',
+                '& .MuiPaper-root': {
+                  bgcolor: 'transparent',
+                  boxShadow: 'none',
+                },
+                boxShadow: 'none',
+                pointerEvents: 'none',
+              }}
+            >
+              <Typography
+                variant="overline"
+                classes={{ root: classes.activeHover }}
+                color={deleteDisabled ? 'green' : 'red'}
+              >
+                {deleteDisabled ? 'Delete Disabled' : 'Delete Enabled'}
+              </Typography>
+            </Popover>
+          </>
+        )}
+
         {(customerVerificationCount || machineVerificationCount > 0 ) && verified > 0  && (
           <>
             <IconButton

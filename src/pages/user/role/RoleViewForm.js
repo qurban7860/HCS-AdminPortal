@@ -34,13 +34,13 @@ export default function RoleViewForm() {
       enqueueSnackbar('Role delete Successfully!');
 
     }catch(error){
-      // if(error.Message){
-      //   enqueueSnackbar(error.Message,{ variant: `error` })
-      // }else if(error.message){
-      //   enqueueSnackbar(error.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
+      if(error.Message){
+        enqueueSnackbar(error.Message,{ variant: `error` })
+      }else if(error.message){
+        enqueueSnackbar(error.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      }
       enqueueSnackbar("Role delete failed!",{ variant: `error` })
       console.log("Error:", error);
     }
@@ -54,7 +54,7 @@ export default function RoleViewForm() {
     () => (
       {
         isActive:                 role?.isActive,
-        disableDelete:                role?.disableDelete || false,
+        disableDelete:            role?.disableDelete || false,
         customerAccess:           role?.customerAccess,
         name:                     role?.name,
         roleType:                 role?.roleType || "",
@@ -78,9 +78,14 @@ export default function RoleViewForm() {
           handleEdit={handleEdit}  
           onDelete={onDelete}
         />
-            <Tooltip>
-              <ViewFormField  isActive={defaultValues.isActive}  />
-            </Tooltip>
+        <Grid display="inline-flex">
+          <Tooltip>
+            <ViewFormField  isActive={defaultValues.isActive}/>
+          </Tooltip>
+          <Tooltip>
+            <ViewFormField  deleteDisabled={defaultValues.disableDelete}  />
+          </Tooltip>
+        </Grid>
         <Grid container>
             <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
             <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
