@@ -89,6 +89,14 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+
+    // RESET Active DOCUMENT NAME
+    resetActiveDocumentTypes(state){
+      state.activeDocumentTypes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
   },
 });
 
@@ -101,6 +109,7 @@ export const {
   setDocumentTypeEditFormVisibility,
   resetDocumentType,
   resetDocumentTypes,
+  resetActiveDocumentTypes,
   setResponseMessage,
 } = slice.actions;
 
@@ -202,7 +211,7 @@ export function getActiveDocumentTypes() {
 
 // -----------------------------------Get Active Document Types of Categories-----------------------------------
 
-export function getActiveDocumentTypesCategories(typeCategory) {
+export function getActiveDocumentTypesWithCategory(typeCategory) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

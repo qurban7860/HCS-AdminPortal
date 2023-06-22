@@ -33,8 +33,8 @@ import {Cover} from '../../../components/Cover';
 // slice
 import { updateDocument } from '../../../../redux/slices/document/document';
 
-import { getDocumentCategories  } from '../../../../redux/slices/document/documentCategory';
-import { getDocumentTypes } from '../../../../redux/slices/document/documentType';
+import { getDocumentCategories, getActiveDocumentCategories  } from '../../../../redux/slices/document/documentCategory';
+import { getDocumentTypes, getActiveDocumentTypes , getActiveDocumentTypesWithCategory} from '../../../../redux/slices/document/documentType';
 import { getMachines} from '../../../../redux/slices/products/machine';
 import { getCustomers } from '../../../../redux/slices/customer/customer';
 import { getContacts } from '../../../../redux/slices/customer/contact';
@@ -45,8 +45,8 @@ import { getSites } from '../../../../redux/slices/customer/site';
 export default function DocumentEditForm() {
 
   const { document, documentHistory } = useSelector((state) => state.document);
-  const { documentTypes } = useSelector((state) => state.documentType);
-  const { documentCategories } = useSelector((state) => state.documentCategory);
+  const { activeDocumentTypes } = useSelector((state) => state.documentType);
+  const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer); 
   const { contacts } = useSelector((state) => state.contact); 
   const { sites } = useSelector((state) => state.site); 
@@ -76,8 +76,8 @@ useEffect(()=>{
   setDocumentCategoryVal(documentHistory?.docCategory)
   setDocumentTypeVal(documentHistory?.docType)
   setDescriptionVal(documentHistory?.description)
-  // dispatch(getDocumentCategories())
-  dispatch(getDocumentTypes())
+  // dispatch(getActiveDocumentCategories())
+  // dispatch(getActiveDocumentTypes())
 },[dispatch,documentHistory])
 
   const EditCustomerDocumentSchema = Yup.object().shape({
@@ -205,19 +205,43 @@ useEffect(()=>{
               <FormHeading heading='Edit Document'/>
               <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
-
-              
-
+            <Autocomplete
+                // freeSolo
+                disabled
+                value={documentCategoryVal || null}
+                options={activeDocumentCategories}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) => {
+                  if(newValue){
+                    setDocumentCategoryVal(newValue);
+                    // dispatch(getActiveDocumentTypesWithCategory(newValue?._id))
+                    // setDocumentTypeVal("");
+                  }
+                  else{  
+                    setDocumentCategoryVal("");
+                    // setDocumentTypeVal("");
+                    // dispatch(getActiveDocumentTypes())
+                  }
+                }}
+                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                id="controllable-states-demo"
+                renderInput={(params) => <TextField {...params} required label="Document Category" />}
+                ChipProps={{ size: 'small' }}
+              />
               <Autocomplete
                 // freeSolo
-                // disabled
+                disabled
                 value={documentTypeVal || null}
-                options={documentTypes}
+                options={activeDocumentTypes}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentTypeVal(newValue);
+                    // if(!documentCategoryVal){
+                    //   setDocumentCategoryVal(newValue?.docCategory);
+                    // }
                   }
                   else{  
                     setDocumentTypeVal("");
@@ -228,28 +252,6 @@ useEffect(()=>{
                 renderInput={(params) => <TextField {...params} required label="Document Type" />}
                 ChipProps={{ size: 'small' }}
               />
-              
-              <Autocomplete
-                // freeSolo
-                disabled
-                value={documentCategoryVal || null}
-                options={documentCategories}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setDocumentCategoryVal(newValue);
-                  }
-                  else{  
-                    setDocumentCategoryVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} required label="Document Category" />}
-                ChipProps={{ size: 'small' }}
-              />
-
               </Box>
               <RHFTextField value={descriptionVal} name="description" label="Description" onChange={handleChangeDescription} minRows={3} multiline />
               <Grid container lg={12} >
