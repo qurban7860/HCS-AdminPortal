@@ -17,8 +17,8 @@ import ViewFormSWitch from '../../components/ViewFormSwitch';
 import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import { addCustomerDocument, updateCustomerDocument, getCustomerDocuments, setCustomerDocumentFormVisibility  } from '../../../redux/slices/document/customerDocument';
-import { getActiveDocumentTypes , setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
-import { getActiveDocumentCategories, setDocumentCategoryFormVisibility, } from '../../../redux/slices/document/documentCategory';
+import { getActiveDocumentTypes } from '../../../redux/slices/document/documentType';
+import { getActiveDocumentCategories, resetDocumentCategories} from '../../../redux/slices/document/documentCategory';
 import { updateDocumentVersion, addDocumentVersion } from '../../../redux/slices/document/documentVersion';
 
 import { getCustomers } from '../../../redux/slices/customer/customer';
@@ -42,7 +42,7 @@ DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
 export default function DocumentAddForm({currentDocument}) {
-  const { activeDocumentTypes } = useSelector((state) => state.documentType);
+  const { activeDocumentTypes, documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customerDocuments } = useSelector((state) => state.customerDocument);
   const { machines } = useSelector((state) => state.machine);
@@ -73,20 +73,6 @@ export default function DocumentAddForm({currentDocument}) {
   const allowedExtension = ["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
   const navigate = useNavigate();
 
-  // let documentAvailable
-  // if(documentNames && documentNames.length){
-  //   documentAvailable =  true
-  // }else{
-  //   documentAvailable =  true
-  // }
-
-  // let fileCategory
-  // if(fileCategories && fileCategories.length){
-  //   fileCategory =  true
-  // }else{
-  //   fileCategory =  true
-  // }
-
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -102,9 +88,17 @@ export default function DocumentAddForm({currentDocument}) {
     setCustomerAccessVal(false)
     setReadOnlyVal(false)
     setDescriptionVal("")
-    dispatch(getActiveDocumentTypes())
     dispatch(getActiveDocumentCategories())
+    // dispatch(getActiveDocumentTypes())
   },[dispatch,customer])
+  console.log("getActiveDocumentCategories")
+
+useEffect(()=>{
+  if(documentCategoryVal?._id){
+    console.log("getActiveDocumentCategories")
+    dispatch(getActiveDocumentCategories())
+  }
+},[documentCategoryVal, dispatch])
 
   const AddCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
@@ -219,15 +213,6 @@ export default function DocumentAddForm({currentDocument}) {
     dispatch(setCustomerDocumentFormVisibility(false));
   };
 
-  const togleCategoryPage = ()=>{
-    dispatch(setDocumentCategoryFormVisibility(true))
-    dispatch(setCustomerDocumentFormVisibility(false));
-  }
-
-  const togleDocumentNamePage = ()=>{
-    dispatch(setDocumentTypeFormVisibility(true))
-    dispatch(setCustomerDocumentFormVisibility(false));
-  }
 
   // const handleDrop = useCallback(
   //   (acceptedFiles) => {
@@ -452,6 +437,7 @@ export default function DocumentAddForm({currentDocument}) {
                             setDocumentTypeVal(newValue);
                           } else {
                             setDocumentTypeVal('');
+                            dispatchEvent(resetDocumentCategories())
                           }
                         }}
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}

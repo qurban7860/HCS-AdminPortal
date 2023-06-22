@@ -123,6 +123,7 @@ export function addDocumentType(params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -146,6 +147,7 @@ export function updateDocumentType(Id,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -168,6 +170,7 @@ export function getDocumentTypes() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -192,6 +195,32 @@ export function getActiveDocumentTypes() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// -----------------------------------Get Active Document Types of Categories-----------------------------------
+
+export function getActiveDocumentTypesCategories(typeCategory) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/documentType/` , 
+      {
+        params: {
+          isArchived: false,
+          isActive: true,
+          docCategory:typeCategory
+        }
+      }
+      );
+      dispatch(slice.actions.getActiveDocumentTypesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Document Types loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -208,6 +237,7 @@ export function getDocumentType(Id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

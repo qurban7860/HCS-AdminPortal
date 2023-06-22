@@ -132,6 +132,7 @@ export function addDocumentFile(documentId,versionId,params) {
   } catch (error) {
     console.log(error);
     dispatch(slice.actions.hasError(error.Message));
+    throw error;
   }
 };
 }
@@ -154,6 +155,7 @@ return async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(slice.actions.hasError(error.Message));
+    throw error;
   }
 };
 }
@@ -176,6 +178,7 @@ return async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(slice.actions.hasError(error.Message));
+    throw error;
   }
 };
 }
@@ -192,6 +195,7 @@ return async (dispatch) => {
   } catch (error) {
     console.error(error);
     dispatch(slice.actions.hasError(error.Message));
+    throw error;
   }
 };
 }

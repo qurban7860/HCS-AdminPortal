@@ -122,6 +122,7 @@ export function addDocumentCategory(params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -144,6 +145,7 @@ export function updateDocumentCategory(Id,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -166,6 +168,7 @@ export function getDocumentCategories() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -182,6 +185,7 @@ export function getDocumentCategory(Id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -205,6 +209,7 @@ export function getActiveDocumentCategories() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

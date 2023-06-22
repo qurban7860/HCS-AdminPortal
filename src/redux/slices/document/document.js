@@ -185,6 +185,7 @@ export function addDocument(customerId , machineId , params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -232,6 +233,7 @@ export function updateDocument(documentId , params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -254,6 +256,7 @@ export function getDocuments() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -281,6 +284,7 @@ export function getCustomerDocuments(customerId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -307,6 +311,7 @@ export function getMachineModelDocuments(machineModelId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -335,6 +340,7 @@ export function getCustomerSiteDocuments(customerSiteId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -361,6 +367,7 @@ export function getMachineDocuments(machineId, machineModelId) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -384,6 +391,7 @@ export function getActiveDocuments() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 } 
@@ -400,6 +408,7 @@ export function getDocument(documentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -420,6 +429,7 @@ export function getDocumentHistory(documentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

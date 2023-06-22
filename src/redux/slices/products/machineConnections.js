@@ -45,7 +45,6 @@ const slice = createSlice({
         state.machineConnections = action.payload;
         state.initial = true;
       },
-
   },
 });
 
@@ -62,14 +61,16 @@ export const {
 
 export function getMachineConnections() {
   return async (dispatch) => {
+    try {
     dispatch(slice.actions.startLoading());
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/getDecoilerProducts/`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineConnectionsSuccess(response.data));
       }
-    return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
-
-
-

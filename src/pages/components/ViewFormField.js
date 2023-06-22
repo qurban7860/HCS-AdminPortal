@@ -7,6 +7,7 @@ import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
 import MenuPopover from '../../components/menu-popover';
+import { fDate } from '../../utils/formatTime';
 
 ViewFormField.propTypes = {
   heading: PropTypes.string,
@@ -164,7 +165,7 @@ useEffect(()=>{
             </Popover>
           </>
         )}
-        {verified > 0  && (
+        {(customerVerificationCount || machineVerificationCount > 0 ) && verified > 0  && (
           <>
             <IconButton
               aria-label={customerVerificationCount || machineVerificationCount > 0 ? 'Verified' : 'Not Verified'}
@@ -174,7 +175,7 @@ useEffect(()=>{
             >
               <Iconify
                 heading={customerVerificationCount  || machineVerificationCount > 0 ? 'Verified' : 'Not Verified'}
-                icon={customerVerificationCount && "bi:person-check" || machineVerificationCount && "carbon:settings-check"}
+                icon="ic:round-verified-user"
                 style={{ color: customerVerificationCount || machineVerificationCount > 0 ? 'green' : 'red' }}
                 width="30px"
               />
@@ -248,8 +249,8 @@ useEffect(()=>{
                             sx={{
                               width: '24px', 
                               height:'24px',
-                              bottom: 20,
-                              left: -20,
+                              bottom: 17,
+                              left: -24,
                               // zIndex: 9,
                               // position: 'absolute',
                               color: (themee) => alpha(themee.palette.common.white, 0.8),
@@ -383,16 +384,17 @@ useEffect(()=>{
           <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
         </MenuItem>
       </MenuPopover>  */}
-      <MenuPopover open={verifiedAnchorEl} onClose={handleVerifiedPopoverClose} sx={{ minWidth: 260 , p: 0}}>
+      <MenuPopover open={verifiedAnchorEl} onClose={handleVerifiedPopoverClose} sx={{ p: 0}}>
         <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
           <Box sx={{ flexGrow: 1 }}>
             <Typography variant="subtitle1">Verified By</Typography>
-            {verifiedBy?.map((user)=>(
-              user?.verifiedBy?.name && <>
+            {verifiedBy?.map((user)=>( 
+              <>
               <Divider sx={{ borderStyle: 'solid' }} />
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {user?.verifiedBy?.name}
-              </Typography>
+              <Grid display="flex" justifyContent="space-between">
+                <Typography variant="body2" sx={{ color: 'text.secondary', mr:3 }}>{user?.verifiedBy?.name || ''}</Typography>
+                <Typography variant="body2" sx={{ color: 'text.secondary' }}>{fDate(user?.verifiedDate) || ''}</Typography>
+              </Grid>
               </>))}
           </Box>
         </Box>

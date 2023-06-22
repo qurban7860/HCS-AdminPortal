@@ -58,16 +58,9 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       dispatch(getSites(customer._id));
       enqueueSnackbar("Site deleted Successfully!");
       setIsExpanded(false);
-    } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
+    } catch (error) {
+        console.log(error)
       enqueueSnackbar("Sites delete failed!",{ variant: `error` });
-      console.log("Error:", err);
     }
 
   };
@@ -140,11 +133,9 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-
         <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
         <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
-
         <Grid container>
           <ViewFormField
             sm={6}

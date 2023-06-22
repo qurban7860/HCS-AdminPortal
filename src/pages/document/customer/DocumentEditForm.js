@@ -214,8 +214,6 @@ useEffect(()=>{
               <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
             <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
 
-              
-
               <Autocomplete
                 // freeSolo
                 // disabled
@@ -226,9 +224,11 @@ useEffect(()=>{
                 onChange={(event, newValue) => {
                   if(newValue){
                     setDocumentTypeVal(newValue);
+                    setDocumentCategoryVal(newValue?.docCategory);
                   }
                   else{  
                     setDocumentTypeVal("");
+                    setDocumentCategoryVal("");
                   }
                 }}
                 renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}

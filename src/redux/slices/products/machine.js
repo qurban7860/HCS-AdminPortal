@@ -168,6 +168,7 @@ export function getMachines() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -191,6 +192,7 @@ export function getActiveMachines() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -255,6 +257,7 @@ export function getCustomerMachines(customerId) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -270,6 +273,7 @@ export function getMachine(id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -367,6 +371,7 @@ export function addMachine(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
     };
 
@@ -409,10 +414,10 @@ export function updateMachine(params) {
       dispatch(getMachine(params.id));
       dispatch(slice.actions.setMachineEditFormVisibility(false));
       // this.updateCustomerSuccess(response);
-
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 

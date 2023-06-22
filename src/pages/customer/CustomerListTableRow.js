@@ -22,7 +22,7 @@ import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Label from '../../components/label';
-import LinkTableCell from '../components/LinkTableCell';
+import LinkTableCellWithIcon from '../components/LinkTableCellWithIcon';
 import { useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -55,7 +55,7 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isActive, type, createdAt } = row;
+  const { name, tradingName, mainSite, isActive, type, createdAt , verifications } = row;
   const address = [];
   if (mainSite?.address?.city) {
     address.push(mainSite?.address?.city);
@@ -66,6 +66,8 @@ export default function CustomerListTableRow({
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
+
+  const userId = localStorage.getItem('userId');
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -97,7 +99,9 @@ export default function CustomerListTableRow({
             ''
           )}
         </TableCell>
-        <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={name} isVerified={verifications?.find(
+                (verified) => verified?.verifiedBy === userId
+              )}/>
         <TableCell>{tradingName}</TableCell>
         <TableCell>
           {Object.values(address ?? {})

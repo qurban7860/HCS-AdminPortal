@@ -94,6 +94,7 @@ export default function ViewFormEditDeleteButtons({
   };
   const handleCloseConfirm = (dialogType) => {
     if(dialogType === 'Verification'){
+      reset();
       setOpenVerificationConfirm(false);
     }
     if(dialogType === 'delete'){
@@ -104,8 +105,9 @@ export default function ViewFormEditDeleteButtons({
       dispatch(setTransferDialogBoxVisibility(false));
     }
   };
-  const handleClosePopover = () => {
-    setOpenPopover(null);
+
+  const handleVerificationConfirm = () => {
+    handleVerification(); handleCloseConfirm('Verification')
   };
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -147,7 +149,7 @@ export default function ViewFormEditDeleteButtons({
           },
         }}
       >
-          {handleVerification  ? (
+          {handleVerification && !isVerified ? (
           <ThemeProvider theme={theme} >
             <Button
               onClick={() => {
@@ -158,7 +160,7 @@ export default function ViewFormEditDeleteButtons({
               sx={{ position: 'relative', zIndex: '1' }}
             >
               <Tooltip
-                title="Verification"
+                title={isVerified ? "Verified" : "Verify"}
                 placement="top"
                 disableFocusListener
                 classes={{ tooltip: classes.tooltip }}
@@ -312,9 +314,16 @@ export default function ViewFormEditDeleteButtons({
         title="Verification"
         content="Are you sure you want to Verify Machine Informaton?"
         action={
-          <Button variant="contained" color="primary" onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}>
+          <LoadingButton
+          variant="contained" 
+          color="primary" 
+          loading={(isSubmitSuccessful || isSubmitting) && isLoading}
+          disabled={isSubmitting}
+          onClick={handleSubmit(handleVerificationConfirm)}
+          // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
+          >
             Verify
-          </Button>
+          </LoadingButton>
         }
       />
       <ConfirmDialog

@@ -76,7 +76,7 @@ export default function CustomerViewForm() {
       enqueueSnackbar("Customer Verified!");
     }catch(error){
       console.log(error)
-      enqueueSnackbar("Customer Verify failed!");
+      enqueueSnackbar("Customer Verify failed!",{variant:"error"});
     }
   };
 

@@ -184,8 +184,8 @@ export function addSite(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
+        throw error;
       }
-
   };
 }
 
@@ -273,6 +273,7 @@ export function getSites(customerID) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -299,6 +300,7 @@ export function getActiveSites(customerID) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -328,6 +330,7 @@ export function searchSites() {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -344,6 +347,7 @@ export function getSite(customerID, id) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
