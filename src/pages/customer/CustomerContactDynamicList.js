@@ -45,14 +45,14 @@ export default function CustomerContactList(currentContact = null) {
   const toggleChecked = () => {
     setChecked((value) => !value);
     if (checked || contactEditFormVisibility) {
-      dispatch(setContactEditFormVisibility(false));
-      // enqueueSnackbar('Please close the form before opening a new one', {
-        //   variant: 'warning',
-        // });
-      // dispatch(setContactFormVisibility(!formVisibility));
-      dispatch(setContactFormVisibility(true));
-      setCardActiveIndex(null);
-      setIsExpanded(false);
+      // dispatch(setContactEditFormVisibility(false));
+      enqueueSnackbar('Please close the form before opening a new one', {
+          variant: 'warning',
+        });
+      // dispatch(setContactFormVisibility(!formVisibility));   
+      // dispatch(setContactFormVisibility(true));
+      // setCardActiveIndex(null);
+      // setIsExpanded(false);
     } else {
       dispatch(setContactFormVisibility(true));
       setCardActiveIndex(null);

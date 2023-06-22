@@ -210,6 +210,7 @@ export function setMachineVerification(Id, verificationValue) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

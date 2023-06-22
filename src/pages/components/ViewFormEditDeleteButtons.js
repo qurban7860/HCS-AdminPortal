@@ -126,7 +126,6 @@ export default function ViewFormEditDeleteButtons({
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
-
   return (
     <>
       <Stack

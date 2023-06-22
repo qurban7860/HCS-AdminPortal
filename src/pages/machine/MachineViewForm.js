@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Divider, Switch, Card, Grid, Typography, Link, Dialog } from '@mui/material';
+import { Divider, Switch, Card, Grid, Typography, Link, Dialog, Tooltip } from '@mui/material';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
 // slices
@@ -104,8 +104,14 @@ export default function MachineViewForm() {
     }
   };
   const handleVerification = async () => {
-    await dispatch(setMachineVerification(machine._id, machine?.isVerified));
-    dispatch(getMachine(machine._id));
+    try {
+      await dispatch(setMachineVerification(machine._id, machine?.isVerified));
+      dispatch(getMachine(machine._id));
+      enqueueSnackbar("Machine Verified successfully!")
+    }catch(error) {
+      console.log(error);
+      enqueueSnackbar("Machine Verification failed!",{variant:"error"})
+    }
   };
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openInstallationSite, setOpenInstallationSite] = useState(false);
@@ -166,15 +172,23 @@ export default function MachineViewForm() {
         <ViewFormEditDeleteButtons
           sx={{ pt: 5 }}
           verificationCount={machine?.verifications?.length}
-          isVerified={machine?.verifications?.find((verified) => verified.verifiedBy === userId)}
+          isVerified={machine?.verifications?.find((verified) => verified.verifiedBy?._id === userId)}
           handleVerification={handleVerification}
           disableTransferButton={disableTransferButton}
           handleEdit={handleEdit}
           onDelete={onDelete}
           handleTransfer={handleTransfer}
         />
-        <ViewFormField sm={12} isActive={defaultValues.isActive} />
+         
       </Grid>
+      <Grid display="inline-flex" >
+            <Tooltip title="Active">
+              <ViewFormField sm={12} isActive={defaultValues.isActive} />
+            </Tooltip>
+            <Tooltip title="Verified By">
+              <ViewFormField sm={12} machineVerificationCount={machine?.verifications?.length} verified machineVerifiedBy={machine?.verifications} />
+            </Tooltip>
+          </Grid>
       <Grid container>
         <FormLabel content="Key Details" />
         <Grid container>
