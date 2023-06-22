@@ -52,8 +52,15 @@ export default function RoleEditForm() {
   const navigate = useNavigate();
 
   const EditRoleSchema = Yup.object().shape({
-    name: Yup.string().min(2).required("Name Field is required!"),
-    description: Yup.string().max(10000).required("Description is required!"),
+    name: Yup.string().min(2).max(50).required("Name Field is required!"),
+    description: Yup.string().max(10000),
+    /* eslint-disable */
+    roleTypes: Yup.string().when('roleType', {
+      is: (roleType) => roleType !== '',      
+      then: Yup.string().required("Role type is required!"),
+      otherwise: Yup.string().notRequired(),
+    }),
+    /* eslint-enable */
     allModules: Yup.boolean(),
     allWriteAccess: Yup.boolean(),
     isActive: Yup.boolean(),
@@ -85,6 +92,7 @@ export default function RoleEditForm() {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    trigger
   } = methods;
 
   const values = watch();
@@ -93,12 +101,19 @@ export default function RoleEditForm() {
   const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);
     if (filteredRole) {
       setRoleType(filteredRole);
+      setValue("roleTypes", filteredRole?.name);
     }
-  }, [role, roleTypesArray]);
+  }, [role, roleTypesArray, setValue]);
 
   const toggleCancel = () => {
     navigate(PATH_DASHBOARD.role.view(role._id))
 
+  };
+
+  const handleRoleTypeChange = (event, newValue) => {
+    setRoleType(newValue);
+    setValue("roleTypes", newValue?.name || "");
+    trigger("roleTypes");
   };
 
   const onSubmit = async (data) => {
@@ -116,7 +131,6 @@ export default function RoleEditForm() {
       console.error(err.message);
     }
   };
-
 
   return (
     <Container maxWidth={false}>
@@ -142,13 +156,7 @@ export default function RoleEditForm() {
                   options={roleTypesArray}
                   getOptionLabel={(option) => option.name}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setRoleType(newValue);
-                    } else { 
-                      setRoleType("");
-                    }
-                  }}
+                  onChange={handleRoleTypeChange}
                   id="controllable-states-demo"
                   renderOption={(props, option) => (
                     <li {...props} key={option.key}>
@@ -156,7 +164,7 @@ export default function RoleEditForm() {
                     </li>
                   )}
                   renderInput={(params) => (
-                    <TextField {...params} name='roleTypes' label="Role Types" required/>
+                    <RHFTextField {...params} name='roleTypes' label="Role Types"/>
                   )}
                   ChipProps={{ size: 'small' }}
                 >
