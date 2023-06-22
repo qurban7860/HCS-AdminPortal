@@ -65,6 +65,7 @@ export default function AccountNotifications() {
       enqueueSnackbar('Update success!');
       // console.log('DATA', data);
     } catch (error) {
+      enqueueSnackbar("Update Failed!", { variant: `error` })
       console.error(error);
     }
   };

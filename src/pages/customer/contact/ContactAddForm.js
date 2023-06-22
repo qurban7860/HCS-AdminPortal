@@ -136,7 +136,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       await dispatch(addContact(data));
       reset();
     } catch (error) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
     }
   };

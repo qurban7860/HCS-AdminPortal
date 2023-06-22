@@ -45,7 +45,6 @@ import ModelListTableToolbar from './ModelListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
-import { getWithNoMsg } from '../../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -114,8 +113,7 @@ export default function ModelList() {
 
   useLayoutEffect( () => {
     // console.log('Testing done')
-    getWithNoMsg(dispatch, getMachineModels(), enqueueSnackbar)
-    //  dispatch(getMachineModels());
+     dispatch(getMachineModels());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -202,10 +200,12 @@ export default function ModelList() {
   };
 
   const handleViewRow = async (id) => {
-    // console.log(id)
-    await getWithNoMsg(dispatch, getMachineModel(id), enqueueSnackbar)
-    // await  dispatch(getMachineModel(id));
+    try {
+    await  dispatch(getMachineModel(id));
     navigate(PATH_MACHINE.machineModel.view(id));
+    }catch (e) {
+      enqueueSnackbar("Couldn't find machine model!",{variant:"error"})
+    }
   };
 
   const handleResetFilter = () => {

@@ -255,7 +255,7 @@ export default function MachineEditForm() {
       setInstallationDate(null);
       reset();
     } catch (error) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
     }
   };

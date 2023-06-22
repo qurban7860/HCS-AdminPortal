@@ -33,7 +33,6 @@ import FormProvider, {
   RHFUpload,
 } from '../../../components/hook-form';
 import {Cover} from '../../components/Cover';
-import { dispatchReqEditAndView, dispatchReqNavToList } from '../../asset/dispatchRequests';
 import AddFormButtons from '../../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
@@ -105,17 +104,21 @@ export default function ModelEditForm() {
 
   const onSubmit = async (data) => {
    
-   
+   try{
       if(category){
         data.category = category
       }else{
         data.category = null;
       }
       // console.log("Data : ",data);
-      await dispatchReqEditAndView(dispatch, updateMachineModel(data,id),  reset(), navigate, PATH_MACHINE.machineModel, id, enqueueSnackbar)
-      // await dispatch(updateMachineModel(data,id));
-      // navigate(PATH_MACHINE.machineModel.view(id));
-
+      await dispatch(updateMachineModel(data,id));
+      navigate(PATH_MACHINE.machineModel.view(id));
+      reset()
+      enqueueSnackbar("Model updated successfully!")
+    } catch (error){
+      console.log(error)
+      enqueueSnackbar("Model update failed!",{variant:"error"})
+    }
   };
 
   return (

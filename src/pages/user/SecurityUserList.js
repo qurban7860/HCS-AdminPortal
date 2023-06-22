@@ -17,7 +17,6 @@ import UserTableToolbar from './SecurityUserTableToolbar';
 import  UserTableRow  from './SecurityUserTableRow';
 import { getSecurityUsers, deleteSecurityUser , setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
-import {  dispatchReqAddAndView, dispatchReqNavToList, dispatchReqNoMsg } from '../asset/dispatchRequests';
 
 // ----------------------------------------------------------------------
 
@@ -84,7 +83,7 @@ export default function SecurityUserList() {
   const [filterStatus, setFilterStatus] = useState('all');
 
   useLayoutEffect(() => {
-    dispatchReqNoMsg(dispatch,getSecurityUsers(),enqueueSnackbar);
+    dispatch(getSecurityUsers())
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch,securityUserEditFormVisibility,securityUserFormVisibility]);
 

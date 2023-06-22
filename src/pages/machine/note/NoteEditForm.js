@@ -59,7 +59,7 @@ export default function NoteEditForm() {
     dispatch(setNoteEditFormVisibility(false));
       // navigate(PATH_DASHBOARD.note.list);
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

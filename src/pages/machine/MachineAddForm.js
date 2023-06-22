@@ -234,7 +234,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       enqueueSnackbar('Create success!');
       navigate(PATH_MACHINE.machine.list);
     } catch (error) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
     }
   };

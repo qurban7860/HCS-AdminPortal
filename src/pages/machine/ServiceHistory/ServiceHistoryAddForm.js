@@ -106,7 +106,7 @@ export default function SiteAddForm() {
       reset();
 
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

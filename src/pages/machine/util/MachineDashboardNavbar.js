@@ -26,7 +26,7 @@ export default function MachineDashboardNavbar() {
   };
 
   const handleSearchSite = () => {
-    enqueueSnackbar('Under Construction');
+    enqueueSnackbar('Under Construction', { variant: `error` });
     // navigate(PATH_DASHBOARD.site.list);
   };
 

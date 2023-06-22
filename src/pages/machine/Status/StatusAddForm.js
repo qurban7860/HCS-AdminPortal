@@ -72,7 +72,7 @@ export default function StatusAddForm() {
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.machineStatus.list); 
       } catch(error){
-        enqueueSnackbar(error?.message)
+        enqueueSnackbar(error?.message, { variant: `error` })
         console.error(error);
       }
   };

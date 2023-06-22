@@ -112,7 +112,7 @@ export default function RepairHistoryEditForm() {
       await dispatch(updateSite(data));
       reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

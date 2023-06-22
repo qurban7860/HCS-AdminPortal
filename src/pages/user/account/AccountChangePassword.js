@@ -47,6 +47,7 @@ export default function AccountChangePassword() {
       enqueueSnackbar('Update success!');
       // console.log('DATA', data);
     } catch (error) {
+      enqueueSnackbar("Update Failed!", { variant: `error` })
       console.error(error);
     }
   };

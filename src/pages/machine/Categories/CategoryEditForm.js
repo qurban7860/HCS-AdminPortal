@@ -82,7 +82,7 @@ export default function CategoryEditForm() {
       enqueueSnackbar('Update success!');
      navigate(PATH_MACHINE.categories.view(id));
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

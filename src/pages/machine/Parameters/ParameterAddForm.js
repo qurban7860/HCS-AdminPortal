@@ -81,7 +81,7 @@ export default function ParameterAddForm() {
         enqueueSnackbar('Create success!');
         navigate(PATH_MACHINE.parameters.list); 
       } catch(error){
-        enqueueSnackbar(error?.message)
+        enqueueSnackbar(error?.message, { variant: `error` })
         console.error(error);
       }
   };
