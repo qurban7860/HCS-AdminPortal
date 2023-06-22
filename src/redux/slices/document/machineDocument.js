@@ -164,6 +164,7 @@ export function addMachineDocument(customerId , machineId , params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -225,6 +226,7 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -249,6 +251,7 @@ export function getMachineDocuments(machineId) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -273,6 +276,7 @@ export function getActiveMachineDocuments(machineId) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -291,6 +295,7 @@ export function getMachineDocument(machineDocumentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -312,6 +317,7 @@ export function getMachineDocumentHistory(machineDocumentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }

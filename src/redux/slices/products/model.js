@@ -114,12 +114,16 @@ export const {
 export function getMachineModels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-
+    try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data));
       }
-      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   }
 }
 
@@ -128,7 +132,7 @@ export function getMachineModels (){
 export function getActiveMachineModels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
-
+    try{
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models`,
       {
         params: {
@@ -139,7 +143,11 @@ export function getActiveMachineModels (){
       if(regEx.test(response.status)){
         dispatch(slice.actions.getActiveMachineModelsSuccess(response.data));
       }
-      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   }
 }
 
@@ -148,12 +156,16 @@ export function getActiveMachineModels (){
 export function getMachineModel(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-
+    try {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/models/${id}`);
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachinemodelSuccess(response.data));
       }
-      return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }
 //----------------------------------------------------------------
@@ -166,7 +178,6 @@ export function deleteMachineModel(id) {
       {
           isArchived: true, 
       });
-      return response;
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -180,6 +191,7 @@ export function deleteMachineModel(id) {
 export function addMachineModel(params) {
     return async (dispatch) => {
       dispatch(slice.actions.startLoading());
+      try{
         /* eslint-disable */
         let data = {
           name: params.name,
@@ -196,7 +208,11 @@ export function addMachineModel(params) {
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
       }
-     return response
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
     };
 }
 
@@ -205,7 +221,7 @@ export function addMachineModel(params) {
 export function updateMachineModel(params,Id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    
+    try{
       /* eslint-disable */
       let data = {
         name: params.name,
@@ -225,6 +241,10 @@ export function updateMachineModel(params,Id) {
         dispatch(getMachineModel(Id));
         dispatch(slice.actions.setMachinemodelsEditFormVisibility(false));
       }
-    return response;
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
   };
 }

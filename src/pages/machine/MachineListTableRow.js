@@ -21,7 +21,7 @@ import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Label from '../../components/label';
-import LinkTableCell from '../components/LinkTableCell';
+import LinkTableCellWithIcon from '../components/LinkTableCellWithIcon';
 import { useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -44,6 +44,7 @@ export default function MachineListTableRow({
   onViewRow,
 }) {
   const {
+    verifications,
     serialNo,
     name,
     parentMachine,
@@ -54,6 +55,7 @@ export default function MachineListTableRow({
     isActive,
     createdAt,
   } = row;
+  const userId = localStorage.getItem('userId');
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -92,7 +94,9 @@ export default function MachineListTableRow({
             ''
           )}
         </TableCell>
-        <LinkTableCell align="left" onClick={onViewRow} param={serialNo}/>
+        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={serialNo} isVerified={verifications?.find(
+                (verified) => verified?.verifiedBy === userId
+              )}/>
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
         <TableCell sx={{ color: status?.slug === 'transferred' ? 'red' : 'inherit' }}>

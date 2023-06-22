@@ -170,6 +170,7 @@ export function addCustomerDocument(customerId,params) {
       console.error(error);
       console.log("add customer document catch block!")
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -215,6 +216,7 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -241,6 +243,7 @@ export function getCustomerDocuments(customerId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -268,6 +271,7 @@ export function getActiveCustomerDocuments(customerId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -291,6 +295,7 @@ export function getCustomerDocumentHistory(customerDocumentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -307,6 +312,7 @@ export function getCustomerDocument(customerDocumentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -323,7 +329,6 @@ export function deleteCustomerDocument(customerDocumentId) {
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     dispatch(slice.actions.stopLoading());
-
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

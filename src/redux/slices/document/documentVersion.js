@@ -135,6 +135,7 @@ export function addDocumentVersion(documentId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -156,6 +157,7 @@ export function updateDocumentVersion(documentId,versionId,params) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -178,6 +180,7 @@ export function getDocumentVersions(Id,documentId) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -202,6 +205,7 @@ export function getActiveDocumentVersions(documentId) {
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
@@ -218,6 +222,7 @@ export function getDocumentVersion(Id,documentId) {
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
+      throw error;
     }
   };
 }
