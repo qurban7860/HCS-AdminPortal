@@ -34,11 +34,6 @@ import ViewFormAudit from '../components/ViewFormAudit';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
 import { Cover } from '../components/Cover';
-import {
-  dispatchReqAddAndView,
-  dispatchReqNavToList,
-  dispatchReqNoMsg,
-} from '../asset/dispatchRequests';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
 import FormLabel from '../components/FormLabel';
@@ -68,8 +63,7 @@ export default function SecurityUserProfile() {
 
   useEffect(() => {
     if (userId) {
-      dispatchReqNoMsg(dispatch, getSecurityUser(userId), enqueueSnackbar);
-      // dispatch(getSecurityUser(userId))
+      dispatch(getSecurityUser(userId))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, userId, initial]);

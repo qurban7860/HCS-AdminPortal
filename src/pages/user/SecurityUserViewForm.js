@@ -24,11 +24,6 @@ import { Cover } from '../components/Cover';
 import { useAuthContext } from '../../auth/useAuthContext';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 import { useSnackbar } from '../../components/snackbar';
-import {
-  dispatchReqAddAndView,
-  dispatchReqNavToList,
-  dispatchReqNoMsg,
-} from '../asset/dispatchRequests';
 import palette from '../../theme';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
@@ -72,9 +67,9 @@ export default function SecurityUserViewForm() {
 
   useEffect(() => {
     if (id) {
-      dispatchReqNoMsg(dispatch, getSecurityUser(id), enqueueSnackbar);
+      dispatch(getSecurityUser(id));
     }
-  }, [id, dispatch, enqueueSnackbar]);
+  }, [id, dispatch]);
 
   useEffect(() => {
     batch(() => {
