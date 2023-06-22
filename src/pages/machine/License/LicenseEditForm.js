@@ -88,7 +88,7 @@ export default function LicenseEditForm() {
       await dispatch(updateLicense( machine._id,license._id,data));
       reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

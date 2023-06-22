@@ -112,7 +112,7 @@ export default function SiteEditForm() {
       await dispatch(updateSite(data));
       reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

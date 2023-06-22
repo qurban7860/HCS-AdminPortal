@@ -118,11 +118,11 @@ export default function NoteList() {
 
   useEffect(() => {
     if (initial) {
-      if (notes && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
+      // if (notes && !error) {
+      //   enqueueSnackbar(responseMessage);
+      // } else {
+      //   enqueueSnackbar(error, { variant: `error` });
+      // }
       setTableData(notes);
     }
   }, [notes, error, responseMessage, enqueueSnackbar, initial]);

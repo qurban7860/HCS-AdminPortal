@@ -63,7 +63,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
         await dispatch(addNote(machine._id,data));
         reset();
       } catch(error){
-        enqueueSnackbar('Note Save failed!');
+        enqueueSnackbar('Note Save failed!', { variant: `error` });
         console.error(error);
       }
   };

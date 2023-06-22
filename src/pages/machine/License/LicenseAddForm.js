@@ -73,7 +73,7 @@ export default function LicenseAddForm() {
       // await dispatch(saveLicense(machine._id,data));
       reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };

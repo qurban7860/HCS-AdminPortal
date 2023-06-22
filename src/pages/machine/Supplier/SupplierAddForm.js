@@ -121,7 +121,7 @@ export default function StatusAddForm() {
       navigate(PATH_MACHINE.supplier.list); 
     } catch(error){
       // enqueueSnackbar('Saving failed!');
-      enqueueSnackbar(error?.message)
+      enqueueSnackbar(error?.message, { variant: `error` })
       console.error(error);
     }
 };

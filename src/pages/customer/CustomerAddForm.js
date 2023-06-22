@@ -232,7 +232,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       enqueueSnackbar('Create success!');
       navigate(PATH_DASHBOARD.customer.view(null));
     } catch (error) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
     }
   };

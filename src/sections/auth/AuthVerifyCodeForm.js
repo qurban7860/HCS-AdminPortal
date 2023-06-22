@@ -55,6 +55,7 @@ export default function AuthVerifyCodeForm() {
       enqueueSnackbar('Verify success!');
       navigate(PATH_DASHBOARD.root);
     } catch (error) {
+      enqueueSnackbar('Verify Failed!',{variant:"error"});
       console.error(error);
     }
   };

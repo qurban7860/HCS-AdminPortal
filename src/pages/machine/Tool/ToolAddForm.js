@@ -87,7 +87,7 @@ export default function ToolAddForm() {
         // console.log(PATH_MACHINE.tool.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
-        enqueueSnackbar(error?.message)
+        enqueueSnackbar(error?.message, { variant: `error` })
         console.error(error);
       }
   };

@@ -111,7 +111,7 @@ export default function ParameterEditForm() {
       navigate(PATH_MACHINE.parameters.view(id));
     } catch (err) {
       console.log(err)
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
