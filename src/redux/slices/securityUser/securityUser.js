@@ -15,7 +15,12 @@ const initialState = {
   error: null,
   securityUsers: [],
   securityUser: null,
-  loggedInUser: null,
+  user: null,
+  userId: null,
+  userEmail: null,
+  userLogin: null,
+  userDisplayName: null,
+  userRoles: [],
   signInLogs: []
 };
 
@@ -44,6 +49,17 @@ const slice = createSlice({
     setSecurityUserEditFormVisibility(state, action){
       state.editFormVisibility = action.payload;
     },
+
+    // SET USER PROPERTIES
+    setSecurityUserProperties(state, userData){
+      const {UserId, User} = userData;
+      state.userId = UserId;
+      state.userEmail = User.email;
+      state.userLogin = User.login;
+      state.userDisplayName = User.displayName;
+      state.userRoles = User.roles;
+    },
+
     // GET users
     getSecurityUsersSuccess(state, action) {
       state.isLoading = false;
@@ -225,6 +241,14 @@ export function getSecurityUser(id) {
       throw error;
     }
   };
+}
+
+// ---------------------------SET LoginUser Data -------------------------------------------
+
+export function setLoginUser(userId,User) {
+  return async (dispatch) => {
+        dispatch(slice.actions.setSecurityUserProperties({userId, User}));
+      }
 }
 
 // ----------------------------------------------------------------------
