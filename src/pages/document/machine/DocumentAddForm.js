@@ -377,7 +377,7 @@ export default function DocumentAddForm({currentDocument}) {
                   <Grid container lg={12}>
                     <Grid container spacing={2}>
                       <Grid item xs={12} lg={6}>
-                    <Autocomplete
+                        <Autocomplete
                         // freeSolo
                         // disabled={documentAvailable}
                         value={documentVal || null}
@@ -408,65 +408,16 @@ export default function DocumentAddForm({currentDocument}) {
                         id="controllable-states-demo"
                         renderInput={(params) => <TextField {...params} required label="Documents" />}
                         ChipProps={{ size: 'small' }}
-                      />
+                        />
+                      </Grid>
                     </Grid>
-                    {documentVal && <Grid item xs={12} lg={6}>
-                      <Autocomplete
-                        // freeSolo
-                        disabled={readOnlyVal}
-                        // readOnly={readOnlyVal}
-                        value={documentTypeVal || null}
-                        options={activeDocumentTypes}
-                        // isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setDocumentTypeVal(newValue);
-                          } else {
-                            setDocumentTypeVal('');
-                          }
-                        }}
-                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    </Grid>}
-                    </Grid>
-                    </Grid>
+                  </Grid>
                       }
-                  { documentVal &&  <FormControl >
-                      <RadioGroup
-                            row
-                            aria-labelledby="demo-controlled-radio-buttons-group"
-                            name="controlled-radio-buttons-group"
-                            value={selectedVersionValue}
-                            onChange={handleVersionRadioChange}
-                          >
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel value="newVersion" control={<Radio />} label="New Version" />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel value="existingVersion" control={<Radio />} label="Current Version" />
-                          </Grid>
-                      </RadioGroup>
-                  </FormControl>}
-                
-                  { selectedValue === "new"   &&
-                <RHFTextField
-                    required
-                    disabled={readOnlyVal}
-                    name="name"   
-                    value={displayNameVal}
-                    label="Name"
-                    onChange={(e) => {
-                      setDisplayNameVal(e.target.value);
-                    }}
-                  />}
-                { selectedValue === "new" &&
+
+                      { (selectedValue === "new" || documentVal)  &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
-                  <Grid item lg={6}>
+                    <Grid item lg={6}>
                       <Autocomplete
                         // freeSolo
                         disabled={readOnlyVal}
@@ -519,6 +470,35 @@ export default function DocumentAddForm({currentDocument}) {
                   </Grid>
                 </Grid>}
 
+                  { documentVal &&  <FormControl >
+                      <RadioGroup
+                            row
+                            aria-labelledby="demo-controlled-radio-buttons-group"
+                            name="controlled-radio-buttons-group"
+                            value={selectedVersionValue}
+                            onChange={handleVersionRadioChange}
+                          >
+                          <Grid item xs={12} sm={6}>
+                            <FormControlLabel value="newVersion" control={<Radio />} label="New Version" />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <FormControlLabel value="existingVersion" control={<Radio />} label="Current Version" />
+                          </Grid>
+                      </RadioGroup>
+                  </FormControl>}
+                
+
+                  { selectedValue === "new"   &&
+                <RHFTextField
+                    required
+                    disabled={readOnlyVal}
+                    name="name"   
+                    value={displayNameVal}
+                    label="Name"
+                    onChange={(e) => {
+                      setDisplayNameVal(e.target.value);
+                    }}
+                  />}
                         
                 { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField   value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
 

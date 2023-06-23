@@ -371,22 +371,6 @@ useEffect(()=>{
                     </Grid>
                     </Grid>
                       }
-                  { documentVal &&  <FormControl >
-                      <RadioGroup
-                            row
-                            aria-labelledby="demo-controlled-radio-buttons-group"
-                            name="controlled-radio-buttons-group"
-                            value={selectedVersionValue}
-                            onChange={handleVersionRadioChange}
-                          >
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel value="newVersion" control={<Radio />} label="New Version" />
-                          </Grid>
-                          <Grid item xs={12} sm={6}>
-                            <FormControlLabel value="existingVersion" control={<Radio />} label="Current Version" />
-                          </Grid>
-                      </RadioGroup>
-                  </FormControl>}
                 { (selectedValue === "new" || documentVal)  &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
@@ -442,6 +426,24 @@ useEffect(()=>{
                     </Grid>
                   </Grid>
                 </Grid>}
+                
+                { documentVal &&  <FormControl >
+                      <RadioGroup
+                            row
+                            aria-labelledby="demo-controlled-radio-buttons-group"
+                            name="controlled-radio-buttons-group"
+                            value={selectedVersionValue}
+                            onChange={handleVersionRadioChange}
+                          >
+                          <Grid item xs={12} sm={6}>
+                            <FormControlLabel value="newVersion" control={<Radio />} label="New Version" />
+                          </Grid>
+                          <Grid item xs={12} sm={6}>
+                            <FormControlLabel value="existingVersion" control={<Radio />} label="Current Version" />
+                          </Grid>
+                      </RadioGroup>
+                  </FormControl>}
+
                 { selectedValue === "new"  &&
                 <RHFTextField
                     required

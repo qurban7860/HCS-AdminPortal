@@ -137,7 +137,7 @@ export default function CustomerEditForm() {
       enqueueSnackbar('Update success!');
       navigate(PATH_DASHBOARD.customer.view(customer._id));
     } catch (err) {
-      enqueueSnackbar('Saving failed!');
+      enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
