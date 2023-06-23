@@ -72,14 +72,8 @@ export default function Document() {
       await dispatch(deleteDocument(id));
       await dispatch(getDocuments());
       navigate(PATH_DASHBOARD.document.dashboard);
+      enqueueSnackbar("Document deleted Successfully!")
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar("Document delete failed!",{ variant: `error` })
       console.log("Error:", err);
     }
@@ -215,7 +209,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
       </Card>
       <Grid container item md={12}>
         <Card sx={{ p: 3 }}>
-          <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
+          {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
           <Grid display="inline-flex">
               <Tooltip >
                 <ViewFormField  isActive={defaultValues.isActive}  />
@@ -233,8 +227,8 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                                       </Typography>
                                     ) : ( '' )
                                   }/>
-            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
             <ViewFormField sm={6} heading="Customer" objectParam={
                                     defaultValues.customer ? (
                                       <Link onClick={handleOpenCustomer} href="#" underline="none">

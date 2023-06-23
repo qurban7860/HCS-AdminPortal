@@ -81,7 +81,7 @@ useEffect(()=>{
 
   const EditCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
-    description: Yup.string().max(10000),
+    description: Yup.string().nullable().max(10000),
     // image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });

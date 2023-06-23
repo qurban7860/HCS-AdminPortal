@@ -71,8 +71,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const onDelete = async () => {
     try {
       await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
-      enqueueSnackbar('Document deleted successfully!');
       dispatch(getCustomerDocuments(customer._id));
+      enqueueSnackbar('Document deleted successfully!');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('Document delete failed!', { variant: `error` });
@@ -143,8 +143,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const handleDelete = async (documentId, versionId, fileId) => {
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
-      enqueueSnackbar('File deleted successfully!');
       dispatch(getCustomerDocuments(customer._id));
+      enqueueSnackbar('File deleted successfully!');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File delete failed!', { variant: `error` });
@@ -268,6 +268,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             )
           }
         />
+
         <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
         <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
         {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}

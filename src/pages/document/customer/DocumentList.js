@@ -205,10 +205,8 @@ export default function DocumentList() {
             path3={PATH_DASHBOARD.customer.document}
             name3={
               <Stack>
-                {customerDocumentFormVisibility
-                  ? `Edit ${customerDocument?.displayName}`
-                  : !expanded && documentName}
-                {!customerDocumentFormVisibility && !expanded && 'Documents'}
+                {customerDocumentFormVisibility && "New Document"}
+                {!expanded && documentName}
               </Stack>
             }
           />
