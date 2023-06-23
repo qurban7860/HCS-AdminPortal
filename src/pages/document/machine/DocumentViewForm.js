@@ -58,14 +58,8 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
     try{
       await dispatch(deleteMachineDocument(currentMachineDocument._id));
       await dispatch(getMachineDocuments(machine._id));
+      enqueueSnackbar("Document deleted Successfully!")
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar("Document delete failed!",{ variant: `error` })
       console.log("Error:", err);
     }
