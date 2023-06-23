@@ -130,7 +130,7 @@ export function Cover({
             sx={{
               px: 3,
               color: 'common.white',
-              mt: { xs: nameTitle.length > 15 ? 5 : 8, md: 7 },
+              mt: { xs: nameTitle.length > 15 ? 6 : 6, md: 6 },
               mb: 0,
               display: { xs: 'flex', md: 'block' },
             }}
@@ -182,7 +182,7 @@ export function Cover({
                 mt: 'auto',
                 color: 'common.white',
                 mx: 2,
-                mb: { xs: 0, md: 1 },
+                mb: { xs: 0, md: 2 },
               }}
               component="button"
               variant="body2"
