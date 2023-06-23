@@ -89,14 +89,12 @@ export default function DocumentAddForm({currentDocument}) {
     setReadOnlyVal(false)
     setDescriptionVal("")
     dispatch(resetActiveDocumentTypes());
-    // dispatch(getActiveDocumentCategories())
+    dispatch(getActiveDocumentCategories())
     // dispatch(getActiveDocumentTypes())
   },[dispatch,customer])
-  console.log("getActiveDocumentCategories")
 
 useEffect(()=>{
   if(documentCategoryVal?._id){
-    console.log("getActiveDocumentCategories")
     dispatch(getActiveDocumentTypesWithCategory(documentCategoryVal?._id))
   }
 },[documentCategoryVal, dispatch])
@@ -370,28 +368,6 @@ useEffect(()=>{
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
-                    {documentVal && <Grid item xs={12} lg={6}>
-                      <Autocomplete
-                        // freeSolo
-                        disabled={readOnlyVal}
-                        // readOnly={readOnlyVal}
-                        value={documentTypeVal || null}
-                        options={activeDocumentTypes}
-                        // isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) =>  `${option.name ? option.name : ""}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setDocumentTypeVal(newValue);
-                          } else {
-                            setDocumentTypeVal('');
-                          }
-                        }}
-                        // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Document Type" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    </Grid>}
                     </Grid>
                     </Grid>
                       }
@@ -411,18 +387,7 @@ useEffect(()=>{
                           </Grid>
                       </RadioGroup>
                   </FormControl>}
-                  { selectedValue === "new"  &&
-                <RHFTextField
-                    required
-                    disabled={readOnlyVal}
-                    name="name"
-                    value={displayNameVal}
-                    label="Name"
-                    onChange={(e) => {
-                      setDisplayNameVal(e.target.value);
-                    }}
-                  />}
-                { selectedValue === "new"  &&
+                { (selectedValue === "new" || documentVal)  &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
                     <Grid item lg={6}>
@@ -477,7 +442,17 @@ useEffect(()=>{
                     </Grid>
                   </Grid>
                 </Grid>}
-                        
+                { selectedValue === "new"  &&
+                <RHFTextField
+                    required
+                    disabled={readOnlyVal}
+                    name="name"
+                    value={displayNameVal}
+                    label="Name"
+                    onChange={(e) => {
+                      setDisplayNameVal(e.target.value);
+                    }}
+                  />}
                 { (selectedValue === "new" || (documentVal && selectedVersionValue !== "existingVersion") ) && <RHFTextField  value={descriptionVal} name="description" onChange={handleChangeDescription} label="Description" minRows={3} multiline />}
                 { (selectedValue === "new" || documentVal ) &&
                   <Grid item xs={12} md={6} lg={12}>
