@@ -268,8 +268,8 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
             )
           }
         />
-        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
         <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
         {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
 
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />

@@ -3,10 +3,10 @@ import { LoadingButton } from '@mui/lab';
 // eslint-disable-next-line
 import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } from '@mui/material';
-import { green } from '@mui/material/colors';
+import { green, blueGrey } from '@mui/material/colors';
 import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
@@ -73,8 +73,17 @@ export default function ViewFormEditDeleteButtons({
   // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
+  const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
+
   const disableDelete = userRoles.some(role => role?.disableDelete === true);
-  
+useEffect(() =>{
+  if(disableDelete){
+    setDeleteButtonColor('text.secondary')
+    setDeleteButtonHoverColor('text.secondary.dark');
+  }
+},[disableDelete])
+
   if(disableDelete){
     disableDeleteButton = true;
    }else{
@@ -85,7 +94,7 @@ export default function ViewFormEditDeleteButtons({
     if(dialogType === 'Verification' && !isVerified ){
       setOpenVerificationConfirm(true);
     }
-    if(dialogType === 'delete'){
+    if(dialogType === 'delete' && !disableDeleteButton){
       setOpenConfirm(true);
     }
     if(dialogType === 'transfer'){
@@ -284,20 +293,26 @@ export default function ViewFormEditDeleteButtons({
         {/* if not in the profile show this */}
         {onDelete ? (
           <Button
-            disabled={disableDeleteButton}
-           
+            // disabled={disableDeleteButton}
+            // readOnly={disableDeleteButton}
             onClick={() => {
               handleOpenConfirm('delete');
             }}
             variant="outlined"
-            color="error"
+            sx={{color:deleteButtonColor, 
+            borderColor:deleteButtonColor,
+            ':hover': {
+              borderColor: deleteButtonHoverColor,
+            }
+            }}
+            // color={disableDeleteButton ? 'secondary' :'error'}
           >
             <Tooltip
               title="Delete"
               placement="top"
               disableFocusListener
               classes={{ tooltip: classes.tooltipError }}
-              color="error"
+              color='error'
             >
               <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:trash-can-outline" />
             </Tooltip>

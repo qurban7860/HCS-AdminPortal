@@ -197,56 +197,56 @@ useEffect(()=>{
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <FormHeading heading='Edit Document'/>
-              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
-            <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
-              <Autocomplete
-                // freeSolo
-                disabled
-                value={documentCategoryVal || null}
-                options={activeDocumentCategories}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setDocumentCategoryVal(newValue);
-                    // dispatch(getActiveDocumentTypesWithCategory(newValue?._id))
-                    // setDocumentTypeVal("");
-                  }
-                  else{  
-                    setDocumentCategoryVal("");
-                    // setDocumentTypeVal("");
-                    // dispatch(getActiveDocumentTypes())
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} required label="Document Category" />}
-                ChipProps={{ size: 'small' }}
-              />
-              <Autocomplete
-                // freeSolo
-                disabled
-                value={documentTypeVal || null}
-                options={activeDocumentTypes}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                    setDocumentTypeVal(newValue);
-                    // if(!documentCategoryVal){
-                    //   setDocumentCategoryVal(newValue?.docCategory);
-                    // }
-                  }
-                  else{  
-                    setDocumentTypeVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} required label="Document Type" />}
-                ChipProps={{ size: 'small' }}
-              />
+              <Box rowGap={3} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }} >
+                <Autocomplete
+                  // freeSolo
+                  disabled
+                  value={documentCategoryVal || null}
+                  options={activeDocumentCategories}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    if(newValue){
+                      setDocumentCategoryVal(newValue);
+                      // dispatch(getActiveDocumentTypesWithCategory(newValue?._id))
+                      // setDocumentTypeVal("");
+                    }
+                    else{  
+                      setDocumentCategoryVal("");
+                      // setDocumentTypeVal("");
+                      // dispatch(getActiveDocumentTypes())
+                    }
+                  }}
+                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} required label="Document Category" />}
+                  ChipProps={{ size: 'small' }}
+                />
+                <Autocomplete
+                  // freeSolo
+                  disabled
+                  value={documentTypeVal || null}
+                  options={activeDocumentTypes}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    if(newValue){
+                      setDocumentTypeVal(newValue);
+                      // if(!documentCategoryVal){
+                      //   setDocumentCategoryVal(newValue?.docCategory);
+                      // }
+                    }
+                    else{  
+                      setDocumentTypeVal("");
+                    }
+                  }}
+                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} required label="Document Type" />}
+                  ChipProps={{ size: 'small' }}
+                />
               </Box>
+              <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
               <RHFTextField value={descriptionVal} name="description" label="Description" onChange={handleChangeDescription} minRows={3} multiline />
               <Grid container lg={12} >
                 <Grid  display="flex" justifyContent="flex-end">
