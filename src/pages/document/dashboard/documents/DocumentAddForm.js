@@ -16,7 +16,7 @@ import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes
 // slice
 import { getActiveDocuments, getDocuments, addDocument, getCustomerDocuments,getMachineDocuments, resetActiveDocuments, getCustomerSiteDocuments} from '../../../../redux/slices/document/document';
 import { setDocumentCategoryFormVisibility , getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
-import { setDocumentTypeFormVisibility , getActiveDocumentTypes } from '../../../../redux/slices/document/documentType';
+import { setDocumentTypeFormVisibility , getActiveDocumentTypes , resetActiveDocumentTypes, getActiveDocumentTypesWithCategory} from '../../../../redux/slices/document/documentType';
 import { addDocumentVersion, updateDocumentVersion } from '../../../../redux/slices/document/documentVersion';
 import { getActiveMachines, resetActiveMachines, getActiveModelMachines } from '../../../../redux/slices/products/machine';
 import { getActiveMachineModels } from '../../../../redux/slices/products/model';
@@ -101,12 +101,20 @@ export default function DocumentAddForm({currentDocument}) {
     dispatch(resetActiveDocuments())
     dispatch(resetActiveMachines)
     dispatch(resetActiveSites)
-    dispatch(getActiveDocumentTypes());
+    dispatch(resetActiveDocumentTypes());
+    // dispatch(getActiveDocumentTypes());
     dispatch(getActiveDocumentCategories());
     // dispatch(getActiveCustomers());
     // dispatch(getActiveMachines());
     // dispatch(getActiveMachineModels());
   },[dispatch,])
+
+  useEffect(()=>{
+    if(documentCategoryVal?._id){
+      console.log("getActiveDocumentCategories")
+      dispatch(getActiveDocumentTypesWithCategory(documentCategoryVal?._id))
+    }
+  },[documentCategoryVal, dispatch])
 
   useEffect(()=>{
     if(documentDependency === "machine" ){
@@ -648,6 +656,34 @@ export default function DocumentAddForm({currentDocument}) {
                 { selectedValue === "new" &&
                 <Grid container lg={12}>
                   <Grid container spacing={2}>
+                  <Grid item lg={6}>
+                      <Autocomplete
+                        // freeSolo
+                        disabled={readOnlyVal}
+                        // readOnly={readOnlyVal}
+                        value={documentCategoryVal || null}
+                        options={activeDocumentCategories}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        getOptionLabel={(option) => `${option.name ? option.name : ""}`}
+                        onChange={(event, newValue) => {
+                          if (newValue) {
+                            setDocumentCategoryVal(newValue);
+                          } else {
+                            setDocumentCategoryVal('');
+                            dispatch(resetActiveDocumentTypes());
+                            setDocumentTypeVal('');
+                          }
+                        }}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>
+                            {option.name}
+                          </li>
+                        )}
+                        id="controllable-states-demo"
+                        renderInput={(params) => <TextField {...params} required label="Document Category" />}
+                        ChipProps={{ size: 'small' }}
+                      />
+                    </Grid>
                     <Grid item lg={6}>
                       <Autocomplete
                         // freeSolo
@@ -667,32 +703,6 @@ export default function DocumentAddForm({currentDocument}) {
                         // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                         id="controllable-states-demo"
                         renderInput={(params) => <TextField {...params} required label="Document Type" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                    </Grid>
-                    <Grid item lg={6}>
-                      <Autocomplete
-                        // freeSolo
-                        disabled={readOnlyVal}
-                        // readOnly={readOnlyVal}
-                        value={documentCategoryVal || null}
-                        options={activeDocumentCategories}
-                        isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) => `${option.name ? option.name : ""}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setDocumentCategoryVal(newValue);
-                          } else {
-                            setDocumentCategoryVal('');
-                          }
-                        }}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>
-                            {option.name}
-                          </li>
-                        )}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Document Category" />}
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>

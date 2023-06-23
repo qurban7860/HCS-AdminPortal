@@ -89,14 +89,12 @@ export default function DocumentAddForm({currentDocument}) {
     setReadOnlyVal(false)
     setDescriptionVal("")
     dispatch(resetActiveDocumentTypes());
-    // dispatch(getActiveDocumentCategories())
+    dispatch(getActiveDocumentCategories())
     // dispatch(getActiveDocumentTypes())
   },[dispatch,customer])
-  console.log("getActiveDocumentCategories")
 
 useEffect(()=>{
   if(documentCategoryVal?._id){
-    console.log("getActiveDocumentCategories")
     dispatch(getActiveDocumentTypesWithCategory(documentCategoryVal?._id))
   }
 },[documentCategoryVal, dispatch])
