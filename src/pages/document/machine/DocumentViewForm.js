@@ -29,6 +29,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import LoadingScreen from '../../../components/loading-screen';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import DeleteIconButton from '../../components/DeleteIconButton';
+import ImagePreviewDialog from '../../components/ImagePreviewDialog';
 
   const Loadable = (Component) => (props) =>
   (
@@ -57,7 +58,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   const onDelete = async () => {
     try{
       await dispatch(deleteMachineDocument(currentMachineDocument._id));
-      await dispatch(getMachineDocuments(machine._id));
+      dispatch(getMachineDocuments(machine._id));
       enqueueSnackbar("Document deleted Successfully!")
     } catch (err) {
       enqueueSnackbar("Document delete failed!",{ variant: `error` })
@@ -79,6 +80,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
     //  await dispatch(getMachine(currentMachineDocument.machine._id))
      await dispatch(getCustomer(currentMachineDocument.customer._id))
     };
+
   const defaultValues = useMemo(
     () => (
       {
@@ -282,55 +284,7 @@ const handleDelete = async (documentId, versionId, fileId ) => {
                           <Iconify icon="icon-park-outline:preview-open" width={18} />
                         </IconButton>
                       </Link>
-                      <Dialog
-                        maxWidth="md"
-                        open={onPreview}
-                        onClose={handleClosePreview}
-                        aria-labelledby="keep-mounted-modal-title"
-                        aria-describedby="keep-mounted-modal-description"
-                        >
-                        <Grid
-                          container
-                          item
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            bgcolor: 'primary.main',
-                            color: 'primary.contrastText',
-                            padding: '10px',
-                          }}
-                        >
-                          <Typography variant="h4" sx={{ px: 2 }}>
-                            {`${imageName}.${imageExtension}`}
-                          </Typography>{' '}
-                          <Link onClick={handleClosePreview} href="#" underline="none" sx={{ ml: 'auto' }}>
-                            {' '}
-                            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-                          </Link>
-                        </Grid>
-                        <Link>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleDownloadImage(imageName ,imageExtension)}
-                              sx={{
-                                top: 70,
-                                right: 15,
-                                zIndex: 9,
-                                height: "60",
-                                position: 'absolute',
-                                color: (theme) => alpha(theme.palette.common.white, 0.8),
-                                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                                '&:hover': {
-                                  bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                                },
-                              }}
-                            >
-                              <Iconify icon="line-md:download-loop" width={18} />
-                            </IconButton>
-                          </Link>
-                        <Box component="img" sx={{minWidth:"350px", minHeight:"350px"}} alt={file?.name}  src={`data:image/png;base64, ${imageData}`}/>
-                      </Dialog>
+                      <ImagePreviewDialog  onPreview={onPreview} handleClosePreview={handleClosePreview} handleDownloadImage={handleDownloadImage} imageName={imageName} imageExtension={imageExtension} file={file} imageData={imageData} />
                       <Link>
                         <IconButton
                           size="small"
