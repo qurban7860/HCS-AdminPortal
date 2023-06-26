@@ -45,7 +45,6 @@ export function Cover({
   generalSettings,
 }) {
   const navigate = useNavigate();
-  const { techparamcategory } = useSelector((state) => state.techparamcategory);
   const handleNavigate = () => {
     navigate(PATH_MACHINE.general.app);
   };
@@ -82,7 +81,7 @@ export function Cover({
           machineChildren={
             <>
               {serialNo && serialNo}
-              {name && name.length > 15 ? `/${nameTitle}` : ''}
+              {name && name.length > 15 && `/${nameTitle}`}
             </>
           }
           children={isMobile && name?.length > 15 ? '' : name}
