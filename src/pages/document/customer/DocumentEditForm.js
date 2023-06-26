@@ -21,6 +21,7 @@ import Iconify from '../../../components/iconify';
 import FormProvider, {
   RHFSelect,
   RHFTextField,
+  RHFDescriptionTextField,
   RHFAutocomplete,
   RHFSwitch,
   RHFUpload
@@ -81,7 +82,7 @@ useEffect(()=>{
 
   const EditCustomerDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
-    description: Yup.string().nullable().max(10000),
+    description: Yup.string().max(10000),
     // image: Yup.mixed().required("Image Field is required!"),
     isActive : Yup.boolean(),
   });
@@ -247,7 +248,7 @@ useEffect(()=>{
                 />
               </Box>
               <RHFTextField name="displayName" value={nameVal} label="Name" onChange={(e)=>{setNameVal(e.target.value)}}/>
-              <RHFTextField value={descriptionVal} name="description" label="Description" onChange={handleChangeDescription} minRows={3} multiline />
+              <RHFDescriptionTextField value={descriptionVal} schema={EditCustomerDocumentSchema} name="description" label="Description" onChange={handleChangeDescription} minRows={3} multiline />
               <Grid container lg={12} >
                 <Grid  display="flex" justifyContent="flex-end">
                    <Typography variant="body1" sx={{ pt:1, display:'flex', justifyContent:"flex-end", alignItems:'center' }}>
