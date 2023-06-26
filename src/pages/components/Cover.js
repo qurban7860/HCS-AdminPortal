@@ -86,7 +86,6 @@ export function Cover({
           }
           children={isMobile && name?.length > 15 ? '' : name}
         />
-
         <CoverSettingsIcons
           setting={setting}
           handleNavigate={handleNavigate}

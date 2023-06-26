@@ -1,31 +1,18 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 // eslint-disable-next-line
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles'; // will uninstall this later
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } from '@mui/material';
-import { green, blueGrey } from '@mui/material/colors';
-import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
+import { Button, Stack, Typography, Popover, IconButton } from '@mui/material';
+import { green } from '@mui/material/colors';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { StyledTooltip } from '../../theme/styles/default-styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
-import MenuPopover from '../../components/menu-popover';
 import useResponsive from '../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../redux/slices/products/machine';
-
-const useStyles = makeStyles((theme) => ({
-  tooltip: {
-    fontSize: '1rem',
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-  },
-  tooltipError: {
-    fontSize: '1rem',
-    backgroundColor: theme.palette.error.main,
-    color: 'white',
-  },
-}));
 
 ViewFormEditDeleteButtons.propTypes = {
   handleVerification: PropTypes.func,
@@ -36,10 +23,10 @@ ViewFormEditDeleteButtons.propTypes = {
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
-  disableTransferButton: PropTypes.bool, 
-  disablePasswordButton: PropTypes.bool, 
-  disableDeleteButton: PropTypes.bool, 
-  disableEditButton: PropTypes.bool, 
+  disableTransferButton: PropTypes.bool,
+  disablePasswordButton: PropTypes.bool,
+  disableDeleteButton: PropTypes.bool,
+  disableEditButton: PropTypes.bool,
   handleMap: PropTypes.func,
 };
 export default function ViewFormEditDeleteButtons({
@@ -47,7 +34,7 @@ export default function ViewFormEditDeleteButtons({
   disableDeleteButton = false,
   disablePasswordButton = false,
   disableEditButton = false,
-  isVerified ,
+  isVerified,
   handleVerification,
   onDelete,
   handleEdit,
@@ -60,63 +47,63 @@ export default function ViewFormEditDeleteButtons({
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const theme = createTheme({
     palette: {
-        success: green,
+      success: green,
     },
-});
+  });
   // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
   const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
 
-  const disableDelete = userRoles.some(role => role?.disableDelete === true);
-useEffect(() =>{
-  if(disableDelete){
-    setDeleteButtonColor('text.secondary')
-    setDeleteButtonHoverColor('text.secondary.dark');
-  }
-},[disableDelete])
+  const disableDelete = userRoles.some((role) => role?.disableDelete === true);
+  useEffect(() => {
+    if (disableDelete) {
+      setDeleteButtonColor('text.secondary');
+      setDeleteButtonHoverColor('text.secondary.dark');
+    }
+  }, [disableDelete]);
 
-  if(disableDelete){
+  if (disableDelete) {
     disableDeleteButton = true;
-   }else{
-    disableDeleteButton = false
-   }
+  } else {
+    disableDeleteButton = false;
+  }
 
   const handleOpenConfirm = (dialogType) => {
-    if(dialogType === 'Verification' && !isVerified ){
+    if (dialogType === 'Verification' && !isVerified) {
       setOpenVerificationConfirm(true);
     }
-    if(dialogType === 'delete' && !disableDeleteButton){
+    if (dialogType === 'delete' && !disableDeleteButton) {
       setOpenConfirm(true);
     }
-    if(dialogType === 'transfer'){
+    if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(true));
     }
   };
   const handleCloseConfirm = (dialogType) => {
-    if(dialogType === 'Verification'){
+    if (dialogType === 'Verification') {
       reset();
       setOpenVerificationConfirm(false);
     }
-    if(dialogType === 'delete'){
+    if (dialogType === 'delete') {
       reset();
       setOpenConfirm(false);
     }
-    if(dialogType === 'transfer'){
+    if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(false));
     }
   };
 
   const handleVerificationConfirm = () => {
-    handleVerification(); handleCloseConfirm('Verification')
+    handleVerification();
+    handleCloseConfirm('Verification');
   };
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -158,8 +145,8 @@ useEffect(() =>{
           },
         }}
       >
-          {handleVerification && !isVerified ? (
-          <ThemeProvider theme={theme} >
+        {handleVerification && !isVerified && (
+          <ThemeProvider theme={theme}>
             <Button
               onClick={() => {
                 handleOpenConfirm('Verification');
@@ -168,20 +155,20 @@ useEffect(() =>{
               color={isVerified ? 'success' : 'primary'}
               sx={{ position: 'relative', zIndex: '1' }}
             >
-              <Tooltip
-                title={isVerified ? "Verified" : "Verify"}
+              <StyledTooltip
+                title={isVerified ? 'Verified' : 'Verify'}
                 placement="top"
                 disableFocusListener
-                classes={{ tooltip: classes.tooltip }}
+                toolTipColor={isVerified ? theme.palette.primary.main : theme.palette.primary.main}
               >
                 <Iconify sx={{ height: '24px', width: '24px' }} icon="ic:round-verified-user" />
-              </Tooltip>
+              </StyledTooltip>
             </Button>
           </ThemeProvider>
-        ) : (
-          ''
         )}
-        {sites && !isMobile ? (
+
+        {/* map icon sliding tooltip *no bg */}
+        {sites && !isMobile && (
           <Button
             onClick={() => {
               handleMap();
@@ -195,7 +182,7 @@ useEffect(() =>{
               onMouseLeave={handlePopoverClose}
             >
               <Iconify
-                heading="Opem Map"
+                heading="Open Map"
                 icon="mdi:google-maps"
                 style={{ color: 'red' }}
                 width="30px"
@@ -223,16 +210,15 @@ useEffect(() =>{
                 pointerEvents: 'none',
               }}
             >
-              <Typography variant="overline" classes={{ root: classes.activeHover }} color="red">
+              <Typography variant="overline" color="red">
                 Open MAP
               </Typography>
             </Popover>
           </Button>
-        ) : (
-          ''
         )}
 
-        {handleTransfer ? (
+        {/* machine transfer */}
+        {handleTransfer && (
           <Button
             disabled={disableTransferButton}
             onClick={() => {
@@ -240,21 +226,19 @@ useEffect(() =>{
             }}
             variant="outlined"
           >
-            <Tooltip
+            <StyledTooltip
               title="Transfer Ownership"
               placement="top"
               disableFocusListener
-              classes={{ tooltip: classes.tooltip }}
+              toolTipColor={theme.palette.primary.main}
             >
               <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi-cog-transfer-outline" />
-            </Tooltip>
+            </StyledTooltip>
           </Button>
-        ) : (
-          ''
         )}
 
-
-        {handleUpdatePassword ? (
+        {/* change password for users */}
+        {handleUpdatePassword && (
           <Button
             disabled={disablePasswordButton}
             onClick={() => {
@@ -262,18 +246,17 @@ useEffect(() =>{
             }}
             variant="outlined"
           >
-            <Tooltip
+            <StyledTooltip
               title="Change Password"
               placement="top"
               disableFocusListener
-              classes={{ tooltip: classes.tooltip }}
+              toolTipColor={theme.palette.secondary.main}
             >
               <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:account-key" />
-            </Tooltip>
+            </StyledTooltip>
           </Button>
-          ) : ( '' )
-        }
-
+        )}
+        {/* edit button */}
         <Button
           disabled={disableEditButton}
           onClick={() => {
@@ -281,17 +264,18 @@ useEffect(() =>{
           }}
           variant="outlined"
         >
-          <Tooltip
+          <StyledTooltip
             title="Edit"
             placement="top"
             disableFocusListener
-            classes={{ tooltip: classes.tooltip }}
+            toolTipColor={theme.palette.primary.main}
           >
             <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:pencil" />
-          </Tooltip>
+          </StyledTooltip>
         </Button>
-        {/* if not in the profile show this */}
-        {onDelete ? (
+
+        {/* delete button */}
+        {onDelete && (
           <Button
             // disabled={disableDeleteButton}
             // readOnly={disableDeleteButton}
@@ -299,26 +283,25 @@ useEffect(() =>{
               handleOpenConfirm('delete');
             }}
             variant="outlined"
-            sx={{color:deleteButtonColor, 
-            borderColor:deleteButtonColor,
-            ':hover': {
-              borderColor: deleteButtonHoverColor,
-            }
+            sx={{
+              color: deleteButtonColor,
+              borderColor: deleteButtonColor,
+              ':hover': {
+                borderColor: deleteButtonHoverColor,
+              },
             }}
             // color={disableDeleteButton ? 'secondary' :'error'}
           >
-            <Tooltip
+            <StyledTooltip
               title="Delete"
               placement="top"
               disableFocusListener
-              classes={{ tooltip: classes.tooltipError }}
-              color='error'
+              toolTipColor="red"
+              color="error"
             >
               <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:trash-can-outline" />
-            </Tooltip>
+            </StyledTooltip>
           </Button>
-        ) : (
-          ''
         )}
       </Stack>
       <ConfirmDialog
@@ -330,12 +313,12 @@ useEffect(() =>{
         content="Are you sure you want to Verify Machine Informaton?"
         action={
           <LoadingButton
-          variant="contained" 
-          color="primary" 
-          loading={(isSubmitSuccessful || isSubmitting) && isLoading}
-          disabled={isSubmitting}
-          onClick={handleSubmit(handleVerificationConfirm)}
-          // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
+            variant="contained"
+            color="primary"
+            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
+            disabled={isSubmitting}
+            onClick={handleSubmit(handleVerificationConfirm)}
+            // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
           >
             Verify
           </LoadingButton>
@@ -349,12 +332,12 @@ useEffect(() =>{
         title="Delete"
         content="Are you sure you want to delete?"
         action={
-          <LoadingButton 
-          variant="contained" 
-          color="error" 
-          loading={(isSubmitSuccessful || isSubmitting) && isLoading}
-          disabled={isSubmitting}
-          onClick={handleSubmit(onDelete)} 
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
+            disabled={isSubmitting}
+            onClick={handleSubmit(onDelete)}
           >
             Delete
           </LoadingButton>

@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
-import { CustomAvatar } from '../../components/custom-avatar';
+import { Popover } from '@mui/material';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
 
 /**
@@ -40,4 +41,29 @@ export const StyledCustomAvatar = styled('div')(({ theme }) => ({
   mt: { xs: 1, md: 1 },
   width: { xs: 110, md: 110 },
   height: { xs: 110, md: 110 },
+}));
+
+export const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme, toolTipColor }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: toolTipColor,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    fontSize: '1rem',
+    backgroundColor: toolTipColor,
+  },
+}));
+
+export const StyledTooltipSliding = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme, toolTipColor }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: toolTipColor,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    fontSize: '1rem',
+    color: toolTipColor,
+    backgroundColor: 'transparent',
+  },
 }));
