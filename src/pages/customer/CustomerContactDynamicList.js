@@ -17,7 +17,12 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData } from '../../components/table';
 // sections
-import { getContacts, setContactEditFormVisibility, setContactFormVisibility, getContact } from '../../redux/slices/customer/contact';
+import {
+  getContacts,
+  setContactEditFormVisibility,
+  setContactFormVisibility,
+  getContact,
+} from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
@@ -32,33 +37,37 @@ export default function CustomerContactList(currentContact = null) {
   const { customer } = useSelector((state) => state.customer);
   const [openContact, setOpenContact] = useState(false);
   const dispatch = useDispatch();
-  const { contacts, error, initial, responseMessage, contactEditFormVisibility, formVisibility } =
-    useSelector((state) => state.contact);
+  const {
+    contact: currentContactData,
+    contacts,
+    error,
+    initial,
+    responseMessage,
+    contactEditFormVisibility,
+    formVisibility,
+  } = useSelector((state) => state.contact);
   const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeCardIndex, setCardActiveIndex] = useState(null);
-  const [currentContactData, setCurrentContactData] = useState({});
+  // const [currentContactData, setCurrentContactData] = useState({});
   const [isExpanded, setIsExpanded] = useState(false);
   const isMobile = useResponsive('down', 'sm');
 
   const toggleChecked = () => {
     setChecked((value) => !value);
     if (checked || contactEditFormVisibility) {
-      // dispatch(setContactEditFormVisibility(false));
+      dispatch(setContactFormVisibility(false));
       enqueueSnackbar('Please close the form before opening a new one', {
-          variant: 'warning',
-        });
-      // dispatch(setContactFormVisibility(!formVisibility));   
-      // dispatch(setContactFormVisibility(true));
-      // setCardActiveIndex(null);
-      // setIsExpanded(false);
+        variant: 'warning',
+      });
+      setIsExpanded(false);
+      setCardActiveIndex(null);
     } else {
       dispatch(setContactFormVisibility(true));
       setCardActiveIndex(null);
       setIsExpanded(false);
     }
-    
   };
 
   const toggleCancel = () => {
@@ -104,19 +113,16 @@ export default function CustomerContactList(currentContact = null) {
           step={1}
           step2
           step3
-          step4
           path={PATH_DASHBOARD.customer.list}
           name="Customers"
           path2={PATH_DASHBOARD.customer.root}
           name2={customer.name}
           path3={PATH_DASHBOARD.customer.contacts}
-          name3="Contacts"
-          path4={PATH_DASHBOARD.customer.contacts}
-          name4={
+          name3={
             <Stack>
               {contactEditFormVisibility
-                ? `Edit ${currentContactData.firstName}`
-                : isExpanded && currentContactData.firstName}
+                ? `Edit ${currentContactData?.firstName}`
+                : isExpanded && currentContactData?.firstName}
               {formVisibility && !isExpanded && 'Add new contact'}
             </Stack>
           }
@@ -133,7 +139,7 @@ export default function CustomerContactList(currentContact = null) {
           sm={12}
           md={12}
           lg={4}
-          sx={{ display: formVisibility && isMobile && 'none' }}
+          sx={{ display: formVisibility && isMobile && 'none', borderRadius: '15px' }}
         >
           <StyledScrollbar
             snap
@@ -157,7 +163,10 @@ export default function CustomerContactList(currentContact = null) {
                         lg={4}
                         display={{ xs: 'flex', lg: 'block' }}
                         onClick={() => {
-                          handleActiveCard(index);
+                          if (!contactEditFormVisibility && !formVisibility) {
+                            handleActiveCard(index);
+                            handleExpand(index);
+                          }
                         }}
                         sx={{
                           width: { xs: '100%', lg: '100%' },
@@ -170,13 +179,13 @@ export default function CustomerContactList(currentContact = null) {
                         >
                           <CardActionArea
                             active={activeIndex === index}
-                            disabled={contactEditFormVisibility}
+                            disabled={contactEditFormVisibility || formVisibility}
                           >
                             <Link
                               underline="none"
-                              disabled={contactEditFormVisibility}
-                              onClick={async ()  => {
-                                await dispatch(getContact(customer._id,contact._id));
+                              disabled={contactEditFormVisibility || formVisibility}
+                              onClick={async () => {
+                                await dispatch(getContact(customer._id, contact._id));
                                 setOpenContact(true);
                                 if (!isExpanded && !formVisibility) {
                                   handleExpand(index);
@@ -245,7 +254,7 @@ export default function CustomerContactList(currentContact = null) {
           <Grid item xs={12} lg={12}>
             {shouldShowContactView && (
               <CardBase>
-                <ContactViewForm setIsExpanded={setIsExpanded}/>
+                <ContactViewForm setIsExpanded={setIsExpanded} />
               </CardBase>
             )}
             {shouldShowContactEdit && <ContactEditForm isExpanded={isExpanded} />}

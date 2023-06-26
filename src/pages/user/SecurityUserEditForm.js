@@ -55,8 +55,8 @@ export default function SecurityUserEditForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }}
-
+  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }};
+  
 useEffect(() => {
     dispatch(getCustomers());
     dispatch(getRoles());
@@ -141,7 +141,6 @@ useEffect(() => {
   }
 
   const onSubmit = async (data) => {
-    console.log("data : " , data)
     data.customer = customerVal?._id || null
     data.contact = contactVal?._id || null
     if(phone && phone.length > 7 ){
@@ -163,7 +162,7 @@ useEffect(() => {
 
     try {  
       await dispatch(updateSecurityUser(data,securityUser._id));
-      navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+      navigate(PATH_DASHBOARD.user.view(securityUser._id));
     } catch (error) {
       if(error.Message){
         enqueueSnackbar(error.Message,{ variant: `error` })
@@ -177,13 +176,12 @@ useEffect(() => {
   };
 
   const toggleCancel = ()=>{
-      navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+      navigate(PATH_DASHBOARD.user.view(securityUser._id));
   }
   const handleInputEmail = (e) => {
     const emailRegEx =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       const trimmedEmail = e.target.value.trim();
       // trimmedEmail.match(emailRegEx) ? setValid(true) : setValid(false);
-    console.log(trimmedEmail)
     setEmail(trimmedEmail);
   }
 

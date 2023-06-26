@@ -30,6 +30,7 @@ import { getDocument, getDocumentHistory, getDocuments, resetDocument, deleteDoc
 import { getCustomer, resetCustomer } from '../../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../../redux/slices/products/machine';
 import CustomAvatar from '../../../../components/custom-avatar/CustomAvatar';
+import ImagePreviewDialog from '../../../components/ImagePreviewDialog';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ export default function Document() {
   const onDelete = async () => {
     try{
       await dispatch(deleteDocument(id));
-      await dispatch(getDocuments());
+      dispatch(getDocuments());
       navigate(PATH_DASHBOARD.document.dashboard);
       enqueueSnackbar("Document deleted Successfully!")
     } catch (err) {
@@ -311,55 +312,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                           <Iconify icon="icon-park-outline:preview-open" width={18} />
                         </IconButton>
                       </Link>
-                      <Dialog
-                        maxWidth="md"
-                        open={onPreview}
-                        onClose={handleClosePreview}
-                        keepMounted
-                        aria-describedby="alert-dialog-slide-description"
-                        >
-                        <Grid
-                          container
-                          item
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            bgcolor: 'primary.main',
-                            color: 'primary.contrastText',
-                            padding: '10px',
-                          }}
-                        >
-                          <Typography variant="h4" sx={{ px: 2 }}>
-                            {`${imageName}.${imageExtension}`}
-                          </Typography>{' '}
-                          <Link onClick={handleClosePreview} href="#" underline="none" sx={{ ml: 'auto' }}>
-                            {' '}
-                            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-                          </Link>
-                        </Grid>
-                        <Link>
-                            <IconButton
-                              size="small"
-                              onClick={() => handleDownloadImage(imageName ,imageExtension)}
-                              sx={{
-                                top: 70,
-                                right: 15,
-                                zIndex: 9,
-                                height: "60",
-                                position: 'absolute',
-                                color: (theme) => alpha(theme.palette.common.white, 0.8),
-                                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                                '&:hover': {
-                                  bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                                },
-                              }}
-                            >
-                              <Iconify icon="line-md:download-loop" width={18} />
-                            </IconButton>
-                          </Link>
-                        <Box component="img" sx={{minWidth:"350px", minHeight:"350px"}} alt={file?.name}  src={`data:image/png;base64, ${imageData}`}/>
-                      </Dialog>
+                       <ImagePreviewDialog  onPreview={onPreview} handleClosePreview={handleClosePreview} handleDownloadImage={handleDownloadImage} imageName={imageName} imageExtension={imageExtension} file={file} imageData={imageData} />
                       <Link>
                         <IconButton
                           size="small"

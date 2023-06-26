@@ -35,7 +35,6 @@ export default function CustomerViewForm() {
   const { customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
-
   // console.log("customer : ",customer)
   // const toggleEdit = () => {
   //   dispatch(setCustomerEditFormVisibility(true));
@@ -55,7 +54,7 @@ export default function CustomerViewForm() {
   };
 
   const onDelete = async () => {
-    try{
+    try {
       await dispatch(deleteCustomer(customer._id));
       navigate(PATH_DASHBOARD.customer.list);
     } catch (err) {
@@ -66,17 +65,17 @@ export default function CustomerViewForm() {
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar("Customer delete failed!",{ variant: `error` });
-      console.log("Error:", err);
+      enqueueSnackbar('Customer delete failed!', { variant: `error` });
+      console.log('Error:', err);
     }
   };
   const handleVerification = async () => {
     try {
       await dispatch(setCustomerVerification(customer._id));
-      enqueueSnackbar("Customer Verified!");
-    }catch(error){
-      console.log(error)
-      enqueueSnackbar("Customer Verify failed!",{variant:"error"});
+      enqueueSnackbar('Customer Verified!');
+    } catch (error) {
+      console.log(error);
+      enqueueSnackbar('Customer Verify failed!', { variant: 'error' });
     }
   };
 
@@ -119,7 +118,6 @@ export default function CustomerViewForm() {
           name2={customer?.name}
         />
       </Stack>
-
       <Grid container direction="row">
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
@@ -131,16 +129,20 @@ export default function CustomerViewForm() {
               handleEdit={handleEdit}
               onDelete={onDelete}
             />
-             <Grid display="inline-flex" >
-                <Tooltip title="Active">
-                  <ViewFormField sm={12} isActive={defaultValues.isActive} />
-                </Tooltip>
-                <Tooltip title="Verified By">
-                  <ViewFormField sm={12} customerVerificationCount={customer?.verifications?.length} verified customerVerifiedBy={customer?.verifications} />
-                </Tooltip>
-              </Grid>
+            <Grid display="inline-flex">
+              <Tooltip title="Active">
+                <ViewFormField sm={12} isActive={defaultValues.isActive} />
+              </Tooltip>
+              <Tooltip title="Verified By">
+                <ViewFormField
+                  sm={12}
+                  customerVerificationCount={customer?.verifications?.length}
+                  verified
+                  customerVerifiedBy={customer?.verifications}
+                />
+              </Tooltip>
+            </Grid>
             <Grid container>
-               
               <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
               <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
               <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />

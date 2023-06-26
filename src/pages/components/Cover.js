@@ -1,50 +1,18 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
-// @mui
-import { styled } from '@mui/material/styles';
-import { Box, Typography, Button, Grid, Link } from '@mui/material';
-
+import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import ListAltIcon from '@mui/icons-material/ListAlt';
-import { bgBlur } from '../../utils/cssStyles';
+import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Image from '../../components/image';
-import { CustomAvatar } from '../../components/custom-avatar';
-import Iconify from '../../components/iconify';
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import CoverCustomAvatar from './CoverCustomAvatar';
+import CoverSettingsIcons from './CoverSettingsIcons';
+import CoverTitles from './CoverTitles';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import useResponsive from '../../hooks/useResponsive';
-
-// ----------------------------------------------------------------------
-
-const StyledRoot = styled('div')(({ theme }) => ({
-  '&:before': {
-    ...bgBlur({
-      color: theme.palette.primary.dark,
-    }),
-    top: 0,
-    zIndex: 9,
-    content: "''",
-    width: '100%',
-    height: 'calc(100% - 50px)',
-    position: 'absolute',
-  },
-}));
-
-const StyledInfo = styled('div')(({ theme }) => ({
-  left: 0,
-  right: 0,
-  zIndex: 99,
-  position: 'absolute',
-  [theme.breakpoints.up('md')]: {
-    display: 'flex',
-  },
-}));
 
 // ----------------------------------------------------------------------
 
@@ -60,10 +28,7 @@ Cover.propTypes = {
   backLink: PropTypes.string,
   model: PropTypes.string,
   customer: PropTypes.string,
-  documentTypeSettings: PropTypes.string,
-  documentCategorySettings: PropTypes.string,
-  documentSettings: PropTypes.string,
-  generalSettings: PropTypes.string
+  generalSettings: PropTypes.string,
 };
 export function Cover({
   tradingName,
@@ -78,22 +43,9 @@ export function Cover({
   model,
   customer,
   generalSettings,
-  documentTypeSettings,
-  documentCategorySettings,
-  documentSettings
 }) {
   const navigate = useNavigate();
-  const { techparamcategory } = useSelector((state) => state.techparamcategory);
   const handleNavigate = () => {
-    navigate(PATH_MACHINE.general.app);
-  };
-  const handleDocumentNavigate = () => {
-    navigate(PATH_MACHINE.general.app);
-  };
-  const handleDocumentCategoryNavigate = () => {
-    navigate(PATH_MACHINE.general.app);
-  };
-  const handleDocumentTypeNavigate = () => {
     navigate(PATH_MACHINE.general.app);
   };
   const handleSettingsNavigate = () => {
@@ -104,7 +56,7 @@ export function Cover({
   };
 
   const isMobile = useResponsive('down', 'sm');
-  // name has a space ?
+
   const nameNumMaxLength = name?.split(' ')[0];
   const nameNumMaxLength2 = name?.split(' ')[1]?.substring(0, 10);
   const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;
@@ -114,177 +66,35 @@ export function Cover({
       <StyledInfo
         style={{ width: '100%', flex: 1, display: 'flex', justifyContent: 'space-between' }}
       >
-        {photoURL ? (
-          <CustomAvatar
-            name={name !== 'HOWICK LTD.' ? name : ''}
-            alt={name}
-            // name={icon === undefined ? name : ''}
-            sx={{
-              // mx: {xs:'auto', md:0},
-              borderWidth: 2,
-              borderStyle: 'solid',
-              borderColor: 'common.white',
-              color: '#fff',
-              fontSize: '4rem',
-              ml: { xs: 3, md: 3 },
-              mt: { xs: 1, md: 1 },
-              width: { xs: 110, md: 110 },
-              height: { xs: 110, md: 110 },
-            }}
-          >
+        {photoURL && (
+          <CoverCustomAvatar name={name !== 'HOWICK LTD.' && name} alt={name}>
             {/* if the page is Howick, will show the howick logo */}
             {name !== 'HOWICK LTD.' ? null : <LogoAvatar />}
-          </CustomAvatar>
-        ) : (
-          ''
+          </CoverCustomAvatar>
         )}
+        <CoverTitles
+          name={name}
+          nameTitle={nameTitle}
+          serialNo={serialNo}
+          photoURL={photoURL}
+          isMobile={isMobile}
+          machineChildren={
+            <>
+              {serialNo && serialNo}
+              {name && name.length > 15 && `/${nameTitle}`}
+            </>
+          }
+          children={isMobile && name?.length > 15 ? '' : name}
+        />
 
-        {serialNo ? (
-          <Typography
-            variant={isMobile && photoURL ? 'h3' : 'h2'}
-            sx={{
-              px: 3,
-              color: 'common.white',
-              mt: { xs: nameTitle.length > 15 ? 5 : 8, md: 7 },
-              mb: 0,
-              display: { xs: 'flex', md: 'block' },
-            }}
-          >
-            {/* serial numbers are not to meant to be longer than 6 digits (in a very long time), *we
-            are still on 5 digits */}
-            {serialNo && serialNo}
-            {name && name.length > 15 ? `/${nameTitle}` : ''}
-          </Typography>
-        ) : (
-          <Typography
-            variant={photoURL ? 'h3' : 'h2'}
-            sx={{
-              px: 3,
-              color: 'common.white',
-              mt: { xs: 7, md: 6 },
-              display: { xs: 'flex', md: 'block' },
-            }}
-          >
-            {/* if in mobile/device, only the avatar will show up for customer */}
-            {isMobile && name?.length > 15 ? '' : name}
-          </Typography>
-        )}
-
-        <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
-          {backLink ? (
-            <Link
-              title="Go Back"
-              sx={{
-                ml: 'auto',
-                mt: 'auto',
-                mb: 2,
-                color: 'common.white',
-              }}
-              component="button"
-              variant="body2"
-              onClick={handleBacklink}
-            >
-              <Iconify icon="material-symbols:arrow-back-rounded" />
-            </Link>
-          ) : (
-            ' '
-          )}
-          {setting ? (
-            <Link
-              title="Machine Setting"
-              sx={{
-                cursor: 'hover',
-                mt: 'auto',
-                color: 'common.white',
-                mx: 2,
-                mb: { xs: 0, md: 1 },
-              }}
-              component="button"
-              variant="body2"
-              onClick={handleNavigate}
-            >
-              <Iconify icon="mdi:cog" />
-            </Link>
-          ) : (
-            ' '
-          )}
-          {generalSettings ? (
-            <Link
-              title="Settings"
-              sx={{
-                cursor: 'hover',
-                mt: 'auto',
-                color: 'common.white',
-                mx: 2,
-                mb: { xs: 0, md: 1 },
-              }}
-              component="button"
-              variant="body2"
-              onClick={handleSettingsNavigate}
-            >
-              <Iconify icon="mdi:cog" />
-            </Link>
-          ) : (
-            ' '
-          )}
-          {documentCategorySettings ? (
-            <Link
-              title="Settings"
-              sx={{
-                cursor: 'hover',
-                mt: 'auto',
-                color: 'common.white',
-                mx: 2,
-                mb: { xs: 0, md: 1 },
-              }}
-              component="button"
-              variant="body2"
-              onClick={handleDocumentCategoryNavigate}
-            >
-              <Iconify icon="mdi:cog" />
-            </Link>
-          ) : (
-            ' '
-          )}
-          {documentTypeSettings ? (
-            <Link
-              title="Settings"
-              sx={{
-                cursor: 'hover',
-                mt: 'auto',
-                color: 'common.white',
-                mx: 2,
-                mb: { xs: 0, md: 1 },
-              }}
-              component="button"
-              variant="body2"
-              onClick={handleDocumentTypeNavigate}
-            >
-              <Iconify icon="mdi:cog" />
-            </Link>
-          ) : (
-            ' '
-          )}
-          {documentSettings ? (
-            <Link
-              title="Settings"
-              sx={{
-                cursor: 'hover',
-                mt: 'auto',
-                color: 'common.white',
-                mx: 2,
-                mb: { xs: 0, md: 1 },
-              }}
-              component="button"
-              variant="body2"
-              onClick={handleDocumentNavigate}
-            >
-              <Iconify icon="mdi:cog" />
-            </Link>
-          ) : (
-            ' '
-          )}
-        </Grid>
+        <CoverSettingsIcons
+          setting={setting}
+          handleNavigate={handleNavigate}
+          backLink={backLink}
+          handleBacklink={handleBacklink}
+          handleSettingsNavigate={handleSettingsNavigate}
+          generalSettings={generalSettings}
+        />
       </StyledInfo>
     </StyledRoot>
   );

@@ -63,12 +63,12 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const toggleChecked = async () => {
     setChecked((value) => !value);
     if (checked || siteEditFormVisibility) {
-      // dispatch(setSiteEditFormVisibility(false));
+      dispatch(setSiteFormVisibility(false));
       enqueueSnackbar('Please close the form before opening a new one', {
         variant: 'warning',
       });
-      // dispatch(setSiteFormVisibility(true));
-      // setIsExpanded(false);
+      setCardActiveIndex(null);
+      setIsExpanded(false);
     } else {
       dispatch(setSiteFormVisibility(true));
       setCardActiveIndex(null);
@@ -101,7 +101,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
 
   // conditions for rendering the contact view, edit, and add forms
-  const shouldShowSiteView = isExpanded && !siteEditFormVisibility;
+  const shouldShowSiteView = isExpanded && !siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteEdit = siteEditFormVisibility && !siteAddFormVisibility;
   const shouldShowSiteAdd = siteAddFormVisibility && !siteEditFormVisibility;
 
@@ -119,19 +119,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           step={1}
           step2
           step3
-          step4
           path={PATH_DASHBOARD.customer.list}
           name="Customers"
           path2={PATH_DASHBOARD.customer.view}
           name2={customer.name}
-          name3="Sites"
           path3={PATH_DASHBOARD.customer.sites}
-          path4={PATH_DASHBOARD.customer}
-          name4={
+          name3={
             <Stack>
-              {siteEditFormVisibility
-                ? `Edit ${site.name}`
-                : isExpanded && site.name}
+              {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}
               {siteAddFormVisibility && !isExpanded && 'New Site Form'}
             </Stack>
           }
@@ -153,7 +148,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             onClick={(e) => e.stopPropagation()}
             snapAlign="start"
             contacts={sites.length}
-            disabled={siteEditFormVisibility}
+            disabled={siteEditFormVisibility || siteAddFormVisibility}
           >
             <Grid container justifyContent="flex-start" direction="column" gap={1}>
               {sites.map((Site, index) => {
@@ -170,8 +165,9 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                         lg={4}
                         display={{ xs: 'flex', lg: 'block' }}
                         onClick={() => {
-                          if (!siteEditFormVisibility) {
+                          if (!siteEditFormVisibility && !siteAddFormVisibility) {
                             handleActiveCard(index);
+                            handleExpand(index);
                           }
                         }}
                         sx={{
@@ -185,22 +181,19 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                         >
                           <CardActionArea
                             active={activeIndex === index}
-                            disabled={siteEditFormVisibility}
+                            disabled={siteEditFormVisibility || siteAddFormVisibility}
                           >
                             <Link
                               underline="none"
-                              disabled={siteEditFormVisibility}
+                              disabled={siteEditFormVisibility || siteAddFormVisibility}
                               onClick={async () => {
-                                await dispatch(getSite(customer._id,Site._id))
+                                await dispatch(getSite(customer._id, Site._id));
                                 setOpenSite(true);
                                 if (!isExpanded && !siteAddFormVisibility) {
+                                  handleActiveCard(!isExpanded ? index : null);
                                   handleExpand(index);
                                   setSiteFormVisibility(!siteAddFormVisibility);
-                                } else if (
-                                  isExpanded &&
-                                  site  &&
-                                  !siteAddFormVisibility
-                                ) {
+                                } else if (isExpanded && site && !siteAddFormVisibility) {
                                   handleExpand(index);
                                 } else {
                                   setIsExpanded(false);
@@ -245,7 +238,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             <Grid container direction="row" gap={1}>
               <Card>
                 <CardActionArea>
-                  {site.lat && site.long && (
+                  {site?.lat && site?.long && (
                     <GoogleMaps
                       mapHeight="400px"
                       lat={site.lat ? site.lat : 0}
@@ -275,10 +268,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                     <Grid item md={12}>
                       <Card>
                         <CardActionArea>
-                          {site.lat && site.long && (
+                          {site?.lat && site?.long && (
                             <GoogleMaps
-                              lat={site.lat ? site.lat : 0}
-                              lng={site.long ? site.long : 0}
+                              lat={site?.lat ? site.lat : 0}
+                              lng={site?.long ? site.long : 0}
                             />
                           )}
                         </CardActionArea>

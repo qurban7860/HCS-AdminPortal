@@ -116,7 +116,7 @@ useEffect(()=>{
             ? 'h4'
             : 'body1'
         }
-        style={{ display: 'flex', alignItems: 'center' , whiteSpace: "pre-line",}}
+        style={{ display: 'flex', alignItems: 'center' , whiteSpace: "pre-line",wordBreak: 'break-word'}}
       >
         {isActive !== undefined && (
           <>

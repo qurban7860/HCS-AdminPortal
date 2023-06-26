@@ -45,6 +45,7 @@ import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import DeleteIconButton from '../../components/DeleteIconButton';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ImagePreviewDialog from '../../components/ImagePreviewDialog';
 
 const Loadable = (Component) => (props) =>
   (
@@ -272,9 +273,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
         <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
         {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
-
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-
         <Grid item sx={{ display: 'flex-inline' }}>
           <Grid container justifyContent="flex-start" gap={1}>
             {currentCustomerDocument?.documentVersions[0]?.files?.map((file) =>
@@ -332,66 +331,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                           <Iconify icon="icon-park-outline:preview-open" width={18} />
                         </IconButton>
                       </Link>
-                      <Dialog
-                        maxWidth="md"
-                        open={onPreview}
-                        onClose={handleClosePreview}
-                        aria-labelledby="keep-mounted-modal-title"
-                        aria-describedby="keep-mounted-modal-description"
-                      >
-                        <Grid
-                          container
-                          item
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            bgcolor: 'primary.main',
-                            color: 'primary.contrastText',
-                            padding: '10px',
-                          }}
-                        >
-                          <Typography variant="h4" sx={{ px: 2 }}>
-                            {`${imageName}.${imageExtension}`}
-                          </Typography>{' '}
-                          <Link
-                            onClick={handleClosePreview}
-                            href="#"
-                            underline="none"
-                            sx={{ ml: 'auto' }}
-                          >
-                            {' '}
-                            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-                          </Link>
-                        </Grid>
-                        <Link>
-                          <IconButton
-                            size="small"
-                            onClick={() => handleDownloadImage(imageName, imageExtension)}
-                            sx={{
-                              top: 70,
-                              right: 15,
-                              zIndex: 9,
-                              width: 28,
-                              height: 28,
-                              position: 'absolute',
-                              color: (theme) => alpha(theme.palette.common.white, 0.8),
-                              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                              '&:hover': {
-                                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                              },
-                            }}
-                          >
-                            <Iconify icon="line-md:download-loop" width={18} />
-                          </IconButton>
-                        </Link>
-                        <Box
-                          component="img"
-                          sx={{ minWidth: '350px', minHeight: '350px' }}
-                          alt={file?.name}
-                          src={`data:image/png;base64, ${imageData}`}
-                        />
-                      </Dialog>
+                      <ImagePreviewDialog  onPreview={onPreview} handleClosePreview={handleClosePreview} handleDownloadImage={handleDownloadImage} imageName={imageName} imageExtension={imageExtension} file={file} imageData={imageData}/>
                       <Link>
                         <IconButton
                           size="small"

@@ -242,15 +242,15 @@ export default function DocumentAddForm({currentDocument}) {
         }
         if(selectedValue === "new"){
           await dispatch(addDocument(customerVal?._id, machineVal._id ,data));
-          enqueueSnackbar('Machine document save successfully!');
+          enqueueSnackbar('Document save successfully!');
           navigate(PATH_DASHBOARD.document.dashboard);
         }else if (selectedVersionValue === "newVersion"){
             await dispatch(addDocumentVersion(documentVal._id,data));
-          enqueueSnackbar('Machine document version updated successfully!');
+          enqueueSnackbar('Document version updated successfully!');
           navigate(PATH_DASHBOARD.document.dashboard);
         }else{
           await dispatch(updateDocumentVersion(documentVal._id,documentVal?.documentVersions[0]?._id,data));
-          enqueueSnackbar('Machine document updated successfully!');
+          enqueueSnackbar('Document updated successfully!');
           navigate(PATH_DASHBOARD.document.dashboard);
           }
           dispatch(getDocuments())
@@ -273,7 +273,7 @@ export default function DocumentAddForm({currentDocument}) {
         setCustomerSiteVal("")
         reset();
       } catch(error){
-        enqueueSnackbar('Machine Document Save failed!', { variant: `error` });
+        enqueueSnackbar('Document Save failed!', { variant: `error` });
         console.error(error);
       }
   };
