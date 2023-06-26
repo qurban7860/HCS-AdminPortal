@@ -123,7 +123,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       </Stack> */}
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
         <ViewFormField sm={6} heading="Fax" param={defaultValues?.fax} />
         <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
@@ -133,21 +133,21 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         <ViewFormField sm={6} heading="City" param={defaultValues?.city} />
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Post Code" param={defaultValues?.postcode} />
-        <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
+        <ViewFormField sm={6} heading="Latitude" param={defaultValues?.lat} />
         <ViewFormField sm={6} heading="Longitude" param={defaultValues?.long} />
         <Grid container>
           <ViewFormField
             sm={6}
             heading="Primary Billing Contact"
             param={defaultValues?.primaryBillingContact?.firstName}
-            secondparam={defaultValues?.primaryBillingContact?.lastName}
+            secondParam={defaultValues?.primaryBillingContact?.lastName}
           />
           <ViewFormField
             sm={6}
             heading="Primary Technical Contact"
             param={defaultValues?.primaryTechnicalContact?.firstName}
-            secondparam={defaultValues?.primaryTechnicalContact?.lastName}
+            secondParam={defaultValues?.primaryTechnicalContact?.lastName}
           />
         </Grid>
         <ViewFormField />

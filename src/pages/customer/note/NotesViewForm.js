@@ -123,7 +123,7 @@ export default function NoteViewForm({ currentNote = null }) {
           sm={6}
           heading="Contact"
           param={defaultValues?.contact_firstName}
-          secondparam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
+          secondParam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
         />
         <ViewFormField sm={12} heading="Note" param={defaultValues?.note} />
         <ViewFormField />

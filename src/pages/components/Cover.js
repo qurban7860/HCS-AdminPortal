@@ -60,6 +60,9 @@ Cover.propTypes = {
   backLink: PropTypes.string,
   model: PropTypes.string,
   customer: PropTypes.string,
+  documentTypeSettings: PropTypes.string,
+  documentCategorySettings: PropTypes.string,
+  documentSettings: PropTypes.string,
   generalSettings: PropTypes.string
 };
 export function Cover({
@@ -74,11 +77,23 @@ export function Cover({
   backLink,
   model,
   customer,
-  generalSettings
+  generalSettings,
+  documentTypeSettings,
+  documentCategorySettings,
+  documentSettings
 }) {
   const navigate = useNavigate();
   const { techparamcategory } = useSelector((state) => state.techparamcategory);
   const handleNavigate = () => {
+    navigate(PATH_MACHINE.general.app);
+  };
+  const handleDocumentNavigate = () => {
+    navigate(PATH_MACHINE.general.app);
+  };
+  const handleDocumentCategoryNavigate = () => {
+    navigate(PATH_MACHINE.general.app);
+  };
+  const handleDocumentTypeNavigate = () => {
     navigate(PATH_MACHINE.general.app);
   };
   const handleSettingsNavigate = () => {
@@ -206,6 +221,63 @@ export function Cover({
               component="button"
               variant="body2"
               onClick={handleSettingsNavigate}
+            >
+              <Iconify icon="mdi:cog" />
+            </Link>
+          ) : (
+            ' '
+          )}
+          {documentCategorySettings ? (
+            <Link
+              title="Settings"
+              sx={{
+                cursor: 'hover',
+                mt: 'auto',
+                color: 'common.white',
+                mx: 2,
+                mb: { xs: 0, md: 1 },
+              }}
+              component="button"
+              variant="body2"
+              onClick={handleDocumentCategoryNavigate}
+            >
+              <Iconify icon="mdi:cog" />
+            </Link>
+          ) : (
+            ' '
+          )}
+          {documentTypeSettings ? (
+            <Link
+              title="Settings"
+              sx={{
+                cursor: 'hover',
+                mt: 'auto',
+                color: 'common.white',
+                mx: 2,
+                mb: { xs: 0, md: 1 },
+              }}
+              component="button"
+              variant="body2"
+              onClick={handleDocumentTypeNavigate}
+            >
+              <Iconify icon="mdi:cog" />
+            </Link>
+          ) : (
+            ' '
+          )}
+          {documentSettings ? (
+            <Link
+              title="Settings"
+              sx={{
+                cursor: 'hover',
+                mt: 'auto',
+                color: 'common.white',
+                mx: 2,
+                mb: { xs: 0, md: 1 },
+              }}
+              component="button"
+              variant="body2"
+              onClick={handleDocumentNavigate}
             >
               <Iconify icon="mdi:cog" />
             </Link>

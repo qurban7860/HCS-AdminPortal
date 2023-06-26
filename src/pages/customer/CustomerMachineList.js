@@ -236,10 +236,8 @@ export default function CustomerContactList() {
                       display={{ sm: 'none', md: 'none', lg: 'block' }}
                     >
                       <Typography>
-                        {Object.values(address ?? {})
-                          .map((value) => typeof value === 'string' && value.trim())
-                          .filter((value) => value !== '')
-                          .join(', ')}
+                      {Object.values(address ?? {}).map(value => typeof value === "string" ? value.trim() : "").filter(value => value !== "").join(", ")}
+
                       </Typography>
                       {/* {customerMachine?.instalationSite?.address?.city ? customerMachine?.instalationSite?.address?.city : ""}
                         {customerMachine?.instalationSite?.address?.region?.trim() !== undefined  ? ", " : ''}

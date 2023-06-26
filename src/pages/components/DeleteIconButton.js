@@ -13,6 +13,11 @@ DeleteIconButton.propTypes = {
 };
 
 export default function DeleteIconButton({ onClick, left }) {
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const disableDelete = userRoles.some(role => role?.disableDelete === true);
+
   const [openConfirm, setOpenConfirm] = useState(false);
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -31,8 +36,9 @@ export default function DeleteIconButton({ onClick, left }) {
   } = methods;
 
   return (
-    <>
+    <>{!disableDelete &&
       <IconButton
+        // disabled={disableDelete}
         size="small"
         onClick={handleOpenConfirm}
         sx={{
@@ -48,9 +54,9 @@ export default function DeleteIconButton({ onClick, left }) {
             bgcolor: (theme) => alpha(theme.palette.error.dark, 0.98),
           },
         }}
-      >
+        >
         <Iconify icon="material-symbols:delete" width={18} />
-      </IconButton>
+      </IconButton>}
       <ConfirmDialog
         open={openConfirm}
         onClose={() => {
