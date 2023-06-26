@@ -1,0 +1,15 @@
+export   const SecurityUserSchema = Yup.object().shape({
+    name: Yup.string().required('First name is required'),
+    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    password: Yup.string().required('Password is required').min(6),
+    passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    // phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+    roles: Yup.array().required('Roles are required'),
+    // address: Yup.string().required('Address is required'),
+    // country: Yup.string().required('Country is required'),
+    // state: Yup.string().required('State is required'),
+    // city: Yup.string().required('City is required'),
+    // role: Yup.string().required('Role is required').nullable(),
+    // zipCode: Yup.string(),
+    // avatarUrl: Yup.string().nullable(true),
+  });

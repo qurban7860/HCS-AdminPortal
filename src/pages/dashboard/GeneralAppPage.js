@@ -10,7 +10,6 @@ import ChartMixed from '../../sections/_examples/extra/chart/ChartMixed';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
-//
 import GoogleMaps from '../../assets/GoogleMaps';
 
 import {
@@ -23,21 +22,8 @@ import {
 // components
 import { useSettingsContext } from '../../components/settings';
 // sections
-import {
-  AppWidget,
-  AppWelcome,
-  AppFeatured,
-  AppNewInvoice,
-  AppTopAuthors,
-  AppTopRelated,
-  AppAreaInstalled,
-  AppWidgetSummary,
-  AppCurrentDownload,
-  AppTopInstalledCountries,
-} from '../../sections/@dashboard/general/app';
+import { AppWidget, AppWelcome } from '../../sections/@dashboard/general/app';
 // assets
-import { SeoIllustration } from '../../assets/illustrations';
-import MachineListTableToolbar from '../machine/MachineListTableToolbar';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count';
 

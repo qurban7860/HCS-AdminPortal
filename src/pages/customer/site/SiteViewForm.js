@@ -56,13 +56,12 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       await dispatch(deleteSite(customer._id, currentSite._id));
       // handleCloseConfirm();
       dispatch(getSites(customer._id));
-      enqueueSnackbar("Site deleted Successfully!");
+      enqueueSnackbar('Site deleted Successfully!');
       setIsExpanded(false);
     } catch (error) {
-        console.log(error)
-      enqueueSnackbar("Sites delete failed!",{ variant: `error` });
+      console.log(error);
+      enqueueSnackbar('Sites delete failed!', { variant: `error` });
     }
-
   };
 
   const handleEdit = async () => {
@@ -91,7 +90,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       country: currentSite ? currentSite.address?.country : site?.address.country || '',
       primaryBillingContact: currentSite?.primaryBillingContact || null,
       primaryTechnicalContact: currentSite?.primaryTechnicalContact || null,
-      isActive: currentSite.isActive,
+      isActive: currentSite?.isActive,
       createdAt: currentSite?.createdAt || '',
       createdByFullName: currentSite?.createdBy?.name || '',
       createdIP: currentSite?.createdIP || '',
@@ -190,5 +189,3 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
     </Grid>
   );
 }
-
-
