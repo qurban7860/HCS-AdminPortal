@@ -272,9 +272,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
         <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
         {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
-
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-
         <Grid item sx={{ display: 'flex-inline' }}>
           <Grid container justifyContent="flex-start" gap={1}>
             {currentCustomerDocument?.documentVersions[0]?.files?.map((file) =>

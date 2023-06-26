@@ -111,6 +111,7 @@ export function StyledScrollbar({ contacts, children, ...props }) {
           sm: contacts === 1 ? '10vh' : '20vh',
           md: 'calc(100vh - 100px)',
         },
+
         scrollSnapType: 'y mandatory',
         scrollSnapAlign: 'start',
         scrollbarWidth: 'none',

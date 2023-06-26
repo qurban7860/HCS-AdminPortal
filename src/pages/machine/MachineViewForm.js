@@ -87,30 +87,30 @@ export default function MachineViewForm() {
     navigate(PATH_DASHBOARD.customer.view(id));
   };
   const onDelete = async () => {
-    try{
+    try {
       await dispatch(deleteMachine(machine._id));
       dispatch(getMachines());
       navigate(PATH_MACHINE.machine.list);
     } catch (err) {
-    // if(err.Message){
-    //     enqueueSnackbar(err.Message,{ variant: `error` })
-    //   }else if(err.message){
-    //     enqueueSnackbar(err.message,{ variant: `error` })
-    //   }else{
-    //     enqueueSnackbar("Something went wrong!",{ variant: `error` })
-    //   }
-      enqueueSnackbar("Machine delete failed!",{ variant: `error` })
-      console.log("Error:", err);
+      // if(err.Message){
+      //     enqueueSnackbar(err.Message,{ variant: `error` })
+      //   }else if(err.message){
+      //     enqueueSnackbar(err.message,{ variant: `error` })
+      //   }else{
+      //     enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      //   }
+      enqueueSnackbar('Machine delete failed!', { variant: `error` });
+      console.log('Error:', err);
     }
   };
   const handleVerification = async () => {
     try {
       await dispatch(setMachineVerification(machine._id, machine?.isVerified));
       dispatch(getMachine(machine._id));
-      enqueueSnackbar("Machine Verified successfully!")
-    }catch(error) {
+      enqueueSnackbar('Machine Verified successfully!');
+    } catch (error) {
       console.log(error);
-      enqueueSnackbar("Machine Verification failed!",{variant:"error"})
+      enqueueSnackbar('Machine Verification failed!', { variant: 'error' });
     }
   };
   const [openCustomer, setOpenCustomer] = useState(false);
@@ -172,23 +172,29 @@ export default function MachineViewForm() {
         <ViewFormEditDeleteButtons
           sx={{ pt: 5 }}
           verificationCount={machine?.verifications?.length}
-          isVerified={machine?.verifications?.find((verified) => verified.verifiedBy?._id === userId)}
+          isVerified={machine?.verifications?.find(
+            (verified) => verified.verifiedBy?._id === userId
+          )}
           handleVerification={handleVerification}
           disableTransferButton={disableTransferButton}
           handleEdit={handleEdit}
           onDelete={onDelete}
           handleTransfer={handleTransfer}
         />
-         
       </Grid>
-      <Grid display="inline-flex" >
-            <Tooltip title="Active">
-              <ViewFormField sm={12} isActive={defaultValues.isActive} />
-            </Tooltip>
-            <Tooltip title="Verified By">
-              <ViewFormField sm={12} machineVerificationCount={machine?.verifications?.length} verified machineVerifiedBy={machine?.verifications} />
-            </Tooltip>
-          </Grid>
+      <Grid display="inline-flex">
+        <Tooltip title="Active">
+          <ViewFormField sm={12} isActive={defaultValues.isActive} />
+        </Tooltip>
+        <Tooltip title="Verified By">
+          <ViewFormField
+            sm={12}
+            machineVerificationCount={machine?.verifications?.length}
+            verified
+            machineVerifiedBy={machine?.verifications}
+          />
+        </Tooltip>
+      </Grid>
       <Grid container>
         <FormLabel content="Key Details" />
         <Grid container>
