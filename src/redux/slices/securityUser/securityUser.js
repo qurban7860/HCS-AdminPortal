@@ -173,7 +173,6 @@ export function addSecurityUser(param) {
 
 export function updateSecurityUser(param,id) {
   return async (dispatch) => {
-    dispatch(resetSecurityUser());
     dispatch(slice.actions.startLoading());
     try{
       const data = {
@@ -190,9 +189,10 @@ export function updateSecurityUser(param,id) {
             data.password = param.password 
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}security/users/${id}`, data);
-      if(regEx.test(response.status)){
-        dispatch(getSecurityUsers());
-      }
+      dispatch(resetSecurityUser());
+      // if(regEx.test(response.status)){
+      //   dispatch(getSecurityUsers());
+      // }
       return response;
     } catch (error) {
       console.error(error);
