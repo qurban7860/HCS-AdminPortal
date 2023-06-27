@@ -75,14 +75,18 @@ export default function ViewFormEditDeleteButtons({
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
   const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
+  let disableDelete = userRoles.some(role => role?.disableDelete === true);
+  if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
+    disableDelete = false;
+  } 
 
-  const disableDelete = userRoles.some(role => role?.disableDelete === true);
-useEffect(() =>{
-  if(disableDelete){
-    setDeleteButtonColor('text.secondary')
-    setDeleteButtonHoverColor('text.secondary.dark');
-  }
-},[disableDelete])
+
+  useEffect(() =>{
+    if(disableDelete){
+      setDeleteButtonColor('text.secondary')
+      setDeleteButtonHoverColor('text.secondary.dark');
+    }
+  },[disableDelete])
 
   if(disableDelete){
     disableDeleteButton = true;

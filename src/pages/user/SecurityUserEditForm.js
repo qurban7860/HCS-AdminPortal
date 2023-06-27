@@ -34,6 +34,8 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 
 
 export default function SecurityUserEditForm() {
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
   const regEx = /^[2][0-9][0-9]$/
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
@@ -55,6 +57,8 @@ export default function SecurityUserEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [ roleTypesDisabled, disableRoleTypes] = useState(false);
+
 
   const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }};
   
@@ -68,8 +72,15 @@ useEffect(() => {
   if(customerVal){
     dispatch(getContacts(customerVal._id));
   }
+  if(userRoles){
+    if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
+      disableRoleTypes(false);
+    } else {
+      disableRoleTypes(true);
+    }
+  }
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [dispatch,customerVal]);
+}, [dispatch, customerVal, userRoles]);
 
 useEffect(() => {
   const mappedRoles = roles.map((role) => ({
@@ -386,6 +397,7 @@ useEffect(() => {
             >
               <RHFTextField name="loginEmail" label="Login Email"  disabled/>
             <RHFMultiSelect
+                disabled={roleTypesDisabled}
                 chip
                 checkbox
                 name="roles"

@@ -35,6 +35,8 @@ SecurityUserAddForm.propTypes = {
 };
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
   const regEx = /^[^2]*$/
   const [ showPassword, setShowPassword] = useState(false);
   const [ name, setName] = useState("");
@@ -46,6 +48,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const { roles } = useSelector((state) => state.role);
   const [sortedRoles, setSortedRoles] = useState([]);
   const [ phone, setPhone] = useState('');
+  const [ roleTypesDisabled, disableRoleTypes] = useState(false);
 
   const ROLES = [];
   roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
@@ -80,8 +83,15 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     if(customerVal){
       dispatch(getContacts(customerVal._id));
     }
+    if(userRoles){
+      if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
+        disableRoleTypes(false);
+      } else {
+        disableRoleTypes(true);
+      }
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch,customerVal]);
+  }, [dispatch, customerVal, userRoles]);
 
   useEffect(() => {
     const mappedRoles = roles.map((role) => ({
@@ -418,6 +428,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               />
 
               <RHFMultiSelect
+                disabled={roleTypesDisabled}
                 chip
                 checkbox
                 name="roles"

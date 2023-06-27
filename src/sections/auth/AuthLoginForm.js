@@ -27,10 +27,10 @@ export default function AuthLoginForm() {
   const [uremember, setRemember] = useState(false);
   
   useEffect(() => {
-    const storedEmail =       localStorage.getItem("email");
-    const storedPassword =    localStorage.getItem("password");
+    const storedEmail =       localStorage.getItem("UserEmail");
+    const storedPassword =    localStorage.getItem("UserPassword");
     const storedRemember =    localStorage.getItem("remember");
-    if (storedEmail && storedPassword) {
+    if (storedEmail && storedPassword && storedRemember) {
       setEmail(storedEmail);
       setPassword(storedPassword);
       setRemember(true);
@@ -70,7 +70,7 @@ export default function AuthLoginForm() {
       if (uremember) {
         localStorage.setItem("UserEmail", data.email);
         localStorage.setItem("UserPassword", data.password);
-        localStorage.setItem("remember", data.remember);
+        localStorage.setItem("remember", uremember);
       } else {
         localStorage.removeItem("UserEmail");
         localStorage.removeItem("UserPassword");
