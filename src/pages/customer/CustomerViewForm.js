@@ -23,7 +23,6 @@ import {
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 
 // ----------------------------------------------------------------------

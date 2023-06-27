@@ -160,7 +160,10 @@ export default function CustomerContactList() {
             to={PATH_DASHBOARD.customer.document}
             name={
               <Stack>
-                {customerMachines.length} {customerMachines.length > 1 ? 'Machines' : 'Machine'}
+                {customerMachines.length > 0 ? customerMachines.length : 'No Machines'}{' '}
+                {customerMachines.length > 1
+                  ? 'Machines'
+                  : customerMachines.length > 0 && 'Machine'}
               </Stack>
             }
           />

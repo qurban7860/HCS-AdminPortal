@@ -12,6 +12,7 @@ import {
   AccordionDetails,
   Divider,
   Breadcrumbs,
+  Typography,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -193,7 +194,11 @@ export default function DocumentList() {
                   name={
                     <Stack>
                       {customerDocumentFormVisibility && 'New Document'}
-                      {!expanded && documentName}
+                      {!expanded && (
+                        <Typography variant="body2" sx={{ color: 'text.disabled' }}>
+                          {customerDocuments.length} Documents
+                        </Typography>
+                      )}
                     </Stack>
                   }
                 />

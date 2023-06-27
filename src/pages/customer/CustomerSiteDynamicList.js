@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
 // @mui
 import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
 import {
@@ -15,7 +14,7 @@ import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData } from '../../components/table';
@@ -34,7 +33,6 @@ import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import SiteViewForm from './site/SiteViewForm';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 
 // ----------------------------------------------------------------------
 
@@ -128,6 +126,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             to={PATH_DASHBOARD.customer.contacts}
             name={
               <Stack>
+                {!siteAddFormVisibility && !siteEditFormVisibility && !isExpanded && 'Sites'}
                 {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}
                 {siteAddFormVisibility && !isExpanded && 'New Site Form'}
               </Stack>

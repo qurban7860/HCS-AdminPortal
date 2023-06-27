@@ -27,7 +27,6 @@ import {
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
@@ -122,6 +121,7 @@ export default function CustomerContactList(currentContact = null) {
             to={PATH_DASHBOARD.customer.contacts}
             name={
               <Stack>
+                {!formVisibility && !contactEditFormVisibility && !isExpanded && 'Contacts'}
                 {contactEditFormVisibility
                   ? `Edit ${currentContactData?.firstName}`
                   : isExpanded && currentContactData?.firstName}

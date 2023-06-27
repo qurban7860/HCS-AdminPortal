@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,8 +9,16 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Autocomplete,
+  TextField,
+  Breadcrumbs,
+} from '@mui/material';
 // global
 import { CONFIG } from '../../config-global';
 // slice
@@ -28,7 +36,7 @@ import { useSnackbar } from '../../components/snackbar';
 import Iconify from '../../components/iconify';
 import AddFormButtons from '../components/AddFormButtons';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import FormProvider, {
   RHFSelect,
   RHFMultiSelect,
@@ -146,16 +154,19 @@ export default function CustomerEditForm() {
     <>
       <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
         <AddButtonAboveAccordion name="New Site" toggleCancel={toggleCancel} isCustomer="true" />
-        <BreadcrumbsProducer
-          underline="none"
-          step={1}
-          step2
-          step3
-          path={PATH_DASHBOARD.customer}
-          name="Customer"
-          path2={PATH_DASHBOARD.customer.view}
-          name2={!customerEditFormVisibility ? `Edit ${customer?.name}` : `${customer?.name}`}
-        />
+      </Stack>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          separator="›"
+          sx={{ fontSize: '12px', color: 'text.disabled' }}
+        >
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+          <BreadcrumbsLink
+            to={PATH_DASHBOARD.customer.view}
+            name={!customerEditFormVisibility ? `Edit ${customer?.name}` : `${customer?.name}`}
+          />
+        </Breadcrumbs>
       </Stack>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
