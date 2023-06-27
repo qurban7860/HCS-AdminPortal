@@ -5,7 +5,7 @@ import { useDispatch, useSelector, batch } from 'react-redux';
 import { Card, Grid, Typography, Link, Dialog, Button } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DASHBOARD, PATH_CUSTOMER, PATH_SECURITY } from '../../routes/paths';
 // slices
 import {
   getLoggedInSecurityUser,
@@ -84,19 +84,19 @@ export default function SecurityUserViewForm() {
 
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));
-    navigate(PATH_DASHBOARD.user.edit(securityUser._id));
+    navigate(PATH_SECURITY.users.edit(securityUser._id));
   };
 
   const handleUpdatePassword = () => {
     // dispatch(setSecurityUserEditFormVisibility(true));
-    navigate(PATH_DASHBOARD.user.userPassword);
+    navigate(PATH_SECURITY.users.userPassword);
   };
 
   const onDelete = async () => {
     try {
       await dispatch(deleteSecurityUser(id));
       dispatch(getSecurityUsers());
-      navigate(PATH_DASHBOARD.user.list);
+      navigate(PATH_SECURITY.users.list);
     } catch (error) {
       // if (error.Message) {
       //   enqueueSnackbar(error.Message, { variant: `error` });
@@ -111,10 +111,10 @@ export default function SecurityUserViewForm() {
   };
 
   const handleViewCustomer = (Id) => {
-    navigate(PATH_DASHBOARD.customer.view(Id));
+    navigate(PATH_CUSTOMER.view(Id));
   };
   const handlePassword = () => {
-    navigate(PATH_DASHBOARD.user.userPassword);
+    navigate(PATH_SECURITY.users.userPassword);
   };
 
   const defaultValues = useMemo(

@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , Container} from '@mui/material';
 // ROUTES
-import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // slice
 import { addDocumentCategory, setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
 import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
@@ -77,10 +77,10 @@ export default function DocumentCategoryAddForm({currentDocument}) {
     // console.log("Document Category : ", data);
       try{
         const response = await dispatch(addDocumentCategory(data));
-        // console.log("response : ",response);
+        console.log("response : ",response);
         reset();
         enqueueSnackbar('Document Save Successfully!');
-        navigate(PATH_DOCUMENT.documentCategory.list)
+        navigate(PATH_SETTING.documentCategory.list)
       } catch(error){
         enqueueSnackbar('Document Save failed!', { variant: `error` });
         console.error(error);
@@ -89,7 +89,7 @@ export default function DocumentCategoryAddForm({currentDocument}) {
 
   const toggleCancel = () =>
   {
-    navigate(PATH_DOCUMENT.documentName.list);
+    navigate(PATH_SETTING.documentCategory.list);
   };
   return (
     <Container maxWidth={false }>

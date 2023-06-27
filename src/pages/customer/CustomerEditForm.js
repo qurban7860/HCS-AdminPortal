@@ -22,7 +22,7 @@ import { getContacts, getSPContacts } from '../../redux/slices/customer/contact'
 import { getSites } from '../../redux/slices/customer/site';
 
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Iconify from '../../components/iconify';
@@ -135,7 +135,7 @@ export default function CustomerEditForm() {
       dispatch(updateCustomer(data));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_DASHBOARD.customer.view(customer._id));
+      navigate(PATH_CUSTOMER.view(customer._id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -151,9 +151,9 @@ export default function CustomerEditForm() {
           step={1}
           step2
           step3
-          path={PATH_DASHBOARD.customer}
+          path={PATH_CUSTOMER.list}
           name="Customer"
-          path2={PATH_DASHBOARD.customer.view}
+          path2={PATH_CUSTOMER.view}
           name2={!customerEditFormVisibility ? `Edit ${customer?.name}` : `${customer?.name}`}
         />
       </Stack>

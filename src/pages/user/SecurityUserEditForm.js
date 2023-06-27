@@ -11,7 +11,7 @@ import { Box, Card, Grid, Stack, Typography, Autocomplete,TextField } from '@mui
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, {
@@ -162,7 +162,7 @@ useEffect(() => {
 
     try {  
       await dispatch(updateSecurityUser(data,securityUser._id));
-      navigate(PATH_DASHBOARD.user.view(securityUser._id));
+      navigate(PATH_SECURITY.users.view(securityUser._id));
     } catch (error) {
       if(error.Message){
         enqueueSnackbar(error.Message,{ variant: `error` })
@@ -176,7 +176,7 @@ useEffect(() => {
   };
 
   const toggleCancel = ()=>{
-      navigate(PATH_DASHBOARD.user.view(securityUser._id));
+      navigate(PATH_SECURITY.users.view(securityUser._id));
   }
   const handleInputEmail = (e) => {
     const emailRegEx =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

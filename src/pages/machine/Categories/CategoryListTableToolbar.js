@@ -41,7 +41,7 @@ export default function CustomerListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_MACHINE.categories.categories); };
+  const toggleAdd = () => { navigate(PATH_MACHINE.machines.settings.categories.new); };
   return (
     <Stack
       spacing={2}

@@ -12,7 +12,7 @@ import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData } from '../../components/table';
@@ -113,11 +113,11 @@ export default function CustomerContactList(currentContact = null) {
           step={1}
           step2
           step3
-          path={PATH_DASHBOARD.customer.list}
+          path={PATH_CUSTOMER.list}
           name="Customers"
-          path2={PATH_DASHBOARD.customer.root}
+          path2={PATH_CUSTOMER.root}
           name2={customer.name}
-          path3={PATH_DASHBOARD.customer.contacts}
+          path3={PATH_CUSTOMER.contact.list}
           name3={
             <Stack>
               {contactEditFormVisibility

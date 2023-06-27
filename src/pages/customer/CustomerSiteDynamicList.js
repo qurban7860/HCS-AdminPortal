@@ -119,11 +119,11 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           step={1}
           step2
           step3
-          path={PATH_DASHBOARD.customer.list}
+          path={PATH_CUSTOMER.list}
           name="Customers"
-          path2={PATH_DASHBOARD.customer.view}
+          path2={PATH_CUSTOMER.view}
           name2={customer.name}
-          path3={PATH_DASHBOARD.customer.sites}
+          path3={PATH_CUSTOMER.sites}
           name3={
             <Stack>
               {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}

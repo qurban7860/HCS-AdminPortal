@@ -56,7 +56,7 @@ export default function CustomerViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteCustomer(customer._id));
-      navigate(PATH_DASHBOARD.customer.list);
+      navigate(PATH_CUSTOMER.customer.list);
     } catch (err) {
       // if(err.Message){
       //   enqueueSnackbar(err.Message,{ variant: `error` })
@@ -112,9 +112,9 @@ export default function CustomerViewForm() {
           underline="none"
           step={1}
           step2
-          path={PATH_DASHBOARD.customer.root}
-          name="Customer"
-          path2={PATH_DASHBOARD.customer.view}
+          path={PATH_CUSTOMER.root}
+          name="Customers"
+          path2={PATH_CUSTOMER.view}
           name2={customer?.name}
         />
       </Stack>

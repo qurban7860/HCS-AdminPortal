@@ -8,7 +8,7 @@ import { Switch, Card, Grid, Stack, Typography, Button ,Tooltip} from '@mui/mate
 // redux
 import { getRole,deleteRole } from '../../../redux/slices/securityUser/role';
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { fDate,fDateTime } from '../../../utils/formatTime';
@@ -30,7 +30,7 @@ export default function RoleViewForm() {
   const onDelete = async () => {
     try{
       await dispatch(deleteRole(role?._id));
-      navigate(PATH_DASHBOARD.role.list);
+      navigate(PATH_SETTING.role.list);
       enqueueSnackbar('Role delete Successfully!');
 
     }catch(error){
@@ -47,7 +47,7 @@ export default function RoleViewForm() {
   };
 
   const  handleEdit = async () => {
-    navigate(PATH_DASHBOARD.role.edit(role._id))
+    navigate(PATH_SETTING.role.edit(role._id))
   };
 
   const defaultValues = useMemo(

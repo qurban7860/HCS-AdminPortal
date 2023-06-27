@@ -17,7 +17,7 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import { PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_CUSTOMER } from '../../../../routes/paths';
 import { Cover } from '../../../components/Cover';
 import Iconify from '../../../../components/iconify';
 import { useSnackbar } from '../../../../components/snackbar';
@@ -72,7 +72,7 @@ export default function Document() {
     try{
       await dispatch(deleteDocument(id));
       dispatch(getDocuments());
-      navigate(PATH_DASHBOARD.document.dashboard);
+      navigate(PATH_DOCUMENT.document.list);
       enqueueSnackbar("Document deleted Successfully!")
     } catch (err) {
       enqueueSnackbar("Document delete failed!",{ variant: `error` })
@@ -81,16 +81,16 @@ export default function Document() {
   };
 
   const  handleEdit = async () => {
-    navigate(PATH_DASHBOARD.document.edit(id));
+    navigate(PATH_DOCUMENT.document.edit(id));
   };
 
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
   const handleViewCustomer = (Id) => {
-    navigate(PATH_DASHBOARD.customer.view(Id));
+    navigate(PATH_CUSTOMER.view(Id));
   };  
   const handleViewMachine = (Id) => {
-    navigate(PATH_MACHINE.machine.view(Id));
+    navigate(PATH_MACHINE.machines.view(Id));
   };
   const handleOpenMachine = () => setOpenMachine(true);
   const handleCloseMachine = () => setOpenMachine(false);
@@ -350,7 +350,7 @@ const handleDownloadAndPreview = (documentId, versionId, fileId,fileName,fileExt
                           objectPosition: 'center',
                         }}
                         image={`data:image/png;base64, ${file?.thumbnail}`}
-                        alt="customer's contact cover photo was here"
+                        alt={imageName}
                       />
                     </CardContent>
                   </Grid>

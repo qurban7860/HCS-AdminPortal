@@ -15,7 +15,7 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import { PATH_MACHINE, PATH_DOCUMENT, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DOCUMENT, PATH_DASHBOARD,PATH_SETTING } from '../../routes/paths';
 import { useDispatch } from '../../redux/store';
 import { Cover } from '../components/Cover';
 import Iconify from '../../components/iconify';
@@ -29,10 +29,10 @@ export default function Setting() {
 
 
    // Functions to navigate to different pages
-   const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentType.list); };
-   const linkFileCategory = () => { navigate(PATH_DOCUMENT.documentCategory.list); };
-   const linkRole = () => { navigate(PATH_DASHBOARD.role.list); };
-   const linkSignInLogs = () => { navigate(PATH_DASHBOARD.user.signInLogList); };
+   const linkDocumentName = () => {  navigate(PATH_SETTING.documentType.list); };
+   const linkFileCategory = () => { navigate(PATH_SETTING.documentCategory.list); };
+   const linkRole = () => { navigate(PATH_SETTING.role.list); };
+   const linkSignInLogs = () => { navigate(PATH_SETTING.signInLogs.list); };
 
 
   return (

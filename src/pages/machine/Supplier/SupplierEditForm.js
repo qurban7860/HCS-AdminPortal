@@ -119,7 +119,7 @@ export default function SupplierEditForm() {
   const toggleCancel = () => 
     {
       // dispatch(setSupplierEditFormVisibility(false));
-      navigate(PATH_MACHINE.supplier.view(id));
+      navigate(PATH_MACHINE.machines.settings.supplier.view(id));
     };
     const handlePhoneChange = (newValue) => {
       matchIsValidTel(newValue)
@@ -157,7 +157,7 @@ export default function SupplierEditForm() {
       await dispatch(updateSupplier(data,id));
       reset(); 
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.supplier.view(id));
+      navigate(PATH_MACHINE.machines.settings.supplier.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

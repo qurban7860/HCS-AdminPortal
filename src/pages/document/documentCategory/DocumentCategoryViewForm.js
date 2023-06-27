@@ -8,7 +8,7 @@ import { Switch, Card, Grid, Stack, Typography, Button ,Tooltip} from '@mui/mate
 // redux
 import { deleteDocumentCategory  } from '../../../redux/slices/document/documentCategory';
 // paths
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { fDate,fDateTime } from '../../../utils/formatTime';
@@ -30,7 +30,7 @@ export default function DocumentCategoryViewForm() {
   const onDelete = async () => {
     try{
       await dispatch(deleteDocumentCategory(documentCategory?._id));
-      navigate(PATH_DOCUMENT.documentCategory.list);
+      navigate(PATH_SETTING.documentCategory.list);
       enqueueSnackbar('Document Category delete Successfully!');
 
     }catch(error){
@@ -40,7 +40,7 @@ export default function DocumentCategoryViewForm() {
   };
 
   const  handleEdit = async () => {
-    navigate(PATH_DOCUMENT.documentCategory.edit(documentCategory._id))
+    navigate(PATH_SETTING.documentCategory.edit(documentCategory._id))
   };
 
   const defaultValues = useMemo(
@@ -60,7 +60,7 @@ export default function DocumentCategoryViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentCategory]
   );
-
+console.log("documentCategory : ", documentCategory, defaultValues.customerAccess, defaultValues.description)
   return (
     <Card sx={{p:2}}>
       <Grid >

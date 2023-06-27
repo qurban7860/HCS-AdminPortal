@@ -67,7 +67,7 @@ export default function CategoryAddForm() {
   
   const toggleCancel = () => 
   {
-    navigate(PATH_MACHINE.categories.list);
+    navigate(PATH_MACHINE.machines.settings.categories.list);
   };
   
 
@@ -77,7 +77,7 @@ export default function CategoryAddForm() {
         await dispatch(addCategory(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.categories.list); 
+        navigate(PATH_MACHINE.machines.settings.categories.list); 
         // console.log(PATH_MACHINE.supplier.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
@@ -94,7 +94,7 @@ export default function CategoryAddForm() {
     <Container maxWidth={false}>
 
       <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-        <Cover name='New Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
+        <Cover name='New Category' icon='material-symbols:category-outline' url={PATH_MACHINE.machines.settings.categories.list} />
       </Card>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container >

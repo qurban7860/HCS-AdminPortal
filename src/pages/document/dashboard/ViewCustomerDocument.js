@@ -17,7 +17,7 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import { PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_CUSTOMER } from '../../../routes/paths';
 import { Cover } from '../../components/Cover';
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
@@ -67,7 +67,7 @@ export default function Document() {
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
   const handleViewCustomer = (Id) => {
-    navigate(PATH_DASHBOARD.customer.view(Id));
+    navigate(PATH_CUSTOMER.view(Id));
   };  
   const defaultValues = useMemo(
     () => (

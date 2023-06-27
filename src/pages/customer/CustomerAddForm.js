@@ -29,7 +29,7 @@ import {
 // slice
 import { addCustomer } from '../../redux/slices/customer/customer';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, {
@@ -197,7 +197,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     }
   };
   const toggleCancel = () => {
-    navigate(PATH_DASHBOARD.customer.list);
+    navigate(PATH_CUSTOMER.list);
   };
 
   const onSubmit = async (data) => {
@@ -230,7 +230,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       dispatch(addCustomer(data));
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_DASHBOARD.customer.view(null));
+      navigate(PATH_CUSTOMER.view(null));
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);

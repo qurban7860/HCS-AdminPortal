@@ -19,7 +19,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
@@ -198,11 +198,11 @@ export default function DocumentList() {
             step2
             step3
             step4
-            path={PATH_DASHBOARD.customer.list}
+            path={PATH_CUSTOMER.list}
             name="Customers"
-            path2={PATH_DASHBOARD.customer.view}
+            path2={PATH_CUSTOMER.view}
             name2={customer.name}
-            path3={PATH_DASHBOARD.customer.document}
+            path3={PATH_CUSTOMER.list}
             name3={
               <Stack>
                 {customerDocumentFormVisibility && "New Document"}

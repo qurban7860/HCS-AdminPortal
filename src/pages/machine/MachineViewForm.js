@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 // @mui
 import { Divider, Switch, Card, Grid, Typography, Link, Dialog, Tooltip } from '@mui/material';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // slices
 import { useAuthContext } from '../../auth/useAuthContext';
 import {
@@ -84,13 +84,13 @@ export default function MachineViewForm() {
   };
 
   const handleViewCustomer = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
+    navigate(PATH_CUSTOMER.view(id));
   };
   const onDelete = async () => {
     try {
       await dispatch(deleteMachine(machine._id));
       dispatch(getMachines());
-      navigate(PATH_MACHINE.machine.list);
+      navigate(PATH_MACHINE.machines.list);
     } catch (err) {
       // if(err.Message){
       //     enqueueSnackbar(err.Message,{ variant: `error` })

@@ -11,7 +11,7 @@ import { getSites } from '../../redux/slices/customer/site';
 import { getContacts } from '../../redux/slices/customer/contact';
 
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
@@ -48,7 +48,7 @@ export default function CustomerEdit() {
             { name: 'Dashboard', href: PATH_DASHBOARD.root },
             {
               name: 'Customer',
-              href: PATH_DASHBOARD.customer.list,
+              href: PATH_CUSTOMER.list,
             },
             { name: customer?.name },
           ]}

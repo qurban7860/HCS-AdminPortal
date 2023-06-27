@@ -204,12 +204,12 @@ export default function SupplierList() {
 
   const handleEditRow = (id) => {
     // console.log(id);
-    navigate(PATH_MACHINE.supplier.edit(id));
+    navigate(PATH_MACHINE.machines.settings.supplier.edit(id));
   };
 
   const handleViewRow = (id) => {
     // console.log(id,PATH_MACHINE.supplier.view(id));
-    navigate(PATH_MACHINE.supplier.view(id));
+    navigate(PATH_MACHINE.machines.settings.supplier.view(id));
   };
 
   const handleResetFilter = () => {

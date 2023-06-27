@@ -14,7 +14,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // component
 import Iconify from '../../components/iconify';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 // assets
 // components
 import { useSnackbar } from '../../components/snackbar';
@@ -162,7 +162,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       const response = await dispatch(addSecurityUser(data));
       await dispatch(resetContacts());
       reset();
-      navigate(PATH_DASHBOARD.user.view(response.data.user._id));   
+      navigate(PATH_SECURITY.users.view(response.data.user._id));   
     } catch (error) {
       if(error.Message){
         enqueueSnackbar(error.Message,{ variant: `error` })
@@ -173,12 +173,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       }
       console.log("Error:", error);
     }
-        // dispatchReqAddAndView(dispatch, addSecurityUser(data) , reset, navigate, PATH_DASHBOARD.user, 'user', enqueueSnackbar)
-        // dispatch(resetContacts())
   };
 
   const toggleCancel = ()=>{
-    navigate(PATH_DASHBOARD.user.list);
+    navigate(PATH_SECURITY.users.list);
   }
 
   return (

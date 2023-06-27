@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Container } from '@mui/material';
 // ROUTES
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
 // slice
 import { addRole } from '../../../redux/slices/securityUser/role';
 
@@ -101,7 +101,7 @@ export default function RoleAddForm({ currentRole }) {
       await dispatch(addRole(data));
       reset();
       enqueueSnackbar('Role Save Successfully!');
-      navigate(PATH_DASHBOARD.role.list);
+      navigate(PATH_SETTING.role.list);
     } catch (error) {
       enqueueSnackbar('Role Save failed!', { variant: `error` });
       console.error(error);
@@ -109,7 +109,7 @@ export default function RoleAddForm({ currentRole }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_DASHBOARD.role.list);
+    navigate(PATH_SETTING.role.list);
   };
 
   return (

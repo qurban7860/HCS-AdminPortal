@@ -17,7 +17,7 @@ import { Cover } from '../components/Cover'
 import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/securityUser';
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/AddFormButtons';
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -64,8 +64,7 @@ export default function SecurityUserChangePassword() {
           await dispatch(SecurityUserPasswordUpdate(data,userId));
           enqueueSnackbar('Password has been updated Successfully!');
           reset();
-          navigate(PATH_DASHBOARD.user.view(userId));
-          // dispatchReqEditAndView(dispatch, SecurityUserPasswordUpdate(data,userId),  reset, navigate, PATH_DASHBOARD.user, userId, enqueueSnackbar, "Password has been updated Successfully!")
+          navigate(PATH_SECURITY.users.view(userId));
         } catch (error) {
           if(error.Message){
             enqueueSnackbar(error.Message,{ variant: `error` })
@@ -76,9 +75,6 @@ export default function SecurityUserChangePassword() {
           }
           console.log("Error:", error);
         }
-        //  getWithMsg(dispatch, SecurityUserPasswordUpdate(data,userId), enqueueSnackbar ,"Password has been updated Successfully!");
-        // reset();
-        // navigate(PATH_DASHBOARD.user.view(userId));
       }
   };
 
