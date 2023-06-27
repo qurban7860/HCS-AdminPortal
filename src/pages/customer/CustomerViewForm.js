@@ -10,7 +10,7 @@ import { Card, Grid, Stack, Typography, Button, Link, Breadcrumbs, Tooltip } fro
 import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import CustomerEditForm from './CustomerEditForm';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import FormLabel from '../components/FormLabel';
 // slices
 import {
@@ -108,17 +108,18 @@ export default function CustomerViewForm() {
     <>
       <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
         <AddButtonAboveAccordion isCustomer="true" />
-        <BreadcrumbsProducer
-          underline="none"
-          step={1}
-          step2
-          path={PATH_DASHBOARD.customer.root}
-          name="Customer"
-          path2={PATH_DASHBOARD.customer.view}
-          name2={customer?.name}
-        />
       </Stack>
-      <Grid container direction="row">
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          separator="›"
+          sx={{ fontSize: '12px', color: 'text.disabled' }}
+        >
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+        </Breadcrumbs>
+      </Stack>
+      <Grid container direction="row" mt={1}>
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons

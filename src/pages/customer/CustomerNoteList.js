@@ -12,6 +12,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Breadcrumbs,
 } from '@mui/material';
 import { fDate, fDateTime } from '../../utils/formatTime';
 // redux
@@ -33,9 +34,8 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 import Iconify from '../../components/iconify';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import EmptyContent from '../../components/empty-content';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import NotesViewForm from './note/NotesViewForm';
@@ -261,37 +261,29 @@ export default function CustomerNoteList() {
   return (
     <>
       {!noteEditFormVisibility && (
-        <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-          <AddButtonAboveAccordion
-            name="New Note"
-            toggleChecked={toggleChecked}
-            FormVisibility={formVisibility}
-            toggleCancel={toggleCancel}
-          />
-          <BreadcrumbsProducer
-            underline="none"
-            step={1}
-            step2
-            step3
-            step4
-            path={PATH_DASHBOARD.customer.list}
-            name="Customers"
-            path2={PATH_DASHBOARD.customer.view}
-            name2={customer.name}
-            name3="Notes"
-            path3={PATH_DASHBOARD.customer.notes}
-            path4={PATH_DASHBOARD.customer}
-            // name4={
-            //   <Stack>
-            //     {siteEditFormVisibility
-            //       ? `Edit ${currentSiteData.name}`
-            //       : isExpanded && currentSiteData.name}
-            //     {siteAddFormVisibility && !isExpanded && 'New Site Form'}
-            //   </Stack>
-            // }
-          />
-        </Stack>
+        <>
+          <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
+            <AddButtonAboveAccordion
+              name="New Note"
+              toggleChecked={toggleChecked}
+              FormVisibility={formVisibility}
+              toggleCancel={toggleCancel}
+            />
+          </Stack>
+          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+            <Breadcrumbs
+              aria-label="breadcrumb"
+              separator="›"
+              sx={{ fontSize: '12px', color: 'text.disabled' }}
+            >
+              <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+              <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+              <BreadcrumbsLink to={PATH_DASHBOARD.customer.notes} name="Notes" />
+            </Breadcrumbs>
+          </Stack>
+        </>
       )}
+
       <Card>
         {noteEditFormVisibility && <NoteEditForm />}
         {formVisibility && !noteEditFormVisibility && <NoteAddForm />}

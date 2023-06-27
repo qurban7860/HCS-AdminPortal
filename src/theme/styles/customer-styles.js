@@ -128,7 +128,7 @@ export function StyledScrollbar({ contacts, children, ...props }) {
 }
 
 StyledScrollbar.propTypes = {
-  contacts: PropTypes.array,
+  contacts: PropTypes.number,
   children: PropTypes.node,
 };
 // ______________________________________________________________________________________________________________________

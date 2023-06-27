@@ -26,6 +26,7 @@ function BreadcrumbsProducer({
     // link underline style
     textDecoration: 'none',
   }));
+
   const steps = [];
   if (step) {
     steps.push({ path, name });
@@ -111,17 +112,15 @@ function BreadcrumbsProducer({
 }
 
 BreadcrumbsProducer.propTypes = {
-  // prop type for links
-
   underline: PropTypes.string,
   path: PropTypes.node,
   path2: PropTypes.node,
   path3: PropTypes.node,
   path4: PropTypes.node,
-  name: PropTypes.node.isRequired,
-  name2: PropTypes.node.isRequired,
-  name3: PropTypes.node.isRequired,
-  name4: PropTypes.node.isRequired,
+  name: PropTypes.node,
+  name2: PropTypes.node,
+  name3: PropTypes.node,
+  name4: PropTypes.node,
   step: PropTypes.node,
   step2: PropTypes.node,
   step3: PropTypes.node,

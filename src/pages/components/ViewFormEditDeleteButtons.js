@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { Button, Stack, Typography, Popover, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { StyledTooltip } from '../../theme/styles/default-styles';
+import { StyledTooltip, StyledStack, StyledPopover } from '../../theme/styles/default-styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
@@ -126,25 +126,7 @@ export default function ViewFormEditDeleteButtons({
   } = methods;
   return (
     <>
-      <Stack
-        justifyContent="flex-end"
-        direction="row"
-        spacing={2}
-        sx={{
-          mb: -5,
-          // mt:1,
-          mr: 3,
-          '& .MuiButton-root': {
-            minWidth: '32px',
-            width: '32px',
-            height: '32px',
-            p: 0,
-            '&:hover': {
-              background: 'transparent',
-            },
-          },
-        }}
-      >
+      <StyledStack>
         {handleVerification && !isVerified && (
           <ThemeProvider theme={theme}>
             <Button
@@ -188,7 +170,7 @@ export default function ViewFormEditDeleteButtons({
                 width="30px"
               />
             </IconButton>
-            <Popover
+            <StyledPopover
               open={isPopoverOpen}
               anchorEl={anchorEl}
               onClose={handlePopoverClose}
@@ -201,19 +183,11 @@ export default function ViewFormEditDeleteButtons({
                 horizontal: 'right',
               }}
               id="mouse-over-popover"
-              sx={{
-                '& .MuiPaper-root': {
-                  bgcolor: 'transparent',
-                  boxShadow: 'none',
-                },
-                boxShadow: 'none',
-                pointerEvents: 'none',
-              }}
             >
               <Typography variant="overline" color="red">
                 Open MAP
               </Typography>
-            </Popover>
+            </StyledPopover>
           </Button>
         )}
 
@@ -256,6 +230,7 @@ export default function ViewFormEditDeleteButtons({
             </StyledTooltip>
           </Button>
         )}
+
         {/* edit button */}
         <Button
           disabled={disableEditButton}
@@ -303,7 +278,7 @@ export default function ViewFormEditDeleteButtons({
             </StyledTooltip>
           </Button>
         )}
-      </Stack>
+      </StyledStack>
       <ConfirmDialog
         open={openVerificationConfirm}
         onClose={() => {

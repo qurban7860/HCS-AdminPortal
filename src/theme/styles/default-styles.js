@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import { Popover } from '@mui/material';
+import { Popover, Stack } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur } from '../../utils/cssStyles';
 
@@ -66,4 +66,44 @@ export const StyledTooltipSliding = styled(({ className, ...props }) => (
     color: toolTipColor,
     backgroundColor: 'transparent',
   },
+}));
+
+export const StyledStack = styled(Stack)(({ theme }) => ({
+  justifyContent: 'flex-end',
+  flexDirection: 'row',
+  '& > :not(style) + :not(style)': {
+    marginLeft: theme.spacing(2),
+  },
+  marginBottom: theme.spacing(-5),
+  marginRight: theme.spacing(3),
+  '& .MuiButton-root': {
+    minWidth: '32px',
+    width: '32px',
+    height: '32px',
+    padding: 0,
+    '&:hover': {
+      background: 'transparent',
+    },
+  },
+}));
+
+export const StyledPopover = styled(Popover)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    size: '100%',
+    overflow: 'hidden',
+    borderRadius: 0,
+  },
+  '& .MuiPopover-paper': {
+    overflow: 'hidden',
+  },
+  '& .MuiPopover-paper .MuiList-root': {
+    padding: '0px',
+  },
+  '& .MuiPopover-paper .MuiTypography-root': {
+    fontSize: '1rem',
+  },
+  boxShadow: 'none',
+  pointerEvents: 'none',
 }));

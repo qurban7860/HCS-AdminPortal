@@ -4,24 +4,15 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Switch,
-  Stack,
   Card,
   Grid,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
   Dialog,
   Typography,
   Accordion,
   AccordionSummary,
-  AccordionDetails,
   Link,
+  Stack,
+  Breadcrumbs,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -30,18 +21,8 @@ import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
-import Iconify from '../../components/iconify';
+import { useTable, getComparator, TableNoData } from '../../components/table';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import FormLabel from '../components/FormLabel';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
@@ -51,7 +32,6 @@ import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slice
 
 // import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
-import EmptyContent from '../../components/empty-content';
 import ViewFormField from '../components/ViewFormField';
 
 // ----------------------------------------------------------------------
@@ -104,7 +84,7 @@ export default function CustomerContactList() {
   const { customer, error, initial, responseMessage } = useSelector((state) => state.customer);
   const { customerMachines, machine } = useSelector((state) => state.machine);
 
-  console.log("customerMachines : ",customerMachines)
+  console.log('customerMachines : ', customerMachines);
   const [checked, setChecked] = useState(false);
   // const toggleChecked = () =>
   //   {
@@ -168,20 +148,24 @@ export default function CustomerContactList() {
   return (
     <>
       <AddButtonAboveAccordion isCustomer="true" />
-      {/* {!contactEditFormVisibility && (
-        <Stack alignItems="flex-end" sx={{ mt: 3, padding: 2 }}>
-          <Button
-            onClick={toggleChecked}
-            variant="contained"
-            startIcon={
-              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mt={5} mb={1}>
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          separator="›"
+          sx={{ fontSize: '12px', color: 'text.disabled' }}
+        >
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+          <BreadcrumbsLink
+            to={PATH_DASHBOARD.customer.document}
+            name={
+              <Stack>
+                {customerMachines.length} {customerMachines.length > 1 ? 'Machines' : 'Machine'}
+              </Stack>
             }
-          >
-            {' '}
-            New Contact{' '}
-          </Button>
-        </Stack>
-      )} */}
+          />
+        </Breadcrumbs>
+      </Stack>
       <Card>
         {customerMachines.map((customerMachine, index) => {
           address.city = customerMachine?.instalationSite?.address?.city;
