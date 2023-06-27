@@ -19,6 +19,7 @@ const initialState = {
   contacts: [],
   activeContacts: [],
   spContacts: [],
+  activeSpContact:[],
   contact: null,
 };
 
@@ -91,6 +92,13 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    getActiveSPContactsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSpContacts = action.payload;
+      state.initial = true;
+    },
+
     // GET Contact
     getContactSuccess(state, action) {
       state.isLoading = false;
@@ -105,6 +113,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.initial = true;
+    },
+
+    resetActiveSPContacts(state){
+      state.activeSpContacts = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
     },
 
   },
@@ -266,6 +281,30 @@ export function getContacts(customerID ) {
         }
         );
       dispatch(slice.actions.getContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ------------------------------ get Active Contacts ----------------------------------------
+
+export function getActiveSPContacts(customerID ) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
+        {
+          params: {
+            isActive: true,
+            isArchived: false
+          }
+        }
+        );
+      dispatch(slice.actions.getActiveSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
     } catch (error) {
       console.log(error);
