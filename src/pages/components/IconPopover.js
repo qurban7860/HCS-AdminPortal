@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, Popover, Typography } from '@mui/material';
+import { IconButton, Button, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { StyledPopover } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
@@ -14,11 +14,10 @@ export default function IconPopover({
   verifyBadgeClick,
   documentIsActive,
   customerAccess,
+  sites,
+  onMapClick,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
-  const [verifiedBy, setVerifiedBy] = useState([]);
-  const open = Boolean(anchorEl);
   const isPopoverOpen = Boolean(anchorEl);
 
   const handlePopoverOpen = (event) => {
@@ -27,14 +26,6 @@ export default function IconPopover({
 
   const handlePopoverClose = () => {
     setAnchorEl(null);
-  };
-
-  const handleVerifiedPopoverOpen = (event) => {
-    setVerifiedAnchorEl(event.currentTarget);
-  };
-
-  const handleVerifiedPopoverClose = () => {
-    setVerifiedAnchorEl(null);
   };
 
   return (
@@ -259,6 +250,43 @@ export default function IconPopover({
           </StyledPopover>
         </>
       )}
+
+      {/* map icon sliding tooltip *no bg */}
+      {sites && (
+        <Button onClick={onMapClick} sx={{ display: { sm: 'block', md: 'none' } }}>
+          <IconButton
+            aria-label="google-maps"
+            onClick={handlePopoverOpen}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            <Iconify
+              heading="Open Map"
+              icon="mdi:google-maps"
+              style={{ color: 'red' }}
+              width="30px"
+            />
+          </IconButton>
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'center',
+              horizontal: 'left',
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'right',
+            }}
+            id="mouse-over-popover"
+          >
+            <Typography variant="overline" color="red">
+              Open MAP
+            </Typography>
+          </StyledPopover>
+        </Button>
+      )}
     </>
   );
 }
@@ -272,4 +300,6 @@ IconPopover.propTypes = {
   verifyBadgeClick: PropTypes.func,
   documentIsActive: PropTypes.bool,
   customerAccess: PropTypes.bool,
+  sites: PropTypes.array,
+  onMapClick: PropTypes.func,
 };
