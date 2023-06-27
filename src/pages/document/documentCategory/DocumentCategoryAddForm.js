@@ -39,7 +39,7 @@ export default function DocumentCategoryAddForm({currentDocument}) {
   const { enqueueSnackbar } = useSnackbar();
  // a note can be archived.
   const AddDocumentCategorySchema = Yup.object().shape({
-    name: Yup.string().min(2).required("Name Field is required!"),
+    name: Yup.string().min(2).max(40).required("Name Field is required!"),
     description: Yup.string().max(10000),
     isActive : Yup.boolean(),
     customerAccess: Yup.boolean(),

@@ -43,7 +43,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
  // a note can be archived.
   const AddDocumentTypeSchema = Yup.object().shape({
     // category: Yup.string().min(2).required("Category is required!"),
-    name: Yup.string().min(2).required("Name is required!"),
+    name: Yup.string().min(2).max(40).required("Name is required!"),
     description: Yup.string().max(10000),
     isActive : Yup.boolean(),
     customerAccess: Yup.boolean(),
