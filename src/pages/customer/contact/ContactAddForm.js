@@ -58,8 +58,8 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const [country, setCountryVal] = useState('');
 
   const AddContactSchema = Yup.object().shape({
-    firstName: Yup.string().required(),
-    lastName: Yup.string(),
+    firstName: Yup.string().max(40).required(),
+    lastName: Yup.string().max(40),
     title: Yup.string(),
     contactTypes: Yup.array(),
     // phone: Yup.string(),
