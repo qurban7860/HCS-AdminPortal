@@ -255,7 +255,14 @@ export function getSPContacts() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`)
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`,
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      }
+      );
       dispatch(slice.actions.getSPContactsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
 

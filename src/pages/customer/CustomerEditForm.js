@@ -42,6 +42,7 @@ export default function CustomerEditForm() {
   const { error, customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
   const { contacts, spContacts } = useSelector((state) => state.contact);
+  const filteredContacts = spContacts.filter(contact => contact.isActive === true);
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
   const [projectManVal, setProjectManVal] = useState('');
@@ -279,7 +280,7 @@ export default function CustomerEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={accountManVal || null}
-                    options={spContacts}
+                    options={filteredContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
@@ -306,7 +307,7 @@ export default function CustomerEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={projectManVal || null}
-                    options={spContacts}
+                    options={filteredContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
@@ -333,7 +334,7 @@ export default function CustomerEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={supportManVal || null}
-                    options={spContacts}
+                    options={filteredContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
