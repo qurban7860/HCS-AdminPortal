@@ -44,7 +44,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const { contacts } = useSelector((state) => state.contact);
   const [ contactVal, setContactVal] = useState("");
   const { roles } = useSelector((state) => state.role);
-  const [ phone, setPhone] = useState('')
+  const [sortedRoles, setSortedRoles] = useState([]);
+  const [ phone, setPhone] = useState('');
 
   const ROLES = [];
   roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
@@ -80,7 +81,22 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       dispatch(getContacts(customerVal._id));
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [dispatch,customerVal]);
+  }, [dispatch,customerVal]);
+
+  useEffect(() => {
+    const mappedRoles = roles.map((role) => ({
+      value: role?._id,
+      label: role.name,
+    }));
+
+    const sortedRolesTemp = [...mappedRoles].sort((a, b) => {
+      const nameA = a.label.toUpperCase();
+      const nameB = b.label.toUpperCase();
+      return nameA.localeCompare(nameB);
+    });
+
+    setSortedRoles(sortedRolesTemp);
+  }, [roles]);
  
   const NewUserSchema = Yup.object().shape({
     // name: Yup.string().required('First name is required'),
@@ -406,7 +422,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 checkbox
                 name="roles"
                 label="Roles"
-                options={ROLES}
+                options={sortedRoles}
               />
             </Box>
             <Grid item md={12}>

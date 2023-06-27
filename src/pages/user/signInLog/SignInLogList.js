@@ -49,6 +49,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'user', label: 'User Name', align: 'left' },
+  { id: 'userLogin', label: 'User Login', align: 'left' },
   { id: 'userIP', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
@@ -73,7 +74,7 @@ export default function SignInLogList() {
     onChangePage,
     onChangeRowsPerPage,
   } = useTable({
-    defaultOrderBy: '-loginTime',
+    // defaultOrderBy: 'loginTime',
   });
 
   const dispatch = useDispatch();

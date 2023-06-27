@@ -50,7 +50,8 @@ export default function SecurityUserEditForm() {
   const { contacts } = useSelector((state) => state.contact);
   const [ contactVal, setContactVal ] = useState('');
   const [ valid, setValid ] = useState(true);
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState('');
+  const [sortedRoles, setSortedRoles] = useState([]); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -69,6 +70,21 @@ useEffect(() => {
   }
 // eslint-disable-next-line react-hooks/exhaustive-deps
 }, [dispatch,customerVal]);
+
+useEffect(() => {
+  const mappedRoles = roles.map((role) => ({
+    value: role?._id,
+    label: role.name,
+  }));
+
+  const sortedRolesTemp = [...mappedRoles].sort((a, b) => {
+    const nameA = a.label.toUpperCase();
+    const nameB = b.label.toUpperCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  setSortedRoles(sortedRolesTemp);
+}, [roles]);
 
   useLayoutEffect(()=>{
     if(securityUser.customer !== undefined && securityUser.customer !== null){
@@ -374,7 +390,7 @@ useEffect(() => {
                 checkbox
                 name="roles"
                 label="Roles"
-                options={ROLES}
+                options={sortedRoles}
               />
             </Box>
             <Grid item md={12}>
