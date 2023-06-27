@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { StyledTooltip, StyledStack, StyledPopover } from '../../theme/styles/default-styles';
+import { StyledStack } from '../../theme/styles/default-styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
@@ -72,6 +72,7 @@ export default function ViewFormEditDeleteButtons({
       dispatch(setTransferDialogBoxVisibility(true));
     }
   };
+
   const handleCloseConfirm = (dialogType) => {
     if (dialogType === 'Verification') {
       reset();
@@ -125,6 +126,7 @@ export default function ViewFormEditDeleteButtons({
           />
         )}
 
+        {/* map toggle button on mobile */}
         {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
 
         {/* machine transfer */}
@@ -176,6 +178,7 @@ export default function ViewFormEditDeleteButtons({
           />
         )}
       </StyledStack>
+
       <ConfirmDialog
         open={openVerificationConfirm}
         onClose={() => {
@@ -196,6 +199,7 @@ export default function ViewFormEditDeleteButtons({
           </LoadingButton>
         }
       />
+
       <ConfirmDialog
         open={openConfirm}
         onClose={() => {
