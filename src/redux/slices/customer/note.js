@@ -18,6 +18,7 @@ const initialState = {
   isLoading: false,
   error: null,
   notes: [],
+  activeNotes: [],
   note: null,
 };
 
@@ -63,6 +64,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
+    // GET Active Notes
+    getActiveNotesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeNotes = action.payload;
+      state.initial = true;
+    },
+    
+
 
     setResponseMessage(state, action) {
       state.responseMessage = action.payload;
@@ -86,6 +96,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET Active CUSTOMERS
+    resetActiveNotes(state){
+      state.activeNotes = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
   },
 });
 
@@ -98,6 +116,7 @@ export const {
   setNoteEditFormVisibility,
   resetNote,
   resetNotes,
+  resetActiveNotes,
   setResponseMessage,
 } = slice.actions;
 
@@ -176,6 +195,31 @@ export function getNotes(id) {
       }
       );
       dispatch(slice.actions.getNotesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
+
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// -----------------------------------Get ActiveNotes-----------------------------------
+
+export function getActiveNotes(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false
+        }
+      }
+      );
+      dispatch(slice.actions.getActiveNotesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Notes loaded successfully'));
 
     } catch (error) {
