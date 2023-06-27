@@ -131,7 +131,7 @@ export default function MachineSuppliers() {
       await dispatch(saveSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.supplier.list);
+      navigate(PATH_MACHINE.machines.settings.supplier.list);
       // console.log(PATH_MACHINE.tool.list)
     } catch(error){
       // enqueueSnackbar('Saving failed!');
@@ -142,7 +142,7 @@ export default function MachineSuppliers() {
 
       const toggleCancel = () =>
       {
-        navigate(PATH_MACHINE.supplier.list);
+        navigate(PATH_MACHINE.machines.settings.supplier.list);
       };
 
 

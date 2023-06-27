@@ -76,14 +76,14 @@ export default function StatusEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [machinestatus]);
 
-  const toggleCancel = () => { navigate(PATH_MACHINE.machineStatus.view(id)) };
+  const toggleCancel = () => { navigate(PATH_MACHINE.machines.settings.machineStatus.view(id)) };
 
   const onSubmit = async (data) => {
     try {
       await dispatch(updateMachinestatus(data,id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machineStatus.view(id));
+      navigate(PATH_MACHINE.machines.settings.machineStatus.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

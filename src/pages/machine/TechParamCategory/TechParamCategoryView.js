@@ -22,7 +22,7 @@ export default function TechParamCategoryView() {
   return (
       <Container maxWidth={ false } >
         <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
-          <Cover name={techparamcategory?.name} setting="enable" backLink={PATH_MACHINE.techParam.list} /> 
+          <Cover name={techparamcategory?.name} setting="enable" backLink={PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list} /> 
         </Card>
         <TechParamCategoryViewForm/>
       </Container>

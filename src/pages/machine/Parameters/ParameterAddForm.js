@@ -79,7 +79,7 @@ export default function ParameterAddForm() {
         await dispatch(addTechparam(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.parameters.list); 
+        navigate(PATH_MACHINE.machines.settings.machineParameters.list); 
       } catch(error){
         enqueueSnackbar(error?.message, { variant: `error` })
         console.error(error);
@@ -87,7 +87,7 @@ export default function ParameterAddForm() {
   };
   const toggleCancel = () => 
       {
-        navigate(PATH_MACHINE.parameters.list);
+        navigate(PATH_MACHINE.machines.settings.machineParameters.list);
       };
   return (
     <>

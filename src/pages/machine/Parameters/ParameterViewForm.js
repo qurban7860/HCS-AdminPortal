@@ -47,7 +47,7 @@ export default function ParameterViewForm() {
   const navigate = useNavigate();
 
   const toggleEdit = () => {
-    navigate(PATH_MACHINE.parameters.parameteredit(techparam._id));
+    navigate(PATH_MACHINE.machines.settings.machineParameters.edit(techparam._id));
   }
 
 useLayoutEffect(()=>{
@@ -80,7 +80,7 @@ useLayoutEffect(()=>{
     const onDelete = () => {
       try{
       dispatch(deleteTechparams(id));
-      navigate(PATH_MACHINE.parameters.list);
+      navigate(PATH_MACHINE.machines.settings.machineParameters.list);
       } catch (err) {
         // if(err.Message){
         //   enqueueSnackbar(err.Message,{ variant: `error` })

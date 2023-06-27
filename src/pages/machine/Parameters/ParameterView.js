@@ -55,7 +55,7 @@ export default function ParameterViewPage({editPage}) {
   return (
       <Container maxWidth={false }>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
-          <Cover name={techparam?.name} setting="enable" backLink={PATH_MACHINE.parameters.list}/> 
+          <Cover name={techparam?.name} setting="enable" backLink={PATH_MACHINE.machines.settings.machineParameters.list}/> 
         </Card>
         <ParameterViewForm/>
       </Container>
