@@ -28,6 +28,7 @@ import {
 } from '@mui/material';
 // slice
 import { addCustomer } from '../../redux/slices/customer/customer';
+import { getSPContacts } from '../../redux/slices/customer/contact';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -64,6 +65,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
 
   const { spContacts } = useSelector((state) => state.contact);
+  const filteredContacts = spContacts.filter(contact => contact.isActive === true);
 
   const [contactFlag, setCheckboxFlag] = useState(false);
 
@@ -166,7 +168,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const values = watch();
 
   useLayoutEffect(() => {
-    // dispatch(getSPContacts());
+    dispatch(getSPContacts());
   }, [dispatch]);
 
   const handlePhoneChange = (newValue) => {
@@ -473,7 +475,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <Autocomplete
                     // freeSolo
                     value={accountManVal || null}
-                    options={spContacts}
+                    options={filteredContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
@@ -500,7 +502,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <Autocomplete
                     // freeSolo
                     value={projectManVal || null}
-                    options={spContacts}
+                    options={filteredContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
@@ -527,7 +529,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                   <Autocomplete
                     // freeSolo
                     value={supportManVal || null}
-                    options={spContacts}
+                    options={filteredContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
