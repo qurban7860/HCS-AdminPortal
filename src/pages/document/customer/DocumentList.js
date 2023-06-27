@@ -166,47 +166,47 @@ export default function DocumentList() {
 
   return (
     <>
-      {!customerDocumentEditFormVisibility &&
-        !documentTypeFormVisibility &&
-        !documentCategoryFormVisibility && (
-          <>
-            <SearchInputAndAddButton
-              searchFormVisibility={customerDocumentFormVisibility}
-              filterName={filterName}
-              handleFilterName={handleFilterName}
-              addButtonName="Add Document"
-              isFiltered={isFiltered}
-              handleResetFilter={handleResetFilter}
-              toggleChecked={toggleChecked}
-              toggleCancel={toggleCancel}
-              FormVisibility={customerDocumentFormVisibility}
-            />
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Breadcrumbs
-                aria-label="breadcrumb"
-                separator="›"
-                sx={{ fontSize: '12px', color: 'text.disabled' }}
-              >
-                <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-                <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-                <BreadcrumbsLink
-                  to={PATH_DASHBOARD.customer.document}
-                  name={
-                    <Stack>
-                      {customerDocumentFormVisibility && 'New Document'}
-                      {!expanded && (
-                        <Typography variant="body2" sx={{ color: 'text.disabled' }}>
-                          {customerDocuments.length} Documents
-                        </Typography>
-                      )}
-                    </Stack>
-                  }
-                />
-              </Breadcrumbs>
-            </Stack>
-          </>
-        )}
-
+      <SearchInputAndAddButton
+        searchFormVisibility={customerDocumentFormVisibility || customerDocumentEditFormVisibility}
+        filterName={filterName}
+        handleFilterName={handleFilterName}
+        addButtonName="Add Document"
+        isFiltered={isFiltered}
+        handleResetFilter={handleResetFilter}
+        toggleChecked={toggleChecked}
+        toggleCancel={toggleCancel}
+        FormVisibility={customerDocumentFormVisibility}
+      />
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          separator="›"
+          sx={{ fontSize: '12px', color: 'text.disabled' }}
+        >
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+          <BreadcrumbsLink
+            to={PATH_DASHBOARD.customer.document}
+            name={
+              <Stack>
+                {!expanded &&
+                  !customerDocumentEditFormVisibility &&
+                  customerDocumentFormVisibility &&
+                  'New Document'}
+                {!customerDocumentFormVisibility &&
+                  !customerDocumentEditFormVisibility &&
+                  'Documents'}
+                {customerDocumentEditFormVisibility && 'Edit Document'}
+                {documentTypeFormVisibility && 'New Document Type'}
+                {documentCategoryFormVisibility && 'New Document Category'}
+              </Stack>
+            }
+          />
+        </Breadcrumbs>
+      </Stack>
+      <Grid item>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
       {!customerDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         !documentCategoryFormVisibility &&
@@ -288,8 +288,6 @@ export default function DocumentList() {
               </Accordion>
             );
           })}
-
-        <TableNoData isNotFound={isNotFound} />
       </Card>
     </>
   );

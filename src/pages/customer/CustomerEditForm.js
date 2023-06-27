@@ -1,13 +1,10 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import {
   Box,
@@ -33,16 +30,10 @@ import { getSites } from '../../redux/slices/customer/site';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import Iconify from '../../components/iconify';
 import AddFormButtons from '../components/AddFormButtons';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import FormProvider, {
-  RHFSelect,
-  RHFMultiSelect,
-  RHFTextField,
-  RHFSwitch,
-} from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
 
 // ----------------------------------------------------------------------
 

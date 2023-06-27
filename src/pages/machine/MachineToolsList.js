@@ -44,8 +44,11 @@ import Scrollbar from '../../components/scrollbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import SiteListTableRow from './ToolsInstalled/SiteListTableRow';
-import SiteListTableToolbar from './ToolsInstalled/SiteListTableToolbar';
+
+// import SiteListTableRow from './ToolsInstalled/SiteListTableRow';
+// import SiteListTableToolbar from './ToolsInstalled/SiteListTableToolbar';
+
+// fix these imports, please. thanks -bally
 import { getSites, deleteSite, getSite, setFormVisibility } from '../../redux/slices/customer/site';
 import SiteAddForm from './ToolsInstalled/SiteAddForm';
 import SiteEditForm from './ToolsInstalled/SiteEditForm';
@@ -210,7 +213,6 @@ export default function MachineToolsList() {
 
         <Card>
           {siteEditFormVisibility && <SiteEditForm />}
-
           {siteAddFormVisibility && !siteEditFormVisibility && <SiteAddForm />}
 
           {!siteAddFormVisibility &&
