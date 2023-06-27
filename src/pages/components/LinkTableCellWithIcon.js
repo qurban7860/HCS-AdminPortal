@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { TableCell, Link } from '@mui/material';
-import { makeStyles } from '@mui/styles'; // will uninstall this later
 import { alpha } from '@mui/material/styles';
 import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';

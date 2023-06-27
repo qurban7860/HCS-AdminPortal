@@ -3,72 +3,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Carousel from 'react-material-ui-carousel';
-import { makeStyles } from '@mui/styles';
-import { Paper, Button } from '@mui/material';
-import {
-  CarouselRootContainer,
-  CarouselContainer,
-  CarouselButtonWrapper,
-  CarouselFullHeightHoverWrapper,
-  CarouselButtonVisible,
-  CarouselButtonHidden,
-  CarouselButton,
-  NextButton,
-  PrevButton,
-} from '../../../../theme/styles/components/carousel-styles';
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     width: '100%',
-//     height: '200px',
-//     objectFit: 'cover',
-//     carousel: {
-//       width: '100%',
-//       position: 'relative',
-//       objectFit: 'cover',
-//       buttonWrapper: {
-//         position: 'absolute',
-//         backgroundColor: 'transparent',
-//         top: 'calc(50% - 70px)',
-//         '&:hover': {
-//           '& $button': {
-//             backgroundColor: 'black',
-//             opacity: '0.4',
-//           },
-//         },
-//       },
-//       fullHeightHoverWrapper: {
-//         height: '100%',
-//         top: '0',
-//       },
-//       buttonVisible: {
-//         opacity: '.2',
-//       },
-//       buttonHidden: {
-//         opacity: '0',
-//       },
-//       button: {
-//         position: 'absolute',
-//         top: 'calc(50% - 20px) !important',
-//         color: 'white',
-//         transition: '200ms',
-//         cursor: 'pointer',
-//         '&:hover': {
-//           opacity: '0.6 !important',
-//         },
-//       },
-//       next: {
-//         right: 0,
-//       },
-//       prev: {
-//         left: 0,
-//       },
-//     },
-//   },
-// }));
+import { Paper } from '@mui/material';
 
 export default function SiteCarousel() {
-  // const classes = useStyles();
   const items = [
     { imageUrl: 'https://www.howickltd.com/asset/245/w800-h600-q80.jpeg' },
     { imageUrl: 'https://www.howickltd.com/asset/241/w800-h600-q80.jpeg' },
@@ -89,7 +26,6 @@ export default function SiteCarousel() {
       duration={1000}
       easing="ease-in-out"
       disableButtonsControls="true"
-      // className={classes.carousel}
       sx={{
         height: '230px',
       }}

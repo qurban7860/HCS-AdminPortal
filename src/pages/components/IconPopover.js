@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Popover, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-// import { useStyles } from '../../theme/styles/useStyles';
 import { StyledPopover } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
 
@@ -16,7 +15,6 @@ export default function IconPopover({
   documentIsActive,
   customerAccess,
 }) {
-  //   const classes = useStyles({ isActive });
   const [anchorEl, setAnchorEl] = useState(null);
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -224,6 +222,8 @@ export default function IconPopover({
           </StyledPopover>
         </>
       )}
+
+      {/* customerAccess icon */}
       {customerAccess !== undefined && (
         <>
           <IconButton

@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-// eslint-disable-next-line
-import { makeStyles } from '@mui/styles'; // will uninstall this later
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Stack, Typography, Popover, IconButton } from '@mui/material';
+import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { StyledTooltip, StyledStack, StyledPopover } from '../../theme/styles/default-styles';
