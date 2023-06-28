@@ -1,6 +1,6 @@
 // components
 import PropTypes from 'prop-types';
-import Chart, { useChart } from '../../../../components/chart';
+import Chart, { useChart } from '../../../components/chart';
 // ----------------------------------------------------------------------
 
 ChartBar.propTypes = {

@@ -1,35 +1,19 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import Chart from 'react-apexcharts';
 // @mui
 import { useTheme } from '@mui/material/styles';
-import { Typography, Container, Grid, Stack, Button, Card } from '@mui/material';
-import { AppShortcutRounded, CenterFocusStrong } from '@mui/icons-material';
-import ChartBar from '../../sections/_examples/extra/chart/ChartBar';
+import { Typography, Container, Grid, Stack, Card, Divider } from '@mui/material';
+import ChartBar from '../components/Charts/ChartBar';
+import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-// _mock_
-import LineChart from '../components/Charts/LineChart';
-import GoogleMaps from '../../assets/GoogleMaps';
-import {
-  _appFeatured,
-  _appAuthors,
-  _appInstalled,
-  _appRelated,
-  _appInvoices,
-} from '../../_mock/arrays';
-// components
-import { useSettingsContext } from '../../components/settings';
+// dummy datas
+import { _appAuthors } from '../../_mock/arrays';
+import ContainerView from '../../sections/_examples/extra/animate/background/ContainerView';
 // sections
-import {
-  AppWidget,
-  AppWelcome,
-  AppAreaInstalled,
-  AppNewInvoice,
-  AppTopInstalledCountries,
-  AppTopRelated,
-} from '../../sections/@dashboard/general/app';
+import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
+import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
+import ProductionLog from '../components/Charts/ProductionLog';
 import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
 
 // assets
@@ -143,8 +127,6 @@ export default function GeneralAppPage() {
         backgroundSize: 'auto 90%',
         backgroundOpacity: 0.1,
         backgroundAttachment: 'fixed',
-        // height: '100%',
-        // width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -166,17 +148,18 @@ export default function GeneralAppPage() {
               position: 'relative',
             }}
           >
-            <AppWelcome
+            <HowickWelcome
               title={`CUSTOMER \n SERVICE & SUPPORT`}
               description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
             />
           </Grid>
         </Grid>
 
+        {/* dashboard customers, sites, machines, active users */}
         <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
           <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
-              <AppWidget
+              <HowickWidgets
                 title="Customers"
                 total={count?.customerCount || 0}
                 icon="mdi:account-group"
@@ -187,7 +170,7 @@ export default function GeneralAppPage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AppWidget
+              <HowickWidgets
                 title="Sites"
                 total={count?.siteCount || 0}
                 icon="mdi:office-building-marker"
@@ -200,7 +183,7 @@ export default function GeneralAppPage() {
           </Grid>
           <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-              <AppWidget
+              <HowickWidgets
                 title="Machines"
                 total={count?.machineCount || 0}
                 icon="mdi:window-shutter-settings"
@@ -211,7 +194,7 @@ export default function GeneralAppPage() {
               />
             </Grid>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-              <AppWidget
+              <HowickWidgets
                 title="Active Users"
                 total={count?.userCount || 0}
                 icon="mdi:account"
@@ -222,27 +205,42 @@ export default function GeneralAppPage() {
               />
             </Grid>
           </Grid>
+
+          {/* Global widget */}
           <Grid container item xs={12} md={16} spacing={3} mt={2}>
             <Grid item xs={12} md={6} lg={6}>
-              <Card sx={{ px: 3, mb: 3 }}>
+              <Card
+                sx={{
+                  px: 3,
+                  mb: 3,
+                  backgroundImage: ` url(../../assets/illustrations/world.svg)`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'top right',
+                  backgroundSize: 'auto 90%',
+                }}
+              >
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="subtitle2">Howick GLOBAL</Typography>
+                  <Typography variant="h6"> GLOBAL</Typography>
                 </Stack>
-
+                <Divider />
                 <ChartBar
                   optionsData={countryWiseCustomerCountCountries}
                   seriesData={countryWiseCustomerCountNumber}
                   type="bar"
                   height="300px"
                   width="100%"
+                  color="warning"
                 />
               </Card>
             </Grid>
+
+            {/* Machine Performance */}
             <Grid item xs={12} md={6} lg={6}>
               <Card sx={{ px: 3, mb: 3 }}>
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="subtitle2">Machine Performance</Typography>
+                  <Typography variant="h6">Machine Performance</Typography>
                 </Stack>
+                <Divider />
                 <ChartBar
                   optionsData={modelWiseMachineModel}
                   seriesData={modelWiseMachineNumber}
@@ -251,8 +249,9 @@ export default function GeneralAppPage() {
               </Card>
             </Grid>
 
+            {/* Production Log */}
             <Grid item xs={12} md={6} lg={8}>
-              <AppAreaInstalled
+              <ProductionLog
                 title="Production Log"
                 subheader
                 chart={{
@@ -278,6 +277,7 @@ export default function GeneralAppPage() {
               />
             </Grid>
 
+            {/* Operators */}
             <Grid item xs={12} lg={4}>
               <Grid item>
                 <HowickOperators title="Operators" list={_appAuthors} />
@@ -285,6 +285,21 @@ export default function GeneralAppPage() {
             </Grid>
           </Grid>
         </Grid>
+
+        {/* extra */}
+        <Grid item xs={12} md={6} lg={12}>
+          <ChartColumnNegative optionsData={modelWiseMachineModel} />
+        </Grid>
+
+        {/* TESTs DONT REMOVE */}
+        {/*
+        <ContainerView selectVariant="panLeft">
+          <Grid container spacing={3}>
+            <Grid item xs={12} md={6} lg={4}>
+              HEY
+            </Grid>
+          </Grid>
+        </ContainerView> */}
 
         {/* <Grid item xs={12} md={6} lg={4}>
           <AppTopRelated title="Machine Tools" list={_appRelated} />
