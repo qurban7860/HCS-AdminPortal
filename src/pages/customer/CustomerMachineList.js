@@ -172,7 +172,7 @@ export default function CustomerContactList() {
       <Grid item lg={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
-      <Card sx={{ mt: 2 }}>
+      <Card>
         {customerMachines.map((customerMachine, index) => {
           address.city = customerMachine?.instalationSite?.address?.city;
           address.region = customerMachine?.instalationSite?.address?.region;

@@ -204,7 +204,7 @@ export default function DocumentList() {
           />
         </Breadcrumbs>
       </Stack>
-      <Grid item>
+      <Grid item mt={1}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
       {!customerDocumentEditFormVisibility &&
@@ -233,7 +233,7 @@ export default function DocumentList() {
         )}
 
       {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
-      <Card sx={{ mt: 2 }}>
+      <Card>
         {!customerDocumentEditFormVisibility &&
           !customerDocumentFormVisibility &&
           !documentTypeFormVisibility &&
