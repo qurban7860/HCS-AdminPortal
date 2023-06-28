@@ -1,20 +1,19 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-// @mui
-import { Card, CardHeader, Box, Typography } from '@mui/material';
-// components
-import { CustomSmallSelect } from '../../../../components/custom-input';
-import Chart, { useChart } from '../../../../components/chart';
+import { Card, CardHeader, Box, Divider } from '@mui/material';
+import { CustomSmallSelect } from '../../../components/custom-input';
+import Chart, { useChart } from '../../../components/chart';
+import { StyledBg } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-AppAreaInstalled.propTypes = {
+ProductionLog.propTypes = {
   chart: PropTypes.object,
   title: PropTypes.string,
   subheader: PropTypes.func,
 };
 
-export default function AppAreaInstalled({ title, subheader, chart, ...other }) {
+export default function ProductionLog({ title, subheader, chart, ...other }) {
   const { colors, categories, series, options } = chart;
   const [seriesData, setSeriesData] = useState('28-June-2023');
 
@@ -66,6 +65,7 @@ export default function AppAreaInstalled({ title, subheader, chart, ...other }) 
             value={seriesData}
             onChange={(event) => setSeriesData(event.target.value)}
           >
+            <Divider />
             {series.map((option) => (
               <option key={option.day} value={option.day}>
                 {option.day}
@@ -82,6 +82,7 @@ export default function AppAreaInstalled({ title, subheader, chart, ...other }) 
           )}
         </Box>
       ))}
+      <StyledBg />
     </Card>
   );
 }

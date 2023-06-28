@@ -331,7 +331,15 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                           <Iconify icon="icon-park-outline:preview-open" width={18} />
                         </IconButton>
                       </Link>
-                      <ImagePreviewDialog  onPreview={onPreview} handleClosePreview={handleClosePreview} handleDownloadImage={handleDownloadImage} imageName={imageName} imageExtension={imageExtension} file={file} imageData={imageData}/>
+                      <ImagePreviewDialog
+                        onPreview={onPreview}
+                        handleClosePreview={handleClosePreview}
+                        handleDownloadImage={handleDownloadImage}
+                        imageName={imageName}
+                        imageExtension={imageExtension}
+                        file={file}
+                        imageData={imageData}
+                      />
                       <Link>
                         <IconButton
                           size="small"

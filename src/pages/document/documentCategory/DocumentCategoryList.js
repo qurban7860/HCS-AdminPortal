@@ -40,11 +40,12 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentCategoryListTableRow from './DocumentCategoryListTableRow';
 import DocumentCategoryListTableToolbar from './DocumentCategoryListTableToolbar';
-import BreadcrumbsProducer from '../../components/BreadcrumbsProducer';
-import documentName, { deleteDocumentCategory, getDocumentCategories  } from '../../../redux/slices/document/documentCategory';
+import documentName, {
+  deleteDocumentCategory,
+  getDocumentCategories,
+} from '../../../redux/slices/document/documentCategory';
 import { Cover } from '../../components/Cover';
 import { fDate } from '../../../utils/formatTime';
-
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +54,6 @@ const TABLE_HEAD = [
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
-
 ];
 
 // ----------------------------------------------------------------------
@@ -95,7 +95,9 @@ export default function DocumentCategoryList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customer } = useSelector((state) => state.customer);
-  const { documentCategories, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentCategory);
+  const { documentCategories, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.documentCategory
+  );
 
   // console.log("documentCategories : ", documentCategories )
 
@@ -198,10 +200,7 @@ export default function DocumentCategoryList() {
             // mt: '24px',
           }}
         >
-          <Cover
-            name="Document Categories"
-            icon="ph:users-light"
-          />
+          <Cover name="Document Categories" icon="ph:users-light" />
         </Card>
         <Card sx={{ mt: 3 }}>
           <DocumentCategoryListTableToolbar
@@ -330,9 +329,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (docCategory) => docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (docCategory) =>
+        docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (docCategory?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(docCategory?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

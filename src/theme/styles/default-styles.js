@@ -1,6 +1,10 @@
-import { styled } from '@mui/material/styles';
-import { CustomAvatar } from '../../components/custom-avatar';
-import { bgBlur } from '../../utils/cssStyles';
+import { styled, alpha } from '@mui/material/styles';
+import { Popover, Stack } from '@mui/material';
+import { m } from 'framer-motion';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { bgBlur, bgGradient } from '../../utils/cssStyles';
+import Image from '../../components/image';
+import { MotionContainer, varFade } from '../../components/animate';
 
 /**
  * @cover :components ____________________________________________________________________________________________
@@ -40,4 +44,87 @@ export const StyledCustomAvatar = styled('div')(({ theme }) => ({
   mt: { xs: 1, md: 1 },
   width: { xs: 110, md: 110 },
   height: { xs: 110, md: 110 },
+}));
+
+export const StyledTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme, toolTipColor }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: toolTipColor,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    fontSize: '1rem',
+    backgroundColor: toolTipColor,
+  },
+}));
+
+export const StyledTooltipSliding = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme, toolTipColor }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: toolTipColor,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    fontSize: '1rem',
+    color: toolTipColor,
+    backgroundColor: 'transparent',
+  },
+}));
+
+export const StyledStack = styled(Stack)(({ theme }) => ({
+  justifyContent: 'flex-end',
+  flexDirection: 'row',
+  '& > :not(style) + :not(style)': {
+    marginLeft: theme.spacing(2),
+  },
+  marginBottom: theme.spacing(-5),
+  marginRight: theme.spacing(3),
+  '& .MuiButton-root': {
+    minWidth: '32px',
+    width: '32px',
+    height: '32px',
+    padding: 0,
+    '&:hover': {
+      background: 'transparent',
+    },
+  },
+}));
+
+export const StyledPopover = styled(Popover)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    backgroundColor: 'transparent',
+    boxShadow: 'none',
+    size: '100%',
+    overflow: 'hidden',
+    borderRadius: 0,
+  },
+  '& .MuiPopover-paper': {
+    overflow: 'hidden',
+  },
+  '& .MuiPopover-paper .MuiList-root': {
+    padding: '0px',
+  },
+  '& .MuiPopover-paper .MuiTypography-root': {
+    fontSize: '1rem',
+  },
+  boxShadow: 'none',
+  pointerEvents: 'none',
+}));
+
+/**
+ * @styled components from minimal layout
+ */
+
+export const StyledBg = styled('div')(({ theme }) => ({
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: -1,
+  position: 'absolute',
+  transform: 'scaleX(-1)',
+  ...bgGradient({
+    color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
+    imgUrl: '/assets/background/overlay_2.jpg',
+  }),
 }));

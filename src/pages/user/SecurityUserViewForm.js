@@ -16,7 +16,6 @@ import {
 } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
-import Iconify from '../../components/iconify';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
@@ -43,7 +42,7 @@ export default function SecurityUserViewForm() {
   const { securityUser, loggedInUser, initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
-  
+
   const [openContact, setOpenContact] = useState(false);
   const handleOpenContact = () => setOpenContact(true);
   const handleCloseContact = () => setOpenContact(false);
@@ -75,19 +74,19 @@ export default function SecurityUserViewForm() {
   }, [id, dispatch]);
 
   useEffect(() => {
-    if(loggedInUser){
+    if (loggedInUser) {
       const superAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
       setSuperAdmin(superAdmin);
       // disable delete button
-      if(!superAdmin){
+      if (!superAdmin) {
         setDisableDeleteButton(true);
-      }else{
+      } else {
         setDisableDeleteButton(false);
       }
       // disable edit button
-      if(superAdmin || loggedInUser._id === id ){
+      if (superAdmin || loggedInUser._id === id) {
         setDisableEditButton(false);
-      }else{
+      } else {
         setDisableEditButton(true);
       }
     }
@@ -127,7 +126,7 @@ export default function SecurityUserViewForm() {
       // } else {
       //   enqueueSnackbar('Something went wrong!', { variant: `error` });
       // }
-      enqueueSnackbar("User delete failed!",{ variant: `error` })
+      enqueueSnackbar('User delete failed!', { variant: `error` });
       console.log('Error:', error);
     }
   };

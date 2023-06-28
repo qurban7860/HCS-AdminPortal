@@ -1,28 +1,29 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import Chart from 'react-apexcharts';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { Typography, Container, Grid, Stack, Button, Card } from '@mui/material';
-import { AppShortcutRounded, CenterFocusStrong } from '@mui/icons-material';
-import ChartBar from '../../sections/_examples/extra/chart/ChartBar';
-import ChartMixed from '../../sections/_examples/extra/chart/ChartMixed';
+import { useTheme, styled, alpha } from '@mui/material/styles';
+import { Typography, Container, Grid, Stack, Card, Divider } from '@mui/material';
+import { m } from 'framer-motion';
+import Image from '../../components/image';
+import { bgGradient } from '../../utils/cssStyles';
+import { MotionContainer, varFade } from '../../components/animate';
+import ChartBar from '../components/Charts/ChartBar';
+import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
+import { StyledBg } from '../../theme/styles/default-styles';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-// _mock_
-import GoogleMaps from '../../assets/GoogleMaps';
-
-import {
-  _appFeatured,
-  _appAuthors,
-  _appInstalled,
-  _appRelated,
-  _appInvoices,
-} from '../../_mock/arrays';
-// components
-import { useSettingsContext } from '../../components/settings';
+// dummy datas
+import { _appAuthors } from '../../_mock/arrays';
+import ContainerView from '../../sections/_examples/extra/animate/background/ContainerView';
+import AlertDialog from '../../sections/_examples/mui/dialog/AlertDialog';
+import CarouselCenterMode from '../../sections/_examples/extra/carousel/CarouselCenterMode';
+import ComponentHero from '../../sections/_examples/ComponentHero';
 // sections
-import { AppWidget, AppWelcome } from '../../sections/@dashboard/general/app';
+import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
+import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
+import ProductionLog from '../components/Charts/ProductionLog';
+import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
+
 // assets
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count';
@@ -31,11 +32,8 @@ import { getCount } from '../../redux/slices/dashboard/count';
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
-
   const { user } = useAuthContext();
-
   const theme = useTheme();
-
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
 
   const modelWiseMachineNumber = [];
@@ -137,14 +135,13 @@ export default function GeneralAppPage() {
         backgroundSize: 'auto 90%',
         backgroundOpacity: 0.1,
         backgroundAttachment: 'fixed',
-        // height: '100%',
-        // width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 0,
         alignContent: 'center',
+        color: 'text.primary',
       }}
     >
       <Grid container item sx={{ justifyContent: 'center' }}>
@@ -159,17 +156,18 @@ export default function GeneralAppPage() {
               position: 'relative',
             }}
           >
-            <AppWelcome
+            <HowickWelcome
               title={`CUSTOMER \n SERVICE & SUPPORT`}
               description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
             />
           </Grid>
         </Grid>
 
+        {/* dashboard customers, sites, machines, active users */}
         <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
           <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
-              <AppWidget
+              <HowickWidgets
                 title="Customers"
                 total={count?.customerCount || 0}
                 icon="mdi:account-group"
@@ -178,18 +176,9 @@ export default function GeneralAppPage() {
                   series: countryWiseCustomerCountNumber,
                 }}
               />
-              {/* <AppWidgetSummary
-                title="Customers"
-                percent={-0.1}
-                total={count?.customerCount || 0}
-                chart={{
-                  colors: [theme.palette.warning.main],
-                  series: [8, 9, 31, 8, 16, 37, 8, 33, 46, 31],
-                }}
-              /> */}
             </Grid>
             <Grid item xs={12} sm={6} md={3}>
-              <AppWidget
+              <HowickWidgets
                 title="Sites"
                 total={count?.siteCount || 0}
                 icon="mdi:office-building-marker"
@@ -202,7 +191,7 @@ export default function GeneralAppPage() {
           </Grid>
           <Grid container item xs={12} md={16} spacing={3}>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-              <AppWidget
+              <HowickWidgets
                 title="Machines"
                 total={count?.machineCount || 0}
                 icon="mdi:window-shutter-settings"
@@ -211,15 +200,9 @@ export default function GeneralAppPage() {
                   series: modelWiseMachineNumber,
                 }}
               />
-
-              {/* <AppWidgetSummary
-                title="Machines"
-                // percent={0.2}
-                total={count?.machineCount || 0}
-              /> */}
             </Grid>
             <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
-              <AppWidget
+              <HowickWidgets
                 title="Active Users"
                 total={count?.userCount || 0}
                 icon="mdi:account"
@@ -228,139 +211,118 @@ export default function GeneralAppPage() {
                   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
                 }}
               />
-
-              {/* <AppWidgetSummary
-                title="Active Users"
-                // percent={2.6}
-                total={count?.userCount || 0}
-                // chart={{
-                //   colors: [theme.palette.primary.main],
-                //   series: [5, 18, 12, 51, 68, 11, 39, 37, 27, 20],
-                // }}
-              /> */}
             </Grid>
           </Grid>
+
+          {/* Global widget */}
           <Grid container item xs={12} md={16} spacing={3} mt={2}>
             <Grid item xs={12} md={6} lg={6}>
-              <Card sx={{ px: 3, mb: 3 }}>
+              <Card
+                variants={varFade().inDown}
+                sx={{
+                  px: 3,
+                  mb: 3,
+                  backgroundImage: ` url(../../assets/illustrations/world.svg)`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'top right',
+                  backgroundSize: 'auto 90%',
+                }}
+              >
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="subtitle2">Customers</Typography>
+                  <Typography variant="h6"> GLOBAL</Typography>
                 </Stack>
+                <Divider />
                 <ChartBar
                   optionsData={countryWiseCustomerCountCountries}
                   seriesData={countryWiseCustomerCountNumber}
                   type="bar"
                   height="300px"
                   width="100%"
+                  color="warning"
                 />
-
-                {/* <Chart
-                  options={CustomerData.options}
-                  series={CustomerData.series}
-                  type="bar"
-                  height="300px"
-                  width="100%"
-                /> */}
               </Card>
             </Grid>
-            <Grid item xs={12} md={6} lg={6}>
-              <Card sx={{ px: 3, mb: 3 }}>
-                <Stack sx={{ pt: 2 }}>
-                  <Typography variant="subtitle2">Machine Models</Typography>
-                </Stack>
-                <ChartMixed
-                  options={ModelData.options}
-                  series={ModelData.series}
-                  height="300px"
-                  width="100%"
-                />
 
-                {/* <Chart
-                  options={ModelData.options}
-                  series={ModelData.series}
+            {/* Machine Performance */}
+            <Grid item xs={12} md={6} lg={6}>
+              <Card
+                sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
+                variants={varFade().inDown}
+              >
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="h6">Machine Performance</Typography>
+                </Stack>
+                <Divider />
+                <ChartBar
+                  optionsData={modelWiseMachineModel}
+                  seriesData={modelWiseMachineNumber}
                   type="bar"
-                  height="300px"
-                  width="100%"
-                /> */}
+                  sx={{ backgroundColor: 'transparent' }}
+                />
               </Card>
+              <StyledBg />
+            </Grid>
+
+            {/* Production Log */}
+            <Grid item xs={12} md={6} lg={8}>
+              <ProductionLog
+                title="Production Log"
+                subheader
+                chart={{
+                  categories: [
+                    '2:00:00PM',
+                    '2:30:00PM',
+                    '2:45:00PM',
+                    '4:00:00PM',
+                    '7:00:00AM',
+                    '10:05:00AM',
+                  ],
+                  series: [
+                    {
+                      day: '28-June-2023',
+                      data: [
+                        { name: 'Operator 1', data: [5000, 0, 3000, 0, 2000, 0] },
+                        { name: 'Operator 2', data: [5000, 0, 4000, 0, 3000, 0] },
+                        { name: 'Operator 3', data: [5500, 0, 2500, 0, 1500, 0] },
+                      ],
+                    },
+                  ],
+                }}
+                sx={{ bg: 'transparent' }}
+              />
+              <StyledBg />
+            </Grid>
+
+            {/* Operators */}
+            <Grid item xs={12} lg={4}>
+              <Grid item>
+                <HowickOperators title="Operators" list={_appAuthors} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
 
-        {/* <Grid item xs={12} md={6} lg={8}>
-            <AppAreaInstalled
-              title="Sites"
-              subheader="(+43%) than last year"
-              chart={{
-                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
-                series: [
-                  {
-                    year: '2019',
-                    data: [
-                      { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
-                      { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] },
-                    ],
-                  },
-                  {
-                    year: '2020',
-                    data: [
-                      { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                      { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
-                    ],
-                  },
-                ],
-              }}
-            />
-          </Grid> */}
+        {/* extra */}
+        <Grid item xs={12} md={6} lg={12}>
+          <ChartColumnNegative optionsData={modelWiseMachineModel} />
+          <StyledBg />
+        </Grid>
 
-        {/* <Grid item xs={12} lg={8}>
-            <AppNewInvoice
-              title="New Site"
-              tableData={_appInvoices}
-              tableLabels={[
-                { id: 'id', label: 'Site ID' },
-                { id: 'category', label: 'Category' },
-                { id: 'price', label: 'Price' },
-                { id: 'status', label: 'Status' },
-                { id: '' },
-              ]}
-            />
-          </Grid> */}
+        {/* TESTs DONT REMOVE */}
+
+        {/* <ContainerView selectVariant="panLeft">
+          <Grid container spacing={3}>
+              <VerticalLinearStepper/>
+          </Grid>
+        </ContainerView> */}
 
         {/* <Grid item xs={12} md={6} lg={4}>
-            <AppTopRelated title="Top Related Applications" list={_appRelated} />
-          </Grid> */}
+          <AppTopRelated title="Machine Tools" list={_appRelated} />
+        </Grid> */}
 
         {/* <Grid item xs={12} md={6} lg={4}>
-            <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
-          </Grid> */}
-
-        {/* <Grid item xs={12} md={6} lg={4}>
-            <AppTopAuthors title="Top Authors" list={_appAuthors} />
-          </Grid> */}
-
-        {/* <Grid item xs={12} md={6} lg={4}>
-            <Stack spacing={3}>
-              <AppWidget
-                title="Conversion"
-                total={38566}
-                icon="eva:person-fill"
-                chart={{
-                  series: 48,
-                }}
-              />
-
-              <AppWidget
-                title="Applications"
-                total={55566}
-                icon="eva:email-fill"
-                color="info"
-                chart={{
-                  series: 75,
-                }}
-              />
-            </Stack>
-          </Grid> */}
+          <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
+        </Grid> */}
       </Grid>
     </Container>
   );

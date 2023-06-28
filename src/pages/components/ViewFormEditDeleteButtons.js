@@ -1,53 +1,25 @@
 import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
-// eslint-disable-next-line
-import { makeStyles } from '@mui/styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Button, Grid, Stack, Link, Tooltip, Typography, Popover, IconButton } from '@mui/material';
-import { green, blueGrey } from '@mui/material/colors';
-import {createTheme, ThemeProvider, styled, alpha} from '@mui/material/styles';
+import { Button, Typography, IconButton } from '@mui/material';
+import { green } from '@mui/material/colors';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { StyledStack } from '../../theme/styles/default-styles';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Iconify from '../../components/iconify';
-import MenuPopover from '../../components/menu-popover';
 import useResponsive from '../../hooks/useResponsive';
 import { setTransferDialogBoxVisibility } from '../../redux/slices/products/machine';
+import IconPopover from './IconPopover';
+import IconTooltip from './IconTooltip';
 
-const useStyles = makeStyles((theme) => ({
-  tooltip: {
-    fontSize: '1rem',
-    backgroundColor: theme.palette.primary.main,
-    color: 'white',
-  },
-  tooltipError: {
-    fontSize: '1rem',
-    backgroundColor: theme.palette.error.main,
-    color: 'white',
-  },
-}));
-
-ViewFormEditDeleteButtons.propTypes = {
-  handleVerification: PropTypes.func,
-  isVerified: PropTypes.bool,
-  handleTransfer: PropTypes.func,
-  handleUpdatePassword: PropTypes.func,
-  handleEdit: PropTypes.func,
-  onDelete: PropTypes.func,
-  type: PropTypes.string,
-  sites: PropTypes.bool,
-  disableTransferButton: PropTypes.bool, 
-  disablePasswordButton: PropTypes.bool, 
-  disableDeleteButton: PropTypes.bool, 
-  disableEditButton: PropTypes.bool, 
-  handleMap: PropTypes.func,
-};
 export default function ViewFormEditDeleteButtons({
   disableTransferButton = false,
   disableDeleteButton = false,
   disablePasswordButton = false,
   disableEditButton = false,
-  isVerified ,
+  isVerified,
   handleVerification,
   onDelete,
   handleEdit,
@@ -60,67 +32,67 @@ export default function ViewFormEditDeleteButtons({
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
-  const classes = useStyles();
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openVerificationConfirm, setOpenVerificationConfirm] = useState(false);
   const theme = createTheme({
     palette: {
-        success: green,
+      success: green,
     },
-});
+  });
   // const [openTransferConfirm, setOpenTransferConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const [deleteButtonColor, setDeleteButtonColor] = useState('error.main');
   const [deleteButtonHoverColor, setDeleteButtonHoverColor] = useState('error.dark');
-  let disableDelete = userRoles.some(role => role?.disableDelete === true);
-  if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
+  let disableDelete = userRoles.some((role) => role?.disableDelete === true);
+  if (userRoles.some((role) => role?.roleType === 'SuperAdmin')) {
     disableDelete = false;
-  } 
+  }
 
-
-  useEffect(() =>{
-    if(disableDelete){
-      setDeleteButtonColor('text.secondary')
+  useEffect(() => {
+    if (disableDelete) {
+      setDeleteButtonColor('text.secondary');
       setDeleteButtonHoverColor('text.secondary.dark');
     }
-  },[disableDelete])
+  }, [disableDelete]);
 
-  if(disableDelete){
+  if (disableDelete) {
     disableDeleteButton = true;
-   }else{
-    disableDeleteButton = false
-   }
+  } else {
+    disableDeleteButton = false;
+  }
 
   const handleOpenConfirm = (dialogType) => {
-    if(dialogType === 'Verification' && !isVerified ){
+    if (dialogType === 'Verification' && !isVerified) {
       setOpenVerificationConfirm(true);
     }
-    if(dialogType === 'delete' && !disableDeleteButton){
+    if (dialogType === 'delete' && !disableDeleteButton) {
       setOpenConfirm(true);
     }
-    if(dialogType === 'transfer'){
+    if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(true));
     }
   };
+
   const handleCloseConfirm = (dialogType) => {
-    if(dialogType === 'Verification'){
+    if (dialogType === 'Verification') {
       reset();
       setOpenVerificationConfirm(false);
     }
-    if(dialogType === 'delete'){
+    if (dialogType === 'delete') {
       reset();
       setOpenConfirm(false);
     }
-    if(dialogType === 'transfer'){
+    if (dialogType === 'transfer') {
       dispatch(setTransferDialogBoxVisibility(false));
     }
   };
 
   const handleVerificationConfirm = () => {
-    handleVerification(); handleCloseConfirm('Verification')
+    handleVerification();
+    handleCloseConfirm('Verification');
   };
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -130,6 +102,7 @@ export default function ViewFormEditDeleteButtons({
     setAnchorEl(null);
     setIsPopoverOpen(false);
   };
+
   const [anchorEl, setAnchorEl] = useState(null);
   const { isMobile } = useResponsive('down', 'sm');
 
@@ -143,188 +116,72 @@ export default function ViewFormEditDeleteButtons({
   } = methods;
   return (
     <>
-      <Stack
-        justifyContent="flex-end"
-        direction="row"
-        spacing={2}
-        sx={{
-          mb: -5,
-          // mt:1,
-          mr: 3,
-          '& .MuiButton-root': {
-            minWidth: '32px',
-            width: '32px',
-            height: '32px',
-            p: 0,
-            '&:hover': {
-              background: 'transparent',
-            },
-          },
-        }}
-      >
-          {handleVerification && !isVerified ? (
-          <ThemeProvider theme={theme} >
-            <Button
-              onClick={() => {
-                handleOpenConfirm('Verification');
-              }}
-              variant="outlined"
-              color={isVerified ? 'success' : 'primary'}
-              sx={{ position: 'relative', zIndex: '1' }}
-            >
-              <Tooltip
-                title={isVerified ? "Verified" : "Verify"}
-                placement="top"
-                disableFocusListener
-                classes={{ tooltip: classes.tooltip }}
-              >
-                <Iconify sx={{ height: '24px', width: '24px' }} icon="ic:round-verified-user" />
-              </Tooltip>
-            </Button>
-          </ThemeProvider>
-        ) : (
-          ''
-        )}
-        {sites && !isMobile ? (
-          <Button
+      <StyledStack>
+        {handleVerification && !isVerified && (
+          <IconTooltip
+            title={isVerified ? 'Verified' : 'Verify'}
+            disabled={disableTransferButton}
             onClick={() => {
-              handleMap();
+              handleOpenConfirm('Verification');
             }}
-            sx={{ display: { sm: 'block', md: 'none' } }}
-          >
-            <IconButton
-              aria-label="google-maps"
-              onClick={handlePopoverOpen}
-              onMouseEnter={handlePopoverOpen}
-              onMouseLeave={handlePopoverClose}
-            >
-              <Iconify
-                heading="Opem Map"
-                icon="mdi:google-maps"
-                style={{ color: 'red' }}
-                width="30px"
-              />
-            </IconButton>
-            <Popover
-              open={isPopoverOpen}
-              anchorEl={anchorEl}
-              onClose={handlePopoverClose}
-              anchorOrigin={{
-                vertical: 'center',
-                horizontal: 'left',
-              }}
-              transformOrigin={{
-                vertical: 'center',
-                horizontal: 'right',
-              }}
-              id="mouse-over-popover"
-              sx={{
-                '& .MuiPaper-root': {
-                  bgcolor: 'transparent',
-                  boxShadow: 'none',
-                },
-                boxShadow: 'none',
-                pointerEvents: 'none',
-              }}
-            >
-              <Typography variant="overline" classes={{ root: classes.activeHover }} color="red">
-                Open MAP
-              </Typography>
-            </Popover>
-          </Button>
-        ) : (
-          ''
+            color={theme.palette.primary.main}
+            icon="ic:round-verified-user"
+          />
         )}
 
-        {handleTransfer ? (
-          <Button
+        {/* map toggle button on mobile */}
+        {sites && !isMobile && <IconPopover onMapClick={() => handleMap()} sites={sites} />}
+
+        {/* machine transfer */}
+        {handleTransfer && (
+          <IconTooltip
+            title="Transfer Ownership"
             disabled={disableTransferButton}
             onClick={() => {
               handleOpenConfirm('transfer');
             }}
-            variant="outlined"
-          >
-            <Tooltip
-              title="Transfer Ownership"
-              placement="top"
-              disableFocusListener
-              classes={{ tooltip: classes.tooltip }}
-            >
-              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi-cog-transfer-outline" />
-            </Tooltip>
-          </Button>
-        ) : (
-          ''
+            color={theme.palette.primary.main}
+            icon="mdi:cog-transfer-outline"
+          />
         )}
 
-
-        {handleUpdatePassword ? (
-          <Button
+        {/* change password for users */}
+        {handleUpdatePassword && (
+          <IconTooltip
+            title="Change Password"
             disabled={disablePasswordButton}
             onClick={() => {
               handleUpdatePassword();
             }}
-            variant="outlined"
-          >
-            <Tooltip
-              title="Change Password"
-              placement="top"
-              disableFocusListener
-              classes={{ tooltip: classes.tooltip }}
-            >
-              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:account-key" />
-            </Tooltip>
-          </Button>
-          ) : ( '' )
-        }
+            color={theme.palette.secondary.main}
+            icon="mdi:account-key"
+          />
+        )}
 
-        <Button
+        {/* edit button */}
+        <IconTooltip
+          title="Edit"
           disabled={disableEditButton}
           onClick={() => {
             handleEdit();
           }}
-          variant="outlined"
-        >
-          <Tooltip
-            title="Edit"
-            placement="top"
-            disableFocusListener
-            classes={{ tooltip: classes.tooltip }}
-          >
-            <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:pencil" />
-          </Tooltip>
-        </Button>
-        {/* if not in the profile show this */}
-        {onDelete ? (
-          <Button
-            // disabled={disableDeleteButton}
-            // readOnly={disableDeleteButton}
+          color={theme.palette.primary.main}
+          icon="mdi:pencil"
+        />
+
+        {/* delete button */}
+        {onDelete && (
+          <IconTooltip
+            title="Delete"
             onClick={() => {
               handleOpenConfirm('delete');
             }}
-            variant="outlined"
-            sx={{color:deleteButtonColor, 
-            borderColor:deleteButtonColor,
-            ':hover': {
-              borderColor: deleteButtonHoverColor,
-            }
-            }}
-            // color={disableDeleteButton ? 'secondary' :'error'}
-          >
-            <Tooltip
-              title="Delete"
-              placement="top"
-              disableFocusListener
-              classes={{ tooltip: classes.tooltipError }}
-              color='error'
-            >
-              <Iconify sx={{ height: '24px', width: '24px' }} icon="mdi:trash-can-outline" />
-            </Tooltip>
-          </Button>
-        ) : (
-          ''
+            color={theme.palette.error.light}
+            icon="mdi:trash-can-outline"
+          />
         )}
-      </Stack>
+      </StyledStack>
+
       <ConfirmDialog
         open={openVerificationConfirm}
         onClose={() => {
@@ -334,17 +191,18 @@ export default function ViewFormEditDeleteButtons({
         content="Are you sure you want to Verify Machine Informaton?"
         action={
           <LoadingButton
-          variant="contained" 
-          color="primary" 
-          loading={(isSubmitSuccessful || isSubmitting) && isLoading}
-          disabled={isSubmitting}
-          onClick={handleSubmit(handleVerificationConfirm)}
-          // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
+            variant="contained"
+            color="primary"
+            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
+            disabled={isSubmitting}
+            onClick={handleSubmit(handleVerificationConfirm)}
+            // onClick={()=> {handleVerification(); handleCloseConfirm('Verification');}}
           >
             Verify
           </LoadingButton>
         }
       />
+
       <ConfirmDialog
         open={openConfirm}
         onClose={() => {
@@ -353,12 +211,12 @@ export default function ViewFormEditDeleteButtons({
         title="Delete"
         content="Are you sure you want to delete?"
         action={
-          <LoadingButton 
-          variant="contained" 
-          color="error" 
-          loading={(isSubmitSuccessful || isSubmitting) && isLoading}
-          disabled={isSubmitting}
-          onClick={handleSubmit(onDelete)} 
+          <LoadingButton
+            variant="contained"
+            color="error"
+            loading={(isSubmitSuccessful || isSubmitting) && isLoading}
+            disabled={isSubmitting}
+            onClick={handleSubmit(onDelete)}
           >
             Delete
           </LoadingButton>
@@ -385,3 +243,19 @@ export default function ViewFormEditDeleteButtons({
     </>
   );
 }
+
+ViewFormEditDeleteButtons.propTypes = {
+  handleVerification: PropTypes.func,
+  isVerified: PropTypes.bool,
+  handleTransfer: PropTypes.func,
+  handleUpdatePassword: PropTypes.func,
+  handleEdit: PropTypes.func,
+  onDelete: PropTypes.func,
+  type: PropTypes.string,
+  sites: PropTypes.bool,
+  disableTransferButton: PropTypes.bool,
+  disablePasswordButton: PropTypes.bool,
+  disableDeleteButton: PropTypes.bool,
+  disableEditButton: PropTypes.bool,
+  handleMap: PropTypes.func,
+};
