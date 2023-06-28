@@ -1,7 +1,10 @@
-import { styled } from '@mui/material/styles';
+import { styled, alpha } from '@mui/material/styles';
 import { Popover, Stack } from '@mui/material';
+import { m } from 'framer-motion';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { bgBlur } from '../../utils/cssStyles';
+import { bgBlur, bgGradient } from '../../utils/cssStyles';
+import Image from '../../components/image';
+import { MotionContainer, varFade } from '../../components/animate';
 
 /**
  * @cover :components ____________________________________________________________________________________________
@@ -106,4 +109,22 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
   },
   boxShadow: 'none',
   pointerEvents: 'none',
+}));
+
+/**
+ * @styled components from minimal layout
+ */
+
+export const StyledBg = styled('div')(({ theme }) => ({
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: -1,
+  position: 'absolute',
+  transform: 'scaleX(-1)',
+  ...bgGradient({
+    color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
+    imgUrl: '/assets/background/overlay_2.jpg',
+  }),
 }));

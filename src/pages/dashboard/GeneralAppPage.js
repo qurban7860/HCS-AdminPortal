@@ -1,15 +1,23 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
 // @mui
-import { useTheme } from '@mui/material/styles';
+import { useTheme, styled, alpha } from '@mui/material/styles';
 import { Typography, Container, Grid, Stack, Card, Divider } from '@mui/material';
+import { m } from 'framer-motion';
+import Image from '../../components/image';
+import { bgGradient } from '../../utils/cssStyles';
+import { MotionContainer, varFade } from '../../components/animate';
 import ChartBar from '../components/Charts/ChartBar';
 import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
+import { StyledBg } from '../../theme/styles/default-styles';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // dummy datas
 import { _appAuthors } from '../../_mock/arrays';
 import ContainerView from '../../sections/_examples/extra/animate/background/ContainerView';
+import AlertDialog from '../../sections/_examples/mui/dialog/AlertDialog';
+import CarouselCenterMode from '../../sections/_examples/extra/carousel/CarouselCenterMode';
+import ComponentHero from '../../sections/_examples/ComponentHero';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
 import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
@@ -210,6 +218,7 @@ export default function GeneralAppPage() {
           <Grid container item xs={12} md={16} spacing={3} mt={2}>
             <Grid item xs={12} md={6} lg={6}>
               <Card
+                variants={varFade().inDown}
                 sx={{
                   px: 3,
                   mb: 3,
@@ -236,7 +245,10 @@ export default function GeneralAppPage() {
 
             {/* Machine Performance */}
             <Grid item xs={12} md={6} lg={6}>
-              <Card sx={{ px: 3, mb: 3 }}>
+              <Card
+                sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
+                variants={varFade().inDown}
+              >
                 <Stack sx={{ pt: 2 }}>
                   <Typography variant="h6">Machine Performance</Typography>
                 </Stack>
@@ -245,8 +257,10 @@ export default function GeneralAppPage() {
                   optionsData={modelWiseMachineModel}
                   seriesData={modelWiseMachineNumber}
                   type="bar"
+                  sx={{ backgroundColor: 'transparent' }}
                 />
               </Card>
+              <StyledBg />
             </Grid>
 
             {/* Production Log */}
@@ -274,7 +288,9 @@ export default function GeneralAppPage() {
                     },
                   ],
                 }}
+                sx={{ bg: 'transparent' }}
               />
+              <StyledBg />
             </Grid>
 
             {/* Operators */}
@@ -289,15 +305,14 @@ export default function GeneralAppPage() {
         {/* extra */}
         <Grid item xs={12} md={6} lg={12}>
           <ChartColumnNegative optionsData={modelWiseMachineModel} />
+          <StyledBg />
         </Grid>
 
         {/* TESTs DONT REMOVE */}
-        {/*
-        <ContainerView selectVariant="panLeft">
+
+        {/* <ContainerView selectVariant="panLeft">
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={4}>
-              HEY
-            </Grid>
+              <VerticalLinearStepper/>
           </Grid>
         </ContainerView> */}
 

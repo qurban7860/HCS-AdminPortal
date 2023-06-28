@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Card, CardHeader, Box, Divider } from '@mui/material';
 import { CustomSmallSelect } from '../../../components/custom-input';
 import Chart, { useChart } from '../../../components/chart';
+import { StyledBg } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -81,6 +82,7 @@ export default function ProductionLog({ title, subheader, chart, ...other }) {
           )}
         </Box>
       ))}
+      <StyledBg />
     </Card>
   );
 }
