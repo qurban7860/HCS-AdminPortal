@@ -270,7 +270,7 @@ export default function CustomerNoteList() {
               toggleCancel={toggleCancel}
             />
           </Stack>
-          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Breadcrumbs
               aria-label="breadcrumb"
               separator="›"
@@ -284,7 +284,7 @@ export default function CustomerNoteList() {
         </>
       )}
 
-      <Card>
+      <Card sx={{ mt: 1 }}>
         {noteEditFormVisibility && <NoteEditForm />}
         {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
         {!formVisibility &&
@@ -299,6 +299,7 @@ export default function CustomerNoteList() {
                 sx={{ borderTop: borderTopVal }}
               >
                 <AccordionSummary
+                  mt={1}
                   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   onClick={() => handleAccordianClick(index)}
                 >
@@ -306,7 +307,6 @@ export default function CustomerNoteList() {
                     <Grid container spacing={1}>
                       <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: 'break-word' }}>
                         <Typography>
-                          {' '}
                           {note.note.length > 100 ? note?.note?.substring(0, 150) : note.note}{' '}
                           {note.note.length > 100 ? '...' : null}{' '}
                         </Typography>
@@ -315,7 +315,6 @@ export default function CustomerNoteList() {
                         {/* <Typography  display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
                       </Grid>
                       <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: 'break-word' }}>
-                        {' '}
                         <Typography> {fDateTime(note.createdAt)} </Typography>{' '}
                       </Grid>
                     </Grid>
@@ -327,10 +326,10 @@ export default function CustomerNoteList() {
               </Accordion>
             );
           })}
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
       </Card>
+      <Grid item lg={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}

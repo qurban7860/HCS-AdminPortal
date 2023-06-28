@@ -28,9 +28,10 @@ import {
   AppAreaInstalled,
   AppNewInvoice,
   AppTopInstalledCountries,
-  AppTopAuthors,
   AppTopRelated,
 } from '../../sections/@dashboard/general/app';
+import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
+
 // assets
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count';
@@ -150,6 +151,7 @@ export default function GeneralAppPage() {
         alignItems: 'center',
         padding: 0,
         alignContent: 'center',
+        color: 'text.primary',
       }}
     >
       <Grid container item sx={{ justifyContent: 'center' }}>
@@ -251,23 +253,24 @@ export default function GeneralAppPage() {
 
             <Grid item xs={12} md={6} lg={8}>
               <AppAreaInstalled
-                title="Sites Installed"
-                subheader="(+43%) than last year"
+                title="Production Log"
+                subheader
                 chart={{
-                  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                  categories: [
+                    '2:00:00PM',
+                    '2:30:00PM',
+                    '2:45:00PM',
+                    '4:00:00PM',
+                    '7:00:00AM',
+                    '10:05:00AM',
+                  ],
                   series: [
                     {
-                      year: '2019',
+                      day: '28-June-2023',
                       data: [
-                        { name: 'Asia', data: [10, 41, 35, 51, 49, 62, 69, 91, 148] },
-                        { name: 'America', data: [10, 34, 13, 56, 77, 88, 99, 77, 45] },
-                      ],
-                    },
-                    {
-                      year: '2020',
-                      data: [
-                        { name: 'Asia', data: [148, 91, 69, 62, 49, 51, 35, 41, 10] },
-                        { name: 'America', data: [45, 77, 99, 88, 77, 56, 13, 34, 10] },
+                        { name: 'Operator 1', data: [5000, 0, 3000, 0, 2000, 0] },
+                        { name: 'Operator 2', data: [5000, 0, 4000, 0, 3000, 0] },
+                        { name: 'Operator 3', data: [5500, 0, 2500, 0, 1500, 0] },
                       ],
                     },
                   ],
@@ -276,29 +279,19 @@ export default function GeneralAppPage() {
             </Grid>
 
             <Grid item xs={12} lg={4}>
-              <AppNewInvoice
-                title="Service desk"
-                tableData={_appInvoices}
-                tableLabels={[
-                  { id: 'id', label: 'Site ID' },
-                  { id: 'name', label: 'Name' },
-                  { id: 'status', label: 'Status' },
-                ]}
-              />
+              <Grid item>
+                <HowickOperators title="Operators" list={_appAuthors} />
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
 
-        <Grid item xs={12} md={6} lg={4}>
-          <AppTopRelated title="Machine Tools" list={_appRelated} />
-        </Grid>
-
         {/* <Grid item xs={12} md={6} lg={4}>
-          <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
+          <AppTopRelated title="Machine Tools" list={_appRelated} />
         </Grid> */}
 
         {/* <Grid item xs={12} md={6} lg={4}>
-          <AppTopAuthors title="Howick Active Users" list={_appAuthors} />
+          <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
         </Grid> */}
       </Grid>
     </Container>
