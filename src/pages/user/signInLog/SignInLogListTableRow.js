@@ -86,6 +86,7 @@ export default function SignInLogListTableRow({
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         {/* <LinkTableCell align="left" onClick={onViewRow} param={name} /> */}
         <TableCell align="left" > {user?.name ? user?.name : '' } </TableCell> 
+        <TableCell align="left" > {user?.login ? user?.login : '' } </TableCell> 
         <TableCell align="left" > {loginIP} </TableCell>  
 
         <TableCell align="left" > {fDateTime(loginTime)} </TableCell>  

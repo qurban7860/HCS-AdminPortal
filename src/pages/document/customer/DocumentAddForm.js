@@ -137,7 +137,7 @@ export default function DocumentAddForm({ currentDocument }) {
   }, [documentCategoryVal, dispatch]);
 
   const AddCustomerDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(50),
+    displayName: Yup.string().max(40),
     description: Yup.string().max(10000),
     images: Yup.mixed()
       .required('File is required!')

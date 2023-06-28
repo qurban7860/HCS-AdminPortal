@@ -224,7 +224,7 @@ export default function CustomerContactList() {
                     >
                       <Typography>
                         {Object.values(address ?? {})
-                          .map((value) => typeof value === 'string' && value.trim())
+                          .map((value) => (typeof value === 'string' ? value.trim() : ''))
                           .filter((value) => value !== '')
                           .join(', ')}
                       </Typography>

@@ -83,8 +83,8 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
 
   const EditContactSchema = Yup.object().shape({
     // customer: Yup.string(),
-    firstName: Yup.string().required(),
-    lastName: Yup.string(),
+    firstName: Yup.string().max(40).required(),
+    lastName: Yup.string().max(40),
     title: Yup.string(),
     contactTypes: Yup.array(),
     // phone: Yup.string(),

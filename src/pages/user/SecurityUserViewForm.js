@@ -16,7 +16,6 @@ import {
 } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
-import Iconify from '../../components/iconify';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
@@ -36,9 +35,14 @@ import FormLabel from '../components/FormLabel';
 export default function SecurityUserViewForm() {
   const regEx = /^[^2]*/;
   const userId = localStorage.getItem('userId');
+  const [disableDeleteButton, setDisableDeleteButton] = useState(false);
+  const [disableEditButton, setDisableEditButton] = useState(false);
+  const [isSuperAdmin, setSuperAdmin] = useState(false);
+
   const { securityUser, loggedInUser, initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
+
   const [openContact, setOpenContact] = useState(false);
   const handleOpenContact = () => setOpenContact(true);
   const handleCloseContact = () => setOpenContact(false);
@@ -53,8 +57,6 @@ export default function SecurityUserViewForm() {
 
   const { user } = useAuthContext();
   const { id } = useParams();
-  const isSuperAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -71,6 +73,25 @@ export default function SecurityUserViewForm() {
     }
   }, [id, dispatch]);
 
+  useEffect(() => {
+    if (loggedInUser) {
+      const superAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
+      setSuperAdmin(superAdmin);
+      // disable delete button
+      if (!superAdmin) {
+        setDisableDeleteButton(true);
+      } else {
+        setDisableDeleteButton(false);
+      }
+      // disable edit button
+      if (superAdmin || loggedInUser._id === id) {
+        setDisableEditButton(false);
+      } else {
+        setDisableEditButton(true);
+      }
+    }
+  }, [id, loggedInUser]);
+  // disableDeleteButton, setDisableDeleteButton
   useEffect(() => {
     batch(() => {
       if (securityUser && securityUser?.customer && securityUser?.customer?._id) {
@@ -105,7 +126,7 @@ export default function SecurityUserViewForm() {
       // } else {
       //   enqueueSnackbar('Something went wrong!', { variant: `error` });
       // }
-      enqueueSnackbar("User delete failed!",{ variant: `error` })
+      enqueueSnackbar('User delete failed!', { variant: `error` });
       console.log('Error:', error);
     }
   };
@@ -153,6 +174,8 @@ export default function SecurityUserViewForm() {
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             disablePasswordButton={!isSuperAdmin}
+            disableDeleteButton={disableDeleteButton}
+            disableEditButton={disableEditButton}
           />
           <ConfirmDialog
             open={openConfirm}

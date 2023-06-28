@@ -50,7 +50,6 @@ export default function NoteViewForm({ currentNote = null }) {
   const { customer } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
 
-
   const handleEdit = async () => {
     await dispatch(getNote(customer._id, currentNote._id));
     dispatch(setNoteEditFormVisibility(true));
@@ -73,7 +72,7 @@ export default function NoteViewForm({ currentNote = null }) {
   };
 
   const onDelete = async () => {
-    try{
+    try {
       await dispatch(deleteNote(customer._id, currentNote._id));
       handleCloseConfirm();
       dispatch(getNotes(customer._id));
@@ -85,8 +84,8 @@ export default function NoteViewForm({ currentNote = null }) {
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar("Notes delete failed!",{ variant: `error` })
-      console.log("Error:", err);
+      enqueueSnackbar('Notes delete failed!', { variant: `error` });
+      console.log('Error:', err);
     }
   };
 
@@ -123,7 +122,7 @@ export default function NoteViewForm({ currentNote = null }) {
           sm={6}
           heading="Contact"
           param={defaultValues?.contact_firstName}
-          secondparam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
+          secondParam={defaultValues?.contact_lastName !== '' ? defaultValues.contact_lastName : ''}
         />
         <ViewFormField sm={12} heading="Note" param={defaultValues?.note} />
         <ViewFormField />

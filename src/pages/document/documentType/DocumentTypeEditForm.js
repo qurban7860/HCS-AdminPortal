@@ -62,7 +62,7 @@ export default function DocumentTypeEditForm() {
     []
   );
   const EditDocumentNameSchema = Yup.object().shape({
-    name: Yup.string().max(50),
+    name: Yup.string().max(40),
     description: Yup.string().max(1500),
     isActive : Yup.boolean(),
     customerAccess: Yup.boolean(),

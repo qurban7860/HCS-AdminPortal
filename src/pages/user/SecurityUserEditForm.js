@@ -34,6 +34,8 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 
 
 export default function SecurityUserEditForm() {
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
   const regEx = /^[2][0-9][0-9]$/
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
@@ -50,13 +52,16 @@ export default function SecurityUserEditForm() {
   const { contacts } = useSelector((state) => state.contact);
   const [ contactVal, setContactVal ] = useState('');
   const [ valid, setValid ] = useState(true);
-  const [phone, setPhone] = useState('')
+  const [phone, setPhone] = useState('');
+  const [sortedRoles, setSortedRoles] = useState([]); 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const [ roleTypesDisabled, disableRoleTypes] = useState(false);
 
-  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }}
 
+  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }};
+  
 useEffect(() => {
     dispatch(getCustomers());
     dispatch(getRoles());
@@ -67,8 +72,30 @@ useEffect(() => {
   if(customerVal){
     dispatch(getContacts(customerVal._id));
   }
+  if(userRoles){
+    if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
+      disableRoleTypes(false);
+    } else {
+      disableRoleTypes(true);
+    }
+  }
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [dispatch,customerVal]);
+}, [dispatch, customerVal, userRoles]);
+
+useEffect(() => {
+  const mappedRoles = roles.map((role) => ({
+    value: role?._id,
+    label: role.name,
+  }));
+
+  const sortedRolesTemp = [...mappedRoles].sort((a, b) => {
+    const nameA = a.label.toUpperCase();
+    const nameB = b.label.toUpperCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  setSortedRoles(sortedRolesTemp);
+}, [roles]);
 
   useLayoutEffect(()=>{
     if(securityUser.customer !== undefined && securityUser.customer !== null){
@@ -141,7 +168,6 @@ useEffect(() => {
   }
 
   const onSubmit = async (data) => {
-    console.log("data : " , data)
     data.customer = customerVal?._id || null
     data.contact = contactVal?._id || null
     if(phone && phone.length > 7 ){
@@ -163,7 +189,7 @@ useEffect(() => {
 
     try {  
       await dispatch(updateSecurityUser(data,securityUser._id));
-      navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+      navigate(PATH_DASHBOARD.user.view(securityUser._id));
     } catch (error) {
       if(error.Message){
         enqueueSnackbar(error.Message,{ variant: `error` })
@@ -177,13 +203,12 @@ useEffect(() => {
   };
 
   const toggleCancel = ()=>{
-      navigate(PATH_DASHBOARD.user.view(defaultValues.id));
+      navigate(PATH_DASHBOARD.user.view(securityUser._id));
   }
   const handleInputEmail = (e) => {
     const emailRegEx =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
       const trimmedEmail = e.target.value.trim();
       // trimmedEmail.match(emailRegEx) ? setValid(true) : setValid(false);
-    console.log(trimmedEmail)
     setEmail(trimmedEmail);
   }
 
@@ -372,11 +397,12 @@ useEffect(() => {
             >
               <RHFTextField name="loginEmail" label="Login Email"  disabled/>
             <RHFMultiSelect
+                disabled={roleTypesDisabled}
                 chip
                 checkbox
                 name="roles"
                 label="Roles"
-                options={ROLES}
+                options={sortedRoles}
               />
             </Box>
             <Grid item md={12}>
