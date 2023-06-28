@@ -5,7 +5,7 @@ import { Card, Table, Button, TableBody, Container, TableContainer, } from '@mui
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
@@ -172,10 +172,10 @@ export default function SecurityUserList() {
     // console.log('id', id);
     // console.log('edit');
     dispatch(setSecurityUserEditFormVisibility(true))
-    navigate(PATH_DASHBOARD.user.edit(id));
+    navigate(PATH_SECURITY.users.edit(id));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.user.view(id));
+    navigate(PATH_SECURITY.users.view(id));
   };
 
   const handleResetFilter = () => {
@@ -190,14 +190,14 @@ export default function SecurityUserList() {
         {/* <CustomBreadcrumbs
           heading="User List"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
-            { name: 'User', href: PATH_DASHBOARD.user.root },
+            { name: 'Dashboard', href: PATH_SECURITY.root },
+            { name: 'Users', href: PATH_SECURITY.users.root },
             { name: 'List' },
           ]}
           action={
             <Button
               component={RouterLink}
-              to={PATH_DASHBOARD.user.new}
+              to={PATH_SECURITY.users.new}
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
             >

@@ -10,7 +10,7 @@ import { Card, Grid, Stack, Typography, Button, Link, Breadcrumbs, Tooltip } fro
 import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import CustomerEditForm from './CustomerEditForm';
 import FormLabel from '../components/FormLabel';
 // slices
 import {
@@ -23,6 +23,7 @@ import {
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 
 // ----------------------------------------------------------------------
@@ -55,7 +56,7 @@ export default function CustomerViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteCustomer(customer._id));
-      navigate(PATH_DASHBOARD.customer.list);
+      navigate(PATH_CUSTOMER.customer.list);
     } catch (err) {
       // if(err.Message){
       //   enqueueSnackbar(err.Message,{ variant: `error` })
@@ -107,18 +108,17 @@ export default function CustomerViewForm() {
     <>
       <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
         <AddButtonAboveAccordion isCustomer="true" />
+        <BreadcrumbsProducer
+          underline="none"
+          step={1}
+          step2
+          path={PATH_CUSTOMER.root}
+          name="Customers"
+          path2={PATH_CUSTOMER.view}
+          name2={customer?.name}
+        />
       </Stack>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-        </Breadcrumbs>
-      </Stack>
-      <Grid container direction="row" mt={1}>
+      <Grid container direction="row">
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons

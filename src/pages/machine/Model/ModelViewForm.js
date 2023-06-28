@@ -46,7 +46,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
 
   const toggleEdit = () => {
     dispatch(setMachinemodelsEditFormVisibility(true));
-    navigate(PATH_MACHINE.machineModel.modeledit(id));
+    navigate(PATH_MACHINE.machines.settings.machineModel.modeledit(id));
   }
 
   const navigate = useNavigate();
@@ -82,7 +82,7 @@ console.log("machinemodel : ", machineModel)
     const onDelete = () => {
       try{
         dispatch(deleteMachineModel(id));
-        navigate(PATH_MACHINE.machineModel.list);
+        navigate(PATH_MACHINE.machines.settings.machineModel.list);
       } catch (err) {
         // if(err.Message){
         //   enqueueSnackbar(err.Message,{ variant: `error` })

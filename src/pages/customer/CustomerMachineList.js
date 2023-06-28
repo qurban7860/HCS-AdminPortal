@@ -142,7 +142,7 @@ export default function CustomerContactList() {
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = !customerMachines.length;
   const handleViewMachine = (id) => {
-    navigate(PATH_MACHINE.machine.view(id));
+    navigate(PATH_MACHINE.machines.view(id));
   };
 
   return (

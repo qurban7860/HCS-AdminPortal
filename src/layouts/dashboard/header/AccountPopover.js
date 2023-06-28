@@ -13,7 +13,7 @@ import {
   IconButton,
 } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_AUTH, PATH_SECURITY } from '../../../routes/paths';
 import { NAV } from '../../../config-global';
 
 // auth
@@ -50,7 +50,7 @@ const OPTIONS = [
   },
   {
     label: 'Profile',
-    linkTo: PATH_DASHBOARD.user.profile,
+    linkTo: PATH_SECURITY.users.profile,
   },
   // {
   //   label: 'Settings',
@@ -58,7 +58,7 @@ const OPTIONS = [
   // },
   {
     label: 'Change Password',
-    linkTo: PATH_DASHBOARD.user.password,
+    linkTo: PATH_SECURITY.users.password,
   },
   // {
   //   label: 'Change User Password',

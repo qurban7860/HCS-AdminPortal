@@ -8,7 +8,7 @@ import { Switch, Card, Grid, Stack, Typography, Button ,Tooltip} from '@mui/mate
 // redux
 import {  setDocumentTypeEditFormVisibility , deleteDocumentType , getDocumentTypes , getDocumentType } from '../../../redux/slices/document/documentType';
 // paths
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { fDate,fDateTime } from '../../../utils/formatTime';
@@ -30,7 +30,7 @@ export default function DocumentTypeViewForm() {
   const onDelete = async () => {
     try{
       await dispatch(deleteDocumentType(documentType?._id));
-      navigate(PATH_DOCUMENT.documentType.list);
+      navigate(PATH_SETTING.documentType.list);
       enqueueSnackbar('Document Type delete Successfully!');
 
     }catch(error){
@@ -40,7 +40,7 @@ export default function DocumentTypeViewForm() {
   };
 
   const  handleEdit = async () => {
-    navigate(PATH_DOCUMENT.documentType.edit(documentType._id))
+    navigate(PATH_SETTING.documentType.edit(documentType._id))
   };
 
   const defaultValues = useMemo(
@@ -61,6 +61,7 @@ export default function DocumentTypeViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentType]
   );
+  console.log("documentType : ", documentType, defaultValues.customerAccess, defaultValues.description)
 
   return (
     <Card sx={{p:2}}>

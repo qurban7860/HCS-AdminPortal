@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Grid, Link, CardActionArea, Breadcrumbs } from '@mui/material';
+import { Stack, Grid, Link, CardActionArea } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -9,11 +9,10 @@ import {
   StyledCardWrapper,
 } from '../../theme/styles/customer-styles';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData } from '../../components/table';
@@ -27,6 +26,7 @@ import {
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
+import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
@@ -108,28 +108,25 @@ export default function CustomerContactList(currentContact = null) {
           FormVisibility={formVisibility}
           toggleCancel={toggleCancel}
         />
-      </Stack>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.root} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={customer.name} />
-          <BreadcrumbsLink
-            to={PATH_DASHBOARD.customer.contacts}
-            name={
-              <Stack>
-                {!formVisibility && !contactEditFormVisibility && !isExpanded && 'Contacts'}
-                {contactEditFormVisibility
-                  ? `Edit ${currentContactData?.firstName}`
-                  : isExpanded && currentContactData?.firstName}
-                {formVisibility && !isExpanded && 'Add new contact'}
-              </Stack>
-            }
-          />
-        </Breadcrumbs>
+        <BreadcrumbsProducer
+          underline="none"
+          step={1}
+          step2
+          step3
+          path={PATH_CUSTOMER.list}
+          name="Customers"
+          path2={PATH_CUSTOMER.root}
+          name2={customer.name}
+          path3={PATH_CUSTOMER.contact.list}
+          name3={
+            <Stack>
+              {contactEditFormVisibility
+                ? `Edit ${currentContactData?.firstName}`
+                : isExpanded && currentContactData?.firstName}
+              {formVisibility && !isExpanded && 'Add new contact'}
+            </Stack>
+          }
+        />
       </Stack>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
         <Grid item lg={12}>
@@ -142,7 +139,7 @@ export default function CustomerContactList(currentContact = null) {
           sm={12}
           md={12}
           lg={4}
-          sx={{ display: formVisibility && isMobile && 'none' }}
+          sx={{ display: formVisibility && isMobile && 'none', borderRadius: '15px' }}
         >
           <StyledScrollbar
             snap

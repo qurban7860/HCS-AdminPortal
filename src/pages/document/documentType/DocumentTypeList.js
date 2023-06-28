@@ -19,7 +19,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
@@ -176,13 +176,9 @@ export default function DocumentTypeList() {
     }
   };
 
-  const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_DOCUMENT.documentName.edit(id));
-  };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DOCUMENT.documentType.view(id));
+    navigate(PATH_SETTING.documentType.view(id));
   };
 
   const handleResetFilter = () => {

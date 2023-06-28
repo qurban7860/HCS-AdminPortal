@@ -228,10 +228,10 @@ export default function MachineList() {
   };
 
   // const handleEditRow = (id) => {
-  //   navigate(PATH_MACHINE.machine.edit(id));
+  //   navigate(PATH_MACHINE.machines.edit(id));
   // };
   const handleViewRow = (id) => {
-    navigate(PATH_MACHINE.machine.view(id));
+    navigate(PATH_MACHINE.machines.view(id));
   };
 
   const handleResetFilter = () => {

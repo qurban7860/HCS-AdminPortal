@@ -83,7 +83,7 @@ export default function ToolAddForm() {
         await dispatch(addTool(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.tool.list); 
+        navigate(PATH_MACHINE.machines.settings.tool.list); 
         // console.log(PATH_MACHINE.tool.list)
       } catch(error){
         // enqueueSnackbar('Saving failed!');
@@ -94,7 +94,7 @@ export default function ToolAddForm() {
 
   const toggleCancel = () => 
       {
-        navigate(PATH_MACHINE.tool.list);
+        navigate(PATH_MACHINE.machines.settings.tool.list);
       };
 
   

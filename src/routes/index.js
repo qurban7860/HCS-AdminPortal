@@ -34,7 +34,7 @@ import {
   CustomerEdit,
   CustomerView,
   // Machine
-  MachinePage,
+  MachineSetting,
   MachineAdd,
   MachineList,
   MachineView,
@@ -139,7 +139,7 @@ RoleEdit,
   MachineDocumentEditForm ,
 
   // DocumentDashboard    
-  DocumentDashboard, 
+  DocumentList, 
   DocumentAddForm, 
   DocumentEditForm, 
   DocumentViewForm, 
@@ -217,87 +217,12 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'app', element: <GeneralAppPage /> },
-        { path: 'setting', element: <Setting /> },
-        { path: 'reports', element: <Reports /> },
-        { path: 'document', element: <DocumentDashboard /> },
-        { path: 'document', element: <DocumentDashboard /> },
-        { path: 'document',
-          children: [
-            {path: 'dashboard',element: <DocumentDashboard />},
-            { path: 'new', element: <DocumentAddForm /> },
-            { path: ':id/edit', element: <DocumentEditForm /> },
-            { path: ':id/view', element: <DocumentViewForm /> },
-            {path: ':id/customer',element: <CustomerDocumentView />},
-            {path: ':id/machine',element: <MachineDocumentView/>} ,
-          ]
-        },
-        {
-          path: 'user',
-          children: [
-            { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
-            { path: 'profile', element: <SecurityUserProfile/> },
-            { path: 'password', element: <SecurityUserChangePassword/> },
-            { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
-            { path: 'list', element: <SecurityUserList /> },
-            { path: 'new', element: <SecurityUserAdd /> },
-            { path: ':id/edit', element: <SecurityUserEdit /> },
-            { path: ':id/view', element: <SecurityUserViewForm /> },
-            { path: 'signInLogList', element: <SignInLogList /> },
-
-          ],
-        },
-        {
-          path: 'role',
-          children: [
-            { path: 'list', element: <RoleList /> },
-            { path: 'new', element: <RoleAdd /> },
-            { path: ':id/edit', element: <RoleEdit />},
-            { path: ':id/view', element: <RoleView />}
-          ],
-        },
-        {
-          path: 'customer',
-          children: [
-            { path: 'dashboard', element: <CustomerDashboard /> },
-            { path: 'list', element: <CustomerList /> },
-            { path: 'new', element: <CustomerAdd /> },
-            { path: ':id/edit', element: <CustomerEdit />},
-            { path: ':id/view', element: <CustomerView />}
-          ],
-        },
-        {
-          path: 'site',
-          children: [
-            { path: 'list', element: <SiteList /> },
-            { path: 'new', element: <SiteAdd /> },
-            { path: ':id/edit', element: <SiteEdit />},
-            { path: ':id/view', element: <SiteView />}
-          ],
-        },
-        {
-          path: 'contact',
-          children: [
-            { path: 'list', element: <ContactList /> },
-            { path: 'new', element: <ContactAdd /> },
-            { path: ':id/edit', element: <ContactEdit />},
-            { path: ':id/view', element: <ContactView />}
-          ],
-        },
-        {
-          path: 'note',
-          children: [
-            { path: 'list', element: <NoteList /> },
-            { path: 'new', element: <NoteAdd /> },
-            { path: ':id/edit', element: <NoteEdit />},
-            { path: ':id/view', element: <NoteView />}
-          ],
-        },
         { path: 'permission-denied', element: <PermissionDeniedPage /> },
         { path: 'blank', element: <BlankPage /> },
       ],
     },
     {
-      path: 'customer',
+      path: 'customers',
       element: (
         <AuthGuard>
           <DashboardLayout />
@@ -309,8 +234,7 @@ export default function Router() {
         { path: 'list', element: <CustomerList /> },
         { path: 'new', element: <CustomerAdd /> },
         { path: ':id/edit', element: <CustomerEdit />},
-        { path: 'view', element: <CustomerView />},
-        
+        { path: ':id/view', element: <CustomerView />},
         {
           path: 'site',
           children: [
@@ -343,109 +267,115 @@ export default function Router() {
       ],
     },
     // Machine
-    {
-      path : 'machine',
-      element: (
-        <AuthGuard>
-          <DashboardLayout />
-        </AuthGuard>
-      ),
-      children: [
-        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'app', element: <MachinePage /> }, 
-        { path: 'new', element: <MachineAdd /> }, 
-        { path: 'list', element: <MachineList /> }, 
-        { path: ':id/view', element: <MachineView /> }, 
-        { path: ':id/edit', element: <MachineEdit /> }, 
+        {
+          path: 'products',
+          element: (
+            <AuthGuard>
+              <DashboardLayout />
+            </AuthGuard>
+          ),
+          children: [
+            { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+            {
+              path: 'machines',
+              children: [
+                { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+                { path: 'new', element: <MachineAdd /> }, 
+                { path: 'list', element: <MachineList /> }, 
+                { path: ':id/view', element: <MachineView /> }, 
+                { path: ':id/edit', element: <MachineEdit /> }, 
+                { path: 'settings',
+                  children: [
+                  {path: 'root', element: <MachineSetting />},
+                  {
+                    path: 'categories',
+                    children:[
+                      {path: 'new', element: <CategoryAddForm/>},
+                      {path: 'list', element: <CategoryList/>},
+                      {path: ':id/view', element: <CategoryView/>},
+                      {path: 'viewform', element: <CategoryViewForm/>},
+                      {path: ':id/edit', element: <CategoryEdit/>}, 
+                      {path: 'editform', element: <CategoryEditForm/>},
+                    ]
+                  },
+                  {
+                    path: 'machineModel',
+                    children:[
+                      {path: 'new', element: <ModelAddForm/>},
+                      {path: 'list', element: <ModelList/>},
+                      {path: 'viewform', element: <ModelViewForm/>},
+                      {path: ':id/view', element: <ModelView/>},
+                      {path: ':id/edit', element: <ModelEdit/>}, 
+                      {path: 'editform', element: <ModelEditForm/>},
+                    ]
+                  },
+                  {
+                    path : 'supplier',
+                    children:[
+                      { path: 'new', element: <SupplierAddForm /> },
+                      { path: 'list', element: <SupplierList/>}, 
+                      { path: ':id/view', element: <SupplierView/>},
+                      // { path: 'viewform', element: <SupplierViewForm/>},
+                      { path: ':id/edit', element: <SupplierEdit/>}, 
+                      // { path: 'editform', element: <SupplierEditForm/>},
+                    ]
+                  },
+                  {
+                    path: 'machineStatus',
+                    children:[
+                      {path: 'new', element: <StatusAddForm/>},
+                      {path: 'list', element: <StatusList/>},
+                      {path: 'viewform', element: <StatusViewForm/>},
+                      {path: ':id/view', element: <StatusView/>},
+                      {path: ':id/edit', element: <StatusEdit/>}, 
+                      {path: 'editform', element: <StatusEditForm/>},
+                    ]
+                  },
+                  {
+                    path: 'machineTechnicalParameterCategories',
+                    children:[
+                      {path: 'new', element: <TechParamCategoryAddForm/>},
+                      {path: 'list', element: <TechParamList/>},
+                      {path: 'viewform', element: <TechParamCategoryViewForm/>},
+                      {path: ':id/view', element: <TechParamCategoryView/>},
+                      {path: ':id/edit', element: <TechParamCategoryEdit/>}, 
+                      {path: 'editform', element: <TechParamCategoryEditForm/>},
+                    ]
+                  },
+                  {
+                    path: 'machineParameters',
+                    children:[
+                      {path: 'new', element: <ParameterAddForm/>},
+                      {path: 'list', element: <ParameterList/>},
+                      {path: ':id/view', element: <ParameterView/>},
+                      {path: 'viewform', element: <ParameterViewForm/>},
+                      {path: ':id/edit', element: <ParameterEdit/>}, 
+                      {path: 'editform', element: <ParameterEditForm/>},
+                    ]
+                  },
+                  {
+                    path: 'tool',
+                    children:[
+                      {path: 'new', element: <ToolAddForm/>},
+                      {path: 'list', element: <ToolList/>},
+                      {path: ':id/view', element: <ToolView/>},
+                      {path: 'viewform', element: <ToolViewForm/>},
+                      {path: ':id/edit', element: <ToolEdit/>}, 
+                      {path: 'editform', element: <ToolEditForm/>},
+                    ]
+                  },
+                ]
+                }
+              ]
+            }, 
+            { path: 'permission-denied', element: <PermissionDeniedPage /> },
+            { path: 'blank', element: <BlankPage /> },
+          ],
+        },
 
-        {
-          path : 'supplier',
-          children:[
-            { path: 'supplier', element: <SupplierAddForm /> },
-            { path: 'list', element: <SupplierList/>}, 
-            { path: ':id/view', element: <SupplierView/>},
-            { path: 'viewform', element: <SupplierViewForm/>},
-            { path: ':id/edit', element: <SupplierEdit/>}, 
-            { path: 'editform', element: <SupplierEditForm/>},
-          ]
-        },
-        // {
-        //   path: 'license',
-        //   children:[
-        //     {path: 'license', element: <MachineLicenses/>},
-        //     {path: 'list', element: <LicenseList/>}
-        //   ]
-        // },
-        {
-          path: 'categories',
-          children:[
-            {path: 'categories', element: <CategoryAddForm/>},
-            {path: 'list', element: <CategoryList/>},
-            {path: ':id/view', element: <CategoryView/>},
-            {path: 'viewform', element: <CategoryViewForm/>},
-            {path: ':id/edit', element: <CategoryEdit/>}, 
-            {path: 'editform', element: <CategoryEditForm/>},
-          ]
-        },
-        {
-          path: 'machine-parameters',
-          children:[
-            {path: 'params', element: <ParameterAddForm/>},
-            {path: 'list', element: <ParameterList/>},
-            {path: ':id/view', element: <ParameterView/>},
-            {path: 'viewform', element: <ParameterViewForm/>},
-            {path: ':id/edit', element: <ParameterEdit/>}, 
-            {path: 'editform', element: <ParameterEditForm/>},
-          ]
-        },
-        {
-          path: 'tool',
-          children:[
-            {path: 'tool', element: <ToolAddForm/>},
-            {path: 'list', element: <ToolList/>},
-            {path: ':id/view', element: <ToolView/>},
-            {path: 'viewform', element: <ToolViewForm/>},
-            {path: ':id/edit', element: <ToolEdit/>}, 
-            {path: 'editform', element: <ToolEditForm/>},
-          ]
-        },
-        {
-          path: 'machine-tech',
-          children:[
-            {path: 'params', element: <TechParamCategoryAddForm/>},
-            {path: 'list', element: <TechParamList/>},
-            {path: 'viewform', element: <TechParamCategoryViewForm/>},
-            {path: ':id/view', element: <TechParamCategoryView/>},
-            {path: ':id/edit', element: <TechParamCategoryEdit/>}, 
-            {path: 'editform', element: <TechParamCategoryEditForm/>},
-          ]
-        },
-        {
-          path: 'machine-status',
-          children:[
-            {path: 'status', element: <StatusAddForm/>},
-            {path: 'list', element: <StatusList/>},
-            {path: 'viewform', element: <StatusViewForm/>},
-            {path: ':id/view', element: <StatusView/>},
-            {path: ':id/edit', element: <StatusEdit/>}, 
-            {path: 'editform', element: <StatusEditForm/>},
-          ]
-        },
-        {
-          path: 'machine-model',
-          children:[
-            {path: 'model', element: <ModelAddForm/>},
-            {path: 'list', element: <ModelList/>},
-            {path: 'viewform', element: <ModelViewForm/>},
-            {path: ':id/view', element: <ModelView/>},
-            {path: ':id/edit', element: <ModelEdit/>}, 
-            {path: 'editform', element: <ModelEditForm/>},
-          ]
-        },
-      ]
-    },
+    // SECURITY
     {
-      path: 'document',
+      path: 'security',
       element: (
         <AuthGuard>
           <DashboardLayout />
@@ -453,10 +383,34 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'list', element: <DocumentNameList /> },
-        { path: 'new', element: <DocumentNameAddForm /> },
-        { path: ':id/edit', element: <DocumentNameEditForm />},
-        { path: ':id/view', element: <DocumentNameViewForm />}, 
+        {
+          path: 'users',
+          children: [
+            { element: <Navigate to="/dashboard/user/profile" replace />, index: true },
+            { path: 'profile', element: <SecurityUserProfile/> },
+            { path: 'password', element: <SecurityUserChangePassword/> },
+            { path: 'changePassword', element: <SecurityUserChangePasswordByAdmin/> },
+            { path: 'list', element: <SecurityUserList /> },
+            { path: 'new', element: <SecurityUserAdd /> },
+            { path: ':id/edit', element: <SecurityUserEdit /> },
+            { path: ':id/view', element: <SecurityUserViewForm /> },
+          ],
+        }, 
+        { path: 'permission-denied', element: <PermissionDeniedPage /> },
+        { path: 'blank', element: <BlankPage /> },
+      ],
+    },
+//            SETTING
+    {
+      path: 'settings',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        {element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: 'app', element: <Setting /> },
         {
           path: 'documentCategory',
           children: [
@@ -475,11 +429,54 @@ export default function Router() {
             { path: ':id/view', element: <DocumentNameViewForm />}
           ],
         },
-        { path: 'permission-denied', element: <PermissionDeniedPage /> },
-        { path: 'blank', element: <BlankPage /> },
+        {
+          path: 'role',
+          children: [
+            { path: 'list', element: <RoleList /> },
+            { path: 'new', element: <RoleAdd /> },
+            { path: ':id/edit', element: <RoleEdit />},
+            { path: ':id/view', element: <RoleView />}
+          ],
+        },
+        {
+          path: 'signInLogs',
+          children: [
+            { path: 'list', element: <SignInLogList /> },
+          ],
+        },
       ],
     },
 
+//              DOCUMENNT
+    {
+      path: 'documents',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        {element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+        {path: 'list',element: <DocumentList />},
+        {path: 'new', element: <DocumentAddForm /> },
+        {path: ':id/edit', element: <DocumentEditForm /> },
+        {path: ':id/view', element: <DocumentViewForm /> },
+        {path: ':id/customer',element: <CustomerDocumentView />},
+        {path: ':id/machine',element: <MachineDocumentView/>},
+      ],
+    },
+    {
+      path: 'site',
+      element: (
+        <AuthGuard>
+          <DashboardLayout />
+        </AuthGuard>
+      ),
+      children: [
+        { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
+        { path: 'app', element: <Reports /> },
+      ]
+    },
     // Main Routes
     {
       element: <DashboardLayout />,

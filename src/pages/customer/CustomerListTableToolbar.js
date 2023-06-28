@@ -18,7 +18,7 @@ import {
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // components
 import Iconify from '../../components/iconify';
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // ----------------------------------------------------------------------
 
 CustomerListTableToolbar.propTypes = {
@@ -41,7 +41,7 @@ export default function CustomerListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_DASHBOARD.customer.new); };
+  const toggleAdd = () => { navigate(PATH_CUSTOMER.new); };
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >
       

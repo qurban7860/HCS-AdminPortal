@@ -7,23 +7,35 @@ import {
   Stack,
   Card,
   Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Divider,
-  Breadcrumbs,
-  Typography,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
-import { useTable, getComparator, TableNoData } from '../../../components/table';
+import {
+  useTable,
+  getComparator,
+  emptyRows,
+  TableNoData,
+  TableSkeleton,
+  TableEmptyRows,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../../components/table';
 import Iconify from '../../../components/iconify';
-import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
+import BreadcrumbsProducer from '../../components/BreadcrumbsProducer';
 // sections
 import {
   setCustomerDocumentFormVisibility,
@@ -32,6 +44,8 @@ import {
 } from '../../../redux/slices/document/customerDocument';
 import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
+import { getMachines } from '../../../redux/slices/products/machine';
+import { getCustomers } from '../../../redux/slices/customer/customer';
 import DocumentAddForm from './DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
@@ -39,8 +53,9 @@ import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
 import _mock from '../../../_mock';
 import SearchInputAndAddButton from '../../components/SearchInputAndAddButton';
+import AddButtonAboveAccordion from '../../components/AddButtonAboveAcoordion';
 import ListSwitch from '../../components/ListSwitch';
-import { fDate } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -166,47 +181,37 @@ export default function DocumentList() {
 
   return (
     <>
-      <SearchInputAndAddButton
-        searchFormVisibility={customerDocumentFormVisibility || customerDocumentEditFormVisibility}
-        filterName={filterName}
-        handleFilterName={handleFilterName}
-        addButtonName="Add Document"
-        isFiltered={isFiltered}
-        handleResetFilter={handleResetFilter}
-        toggleChecked={toggleChecked}
-        toggleCancel={toggleCancel}
-        FormVisibility={customerDocumentFormVisibility}
-      />
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-          <BreadcrumbsLink
-            to={PATH_DASHBOARD.customer.document}
-            name={
+      {!customerDocumentEditFormVisibility &&
+        !documentTypeFormVisibility &&
+        !documentCategoryFormVisibility && (
+          <SearchInputAndAddButton
+            searchFormVisibility={customerDocumentFormVisibility}
+            filterName={filterName}
+            handleFilterName={handleFilterName}
+            addButtonName="Add Document"
+            isFiltered={isFiltered}
+            handleResetFilter={handleResetFilter}
+            toggleChecked={toggleChecked}
+            toggleCancel={toggleCancel}
+            FormVisibility={customerDocumentFormVisibility}
+            step
+            step2
+            step3
+            step4
+            path={PATH_CUSTOMER.list}
+            name="Customers"
+            path2={PATH_CUSTOMER.view}
+            name2={customer.name}
+            path3={PATH_CUSTOMER.list}
+            name3={
               <Stack>
-                {!expanded &&
-                  !customerDocumentEditFormVisibility &&
-                  customerDocumentFormVisibility &&
-                  'New Document'}
-                {!customerDocumentFormVisibility &&
-                  !customerDocumentEditFormVisibility &&
-                  'Documents'}
-                {customerDocumentEditFormVisibility && 'Edit Document'}
-                {documentTypeFormVisibility && 'New Document Type'}
-                {documentCategoryFormVisibility && 'New Document Category'}
+                {customerDocumentFormVisibility && "New Document"}
+                {!expanded && documentName}
               </Stack>
             }
           />
-        </Breadcrumbs>
-      </Stack>
-      <Grid item>
-        <TableNoData isNotFound={isNotFound} />
-      </Grid>
+        )}
+
       {!customerDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         !documentCategoryFormVisibility &&
@@ -262,14 +267,9 @@ export default function DocumentList() {
                       <Grid item xs={12} sm={4} md={2.4}>
                         {document?.docCategory?.name || ''}
                       </Grid>
-                      <Grid
-                        item
-                        xs={12}
-                        display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
-                        md={1.4}
-                      >
-                        <ListSwitch isActive={document?.customerAccess} />
-                      </Grid>
+                      <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={1.4}>
+                    <ListSwitch isActive={document?.customerAccess} />
+                  </Grid>
                       <Grid
                         item
                         xs={12}
@@ -288,6 +288,8 @@ export default function DocumentList() {
               </Accordion>
             );
           })}
+
+        <TableNoData isNotFound={isNotFound} />
       </Card>
     </>
   );

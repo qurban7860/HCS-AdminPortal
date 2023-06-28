@@ -12,13 +12,12 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Breadcrumbs,
 } from '@mui/material';
 import { fDate, fDateTime } from '../../utils/formatTime';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -34,8 +33,9 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 import Iconify from '../../components/iconify';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import EmptyContent from '../../components/empty-content';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import NotesViewForm from './note/NotesViewForm';
@@ -261,30 +261,38 @@ export default function CustomerNoteList() {
   return (
     <>
       {!noteEditFormVisibility && (
-        <>
-          <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-            <AddButtonAboveAccordion
-              name="New Note"
-              toggleChecked={toggleChecked}
-              FormVisibility={formVisibility}
-              toggleCancel={toggleCancel}
-            />
-          </Stack>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              separator="›"
-              sx={{ fontSize: '12px', color: 'text.disabled' }}
-            >
-              <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-              <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-              <BreadcrumbsLink to={PATH_DASHBOARD.customer.notes} name="Notes" />
-            </Breadcrumbs>
-          </Stack>
-        </>
+        <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
+          <AddButtonAboveAccordion
+            name="New Note"
+            toggleChecked={toggleChecked}
+            FormVisibility={formVisibility}
+            toggleCancel={toggleCancel}
+          />
+          <BreadcrumbsProducer
+            underline="none"
+            step={1}
+            step2
+            step3
+            step4
+            path={PATH_CUSTOMER.list}
+            name="Customers"
+            path2={PATH_CUSTOMER.view}
+            name2={customer.name}
+            name3="Notes"
+            path3={PATH_CUSTOMER.note.list}
+            path4={PATH_CUSTOMER.list}
+            // name4={
+            //   <Stack>
+            //     {siteEditFormVisibility
+            //       ? `Edit ${currentSiteData.name}`
+            //       : isExpanded && currentSiteData.name}
+            //     {siteAddFormVisibility && !isExpanded && 'New Site Form'}
+            //   </Stack>
+            // }
+          />
+        </Stack>
       )}
-
-      <Card sx={{ mt: 1 }}>
+      <Card>
         {noteEditFormVisibility && <NoteEditForm />}
         {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
         {!formVisibility &&
@@ -299,7 +307,6 @@ export default function CustomerNoteList() {
                 sx={{ borderTop: borderTopVal }}
               >
                 <AccordionSummary
-                  mt={1}
                   expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                   onClick={() => handleAccordianClick(index)}
                 >
@@ -307,6 +314,7 @@ export default function CustomerNoteList() {
                     <Grid container spacing={1}>
                       <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: 'break-word' }}>
                         <Typography>
+                          {' '}
                           {note.note.length > 100 ? note?.note?.substring(0, 150) : note.note}{' '}
                           {note.note.length > 100 ? '...' : null}{' '}
                         </Typography>
@@ -315,6 +323,7 @@ export default function CustomerNoteList() {
                         {/* <Typography  display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
                       </Grid>
                       <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: 'break-word' }}>
+                        {' '}
                         <Typography> {fDateTime(note.createdAt)} </Typography>{' '}
                       </Grid>
                     </Grid>
@@ -326,10 +335,10 @@ export default function CustomerNoteList() {
               </Accordion>
             );
           })}
+        <Grid item lg={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
       </Card>
-      <Grid item lg={12}>
-        <TableNoData isNotFound={isNotFound} />
-      </Grid>
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}

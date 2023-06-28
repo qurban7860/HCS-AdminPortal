@@ -99,7 +99,7 @@ export default function ModelEditForm() {
  
   const toggleCancel = () => 
     {
-      navigate(PATH_MACHINE.machineModel.view(id))
+      navigate(PATH_MACHINE.machines.settings.machineModel.view(id))
     };
 
   const onSubmit = async (data) => {
@@ -112,7 +112,7 @@ export default function ModelEditForm() {
       }
       // console.log("Data : ",data);
       await dispatch(updateMachineModel(data,id));
-      navigate(PATH_MACHINE.machineModel.view(id));
+      navigate(PATH_MACHINE.machines.settings.machineModel.view(id));
       reset()
       enqueueSnackbar("Model updated successfully!")
     } catch (error){

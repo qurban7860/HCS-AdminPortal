@@ -41,7 +41,7 @@ export default function ToolListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_MACHINE.tool.tool); };
+  const toggleAdd = () => { navigate(PATH_MACHINE.machines.settings.tool.new); };
   return (
     <Stack
       spacing={2}

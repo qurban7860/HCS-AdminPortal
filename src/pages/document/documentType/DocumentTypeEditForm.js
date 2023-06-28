@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 import { CONFIG } from '../../../config-global';
 // slice
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
@@ -91,7 +91,7 @@ export default function DocumentTypeEditForm() {
 
   const toggleCancel = () => 
   {
-    navigate(PATH_DOCUMENT.documentType.view(documentType._id))
+    navigate(PATH_SETTING.documentType.view(documentType._id))
 
   };
 
@@ -102,7 +102,7 @@ export default function DocumentTypeEditForm() {
       }
       await dispatch(updateDocumentType(documentType._id,data));
       dispatch(getDocumentTypes(documentType._id));
-      navigate(PATH_DOCUMENT.documentType.view(documentType._id))
+      navigate(PATH_SETTING.documentType.view(documentType._id))
       enqueueSnackbar('Document Type updated Successfully!');
       reset();
     } catch (err) {

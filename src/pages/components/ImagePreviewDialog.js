@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {  Typography, Dialog, Grid, Link , IconButton, Box } from '@mui/material';
+import {  Typography, Dialog, Grid, Link , IconButton, Box,CardContent, CardMedia } from '@mui/material';
 import { styled, alpha ,useTheme } from '@mui/material/styles';
 import Iconify from '../../components/iconify';
 
@@ -49,6 +49,7 @@ export default function ImagePreviewDialog({ onPreview, handleClosePreview, hand
             <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
           </Link>
         </Grid>
+          <CardContent>
             <Link>
                 <IconButton
                   size="small"
@@ -69,7 +70,13 @@ export default function ImagePreviewDialog({ onPreview, handleClosePreview, hand
                   <Iconify icon="line-md:download-loop" width={18} />
                 </IconButton>
             </Link>
-            <Box component="img" sx={{minWidth:"350px", minHeight:"350px"}} alt={file?.name}  src={`data:image/png;base64, ${imageData}`}/>
+            <CardMedia
+              component="img" 
+              sx={{minWidth:"350px", minHeight:"350px"}} 
+              alt={file?.name}  
+              image={`data:image/png;base64, ${imageData}`}
+            />
+          </CardContent>
         </Dialog>
       </>
     )

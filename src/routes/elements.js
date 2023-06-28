@@ -69,7 +69,7 @@ export const RoleView = Loadable(lazy(() => import('../pages/user/role/RoleView'
 //----------------------------------------------------------------
 
 // Machine
-export const MachinePage = Loadable(lazy(()=> import('../pages/machine/Machine')));
+export const MachineSetting = Loadable(lazy(()=> import('../pages/machine/Machine')));
 export const MachineAdd = Loadable(lazy(()=> import('../pages/machine/MachineAddForm')));
 export const MachineList = Loadable(lazy(()=> import('../pages/machine/MachineList')));
 export const MachineView = Loadable(lazy(()=> import('../pages/machine/MachineView')));
@@ -142,7 +142,7 @@ export const ModelEditForm = Loadable(lazy(()=> import('../pages/machine/Model/M
 export const ModelEdit = Loadable(lazy(()=> import('../pages/machine/Model/ModelEdit')));
 
 // Document dashboard
-export const DocumentDashboard  = Loadable(lazy(()=>   import('../pages/document/dashboard/documents/DocumentList')));
+export const DocumentList  = Loadable(lazy(()=>   import('../pages/document/dashboard/documents/DocumentList')));
 export const DocumentAddForm  = Loadable(lazy(()=>   import('../pages/document/dashboard/documents/DocumentAddForm')));
 export const DocumentEditForm  = Loadable(lazy(()=>   import('../pages/document/dashboard/documents/DocumentEditForm')));
 export const DocumentViewForm  = Loadable(lazy(()=>   import('../pages/document/dashboard/documents/DocumentViewForm')));

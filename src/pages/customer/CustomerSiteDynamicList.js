@@ -1,8 +1,9 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
+import { Stack, Card, CardMedia, Grid, CardActionArea, Link } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -10,11 +11,10 @@ import {
   StyledCardWrapper,
 } from '../../theme/styles/customer-styles';
 import SiteCarousel from './site/util/SiteCarousel';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData } from '../../components/table';
@@ -33,6 +33,7 @@ import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import SiteViewForm from './site/SiteViewForm';
+import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 
 // ----------------------------------------------------------------------
 
@@ -113,31 +114,26 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           FormVisibility={siteAddFormVisibility}
           toggleCancel={toggleCancel}
         />
+        <BreadcrumbsProducer
+          underline="none"
+          step={1}
+          step2
+          step3
+          path={PATH_CUSTOMER.list}
+          name="Customers"
+          path2={PATH_CUSTOMER.view}
+          name2={customer.name}
+          path3={PATH_CUSTOMER.sites}
+          name3={
+            <Stack>
+              {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}
+              {siteAddFormVisibility && !isExpanded && 'New Site Form'}
+            </Stack>
+          }
+        />
       </Stack>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-          <BreadcrumbsLink
-            to={PATH_DASHBOARD.customer.contacts}
-            name={
-              <Stack>
-                {!siteAddFormVisibility && !siteEditFormVisibility && !isExpanded && 'Sites'}
-                {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}
-                {siteAddFormVisibility && !isExpanded && 'New Site Form'}
-              </Stack>
-            }
-          />
-        </Breadcrumbs>
-      </Stack>
+
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
         <Grid
           item
           xs={12}
@@ -154,7 +150,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             contacts={sites.length}
             disabled={siteEditFormVisibility || siteAddFormVisibility}
           >
-            <Grid container spacing={1} justifyContent="flex-start" direction="column">
+            <Grid container justifyContent="flex-start" direction="column" gap={1}>
               {sites.map((Site, index) => {
                 const borderTopVal = index !== 0 ? '0px solid white' : '';
                 return (
