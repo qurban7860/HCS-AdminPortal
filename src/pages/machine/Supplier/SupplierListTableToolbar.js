@@ -41,7 +41,7 @@ export default function SupplierListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_MACHINE.supplier.supplier); };
+  const toggleAdd = () => { navigate(PATH_MACHINE.machines.settings.supplier.new); };
   return (
     <Stack
       spacing={2}

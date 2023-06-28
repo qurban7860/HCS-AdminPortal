@@ -27,7 +27,7 @@ export default function StatusListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_MACHINE.machineStatus.status); };
+  const toggleAdd = () => { navigate(PATH_MACHINE.machines.settings.machineStatus.new); };
   
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >

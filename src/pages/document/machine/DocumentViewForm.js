@@ -14,7 +14,7 @@ import { Switch, Card, Grid, Stack, Typography, Button , Box , Link, IconButton,
 // redux
 import { setMachineDocumentEditFormVisibility , deleteMachineDocument , getMachineDocuments , getMachineDocument, updateMachineDocument,resetMachineDocument, getMachineDocumentHistory} from '../../../redux/slices/document/machineDocument';
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import { fDate,fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewFormAudit';
@@ -72,7 +72,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
     dispatch(setMachineDocumentEditFormVisibility(true));
   };
   const linkMachineDocumentView = async () => { 
-     navigate(PATH_DASHBOARD.document.machine(currentMachineDocument._id)); 
+     navigate(PATH_DOCUMENT.document.machine(currentMachineDocument._id)); 
      dispatch(resetMachineDocument())
      dispatch(resetCustomer())
     //  dispatch(resetMachine())

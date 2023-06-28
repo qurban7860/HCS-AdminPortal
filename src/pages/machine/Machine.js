@@ -36,13 +36,13 @@ export default function Machine() {
   ];
 
    // Functions to navigate to different pages
-   const linkCategory = () => { navigate(PATH_MACHINE.categories.list); };
-   const linkModel = () => { navigate(PATH_MACHINE.machineModel.list); };
-   const linkStatus = () => { navigate(PATH_MACHINE.machineStatus.list); };
-   const linkSupplier = () => { navigate(PATH_MACHINE.supplier.list); };
-   const linkTechParam = () => { navigate(PATH_MACHINE.parameters.list); };
-   const linktpCategory = () => { navigate(PATH_MACHINE.techParam.list); };
-   const linkTool = () => { navigate(PATH_MACHINE.tool.list); };
+   const linkCategory = () => { navigate(PATH_MACHINE.machines.settings.categories.list); };
+   const linkModel = () => { navigate(PATH_MACHINE.machines.settings.machineModel.list); };
+   const linkStatus = () => { navigate(PATH_MACHINE.machines.settings.machineStatus.list); };
+   const linkSupplier = () => { navigate(PATH_MACHINE.machines.settings.supplier.list); };
+   const linkTechParam = () => { navigate(PATH_MACHINE.machines.settings.machineParameters.list); };
+   const linktpCategory = () => { navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list); };
+   const linkTool = () => { navigate(PATH_MACHINE.machines.settings.tool.list); };
 
 
 

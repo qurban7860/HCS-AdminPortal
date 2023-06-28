@@ -35,7 +35,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
 
   const toggleEdit = () => {
     // dispatch(setSupplierEditFormVisibility(true));
-    navigate(PATH_MACHINE.supplier.supplieredit(id));
+    navigate(PATH_MACHINE.machines.settings.supplier.supplieredit(id));
   }
 
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ export default function SupplierViewForm({ currentSupplier = null }) {
     const onDelete = () => {
       try{
         dispatch(deleteSupplier(id));
-        navigate(PATH_MACHINE.supplier.list);
+        navigate(PATH_MACHINE.machines.settings.supplier.list);
       } catch (err) {
         // if(err.Message){
         //   enqueueSnackbar(err.Message,{ variant: `error` })

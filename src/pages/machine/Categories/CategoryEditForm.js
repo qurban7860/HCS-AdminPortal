@@ -72,7 +72,7 @@ export default function CategoryEditForm() {
   const toggleCancel = () => 
     {
       dispatch(setCategoryEditFormVisibility(false));
-      navigate(PATH_MACHINE.categories.view(id));
+      navigate(PATH_MACHINE.machines.settings.categories.view(id));
     };
   const onSubmit = async (data) => {
     try {
@@ -80,7 +80,7 @@ export default function CategoryEditForm() {
       reset(); 
       dispatch(setCategoryEditFormVisibility(false))
       enqueueSnackbar('Update success!');
-     navigate(PATH_MACHINE.categories.view(id));
+     navigate(PATH_MACHINE.machines.settings.categories.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -89,7 +89,7 @@ export default function CategoryEditForm() {
   return (
     <>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
-          <Cover name='Edit Category' icon='material-symbols:category-outline' url={PATH_MACHINE.categories.list} />
+          <Cover name='Edit Category' icon='material-symbols:category-outline' url={PATH_MACHINE.machines.settings.categories.list} />
         </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container>

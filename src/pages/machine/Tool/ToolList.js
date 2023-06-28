@@ -200,14 +200,14 @@ export default function ToolList() {
     // console.log(id);
     // dispatch(getTool(id));
     await dispatch(getTool(id));
-    navigate(PATH_MACHINE.tool.edit(id));
+    navigate(PATH_MACHINE.machines.settings.tool.edit(id));
   };
 
   const handleViewRow = async (id) => {
     // console.log(id,PATH_MACHINE.supplier.view(id));
     // console.log(id)
     await dispatch(getTool(id));
-    navigate(PATH_MACHINE.tool.view(id));
+    navigate(PATH_MACHINE.machines.settings.tool.view(id));
   };
 
   const handleResetFilter = () => {

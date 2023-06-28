@@ -121,11 +121,6 @@ export default function CategoryList() {
 
   useEffect(() => {
     if (initial) {
-      if (categories && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(categories);
     }
   }, [categories, error, responseMessage, enqueueSnackbar, initial]);
@@ -206,12 +201,11 @@ export default function CategoryList() {
 
   const handleEditRow = (id) => {
     // console.log(id);
-    navigate(PATH_MACHINE.categories.edit(id));
+    navigate(PATH_MACHINE.machines.settings.categories.edit(id));
   };
 
   const handleViewRow = (id) => {
-    // console.log(id,PATH_MACHINE.supplier.view(id));
-    navigate(PATH_MACHINE.categories.view(id));
+    navigate(PATH_MACHINE.machines.settings.categories.view(id));
   };
 
   const handleResetFilter = () => {

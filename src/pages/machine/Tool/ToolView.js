@@ -82,7 +82,7 @@ export default function ToolView({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={tool?.name} setting="setting" backLink={PATH_MACHINE.tool.list}/> 
+          <Cover name={tool?.name} setting="setting" backLink={PATH_MACHINE.machines.settings.tool.list}/> 
         </Card>
         
         <ToolViewForm/>

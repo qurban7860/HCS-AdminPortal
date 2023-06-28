@@ -6,7 +6,7 @@ import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
 // redux
 
 import { getRole} from '../../../redux/slices/securityUser/role';
@@ -50,7 +50,7 @@ useLayoutEffect(() => {
           <Cover 
             name={role?.name}
             generalSettings="enabled"
-            backLink={PATH_DASHBOARD.role.list}/> 
+            backLink={PATH_SETTING.role.list}/> 
         </Card>
         <RoleViewForm/>
       </Container>

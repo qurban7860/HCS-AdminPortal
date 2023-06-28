@@ -70,14 +70,14 @@ export default function StatusAddForm() {
         await dispatch(addMachineStatus(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.machineStatus.list); 
+        navigate(PATH_MACHINE.machines.settings.machineStatus.list); 
       } catch(error){
         enqueueSnackbar(error?.message, { variant: `error` })
         console.error(error);
       }
   };
 
-  const toggleCancel = () => { navigate(PATH_MACHINE.machineStatus.list) };
+  const toggleCancel = () => { navigate(PATH_MACHINE.machines.settings.machineStatus.list) };
 
   return (
     <>

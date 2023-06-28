@@ -32,7 +32,7 @@ export default function MachineListTableToolbar({
 }) {
   const navigate = useNavigate();
   const handleMachineAdd = () => {
-    navigate(PATH_MACHINE.machine.new);
+    navigate(PATH_MACHINE.machines.new);
   };
 
   return (

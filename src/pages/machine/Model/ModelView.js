@@ -79,7 +79,7 @@ export default function ModelViewPage({editPage}) {
             model={machineModel?.name}
             name={machineModel?.name}
             setting="enable"
-            backLink={PATH_MACHINE.machineModel.list}
+            backLink={PATH_MACHINE.machines.settings.machineModel.list}
           />
         </Card>
         <ModelViewForm />

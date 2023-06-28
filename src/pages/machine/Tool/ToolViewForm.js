@@ -42,7 +42,7 @@ export default function ToolViewForm({ currentTool = null }) {
 
   const handleEdit = () => {
     // dispatch(setToolEditFormVisibility(true));
-    navigate(PATH_MACHINE.tool.tooledit(id));
+    navigate(PATH_MACHINE.machines.settings.tool.edit(id));
   }
 
   const navigate = useNavigate();
@@ -81,7 +81,7 @@ export default function ToolViewForm({ currentTool = null }) {
     const onDelete = () => {
       try{
         dispatch(deleteTool(id))
-        navigate(PATH_MACHINE.tool.list);
+        navigate(PATH_MACHINE.machines.settings.tool.list);
       } catch (err) {
         // if(err.Message){
         //   enqueueSnackbar(err.Message,{ variant: `error` })

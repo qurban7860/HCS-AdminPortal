@@ -17,7 +17,7 @@ import { fDate, fDateTime } from '../../utils/formatTime';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -274,13 +274,13 @@ export default function CustomerNoteList() {
             step2
             step3
             step4
-            path={PATH_DASHBOARD.customer.list}
+            path={PATH_CUSTOMER.list}
             name="Customers"
-            path2={PATH_DASHBOARD.customer.view}
+            path2={PATH_CUSTOMER.view}
             name2={customer.name}
             name3="Notes"
-            path3={PATH_DASHBOARD.customer.notes}
-            path4={PATH_DASHBOARD.customer}
+            path3={PATH_CUSTOMER.note.list}
+            path4={PATH_CUSTOMER.list}
             // name4={
             //   <Stack>
             //     {siteEditFormVisibility

@@ -64,7 +64,7 @@ export default function TechParamCategoryAddForm() {
         await dispatch(addTechparamcategory(data));
         reset();
         enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.techParam.list); 
+        navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list); 
       } catch(error){
         
           enqueueSnackbar("Save Failed!", { variant: `error` });
@@ -74,7 +74,7 @@ export default function TechParamCategoryAddForm() {
   };
       const toggleCancel = () => 
       {
-        navigate(PATH_MACHINE.techParam.list);
+        navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list);
       };
 
   return (

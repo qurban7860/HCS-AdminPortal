@@ -51,7 +51,7 @@ export default function StatusView({editPage}) {
   return (
     <Container maxWidth={false}>
       <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-        <Cover name={machinestatus?.name} setting="enable" backLink={PATH_MACHINE.machineStatus.list}/> 
+        <Cover name={machinestatus?.name} setting="enable" backLink={PATH_MACHINE.machines.settings.machineStatus.list}/> 
       </Card>
       <StatusViewForm/>
     </Container>

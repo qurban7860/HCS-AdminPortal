@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 import { CONFIG } from '../../../config-global';
 // slice
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
@@ -106,7 +106,7 @@ export default function RoleEditForm() {
   }, [role, roleTypesArray, setValue]);
 
   const toggleCancel = () => {
-    navigate(PATH_DASHBOARD.role.view(role._id))
+    navigate(PATH_SETTING.role.view(role._id))
 
   };
 
@@ -123,7 +123,7 @@ export default function RoleEditForm() {
       }
       await dispatch(updateRole(role._id, data));
       dispatch(getRole(role._id));
-      navigate(PATH_DASHBOARD.role.view(role._id))
+      navigate(PATH_SETTING.role.view(role._id))
       enqueueSnackbar('Role updated Successfully!');
       reset();
     } catch (err) {

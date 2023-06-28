@@ -176,12 +176,12 @@ export default function StatusList() {
 
   const handleEditRow = async (id) => {
     await dispatch(getTechparam(id));
-    navigate(PATH_MACHINE.parameters.edit(id));
+    navigate(PATH_MACHINE.machines.settings.machineParameters.edit(id));
   };
 
   const handleViewRow = async (id) => {
     await dispatch(getTechparam(id));
-    navigate(PATH_MACHINE.parameters.view(id));
+    navigate(PATH_MACHINE.machines.settings.machineParameters.view(id));
   };
 
   const handleResetFilter = () => {
