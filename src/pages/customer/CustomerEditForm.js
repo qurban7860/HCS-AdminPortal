@@ -28,7 +28,7 @@ import { useSnackbar } from '../../components/snackbar';
 import Iconify from '../../components/iconify';
 import AddFormButtons from '../components/AddFormButtons';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+// import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import FormProvider, {
   RHFSelect,
   RHFMultiSelect,
@@ -147,7 +147,7 @@ export default function CustomerEditForm() {
     <>
       <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
         <AddButtonAboveAccordion name="New Site" toggleCancel={toggleCancel} isCustomer="true" />
-        <BreadcrumbsProducer
+        {/* <BreadcrumbsProducer
           underline="none"
           step={1}
           step2
@@ -156,7 +156,7 @@ export default function CustomerEditForm() {
           name="Customer"
           path2={PATH_CUSTOMER.view}
           name2={!customerEditFormVisibility ? `Edit ${customer?.name}` : `${customer?.name}`}
-        />
+        /> */}
       </Stack>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>

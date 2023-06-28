@@ -23,7 +23,7 @@ import {
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+// import BreadcrumbsProducer from '../components/Breadcrumbs/';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 
 // ----------------------------------------------------------------------
@@ -108,7 +108,7 @@ export default function CustomerViewForm() {
     <>
       <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
         <AddButtonAboveAccordion isCustomer="true" />
-        <BreadcrumbsProducer
+        {/* <BreadcrumbsProducer
           underline="none"
           step={1}
           step2
@@ -116,7 +116,7 @@ export default function CustomerViewForm() {
           name="Customers"
           path2={PATH_CUSTOMER.view}
           name2={customer?.name}
-        />
+        /> */}
       </Stack>
       <Grid container direction="row">
         <Grid item md={12}>

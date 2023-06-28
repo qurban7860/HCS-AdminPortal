@@ -33,7 +33,7 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 import Iconify from '../../components/iconify';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+// import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 import EmptyContent from '../../components/empty-content';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -268,7 +268,7 @@ export default function CustomerNoteList() {
             FormVisibility={formVisibility}
             toggleCancel={toggleCancel}
           />
-          <BreadcrumbsProducer
+          {/* <BreadcrumbsProducer
             underline="none"
             step={1}
             step2
@@ -289,7 +289,7 @@ export default function CustomerNoteList() {
             //     {siteAddFormVisibility && !isExpanded && 'New Site Form'}
             //   </Stack>
             // }
-          />
+          /> */}
         </Stack>
       )}
       <Card>

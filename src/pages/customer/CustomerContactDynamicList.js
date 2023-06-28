@@ -26,7 +26,7 @@ import {
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+// import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
@@ -108,7 +108,7 @@ export default function CustomerContactList(currentContact = null) {
           FormVisibility={formVisibility}
           toggleCancel={toggleCancel}
         />
-        <BreadcrumbsProducer
+        {/* <BreadcrumbsProducer
           underline="none"
           step={1}
           step2
@@ -126,7 +126,7 @@ export default function CustomerContactList(currentContact = null) {
               {formVisibility && !isExpanded && 'Add new contact'}
             </Stack>
           }
-        />
+        /> */}
       </Stack>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
         <Grid item lg={12}>

@@ -33,7 +33,7 @@ import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import SiteViewForm from './site/SiteViewForm';
-import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+// import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 
 // ----------------------------------------------------------------------
 
@@ -114,7 +114,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           FormVisibility={siteAddFormVisibility}
           toggleCancel={toggleCancel}
         />
-        <BreadcrumbsProducer
+        {/* <BreadcrumbsProducer
           underline="none"
           step={1}
           step2
@@ -130,7 +130,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               {siteAddFormVisibility && !isExpanded && 'New Site Form'}
             </Stack>
           }
-        />
+        /> */}
       </Stack>
 
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
