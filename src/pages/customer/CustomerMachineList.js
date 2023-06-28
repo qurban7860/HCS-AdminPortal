@@ -169,7 +169,10 @@ export default function CustomerContactList() {
           />
         </Breadcrumbs>
       </Stack>
-      <Card>
+      <Grid item lg={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
+      <Card sx={{ mt: 2 }}>
         {customerMachines.map((customerMachine, index) => {
           address.city = customerMachine?.instalationSite?.address?.city;
           address.region = customerMachine?.instalationSite?.address?.region;
@@ -240,9 +243,7 @@ export default function CustomerContactList() {
             </Accordion>
           );
         })}
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
+
         <Dialog
           maxWidth="md"
           open={openMachine}
