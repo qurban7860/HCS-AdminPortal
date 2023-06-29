@@ -272,7 +272,6 @@ export default function Document() {
             secondParam={machine?.supportManager?.lastName}
           />
         </Grid>
-
         <DialogLink onClick={() => handleViewMachine(machine._id)} content="Go to Machine" />
       </Dialog>
     </Container>
