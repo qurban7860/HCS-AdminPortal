@@ -1,6 +1,6 @@
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { Popover, CardMedia, Card, Grid, IconButton } from '@mui/material';
+import { CardContent, CardMedia, Card, Grid, IconButton } from '@mui/material';
 import { m } from 'framer-motion';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import Iconify from '../../components/iconify';
@@ -14,7 +14,7 @@ export const ThumbnailCard = styled(Card)(({ theme }) => ({
   m: 1,
 }));
 
-export const ThumbnailCardContent = styled(Card)(({ theme }) => ({
+export const ThumbnailCardContent = styled(CardContent)(({ theme }) => ({
   position: 'relative',
   zIndex: '1',
 }));
