@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import download from 'downloadjs';
 // @mui
 // eslint-disable-next-line import/no-anonymous-default-export
-import { useTheme } from '@mui/material/styles';
-import { Grid, Stack, Typography, Link, Tooltip } from '@mui/material';
+import { alpha, useTheme } from '@mui/material/styles';
+import { Grid, Stack, Typography, Link, Tooltip, Chip } from '@mui/material';
 import {
   ThumbnailCard,
   ThumbnailCardMedia,
@@ -42,6 +42,7 @@ import DeleteIconButton, {
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import ImagePreviewDialog from '../../components/ImagePreviewDialog';
 import { document } from '../../../constants/document-constants';
+import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 
 const Loadable = (Component) => (props) =>
   (
@@ -231,8 +232,12 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 {currentCustomerDocument?.documentVersions &&
                   currentCustomerDocument?.documentVersions?.length > 1 && (
                     <Link onClick={linkCustomerDocumentView} href="#" underline="none">
-                      <Typography variant="body2" sx={{ mt: 0.45, ml: 1 }}>
-                        More version
+                      <Typography
+                        variant="overline"
+                        sx={{ mt: 0.45, ml: 1 }}
+                        color={alpha(theme.palette.primary.main, 0.4)}
+                      >
+                        View other versions
                       </Typography>
                     </Link>
                   )}
