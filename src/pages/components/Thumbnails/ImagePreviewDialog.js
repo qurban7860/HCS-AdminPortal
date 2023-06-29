@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Typography, Dialog, Grid, Link, IconButton, Box } from '@mui/material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
-import Iconify from '../../components/iconify';
+import Iconify from '../../../components/iconify';
 
 ImagePreviewDialog.propTypes = {
   onPreview: PropTypes.bool,

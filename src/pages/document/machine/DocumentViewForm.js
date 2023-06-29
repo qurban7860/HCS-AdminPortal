@@ -52,7 +52,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import LoadingScreen from '../../../components/loading-screen';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
 import DeleteIconButton from '../../components/Thumbnails/ThumbnailIconButtonsDefault';
-import ImagePreviewDialog from '../../components/ImagePreviewDialog';
+import ImagePreviewDialog from '../../components/Thumbnails/ImagePreviewDialog';
 
 const Loadable = (Component) => (props) =>
   (

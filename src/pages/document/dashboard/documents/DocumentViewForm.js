@@ -35,7 +35,7 @@ import {
 import { getCustomer, resetCustomer } from '../../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../../redux/slices/products/machine';
 import CustomAvatar from '../../../../components/custom-avatar/CustomAvatar';
-import ImagePreviewDialog from '../../../components/ImagePreviewDialog';
+import ImagePreviewDialog from '../../../components/Thumbnails/ImagePreviewDialog';
 
 // ----------------------------------------------------------------------
 

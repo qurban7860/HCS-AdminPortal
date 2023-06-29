@@ -86,7 +86,6 @@ DeleteIconButton.defaultProps = {
   left: 44,
   icon: 'material-symbols:delete',
 };
-// "material-symbols:delete"
 
 // template thumbnail Iconbutton
 

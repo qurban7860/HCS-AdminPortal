@@ -1,26 +1,11 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
+// eslint-disable-next-line import/no-anonymous-default-export
 import PropTypes from 'prop-types';
-import React, { useMemo, useState, Suspense, lazy } from 'react';
+import React, { useMemo, Suspense, lazy } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import download from 'downloadjs';
-// @mui
-// eslint-disable-next-line import/no-anonymous-default-export
 import { alpha, useTheme } from '@mui/material/styles';
-import { Grid, Stack, Typography, Link, Tooltip, Chip } from '@mui/material';
-import {
-  ThumbnailCard,
-  ThumbnailCardMedia,
-  ThumbnailCardContent,
-  ThumbnailGrid,
-  ThumbnailIconify,
-  ThumbnailNameGrid,
-} from '../../../theme/styles/document-styles';
-// redux
-import {
-  getDocumentDownload,
-  deleteDocumentFile,
-} from '../../../redux/slices/document/documentFile';
+import { Grid, Typography, Link, Tooltip } from '@mui/material';
 import {
   setCustomerDocumentEditFormVisibility,
   deleteCustomerDocument,
@@ -32,17 +17,12 @@ import {
 // paths
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import LoadingScreen from '../../../components/loading-screen';
+import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import { useSnackbar } from '../../../components/snackbar';
+import LoadingScreen from '../../../components/loading-screen';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
-import DeleteIconButton, {
-  ThumbnailIconButtonDefault,
-} from '../../components/Thumbnails/ThumbnailIconButtonsDefault';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import ImagePreviewDialog from '../../components/ImagePreviewDialog';
-import { document } from '../../../constants/document-constants';
-import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 
 const Loadable = (Component) => (props) =>
   (
@@ -113,102 +93,6 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     [currentCustomerDocument, customerDocument]
   );
 
-  const downloadBase64File = (base64Data, fileName) => {
-    // Decode the Base64 file
-    const decodedString = atob(base64Data);
-    // Convert the decoded string to a Uint8Array
-    const byteNumbers = new Array(decodedString.length);
-    for (let i = 0; i < decodedString.length; i += 1) {
-      byteNumbers[i] = decodedString.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    // Create a Blob object from the Uint8Array
-    const blob = new Blob([byteArray]);
-    const link = React.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = fileName;
-    link.target = '_blank';
-    link.click();
-  };
-
-  const handleDownloadFile = (base64) => {
-    const base64Data = base64;
-    const fileName = 'your_file_name.ext';
-    downloadBase64File(base64Data, fileName);
-  };
-
-  const handleDelete = async (documentId, versionId, fileId) => {
-    try {
-      await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
-      dispatch(getCustomerDocuments(customer._id));
-      enqueueSnackbar('File deleted successfully!');
-    } catch (err) {
-      console.log(err);
-      enqueueSnackbar('File delete failed!', { variant: `error` });
-    }
-  };
-
-  const handleDownload = (documentId, versionId, fileId, fileName, fileExtension) => {
-    dispatch(getDocumentDownload(documentId, versionId, fileId))
-      .then((res) => {
-        if (regEx.test(res.status)) {
-          download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
-          // downloadBase64File(res.data, `${fileName}.${fileExtension}`);
-          enqueueSnackbar(res.statusText);
-        } else {
-          enqueueSnackbar(res.statusText, { variant: `error` });
-        }
-      })
-      .catch((err) => {
-        if (err.Message) {
-          enqueueSnackbar(err.Message, { variant: `error` });
-        } else if (err.message) {
-          enqueueSnackbar(err.message, { variant: `error` });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
-        }
-      });
-  };
-
-  const [onPreview, setOnPreview] = useState(false);
-  const [imageData, setImageData] = useState(false);
-  const [imageName, setImageName] = useState('');
-  const [imageExtension, setImageExtension] = useState('');
-
-  const handleOpenPreview = () => {
-    setOnPreview(true);
-  };
-  const handleClosePreview = () => {
-    setOnPreview(false);
-  };
-
-  const handleDownloadImage = (fileName, fileExtension) => {
-    download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension });
-  };
-
-  const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileExtension) => {
-    setImageName(fileName);
-    setImageExtension(fileExtension);
-    dispatch(getDocumentDownload(documentId, versionId, fileId))
-      .then((res) => {
-        if (regEx.test(res.status)) {
-          setImageData(res.data);
-          handleOpenPreview();
-        } else {
-          enqueueSnackbar(res.statusText, { variant: `error` });
-        }
-      })
-      .catch((err) => {
-        if (err.Message) {
-          enqueueSnackbar(err.Message, { variant: `error` });
-        } else if (err.message) {
-          enqueueSnackbar(err.message, { variant: `error` });
-        } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
-        }
-      });
-  };
-
   return (
     <Grid>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
@@ -253,87 +137,12 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
         <Grid item sx={{ display: 'flex-inline' }}>
           <Grid container justifyContent="flex-start" gap={1}>
             {currentCustomerDocument?.documentVersions[0]?.files?.map((file) => (
-              <ThumbnailCard>
-                <ThumbnailGrid item justifyContent="center">
-                  <ThumbnailCardContent component={Stack} display="block" height="110px">
-                    <DeleteIconButton
-                      left={document.icon[file.extension] ? 76 : 44}
-                      onClick={() =>
-                        handleDelete(
-                          currentCustomerDocument._id,
-                          currentCustomerDocument?.documentVersions[0]._id,
-                          file._id
-                        )
-                      }
-                    />
-                    {file?.fileType.startsWith('image') && (
-                      <ThumbnailIconButtonDefault
-                        theme={theme}
-                        icon="icon-park-outline:preview-open"
-                        left={76}
-                        size="small"
-                        onClick={() => {
-                          handleDownloadAndPreview(
-                            currentCustomerDocument._id,
-                            currentCustomerDocument?.documentVersions[0]._id,
-                            file._id,
-                            file.name,
-                            file.extension
-                          );
-                        }}
-                      />
-                    )}
-                    {file?.fileType.startsWith('image') && (
-                      <ImagePreviewDialog
-                        onPreview={onPreview}
-                        handleClosePreview={handleClosePreview}
-                        handleDownloadImage={handleDownloadImage}
-                        imageName={imageName}
-                        imageExtension={imageExtension}
-                        file={file}
-                        imageData={imageData}
-                      />
-                    )}
-
-                    <ThumbnailIconButtonDefault
-                      icon="line-md:download-loop"
-                      left={108}
-                      size="small"
-                      onClick={() =>
-                        handleDownload(
-                          currentCustomerDocument._id,
-                          currentCustomerDocument?.documentVersions[0]._id,
-                          file._id,
-                          file.name,
-                          file.extension
-                        )
-                      }
-                      theme={theme}
-                    />
-                    {file?.fileType.startsWith('image') && (
-                      <ThumbnailCardMedia
-                        component="img"
-                        image={`data:image/png;base64, ${file?.thumbnail}`}
-                        alt="customer's contact cover photo was here"
-                      />
-                    )}
-                    {document.icon[file.extension] && document.color[file.extension] && (
-                      <ThumbnailIconify
-                        icon={document.icon[file.extension]}
-                        color={document.color[file.extension]}
-                      />
-                    )}
-                  </ThumbnailCardContent>
-                </ThumbnailGrid>
-                <ThumbnailNameGrid item justifyContent="center">
-                  <Tooltip title={file.name} arrow>
-                    <Typography variant="body2">
-                      {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name}{' '}
-                      {file?.name?.length > 15 ? '...' : null}
-                    </Typography>
-                  </Tooltip>
-                </ThumbnailNameGrid>
-              </ThumbnailCard>
+              <Thumbnail
+                key={file._id}
+                file={file}
+                currentCustomerDocument={currentCustomerDocument}
+                customer={customer}
+              />
             ))}
           </Grid>
         </Grid>
