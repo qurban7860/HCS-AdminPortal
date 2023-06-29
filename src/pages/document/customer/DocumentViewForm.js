@@ -33,12 +33,8 @@ const Loadable = (Component) => (props) =>
 const DownloadComponent = Loadable(lazy(() => import('../DownloadDocument')));
 
 // ----------------------------------------------------------------------
-DocumentViewForm.propTypes = {
-  currentCustomerDocument: PropTypes.object,
-};
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
-  const regEx = /^[^2]*/;
   const { customerDocument, isLoading } = useSelector((state) => state.customerDocument);
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
@@ -153,3 +149,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     </Grid>
   );
 }
+
+DocumentViewForm.propTypes = {
+  currentCustomerDocument: PropTypes.object,
+};

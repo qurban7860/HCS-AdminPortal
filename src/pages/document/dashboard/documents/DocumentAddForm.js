@@ -6,17 +6,12 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { LoadingButton } from '@mui/lab';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   Switch,
   Radio,
   RadioGroup,
   FormControlLabel,
-  FormLabel,
   Box,
-  Button,
   Card,
   Grid,
   Stack,
@@ -24,13 +19,10 @@ import {
   Autocomplete,
   TextField,
   Link,
-  InputLabel,
-  MenuItem,
   FormControl,
   Dialog,
   Container,
 } from '@mui/material';
-
 // PATH
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
@@ -76,9 +68,16 @@ import FormProvider, {
   RHFUpload,
 } from '../../../../components/hook-form';
 // assets
-import FormHeading from '../../../components/FormHeading';
+import FormLabel from '../../../components/FormLabel';
+import DialogLabel from '../../../components/Dialog/DialogLabel';
+import DialogLink from '../../../components/Dialog/DialogLink';
 import AddFormButtons from '../../../components/AddFormButtons';
 import { Cover } from '../../../components/Cover';
+import {
+  fileTypesArray,
+  allowedExtensions,
+  fileTypesMessage,
+} from '../../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -98,7 +97,6 @@ export default function DocumentAddForm({ currentDocument }) {
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const [documentVal, setDocumentVal] = useState('');
-  console.log('documentVal : ', documentVal);
   const [selectedValue, setSelectedValue] = useState('new');
   const [selectedVersionValue, setSelectedVersionValue] = useState('newVersion');
   const [descriptionVal, setDescriptionVal] = useState('');
@@ -211,84 +209,13 @@ export default function DocumentAddForm({ currentDocument }) {
     description: Yup.string().max(10000),
     images: Yup.mixed()
       .required('File is required!')
-      .test(
-        'fileType',
-        'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx',
-        (value) => {
-          if (value && value?.name) {
-            const allowedExtensions = [
-              'png',
-              'jpeg',
-              'jpg',
-              'gif',
-              'bmp',
-              'webp',
-              'djvu',
-              'heic',
-              'heif',
-              'ico',
-              'jfif',
-              'jp2',
-              'jpe',
-              'jpeg',
-              'jpg',
-              'jps',
-              'mng',
-              'nef',
-              'nrw',
-              'orf',
-              'pam',
-              'pbm',
-              'pcd',
-              'pcx',
-              'pef',
-              'pes',
-              'pfm',
-              'pgm',
-              'picon',
-              'pict',
-              'png',
-              'pnm',
-              'ppm',
-              'psd',
-              'raf',
-              'ras',
-              'rw2',
-              'sfw',
-              'sgi',
-              'svg',
-              'tga',
-              'tiff',
-              'psd',
-              'jxr',
-              'wbmp',
-              'x3f',
-              'xbm',
-              'xcf',
-              'xpm',
-              'xwd',
-              'pdf',
-              'doc',
-              'docx',
-              'xls',
-              'xlsx',
-              'ppt',
-              'pptx',
-              'csv',
-              'txt',
-              'odp',
-              'ods',
-              'odt',
-              'ott',
-              'rtf',
-              'txt',
-            ];
-            const fileExtension = value?.name?.split('.').pop().toLowerCase();
-            return allowedExtensions.includes(fileExtension);
-          }
-          return false;
+      .test('fileType', fileTypesMessage, (value) => {
+        if (value && value?.name) {
+          const fileExtension = value?.name?.split('.').pop().toLowerCase();
+          return allowedExtensions.includes(fileExtension);
         }
-      )
+        return false;
+      })
       .nullable(true),
     isActive: Yup.boolean(),
   });
@@ -396,23 +323,7 @@ export default function DocumentAddForm({ currentDocument }) {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       const fileName = file.name.split('.');
-      if (
-        [
-          'png',
-          'jpeg',
-          'jpg',
-          'gif',
-          'bmp',
-          'webp',
-          'pdf',
-          'doc',
-          'docx',
-          'xls',
-          'xlsx',
-          'ppt',
-          'pptx',
-        ].includes(fileName[fileName.length - 1])
-      ) {
+      if (fileTypesArray.includes(fileName[fileName.length - 1])) {
         setNameVal(fileName[0]);
       }
       const newFile = Object.assign(file, {
@@ -547,6 +458,7 @@ export default function DocumentAddForm({ currentDocument }) {
                       </Grid>
                     </RadioGroup>
                   </FormControl>
+
                   {documentDependency === 'customer' && (
                     <Grid container lg={12}>
                       <Grid container spacing={2}>
@@ -899,6 +811,8 @@ export default function DocumentAddForm({ currentDocument }) {
                       />
                     </Grid>
                   )}
+
+                  {/* cleanup */}
                   {selectedValue === 'new' && (
                     <Grid container lg={12} display="flex">
                       <Grid display="flex">
@@ -957,39 +871,13 @@ export default function DocumentAddForm({ currentDocument }) {
           aria-labelledby="keep-mounted-modal-title"
           aria-describedby="keep-mounted-modal-description"
         >
-          <Grid
-            container
-            item
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              bgcolor: 'primary.main',
-              color: 'primary.contrastText',
-              padding: '10px',
-            }}
-          >
-            <Typography variant="h4" sx={{ px: 2 }}>
-              {nameVal}
-            </Typography>{' '}
-            <Link
-              onClick={() => handleClosePreview()}
-              href="#"
-              underline="none"
-              sx={{ ml: 'auto' }}
-            >
-              {' '}
-              <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-            </Link>
-          </Grid>
-          {/* <Grid  > */}
+          <DialogLabel content={nameVal} onClick={() => handleClosePreview()} />
           <Box
             component="img"
             sx={{ minWidth: '400px', minHeight: '400px' }}
             alt={defaultValues?.name}
             src={previewVal}
           />
-          {/* </Grid> */}
         </Dialog>
       </FormProvider>
     </Container>
