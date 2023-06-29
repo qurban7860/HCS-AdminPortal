@@ -2,32 +2,13 @@ import PropTypes from 'prop-types';
 import { TableCell, Link } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { StyledTooltip } from '../../theme/styles/default-styles';
+import VerificationIcon from './VerificationIcon';
 import Iconify from '../../components/iconify';
 
-LinkTableCellWithIcon.propTypes = {
-  align: PropTypes.string,
-  onClick: PropTypes.func,
-  param: PropTypes.string,
-  isVerified: PropTypes.bool,
-};
 export default function LinkTableCellWithIcon({ align, onClick, param, isVerified }) {
   return (
     <TableCell align={align}>
-      <StyledTooltip
-        title={isVerified ? 'Verified' : 'Not Verified'}
-        placement="top"
-        disableFocusListener
-        toolTipColor={isVerified ? 'green' : 'red'}
-      >
-        <Iconify
-          icon="ic:round-verified-user"
-          color={isVerified ? 'green' : 'red'}
-          sx={{
-            mb: -0.5,
-            mr: 0.5,
-          }}
-        />
-      </StyledTooltip>
+      <VerificationIcon isVerified={isVerified} />
       <Link
         onClick={onClick}
         color="inherit"
@@ -46,3 +27,10 @@ export default function LinkTableCellWithIcon({ align, onClick, param, isVerifie
     </TableCell>
   );
 }
+
+LinkTableCellWithIcon.propTypes = {
+  align: PropTypes.string,
+  onClick: PropTypes.func,
+  param: PropTypes.string,
+  isVerified: PropTypes.bool,
+};

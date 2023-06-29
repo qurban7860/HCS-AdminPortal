@@ -22,7 +22,6 @@ import {
   Typography,
   Autocomplete,
   TextField,
-  Link,
   FormControl,
   Dialog,
 } from '@mui/material';
@@ -57,6 +56,11 @@ import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
 import DialogLabel from '../../components/Dialog/DialogLabel';
+import {
+  fileTypesArray,
+  allowedExtensions,
+  fileTypesMessage,
+} from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
@@ -94,21 +98,7 @@ export default function DocumentAddForm({ currentDocument }) {
   const [customerVal, setCustomerVal] = useState('');
   const [siteVal, setSiteVal] = useState('');
   const [contactVal, setContactVal] = useState('');
-  const allowedExtension = [
-    'png',
-    'jpeg',
-    'jpg',
-    'gif',
-    'bmp',
-    'webp',
-    'pdf',
-    'doc',
-    'docx',
-    'xls',
-    'xlsx',
-    'ppt',
-    'pptx',
-  ];
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -141,32 +131,13 @@ export default function DocumentAddForm({ currentDocument }) {
     description: Yup.string().max(10000),
     images: Yup.mixed()
       .required('File is required!')
-      .test(
-        'fileType',
-        'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx',
-        (value) => {
-          if (value && value?.name) {
-            const allowedExtensions = [
-              'png',
-              'jpeg',
-              'jpg',
-              'gif',
-              'bmp',
-              'webp',
-              'pdf',
-              'doc',
-              'docx',
-              'xls',
-              'xlsx',
-              'ppt',
-              'pptx',
-            ];
-            const fileExtension = value?.name?.split('.').pop().toLowerCase();
-            return allowedExtensions.includes(fileExtension);
-          }
-          return false;
+      .test('fileType', fileTypesMessage, (value) => {
+        if (value && value?.name) {
+          const fileExtension = value?.name?.split('.').pop().toLowerCase();
+          return allowedExtensions.includes(fileExtension);
         }
-      )
+        return false;
+      })
       .nullable(true),
     isActive: Yup.boolean(),
   });
@@ -230,14 +201,15 @@ export default function DocumentAddForm({ currentDocument }) {
       }
       if (selectedValue === 'new') {
         await dispatch(addCustomerDocument(customer._id, data));
+        enqueueSnackbar('Customer document saved successfully!');
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));
+        enqueueSnackbar('Customer Document updated successfully!');
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
       }
-      enqueueSnackbar('Customer document save successfully!');
       dispatch(getCustomerDocuments(customer?._id));
       dispatch(setCustomerDocumentFormVisibility(false));
       setDocumentCategoryVal('');
@@ -255,7 +227,7 @@ export default function DocumentAddForm({ currentDocument }) {
       setDescriptionVal('');
       reset();
     } catch (error) {
-      enqueueSnackbar('Customer document save failed!', { variant: `error` });
+      enqueueSnackbar('Failed to save Customer document!', { variant: `error` });
       console.error(error);
     }
   };
@@ -298,23 +270,7 @@ export default function DocumentAddForm({ currentDocument }) {
       const file = acceptedFiles[0];
       const fileName = file.name.split('.');
 
-      if (
-        [
-          'png',
-          'jpeg',
-          'jpg',
-          'gif',
-          'bmp',
-          'webp',
-          'pdf',
-          'doc',
-          'docx',
-          'xls',
-          'xlsx',
-          'ppt',
-          'pptx',
-        ].includes(fileName[fileName.length - 1])
-      ) {
+      if (fileTypesArray.includes(fileName[fileName.length - 1])) {
         setNameVal(fileName[0]);
       }
 
@@ -410,6 +366,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     </Grid>
                   </RadioGroup>
                 </FormControl>
+
                 {selectedValue === 'newVersion' && (
                   <Grid container lg={12}>
                     <Grid container spacing={2}>
@@ -459,6 +416,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     </Grid>
                   </Grid>
                 )}
+
                 {(selectedValue === 'new' || documentVal) && (
                   <Grid container lg={12}>
                     <Grid container spacing={2}>
@@ -645,6 +603,7 @@ export default function DocumentAddForm({ currentDocument }) {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
+        <DialogLabel content={nameVal} onClick={() => handleClosePreview()} />
         <Box component="img" alt={defaultValues?.name} src={previewVal} />
       </Dialog>
     </FormProvider>

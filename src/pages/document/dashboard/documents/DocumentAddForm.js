@@ -18,7 +18,6 @@ import {
   Typography,
   Autocomplete,
   TextField,
-  Link,
   FormControl,
   Dialog,
   Container,
@@ -83,6 +82,7 @@ import {
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
+
 export default function DocumentAddForm({ currentDocument }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
@@ -278,7 +278,7 @@ export default function DocumentAddForm({ currentDocument }) {
       }
       if (selectedValue === 'new') {
         await dispatch(addDocument(customerVal?._id, machineVal._id, data));
-        enqueueSnackbar('Document save successfully!');
+        enqueueSnackbar('Document saved successfully!');
         navigate(PATH_DASHBOARD.document.dashboard);
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));

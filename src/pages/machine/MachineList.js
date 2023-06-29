@@ -8,35 +8,15 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import {
-  Box,
-  Card,
-  Grid,
-  Container,
-  Stack,
-  Typography,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  IconButton,
-  TableContainer,
-} from '@mui/material';
+import { Card, Grid, Container, Table, Button, TableBody, TableContainer } from '@mui/material';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
-import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import MachineListTableRow from './MachineListTableRow';
@@ -63,14 +43,6 @@ import {
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-} from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset

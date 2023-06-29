@@ -19,7 +19,6 @@ export default function LinkTableCell({ align, onClick, param }) {
           },
         }}
       >
-        {' '}
         {param}
       </Link>
     </TableCell>
