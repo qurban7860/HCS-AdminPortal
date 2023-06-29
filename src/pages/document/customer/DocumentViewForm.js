@@ -140,7 +140,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
               <Thumbnail
                 key={file._id}
                 file={file}
-                currentCustomerDocument={currentCustomerDocument}
+                currentDocument={currentCustomerDocument}
                 customer={customer}
               />
             ))}

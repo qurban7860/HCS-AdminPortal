@@ -34,7 +34,7 @@ import {
 } from '../../../../redux/slices/document/document';
 import { getCustomer, resetCustomer } from '../../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../../redux/slices/products/machine';
-import CustomAvatar from '../../../../components/custom-avatar/CustomAvatar';
+import FormLabel from '../../../components/FormLabel';
 import ImagePreviewDialog from '../../../components/Thumbnails/ImagePreviewDialog';
 
 // ----------------------------------------------------------------------
@@ -286,19 +286,7 @@ export default function Document() {
               documentHistory?.documentVersions?.map((files) => (
                 <Grid container>
                   <Grid container sx={{ pt: '2rem' }}>
-                    <Grid
-                      item
-                      xs={12}
-                      sm={12}
-                      sx={{
-                        backgroundImage: (theme) =>
-                          `linear-gradient(to right, ${theme.palette.primary.main} ,  white)`,
-                      }}
-                    >
-                      <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'white' }}>
-                        Version No. {files?.versionNo}
-                      </Typography>
-                    </Grid>
+                    <FormLabel content={`Version No. ${files?.versionNo}`} />
                     <ViewFormField sm={12} heading="Description" param={files?.description} />
                   </Grid>
                   {files?.files?.map((file) => (
@@ -693,22 +681,9 @@ export default function Document() {
             </Typography>}
           </Grid> */}
         </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
-          <Grid item container sx={{ py: '2rem' }}>
-            <Grid
-              item
-              xs={12}
-              sm={12}
-              sx={{
-                backgroundImage: (theme) =>
-                  `linear-gradient(to right, ${theme.palette.primary.lighter} ,  white)`,
-              }}
-            >
-              <Typography variant="h6" sm={12} sx={{ ml: '1rem', color: 'primary.contrastText' }}>
-                Howick Resources{' '}
-              </Typography>
-            </Grid>
-          </Grid>
+        <Grid item sx={{ px: 2, pb: 3 }}>
+          <FormLabel content="Howick Resources" />
+
           <ViewFormField
             sm={6}
             heading="Account Manager"

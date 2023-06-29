@@ -22,13 +22,7 @@ import {
 } from '../../../redux/slices/document/documentFile';
 import { document } from '../../../constants/document-constants';
 
-export function Thumbnail({
-  deleteOnClick,
-  file,
-  previewOnClick,
-  currentCustomerDocument,
-  customer,
-}) {
+export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument, customer }) {
   const [onPreview, setOnPreview] = useState(false);
   const [imageName, setImageName] = useState('');
   const [imageData, setImageData] = useState('');
@@ -116,11 +110,7 @@ export function Thumbnail({
           <DeleteIconButton
             left={document.icon[file.extension] ? 76 : 44}
             onClick={() =>
-              handleDelete(
-                currentCustomerDocument._id,
-                currentCustomerDocument?.documentVersions[0]._id,
-                file._id
-              )
+              handleDelete(currentDocument._id, currentDocument?.documentVersions[0]._id, file._id)
             }
           />
           {file?.fileType.startsWith('image') && (
@@ -130,8 +120,8 @@ export function Thumbnail({
               size="small"
               onClick={() => {
                 handleDownloadAndPreview(
-                  currentCustomerDocument._id,
-                  currentCustomerDocument?.documentVersions[0]._id,
+                  currentDocument._id,
+                  currentDocument?.documentVersions[0]._id,
                   file._id,
                   file.name,
                   file.extension
@@ -157,8 +147,8 @@ export function Thumbnail({
             size="small"
             onClick={() =>
               handleDownload(
-                currentCustomerDocument._id,
-                currentCustomerDocument?.documentVersions[0]._id,
+                currentDocument._id,
+                currentDocument?.documentVersions[0]._id,
                 file._id,
                 file.name,
                 file.extension
@@ -197,8 +187,7 @@ Thumbnail.propTypes = {
   deleteOnClick: PropTypes.func,
   file: PropTypes.object,
   previewOnClick: PropTypes.func,
-
-  currentCustomerDocument: PropTypes.object,
+  currentDocument: PropTypes.object,
   customer: PropTypes.object,
 };
 

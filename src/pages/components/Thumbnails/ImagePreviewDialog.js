@@ -2,16 +2,8 @@ import PropTypes from 'prop-types';
 import { Typography, Dialog, Grid, Link, IconButton, Box } from '@mui/material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
+import { CloseButton } from '../CloseButton';
 
-ImagePreviewDialog.propTypes = {
-  onPreview: PropTypes.bool,
-  handleClosePreview: PropTypes.func,
-  handleDownloadImage: PropTypes.func,
-  imageName: PropTypes.string,
-  imageExtension: PropTypes.string,
-  file: PropTypes.object,
-  imageData: PropTypes.string,
-};
 export default function ImagePreviewDialog({
   onPreview,
   handleClosePreview,
@@ -60,7 +52,7 @@ export default function ImagePreviewDialog({
             position: 'absolute',
           }}
         >
-          <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
+          <CloseButton />
         </Link>
       </Grid>
       <Link>
@@ -92,3 +84,13 @@ export default function ImagePreviewDialog({
     </Dialog>
   );
 }
+
+ImagePreviewDialog.propTypes = {
+  onPreview: PropTypes.bool,
+  handleClosePreview: PropTypes.func,
+  handleDownloadImage: PropTypes.func,
+  imageName: PropTypes.string,
+  imageExtension: PropTypes.string,
+  file: PropTypes.object,
+  imageData: PropTypes.string,
+};
