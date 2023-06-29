@@ -51,7 +51,7 @@ import { getMachine, resetMachine } from '../../../redux/slices/products/machine
 import { useSnackbar } from '../../../components/snackbar';
 import LoadingScreen from '../../../components/loading-screen';
 import CustomAvatar from '../../../components/custom-avatar/CustomAvatar';
-import DeleteIconButton from '../../components/DeleteIconButton';
+import DeleteIconButton from '../../components/Thumbnails/ThumbnailIconButtonsDefault';
 import ImagePreviewDialog from '../../components/ImagePreviewDialog';
 
 const Loadable = (Component) => (props) =>
@@ -260,8 +260,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
                   currentMachineDocument?.documentVersions?.length > 1 && (
                     <Link onClick={linkMachineDocumentView} href="#" underline="none">
                       <Typography variant="body2" sx={{ mt: 0.45, ml: 1 }}>
-                        {' '}
-                        More version{' '}
+                        More version
                       </Typography>
                     </Link>
                   )}

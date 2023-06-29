@@ -1,0 +1,74 @@
+import { styled, alpha, useTheme } from '@mui/material/styles';
+import PropTypes from 'prop-types';
+import { Popover, CardMedia, Card, Grid, IconButton } from '@mui/material';
+import { m } from 'framer-motion';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Iconify from '../../components/iconify';
+import { bgBlur, bgGradient } from '../../utils/cssStyles';
+import Image from '../../components/image';
+import { MotionContainer, varFade } from '../../components/animate';
+
+export const ThumbnailCard = styled(Card)(({ theme }) => ({
+  height: '140px',
+  width: '140px',
+  m: 1,
+}));
+
+export const ThumbnailCardContent = styled(Card)(({ theme }) => ({
+  position: 'relative',
+  zIndex: '1',
+}));
+
+export const ThumbnailCardMedia = styled(CardMedia)(({ theme }) => ({
+  height: '110px',
+  opacity: '0.6',
+  display: 'block',
+  zIndex: '-1',
+  position: 'absolute',
+  top: '0',
+  left: '0',
+  right: '0',
+  bottom: '0',
+  width: '100%',
+  objectFit: 'cover',
+  objectPosition: 'center',
+}));
+
+export const ThumbnailGrid = styled(Grid)(({ theme, ...props }) => ({
+  bgcolor: 'lightgray',
+  alignContent: 'center',
+  width: '140px',
+}));
+
+export const ThumbnailIconButton = styled(IconButton)(({ theme }) => ({
+  top: 4,
+  zIndex: 9,
+  width: 28,
+  height: 28,
+  position: 'absolute',
+}));
+
+export const ThumbnailNameGrid = styled(Grid)(({ theme }) => ({
+  textAlign: 'center',
+  width: '140px',
+  mt: 1,
+}));
+
+export const ThumbnailIconify = styled(Iconify)(({ theme }) => ({
+  height: '90px',
+  opacity: '0.6',
+  display: 'block',
+  zIndex: '-1',
+  position: 'absolute',
+  top: '5px',
+  left: '0',
+  right: '0',
+  bottom: '0',
+  width: '100%',
+  objectFit: 'cover',
+  objectPosition: 'center',
+}));
+
+/**
+ * @function components__________________________________________________________
+ */

@@ -5,9 +5,8 @@ import { useNavigate } from 'react-router-dom';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import download from 'downloadjs';
 // @mui
-import Image from 'mui-image';
 // eslint-disable-next-line import/no-anonymous-default-export
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import {
   CardContent,
   IconButton,
@@ -15,12 +14,18 @@ import {
   Grid,
   Stack,
   Typography,
-  Box,
   CardMedia,
-  Dialog,
   Link,
   Tooltip,
 } from '@mui/material';
+import {
+  ThumbnailCard,
+  ThumbnailCardMedia,
+  ThumbnailCardContent,
+  ThumbnailGrid,
+  ThumbnailIconify,
+  ThumbnailNameGrid,
+} from '../../../theme/styles/document-styles';
 // redux
 import {
   getDocumentDownload,
@@ -43,7 +48,9 @@ import { fDate, fDateTime } from '../../../utils/formatTime';
 import { useSnackbar } from '../../../components/snackbar';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
-import DeleteIconButton from '../../components/DeleteIconButton';
+import DeleteIconButton, {
+  ThumbnailIconButtonDefault,
+} from '../../components/Thumbnails/ThumbnailIconButtonsDefault';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
 import ImagePreviewDialog from '../../components/ImagePreviewDialog';
 
@@ -66,7 +73,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   // console.log("currentCustomerDocument : ",currentCustomerDocument)
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-
+  const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onDelete = async () => {
@@ -251,21 +258,18 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
           sm={6}
           heading="Version"
           objectParam={
-            defaultValues.documentVersion ? (
+            defaultValues.documentVersion && (
               <Typography display="flex">
                 {defaultValues.versionPrefix} {defaultValues.documentVersion}
                 {currentCustomerDocument?.documentVersions &&
                   currentCustomerDocument?.documentVersions?.length > 1 && (
                     <Link onClick={linkCustomerDocumentView} href="#" underline="none">
                       <Typography variant="body2" sx={{ mt: 0.45, ml: 1 }}>
-                        {' '}
-                        More version{' '}
+                        More version
                       </Typography>
                     </Link>
                   )}
               </Typography>
-            ) : (
-              ''
             )
           }
         />
@@ -278,218 +282,123 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
           <Grid container justifyContent="flex-start" gap={1}>
             {currentCustomerDocument?.documentVersions[0]?.files?.map((file) =>
               file?.fileType.startsWith('image') ? (
-                <Card sx={{ height: '140px', width: '140px', m: 1 }}>
-                  <Grid
-                    item
-                    justifyContent="center"
-                    sx={{ bgcolor: 'lightgray', alignContent: 'center', width: '140px' }}
-                  >
-                    <CardContent
-                      component={Stack}
-                      display="block"
-                      height="110px"
-                      sx={{ position: 'relative', zIndex: '1' }}
-                    >
-                      <Link>
-                        <DeleteIconButton
-                          left={44}
-                          onClick={() =>
-                            handleDelete(
-                              currentCustomerDocument._id,
-                              currentCustomerDocument?.documentVersions[0]._id,
-                              file._id
-                            )
-                          }
-                        />
-                      </Link>
-                      <Link>
-                        <IconButton
-                          size="small"
-                          onClick={() => {
-                            handleDownloadAndPreview(
-                              currentCustomerDocument._id,
-                              currentCustomerDocument?.documentVersions[0]._id,
-                              file._id,
-                              file.name,
-                              file.extension
-                            );
-                          }}
-                          sx={{
-                            top: 4,
-                            left: 76,
-                            zIndex: 9,
-                            width: 28,
-                            height: 28,
-                            position: 'absolute',
-                            color: (theme) => alpha(theme.palette.common.white, 0.8),
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                            },
-                          }}
-                        >
-                          <Iconify icon="icon-park-outline:preview-open" width={18} />
-                        </IconButton>
-                      </Link>
-                      <ImagePreviewDialog
-                        onPreview={onPreview}
-                        handleClosePreview={handleClosePreview}
-                        handleDownloadImage={handleDownloadImage}
-                        imageName={imageName}
-                        imageExtension={imageExtension}
-                        file={file}
-                        imageData={imageData}
+                <ThumbnailCard>
+                  <ThumbnailGrid item justifyContent="center">
+                    <ThumbnailCardContent component={Stack} display="block" height="110px">
+                      <DeleteIconButton
+                        left={44}
+                        onClick={() =>
+                          handleDelete(
+                            currentCustomerDocument._id,
+                            currentCustomerDocument?.documentVersions[0]._id,
+                            file._id
+                          )
+                        }
                       />
-                      <Link>
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            handleDownload(
-                              currentCustomerDocument._id,
-                              currentCustomerDocument?.documentVersions[0]._id,
-                              file._id,
-                              file.name,
-                              file.extension
-                            )
-                          }
-                          sx={{
-                            top: 4,
-                            left: 108,
-                            zIndex: 9,
-                            width: 28,
-                            height: 28,
-                            position: 'absolute',
-                            color: (theme) => alpha(theme.palette.common.white, 0.8),
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                            },
-                          }}
-                        >
-                          <Iconify icon="line-md:download-loop" width={18} />
-                        </IconButton>
-                      </Link>
-                      <CardMedia
-                        component="img"
-                        sx={{
-                          height: '110px',
-                          opacity: '0.6',
-                          display: 'block',
-                          zIndex: '-1',
-                          position: 'absolute',
-                          top: '0',
-                          left: '0',
-                          right: '0',
-                          bottom: '0',
-                          width: '100%',
-                          objectFit: 'cover',
-                          objectPosition: 'center',
+                      <ThumbnailIconButtonDefault
+                        theme={theme}
+                        icon="icon-park-outline:preview-open"
+                        left={76}
+                        size="small"
+                        onClick={() => {
+                          handleDownloadAndPreview(
+                            currentCustomerDocument._id,
+                            currentCustomerDocument?.documentVersions[0]._id,
+                            file._id,
+                            file.name,
+                            file.extension
+                          );
                         }}
+                      />
+                      {onPreview && (
+                        <ImagePreviewDialog
+                          onPreview={onPreview}
+                          handleClosePreview={handleClosePreview}
+                          handleDownloadImage={handleDownloadImage}
+                          imageName={imageName}
+                          imageExtension={imageExtension}
+                          file={file}
+                          imageData={imageData}
+                        />
+                      )}
+
+                      <ThumbnailIconButtonDefault
+                        icon="line-md:download-loop"
+                        left={108}
+                        size="small"
+                        onClick={() =>
+                          handleDownload(
+                            currentCustomerDocument._id,
+                            currentCustomerDocument?.documentVersions[0]._id,
+                            file._id,
+                            file.name,
+                            file.extension
+                          )
+                        }
+                        theme={theme}
+                      />
+                      <ThumbnailCardMedia
+                        component="img"
                         image={`data:image/png;base64, ${file?.thumbnail}`}
                         alt="customer's contact cover photo was here"
                       />
-                    </CardContent>
-                  </Grid>
-                  <Grid
-                    item
-                    justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt: 0.7 }}
-                  >
+                    </ThumbnailCardContent>
+                  </ThumbnailGrid>
+                  <ThumbnailNameGrid item justifyContent="center">
                     <Tooltip title={file.name} arrow>
                       <Typography variant="body2">
                         {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name}{' '}
                         {file?.name?.length > 15 ? '...' : null}
                       </Typography>
                     </Tooltip>
-                  </Grid>
-                </Card>
+                  </ThumbnailNameGrid>
+                </ThumbnailCard>
               ) : (
-                <Card sx={{ height: '140px', width: '140px', m: 1 }}>
-                  <Grid
-                    item
-                    justifyContent="center"
-                    sx={{ bgcolor: 'lightgray', alignContent: 'center', width: '140px' }}
-                  >
-                    <CardContent
-                      component={Stack}
-                      display="block"
-                      height="110px"
-                      sx={{ position: 'relative', zIndex: '1' }}
-                    >
-                      <Link>
-                        <DeleteIconButton
-                          left={76}
-                          onClick={() =>
-                            handleDelete(
-                              currentCustomerDocument._id,
-                              currentCustomerDocument?.documentVersions[0]._id,
-                              file._id
-                            )
-                          }
-                        />
-                      </Link>
-                      <Link>
-                        <IconButton
-                          size="small"
-                          onClick={() =>
-                            handleDownload(
-                              currentCustomerDocument._id,
-                              currentCustomerDocument?.documentVersions[0]._id,
-                              file._id,
-                              file.name,
-                              file.extension
-                            )
-                          }
-                          sx={{
-                            top: 4,
-                            left: 108,
-                            zIndex: 9,
-                            width: 28,
-                            height: 28,
-                            position: 'absolute',
-                            color: (theme) => alpha(theme.palette.common.white, 0.8),
-                            bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
-                            '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.48),
-                            },
-                          }}
-                        >
-                          <Iconify icon="line-md:download-loop" width={18} />
-                        </IconButton>
-                      </Link>
-                      <Iconify
-                        sx={{
-                          height: '90px',
-                          opacity: '0.6',
-                          display: 'block',
-                          zIndex: '-1',
-                          position: 'absolute',
-                          top: '5px',
-                          left: '0',
-                          right: '0',
-                          bottom: '0',
-                          width: '100%',
-                          objectFit: 'cover',
-                          objectPosition: 'center',
-                        }}
-                        icon={document.icon[file.extension]}
-                        color={document.color[file.extension]}
+                <ThumbnailCard sx={{ height: '140px', width: '140px', m: 1 }}>
+                  <ThumbnailGrid item justifyContent="center">
+                    <ThumbnailCardContent component={Stack} display="block" height="110px">
+                      <DeleteIconButton
+                        left={76}
+                        onClick={() =>
+                          handleDelete(
+                            currentCustomerDocument._id,
+                            currentCustomerDocument?.documentVersions[0]._id,
+                            file._id
+                          )
+                        }
                       />
-                    </CardContent>
-                  </Grid>
-                  <Grid
-                    item
-                    justifyContent="center"
-                    sx={{ textAlign: 'center', width: '140px', mt: 0.7 }}
-                  >
+
+                      <ThumbnailIconButtonDefault
+                        icon="line-md:download-loop"
+                        left={108}
+                        size="small"
+                        onClick={() =>
+                          handleDownload(
+                            currentCustomerDocument._id,
+                            currentCustomerDocument?.documentVersions[0]._id,
+                            file._id,
+                            file.name,
+                            file.extension
+                          )
+                        }
+                      />
+                      {document.icon[file.extension] && document.color[file.extension] && (
+                        <ThumbnailIconify
+                          icon={document.icon[file.extension]}
+                          color={document.color[file.extension]}
+                        />
+                      )}
+                    </ThumbnailCardContent>
+                  </ThumbnailGrid>
+                  <ThumbnailNameGrid item justifyContent="center">
                     <Tooltip title={file.name} arrow>
                       <Typography variant="body2">
                         {file?.name?.length > 15 ? file?.name?.substring(0, 15) : file?.name}{' '}
                         {file?.name?.length > 15 ? '...' : null}
                       </Typography>
                     </Tooltip>
-                  </Grid>
-                </Card>
+                  </ThumbnailNameGrid>
+                </ThumbnailCard>
               )
             )}
           </Grid>
