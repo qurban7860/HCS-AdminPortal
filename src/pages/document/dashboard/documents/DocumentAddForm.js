@@ -219,6 +219,7 @@ export default function DocumentAddForm({ currentDocument }) {
       .nullable(true),
     isActive: Yup.boolean(),
   });
+
   const defaultValues = useMemo(
     () => ({
       displayName: nameVal,
@@ -864,6 +865,8 @@ export default function DocumentAddForm({ currentDocument }) {
             </Grid>
           </Grid>
         </Box>
+
+        {/* dialog preview */}
         <Dialog
           maxWidth="md"
           open={preview}

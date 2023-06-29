@@ -3,18 +3,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 // @mui
-import {
-  Tab,
-  Card,
-  Tabs,
-  Container,
-  Box,
-  Button,
-  Grid,
-  Stack,
-  Typography,
-  tabsClasses,
-} from '@mui/material';
+import { Tab, Card, Tabs, Container, Box, tabsClasses } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
@@ -180,7 +169,6 @@ export default function CustomerView({ editPage }) {
         (tab) =>
           tab.value === currentTab && (
             <Box key={tab.value} height="100vh">
-              {' '}
               {tab.component ? tab.component : <UnderDevelopment />}
             </Box>
           )

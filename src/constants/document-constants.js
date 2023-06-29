@@ -35,8 +35,22 @@ export const fileTypesArray = [
   'pptx',
 ];
 
-export const fileTypesMessage =
-  'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx';
+export const fileTypesMessage = `
+Only the following formats are accepted:
+.png,
+.jpeg,
+.jpg,
+.gif,
+.bmp,
+.webp,
+.pdf,
+.doc,
+.docx,
+.xls,
+.xlsx,
+.ppt,
+.pptx
+`;
 
 export const allowedExtensions = [
   'png',

@@ -15,7 +15,6 @@ import {
   Radio,
   RadioGroup,
   FormControlLabel,
-  Breadcrumbs,
   Box,
   Card,
   Grid,
@@ -57,6 +56,7 @@ import FormProvider, { RHFTextField, RHFUpload } from '../../../components/hook-
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
+import DialogLabel from '../../components/Dialog/DialogLabel';
 
 // ----------------------------------------------------------------------
 
@@ -636,6 +636,8 @@ export default function DocumentAddForm({ currentDocument }) {
           </Grid>
         </Grid>
       </Box>
+
+      {/* dialog preview */}
       <Dialog
         maxWidth="md"
         open={preview}
@@ -643,29 +645,7 @@ export default function DocumentAddForm({ currentDocument }) {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          item
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            {nameVal}
-          </Typography>{' '}
-          <Link onClick={() => handleClosePreview()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        {/* <Grid  > */}
         <Box component="img" alt={defaultValues?.name} src={previewVal} />
-        {/* </Grid> */}
       </Dialog>
     </FormProvider>
   );

@@ -14,7 +14,6 @@ import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import FormLabel from '../components/FormLabel';
 // slices
 import {
-  getCustomers,
   getCustomer,
   setCustomerEditFormVisibility,
   deleteCustomer,
@@ -103,6 +102,7 @@ export default function CustomerViewForm() {
 
   const shouldShowCustomerView = isExpanded && !setCustomerEditFormVisibility;
   const shouldShowCustomerEdit = setCustomerEditFormVisibility && !isExpanded;
+
   return (
     <>
       <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
@@ -129,10 +129,8 @@ export default function CustomerViewForm() {
               handleEdit={handleEdit}
               onDelete={onDelete}
             />
-            <Grid display="inline-flex">
-              <Tooltip title="Active">
-                <ViewFormField sm={12} isActive={defaultValues.isActive} />
-              </Tooltip>
+            <Grid display="inline-flex" mx={0}>
+              <ViewFormField sm={12} isActive={defaultValues.isActive} />
               <Tooltip title="Verified By">
                 <ViewFormField
                   sm={12}

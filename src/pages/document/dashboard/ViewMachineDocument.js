@@ -152,6 +152,7 @@ export default function Document() {
                           key={file._id}
                           file={file}
                           currentDocument={machineDocumentHistory}
+                          customer={customer}
                         />
                       </Grid>
                     </Grid>

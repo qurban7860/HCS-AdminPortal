@@ -64,7 +64,7 @@ export default function ViewFormField({
           wordBreak: 'break-word',
         }}
       >
-        {isActive !== undefined && <IconPopover isActive={isActive} />}
+        <IconPopover isActive={isActive} />
         {deleteDisabled !== undefined && <IconPopover deleteDisabled={deleteDisabled} />}
         {(customerVerificationCount || machineVerificationCount > 0) && verified > 0 && (
           <IconPopover

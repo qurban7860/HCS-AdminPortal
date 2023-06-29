@@ -31,7 +31,7 @@ export default function IconPopover({
   return (
     <>
       {/* isActive Icon */}
-      {isActive && (
+      {isActive !== undefined && (
         <>
           <IconButton
             aria-label={isActive ? 'Active' : 'Inactive'}
@@ -40,7 +40,7 @@ export default function IconPopover({
           >
             <Iconify
               heading={isActive ? 'Active' : 'Inactive'}
-              icon={isActive ? 'mdi:check-circle' : 'mdi:checkbox-multiple-blank-circle-outline'}
+              icon={isActive ? 'mdi:check-circle' : 'mdi:minus-circle-outline'}
               style={{ color: isActive ? 'green' : 'red' }}
               width="30px"
             />
