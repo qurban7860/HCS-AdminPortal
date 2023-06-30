@@ -1,6 +1,6 @@
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
-import { CardContent, CardMedia, Card, Grid, IconButton } from '@mui/material';
+import { CardContent, CardMedia, Card, Grid, IconButton, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import Iconify from '../../components/iconify';
@@ -67,6 +67,19 @@ export const ThumbnailIconify = styled(Iconify)(({ theme }) => ({
   width: '100%',
   objectFit: 'cover',
   objectPosition: 'center',
+}));
+
+// label for togglebuttons: ToggleButtons.js
+
+export const StyledToggleButtonLabel = styled(Typography)(({ theme }) => ({
+  pl: 2,
+  pt: 1,
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
+  fontSmooth: 'auto',
+  fontWeight: 'bold',
+  color: theme.palette.grey[600],
 }));
 
 /**

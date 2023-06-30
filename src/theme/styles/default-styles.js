@@ -5,6 +5,7 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
 import Image from '../../components/image';
 import { MotionContainer, varFade } from '../../components/animate';
+import Typography from '../overrides/Typography';
 
 /**
  * @cover :components ____________________________________________________________________________________________
@@ -127,4 +128,14 @@ export const StyledBg = styled('div')(({ theme }) => ({
     color: alpha(theme.palette.background.default, theme.palette.mode === 'light' ? 0.9 : 0.94),
     imgUrl: '/assets/background/overlay_2.jpg',
   }),
+}));
+
+// label for togglebuttons: ToggleButtons.js
+
+export const StyledToggleButtonLabel = styled(Typography)(({ theme }) => ({
+  pl: 2,
+  pt: 1,
+  display: 'flex',
+  justifyContent: 'flex-end',
+  alignItems: 'center',
 }));

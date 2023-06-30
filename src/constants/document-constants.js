@@ -119,3 +119,20 @@ export const allowedExtensions = [
   'rtf',
   'txt',
 ];
+
+// NOTE: These are the constants for the document upload radio buttons for adding a document
+
+export const DocRadioValue = {
+  new: 'new',
+  newVersion: 'newVersion',
+  existing: 'existingVersion',
+};
+
+export const DocRadioLabel = {
+  new: 'New Document',
+  existing: 'Upload new file against existing Document',
+  newVersion: 'New Version',
+  curentVersion: 'Current Version',
+};
+
+export const Defaults = {};

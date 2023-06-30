@@ -10,43 +10,16 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import {
-  Switch,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
-  Autocomplete,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
-// global
-import { CONFIG } from '../../../config-global';
+import { Switch, Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-  RHFDescriptionTextField,
-  RHFAutocomplete,
-  RHFSwitch,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../components/AddFormButtons';
 import FormHeading from '../../components/FormHeading';
-import ViewFormSWitch from '../../components/ViewFormSwitch';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // slice
 import {
@@ -79,6 +52,7 @@ export default function DocumentEditForm() {
   const { customer } = useSelector((state) => state.customer);
   const { contacts } = useSelector((state) => state.contact);
   const { sites } = useSelector((state) => state.site);
+  const { enqueueSnackbar } = useSnackbar();
 
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
@@ -89,14 +63,10 @@ export default function DocumentEditForm() {
   const [descriptionVal, setDescriptionVal] = useState('');
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
-
   const [nameVal, setNameVal] = useState('');
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
-  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     setNameVal(customerDocument?.displayName);
@@ -311,38 +281,13 @@ export default function DocumentEditForm() {
                   minRows={3}
                   multiline
                 />
-                <Grid container lg={12}>
-                  <Grid display="flex" justifyContent="flex-end">
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        pt: 1,
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                      }}
-                    >
-                      Customer Access
-                    </Typography>
-                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-                  </Grid>
 
-                  <Grid display="flex" justifyContent="flex-end">
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        pt: 1,
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                      }}
-                    >
-                      isActive
-                    </Typography>
-                    <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
-                  </Grid>
-                </Grid>
-
+                <ToggleButtons
+                  handleChange={handleChange}
+                  customerAccessVal={customerAccessVal}
+                  isActive={isActive}
+                  handleIsActiveChange={handleIsActiveChange}
+                />
                 {/* <RHFUpload
                   name="image"
                   maxSize={3145728}

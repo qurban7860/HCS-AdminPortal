@@ -121,7 +121,7 @@ export default function IconPopover({
                   ? 'Verified'
                   : 'Not Verified'
               }
-              icon={verified > 0 ? 'ic:round-verified-user ' : 'mdi:shield-off-outline'}
+              icon="ic:round-verified-user"
               style={{
                 color: customerVerificationCount || machineVerificationCount > 0 ? 'green' : 'red',
               }}

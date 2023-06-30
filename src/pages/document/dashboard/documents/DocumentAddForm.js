@@ -311,7 +311,7 @@ export default function DocumentAddForm({ currentDocument }) {
       setCustomerSiteVal('');
       reset();
     } catch (error) {
-      enqueueSnackbar('Document Save failed!', { variant: `error` });
+      enqueueSnackbar('Failed to save the Document', { variant: `error` });
       console.error(error);
     }
   };
