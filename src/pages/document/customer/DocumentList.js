@@ -97,9 +97,7 @@ export default function DocumentList() {
   const toggleChecked = async () => {
     dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
   };
-  const { themeStretch } = useSettingsContext();
   const [checked, setChecked] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);

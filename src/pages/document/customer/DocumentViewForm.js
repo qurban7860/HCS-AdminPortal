@@ -19,10 +19,12 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import { useSnackbar } from '../../../components/snackbar';
+import { Snacks } from '../../../constants/document-constants';
 import LoadingScreen from '../../../components/loading-screen';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import VersionsLink from '../../components/DocumentForms/VersionsLink';
 
 const Loadable = (Component) => (props) =>
   (
@@ -45,10 +47,10 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     try {
       await dispatch(deleteCustomerDocument(currentCustomerDocument._id));
       dispatch(getCustomerDocuments(customer._id));
-      enqueueSnackbar('Document deleted successfully!');
+      enqueueSnackbar(Snacks.deletedDoc, { variant: `success` });
     } catch (err) {
       console.log(err);
-      enqueueSnackbar('Document delete failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedDeleteDoc, { variant: `error` });
     }
   };
 
@@ -111,15 +113,10 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 {defaultValues.versionPrefix} {defaultValues.documentVersion}
                 {currentCustomerDocument?.documentVersions &&
                   currentCustomerDocument?.documentVersions?.length > 1 && (
-                    <Link onClick={linkCustomerDocumentView} href="#" underline="none">
-                      <Typography
-                        variant="overline"
-                        sx={{ mt: 0.45, ml: 1 }}
-                        color={alpha(theme.palette.primary.main, 0.4)}
-                      >
-                        View other versions
-                      </Typography>
-                    </Link>
+                    <VersionsLink
+                      onClick={linkCustomerDocumentView}
+                      content="View other versions"
+                    />
                   )}
               </Typography>
             )

@@ -1,16 +1,13 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Switch, Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
@@ -33,15 +30,8 @@ import {
   setDocumentCategoryFormVisibility,
   getActiveDocumentCategories,
 } from '../../../redux/slices/document/documentCategory';
-import {
-  setDocumentTypeFormVisibility,
-  getActiveDocumentTypes,
-  getActiveDocumentTypesWithCategory,
-} from '../../../redux/slices/document/documentType';
-import { getMachines } from '../../../redux/slices/products/machine';
-import { getCustomers } from '../../../redux/slices/customer/customer';
-import { getContacts } from '../../../redux/slices/customer/contact';
-import { getSites } from '../../../redux/slices/customer/site';
+import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
+import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
@@ -56,10 +46,6 @@ export default function DocumentEditForm() {
 
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
-  const [machineVal, setMachineVal] = useState('');
-  const [customerVal, setCustomerVal] = useState('');
-  const [siteVal, setSiteVal] = useState('');
-  const [contactVal, setContactVal] = useState('');
   const [descriptionVal, setDescriptionVal] = useState('');
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -130,14 +116,14 @@ export default function DocumentEditForm() {
       data.customerAccess = customerAccessVal;
       data.isActive = isActive;
       await dispatch(updateCustomerDocument(customerDocument?._id, data, customer._id));
-      enqueueSnackbar('Document saved successfully!');
+      enqueueSnackbar(Snacks.updatedDoc, { variant: `success` });
       setDescriptionVal('');
       setNameVal('');
       setDocumentCategoryVal('');
       setDocumentTypeVal('');
       reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedUpdateDoc, { variant: `error` });
       console.error(err.message);
     }
   };
@@ -146,16 +132,17 @@ export default function DocumentEditForm() {
     dispatch(setCustomerDocumentEditFormVisibility(false));
   };
 
-  const togleCategoryPage = () => {
-    dispatch(setCustomerDocumentEdit(true));
-    dispatch(setDocumentCategoryFormVisibility(true));
-    dispatch(setCustomerDocumentEditFormVisibility(false));
-  };
-  const togleDocumentNamePage = () => {
-    dispatch(setCustomerDocumentEdit(true));
-    dispatch(setDocumentTypeFormVisibility(true));
-    dispatch(setCustomerDocumentEditFormVisibility(false));
-  };
+  // if not used, remove the unused vars
+  // const togleCategoryPage = () => {
+  //   dispatch(setCustomerDocumentEdit(true));
+  //   dispatch(setDocumentCategoryFormVisibility(true));
+  //   dispatch(setCustomerDocumentEditFormVisibility(false));
+  // };
+  // const togleDocumentNamePage = () => {
+  //   dispatch(setCustomerDocumentEdit(true));
+  //   dispatch(setDocumentTypeFormVisibility(true));
+  //   dispatch(setCustomerDocumentEditFormVisibility(false));
+  // };
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -288,6 +275,7 @@ export default function DocumentEditForm() {
                   isActive={isActive}
                   handleIsActiveChange={handleIsActiveChange}
                 />
+
                 {/* <RHFUpload
                   name="image"
                   maxSize={3145728}

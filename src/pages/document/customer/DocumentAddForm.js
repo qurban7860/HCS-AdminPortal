@@ -58,6 +58,7 @@ import {
   fileTypesMessage,
   DocRadioLabel,
   DocRadioValue,
+  Snacks,
 } from '../../../constants/document-constants';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
@@ -200,10 +201,10 @@ export default function DocumentAddForm({ currentDocument }) {
       }
       if (selectedValue === 'new') {
         await dispatch(addCustomerDocument(customer._id, data));
-        enqueueSnackbar('Customer document saved successfully!');
+        enqueueSnackbar(Snacks.addedDoc);
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));
-        enqueueSnackbar('Customer Document updated successfully!');
+        enqueueSnackbar(Snacks.updatedDoc);
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
@@ -226,7 +227,7 @@ export default function DocumentAddForm({ currentDocument }) {
       setDescriptionVal('');
       reset();
     } catch (error) {
-      enqueueSnackbar('Failed to save Customer document!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedDoc, { variant: `error` });
       console.error(error);
     }
   };

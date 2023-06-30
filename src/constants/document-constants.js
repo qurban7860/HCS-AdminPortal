@@ -137,4 +137,13 @@ export const DocRadioLabel = {
   curentVersion: 'Current Version',
 };
 
-export const Defaults = {};
+// Snackbars constants
+export const Snacks = {
+  addedDoc: 'Customer Document UPLOAD Successful', // Upload Success message
+  updatedDoc: 'Customer Document UPDATE Successful', // Update Success message
+  deletedDoc: 'Customer Document DELETE Successful', // Delete Success message
+
+  failedDoc: 'Failed to UPLOAD Customer Document', // Update Failed message
+  failedUpdateDoc: 'Failed to UPDATE Customer Document', // Update Failed message
+  failedDeleteDoc: 'Failed to DELETE Customer Document', // Delete Failed message
+};
