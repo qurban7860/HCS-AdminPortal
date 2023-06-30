@@ -122,12 +122,14 @@ export const allowedExtensions = [
 
 // NOTE: These are the constants for the document upload radio buttons for adding a document
 
+// Values for the radio buttons
 export const DocRadioValue = {
   new: 'new',
   newVersion: 'newVersion',
   existing: 'existingVersion',
 };
 
+// Labels for the radio buttons
 export const DocRadioLabel = {
   new: 'New Document',
   existing: 'Upload new file against existing Document',
