@@ -22,6 +22,7 @@ import {
   Dialog,
   Container,
 } from '@mui/material';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // PATH
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
@@ -67,16 +68,21 @@ import FormProvider, {
   RHFUpload,
 } from '../../../../components/hook-form';
 // assets
+
 import FormLabel from '../../../components/FormLabel';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import DialogLink from '../../../components/Dialog/DialogLink';
 import AddFormButtons from '../../../components/AddFormButtons';
-import { Cover } from '../../../components/Cover';
+import RadioButtons from '../../../components/DocumentForms/RadioButtons';
 import {
   fileTypesArray,
   allowedExtensions,
   fileTypesMessage,
+  DocRadioValue,
+  DocRadioLabel,
+  Snacks,
 } from '../../../../constants/document-constants';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -410,56 +416,29 @@ export default function DocumentAddForm({ currentDocument }) {
   return (
     <Container maxWidth={false}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name="New Document" icon="ph:users-light" />
-        </Card>
+        <DocumentCover content="New Document" />
         <Box
           column={12}
           rowGap={3}
           columnGap={2}
           // display="grid"
           gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+          mt={3}
         >
           <Grid container xs={12} md={12} lg={12}>
             <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <FormControl>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
-                      value={documentDependency}
-                      onChange={handleDependencyChange}
-                    >
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          item
-                          sm={6}
-                          value="customer"
-                          control={<Radio />}
-                          label="Customer"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          item
-                          sm={6}
-                          value="machine"
-                          control={<Radio />}
-                          label="Machine"
-                        />
-                      </Grid>
-                    </RadioGroup>
-                  </FormControl>
+                  <RadioButtons
+                    value={documentDependency}
+                    radioOnChange={handleDependencyChange}
+                    newLabel={DocRadioLabel.customer}
+                    newValue={DocRadioValue.customer}
+                    secondLabel={DocRadioLabel.machine}
+                    secondValue={DocRadioValue.machine}
+                  />
 
+                  {/* Customer */}
                   {documentDependency === 'customer' && (
                     <Grid container lg={12}>
                       <Grid container spacing={2}>
@@ -530,6 +509,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     </Grid>
                   )}
 
+                  {/* Machine */}
                   {documentDependency === 'machine' && (
                     <Grid container lg={12}>
                       <Grid container spacing={2}>
@@ -600,37 +580,16 @@ export default function DocumentAddForm({ currentDocument }) {
                     </Grid>
                   )}
 
-                  {/* { selectedValue === "new" && */}
-                  <FormControl>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
-                      value={selectedValue}
-                      onChange={handleRadioChange}
-                    >
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          item
-                          sm={6}
-                          value="new"
-                          control={<Radio />}
-                          label="New Document"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          item
-                          sm={6}
-                          value="newVersion"
-                          control={<Radio />}
-                          label="Upload new file against existing Document"
-                        />
-                      </Grid>
-                    </RadioGroup>
-                  </FormControl>
-                  {/* } */}
+                  <RadioButtons
+                    value={selectedValue}
+                    radioOnChange={handleRadioChange}
+                    newValue={DocRadioValue.new}
+                    newLabel={DocRadioLabel.new}
+                    secondValue={DocRadioValue.newVersion}
+                    secondLabel={DocRadioLabel.existing}
+                  />
 
+                  {/* New Version */}
                   {selectedValue === 'newVersion' && (
                     <Grid container lg={12}>
                       <Grid container spacing={2}>
@@ -680,6 +639,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     </Grid>
                   )}
 
+                  {/*  New Document */}
                   {(selectedValue === 'new' || documentVal) && (
                     <Grid container lg={12}>
                       <Grid container spacing={2}>
@@ -742,30 +702,14 @@ export default function DocumentAddForm({ currentDocument }) {
                   )}
 
                   {documentVal && (
-                    <FormControl>
-                      <RadioGroup
-                        row
-                        aria-labelledby="demo-controlled-radio-buttons-group"
-                        name="controlled-radio-buttons-group"
-                        value={selectedVersionValue}
-                        onChange={handleVersionRadioChange}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <FormControlLabel
-                            value="newVersion"
-                            control={<Radio />}
-                            label="New Version"
-                          />
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                          <FormControlLabel
-                            value="existingVersion"
-                            control={<Radio />}
-                            label="Current Version"
-                          />
-                        </Grid>
-                      </RadioGroup>
-                    </FormControl>
+                    <RadioButtons
+                      value={selectedVersionValue}
+                      radioOnChange={handleVersionRadioChange}
+                      newValue={DocRadioValue.newVersion}
+                      newLabel={DocRadioLabel.newVersion}
+                      secondValue={DocRadioValue.existing}
+                      secondLabel={DocRadioLabel.currentVersion}
+                    />
                   )}
 
                   {selectedValue === 'new' && (
@@ -815,42 +759,12 @@ export default function DocumentAddForm({ currentDocument }) {
 
                   {/* cleanup */}
                   {selectedValue === 'new' && (
-                    <Grid container lg={12} display="flex">
-                      <Grid display="flex">
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            pl: 2,
-                            pt: 1,
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                          }}
-                        >
-                          Customer Access
-                        </Typography>
-                        <Switch
-                          sx={{ mt: 1 }}
-                          checked={customerAccessVal}
-                          onChange={handleChange}
-                        />
-                      </Grid>
-                      <Grid display="flex">
-                        <Typography
-                          variant="body1"
-                          sx={{
-                            pl: 2,
-                            pt: 1,
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                            alignItems: 'center',
-                          }}
-                        >
-                          isActive
-                        </Typography>
-                        <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
-                      </Grid>
-                    </Grid>
+                    <ToggleButtons
+                      customerAccessVal={customerAccessVal}
+                      handleChange={handleChange}
+                      isActive={isActive}
+                      handleIsActiveChange={handleIsActiveChange}
+                    />
                   )}
 
                   {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />

@@ -82,6 +82,13 @@ export const StyledToggleButtonLabel = styled(Typography)(({ theme }) => ({
   color: theme.palette.grey[600],
 }));
 
+// card cover for documents
+export const StyledCardCover = styled(Card)(({ theme }) => ({
+  mb: 3,
+  height: 160,
+  position: 'relative',
+}));
+
 /**
  * @function components__________________________________________________________
  */

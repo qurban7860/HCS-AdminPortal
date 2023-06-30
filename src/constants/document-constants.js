@@ -127,6 +127,10 @@ export const DocRadioValue = {
   new: 'new',
   newVersion: 'newVersion',
   existing: 'existingVersion',
+
+  // documentAddForm in documents
+  customer: 'customer',
+  machine: 'machine',
 };
 
 // Labels for the radio buttons
@@ -134,7 +138,11 @@ export const DocRadioLabel = {
   new: 'New Document',
   existing: 'Upload new file against existing Document',
   newVersion: 'New Version',
-  curentVersion: 'Current Version',
+  currentVersion: 'Current Version',
+
+  // documentAddForm in documents
+  customer: 'Customer',
+  machine: 'Machine',
 };
 
 // Snackbars constants

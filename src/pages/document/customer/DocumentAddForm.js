@@ -465,7 +465,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     radioOnChange={handleVersionRadioChange}
                     newLabel={DocRadioLabel.newVersion}
                     newValue={DocRadioValue.newVersion}
-                    secondLabel={DocRadioLabel.curentVersion}
+                    secondLabel={DocRadioLabel.currentVersion}
                     secondValue={DocRadioValue.existing}
                   />
                 )}

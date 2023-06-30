@@ -4,19 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import download from 'downloadjs';
 import { styled, alpha, useTheme } from '@mui/material/styles';
-import {
-  CardContent,
-  IconButton,
-  CardMedia,
-  Container,
-  Grid,
-  Card,
-  Tooltip,
-  Typography,
-  Dialog,
-  Link,
-  Stack,
-} from '@mui/material';
+import { Container, Grid, Card, Tooltip, Typography, Dialog, Link } from '@mui/material';
 import { PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT } from '../../../../routes/paths';
 import { Cover } from '../../../components/Cover';
 import Iconify from '../../../../components/iconify';
@@ -40,6 +28,7 @@ import DialogLink from '../../../components/Dialog/DialogLink';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import ImagePreviewDialog from '../../../components/Thumbnails/ImagePreviewDialog';
 import { document as documentType } from '../../../../constants/document-constants';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 
 // ----------------------------------------------------------------------
 
@@ -198,16 +187,8 @@ export default function Document() {
 
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-        }}
-      >
-        <Cover name={defaultValues.displayName} icon="material-symbols:list-alt-outline" />
-      </Card>
-      <Grid container item md={12}>
+      <DocumentCover content={defaultValues?.displayName} />
+      <Grid container item md={12} mt={2}>
         <Card sx={{ p: 3 }}>
           {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
           <Grid display="inline-flex">
