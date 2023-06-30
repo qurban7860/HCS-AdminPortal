@@ -2,16 +2,15 @@ import { Helmet } from 'react-helmet-async';
 import { useEffect, useLayoutEffect, useState } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Card, Container } from '@mui/material';
+import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
 import { PATH_MACHINE } from '../../../../routes/paths';
 // redux
-
 import { getDocumentCategory } from '../../../../redux/slices/document/documentCategory';
-// sections
-import { Cover } from '../../../components/Cover';
+// components
 import DocumentViewForm from './DocumentViewForm';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------
@@ -28,15 +27,7 @@ export default function DocumentView() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
-          <Cover name={documentCategory?.name} />
-        </Card>
+        <DocumentCover content={documentCategory?.name} />
         <DocumentViewForm />
       </Container>
     </>
