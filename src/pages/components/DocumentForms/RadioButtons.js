@@ -10,7 +10,7 @@ export default function RadioButtons({
   newValue,
   secondValue,
   secondLabel,
-  ...props
+  ... props
 }) {
   return (
     <FormControl>

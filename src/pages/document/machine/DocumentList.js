@@ -15,9 +15,6 @@ import { useSettingsContext } from '../../../components/settings';
 import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom,
 } from '../../../components/table';
 import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import { getMachineDocuments, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
 import { setDocumentTypeFormVisibility} from '../../../redux/slices/document/documentType';
@@ -31,7 +28,6 @@ import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm
 import ListSwitch from '../../components/ListSwitch';
 
 import _mock from '../../../_mock';
-import EmptyContent from '../../../components/empty-content';
 import { fDate,fDateTime } from '../../../utils/formatTime';
 
 

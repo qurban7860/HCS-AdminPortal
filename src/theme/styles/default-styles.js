@@ -130,12 +130,3 @@ export const StyledBg = styled('div')(({ theme }) => ({
   }),
 }));
 
-// label for togglebuttons: ToggleButtons.js
-
-export const StyledToggleButtonLabel = styled(Typography)(({ theme }) => ({
-  pl: 2,
-  pt: 1,
-  display: 'flex',
-  justifyContent: 'flex-end',
-  alignItems: 'center',
-}));

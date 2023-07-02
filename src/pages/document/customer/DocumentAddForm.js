@@ -523,7 +523,6 @@ export default function DocumentAddForm({ currentDocument }) {
                     handleIsActiveChange={handleIsActiveChange}
                   />
                 )}
-
                 {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />
                 {!!files.length && (
           <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>

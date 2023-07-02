@@ -19,13 +19,16 @@ export default function ViewFormAudit({ defaultValues }) {
           {createdIP ? `${createdIP} ` : ''}
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
-          updated by: {updatedByFullName ? `${updatedByFullName} / ` : ''}
-          {fDateTime(updatedAt) ? `${fDateTime(updatedAt)} / ` : ''}
-          {updatedIP ? `${updatedIP}` : ''}
-        </Typography>
-      </Grid>
+
+      {updatedAt !== createdAt && (
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
+            updated by: {updatedByFullName ? `${updatedByFullName} / ` : ''}
+            {fDateTime(updatedAt) ? `${fDateTime(updatedAt)} / ` : ''}
+            {updatedIP ? `${updatedIP}` : ''}
+          </Typography>
+        </Grid>
+      )}
     </Grid>
   );
 }

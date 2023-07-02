@@ -6,10 +6,10 @@ FormHeading.propTypes = {
   };
 export default function FormHeading({heading}) {
     return (
-      <>
+  
         <Typography variant="h4" sx={{ color: 'text.secondary' }}>
                     {heading}
         </Typography>
-      </>
+  
     )
 }
