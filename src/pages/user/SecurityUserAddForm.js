@@ -36,7 +36,10 @@ SecurityUserAddForm.propTypes = {
 
 export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
+  // const userRoles = JSON.parse(userRolesString);
+
+  const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
+
   const regEx = /^[^2]*$/
   const [ showPassword, setShowPassword] = useState(false);
   const [ name, setName] = useState("");
@@ -48,7 +51,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const { roles } = useSelector((state) => state.role);
   const [sortedRoles, setSortedRoles] = useState([]);
   const [ phone, setPhone] = useState('');
-  const [ roleTypesDisabled, disableRoleTypes] = useState(false);
+  const [ roleTypesDisabled, setDisableRoleTypes] = useState(false);
 
   const ROLES = [];
   roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
@@ -85,13 +88,15 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     }
     if(userRoles){
       if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
-        disableRoleTypes(false);
+        setDisableRoleTypes(false);
       } else {
-        disableRoleTypes(true);
+        setDisableRoleTypes(true);
       }
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customerVal, userRoles]);
+  }, [dispatch, customerVal, 
+    // userRoles
+  ]);
 
   useEffect(() => {
     const mappedRoles = roles.map((role) => ({
@@ -313,17 +318,17 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
                   if(newValue){
+                  dispatch(resetContacts());
                   setCustomerVal(newValue);
                   setContactVal("");
-                  dispatch(resetContacts());
                   }
                   else{ 
                   setCustomerVal("");
+                  dispatch(resetContacts());
                   setContactVal("");
                   setName("");
                   setPhone("")
                   setEmail("");
-                  dispatch(resetContacts());
                   }
                 }}
                 id="controllable-states-demo"

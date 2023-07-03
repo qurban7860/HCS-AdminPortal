@@ -35,7 +35,8 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 
 export default function SecurityUserEditForm() {
   const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
+  // const userRoles = JSON.parse(userRolesString);
+  const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
   const regEx = /^[2][0-9][0-9]$/
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
@@ -57,7 +58,7 @@ export default function SecurityUserEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [ roleTypesDisabled, disableRoleTypes] = useState(false);
+  const [ roleTypesDisabled, setDisableRoleTypes] = useState(false);
 
 
   const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }};
@@ -74,13 +75,15 @@ useEffect(() => {
   }
   if(userRoles){
     if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
-      disableRoleTypes(false);
+      setDisableRoleTypes(false);
     } else {
-      disableRoleTypes(true);
+      setDisableRoleTypes(true);
     }
   }
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [dispatch, customerVal, userRoles]);
+}, [dispatch, customerVal, 
+  // userRoles
+]);
 
 useEffect(() => {
   const mappedRoles = roles.map((role) => ({
