@@ -46,9 +46,9 @@ export default function MachineViewForm() {
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
-  const [disableTransferButton, setDisableTransferButton] = useState(true);
-  const [disableEditButton, setDisableEditButton] = useState(false);
-  const [hasValid, setHasValid] = useState(false);
+  const [ disableTransferButton, setDisableTransferButton ] = useState(true);
+  const [ disableEditButton, setDisableEditButton ] = useState(false);
+  const [ hasValidLatLong, setHasValidLatLong ] = useState(false);
   const baseUrl = window.location.origin;
   const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
 
@@ -72,9 +72,9 @@ export default function MachineViewForm() {
 
   useEffect(() => {
     const isValid = hasValidArray(latLongValues);
-    setHasValid(isValid);
+    setHasValidLatLong(isValid);
 
-  }, [machine, latLongValues, setHasValid]);
+  }, [machine, latLongValues, setHasValidLatLong]);
 
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));
@@ -304,7 +304,7 @@ export default function MachineViewForm() {
 
       <Grid container>
         <FormLabel content="Sites Locations" />
-        { hasValid ? <GoogleMaps
+        { hasValidLatLong ? <GoogleMaps
               machineView
               latlongArr={latLongValues}
               mapHeight='500px'
