@@ -233,7 +233,7 @@ export function getCustomerDocuments(customerId) {
           isArchived: false,
           customer:customerId,
           machine: null,
-          basic: true
+          // basic: true
         }
       }
       );
