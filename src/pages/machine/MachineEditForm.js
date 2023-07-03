@@ -524,7 +524,7 @@ export default function MachineEditForm() {
                     <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                   )}
                   id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Instalation Site" />}
+                  renderInput={(params) => <TextField {...params} label="Installation Site" />}
                   ChipProps={{ size: 'small' }}
                 />
                 <Autocomplete
