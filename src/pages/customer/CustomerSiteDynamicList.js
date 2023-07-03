@@ -35,6 +35,7 @@ import AvatarSection from '../components/sections/AvatarSection';
 import SiteViewForm from './site/SiteViewForm';
 import SearchInput from '../components/SearchInput';
 import { fDate } from '../../utils/formatTime';
+import { Snacks } from '../../constants/customer-constants';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +71,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     setChecked((value) => !value);
     if (checked || siteEditFormVisibility) {
       dispatch(setSiteFormVisibility(false));
-      enqueueSnackbar('Close the form before adding a new site', {
+      enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
         variant: 'warning',
       });
       setCardActiveIndex(null);
@@ -161,6 +162,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           toggleChecked={toggleChecked}
           FormVisibility={siteAddFormVisibility}
           toggleCancel={toggleCancel}
+          disabled={siteEditFormVisibility}
         />
       </Stack>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">

@@ -260,31 +260,25 @@ export default function CustomerNoteList() {
 
   return (
     <>
-      {!noteEditFormVisibility && (
-        <>
-          <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-            <AddButtonAboveAccordion
-              name="New Note"
-              toggleChecked={toggleChecked}
-              FormVisibility={formVisibility}
-              toggleCancel={toggleCancel}
-            />
-          </Stack>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              separator="›"
-              sx={{ fontSize: '12px', color: 'text.disabled' }}
-            >
-              <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-              <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-              <BreadcrumbsLink to={PATH_DASHBOARD.customer.notes} name="Notes" />
-            </Breadcrumbs>
-          </Stack>
-        </>
-      )}
-
-      <Card sx={{ mt: 1 }}>
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Breadcrumbs
+          aria-label="breadcrumb"
+          separator="›"
+          sx={{ fontSize: '12px', color: 'text.disabled' }}
+        >
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+          <BreadcrumbsLink to={PATH_DASHBOARD.customer.notes} name="Notes" />
+        </Breadcrumbs>
+        <AddButtonAboveAccordion
+          name="New Note"
+          toggleChecked={toggleChecked}
+          FormVisibility={formVisibility}
+          toggleCancel={toggleCancel}
+          disabled={noteEditFormVisibility}
+        />
+      </Stack>
+      <Card>
         {noteEditFormVisibility && <NoteEditForm />}
         {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
         {!formVisibility &&

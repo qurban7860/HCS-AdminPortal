@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { TableNoData } from '../../components/table';
+import { TableNoData, useTable, getComparator } from '../../components/table';
 // sections
 import {
   getContacts,
@@ -30,10 +30,14 @@ import ContactViewForm from './contact/ContactViewForm';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
+import SearchInput from '../components/SearchInput';
+import { fDate } from '../../utils/formatTime';
+import { Snacks } from '../../constants/customer-constants';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList(currentContact = null) {
+  const { order, orderBy } = useTable({ defaultOrderBy: 'name' });
   const { customer } = useSelector((state) => state.customer);
   const [openContact, setOpenContact] = useState(false);
   const dispatch = useDispatch();
@@ -50,8 +54,13 @@ export default function CustomerContactList(currentContact = null) {
   const { enqueueSnackbar } = useSnackbar();
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeCardIndex, setCardActiveIndex] = useState(null);
-  // const [currentContactData, setCurrentContactData] = useState({});
+  // for filtering contacts -------------------------------------
   const [isExpanded, setIsExpanded] = useState(false);
+  const [filterName, setFilterName] = useState('');
+  const [filterStatus, setFilterStatus] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const isFiltered = filterName !== '' || !!filterStatus.length;
+  // ------------------------------------------------------------
   const isMobile = useResponsive('down', 'sm');
 
   const toggleChecked = () => {
@@ -69,6 +78,30 @@ export default function CustomerContactList(currentContact = null) {
       setIsExpanded(false);
     }
   };
+
+  // -----------------------Filtering----------------------------
+
+  const handleFilterName = (e) => {
+    setFilterName(e.target.value);
+  };
+
+  const handleResetFilter = () => {
+    setFilterName('');
+    setFilterStatus([]);
+  };
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+    filterStatus,
+  });
+
+  useEffect(() => {
+    setTableData(contacts);
+  }, [contacts, error, responseMessage]);
+
+  // ------------------------------------------------------------
 
   const toggleCancel = () => {
     dispatch(setContactFormVisibility(false));
@@ -101,14 +134,6 @@ export default function CustomerContactList(currentContact = null) {
 
   return (
     <>
-      <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-        <AddButtonAboveAccordion
-          name="New Contact"
-          toggleChecked={toggleChecked}
-          FormVisibility={formVisibility}
-          toggleCancel={toggleCancel}
-        />
-      </Stack>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Breadcrumbs
           aria-label="breadcrumb"
@@ -130,12 +155,20 @@ export default function CustomerContactList(currentContact = null) {
             }
           />
         </Breadcrumbs>
+        <AddButtonAboveAccordion
+          name="New Contact"
+          toggleChecked={toggleChecked}
+          FormVisibility={formVisibility}
+          toggleCancel={toggleCancel}
+          disabled={contactEditFormVisibility}
+        />
       </Stack>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
-
+        {contacts.length === 0 && (
+          <Grid item lg={12}>
+            <TableNoData isNotFound={isNotFound} />
+          </Grid>
+        )}
         <Grid
           item
           xs={12}
@@ -144,15 +177,32 @@ export default function CustomerContactList(currentContact = null) {
           lg={4}
           sx={{ display: formVisibility && isMobile && 'none' }}
         >
+          {contacts.length > 5 && (
+            <Grid item md={12}>
+              <SearchInput
+                // searchFormVisibility={formVisibility || contactEditFormVisibility}
+                filterName={filterName}
+                handleFilterName={handleFilterName}
+                isFiltered={isFiltered}
+                handleResetFilter={handleResetFilter}
+                toggleChecked={toggleChecked}
+                toggleCancel={toggleCancel}
+                FormVisibility={formVisibility}
+                disabled={contactEditFormVisibility || formVisibility}
+                sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
+              />
+            </Grid>
+          )}
           <StyledScrollbar
             snap
             snapOffset={100}
             onClick={(e) => e.stopPropagation()}
             snapAlign="start"
             contacts={contacts.length}
+            disabled={contactEditFormVisibility || formVisibility}
           >
             <Grid container justifyContent="flex-start" direction="column" gap={1}>
-              {contacts.map((contact, index) => {
+              {dataFiltered.map((contact, index) => {
                 const borderTopVal = index !== 0 ? '0px solid white' : '';
                 return (
                   <>
@@ -270,3 +320,25 @@ export default function CustomerContactList(currentContact = null) {
 }
 
 // ----------------------------------------------------------------------
+
+export function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+
+  if (filterName) {
+    inputData = inputData.filter(
+      (contact) =>
+        contact?.firstName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
+  }
+
+  return inputData;
+}

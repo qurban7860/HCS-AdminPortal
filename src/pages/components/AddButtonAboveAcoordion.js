@@ -11,6 +11,7 @@ export default function AddButtonAboveAccordion({
   FormVisibility,
   toggleCancel,
   isCustomer,
+  disabled,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const isMobile = useResponsive('down', 'sm');
@@ -34,6 +35,7 @@ export default function AddButtonAboveAccordion({
     <>
       <Button
         onClick={handleOpenConfirm}
+        disabled={disabled}
         variant="contained"
         color={!FormVisibility ? 'primary' : 'error'}
         startIcon={
@@ -64,4 +66,5 @@ AddButtonAboveAccordion.propTypes = {
   toggleChecked: PropTypes.func,
   toggleCancel: PropTypes.func,
   isCustomer: PropTypes.bool,
+  disabled: PropTypes.bool,
 };

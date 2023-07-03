@@ -9,6 +9,7 @@ function SearchInput({
   isFiltered,
   handleResetFilter,
   searchFormVisibility,
+  disabled,
 }) {
   return (
     <Grid container sx={{ display: 'inline-flex' }} p={1}>
@@ -16,6 +17,7 @@ function SearchInput({
         {!searchFormVisibility && (
           <TextField
             fullWidth
+            disabled={disabled}
             value={filterName}
             onChange={handleFilterName}
             placeholder="Search..."
@@ -52,6 +54,7 @@ SearchInput.propTypes = {
   isFiltered: PropTypes.string,
   handleResetFilter: PropTypes.func,
   searchFormVisibility: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 export default SearchInput;
