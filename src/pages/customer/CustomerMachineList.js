@@ -17,7 +17,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -154,10 +154,10 @@ export default function CustomerContactList() {
           separator="›"
           sx={{ fontSize: '12px', color: 'text.disabled' }}
         >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+          <BreadcrumbsLink to={PATH_CUSTOMER.list} name="Customers" />
+          <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
           <BreadcrumbsLink
-            to={PATH_DASHBOARD.customer.document}
+            to={PATH_DOCUMENT.document.list}
             name={
               <Stack>
                 {customerMachines.length > 0 ? customerMachines.length : 'No Machines'}{' '}
