@@ -10,6 +10,10 @@ export default function ViewFormAudit({ defaultValues }) {
     defaultValues;
   const created = [createdByFullName, createdAt, createdIP];
   const updated = [updatedByFullName, updatedAt, updatedIP];
+
+  const createdDate = fDateTime(createdAt);
+  const updatedDate = fDateTime(updatedAt);
+
   return (
     <Grid container item md={12} sx={{ overflowWrap: 'break-word', display: 'flex' }}>
       <Grid item xs={12} sm={6}>
@@ -20,7 +24,7 @@ export default function ViewFormAudit({ defaultValues }) {
         </Typography>
       </Grid>
 
-      {updatedAt !== createdAt && (
+      {createdDate !== updatedDate && (
         <Grid item xs={12} sm={6}>
           <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
             updated by: {updatedByFullName ? `${updatedByFullName} / ` : ''}

@@ -28,6 +28,7 @@ import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
 import CommaJoinField from '../components/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
+import { Dialogs } from '../../constants/default-constants';
 import FormLabel from '../components/FormLabel';
 import GoogleMaps from '../../assets/GoogleMaps';
 
@@ -349,8 +350,9 @@ export default function MachineViewForm() {
             secondParam={customer?.supportManager?.lastName}
           />
         </Grid>
-        <DialogLink content="Go to customer" onClick={() => handleViewCustomer(customer._id)} />
+        <DialogLink content={Dialogs.CUSTOMER} onClick={() => handleViewCustomer(customer._id)} />
       </Dialog>
+
       <Dialog
         open={openInstallationSite}
         onClose={handleCloseInstallationSite}

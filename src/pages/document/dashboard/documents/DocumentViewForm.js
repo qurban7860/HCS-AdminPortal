@@ -188,81 +188,87 @@ export default function Document() {
   return (
     <Container maxWidth={false}>
       <DocumentCover content={defaultValues?.displayName} />
-      <Grid container item md={12} mt={2}>
-        <Card sx={{ p: 3 }}>
-          {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
-          <Grid display="inline-flex">
-            <Tooltip>
-              <ViewFormField isActive={defaultValues.isActive} />
-            </Tooltip>
-            <Tooltip>
-              <ViewFormField customerAccess={defaultValues?.customerAccess} />
-            </Tooltip>
-          </Grid>
-          <Grid container>
-            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
-            <ViewFormField
-              sm={6}
-              heading="Active Version"
-              objectParam={
-                defaultValues.documentVersion && (
-                  <Typography display="flex">
-                    {defaultValues.versionPrefix} {defaultValues.documentVersion}
-                  </Typography>
-                )
-              }
-            />
-            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-            <ViewFormField
-              sm={6}
-              heading="Customer"
-              objectParam={
-                defaultValues.customer && (
-                  <Link onClick={handleOpenCustomer} href="#" underline="none">
-                    {defaultValues.customer}
-                  </Link>
-                )
-              }
-            />
-            <ViewFormField
-              sm={6}
-              heading="Machine"
-              objectParam={
-                defaultValues.machine && (
-                  <Link onClick={handleOpenMachine} href="#" underline="none">
-                    {defaultValues.machine}
-                  </Link>
-                )
-              }
-            />
-            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-            <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
-              <ViewFormAudit defaultValues={defaultValues} />
+      <Grid container>
+        <Grid item md={12} mt={2}>
+          <Card sx={{ p: 3 }}>
+            {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
+            <Grid display="inline-flex">
+              <Tooltip>
+                <ViewFormField isActive={defaultValues.isActive} />
+              </Tooltip>
+              <Tooltip>
+                <ViewFormField customerAccess={defaultValues?.customerAccess} />
+              </Tooltip>
             </Grid>
-            {documentHistory &&
-              documentHistory?.documentVersions?.map((files) => (
-                <Grid container>
-                  <Grid container sx={{ pt: '2rem' }} mb={1}>
-                    <FormLabel content={`Version No. ${files?.versionNo}`} />
-                    <ViewFormField sm={12} heading="Description" param={files?.description} />
-                  </Grid>
-                  {files?.files?.map((file) => (
-                    <Grid item sx={{ display: 'flex-inline' }}>
-                      <Grid container justifyContent="flex-start" gap={1}>
-                        <Thumbnail
-                          key={file?._id}
-                          file={file}
-                          currentDocument={documentHistory}
-                          customer={customer}
-                        />
-                      </Grid>
+            <Grid container>
+              <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField
+                sm={6}
+                heading="Active Version"
+                objectParam={
+                  defaultValues.documentVersion && (
+                    <Typography display="flex">
+                      {defaultValues.versionPrefix} {defaultValues.documentVersion}
+                    </Typography>
+                  )
+                }
+              />
+              <ViewFormField
+                sm={6}
+                heading="Document Category"
+                param={defaultValues?.docCategory}
+              />
+              <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+              <ViewFormField
+                sm={6}
+                heading="Customer"
+                objectParam={
+                  defaultValues.customer && (
+                    <Link onClick={handleOpenCustomer} href="#" underline="none">
+                      {defaultValues.customer}
+                    </Link>
+                  )
+                }
+              />
+              <ViewFormField
+                sm={6}
+                heading="Machine"
+                objectParam={
+                  defaultValues.machine && (
+                    <Link onClick={handleOpenMachine} href="#" underline="none">
+                      {defaultValues.machine}
+                    </Link>
+                  )
+                }
+              />
+              <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+              <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
+                <ViewFormAudit defaultValues={defaultValues} />
+              </Grid>
+              {documentHistory &&
+                documentHistory?.documentVersions?.map((files) => (
+                  <Grid container>
+                    <Grid container sx={{ pt: '2rem' }} mb={1}>
+                      <FormLabel content={`Version No. ${files?.versionNo}`} />
+                      <ViewFormField sm={12} heading="Description" param={files?.description} />
                     </Grid>
-                  ))}
-                </Grid>
-              ))}
-          </Grid>
-        </Card>
+                    {files?.files?.map((file) => (
+                      <Grid item sx={{ display: 'flex-inline' }}>
+                        <Grid container justifyContent="flex-start" gap={1}>
+                          <Thumbnail
+                            key={file?._id}
+                            file={file}
+                            currentDocument={documentHistory}
+                            customer={customer}
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
+                  </Grid>
+                ))}
+            </Grid>
+          </Card>
+        </Grid>
       </Grid>
 
       {/* dialog for customer */}

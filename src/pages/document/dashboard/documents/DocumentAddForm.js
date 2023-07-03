@@ -6,22 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {
-  Switch,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Autocomplete,
-  TextField,
-  FormControl,
-  Dialog,
-  Container,
-} from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container } from '@mui/material';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // PATH
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
@@ -68,7 +53,6 @@ import FormProvider, {
   RHFUpload,
 } from '../../../../components/hook-form';
 // assets
-
 import FormLabel from '../../../components/FormLabel';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import DialogLink from '../../../components/Dialog/DialogLink';
@@ -83,6 +67,7 @@ import {
   Snacks,
 } from '../../../../constants/document-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
+import DocumentMachineAddForm from './DocumentAddForms/DocumentMachineAddForm';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -511,73 +496,43 @@ export default function DocumentAddForm({ currentDocument }) {
 
                   {/* Machine */}
                   {documentDependency === 'machine' && (
-                    <Grid container lg={12}>
-                      <Grid container spacing={2}>
-                        <Grid item lg={6}>
-                          <Autocomplete
-                            // freeSolo
-                            disabled={readOnlyVal}
-                            // readOnly={readOnlyVal}
-                            value={machineModelVal || null}
-                            options={activeMachineModels}
-                            isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                setMachineModelVal(newValue);
-                                setMachineVal('');
-                                setCustomerVal('');
-                                setCustomerSiteVal('');
-                                dispatch(resetActiveMachines());
-                                setDocumentVal('');
-                                dispatch(resetActiveDocuments());
-                              } else {
-                                setMachineModelVal('');
-                                setMachineVal('');
-                                dispatch(resetActiveMachines());
-                                setDocumentVal('');
-                                dispatch(resetActiveDocuments());
-                              }
-                            }}
-                            renderOption={(props, option) => (
-                              <li {...props} key={option._id}>
-                                {option.name}
-                              </li>
-                            )}
-                            id="controllable-states-demo"
-                            renderInput={(params) => (
-                              <TextField {...params} required label="Select Model" />
-                            )}
-                            ChipProps={{ size: 'small' }}
-                          />
-                        </Grid>
-
-                        <Grid item lg={6}>
-                          <Autocomplete
-                            // freeSolo
-                            value={machineVal || null}
-                            options={activeMachines}
-                            // isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                setMachineVal(newValue);
-                              } else {
-                                setMachineVal('');
-                                setDocumentVal('');
-                                dispatch(resetActiveDocuments());
-                              }
-                            }}
-                            // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                            id="controllable-states-demo"
-                            renderInput={(params) => (
-                              <TextField {...params} label="Select Machine" />
-                            )}
-                            ChipProps={{ size: 'small' }}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
+                    <DocumentMachineAddForm
+                      disabled={readOnlyVal}
+                      value={machineModelVal || null}
+                      options={activeMachineModels}
+                      onChange={(event, newValue) => {
+                        if (newValue) {
+                          setMachineModelVal(newValue);
+                          setMachineVal('');
+                          setCustomerVal('');
+                          setCustomerSiteVal('');
+                          dispatch(resetActiveMachines());
+                          setDocumentVal('');
+                          dispatch(resetActiveDocuments());
+                        } else {
+                          setMachineModelVal('');
+                          setMachineVal('');
+                          dispatch(resetActiveMachines());
+                          setDocumentVal('');
+                          dispatch(resetActiveDocuments());
+                        }
+                      }}
+                      renderInput={(params) => (
+                        <TextField {...params} required label="Select Model" />
+                      )}
+                      SubValue={machineVal || null}
+                      SubOptions={activeMachines}
+                      SubOnChange={(event, newValue) => {
+                        if (newValue) {
+                          setMachineVal(newValue);
+                        } else {
+                          setMachineVal('');
+                          setDocumentVal('');
+                          dispatch(resetActiveDocuments());
+                        }
+                      }}
+                      SubRenderInput={(params) => <TextField {...params} label="Select Machine" />}
+                    />
                   )}
 
                   <RadioButtons

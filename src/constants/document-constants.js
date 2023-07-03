@@ -155,3 +155,11 @@ export const Snacks = {
   failedUpdateDoc: 'Failed to UPDATE Customer Document', // Update Failed message
   failedDeleteDoc: 'Failed to DELETE Customer Document', // Delete Failed message
 };
+
+export const Dialogs = {
+  // customer
+  CUSTOMER: 'Go to Customer',
+
+  // machine
+  MACHINE: 'Go to Machine',
+};
