@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Tooltip, Stack } from '@mui/material';
+import { Box, Tooltip, Stack , CardContent, CardMedia } from '@mui/material';
 //
 import { fileData, fileFormat, fileThumb } from './utils';
 import DownloadButton from './DownloadButton';
@@ -23,24 +23,24 @@ export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx
 
   const renderContent =
     format === 'image' && imageView ? (
-      <Box
-        component="img"
-        src={preview}
-        sx={{
-          width: 1,
-          height: 1,
-          flexShrink: 0,
-          objectFit: 'cover',
-          ...imgSx,
-        }}
-      />
+          <CardMedia
+            component="img"
+            image={preview}
+            sx={{
+              width: 1,
+              height: 1,
+              flexShrink: 0,
+              objectFit: 'cover',
+              ...imgSx,
+            }}
+          />
     ) : (
       <Box
         component="img"
         src={fileThumb(format)}
         sx={{
-          width: 32,
-          height: 32,
+          width: 62,
+          height: 62,
           flexShrink: 0,
           ...sx,
         }}
