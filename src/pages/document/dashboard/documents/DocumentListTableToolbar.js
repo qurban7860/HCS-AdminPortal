@@ -42,7 +42,7 @@ export default function DocumentListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_DASHBOARD.document.new); };
+  const toggleAdd = () => { navigate(PATH_DOCUMENT.document.new); };
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >
       
