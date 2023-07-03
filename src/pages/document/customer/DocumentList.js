@@ -148,8 +148,8 @@ export default function DocumentList() {
     !documentTypeFormVisibility &&
     !documentCategoryFormVisibility;
 
-  const handleFilterName = (event) => {
-    setFilterName(event.target.value);
+  const handleFilterName = (e) => {
+    setFilterName(e.target.value);
   };
 
   const handleResetFilter = () => {

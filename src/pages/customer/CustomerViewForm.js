@@ -23,6 +23,7 @@ import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import { Snacks } from '../../constants/customer-constants';
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +64,7 @@ export default function CustomerViewForm() {
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar('Customer delete failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.FAILED_DELETE, { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -73,7 +74,7 @@ export default function CustomerViewForm() {
       enqueueSnackbar('Customer Verified!');
     } catch (error) {
       console.log(error);
-      enqueueSnackbar('Customer Verify failed!', { variant: 'error' });
+      enqueueSnackbar(Snacks.FAILED_VERIFY, { variant: 'error' });
     }
   };
 
@@ -100,14 +101,14 @@ export default function CustomerViewForm() {
     [customer]
   );
 
-  const shouldShowCustomerView = isExpanded && !setCustomerEditFormVisibility;
-  const shouldShowCustomerEdit = setCustomerEditFormVisibility && !isExpanded;
+  // const shouldShowCustomerView = isExpanded && !setCustomerEditFormVisibility;
+  // const shouldShowCustomerEdit = setCustomerEditFormVisibility && !isExpanded;
 
   return (
     <>
-      <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
+      {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
         <AddButtonAboveAccordion isCustomer="true" />
-      </Stack>
+      </Stack> */}
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Breadcrumbs
           aria-label="breadcrumb"
@@ -117,8 +118,9 @@ export default function CustomerViewForm() {
           <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
           <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
         </Breadcrumbs>
+        <AddButtonAboveAccordion isCustomer="true" />
       </Stack>
-      <Grid container direction="row" mt={1}>
+      <Grid container direction="row">
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons

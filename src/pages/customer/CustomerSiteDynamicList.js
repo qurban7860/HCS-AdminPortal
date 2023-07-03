@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { TableNoData } from '../../components/table';
+import { TableNoData, getComparator, useTable } from '../../components/table';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
@@ -33,18 +33,23 @@ import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import SiteViewForm from './site/SiteViewForm';
+import SearchInput from '../components/SearchInput';
+import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
+  const { order, orderBy } = useTable({ defaultOrderBy: 'name' });
   const [checked, setChecked] = useState(false);
   const [openSite, setOpenSite] = useState(false);
   const { site } = useSelector((state) => state.site);
-  // const [site, setCurrentSiteData] = useState({});
   const { enqueueSnackbar } = useSnackbar();
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeCardIndex, setCardActiveIndex] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [filterName, setFilterName] = useState('');
+  const [filterStatus, setFilterStatus] = useState([]);
+  const [tableData, setTableData] = useState([]);
   const [googleMapsVisibility, setGoogleMapsVisibility] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
@@ -58,12 +63,14 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     siteAddFormVisibility,
   } = useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
+  // for filtering sites
+  const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const toggleChecked = async () => {
     setChecked((value) => !value);
     if (checked || siteEditFormVisibility) {
       dispatch(setSiteFormVisibility(false));
-      enqueueSnackbar('Please close the form before opening a new one', {
+      enqueueSnackbar('Close the form before adding a new site', {
         variant: 'warning',
       });
       setCardActiveIndex(null);
@@ -75,6 +82,29 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     }
   };
 
+  // -----------------------Filtering----------------------------
+
+  const handleFilterName = (e) => {
+    setFilterName(e.target.value);
+  };
+
+  const handleResetFilter = () => {
+    setFilterName('');
+    setFilterStatus([]);
+  };
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+    filterStatus,
+  });
+
+  useEffect(() => {
+    setTableData(sites);
+  }, [sites, error, responseMessage]);
+
+  // ------------------------------------------------------------
   const toggleCancel = () => {
     dispatch(setSiteFormVisibility(false));
     setChecked(false);
@@ -106,14 +136,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
   return (
     <>
-      <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-        <AddButtonAboveAccordion
-          name="New Site"
-          toggleChecked={toggleChecked}
-          FormVisibility={siteAddFormVisibility}
-          toggleCancel={toggleCancel}
-        />
-      </Stack>
+      {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Breadcrumbs
           aria-label="breadcrumb"
@@ -133,11 +156,17 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             }
           />
         </Breadcrumbs>
+        <AddButtonAboveAccordion
+          name="New Site"
+          toggleChecked={toggleChecked}
+          FormVisibility={siteAddFormVisibility}
+          toggleCancel={toggleCancel}
+        />
       </Stack>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-        <Grid item lg={12}>
+        {/* <Grid item lg={12}>
           <TableNoData isNotFound={isNotFound} />
-        </Grid>
+        </Grid> */}
         <Grid
           item
           xs={12}
@@ -146,6 +175,21 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           lg={4}
           sx={{ display: siteAddFormVisibility && isMobile && 'none' }}
         >
+          {sites.length > 5 && (
+            <Grid item md={12}>
+              <SearchInput
+                searchFormVisibility={siteAddFormVisibility || siteEditFormVisibility}
+                filterName={filterName}
+                handleFilterName={handleFilterName}
+                isFiltered={isFiltered}
+                handleResetFilter={handleResetFilter}
+                toggleChecked={toggleChecked}
+                toggleCancel={toggleCancel}
+                FormVisibility={siteAddFormVisibility}
+                sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
+              />
+            </Grid>
+          )}
           <StyledScrollbar
             snap
             snapOffset={100}
@@ -155,7 +199,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             disabled={siteEditFormVisibility || siteAddFormVisibility}
           >
             <Grid container spacing={1} justifyContent="flex-start" direction="column">
-              {sites.map((Site, index) => {
+              {dataFiltered.map((Site, index) => {
                 const borderTopVal = index !== 0 ? '0px solid white' : '';
                 return (
                   <>
@@ -311,3 +355,25 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 }
 
 // ----------------------------------------------------------------------
+
+export function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+
+  if (filterName) {
+    inputData = inputData.filter(
+      (site) =>
+        site?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        site?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(site?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
+  }
+
+  return inputData;
+}
