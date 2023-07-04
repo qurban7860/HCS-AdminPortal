@@ -60,7 +60,7 @@ export default function CustomerViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteCustomer(customer._id));
-      navigate(PATH_DASHBOARD.customer.list);
+      navigate(PATH_CUSTOMER.list);
     } catch (err) {
       // if(err.Message){
       //   enqueueSnackbar(err.Message,{ variant: `error` })
@@ -118,8 +118,8 @@ export default function CustomerViewForm() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
           </Breadcrumbs>
         </Grid>
         {!isMobile && <AddButtonAboveAccordion isCustomer />}

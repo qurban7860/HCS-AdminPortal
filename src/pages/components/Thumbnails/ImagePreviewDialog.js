@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Typography, Dialog, Grid, Link, IconButton, Box } from '@mui/material';
+import { Typography, Dialog, DialogActions, Grid, Link, IconButton, Box } from '@mui/material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import { CloseButton } from '../CloseButton';
@@ -27,6 +27,7 @@ export default function ImagePreviewDialog({
         item
         sx={{
           display: 'flex',
+          justifyContent: 'space-between',
           alignItems: 'center',
           bgcolor: 'primary.main',
           color: 'primary.contrastText',
@@ -40,6 +41,7 @@ export default function ImagePreviewDialog({
         >
           {`${imageName}.${imageExtension}`}
         </Typography>{' '}
+          <DialogActions>
         <Link
           onClick={handleClosePreview}
           href="#"
@@ -54,6 +56,7 @@ export default function ImagePreviewDialog({
         >
           <CloseButton />
         </Link>
+        </DialogActions>
       </Grid>
       <Link>
         <IconButton

@@ -1,27 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Link } from '@mui/material';
+import { Grid, Typography, Link, DialogActions } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 function DialogLabel({ onClick, content }) {
   return (
     <Grid
-      container
       sx={{
         display: 'flex',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
         bgcolor: 'primary.main',
         color: 'primary.contrastText',
-        padding: '10px',
+        height: '50px',
+        pt: 1,
       }}
     >
       <Typography variant="h4" sx={{ px: 2 }}>
         {content}
       </Typography>
-      <Link onClick={onClick} href="#" underline="none" sx={{ ml: 'auto' }}>
-        <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-      </Link>
+      <DialogActions>
+        <Link onClick={onClick} href="#" underline="none" sx={{ ml: 'auto' }}>
+          <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
+        </Link>
+      </DialogActions>
     </Grid>
   );
 }

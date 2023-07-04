@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import {
   Typography,
   Dialog,
+  DialogActions,
   Grid,
   Link,
   IconButton,
@@ -56,21 +57,23 @@ export default function ImagePreviewDialog({
         >
           {`${imageName}.${imageExtension}`}
         </Typography>{' '}
-        <Link
-          onClick={handleClosePreview}
-          href="#"
-          underline="none"
-          sx={{
-            top: 15,
-            right: 15,
-            zIndex: 9,
-            height: '60',
-            position: 'absolute',
-          }}
-        >
-          {' '}
-          <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-        </Link>
+        <DialogActions>
+          <Link
+            onClick={handleClosePreview}
+            href="#"
+            underline="none"
+            sx={{
+              top: 15,
+              right: 15,
+              zIndex: 9,
+              height: '60',
+              position: 'absolute',
+            }}
+          >
+            {' '}
+            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
+          </Link>
+        </DialogActions>
       </Grid>
       <CardContent>
         <Link>
