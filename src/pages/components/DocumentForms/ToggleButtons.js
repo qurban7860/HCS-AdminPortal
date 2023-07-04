@@ -4,20 +4,24 @@ import { Grid, Typography, Switch } from '@mui/material';
 import { StyledToggleButtonLabel } from '../../../theme/styles/document-styles';
 
 export default function ToggleButtons({
+  name,
   customerAccessVal,
   handleChange,
   isActive,
   handleIsActiveChange,
+  isDocument,
 }) {
   return (
     <Grid item lg={12} display="flex">
-      <Grid display="flex">
-        <StyledToggleButtonLabel variant="body2">Customer Access</StyledToggleButtonLabel>
-        <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-      </Grid>
+      {isDocument && (
+        <Grid display="flex">
+          <StyledToggleButtonLabel variant="body2">Customer Access</StyledToggleButtonLabel>
+          <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+        </Grid>
+      )}
       <Grid display="flex">
         <StyledToggleButtonLabel variant="body2">Active</StyledToggleButtonLabel>
-        <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
+        <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} name={name} />
       </Grid>
     </Grid>
   );
@@ -28,4 +32,6 @@ ToggleButtons.propTypes = {
   handleIsActiveChange: PropTypes.func,
   customerAccessVal: PropTypes.bool,
   isActive: PropTypes.bool,
+  isDocument: PropTypes.bool,
+  name: PropTypes.string,
 };

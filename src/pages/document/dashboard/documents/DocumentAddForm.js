@@ -1,18 +1,17 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container, Typography } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container } from '@mui/material';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // PATH
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 // slice
 import {
-  getActiveDocuments,
   getDocuments,
   addDocument,
   getCustomerDocuments,
@@ -20,13 +19,8 @@ import {
   resetActiveDocuments,
   getCustomerSiteDocuments,
 } from '../../../../redux/slices/document/document';
+import { getActiveDocumentCategories } from '../../../../redux/slices/document/documentCategory';
 import {
-  setDocumentCategoryFormVisibility,
-  getActiveDocumentCategories,
-} from '../../../../redux/slices/document/documentCategory';
-import {
-  setDocumentTypeFormVisibility,
-  getActiveDocumentTypes,
   resetActiveDocumentTypes,
   getActiveDocumentTypesWithCategory,
 } from '../../../../redux/slices/document/documentType';
@@ -35,7 +29,6 @@ import {
   updateDocumentVersion,
 } from '../../../../redux/slices/document/documentVersion';
 import {
-  getActiveMachines,
   resetActiveMachines,
   getActiveModelMachines,
 } from '../../../../redux/slices/products/machine';
@@ -43,29 +36,20 @@ import { getActiveMachineModels } from '../../../../redux/slices/products/model'
 import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../../../redux/slices/customer/site';
 // components
-import Iconify from '../../../../components/iconify';
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFMultiSelect,
-  RHFTextField,
-  RHFSwitch,
-  RHFUpload,
-} from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFUpload } from '../../../../components/hook-form';
 // assets
-import FormLabel from '../../../components/FormLabel';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
-import DialogLink from '../../../components/Dialog/DialogLink';
 import AddFormButtons from '../../../components/AddFormButtons';
 import RadioButtons from '../../../components/DocumentForms/RadioButtons';
 import {
-  fileTypesArray,
   allowedExtensions,
-  fileTypesMessage,
   DocRadioValue,
   DocRadioLabel,
+  fileTypesMessage,
   Snacks,
 } from '../../../../constants/document-constants';
+import { FORMLABELS } from '../../../../constants/default-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 import DocumentMachineAddForm from './DocumentAddForms/DocumentMachineAddForm';
 
@@ -200,7 +184,7 @@ export default function DocumentAddForm({ currentDocument }) {
     if (value && Array.isArray(value)) {
       if (value.length > 10) {
         return createError({
-          message: 'Maximum 10 files can be uploaded at a time.',
+          message: Snacks.fileMaxCount,
           path,
           value,
         });
@@ -210,7 +194,7 @@ export default function DocumentAddForm({ currentDocument }) {
         return !allowedExtensions.includes(fileExtension);
       });
       if (invalidFiles.length > 0) {
-        const invalidFileNames = invalidFiles.map(file => file.name).join(', ');
+        const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
         return createError({
           message: `Invalid file(s) detected: ${invalidFileNames}`,
           path,
@@ -220,7 +204,7 @@ export default function DocumentAddForm({ currentDocument }) {
       return true;
     }
     return createError({
-      message: 'File is required!',
+      message: Snacks.fileRequired,
       path,
       value,
     });
@@ -230,9 +214,9 @@ export default function DocumentAddForm({ currentDocument }) {
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
-    .required('File is required!')
-  .test('fileType', 'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx', validateFileType)
-  .nullable(true),
+      .required('File is required!')
+      .test('fileType', fileTypesMessage, validateFileType)
+      .nullable(true),
     isActive: Yup.boolean(),
   });
 
@@ -295,17 +279,17 @@ export default function DocumentAddForm({ currentDocument }) {
       }
       if (selectedValue === 'new') {
         await dispatch(addDocument(customerVal?._id, machineVal._id, data));
-        enqueueSnackbar('Document saved successfully!');
+        enqueueSnackbar(Snacks.docSaved);
         navigate(PATH_DASHBOARD.document.dashboard);
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));
-        enqueueSnackbar('Document version updated successfully!');
+        enqueueSnackbar(Snacks.docVersionUpdated);
         navigate(PATH_DASHBOARD.document.dashboard);
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
-        enqueueSnackbar('Document updated successfully!');
+        enqueueSnackbar(Snacks.docUpdated);
         navigate(PATH_DASHBOARD.document.dashboard);
       }
       dispatch(getDocuments());
@@ -328,7 +312,7 @@ export default function DocumentAddForm({ currentDocument }) {
       setCustomerSiteVal('');
       reset();
     } catch (error) {
-      enqueueSnackbar('Failed to save the Document', { variant: `error` });
+      enqueueSnackbar(Snacks.failedSaveDoc, { variant: `error` });
       console.error(error);
     }
   };
@@ -401,17 +385,16 @@ export default function DocumentAddForm({ currentDocument }) {
     setIsActive(!isActive);
   };
 
-
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       const files = values.multiUpload || [];
-      console.log("files: ", files);
+      console.log('files: ', files);
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
       );
-      console.log("newFiles: ", newFiles);
+      console.log('newFiles: ', newFiles);
       setValue('multiUpload', [...files, ...newFiles], { shouldValidate: true });
     },
     [setValue, values.multiUpload]
@@ -477,7 +460,7 @@ export default function DocumentAddForm({ currentDocument }) {
                             // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                             id="controllable-states-demo"
                             renderInput={(params) => (
-                              <TextField {...params} required label="Select Customer" />
+                              <TextField {...params} required label={FORMLABELS.SELECT_CUSTOMER} />
                             )}
                             ChipProps={{ size: 'small' }}
                           />
@@ -505,7 +488,9 @@ export default function DocumentAddForm({ currentDocument }) {
                               </li>
                             )}
                             id="controllable-states-demo"
-                            renderInput={(params) => <TextField {...params} label="Select Site" />}
+                            renderInput={(params) => (
+                              <TextField {...params} label={FORMLABELS.SELECT_SITE} />
+                            )}
                             ChipProps={{ size: 'small' }}
                           />
                         </Grid>
@@ -538,7 +523,7 @@ export default function DocumentAddForm({ currentDocument }) {
                         }
                       }}
                       renderInput={(params) => (
-                        <TextField {...params} required label="Select Model" />
+                        <TextField {...params} required label={FORMLABELS.SELECT_MODEL} />
                       )}
                       SubValue={machineVal || null}
                       SubOptions={activeMachines}
@@ -551,7 +536,9 @@ export default function DocumentAddForm({ currentDocument }) {
                           dispatch(resetActiveDocuments());
                         }
                       }}
-                      SubRenderInput={(params) => <TextField {...params} label="Select Machine" />}
+                      SubRenderInput={(params) => (
+                        <TextField {...params} label={FORMLABELS.SELECT_MACHINE} />
+                      )}
                     />
                   )}
 
@@ -605,7 +592,7 @@ export default function DocumentAddForm({ currentDocument }) {
                             )}
                             id="controllable-states-demo"
                             renderInput={(params) => (
-                              <TextField {...params} required label="Select  Document" />
+                              <TextField {...params} required label={FORMLABELS.SELECT_DOCUMENT} />
                             )}
                             ChipProps={{ size: 'small' }}
                           />
@@ -643,7 +630,7 @@ export default function DocumentAddForm({ currentDocument }) {
                             )}
                             id="controllable-states-demo"
                             renderInput={(params) => (
-                              <TextField {...params} required label="Document Category" />
+                              <TextField {...params} required label={FORMLABELS.SELECT_MACHINE} />
                             )}
                             ChipProps={{ size: 'small' }}
                           />
@@ -667,7 +654,11 @@ export default function DocumentAddForm({ currentDocument }) {
                             // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
                             id="controllable-states-demo"
                             renderInput={(params) => (
-                              <TextField {...params} required label="Document Type" />
+                              <TextField
+                                {...params}
+                                required
+                                label={FORMLABELS.SELECT_DOCUMENT_TYPE}
+                              />
                             )}
                             ChipProps={{ size: 'small' }}
                           />
@@ -693,7 +684,7 @@ export default function DocumentAddForm({ currentDocument }) {
                       disabled={readOnlyVal}
                       name="name"
                       value={displayNameVal}
-                      label="Document Name"
+                      label={FORMLABELS.DOCUMENT_NAME}
                       onChange={(e) => {
                         setDisplayNameVal(e.target.value);
                       }}
@@ -706,7 +697,7 @@ export default function DocumentAddForm({ currentDocument }) {
                       value={descriptionVal}
                       name="description"
                       onChange={handleChangeDescription}
-                      label="Description"
+                      label={FORMLABELS.DOCUMENT_DESC}
                       minRows={3}
                       multiline
                     />
@@ -714,24 +705,23 @@ export default function DocumentAddForm({ currentDocument }) {
 
                   {(selectedValue === 'new' || documentVal) && (
                     <Grid item xs={12} md={6} lg={12}>
-                    <RHFUpload 
-                      multiple  
-                      thumbnail
-                      name="multiUpload"
-                      // maxSize={3145728}
-                      onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        setValue(
-                          'multiUpload',
-                          values.multiUpload &&
-                            values.multiUpload?.filter((file) => file !== inputFile),
-                          { shouldValidate: true }
-                        )
-                      }
-                      onRemoveAll={() => setValue('multiUpload', [], { shouldValidate: true })}
-                      onUpload={() => console.log('ON UPLOAD')}
-                    />
-                    
+                      <RHFUpload
+                        multiple
+                        thumbnail
+                        name="multiUpload"
+                        // maxSize={3145728}
+                        onDrop={handleDropMultiFile}
+                        onRemove={(inputFile) =>
+                          setValue(
+                            'multiUpload',
+                            values.multiUpload &&
+                              values.multiUpload?.filter((file) => file !== inputFile),
+                            { shouldValidate: true }
+                          )
+                        }
+                        onRemoveAll={() => setValue('multiUpload', [], { shouldValidate: true })}
+                        onUpload={() => console.log('ON UPLOAD')}
+                      />
                     </Grid>
                   )}
 
@@ -742,6 +732,7 @@ export default function DocumentAddForm({ currentDocument }) {
                       handleChange={handleChange}
                       isActive={isActive}
                       handleIsActiveChange={handleIsActiveChange}
+                      isDocument
                     />
                   )}
 

@@ -147,6 +147,11 @@ export const DocRadioLabel = {
 
 // Snackbars constants
 export const Snacks = {
+  docSaved: 'Document Saved Successfully',
+  docUpdated: 'Document Updated Successfully',
+  docVersionUpdated: 'Document Version Updated Successfully',
+  failedSaveDoc: 'Failed to Save the Document',
+
   addedDoc: 'Customer Document UPLOAD Successful', // Upload Success message
   updatedDoc: 'Customer Document UPDATE Successful', // Update Success message
   deletedDoc: 'Customer Document DELETE Successful', // Delete Success message
@@ -154,4 +159,9 @@ export const Snacks = {
   failedDoc: 'Failed to UPLOAD Customer Document', // Update Failed message
   failedUpdateDoc: 'Failed to UPDATE Customer Document', // Update Failed message
   failedDeleteDoc: 'Failed to DELETE Customer Document', // Delete Failed message
+
+  // documentAddForm -documents dashboard
+  fileRequired: 'File is required',
+  fileMaxSize: 'File size should be less than 10MB',
+  fileMaxCount: 'Maximum 10 files can be uploaded at a time.',
 };

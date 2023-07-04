@@ -274,6 +274,7 @@ export default function DocumentEditForm() {
                   customerAccessVal={customerAccessVal}
                   isActive={isActive}
                   handleIsActiveChange={handleIsActiveChange}
+                  isDocument
                 />
 
                 {/* <RHFUpload

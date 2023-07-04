@@ -5,6 +5,18 @@ export const FORMLABELS = {
   CUSTOMER: 'Customer Information',
   SITE: 'Site Information',
   SITELOC: 'Site Location',
+
+  // for DocumentAddForm in dashboard/documents
+  SELECT_CUSTOMER: 'Select Customer',
+  SELECT_SITE: 'Select Site',
+  SELECT_MACHINE: 'Select Machine',
+  SELECT_MODEL: 'Select Model',
+  SELECT_DOCUMENT: 'Select Document',
+  SELECT_DOCUMENT_TYPE: 'Select Document Type',
+  SELECT_CATEGORY: 'Select Category',
+
+  DOCUMENT_NAME: 'Document Name',
+  DOCUMENT_DESC: 'Description',
 };
 
 // dialog contents

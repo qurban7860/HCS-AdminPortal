@@ -521,6 +521,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     customerAccessVal={customerAccessVal}
                     isActive={isActive}
                     handleIsActiveChange={handleIsActiveChange}
+                    isDocument
                   />
                 )}
                 {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />

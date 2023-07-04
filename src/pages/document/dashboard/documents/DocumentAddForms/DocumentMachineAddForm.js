@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, TextField, Autocomplete } from '@mui/material';
 
@@ -13,6 +13,12 @@ function DocumentMachineAddForm({
   renderInput,
   SubRenderInput,
 }) {
+  const [machineVal, setMachineVal] = useState('');
+  const [machineModelVal, setMachineModelVal] = useState('');
+  const [isActive, setIsActive] = useState(true);
+  const [nameVal, setNameVal] = useState('');
+  const [displayNameVal, setDisplayNameVal] = useState('');
+
   return (
     <Grid container>
       <Grid container spacing={2}>

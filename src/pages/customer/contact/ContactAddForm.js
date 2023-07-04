@@ -9,7 +9,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Button, Typography, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TextField, Divider, Chip } from '@mui/material';
+// schema
+import { AddContactSchema } from './schemas/AddContactSchema';
 // slice
 import { addContact, setContactFormVisibility } from '../../../redux/slices/customer/contact';
 // components
@@ -24,6 +26,9 @@ import FormProvider, {
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../components/AddFormButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import { FORMLABELS as FORM_LABELS } from '../../../constants/default-constants';
+import { Snacks, FORMLABELS } from '../../../constants/customer-constants';
 
 // ----------------------------------------------------------------------
 
@@ -33,47 +38,16 @@ ContactAddForm.propTypes = {
   currentContact: PropTypes.object,
 };
 
-const CONTACT_TYPES = [
-  { value: 'technical', label: 'Technical' },
-  { value: 'financial', label: 'Financial' },
-  { value: 'support', label: 'Support' },
-];
-
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { formVisibility } = useSelector((state) => state.contact);
-
   const { customer } = useSelector((state) => state.customer);
-
   const { userId, user } = useAuthContext();
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const numberRegExp = /^[0-9]+$/;
-
   const [phone, setPhone] = useState('');
   const [country, setCountryVal] = useState('');
-
-  const AddContactSchema = Yup.object().shape({
-    firstName: Yup.string().max(40).required(),
-    lastName: Yup.string().max(40),
-    title: Yup.string(),
-    contactTypes: Yup.array(),
-    // phone: Yup.string(),
-    email: Yup.string()
-      .trim('The email name cannot include leading and trailing spaces')
-      .email('Email must be a valid email address'),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    city: Yup.string(),
-    region: Yup.string(),
-    postcode: Yup.string(),
-    isActive: Yup.boolean(),
-    // country: Yup.string().nullable()
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -159,36 +133,36 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                   xs: 'repeat(1, 1fr)',
                   sm: 'repeat(2, 1fr)',
                 }}
+                mb={2}
               >
-                <RHFTextField name="firstName" label="First Name" />
-
-                <RHFTextField name="lastName" label="Last Name" />
-
-                <RHFTextField name="title" label="Title" />
+                <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
+                <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
+                <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
 
                 <RHFMultiSelect
                   chip
                   checkbox
-                  name="contactTypes"
-                  label="Contact Types"
-                  options={CONTACT_TYPES}
+                  name={FORMLABELS.CONTACT_TYPES.name}
+                  label={FORMLABELS.CONTACT_TYPES.label}
+                  options={FORMLABELS.CONTACT_TYPES.options}
                 />
 
                 {/* <RHFTextField name="phone" label="Phone" /> */}
                 <MuiTelInput
                   value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
+                  name={FORMLABELS.PHONE.name}
+                  label={FORMLABELS.PHONE.label}
+                  flagSize={FORMLABELS.PHONE.flagSize}
                   onChange={handlePhoneChange}
                   forceCallingCode
-                  defaultCountry="NZ"
+                  defaultCountry={FORMLABELS.PHONE.defaultCountry}
                 />
 
-                <RHFTextField name="email" label="Email" />
+                <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
               </Box>
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Address Details
+
+              <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                {FORM_LABELS.ADDRESS}
               </Typography>
 
               <Box
@@ -200,31 +174,18 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <RHFTextField name="street" label="Street" />
+                <RHFTextField name={FORMLABELS.STREET.name} label={FORMLABELS.STREET.label} />
+                <RHFTextField name={FORMLABELS.SUBURB.name} label={FORMLABELS.SUBURB.label} />
+                <RHFTextField name={FORMLABELS.CITY.name} label={FORMLABELS.CITY.label} />
+                <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
+                <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
 
-                <RHFTextField name="suburb" label="Suburb" />
-
-                <RHFTextField name="city" label="City" />
-
-                <RHFTextField name="region" label="Region" />
-
-                <RHFTextField name="postcode" label="Post Code" />
-
-                {/* <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-
-                  ChipProps={{ size: 'small' }}
-                /> */}
                 <RHFAutocomplete
-                  id="country-select-demo"
+                  id={FORMLABELS.COUNTRY.id}
                   options={countries}
                   value={country || null}
-                  name="country"
-                  label="Country"
+                  name={FORMLABELS.COUNTRY.name}
+                  label={FORMLABELS.COUNTRY.label}
                   autoHighlight
                   isOptionEqualToValue={(option, value) => option.lable === value.lable}
                   onChange={(event, newValue) => {
@@ -247,28 +208,12 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                       {option.label} ({option.code}) +{option.phone}
                     </Box>
                   )}
-                  renderInput={(params) => <TextField {...params} label="Choose a country" />}
+                  renderInput={(params) => (
+                    <TextField {...params} label={FORMLABELS.COUNTRY.select} />
+                  )}
                 />
               </Box>
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
-              />
+              <ToggleButtons checked={FORMLABELS.isACTIVE.name} />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
