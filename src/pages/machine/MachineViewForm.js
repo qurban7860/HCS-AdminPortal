@@ -84,6 +84,11 @@ export default function MachineViewForm() {
     } else {
       setDisableTransferButton(false);
     }
+    if(machine.transferredMachine){
+      setDisableEditButton(true);
+    }else{
+      setDisableEditButton(false);
+    }
     if (userId) {
       dispatch(getLoggedInSecurityUser(userId));
     }
@@ -200,6 +205,7 @@ export default function MachineViewForm() {
           )}
           handleVerification={handleVerification}
           disableTransferButton={disableTransferButton}
+          disableEditButton={disableEditButton}
           handleEdit={handleEdit}
           onDelete={onDelete}
           handleTransfer={handleTransfer}
