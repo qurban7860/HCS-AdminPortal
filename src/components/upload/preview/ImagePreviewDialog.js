@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Typography ,Dialog, DialogActions, Grid, Link, CardContent, CardMedia, Stack, Button} from '@mui/material';
+import { Typography ,Dialog, DialogActions, Grid, Link, CardContent, CardMedia, Stack, Button, Avatar} from '@mui/material';
 import Iconify from '../../iconify';
+import Image from '../../image';
 
 // ----------------------------------------------------------------------
 
@@ -50,18 +51,31 @@ export default function ImagePreviewDialog({ file, preview ,closePreview }) {
                         </Button>
                       </DialogActions>
                     </Grid>
-                    <CardContent
+                    {/* <CardContent
                       component={Stack}
                       display="block"
                       sx={{ position: 'relative', zIndex: '1' }}
                     >
                       <CardMedia
                         component="img" 
+                        // component="video, audio, picture, iframe, or img" 
                         sx={{minWidth:"350px", minHeight:"350px"}} 
                         alt={file?.name}  
                         image={file.preview}
                       />
-                    </CardContent>
+                      
+                    </CardContent> */}
+                    {/* <Image
+                        alt={file?.name}
+                        src={file.preview}
+                        sx={{minWidth:"350px", minHeight:"350px"}} 
+                        
+                      /> */}
+                      <Avatar
+                        alt={file?.name}
+                        src={file.preview}
+                        sx={{minWidth:"350px", minHeight:"350px"}} 
+                      />
                   </Dialog>
   );
 }

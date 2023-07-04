@@ -80,10 +80,6 @@ export default function Upload({
   const allowedImageExtensions = ["png", "jpeg", "jpg", "gif", "bmp", "webp" ];
   const allowedDocumentExtension = ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"];
 
-  // const allowedPdfExtension = ["pdf"];
-  // const allowedDoctExtensions = ["doc", "docx"];
-  // const allowedXlsExtensions = ["xls", "xlsx"];
-  // const allowedPptExtensions = ["ppt", "pptx"];
   const document = {
     icon: {
       pdf: "bxs:file-pdf",
@@ -104,14 +100,7 @@ export default function Upload({
       pptx: "#e65100"
     }
   }
-  // const pdf = "bxs:file-pdf"
-  // const doc = "bxs:file-doc"
-  // const docx = "bxs:file-doc"
-  // const xls = "mdi:file-powerpoint"
-  // const xlsx = "mdi:file-powerpoint"
-  // const ppt = "mdi:file-powerpoint"
-  // const pptx = "mdi:file-powerpoint"
-
+  
   const fileExtension = file?.name?.split(".").pop().toLowerCase();
   return (
     <Box sx={{ width: 1, position: 'relative', ...sx }}>

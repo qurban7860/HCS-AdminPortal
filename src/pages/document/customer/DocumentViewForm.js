@@ -15,7 +15,7 @@ import {
   getCustomerDocumentHistory,
 } from '../../../redux/slices/document/customerDocument';
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import { useSnackbar } from '../../../components/snackbar';
@@ -60,7 +60,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   };
 
   const linkCustomerDocumentView = async () => {
-    navigate(PATH_DASHBOARD.document.customer(currentCustomerDocument._id));
+    navigate(PATH_DOCUMENT.document.customer(currentCustomerDocument._id));
     dispatch(resetCustomerDocument());
     // dispatch(resetCustomer())
     await dispatch(getCustomerDocumentHistory(currentCustomerDocument?._id));
