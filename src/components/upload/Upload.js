@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 // @mui
@@ -11,7 +12,7 @@ import Iconify from '../iconify';
 import RejectionFiles from './errors/RejectionFiles';
 import MultiFilePreview from './preview/MultiFilePreview';
 import SingleFilePreview from './preview/SingleFilePreview';
-
+import AllowedExtensionsMenuePopover from './AllowedExtensionsMenuePopover';
 // ----------------------------------------------------------------------
 
 const StyledDropZone = styled('div')(({ theme }) => ({
@@ -71,7 +72,14 @@ export default function Upload({
     disabled,
     ...other,
   });
+  const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
+  const handleExtensionsPopoverOpen = (event) => {
+    setVerifiedAnchorEl(event.currentTarget);
+  };
 
+  const handleExtensionsPopoverClose = () => {
+    setVerifiedAnchorEl(null);
+  };
   const hasFile = !!file && !multiple;
 
   const hasFiles = files && multiple && files.length > 0;
@@ -100,7 +108,7 @@ export default function Upload({
       pptx: "#e65100"
     }
   }
-  
+
   const fileExtension = file?.name?.split(".").pop().toLowerCase();
   return (
     <Box sx={{ width: 1, position: 'relative', ...sx }}>
@@ -143,7 +151,13 @@ export default function Upload({
 
         {hasFile && <SingleFilePreview file={file} />}
       </StyledDropZone>
-
+      <Typography sx={{display: 'flex', justifyContent:'start', alignItems:'center', ml:2, mt:0.5}}>
+        Allowed Extensions: <Iconify onClick={ handleExtensionsPopoverOpen } icon="iconamoon:question-mark-circle-bold" sx={{ cursor:'pointer'}}/>
+      </Typography>
+       <AllowedExtensionsMenuePopover 
+        open={verifiedAnchorEl}
+        onClose={handleExtensionsPopoverClose}
+       />
       {helperText && helperText}
 
       <RejectionFiles fileRejections={fileRejections} />
@@ -233,7 +247,7 @@ export default function Upload({
           <Iconify icon={document.icon[fileExtension]} color={document.color[fileExtension]} width={60} sx={{ p:1, color: document.color[fileExtension] }} /><Typography variant='body2' width="170px" sx={{ overflowWrap: 'break-word' }}>{file?.name}</Typography>
         </IconButton>
       )}
-
+      
       {hasFiles && (
         <>
           <Box sx={{ my: 3 }}>
@@ -273,6 +287,7 @@ Placeholder.propTypes = {
 
 function Placeholder({ sx, ...other }) {
   return (
+    <>
     <Stack
       spacing={5}
       alignItems="center"
@@ -312,6 +327,9 @@ function Placeholder({ sx, ...other }) {
           file
         </Typography>
       </div>
+      
     </Stack>
+    
+  </>
   );
 }

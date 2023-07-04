@@ -17,26 +17,24 @@ FileThumbnail.propTypes = {
 };
 
 export default function FileThumbnail({ file, tooltip, imageView, onDownload, sx, imgSx }) {
-  
-  console.log("file, tooltip, imageView, onDownload, sx, imgSx  : ", file, tooltip, imageView, onDownload, sx, imgSx )
 
   const { name = '', path = '', preview = '' } = fileData(file);
 
   const format = fileFormat(path || preview);
 
   const renderContent =
-    format === 'image' && imageView ? (
-          <CardMedia
-            component="img"
-            image={preview}
-            sx={{
+    format === 'images' && imageView ? (
+           <Box
+        component="img"
+        src={preview}
+        sx={{
               width: 1,
               height: 1,
               flexShrink: 0,
               objectFit: 'cover',
               ...imgSx,
             }}
-          />
+      />
     ) : (
       <Box
         component="img"

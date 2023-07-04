@@ -34,12 +34,13 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
     setSelectedFile(file);
   };
   const handleClosePreview = () => { setPreview(false);setSelectedFile(null); };
+  const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'jpe'];
 
   return (
     <AnimatePresence initial={false}>
       {files.map((file) => {
         const { key, name = '', size = 0 } = fileData(file);
-
+        const fileType = file.type.split('/').pop();
         const isNotFormatFile = typeof file === 'string';
 
         if (thumbnail) {
@@ -90,7 +91,7 @@ export default function MultiFilePreview({ thumbnail, files, onRemove, sx }) {
                 </IconButton>
               )}
 
-              {file.type.startsWith("image") && (
+              {FORMAT_IMG_VISIBBLE.some(format => fileType.match(format))  && (
                   <IconButton
                     size="small"
                     onClick={()=>previewHandle(file)}
