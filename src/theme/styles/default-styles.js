@@ -5,6 +5,7 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
 import Image from '../../components/image';
 import { MotionContainer, varFade } from '../../components/animate';
+import Typography from '../overrides/Typography';
 
 /**
  * @cover :components ____________________________________________________________________________________________
@@ -128,3 +129,4 @@ export const StyledBg = styled('div')(({ theme }) => ({
     imgUrl: '/assets/background/overlay_2.jpg',
   }),
 }));
+

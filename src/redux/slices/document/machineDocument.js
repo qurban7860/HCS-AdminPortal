@@ -242,7 +242,7 @@ export function getMachineDocuments(machineId) {
         params: {
           isArchived: false,
           machine: machineId,
-          basic: true
+          // basic: true
         }
       }
       );

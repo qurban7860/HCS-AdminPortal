@@ -7,10 +7,7 @@ import {
   Stack,
   Card,
   Grid,
-  Button,
-  TextField,
-  Typography,
-  InputAdornment,
+  Breadcrumbs,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -22,20 +19,13 @@ import { useDispatch, useSelector } from '../../../redux/store';
 import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+import useResponsive from '../../../hooks/useResponsive';
 import { useSettingsContext } from '../../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../../components/table';
+import { useTable, getComparator, TableNoData } from '../../../components/table';
+// components
 import Iconify from '../../../components/iconify';
-// import BreadcrumbsProducer from '../../components/BreadcrumbsProducer';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
+import SearchInput from '../../components/SearchInput';
 // sections
 import {
   setCustomerDocumentFormVisibility,
@@ -55,7 +45,8 @@ import _mock from '../../../_mock';
 import SearchInputAndAddButton from '../../components/SearchInputAndAddButton';
 import AddButtonAboveAccordion from '../../components/AddButtonAboveAcoordion';
 import ListSwitch from '../../components/ListSwitch';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+import { fDate } from '../../../utils/formatTime';
+import { BUTTONS, FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -70,37 +61,20 @@ const _accordions = [...Array(8)].map((_, index) => ({
 // ----------------------------------------------------------------------
 
 export default function DocumentList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+  const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: '-createdAt',
   });
-
+  const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
 
   const {
     error,
     responseMessage,
     customerDocuments,
-    customerDocument,
     customerDocumentEditFormVisibility,
     customerDocumentFormVisibility,
   } = useSelector((state) => state.customerDocument);
+
   const { fileCategories, fileCategory, documentCategoryFormVisibility } = useSelector(
     (state) => state.documentCategory
   );
@@ -112,14 +86,13 @@ export default function DocumentList() {
   const toggleChecked = async () => {
     dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
   };
-  const { themeStretch } = useSettingsContext();
   const [checked, setChecked] = useState(false);
-  const { enqueueSnackbar } = useSnackbar();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
+
   const handleAccordianClick = (accordianIndex) => {
     if (accordianIndex === activeIndex) {
       setActiveIndex(null);
@@ -165,8 +138,8 @@ export default function DocumentList() {
     !documentTypeFormVisibility &&
     !documentCategoryFormVisibility;
 
-  const handleFilterName = (event) => {
-    setFilterName(event.target.value);
+  const handleFilterName = (e) => {
+    setFilterName(e.target.value);
   };
 
   const handleResetFilter = () => {
@@ -181,37 +154,105 @@ export default function DocumentList() {
 
   return (
     <>
-      {!customerDocumentEditFormVisibility &&
-        !documentTypeFormVisibility &&
-        !documentCategoryFormVisibility && (
-          <SearchInputAndAddButton
-            searchFormVisibility={customerDocumentFormVisibility}
+      <Grid
+        container
+        direction={{ sm: 'column', lg: 'row' }}
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink
+              to={PATH_DASHBOARD.customer.document}
+              name={
+                <Stack>
+                  {!expanded &&
+                    !customerDocumentEditFormVisibility &&
+                    customerDocumentFormVisibility &&
+                    'New Document'}
+                  {!customerDocumentFormVisibility &&
+                    !customerDocumentEditFormVisibility &&
+                    'Documents'}
+                  {customerDocumentEditFormVisibility && 'Edit Document'}
+                  {documentTypeFormVisibility && 'New Document Type'}
+                  {documentCategoryFormVisibility && 'New Document Category'}
+                </Stack>
+              }
+            />
+          </Breadcrumbs>
+        </Grid>
+
+        {/* conditional reactive */}
+        <Grid item xs={12} md={6}>
+          <Grid container direction={{ sm: 'column', lg: 'row' }} justifyContent="flex-end">
+            {isMobile && (
+              <Grid item xs={12} md={3}>
+                <Grid container justifyContent="flex-end">
+                  <AddButtonAboveAccordion
+                    name={BUTTONS.NEWDOCUMENT}
+                    toggleChecked={toggleChecked}
+                    FormVisibility={customerDocumentFormVisibility}
+                    toggleCancel={toggleCancel}
+                    disabled={customerDocumentEditFormVisibility}
+                  />
+                </Grid>
+              </Grid>
+            )}
+            <Grid item xs={12} md={9}>
+              <SearchInput
+                // searchFormVisibility={formVisibility || contactEditFormVisibility}
+                filterName={filterName}
+                handleFilterName={handleFilterName}
+                isFiltered={isFiltered}
+                handleResetFilter={handleResetFilter}
+                toggleChecked={toggleChecked}
+                toggleCancel={toggleCancel}
+                FormVisibility={customerDocumentFormVisibility}
+                disabled={customerDocumentEditFormVisibility || customerDocumentFormVisibility}
+                size="small"
+                isSearchBar
+              />
+            </Grid>
+            {!isMobile && (
+              <Grid item xs={12} md={3}>
+                <Grid container justifyContent="flex-end">
+                  <AddButtonAboveAccordion
+                    name={BUTTONS.NEWDOCUMENT}
+                    toggleChecked={toggleChecked}
+                    FormVisibility={customerDocumentFormVisibility}
+                    toggleCancel={toggleCancel}
+                    disabled={customerDocumentEditFormVisibility}
+                  />
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+
+          {/* <SearchInputAndAddButton
+            searchFormVisibility={
+              customerDocumentFormVisibility || customerDocumentEditFormVisibility
+            }
             filterName={filterName}
             handleFilterName={handleFilterName}
-            addButtonName="Add Document"
+            addButtonName={BUTTONS.DOCUMENT}
             isFiltered={isFiltered}
             handleResetFilter={handleResetFilter}
             toggleChecked={toggleChecked}
             toggleCancel={toggleCancel}
             FormVisibility={customerDocumentFormVisibility}
-            step
-            step2
-            step3
-            step4
-            path={PATH_CUSTOMER.list}
-            name="Customers"
-            path2={PATH_CUSTOMER.view}
-            name2={customer.name}
-            path3={PATH_CUSTOMER.list}
-            name3={
-              <Stack>
-                {customerDocumentFormVisibility && "New Document"}
-                {!expanded && documentName}
-              </Stack>
-            }
-          />
-        )}
+          /> */}
+        </Grid>
+      </Grid>
 
+      <Grid item mt={1}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
       {!customerDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         !documentCategoryFormVisibility &&
@@ -238,7 +279,7 @@ export default function DocumentList() {
         )}
 
       {/* {customerDocumentEditFormVisibility && <DocumentEditForm/>} */}
-      <Card sx={{ mt: 2 }}>
+      <Card>
         {!customerDocumentEditFormVisibility &&
           !customerDocumentFormVisibility &&
           !documentTypeFormVisibility &&
@@ -267,9 +308,14 @@ export default function DocumentList() {
                       <Grid item xs={12} sm={4} md={2.4}>
                         {document?.docCategory?.name || ''}
                       </Grid>
-                      <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={1.4}>
-                    <ListSwitch isActive={document?.customerAccess} />
-                  </Grid>
+                      <Grid
+                        item
+                        xs={12}
+                        display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
+                        md={1.4}
+                      >
+                        <ListSwitch isActive={document?.customerAccess} />
+                      </Grid>
                       <Grid
                         item
                         xs={12}
@@ -288,8 +334,6 @@ export default function DocumentList() {
               </Accordion>
             );
           })}
-
-        <TableNoData isNotFound={isNotFound} />
       </Card>
     </>
   );
@@ -297,7 +341,7 @@ export default function DocumentList() {
 
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+export function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);

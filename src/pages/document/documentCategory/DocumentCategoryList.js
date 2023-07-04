@@ -26,10 +26,8 @@ import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -40,7 +38,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentCategoryListTableRow from './DocumentCategoryListTableRow';
 import DocumentCategoryListTableToolbar from './DocumentCategoryListTableToolbar';
-import documentName, {
+import {
   deleteDocumentCategory,
   getDocumentCategories,
 } from '../../../redux/slices/document/documentCategory';

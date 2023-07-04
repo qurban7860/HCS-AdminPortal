@@ -10,9 +10,21 @@ ConfirmDialog.propTypes = {
   action: PropTypes.node,
   content: PropTypes.node,
   onClose: PropTypes.func,
+  SubButton: PropTypes.node,
 };
 
-export default function ConfirmDialog({ title, content, action, open, onClose, ...other }) {
+ConfirmDialog.defaultProps = {
+  SubButton: 'Cancel',
+};
+export default function ConfirmDialog({
+  title,
+  content,
+  action,
+  open,
+  onClose,
+  SubButton,
+  ...other
+}) {
   return (
     <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose} {...other}>
       <DialogTitle sx={{ pb: 2 }}>{title}</DialogTitle>
@@ -23,7 +35,7 @@ export default function ConfirmDialog({ title, content, action, open, onClose, .
         {action}
 
         <Button variant="outlined" color="inherit" onClick={onClose}>
-          Cancel
+          {SubButton}
         </Button>
       </DialogActions>
     </Dialog>

@@ -68,7 +68,7 @@ function CoverSettingsIcons({
 }
 
 CoverSettingsIcons.propTypes = {
-  setting: PropTypes.bool,
+  setting: PropTypes.string,
   handleNavigate: PropTypes.func,
   backLink: PropTypes.bool,
   handleBacklink: PropTypes.func,

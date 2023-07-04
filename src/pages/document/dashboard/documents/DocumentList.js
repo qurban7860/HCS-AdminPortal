@@ -26,10 +26,8 @@ import { useSettingsContext } from '../../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -44,7 +42,6 @@ import { getDocuments, deleteDocument } from '../../../../redux/slices/document/
 import { Cover } from '../../../components/Cover';
 import { fDate } from '../../../../utils/formatTime';
 
-
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -56,7 +53,6 @@ const TABLE_HEAD = [
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
-
 ];
 
 // ----------------------------------------------------------------------
@@ -82,23 +78,17 @@ export default function DocumentList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
-  const { documents, isLoading, error, initial, responseMessage } = useSelector((state) => state.document);
-// console.log("documents : ",documents)
+  const { documents, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.document
+  );
+  // console.log("documents : ",documents)
   useLayoutEffect(() => {
     dispatch(getDocuments());
   }, [dispatch]);
@@ -117,20 +107,12 @@ export default function DocumentList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = 60;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  const handleOpenConfirm = () => setOpenConfirm(true);
+  const handleCloseConfirm = () => setOpenConfirm(false);
 
   const handleFilterName = (event) => {
     setPage(0);
@@ -144,7 +126,6 @@ export default function DocumentList() {
 
   const handleDeleteRow = async (id) => {
     try {
-      // console.log(id);
       await dispatch(deleteDocument(id));
       dispatch(deleteDocument());
       setSelected([]);
@@ -198,13 +179,9 @@ export default function DocumentList() {
             mb: 3,
             height: 160,
             position: 'relative',
-            // mt: '24px',
           }}
         >
-          <Cover
-            name="Documents List"
-            icon="ph:users-light"
-          />
+          <Cover name="Documents List" icon="ph:users-light" />
         </Card>
 
         <Card sx={{ mt: 3 }}>
@@ -332,13 +309,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   inputData = stabilizedThis.map((el) => el[0]);
   if (filterName) {
-    inputData = inputData.filter( (document) => document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (document) =>
+        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

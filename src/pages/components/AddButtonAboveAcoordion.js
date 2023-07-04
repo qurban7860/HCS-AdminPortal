@@ -4,6 +4,7 @@ import { Button, Stack } from '@mui/material';
 import Iconify from '../../components/iconify';
 import ConfirmDialog from '../../components/confirm-dialog';
 import useResponsive from '../../hooks/useResponsive';
+import { BUTTONS, DIALOGS } from '../../constants/default-constants';
 
 export default function AddButtonAboveAccordion({
   name,
@@ -11,6 +12,7 @@ export default function AddButtonAboveAccordion({
   FormVisibility,
   toggleCancel,
   isCustomer,
+  disabled,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const isMobile = useResponsive('down', 'sm');
@@ -34,25 +36,34 @@ export default function AddButtonAboveAccordion({
     <>
       <Button
         onClick={handleOpenConfirm}
+        fullWidth={isMobile}
+        disabled={disabled}
         variant="contained"
         color={!FormVisibility ? 'primary' : 'error'}
         startIcon={
           !FormVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
         }
-        sx={{ mb: 3, ...(isMobile && { width: '100%' }), opacity: isCustomer ? 0 : 1 }}
+        sx={{
+          mb: { xs: 0, md: 2 },
+          my: { xs: 1 },
+          ...(isMobile && { width: '100%' }),
+          opacity: isCustomer ? 0 : 1,
+          display: isCustomer && isMobile ? 'none' : 'flex',
+        }}
       >
         {!FormVisibility ? name : 'Close Add'}
       </Button>
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Cancel"
-        content="Are you sure you want to cancel?"
+        title={DIALOGS.DISCARD_TITLE}
+        content={DIALOGS.DISCARD}
         action={
           <Button variant="contained" color="error" onClick={onConfirm}>
-            Confirm
+            {BUTTONS.DISCARD}
           </Button>
         }
+        SubButton={BUTTONS.CONTINUE}
       />
     </>
   );
@@ -64,4 +75,5 @@ AddButtonAboveAccordion.propTypes = {
   toggleChecked: PropTypes.func,
   toggleCancel: PropTypes.func,
   isCustomer: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
