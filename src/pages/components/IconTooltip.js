@@ -5,10 +5,11 @@ import { StyledTooltip } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
 import theme from '../../theme';
 
-export default function IconTooltip({ onDelete, onClick, color, title, placement, icon }) {
+export default function IconTooltip({ onDelete, onClick, color, title, placement, icon, disabled }) {
   return (
     <Button
       onClick={onClick}
+      disabled={disabled}
       variant="outlined"
       sx={{
         color,
@@ -34,6 +35,7 @@ export default function IconTooltip({ onDelete, onClick, color, title, placement
 
 IconTooltip.propTypes = {
   onDelete: PropTypes.bool,
+  disabled: PropTypes.bool,
   onClick: PropTypes.func,
   color: PropTypes.string,
   title: PropTypes.string,

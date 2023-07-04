@@ -51,17 +51,15 @@ export default function ViewFormEditDeleteButtons({
     disableDelete = false;
   }
 
-  useEffect(() => {
-    if (disableDelete) {
-      setDeleteButtonColor('text.secondary');
-      setDeleteButtonHoverColor('text.secondary.dark');
-    }
-  }, [disableDelete]);
+  // useEffect(() => {
+  //   if (disableDelete) {
+  //     setDeleteButtonColor('text.secondary');
+  //     setDeleteButtonHoverColor('text.secondary.dark');
+  //   }
+  // }, [disableDelete]);
 
   if (disableDelete) {
     disableDeleteButton = true;
-  } else {
-    disableDeleteButton = false;
   }
 
   const handleOpenConfirm = (dialogType) => {
@@ -120,7 +118,7 @@ export default function ViewFormEditDeleteButtons({
         {handleVerification && !isVerified && (
           <IconTooltip
             title={isVerified ? 'Verified' : 'Verify'}
-            disabled={disableTransferButton}
+            // disabled={disableTransferButton}
             onClick={() => {
               handleOpenConfirm('Verification');
             }}
@@ -173,6 +171,7 @@ export default function ViewFormEditDeleteButtons({
         {onDelete && (
           <IconTooltip
             title="Delete"
+            disabled={disableDeleteButton}
             onClick={() => {
               handleOpenConfirm('delete');
             }}

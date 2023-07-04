@@ -77,12 +77,6 @@ export default function SecurityUserViewForm() {
     if (loggedInUser) {
       const superAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
       setSuperAdmin(superAdmin);
-      // disable delete button
-      if (!superAdmin) {
-        setDisableDeleteButton(true);
-      } else {
-        setDisableDeleteButton(false);
-      }
       // disable edit button
       if (superAdmin || loggedInUser._id === id) {
         setDisableEditButton(false);
@@ -174,7 +168,7 @@ export default function SecurityUserViewForm() {
             handleUpdatePassword={handleUpdatePassword}
             onDelete={onDelete}
             disablePasswordButton={!isSuperAdmin}
-            disableDeleteButton={disableDeleteButton}
+            disableDeleteButton={!isSuperAdmin}
             disableEditButton={disableEditButton}
           />
           <ConfirmDialog
