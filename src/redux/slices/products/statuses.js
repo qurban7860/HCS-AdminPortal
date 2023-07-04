@@ -99,7 +99,12 @@ export function getMachinestatuses (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
 
       dispatch(slice.actions.getMachinestatusesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));

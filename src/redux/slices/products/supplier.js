@@ -97,7 +97,12 @@ export function getSuppliers (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       dispatch(slice.actions.getSuppliersSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
     } catch (error) {

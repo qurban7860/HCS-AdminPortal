@@ -115,7 +115,12 @@ export function getMachineModels (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/models`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineModelsSuccess(response.data));
       }

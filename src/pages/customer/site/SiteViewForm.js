@@ -58,9 +58,15 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       dispatch(getSites(customer._id));
       enqueueSnackbar('Site deleted Successfully!');
       setIsExpanded(false);
-    } catch (error) {
-      console.log(error);
-      enqueueSnackbar('Sites delete failed!', { variant: `error` });
+    } catch (err) {
+      if(err.Message){
+        enqueueSnackbar(err.Message,{ variant: `error` })
+      }else if(err.message){
+        enqueueSnackbar(err.message,{ variant: `error` })
+      }else{
+        enqueueSnackbar('Site delete failed!', { variant: `error` });
+      }
+      console.log(err);
     }
   };
 

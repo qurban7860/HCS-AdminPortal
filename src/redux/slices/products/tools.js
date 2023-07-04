@@ -99,7 +99,12 @@ export function getTools (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       dispatch(slice.actions.getToolsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
     } catch (error) {

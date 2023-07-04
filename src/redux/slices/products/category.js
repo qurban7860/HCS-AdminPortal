@@ -99,7 +99,12 @@ export function getCategories (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`, 
+      {
+        params: {
+          isArchived: false
+        }
+      });
       dispatch(slice.actions.getCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
       // dispatch(slice.actions)

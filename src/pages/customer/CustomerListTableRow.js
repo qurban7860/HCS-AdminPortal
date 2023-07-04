@@ -99,9 +99,7 @@ export default function CustomerListTableRow({
             ''
           )}
         </TableCell>
-        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={name} isVerified={verifications?.find(
-                (verified) => verified?.verifiedBy === userId
-              )}/>
+        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={name} isVerified={verifications?.length > 0}/>
         <TableCell>{tradingName}</TableCell>
         <TableCell>
           {Object.values(address ?? {})

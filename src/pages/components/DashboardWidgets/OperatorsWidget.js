@@ -35,7 +35,7 @@ export default function HowickOperators({ title, subheader, list, ...other }) {
       <Divider />
       <Stack spacing={3} sx={{ p: 3 }}>
         {spContacts.map((operator, index) => (
-          <OperatorItem key={operator.id} operator={operator} index={index} />
+            <OperatorItem key={operator._id || index} operator={operator} index={index} />
         ))}
       </Stack>
     </Card>
@@ -46,6 +46,7 @@ export default function HowickOperators({ title, subheader, list, ...other }) {
 
 OperatorItem.propTypes = {
   operator: PropTypes.shape({
+    _id: PropTypes.string,
     firstName: PropTypes.string,
     lastName: PropTypes.string,
     produced: PropTypes.number,
@@ -57,7 +58,7 @@ function OperatorItem({ operator, index }) {
   const fullName = `${operator.firstName} ${operator.lastName}`;
 
   return (
-    <Stack direction="row" alignItems="center" spacing={2}>
+    <Stack key={operator._id} direction="row" alignItems="center" spacing={2}>
       <CustomAvatar name={fullName} />
 
       <Box sx={{ flexGrow: 1 }}>
