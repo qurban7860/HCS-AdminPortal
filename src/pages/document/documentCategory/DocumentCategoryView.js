@@ -6,7 +6,7 @@ import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import { Tab, Card, Tabs, Container, Box, Button, Grid, Stack } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { PATH_MACHINE } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // redux
 
 import { getDocumentCategory} from '../../../redux/slices/document/documentCategory';
@@ -47,7 +47,7 @@ useLayoutEffect(() => {
             // mt: '24px',
           }}
         >
-          <Cover name={documentCategory?.name} /> 
+          <Cover name={documentCategory?.name} generalSettings backLink={PATH_SETTING.documentCategory.list}/> 
         </Card>
         <DocumentCategoryViewForm/>
       </Container>

@@ -122,7 +122,7 @@ export default function DocumentTypeEditForm() {
             // mt: '24px',
           }}
         >
-          <Cover name={documentType?.name} /> 
+          <Cover name={documentType?.name}  generalSettings backLink={PATH_SETTING.documentType.view(documentType?._id)}/> 
         </Card>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={4}>

@@ -102,7 +102,7 @@ export default function DocumentList() {
   };
 
   useEffect(() => {
-    if (customer?._id) {
+    if (customer && customer?._id) {
       dispatch(getCustomerDocuments(customer?._id));
     }
     dispatch(setCustomerDocumentEditFormVisibility(false));
