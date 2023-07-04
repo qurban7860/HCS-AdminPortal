@@ -399,6 +399,7 @@ export default function DocumentAddForm({currentDocument}) {
       );
       console.log("newFiles: ", newFiles);
       setValue('multiUpload', [...files, ...newFiles], { shouldValidate: true });
+      console.log("values.multiUpload : ",values.multiUpload)
     },
     [setValue, values.multiUpload]
   );
@@ -450,9 +451,9 @@ export default function DocumentAddForm({currentDocument}) {
                     </RadioGroup>
                   </FormControl>
                   { documentDependency === "customer" &&
-                <Grid container lg={12}>
+                <Grid container >
                   <Grid container spacing={2}>
-                    <Grid item lg={6}>
+                    <Grid item lg={6} md={6} sm={12}>
                       <Autocomplete
                         // freeSolo
                         value={customerVal || null}
@@ -486,7 +487,7 @@ export default function DocumentAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
-                    <Grid item lg={6}>
+                    <Grid item lg={6} md={6} sm={12}>
                         <Autocomplete
                           // freeSolo
                           disabled={siteDisabled}
@@ -518,9 +519,9 @@ export default function DocumentAddForm({currentDocument}) {
                 </Grid>}
 
                 { documentDependency === "machine" &&
-                <Grid container lg={12}>
+                <Grid container >
                   <Grid container spacing={2}>
-                  <Grid item lg={6}>
+                  <Grid item lg={6} md={6} sm={12} >
                       <Autocomplete
                         // freeSolo
                         disabled={readOnlyVal}
@@ -557,7 +558,7 @@ export default function DocumentAddForm({currentDocument}) {
                       />
                     </Grid>
 
-                    <Grid item lg={6}>
+                    <Grid item lg={6} md={6} sm={12} >
                       <Autocomplete
                         // freeSolo
                         value={machineVal || null}
@@ -603,9 +604,9 @@ export default function DocumentAddForm({currentDocument}) {
                   {/* } */}
 
                   { selectedValue === "newVersion" &&
-                  <Grid container lg={12}>
+                  <Grid container >
                     <Grid container spacing={2}>
-                      <Grid item xs={12} lg={6}>
+                      <Grid item lg={6}  sm={12}>
                       <Autocomplete
                           // freeSolo
                           // disabled={documentAvailable}
@@ -645,9 +646,9 @@ export default function DocumentAddForm({currentDocument}) {
                       }
                   
                 { (selectedValue === "new" || documentVal)  &&
-                <Grid container lg={12}>
+                <Grid container >
                   <Grid container spacing={2}>
-                    <Grid item lg={6}>
+                    <Grid item lg={6} md={6} sm={12}>
                       <Autocomplete
                         // freeSolo
                         disabled={readOnlyVal}
@@ -675,7 +676,7 @@ export default function DocumentAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     </Grid>
-                    <Grid item lg={6}>
+                    <Grid item lg={6} md={6} sm={12}>
                       <Autocomplete
                         // freeSolo
                         disabled={readOnlyVal}
