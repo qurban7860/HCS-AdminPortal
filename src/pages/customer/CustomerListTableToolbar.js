@@ -7,7 +7,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
 import Iconify from '../../components/iconify';
 import useResponsive from '../../hooks/useResponsive';
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 import { BUTTONS, DIALOGS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
@@ -32,7 +32,7 @@ export default function CustomerListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_DASHBOARD.customer.new);
+    navigate(PATH_CUSTOMER.new);
   };
   return (
     <Stack
