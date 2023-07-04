@@ -22,17 +22,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
@@ -42,15 +32,10 @@ import NotesViewForm from './note/NotesViewForm';
 import NoteStatistics from './note/NoteStatistics';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
-import {
-  getNotes,
-  deleteNote,
-  getNote,
-  updateNote,
-  setNoteFormVisibility,
-} from '../../redux/slices/customer/note';
+import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
 import { getSites } from '../../redux/slices/customer/site';
 import { getContacts } from '../../redux/slices/customer/contact';
+import { BUTTONS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -260,67 +245,73 @@ export default function CustomerNoteList() {
 
   return (
     <>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.notes} name="Notes" />
-        </Breadcrumbs>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.notes} name="Notes" />
+          </Breadcrumbs>
+        </Grid>
         <AddButtonAboveAccordion
-          name="New Note"
+          name={BUTTONS.NEWNOTE}
           toggleChecked={toggleChecked}
           FormVisibility={formVisibility}
           toggleCancel={toggleCancel}
           disabled={noteEditFormVisibility}
         />
-      </Stack>
-      <Card>
-        {noteEditFormVisibility && <NoteEditForm />}
-        {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
-        {!formVisibility &&
-          !noteEditFormVisibility &&
-          notes.map((note, index) => {
-            const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
-            return (
-              <Accordion
-                key={note._id}
-                expanded={expanded === index}
-                onChange={handleChange(index)}
-                sx={{ borderTop: borderTopVal }}
-              >
-                <AccordionSummary
-                  mt={1}
-                  expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-                  onClick={() => handleAccordianClick(index)}
-                >
-                  {index !== activeIndex ? (
-                    <Grid container spacing={1}>
-                      <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: 'break-word' }}>
-                        <Typography>
-                          {note.note.length > 100 ? note?.note?.substring(0, 150) : note.note}{' '}
-                          {note.note.length > 100 ? '...' : null}{' '}
-                        </Typography>
-                        {/* <Typography  display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
-                        {/* <Typography  display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
-                        {/* <Typography  display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
-                      </Grid>
-                      <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: 'break-word' }}>
-                        <Typography> {fDateTime(note.createdAt)} </Typography>{' '}
-                      </Grid>
-                    </Grid>
-                  ) : null}
-                </AccordionSummary>
-                <AccordionDetails sx={{ mt: -5 }}>
-                  <NotesViewForm currentNote={note} />
-                </AccordionDetails>
-              </Accordion>
-            );
-          })}
-      </Card>
+      </Grid>
+      <Grid container mt={1}>
+        <Grid item xs={12} md={12}>
+          <Card>
+            {noteEditFormVisibility && <NoteEditForm />}
+            {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
+            {!formVisibility &&
+              !noteEditFormVisibility &&
+              notes.map((note, index) => {
+                const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
+                return (
+                  <Accordion
+                    key={note._id}
+                    expanded={expanded === index}
+                    onChange={handleChange(index)}
+                    sx={{ borderTop: borderTopVal }}
+                  >
+                    <AccordionSummary
+                      mt={1}
+                      expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
+                      onClick={() => handleAccordianClick(index)}
+                    >
+                      {index !== activeIndex ? (
+                        <Grid container spacing={1}>
+                          <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: 'break-word' }}>
+                            <Typography>
+                              {note.note.length > 100 ? note?.note?.substring(0, 150) : note.note}{' '}
+                              {note.note.length > 100 ? '...' : null}{' '}
+                            </Typography>
+                            {/* <Typography  display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
+                            {/* <Typography  display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
+                            {/* <Typography  display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
+                          </Grid>
+                          <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: 'break-word' }}>
+                            <Typography> {fDateTime(note.createdAt)} </Typography>{' '}
+                          </Grid>
+                        </Grid>
+                      ) : null}
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ mt: -5 }}>
+                      <NotesViewForm currentNote={note} />
+                    </AccordionDetails>
+                  </Accordion>
+                );
+              })}
+          </Card>
+        </Grid>
+      </Grid>
       <Grid item lg={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>

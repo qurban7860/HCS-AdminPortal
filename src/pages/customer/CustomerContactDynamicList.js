@@ -134,27 +134,29 @@ export default function CustomerContactList(currentContact = null) {
 
   return (
     <>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.root} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={customer.name} />
-          <BreadcrumbsLink
-            to={PATH_DASHBOARD.customer.contacts}
-            name={
-              <Stack>
-                {!formVisibility && !contactEditFormVisibility && !isExpanded && 'Contacts'}
-                {contactEditFormVisibility
-                  ? `Edit ${currentContactData?.firstName}`
-                  : isExpanded && currentContactData?.firstName}
-                {formVisibility && !isExpanded && 'Add new contact'}
-              </Stack>
-            }
-          />
-        </Breadcrumbs>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.root} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={customer.name} />
+            <BreadcrumbsLink
+              to={PATH_DASHBOARD.customer.contacts}
+              name={
+                <Stack>
+                  {!formVisibility && !contactEditFormVisibility && !isExpanded && 'Contacts'}
+                  {contactEditFormVisibility
+                    ? `Edit ${currentContactData?.firstName}`
+                    : isExpanded && currentContactData?.firstName}
+                  {formVisibility && !isExpanded && 'Add new contact'}
+                </Stack>
+              }
+            />
+          </Breadcrumbs>
+        </Grid>
         <AddButtonAboveAccordion
           name="New Contact"
           toggleChecked={toggleChecked}
@@ -162,7 +164,7 @@ export default function CustomerContactList(currentContact = null) {
           toggleCancel={toggleCancel}
           disabled={contactEditFormVisibility}
         />
-      </Stack>
+      </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
         {contacts.length === 0 && (
           <Grid item lg={12}>

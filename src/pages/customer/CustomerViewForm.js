@@ -5,13 +5,14 @@ import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button, Link, Breadcrumbs, Tooltip } from '@mui/material';
+import { Card, Grid, Breadcrumbs, Tooltip } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import FormLabel from '../components/FormLabel';
+import { TableNoData } from '../../components/table';
 // slices
 import {
   getCustomer,
@@ -23,7 +24,9 @@ import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import { FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/customer-constants';
+import useResponsive from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -31,9 +34,11 @@ export default function CustomerViewForm() {
   const [isExpanded, setIsExpanded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isMobile = useResponsive('down', 'sm');
   const { customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
+  const isNotFound = !customer;
   // console.log("customer : ",customer)
   // const toggleEdit = () => {
   //   dispatch(setCustomerEditFormVisibility(true));
@@ -106,21 +111,23 @@ export default function CustomerViewForm() {
 
   return (
     <>
-      {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-        <AddButtonAboveAccordion isCustomer="true" />
-      </Stack> */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-        </Breadcrumbs>
-        <AddButtonAboveAccordion isCustomer="true" />
-      </Stack>
-      <Grid container direction="row">
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+          </Breadcrumbs>
+        </Grid>
+        {!isMobile && <AddButtonAboveAccordion isCustomer />}
+      </Grid>
+      <Grid item lg={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
+      <Grid container direction="row" mt={isMobile && 2}>
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons
@@ -164,7 +171,7 @@ export default function CustomerViewForm() {
 
             {defaultValues.mainSite && (
               <Grid container>
-                <FormLabel content="Address Information" />
+                <FormLabel content={FORMLABELS.ADDRESS} />
                 <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
                 <ViewFormField
                   sm={6}
@@ -199,7 +206,7 @@ export default function CustomerViewForm() {
               </Grid>
             )}
             <Grid container>
-              <FormLabel content="Howick Resources" />
+              <FormLabel content={FORMLABELS.HOWICK} />
               <ViewFormField
                 sm={6}
                 heading="Account Manager"

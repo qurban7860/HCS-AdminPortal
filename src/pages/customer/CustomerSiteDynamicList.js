@@ -138,25 +138,27 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   return (
     <>
       {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-          <BreadcrumbsLink
-            to={PATH_DASHBOARD.customer.contacts}
-            name={
-              <Stack>
-                {!siteAddFormVisibility && !siteEditFormVisibility && !isExpanded && 'Sites'}
-                {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}
-                {siteAddFormVisibility && !isExpanded && 'New Site Form'}
-              </Stack>
-            }
-          />
-        </Breadcrumbs>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink
+              to={PATH_DASHBOARD.customer.contacts}
+              name={
+                <Stack>
+                  {!siteAddFormVisibility && !siteEditFormVisibility && !isExpanded && 'Sites'}
+                  {siteEditFormVisibility ? `Edit ${site?.name}` : isExpanded && site?.name}
+                  {siteAddFormVisibility && !isExpanded && 'New Site Form'}
+                </Stack>
+              }
+            />
+          </Breadcrumbs>
+        </Grid>
         <AddButtonAboveAccordion
           name="New Site"
           toggleChecked={toggleChecked}
@@ -164,11 +166,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           toggleCancel={toggleCancel}
           disabled={siteEditFormVisibility}
         />
-      </Stack>
+      </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-        {/* <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid> */}
         <Grid
           item
           xs={12}

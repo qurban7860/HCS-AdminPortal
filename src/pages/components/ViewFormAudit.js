@@ -8,6 +8,7 @@ ViewFormAudit.propTypes = {
 export default function ViewFormAudit({ defaultValues }) {
   const { createdByFullName, createdAt, createdIP, updatedByFullName, updatedAt, updatedIP } =
     defaultValues;
+
   const created = [createdByFullName, createdAt, createdIP];
   const updated = [updatedByFullName, updatedAt, updatedIP];
 

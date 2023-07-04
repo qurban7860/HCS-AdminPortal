@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Stack, TextField, Button, InputAdornment } from '@mui/material';
 import AddButtonAboveAccordion from './AddButtonAboveAcoordion';
 import Iconify from '../../components/iconify';
+import { BUTTONS } from '../../constants/default-constants';
 
 function SearchInputAndAddButton({
   searchFormVisibility,
@@ -16,17 +17,13 @@ function SearchInputAndAddButton({
   FormVisibility,
 }) {
   return (
-    <Stack
-      spacing={2}
-      alignItems="center"
-      direction={{ xs: 'column', md: 'row' }}
-      sx={{ mt: 4, pl: 2 }}
-    >
-      <Grid container>
-        <Grid item xs={12} md={12} sx={{ display: 'inline-flex' }}>
-          <Grid item xs={12} sm={8} md={8}>
+    <Grid container direction={{ sm: 'column', lg: 'row' }} justifyContent="flex-end">
+      <Grid item xs={12} md={8}>
+        <Grid container direction={{ sm: 'column', lg: 'row' }} justifyContent="flex-start">
+          <Grid item xs={10} sm={8} md={10}>
             {!searchFormVisibility && (
               <TextField
+                size="small"
                 fullWidth
                 value={filterName}
                 onChange={handleFilterName}
@@ -42,31 +39,29 @@ function SearchInputAndAddButton({
               />
             )}
           </Grid>
-          <Grid item md={2}>
+          <Grid item xs={2} md={2}>
             {isFiltered && (
               <Button
                 color="error"
-                sx={{ p: 2, ml: 1 }}
+                sx={{ ml: 1 }}
                 onClick={handleResetFilter}
                 startIcon={<Iconify icon="eva:trash-2-outline" />}
               >
-                Clear
+                {BUTTONS.CLEAR}
               </Button>
             )}
           </Grid>
-          <Grid item justifyContent="flex-end" md={2}>
-            <Stack alignItems="flex-end" sx={{ padding: 2 }}>
-              <AddButtonAboveAccordion
-                name={addButtonName}
-                toggleChecked={toggleChecked}
-                toggleCancel={toggleCancel}
-                FormVisibility={FormVisibility}
-              />
-            </Stack>
-          </Grid>
         </Grid>
       </Grid>
-    </Stack>
+      <Grid item justifyContent="flex-end" sx={12} md={4}>
+        <AddButtonAboveAccordion
+          name={addButtonName}
+          toggleChecked={toggleChecked}
+          toggleCancel={toggleCancel}
+          FormVisibility={FormVisibility}
+        />
+      </Grid>
+    </Grid>
   );
 }
 

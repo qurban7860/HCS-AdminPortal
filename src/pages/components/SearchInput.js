@@ -2,23 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Button, TextField, InputAdornment } from '@mui/material';
 import Iconify from '../../components/iconify';
+import { BUTTONS } from '../../constants/default-constants';
 
 function SearchInput({
   filterName,
   handleFilterName,
   isFiltered,
+  isSearchBar,
   handleResetFilter,
   searchFormVisibility,
   disabled,
+  size,
+  padding,
 }) {
   return (
-    <Grid container sx={{ display: 'inline-flex' }} p={1}>
-      <Grid item md={isFiltered ? 10 : 12}>
+    <Grid container rowSpacing={1}>
+      <Grid item xs={isFiltered ? 9 : 12} md={isFiltered ? 10 : 12} sx={{ display: 'inline-flex' }}>
         {!searchFormVisibility && (
           <TextField
             fullWidth
             disabled={disabled}
             value={filterName}
+            size={size}
             onChange={handleFilterName}
             placeholder="Search..."
             InputProps={{
@@ -28,21 +33,19 @@ function SearchInput({
                 </InputAdornment>
               ),
             }}
-            sx={{ mr: 1, mb: 0 }}
+            sx={{ my: 1 }}
           />
         )}
       </Grid>
       {isFiltered && (
-        <Grid item md={2}>
-          <Button
-            color="error"
-            sx={{ p: 2, ml: 1 }}
-            onClick={handleResetFilter}
-            startIcon={<Iconify icon="eva:trash-2-outline" />}
-          >
-            Clear
-          </Button>
-        </Grid>
+        <Button
+          color="error"
+          sx={{ flexShrink: 0, ml: 1 }}
+          onClick={handleResetFilter}
+          startIcon={<Iconify icon="eva:trash-2-outline" />}
+        >
+          {BUTTONS.CLEAR}
+        </Button>
       )}
     </Grid>
   );
@@ -52,9 +55,21 @@ SearchInput.propTypes = {
   filterName: PropTypes.string,
   handleFilterName: PropTypes.func,
   isFiltered: PropTypes.string,
+  isSearchBar: PropTypes.bool,
   handleResetFilter: PropTypes.func,
   searchFormVisibility: PropTypes.string,
   disabled: PropTypes.bool,
+  size: PropTypes.string,
+  padding: PropTypes.string,
 };
+
+SearchInput.defaultProps = {
+  padding: 2,
+  size: 'small',
+};
+
+/**
+ * @param {isSearchBar} boolean - if true, then it will have no padding
+ */
 
 export default SearchInput;
