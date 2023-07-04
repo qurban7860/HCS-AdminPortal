@@ -70,7 +70,8 @@ export default function HowickWidgets({
       }}
       {...other}
     >
-      <Chart type="polarArea" series={[series]} options={chartOptions} width={86} height={86} />
+      {/* series={series} */}
+      <Chart type="polarArea" series={[0.00]} options={chartOptions} width={86} height={86} />
 
       <Box sx={{ ml: 3 }}>
         <Typography variant="h4"> {fNumber(total)}</Typography>

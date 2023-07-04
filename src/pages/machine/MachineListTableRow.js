@@ -94,9 +94,7 @@ export default function MachineListTableRow({
             ''
           )}
         </TableCell>
-        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={serialNo} isVerified={verifications?.find(
-                (verified) => verified?.verifiedBy === userId
-              )}/>
+        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={serialNo} isVerified={verifications?.length > 0}/>
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>
         <TableCell sx={{ color: status?.slug === 'transferred' ? 'red' : 'inherit' }}>

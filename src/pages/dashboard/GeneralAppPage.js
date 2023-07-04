@@ -38,6 +38,11 @@ export default function GeneralAppPage() {
 
   const modelWiseMachineNumber = [];
   const modelWiseMachineModel = [];
+  const countryWiseCustomerCountNumber = [];
+  const countryWiseCustomerCountCountries = [];
+  const countryWiseSiteCountNumber = [];
+  const countryWiseSiteCountCountries = [];
+  
   if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {
       modelWiseMachineNumber.push(model.count);
@@ -46,8 +51,7 @@ export default function GeneralAppPage() {
     });
   }
 
-  const countryWiseCustomerCountNumber = [];
-  const countryWiseCustomerCountCountries = [];
+  
   if (count && count.countryWiseCustomerCount) {
     count.countryWiseCustomerCount.map((customer) => {
       countryWiseCustomerCountNumber.push(customer.count);
@@ -56,8 +60,7 @@ export default function GeneralAppPage() {
     });
   }
 
-  const countryWiseSiteCountNumber = [];
-  const countryWiseSiteCountCountries = [];
+  
   if (count && count.countryWiseSiteCount) {
     count.countryWiseSiteCount.map((site) => {
       countryWiseSiteCountNumber.push(site.count);
@@ -267,7 +270,6 @@ export default function GeneralAppPage() {
             <Grid item xs={12} md={6} lg={8}>
               <ProductionLog
                 title="Production Log"
-                subheader
                 chart={{
                   categories: [
                     '2:00:00PM',
