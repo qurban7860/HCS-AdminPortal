@@ -3,37 +3,17 @@
 // Define more types here
 const FORMAT_PDF = ['pdf'];
 const FORMAT_TEXT = ['txt', 'odt', 'ott', 'rtf', 'csv'];
-const FORMAT_PHOTOSHOP = ['psb', 'ai'];
+const FORMAT_PHOTOSHOP = [ 'psd', 'psb', 'ai', 'tiff'];
 const FORMAT_WORD = ['doc', 'docx'];
 const FORMAT_EXCEL = ['xls', 'xlsx', 'ods'];
 const FORMAT_ZIP = ['zip', 'rar', 'iso'];
 const FORMAT_ILLUSTRATOR = ['ai', 'esp'];
 const FORMAT_POWERPOINT = ['ppt', 'pptx', 'odp'];
 const FORMAT_AUDIO = ['wav', 'aif', 'mp3', 'aac'];
-const FORMAT_IMG = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'BMP', 'eps', 'cr2', 
-'cur', 'dds','dng', 'erf', 'exr', 'fts', 'hdr', 'heic', 'heif', 'jfif', 'jp2', 'jpe', 'jps', 'mng', 
-'nef', 'nrw', 'orf', 'pam', 'pbm', 'pcd', 'pcx', 'pef', 'pes', 'pfm', 'pgm', 'picon', 'pict', 'pnm',
- 'ppm', 'psd', 'raf', 'ras', 'rw2', 'sfw', 'sgi', 'tga', 'wbmp', 'wpg', 'x3f','xbm', 'xcf','xpm', 'xwd'];
+const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'x-icon', 'jpe'];
+const FORMAT_IMG = [ 'exr', 'hdr', 'pbm', 'pfm', 'pgm', 'pict', 'ppm', 'sgi', 'tga', 'dds', 'cr2', 'dng', 'heic', 'heif', 'jp2', 'nef', 'orf', 'pef', 'raf', 'rw2',];
 const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
 const iconUrl = (icon) => `/assets/icons/files/${icon}.svg`;
-// 'image/*': [ 'png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp', 'djvu', 'heic', 'heif', 'ico', 'jfif', 'jp2', 
-            //     'jpe', 'jps', 'mng', 'nef', 'nrw', 'orf', 'pam', 'pbm', 'pcd', 'pcx', 'pef', 'pes', 'pfm',
-            //     'pgm', 'picon', 'pict', 'pnm', 'ppm', 'psd', 'raf', 'ras', 'rw2', 'sfw', 'sgi', 'svg', 'tga', 'tiff',
-            //     'psd', 'jxr', 'wbmp', 'x3f', 'xbm', 'xcf', 'xpm', 'xwd',
-            //   'application/pdf': ['pdf'],
-            //   'application/msword': ['doc'],
-            //   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['docx'],
-            //   'application/vnd.ms-excel': ['xls'],
-            //   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['xlsx'],
-            //   'application/vnd.ms-powerpoint': ['ppt'],
-            //   'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['pptx'],
-            //   'text/csv': ['csv'],
-            //   'text/plain': ['txt'],
-            //   'application/vnd.oasis.opendocument.presentation': ['odp'],
-            //   'application/vnd.oasis.opendocument.spreadsheet': ['ods'],
-            //   'application/vnd.oasis.opendocument.text': ['odt'],
-            //   'application/vnd.oasis.opendocument.text-template': ['ott'],
-            //   'application/rtf': ['rtf'],
 // ----------------------------------------------------------------------
 
 export function fileFormat(fileUrl) {
@@ -48,6 +28,9 @@ export function fileFormat(fileUrl) {
       break;
     case FORMAT_AUDIO.includes(fileTypeByUrl(fileUrl)):
       format = 'audio';
+      break;
+    case FORMAT_IMG_VISIBBLE.includes(fileTypeByUrl(fileUrl)):
+      format = 'images';
       break;
     case FORMAT_IMG.includes(fileTypeByUrl(fileUrl)):
       format = 'image';

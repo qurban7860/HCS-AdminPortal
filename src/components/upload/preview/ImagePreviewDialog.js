@@ -65,17 +65,17 @@ export default function ImagePreviewDialog({ file, preview ,closePreview }) {
                       />
                       
                     </CardContent> */}
-                    {/* <Image
+                    <Image
                         alt={file?.name}
                         src={file.preview}
                         sx={{minWidth:"350px", minHeight:"350px"}} 
                         
-                      /> */}
-                      <Avatar
+                      />
+                      {/* <Avatar
                         alt={file?.name}
                         src={file.preview}
                         sx={{minWidth:"350px", minHeight:"350px"}} 
-                      />
+                      /> */}
                   </Dialog>
   );
 }

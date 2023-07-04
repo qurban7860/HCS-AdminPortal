@@ -13,7 +13,6 @@ export default function ViewFormMenuPopover({ open, onClose, ListArr, ListTitle 
 
           {ListArr?.map((user) => (
             <>
-              {console.log(user)}
               <Divider key={user?._id} sx={{ borderStyle: 'solid' }} />
               <Grid display="flex" justifyContent="space-between">
                 <Typography variant="body2" sx={{ color: 'text.secondary', mr: 3 }}>

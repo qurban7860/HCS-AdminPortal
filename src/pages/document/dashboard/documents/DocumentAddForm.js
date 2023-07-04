@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container, Typography } from '@mui/material';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // PATH
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
@@ -195,25 +195,44 @@ export default function DocumentAddForm({ currentDocument }) {
     }
   }, [dispatch, machineVal, machineModelVal, selectedValue]);
 
+  const validateFileType = (value, options) => {
+    const { path, createError } = options;
+    if (value && Array.isArray(value)) {
+      if (value.length > 10) {
+        return createError({
+          message: 'Maximum 10 files can be uploaded at a time.',
+          path,
+          value,
+        });
+      }
+      const invalidFiles = value.filter((file) => {
+        const fileExtension = file?.name?.split('.').pop().toLowerCase();
+        return !allowedExtensions.includes(fileExtension);
+      });
+      if (invalidFiles.length > 0) {
+        const invalidFileNames = invalidFiles.map(file => file.name).join(', ');
+        return createError({
+          message: `Invalid file(s) detected: ${invalidFileNames}`,
+          path,
+          value,
+        });
+      }
+      return true;
+    }
+    return createError({
+      message: 'File is required!',
+      path,
+      value,
+    });
+  };
+
   const AddDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
-    .required("File is required!")
-    .test("fileType",
-    "Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx",
-    (value) => {
-      if (value && Array.isArray(value)) {
-        const invalidFiles = value.filter((file) => {
-          const fileExtension = file?.name?.split(".").pop().toLowerCase();
-          return !allowedExtensions.includes(fileExtension);
-        });
-        return invalidFiles.length === 0;
-      }
-        return false;
-      }
-    )
-    .nullable(true),
+    .required('File is required!')
+  .test('fileType', 'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx', validateFileType)
+  .nullable(true),
     isActive: Yup.boolean(),
   });
 
@@ -712,6 +731,7 @@ export default function DocumentAddForm({ currentDocument }) {
                       onRemoveAll={() => setValue('multiUpload', [], { shouldValidate: true })}
                       onUpload={() => console.log('ON UPLOAD')}
                     />
+                    
                     </Grid>
                   )}
 
