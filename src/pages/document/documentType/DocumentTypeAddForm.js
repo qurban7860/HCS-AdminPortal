@@ -113,7 +113,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
             // mt: '24px',
           }}
         >
-          <Cover name="New Document Type" /> 
+          <Cover name="New Document Type"  generalSettings backLink={PATH_SETTING.documentType.list} /> 
         </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>

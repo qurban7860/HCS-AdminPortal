@@ -45,18 +45,11 @@ export function Cover({
   generalSettings,
 }) {
   const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate(PATH_MACHINE.machines.settings.root);
-  };
-  const handleSettingsNavigate = () => {
-    navigate(PATH_SETTING.app);
-  };
-  const handleBacklink = () => {
-    navigate(backLink);
-  };
+  const handleNavigate = () => {navigate(PATH_MACHINE.machines.settings.root);};
+  const handleSettingsNavigate = () => { navigate(PATH_SETTING.app)};
+  const handleBacklink = () => {navigate(backLink)};
 
   const isMobile = useResponsive('down', 'sm');
-
   const nameNumMaxLength = name?.split(' ')[0];
   const nameNumMaxLength2 = name?.split(' ')[1]?.substring(0, 10);
   const nameTitle = `${nameNumMaxLength} ${nameNumMaxLength2 || ''}`;

@@ -198,7 +198,7 @@ export default function DocumentCategoryList() {
             // mt: '24px',
           }}
         >
-          <Cover name="Document Categories" icon="ph:users-light" />
+          <Cover name="Document Categories" icon="ph:users-light" generalSettings />
         </Card>
         <Card sx={{ mt: 3 }}>
           <DocumentCategoryListTableToolbar

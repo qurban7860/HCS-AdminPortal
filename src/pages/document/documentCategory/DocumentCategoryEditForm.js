@@ -111,7 +111,7 @@ export default function DocumentCategoryeEditForm() {
             // mt: '24px',
           }}
         >
-          <Cover name={documentCategory?.name} /> 
+          <Cover name={documentCategory?.name} generalSettings backLink={PATH_SETTING.documentCategory.view(documentCategory?._id)}/> 
         </Card>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={4}>

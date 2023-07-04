@@ -200,6 +200,7 @@ export default function DocumentTypeList() {
           <Cover
             name="Document Types"
             icon="ph:users-light"
+            generalSettings
           />
         </Card>
 
