@@ -1,5 +1,11 @@
 export const ICONS = {
+  //  defaults
   size: '30px',
+  variant: 'overline',
+  badge: 'body2',
+
+  // ------------------------------------------------------------
+
   // @root - src/components/IconPopover -ViewFormFields
   // isActive
   ACTIVE: {

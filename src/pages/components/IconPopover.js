@@ -61,7 +61,7 @@ export default function IconPopover({
             id="mouse-over-popover"
           >
             <Typography
-              variant="overline"
+              variant={ICONS.variant}
               color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
             >
               {isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
@@ -106,7 +106,7 @@ export default function IconPopover({
             id="mouse-over-popover"
           >
             <Typography
-              variant="overline"
+              variant={ICONS.variant}
               color={deleteDisabled ? ICONS.DELETE_DISABLED.color : ICONS.DELETE_ENABLED.color}
             >
               {deleteDisabled ? ICONS.DELETE_DISABLED.heading : ICONS.DELETE_ENABLED.heading}
@@ -158,7 +158,7 @@ export default function IconPopover({
               id="mouse-over-popover"
             >
               <Typography
-                variant="overline"
+                variant={ICONS.variant}
                 color={
                   customerVerificationCount || machineVerificationCount > 0
                     ? ICONS.VERIFIED.color
@@ -187,7 +187,7 @@ export default function IconPopover({
                 },
               }}
             >
-              <Typography variant="body2">
+              <Typography variant={ICONS.badge}>
                 {(customerVerificationCount || machineVerificationCount) > 99
                   ? 99
                   : customerVerificationCount || machineVerificationCount}
@@ -236,7 +236,7 @@ export default function IconPopover({
             id="mouse-over-popover"
           >
             <Typography
-              variant="overline"
+              variant={ICONS.variant}
               color={documentIsActive ? ICONS.DOCUMENT_ACTIVE.color : ICONS.DOCUMENT_INACTIVE.color}
             >
               {documentIsActive ? ICONS.DOCUMENT_ACTIVE.heading : ICONS.DOCUMENT_INACTIVE.heading}
@@ -315,7 +315,7 @@ export default function IconPopover({
             }}
             id="mouse-over-popover"
           >
-            <Typography variant="overline" color={ICONS.MAP.color}>
+            <Typography variant={ICONS.variant} color={ICONS.MAP.color}>
               {ICONS.MAP.heading}
             </Typography>
           </StyledPopover>
