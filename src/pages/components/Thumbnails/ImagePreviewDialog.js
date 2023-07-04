@@ -3,6 +3,7 @@ import { Typography, Dialog, DialogActions, Grid, Link, IconButton, Box } from '
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import { CloseButton } from '../CloseButton';
+// import Image from '../../../components/image';
 
 export default function ImagePreviewDialog({
   onPreview,
@@ -31,6 +32,7 @@ export default function ImagePreviewDialog({
           alignItems: 'center',
           bgcolor: 'primary.main',
           color: 'primary.contrastText',
+          height: '50px',
           padding: '5px',
         }}
       >
@@ -78,11 +80,17 @@ export default function ImagePreviewDialog({
           <Iconify icon="line-md:download-loop" width={18} />
         </IconButton>
       </Link>
+      {/* <Image
+        alt={file?.name}
+        src={`data:image/png;base64, ${imageData}`}
+        sx={{minWidth:"350px", minHeight:"350px"}} 
+      /> */}
       <Box
         component="img"
         sx={{ minWidth: '350px', minHeight: '350px' }}
         alt={file?.name}
         src={`data:image/png;base64, ${imageData}`}
+        loading="lazy"
       />
     </Dialog>
   );

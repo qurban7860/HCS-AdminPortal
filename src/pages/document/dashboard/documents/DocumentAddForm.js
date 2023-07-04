@@ -198,16 +198,22 @@ export default function DocumentAddForm({ currentDocument }) {
   const AddDocumentSchema = Yup.object().shape({
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
-    images: Yup.mixed()
-      .required('File is required!')
-      .test('fileType', fileTypesMessage, (value) => {
-        if (value && value?.name) {
-          const fileExtension = value?.name?.split('.').pop().toLowerCase();
-          return allowedExtensions.includes(fileExtension);
-        }
+    multiUpload: Yup.mixed()
+    .required("File is required!")
+    .test("fileType",
+    "Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx",
+    (value) => {
+      if (value && Array.isArray(value)) {
+        const invalidFiles = value.filter((file) => {
+          const fileExtension = file?.name?.split(".").pop().toLowerCase();
+          return !allowedExtensions.includes(fileExtension);
+        });
+        return invalidFiles.length === 0;
+      }
         return false;
-      })
-      .nullable(true),
+      }
+    )
+    .nullable(true),
     isActive: Yup.boolean(),
   });
 
@@ -312,38 +318,6 @@ export default function DocumentAddForm({ currentDocument }) {
     navigate(PATH_DASHBOARD.document.dashboard);
   };
 
-  // const handleDrop = useCallback(
-  //   (acceptedFiles) => {
-  //     const file = acceptedFiles[0];
-  //     const fileName = file.name.split(".");
-  //     if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[fileName.length - 1])){
-  //       setNameVal(fileName[0])
-  //     }
-  //     const newFile = Object.assign(file, {
-  //       preview: URL.createObjectURL(file),
-  //     });
-  //     if (file) {
-  //     setPreviewVal(file.preview)
-  //       setValue('images', newFile, { shouldValidate: true });
-  //     }
-  //   },
-  //   [setValue]
-  // );
-
-  // const handleDrop = useCallback(
-  //   (acceptedFiles) => {
-  //     const newFiles = acceptedFiles.map((file) =>
-  //       Object.assign(file, {
-  //         preview: URL.createObjectURL(file),
-  //       })
-  //     );
-  //     console.log("newFiles : ",newFiles)
-
-  //     setFiles([...files, ...newFiles]);
-  //   },
-  //   [files]
-  // );
-
   const previewHandle = () => {
     setPreview(true);
   };
@@ -351,11 +325,6 @@ export default function DocumentAddForm({ currentDocument }) {
   const handleClosePreview = () => {
     setPreview(false);
   };
-
-  // const handleRemoveFile = () => {
-  //   setValue('images', "", { shouldValidate: true });
-  //   setNameVal("")
-  // };
 
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
@@ -412,29 +381,23 @@ export default function DocumentAddForm({ currentDocument }) {
   const handleIsActiveChange = () => {
     setIsActive(!isActive);
   };
-  // const handleRemoveFile = (inputFile) => {
-  //   const filtered = files.filter((file) => file !== inputFile);
-  //   setFiles(filtered);
-  // };
+
 
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       const files = values.multiUpload || [];
-      console.log('files: ', files);
+      console.log("files: ", files);
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
       );
-      console.log('newFiles: ', newFiles);
+      console.log("newFiles: ", newFiles);
       setValue('multiUpload', [...files, ...newFiles], { shouldValidate: true });
     },
     [setValue, values.multiUpload]
   );
 
-  // const handleRemoveAllFiles = () => {
-  //   setFiles([]);
-  // };
   return (
     <Container maxWidth={false}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -732,21 +695,23 @@ export default function DocumentAddForm({ currentDocument }) {
 
                   {(selectedValue === 'new' || documentVal) && (
                     <Grid item xs={12} md={6} lg={12}>
-                      <RHFUpload
-                        required
-                        // multiple
-                        // thumbnail
-                        onPreview={previewHandle}
-                        name="images"
-                        maxSize={30145728}
-                        // onDelete={handleRemoveFile}
-                        // onDrop={handleDrop}
-                        // onRemove={handleDrop}
-                        // onRemoveAll={handleRemoveAllFiles}
-                        // onUpload={() => console.log('ON UPLOAD')}
-                        // onDelete={handleRemoveFile}
-                        // onUpload={() => console.log('ON UPLOAD')}
-                      />
+                    <RHFUpload 
+                      multiple  
+                      thumbnail
+                      name="multiUpload"
+                      // maxSize={3145728}
+                      onDrop={handleDropMultiFile}
+                      onRemove={(inputFile) =>
+                        setValue(
+                          'multiUpload',
+                          values.multiUpload &&
+                            values.multiUpload?.filter((file) => file !== inputFile),
+                          { shouldValidate: true }
+                        )
+                      }
+                      onRemoveAll={() => setValue('multiUpload', [], { shouldValidate: true })}
+                      onUpload={() => console.log('ON UPLOAD')}
+                    />
                     </Grid>
                   )}
 
