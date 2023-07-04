@@ -48,7 +48,7 @@ export const tokenExpired = (exp) => {
   clearTimeout(expiredTimer);
 
   expiredTimer = setTimeout(() => {
-    alert('Token expired');
+    alert('Your session has expired. Please login again');
 
     localStorage.removeItem('accessToken');
 
