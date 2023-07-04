@@ -21,13 +21,7 @@ import { TableNoData, getComparator, useTable } from '../../components/table';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import {
-  getSites,
-  deleteSite,
-  getSite,
-  setSiteFormVisibility,
-  setSiteEditFormVisibility,
-} from '../../redux/slices/customer/site';
+import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/sections/DetailsSection';
@@ -36,6 +30,7 @@ import SiteViewForm from './site/SiteViewForm';
 import SearchInput from '../components/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
+import { BUTTONS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -160,126 +155,129 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
           </Breadcrumbs>
         </Grid>
         <AddButtonAboveAccordion
-          name="New Site"
+          name={BUTTONS.NEWSITE}
           toggleChecked={toggleChecked}
           FormVisibility={siteAddFormVisibility}
           toggleCancel={toggleCancel}
           disabled={siteEditFormVisibility}
         />
       </Grid>
+
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={4}
-          sx={{ display: siteAddFormVisibility && isMobile && 'none' }}
-        >
-          {sites.length > 5 && (
-            <Grid item md={12}>
-              <SearchInput
-                searchFormVisibility={siteAddFormVisibility || siteEditFormVisibility}
-                filterName={filterName}
-                handleFilterName={handleFilterName}
-                isFiltered={isFiltered}
-                handleResetFilter={handleResetFilter}
-                toggleChecked={toggleChecked}
-                toggleCancel={toggleCancel}
-                FormVisibility={siteAddFormVisibility}
-                sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
-              />
-            </Grid>
-          )}
-          <StyledScrollbar
-            snap
-            snapOffset={100}
-            onClick={(e) => e.stopPropagation()}
-            snapAlign="start"
-            contacts={sites.length}
-            disabled={siteEditFormVisibility || siteAddFormVisibility}
+        {sites.length > 0 && (
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={4}
+            sx={{ display: siteAddFormVisibility && isMobile && 'none' }}
           >
-            <Grid container spacing={1} justifyContent="flex-start" direction="column">
-              {dataFiltered.map((Site, index) => {
-                const borderTopVal = index !== 0 ? '0px solid white' : '';
-                return (
-                  <>
-                    {index !== activeIndex && (
-                      <Grid
-                        item
-                        key={index}
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={4}
-                        display={{ xs: 'flex', lg: 'block' }}
-                        onClick={() => {
-                          if (!siteEditFormVisibility && !siteAddFormVisibility) {
-                            handleActiveCard(index);
-                            handleExpand(index);
-                          }
-                        }}
-                        sx={{
-                          width: { xs: '100%', lg: '100%' },
-                        }}
-                      >
-                        <StyledCardWrapper
-                          condition1={activeCardIndex !== index}
-                          condition2={activeCardIndex === index}
-                          isMobile={isMobile}
+            {sites.length > 5 && (
+              <Grid item md={12}>
+                <SearchInput
+                  searchFormVisibility={siteAddFormVisibility || siteEditFormVisibility}
+                  filterName={filterName}
+                  handleFilterName={handleFilterName}
+                  isFiltered={isFiltered}
+                  handleResetFilter={handleResetFilter}
+                  toggleChecked={toggleChecked}
+                  toggleCancel={toggleCancel}
+                  FormVisibility={siteAddFormVisibility}
+                  sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
+                />
+              </Grid>
+            )}
+            <StyledScrollbar
+              snap
+              snapOffset={100}
+              onClick={(e) => e.stopPropagation()}
+              snapAlign="start"
+              contacts={sites.length}
+              disabled={siteEditFormVisibility || siteAddFormVisibility}
+            >
+              <Grid container spacing={1} justifyContent="flex-start" direction="column">
+                {dataFiltered.map((Site, index) => {
+                  const borderTopVal = index !== 0 ? '0px solid white' : '';
+                  return (
+                    <>
+                      {index !== activeIndex && (
+                        <Grid
+                          item
+                          key={index}
+                          xs={12}
+                          sm={12}
+                          md={12}
+                          lg={4}
+                          display={{ xs: 'flex', lg: 'block' }}
+                          onClick={() => {
+                            if (!siteEditFormVisibility && !siteAddFormVisibility) {
+                              handleActiveCard(index);
+                              handleExpand(index);
+                            }
+                          }}
+                          sx={{
+                            width: { xs: '100%', lg: '100%' },
+                          }}
                         >
-                          <CardActionArea
-                            active={activeIndex === index}
-                            disabled={siteEditFormVisibility || siteAddFormVisibility}
+                          <StyledCardWrapper
+                            condition1={activeCardIndex !== index}
+                            condition2={activeCardIndex === index}
+                            isMobile={isMobile}
                           >
-                            <Link
-                              underline="none"
+                            <CardActionArea
+                              active={activeIndex === index}
                               disabled={siteEditFormVisibility || siteAddFormVisibility}
-                              onClick={async () => {
-                                await dispatch(getSite(customer._id, Site._id));
-                                setOpenSite(true);
-                                if (!isExpanded && !siteAddFormVisibility) {
-                                  handleActiveCard(!isExpanded ? index : null);
-                                  handleExpand(index);
-                                  setSiteFormVisibility(!siteAddFormVisibility);
-                                } else if (isExpanded && site && !siteAddFormVisibility) {
-                                  handleExpand(index);
-                                } else {
-                                  setIsExpanded(false);
-                                  index = null;
-                                }
-                              }}
                             >
-                              <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
+                              <Link
+                                underline="none"
+                                disabled={siteEditFormVisibility || siteAddFormVisibility}
+                                onClick={async () => {
+                                  await dispatch(getSite(customer._id, Site._id));
+                                  setOpenSite(true);
+                                  if (!isExpanded && !siteAddFormVisibility) {
+                                    handleActiveCard(!isExpanded ? index : null);
+                                    handleExpand(index);
+                                    setSiteFormVisibility(!siteAddFormVisibility);
+                                  } else if (isExpanded && site && !siteAddFormVisibility) {
+                                    handleExpand(index);
+                                  } else {
+                                    setIsExpanded(false);
+                                    index = null;
+                                  }
+                                }}
                               >
-                                {!isMobile && (
-                                  <AvatarSection
-                                    // name={fullName[index]}
-                                    image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                    isSite="true"
+                                <Grid
+                                  container
+                                  direction="row"
+                                  justifyContent="flex-start"
+                                  alignItems="center"
+                                >
+                                  {!isMobile && (
+                                    <AvatarSection
+                                      // name={fullName[index]}
+                                      image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
+                                      isSite="true"
+                                    />
+                                  )}
+                                  <DetailsSection
+                                    content={Site.name}
+                                    content2={Site?.address?.city ? Site?.address?.city : <br />}
+                                    content3={Site?.website ? Site?.website : <br />}
                                   />
-                                )}
-                                <DetailsSection
-                                  content={Site.name}
-                                  content2={Site?.address?.city ? Site?.address?.city : <br />}
-                                  content3={Site?.website ? Site?.website : <br />}
-                                />
-                              </Grid>
-                            </Link>
-                          </CardActionArea>
-                        </StyledCardWrapper>
-                      </Grid>
-                    )}
-                  </>
-                );
-              })}
-            </Grid>
-          </StyledScrollbar>
-        </Grid>
+                                </Grid>
+                              </Link>
+                            </CardActionArea>
+                          </StyledCardWrapper>
+                        </Grid>
+                      )}
+                    </>
+                  );
+                })}
+              </Grid>
+            </StyledScrollbar>
+          </Grid>
+        )}
 
         {/* Google Maps View */}
         {isMobile && googleMapsVisibility && (
@@ -301,7 +299,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
         )}
 
         {/* Conditional View Forms */}
-        <GridBaseViewForm item lg={8}>
+        <GridBaseViewForm item lg={sites.length === 0 ? 12 : 8}>
           {shouldShowSiteView && (
             <CardBase>
               <SiteViewForm

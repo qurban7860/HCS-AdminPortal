@@ -33,6 +33,7 @@ import useResponsive from '../../hooks/useResponsive';
 import SearchInput from '../components/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -141,7 +142,7 @@ export default function CustomerContactList(currentContact = null) {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.root} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.root} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={customer.name} />
             <BreadcrumbsLink
               to={PATH_DASHBOARD.customer.contacts}
@@ -158,7 +159,7 @@ export default function CustomerContactList(currentContact = null) {
           </Breadcrumbs>
         </Grid>
         <AddButtonAboveAccordion
-          name="New Contact"
+          name={BUTTONS.NEWCONTACT}
           toggleChecked={toggleChecked}
           FormVisibility={formVisibility}
           toggleCancel={toggleCancel}
@@ -171,129 +172,131 @@ export default function CustomerContactList(currentContact = null) {
             <TableNoData isNotFound={isNotFound} />
           </Grid>
         )}
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={4}
-          sx={{ display: formVisibility && isMobile && 'none' }}
-        >
-          {contacts.length > 5 && (
-            <Grid item md={12}>
-              <SearchInput
-                // searchFormVisibility={formVisibility || contactEditFormVisibility}
-                filterName={filterName}
-                handleFilterName={handleFilterName}
-                isFiltered={isFiltered}
-                handleResetFilter={handleResetFilter}
-                toggleChecked={toggleChecked}
-                toggleCancel={toggleCancel}
-                FormVisibility={formVisibility}
-                disabled={contactEditFormVisibility || formVisibility}
-                sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
-              />
-            </Grid>
-          )}
-          <StyledScrollbar
-            snap
-            snapOffset={100}
-            onClick={(e) => e.stopPropagation()}
-            snapAlign="start"
-            contacts={contacts.length}
-            disabled={contactEditFormVisibility || formVisibility}
+        {contacts.length > 0 && (
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={4}
+            sx={{ display: formVisibility && isMobile && 'none' }}
           >
-            <Grid container justifyContent="flex-start" direction="column" gap={1}>
-              {dataFiltered.map((contact, index) => {
-                const borderTopVal = index !== 0 ? '0px solid white' : '';
-                return (
-                  <>
-                    {index !== activeIndex && (
-                      <Grid
-                        item
-                        key={index}
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={4}
-                        display={{ xs: 'flex', lg: 'block' }}
-                        onClick={() => {
-                          if (!contactEditFormVisibility && !formVisibility) {
-                            handleActiveCard(index);
-                            handleExpand(index);
-                          }
-                        }}
-                        sx={{
-                          width: { xs: '100%', lg: '100%' },
-                        }}
-                      >
-                        <StyledCardWrapper
-                          condition1={activeCardIndex !== index}
-                          condition2={activeCardIndex === index}
-                          isMobile={isMobile}
+            {contacts.length > 5 && (
+              <Grid item md={12}>
+                <SearchInput
+                  // searchFormVisibility={formVisibility || contactEditFormVisibility}
+                  filterName={filterName}
+                  handleFilterName={handleFilterName}
+                  isFiltered={isFiltered}
+                  handleResetFilter={handleResetFilter}
+                  toggleChecked={toggleChecked}
+                  toggleCancel={toggleCancel}
+                  FormVisibility={formVisibility}
+                  disabled={contactEditFormVisibility || formVisibility}
+                  sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
+                />
+              </Grid>
+            )}
+            <StyledScrollbar
+              snap
+              snapOffset={100}
+              onClick={(e) => e.stopPropagation()}
+              snapAlign="start"
+              contacts={contacts.length}
+              disabled={contactEditFormVisibility || formVisibility}
+            >
+              <Grid container justifyContent="flex-start" direction="column" gap={1}>
+                {dataFiltered.map((contact, index) => {
+                  const borderTopVal = index !== 0 ? '0px solid white' : '';
+                  return (
+                    <>
+                      {index !== activeIndex && (
+                        <Grid
+                          item
+                          key={index}
+                          xs={12}
+                          sm={12}
+                          md={12}
+                          lg={4}
+                          display={{ xs: 'flex', lg: 'block' }}
+                          onClick={() => {
+                            if (!contactEditFormVisibility && !formVisibility) {
+                              handleActiveCard(index);
+                              handleExpand(index);
+                            }
+                          }}
+                          sx={{
+                            width: { xs: '100%', lg: '100%' },
+                          }}
                         >
-                          <CardActionArea
-                            active={activeIndex === index}
-                            disabled={contactEditFormVisibility || formVisibility}
+                          <StyledCardWrapper
+                            condition1={activeCardIndex !== index}
+                            condition2={activeCardIndex === index}
+                            isMobile={isMobile}
                           >
-                            <Link
-                              underline="none"
+                            <CardActionArea
+                              active={activeIndex === index}
                               disabled={contactEditFormVisibility || formVisibility}
-                              onClick={async () => {
-                                await dispatch(getContact(customer._id, contact._id));
-                                setOpenContact(true);
-                                if (!isExpanded && !formVisibility) {
-                                  handleExpand(index);
-                                  setContactFormVisibility(!formVisibility);
-                                } else if (
-                                  isExpanded &&
-                                  currentContactData !== contact &&
-                                  !formVisibility
-                                ) {
-                                  handleExpand(index);
-                                } else {
-                                  setIsExpanded(false);
-                                  index = null;
-                                }
-                              }}
                             >
-                              <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                              >
-                                {!isMobile && (
-                                  <AvatarSection
-                                    name={fullName[index]}
-                                    image="/assets/images/covers/bg.jpg"
-                                  />
-                                )}
-                                <DetailsSection
-                                  content={
-                                    fullName[index].length >= 15
-                                      ? contact.firstName
-                                      : fullName[index]
+                              <Link
+                                underline="none"
+                                disabled={contactEditFormVisibility || formVisibility}
+                                onClick={async () => {
+                                  await dispatch(getContact(customer._id, contact._id));
+                                  setOpenContact(true);
+                                  if (!isExpanded && !formVisibility) {
+                                    handleExpand(index);
+                                    setContactFormVisibility(!formVisibility);
+                                  } else if (
+                                    isExpanded &&
+                                    currentContactData !== contact &&
+                                    !formVisibility
+                                  ) {
+                                    handleExpand(index);
+                                  } else {
+                                    setIsExpanded(false);
+                                    index = null;
                                   }
-                                  content2={contact.title ? contact.title : <br />}
-                                  content3={contact.email ? contact.email : <br />}
-                                />
-                              </Grid>
-                            </Link>
-                          </CardActionArea>
-                        </StyledCardWrapper>
-                      </Grid>
-                    )}
-                  </>
-                );
-              })}
-            </Grid>
-          </StyledScrollbar>
-        </Grid>
+                                }}
+                              >
+                                <Grid
+                                  container
+                                  direction="row"
+                                  justifyContent="flex-start"
+                                  alignItems="center"
+                                >
+                                  {!isMobile && (
+                                    <AvatarSection
+                                      name={fullName[index]}
+                                      image="/assets/images/covers/bg.jpg"
+                                    />
+                                  )}
+                                  <DetailsSection
+                                    content={
+                                      fullName[index].length >= 15
+                                        ? contact.firstName
+                                        : fullName[index]
+                                    }
+                                    content2={contact.title ? contact.title : <br />}
+                                    content3={contact.email ? contact.email : <br />}
+                                  />
+                                </Grid>
+                              </Link>
+                            </CardActionArea>
+                          </StyledCardWrapper>
+                        </Grid>
+                      )}
+                    </>
+                  );
+                })}
+              </Grid>
+            </StyledScrollbar>
+          </Grid>
+        )}
 
         {/* Conditional View Forms */}
         {!isMobile && (
-          <GridBaseViewForm item lg={8}>
+          <GridBaseViewForm item lg={contacts.length === 0 ? 12 : 8}>
             {shouldShowContactView && (
               <CardBase>
                 <ContactViewForm setIsExpanded={setIsExpanded} />

@@ -34,6 +34,17 @@ export const BUTTONS = {
   // New Buttons on the TOP of Modules
   NEWDOCUMENT: 'New Document',
   NEWNOTE: 'New Note',
+  NEWSITE: 'New Site',
+  NEWCONTACT: 'New Contact',
+
   // Add Buttons on the list pages
   ADDCUSTOMER: 'Add Customer',
+  ADDMACHINE: 'Add Machine',
+};
+
+export const BREADCRUMBS = {
+  // breadcrumbs
+  CUSTOMERS: 'Customers',
+  NEWCONTACT: 'Add new Contact',
+  NEWSITE: 'Add new Site',
 };
