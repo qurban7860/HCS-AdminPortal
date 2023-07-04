@@ -495,6 +495,7 @@ export default function DocumentAddForm({ currentDocument }) {
                   )}
 
                   {/* Machine */}
+                  {/* will write a better way */}
                   {documentDependency === 'machine' && (
                     <DocumentMachineAddForm
                       disabled={readOnlyVal}
