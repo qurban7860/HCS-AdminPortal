@@ -215,7 +215,7 @@ export default function DocumentAddForm({ currentDocument }) {
     () => ({
       displayName: nameVal,
       description: '',
-      images: null,
+      imultiUpload: null,
       isActive: true,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -239,6 +239,7 @@ export default function DocumentAddForm({ currentDocument }) {
     reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const values = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -311,23 +312,37 @@ export default function DocumentAddForm({ currentDocument }) {
     navigate(PATH_DASHBOARD.document.dashboard);
   };
 
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-      const fileName = file.name.split('.');
-      if (fileTypesArray.includes(fileName[fileName.length - 1])) {
-        setNameVal(fileName[0]);
-      }
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-      if (file) {
-        setPreviewVal(file.preview);
-        setValue('images', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
+  // const handleDrop = useCallback(
+  //   (acceptedFiles) => {
+  //     const file = acceptedFiles[0];
+  //     const fileName = file.name.split(".");
+  //     if(["png", "jpeg", "jpg", "gif", "bmp", "webp", "pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx"].includes(fileName[fileName.length - 1])){
+  //       setNameVal(fileName[0])
+  //     }
+  //     const newFile = Object.assign(file, {
+  //       preview: URL.createObjectURL(file),
+  //     });
+  //     if (file) {
+  //     setPreviewVal(file.preview)
+  //       setValue('images', newFile, { shouldValidate: true });
+  //     }
+  //   },
+  //   [setValue]
+  // );
+
+  // const handleDrop = useCallback(
+  //   (acceptedFiles) => {
+  //     const newFiles = acceptedFiles.map((file) =>
+  //       Object.assign(file, {
+  //         preview: URL.createObjectURL(file),
+  //       })
+  //     );
+  //     console.log("newFiles : ",newFiles)
+
+  //     setFiles([...files, ...newFiles]);
+  //   },
+  //   [files]
+  // );
 
   const previewHandle = () => {
     setPreview(true);
@@ -337,10 +352,10 @@ export default function DocumentAddForm({ currentDocument }) {
     setPreview(false);
   };
 
-  const handleRemoveFile = () => {
-    setValue('images', '', { shouldValidate: true });
-    setNameVal('');
-  };
+  // const handleRemoveFile = () => {
+  //   setValue('images', "", { shouldValidate: true });
+  //   setNameVal("")
+  // };
 
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
@@ -397,7 +412,29 @@ export default function DocumentAddForm({ currentDocument }) {
   const handleIsActiveChange = () => {
     setIsActive(!isActive);
   };
+  // const handleRemoveFile = (inputFile) => {
+  //   const filtered = files.filter((file) => file !== inputFile);
+  //   setFiles(filtered);
+  // };
 
+  const handleDropMultiFile = useCallback(
+    (acceptedFiles) => {
+      const files = values.multiUpload || [];
+      console.log('files: ', files);
+      const newFiles = acceptedFiles.map((file) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file),
+        })
+      );
+      console.log('newFiles: ', newFiles);
+      setValue('multiUpload', [...files, ...newFiles], { shouldValidate: true });
+    },
+    [setValue, values.multiUpload]
+  );
+
+  // const handleRemoveAllFiles = () => {
+  //   setFiles([]);
+  // };
   return (
     <Container maxWidth={false}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -702,9 +739,9 @@ export default function DocumentAddForm({ currentDocument }) {
                         onPreview={previewHandle}
                         name="images"
                         maxSize={30145728}
-                        onDelete={handleRemoveFile}
-                        onDrop={handleDrop}
-                        onRemove={handleDrop}
+                        // onDelete={handleRemoveFile}
+                        // onDrop={handleDrop}
+                        // onRemove={handleDrop}
                         // onRemoveAll={handleRemoveAllFiles}
                         // onUpload={() => console.log('ON UPLOAD')}
                         // onDelete={handleRemoveFile}

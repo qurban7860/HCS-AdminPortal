@@ -7,18 +7,17 @@ import {
   Stack,
   Card,
   Grid,
+  Breadcrumbs,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Divider,
-  Breadcrumbs,
-  Typography,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// hooks
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
+// components
 import { useSnackbar } from '../../../components/snackbar';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSettingsContext } from '../../../components/settings';
@@ -35,6 +34,8 @@ import {
 } from '../../../redux/slices/document/customerDocument';
 import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
+import { getMachines } from '../../../redux/slices/products/machine';
+import { getCustomers } from '../../../redux/slices/customer/customer';
 import DocumentAddForm from './DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';

@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
 // @mui
 import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
 import {
@@ -10,15 +11,15 @@ import {
   StyledCardWrapper,
 } from '../../theme/styles/customer-styles';
 import SiteCarousel from './site/util/SiteCarousel';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData, getComparator, useTable } from '../../components/table';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
 import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';

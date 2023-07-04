@@ -2,11 +2,10 @@ import { Helmet } from 'react-helmet-async';
 import { useState, useMemo, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
 import { Container, Grid, Card, Tooltip, Typography, Dialog, Link } from '@mui/material';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/FormLabel';
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 import { Cover } from '../../components/Cover';
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
@@ -43,7 +42,7 @@ export default function Document() {
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
   const handleViewCustomer = (Id) => {
-    navigate(PATH_DASHBOARD.customer.view(Id));
+    navigate(PATH_CUSTOMER.view(Id));
   };
   const defaultValues = useMemo(
     () => ({

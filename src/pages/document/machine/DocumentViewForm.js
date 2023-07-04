@@ -15,7 +15,7 @@ import {
   getMachineDocumentHistory,
 } from '../../../redux/slices/document/machineDocument';
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import ViewFormAudit from '../../components/ViewFormAudit';
 import ViewFormField from '../../components/ViewFormField';
@@ -62,7 +62,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
     dispatch(setMachineDocumentEditFormVisibility(true));
   };
   const linkMachineDocumentView = async () => {
-    navigate(PATH_DASHBOARD.document.machine(currentMachineDocument._id));
+    navigate(PATH_DOCUMENT.document.machine(currentMachineDocument._id));
     dispatch(resetMachineDocument());
     dispatch(resetCustomer());
     //  dispatch(resetMachine())
@@ -143,14 +143,10 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
             ))}
           </Grid>
         </Grid>
-        <Grid container sx={{ mt: '1rem' }}>
-          <ViewFormAudit defaultValues={defaultValues} />
-        </Grid>
       </Grid>
     </Grid>
   );
 }
-
 DocumentViewForm.propTypes = {
   currentMachineDocument: PropTypes.object,
 };

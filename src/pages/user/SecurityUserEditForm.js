@@ -11,7 +11,7 @@ import { Box, Card, Grid, Stack, Typography, Autocomplete,TextField } from '@mui
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, {
@@ -35,7 +35,8 @@ import ViewFormSWitch from '../components/ViewFormSwitch';
 
 export default function SecurityUserEditForm() {
   const userRolesString = localStorage.getItem('userRoles');
-  const userRoles = JSON.parse(userRolesString);
+  // const userRoles = JSON.parse(userRolesString);
+  const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
   const regEx = /^[2][0-9][0-9]$/
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
@@ -57,7 +58,7 @@ export default function SecurityUserEditForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [ roleTypesDisabled, disableRoleTypes] = useState(false);
+  const [ roleTypesDisabled, setDisableRoleTypes] = useState(false);
 
 
   const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }};
@@ -74,13 +75,15 @@ useEffect(() => {
   }
   if(userRoles){
     if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
-      disableRoleTypes(false);
+      setDisableRoleTypes(false);
     } else {
-      disableRoleTypes(true);
+      setDisableRoleTypes(true);
     }
   }
 // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [dispatch, customerVal, userRoles]);
+}, [dispatch, customerVal, 
+  // userRoles
+]);
 
 useEffect(() => {
   const mappedRoles = roles.map((role) => ({
@@ -189,7 +192,7 @@ useEffect(() => {
 
     try {  
       await dispatch(updateSecurityUser(data,securityUser._id));
-      navigate(PATH_DASHBOARD.user.view(securityUser._id));
+      navigate(PATH_SECURITY.users.view(securityUser._id));
     } catch (error) {
       if(error.Message){
         enqueueSnackbar(error.Message,{ variant: `error` })
@@ -203,7 +206,7 @@ useEffect(() => {
   };
 
   const toggleCancel = ()=>{
-      navigate(PATH_DASHBOARD.user.view(securityUser._id));
+      navigate(PATH_SECURITY.users.view(securityUser._id));
   }
   const handleInputEmail = (e) => {
     const emailRegEx =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;

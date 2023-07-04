@@ -41,7 +41,7 @@ export default function ParameterListTableToolbar({
   onFilterStatus,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_MACHINE.parameters.params); };
+  const toggleAdd = () => { navigate(PATH_MACHINE.machines.settings.machineParameters.new); };
   return (
     <Stack
       spacing={2}

@@ -19,7 +19,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
@@ -183,11 +183,11 @@ export default function RoleList() {
 
   const handleEditRow = (id) => {
     // console.log(id);
-    navigate(PATH_DASHBOARD.role.edit(id));
+    navigate(PATH_SETTING.role.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.role.view(id));
+    navigate(PATH_SETTING.role.view(id));
   };
 
   const handleResetFilter = () => {

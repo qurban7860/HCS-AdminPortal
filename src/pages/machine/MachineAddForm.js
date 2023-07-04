@@ -232,7 +232,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
       setInstallationDate(null);
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.machine.list);
+      navigate(PATH_MACHINE.machines.list);
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
@@ -262,7 +262,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machine.list);
+    navigate(PATH_MACHINE.machines.list);
   };
 
   const { themeStretch } = useSettingsContext();
@@ -527,7 +527,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
                     )}
                     id="controllable-states-demo"
-                    renderInput={(params) => <TextField {...params} label="Instalation Site" />}
+                    renderInput={(params) => <TextField {...params} label="Installation Site" />}
                     ChipProps={{ size: 'small' }}
                   />
 

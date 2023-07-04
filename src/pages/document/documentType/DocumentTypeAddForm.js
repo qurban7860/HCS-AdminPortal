@@ -10,7 +10,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , Container} from '@mui/material';
 // ROUTES
-import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // slice
 import { addDocumentType, setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
@@ -80,7 +80,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
   },[dispatch]);
 
   const onSubmit = async (data) => {
-    // console.log("Document Type : ", data);
+    console.log("Document Type : ", data);
       try{
         if(documentCategoryVal){
           data.docCategory= documentCategoryVal._id 
@@ -89,7 +89,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
         // console.log("response : ",response);
         reset();
         enqueueSnackbar('Document Save Successfully!');
-        navigate(PATH_DOCUMENT.documentType.list)
+        navigate(PATH_SETTING.documentType.list)
       } catch(error){
         enqueueSnackbar('Document Save failed!', { variant: `error` });
         console.error(error);
@@ -98,7 +98,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
 
   const toggleCancel = () =>
   {
-    navigate(PATH_DOCUMENT.documentName.list);
+    navigate(PATH_SETTING.documentName.list);
     dispatch(setDocumentTypeFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(true))

@@ -163,7 +163,7 @@ export default function DocumentList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.document.view(id));
+    navigate(PATH_DOCUMENT.document.view(id));
   };
 
   const handleResetFilter = () => {

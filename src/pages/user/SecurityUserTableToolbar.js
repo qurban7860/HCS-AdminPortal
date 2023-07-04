@@ -4,7 +4,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { Stack, InputAdornment, TextField, MenuItem, Button ,Grid} from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 import { setSecurityUserFormVisibility} from '../../redux/slices/securityUser/securityUser';
 import { useDispatch} from '../../redux/store';
 
@@ -90,7 +90,7 @@ export default function SecurityUserTableToolbar({
         </Grid>
         <Grid item xs={8} sm={3}>
           <Stack alignItems="flex-end" > 
-            <Button component={RouterLink} sx={{p:2, px:4}} onClick={formVisibleToggle} to={PATH_DASHBOARD.user.new} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} > User</Button>
+            <Button component={RouterLink} sx={{p:2, px:4}} onClick={formVisibleToggle} to={PATH_SECURITY.users.new} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} > User</Button>
           </Stack>
         </Grid>
       </Grid>

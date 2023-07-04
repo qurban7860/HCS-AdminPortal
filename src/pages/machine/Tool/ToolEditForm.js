@@ -89,7 +89,7 @@ export default function ToolEditForm() {
   const toggleCancel = () => 
     {
       // dispatch(setToolEditFormVisibility(false));
-      navigate(PATH_MACHINE.tool.view(id));
+      navigate(PATH_MACHINE.machines.settings.tool.view(id));
     };
 
   const onSubmit = async (data) => {
@@ -98,7 +98,7 @@ export default function ToolEditForm() {
       await dispatch(updateTool({...data,id}));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.tool.view(id));
+      navigate(PATH_MACHINE.machines.settings.tool.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

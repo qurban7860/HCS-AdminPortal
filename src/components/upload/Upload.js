@@ -248,7 +248,7 @@ export default function Upload({
       {hasFiles && (
         <>
           <Box sx={{ my: 3 }}>
-            <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove} />
+            <MultiFilePreview files={files} thumbnail={thumbnail} onRemove={onRemove}/>
           </Box>
 
           <Stack direction="row" justifyContent="flex-end" spacing={1.5}>
@@ -257,7 +257,7 @@ export default function Upload({
                 Remove all
               </Button>
             )}
-
+{/* 
             {onRemove && (
               <Button color="inherit" variant="outlined" size="small" onClick={onRemove}>
                 Remove
@@ -268,7 +268,7 @@ export default function Upload({
               <Button size="small" variant="contained" onClick={onUpload}>
                 Upload files
               </Button>
-            )}
+            )} */}
           </Stack>
         </>
       )}

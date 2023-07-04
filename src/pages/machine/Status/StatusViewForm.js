@@ -58,7 +58,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
   const onDelete = () => {
     try{
       dispatch(deleteMachinestatus(id));
-      navigate(PATH_MACHINE.machineStatus.list);
+      navigate(PATH_MACHINE.machines.settings.machineStatus.list);
     } catch (err) {
       // if(err.Message){
       //   enqueueSnackbar(err.Message,{ variant: `error` })
@@ -74,7 +74,7 @@ export default function StatusViewForm({ currentMachinestatus = null }) {
 
 
   const toggleEdit = () => {
-    navigate(PATH_MACHINE.machineStatus.statusedit(id));
+    navigate(PATH_MACHINE.machines.settings.machineStatus.statusedit(id));
   }
 
   return (

@@ -3,7 +3,7 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -190,11 +190,11 @@ export default function CustomerList() {
 
   const handleEditRow = (id) => {
     // console.log(id);
-    navigate(PATH_DASHBOARD.customer.edit(id));
+    navigate(PATH_CUSTOMER.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
+    navigate(PATH_CUSTOMER.view(id));
   };
 
   const handleResetFilter = () => {

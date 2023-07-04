@@ -1,22 +1,17 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useMemo, useEffect, useLayoutEffect } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import download from 'downloadjs';
-import { styled, alpha, useTheme } from '@mui/material/styles';
 import { Container, Grid, Card, Tooltip, Typography, Dialog, Link } from '@mui/material';
-import { PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT } from '../../../../routes/paths';
-import { Cover } from '../../../components/Cover';
-import Iconify from '../../../../components/iconify';
+import { PATH_CUSTOMER, PATH_MACHINE, PATH_DOCUMENT } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../components/ViewFormAudit';
 import ViewFormField from '../../../components/ViewFormField';
 import { getDocumentDownload } from '../../../../redux/slices/document/documentFile';
 import {
-  getDocument,
   getDocumentHistory,
   getDocuments,
-  resetDocument,
   deleteDocument,
   resetActiveDocuments,
 } from '../../../../redux/slices/document/document';
@@ -26,7 +21,6 @@ import { Thumbnail } from '../../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../../components/FormLabel';
 import DialogLink from '../../../components/Dialog/DialogLink';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
-import ImagePreviewDialog from '../../../components/Thumbnails/ImagePreviewDialog';
 import { document as documentType } from '../../../../constants/document-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 
@@ -70,7 +64,7 @@ export default function Document() {
     try {
       await dispatch(deleteDocument(id));
       dispatch(getDocuments());
-      navigate(PATH_DASHBOARD.document.dashboard);
+      navigate(PATH_DOCUMENT.document.list);
       enqueueSnackbar('Document deleted Successfully!');
     } catch (err) {
       enqueueSnackbar('Document delete failed!', { variant: `error` });
@@ -79,16 +73,16 @@ export default function Document() {
   };
 
   const handleEdit = async () => {
-    navigate(PATH_DASHBOARD.document.edit(id));
+    navigate(PATH_DOCUMENT.document.edit(id));
   };
 
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
   const handleViewCustomer = (Id) => {
-    navigate(PATH_DASHBOARD.customer.view(Id));
+    navigate(PATH_CUSTOMER.view(Id));
   };
   const handleViewMachine = (Id) => {
-    navigate(PATH_MACHINE.machine.view(Id));
+    navigate(PATH_MACHINE.machines.view(Id));
   };
   const handleOpenMachine = () => setOpenMachine(true);
   const handleCloseMachine = () => setOpenMachine(false);

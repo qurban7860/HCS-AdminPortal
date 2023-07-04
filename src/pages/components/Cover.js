@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
 import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
 // utils
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_MACHINE, PATH_SETTING } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // components
@@ -46,10 +46,10 @@ export function Cover({
 }) {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate(PATH_MACHINE.general.app);
+    navigate(PATH_MACHINE.machines.settings.root);
   };
   const handleSettingsNavigate = () => {
-    navigate(PATH_DASHBOARD.setting);
+    navigate(PATH_SETTING.app);
   };
   const handleBacklink = () => {
     navigate(backLink);

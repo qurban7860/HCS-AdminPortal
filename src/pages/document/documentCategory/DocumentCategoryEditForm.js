@@ -15,7 +15,7 @@ import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputA
 import { CONFIG } from '../../../config-global';
 // slice
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
@@ -83,7 +83,7 @@ export default function DocumentCategoryeEditForm() {
 
   const toggleCancel = () => 
   {
-    navigate(PATH_DOCUMENT.documentCategory.view(documentCategory._id))
+    navigate(PATH_SETTING.documentCategory.view(documentCategory._id))
 
   };
 

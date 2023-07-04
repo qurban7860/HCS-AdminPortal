@@ -71,7 +71,7 @@ export default function TechParamCategoryEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [techparamcategory]);
 
-  const toggleCancel = () =>  { navigate(PATH_MACHINE.techParam.view(id)); };
+  const toggleCancel = () =>  { navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.view(id)); };
 
   const onSubmit = async (data) => {
     try {
@@ -79,7 +79,7 @@ export default function TechParamCategoryEditForm() {
       await dispatch(updateTechparamcategory(data,id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.techParam.view(id));
+      navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

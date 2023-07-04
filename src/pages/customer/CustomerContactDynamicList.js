@@ -9,11 +9,10 @@ import {
   StyledCardWrapper,
 } from '../../theme/styles/customer-styles';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData, useTable, getComparator } from '../../components/table';
@@ -27,6 +26,7 @@ import {
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';

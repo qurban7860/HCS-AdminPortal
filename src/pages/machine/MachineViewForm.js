@@ -1,10 +1,10 @@
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Divider, Switch, Card, Grid, Typography, Link, Dialog, Tooltip } from '@mui/material';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // slices
 import { useAuthContext } from '../../auth/useAuthContext';
 import {
@@ -31,6 +31,9 @@ import { useSnackbar } from '../../components/snackbar';
 import { DIALOGS } from '../../constants/default-constants';
 import FormLabel from '../components/FormLabel';
 import GoogleMaps from '../../assets/GoogleMaps';
+// utils
+import { fDateTime , fDate } from '../../utils/formatTime';
+
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
@@ -44,9 +47,35 @@ export default function MachineViewForm() {
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
-  const [disableTransferButton, setDisableTransferButton] = useState(false);
+  const [ disableTransferButton, setDisableTransferButton ] = useState(true);
+  const [ disableEditButton, setDisableEditButton ] = useState(false);
+  const [ hasValidLatLong, setHasValidLatLong ] = useState(false);
   const baseUrl = window.location.origin;
-  const isSuperAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
+  const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
+
+  // function to check whether the lat long params exist or not
+  const hasValidArray = (array) => array.some((obj) => {
+    const lat = obj?.lat;
+    const long = obj?.long;
+    return lat !== undefined && long !== undefined && lat !== "" && long !== "";
+  });
+
+  const latLongValues = useMemo(() => [
+    {
+      lat: machine?.instalationSite?.lat || "",
+      long: machine?.instalationSite?.long || "",
+    },
+    {
+      lat: machine?.billingSite?.lat || "",
+      long: machine?.billingSite?.long || "",
+    }
+  ], [machine]);
+
+  useEffect(() => {
+    const isValid = hasValidArray(latLongValues);
+    setHasValidLatLong(isValid);
+
+  }, [machine, latLongValues, setHasValidLatLong]);
 
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));
@@ -71,7 +100,7 @@ export default function MachineViewForm() {
     try {
       const response = await dispatch(transferMachine(machine));
       const machineId = response.data.Machine._id;
-      window.open(`${baseUrl}/machine/${machineId}/view`);
+      window.open(`${baseUrl}/products/machines/${machineId}/view`);
     } catch (error) {
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
@@ -85,13 +114,13 @@ export default function MachineViewForm() {
   };
 
   const handleViewCustomer = (id) => {
-    navigate(PATH_DASHBOARD.customer.view(id));
+    navigate(PATH_CUSTOMER.view(id));
   };
   const onDelete = async () => {
     try {
       await dispatch(deleteMachine(machine._id));
       dispatch(getMachines());
-      navigate(PATH_MACHINE.machine.list);
+      navigate(PATH_MACHINE.machines.list);
     } catch (err) {
       // if(err.Message){
       //     enqueueSnackbar(err.Message,{ variant: `error` })
@@ -127,45 +156,38 @@ export default function MachineViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id: machine?._id || '',
-      name: machine?.name || '',
-      serialNo: machine?.serialNo || '',
-      parentMachine: machine?.parentMachine?.name || '',
-      parentSerialNo: machine?.parentMachine?.serialNo || '',
-      supplier: machine?.supplier?.name || '',
-      workOrderRef: machine?.workOrderRef || '',
-      machineModel: machine?.machineModel?.name || '',
-      status: machine?.status?.name || '',
-      customer: machine?.customer || '',
-      instalationSite: machine?.instalationSite || '',
-      siteMilestone: machine?.siteMilestone || '',
-      billingSite: machine?.billingSite || '',
-      description: machine?.description || '',
-      customerTags: machine?.customerTags || '',
-      accountManager: machine?.accountManager || '',
-      projectManager: machine?.projectManager || '',
-      supportManager: machine?.supportManager || '',
-      isActive: machine?.isActive,
-      createdByFullName: machine?.createdBy?.name,
-      createdAt: machine?.createdAt,
-      createdIP: machine?.createdIP,
-      updatedByFullName: machine?.updatedBy?.name,
-      updatedAt: machine?.updatedAt,
-      updatedIP: machine?.updatedIP,
-    }),
+      id:                       machine?._id || '',
+      name:                     machine?.name || '',
+      serialNo:                 machine?.serialNo || '',
+      parentMachine:            machine?.parentMachine?.name || '',
+      parentSerialNo:           machine?.parentMachine?.serialNo || '',
+      supplier:                 machine?.supplier?.name || '',
+      workOrderRef:             machine?.workOrderRef || '',
+      machineModel:             machine?.machineModel?.name || '',
+      status:                   machine?.status?.name || '',
+      customer:                 machine?.customer || '',
+      siteMilestone:            machine?.siteMilestone || '',
+      instalationSite:          machine?.instalationSite || '',
+      billingSite:              machine?.billingSite|| '',
+      installationDate:         machine?.installationDate || '',
+      shippingDate:             machine?.shippingDate || '',
+      description:              machine?.description || '',
+      customerTags:             machine?.customerTags || '',
+      accountManager:           machine?.accountManager || '',
+      projectManager:           machine?.projectManager || '',
+      supportManager:           machine?.supportManager || '',
+      isActive:                 machine?.isActive,
+      createdByFullName:        machine?.createdBy?.name ,
+      createdAt:                machine?.createdAt ,
+      createdIP:                machine?.createdIP ,
+      updatedByFullName:        machine?.updatedBy?.name ,
+      updatedAt:                machine?.updatedAt ,
+      updatedIP:                machine?.updatedIP ,
+    }
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
-
-  const latLongValues = [
-    {
-      lat: machine?.billingSite?.lat || '',
-      long: machine?.billingSite?.long || '',
-    },
-    {
-      lat: machine?.instalationSite?.lat || '',
-      long: machine?.instalationSite?.long || '',
-    },
-  ];
 
   return (
     <Card sx={{ p: 3 }}>
@@ -221,10 +243,11 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
         <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <CommaJoinField
+        <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
+        <ViewFormField
           sm={6}
-          arrayParam={machine.machineConnections}
-          heading="Connected Machines"
+          heading="Work Order / Purchase Order"
+          param={defaultValues?.workOrderRef}
         />
         <ViewFormField
           sm={6}
@@ -248,11 +271,9 @@ export default function MachineViewForm() {
             )
           }
         />
-        <ViewFormField
-          sm={6}
-          heading="Work Order / Perchase Order"
-          param={defaultValues?.workOrderRef}
-        />
+        <ViewFormField sm={6} heading="Installation Date" param={fDate(defaultValues?.installationDate)} />
+        <ViewFormField sm={6} heading="Shipping Date" param={fDate(defaultValues?.shippingDate)} />
+
         <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
@@ -284,7 +305,16 @@ export default function MachineViewForm() {
 
       <Grid container>
         <FormLabel content="Sites Locations" />
-        <GoogleMaps latlongArr={latLongValues} mapHeight="500px" />
+        { hasValidLatLong ? <GoogleMaps
+              machineView
+              latlongArr={latLongValues}
+              mapHeight='500px'
+          /> : 
+          <ViewFormField
+            sm={6}
+            heading="No Site Locations Available"
+          />
+        }    
       </Grid>
 
       <Grid container sx={{ mt: 2 }}>

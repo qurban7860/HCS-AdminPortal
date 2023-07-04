@@ -29,7 +29,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
 
   const toggleEdit = () => {
     dispatch(setCategoryEditFormVisibility(true));
-    navigate(PATH_MACHINE.categories.categoryedit(id));
+    navigate(PATH_MACHINE.machines.settings.categories.categoryedit(id));
   }
   const { enqueueSnackbar } = useSnackbar();
 
@@ -63,7 +63,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       try{  
         await dispatch(deleteCategory(id));
         enqueueSnackbar("Category Deleted Successfullty!");
-        navigate(PATH_MACHINE.categories.list);
+        navigate(PATH_MACHINE.machines.settings.categories.list);
       } catch (err) {
         // if(err.Message){
         //   enqueueSnackbar(err.Message,{ variant: `error` })

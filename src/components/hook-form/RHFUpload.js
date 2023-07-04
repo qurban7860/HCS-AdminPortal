@@ -82,7 +82,28 @@ export function RHFUpload({ name, multiple, helperText, ...other }) {
         multiple ? (
           <Upload
             multiple
-            accept={{ '': [] }}
+            accept=".png, .jpeg, .jpg, .gif, .bmp, .webp, .djvu, .heic, .heif, .ico, .jfif, .jp2, .jpe, .jpeg, .jpg, .jps, .mng, .nef, .nrw, .orf, .pam, .pbm, .pcd, .pcx, .pef, .pes, .pfm, .pgm, .picon, .pict, .png, .pnm, .ppm, .psd, .raf, .ras, .rw2, .sfw, .sgi, .svg, .tga, .tiff, .psd, .jxr, .wbmp, .x3f, .xbm, .xcf, .xpm, .xwd, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .csv, .txt, .odp, .ods, .odt, .ott, .rtf"
+            // accept={{
+            //   'image/*': [ 'png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp', 'djvu', 'heic', 'heif', 'ico', 'jfif', 'jp2', 
+            //     'jpe', 'jpeg', 'jpg', 'jps', 'mng', 'nef', 'nrw', 'orf', 'pam', 'pbm', 'pcd', 'pcx', 'pef', 'pes', 'pfm',
+            //     'pgm', 'picon', 'pict', 'png', 'pnm', 'ppm', 'psd', 'raf', 'ras', 'rw2', 'sfw', 'sgi', 'svg', 'tga', 'tiff',
+            //     'psd', 'jxr', 'wbmp', 'x3f', 'xbm', 'xcf', 'xpm', 'xwd',
+            //   ],
+            //   'application/pdf': ['pdf'],
+            //   'application/msword': ['doc'],
+            //   'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['docx'],
+            //   'application/vnd.ms-excel': ['xls'],
+            //   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['xlsx'],
+            //   'application/vnd.ms-powerpoint': ['ppt'],
+            //   'application/vnd.openxmlformats-officedocument.presentationml.presentation': ['pptx'],
+            //   'text/csv': ['csv'],
+            //   'text/plain': ['txt'],
+            //   'application/vnd.oasis.opendocument.presentation': ['odp'],
+            //   'application/vnd.oasis.opendocument.spreadsheet': ['ods'],
+            //   'application/vnd.oasis.opendocument.text': ['odt'],
+            //   'application/vnd.oasis.opendocument.text-template': ['ott'],
+            //   'application/rtf': ['rtf'],
+            // }}
             files={field.value}
             error={!!error}
             helperText={

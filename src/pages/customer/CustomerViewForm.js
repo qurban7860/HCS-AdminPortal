@@ -7,10 +7,9 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Breadcrumbs, Tooltip } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import FormLabel from '../components/FormLabel';
 import { TableNoData } from '../../components/table';
 // slices
@@ -23,8 +22,9 @@ import {
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import { FORMLABELS } from '../../constants/default-constants';
+import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/customer-constants';
 import useResponsive from '../../hooks/useResponsive';
 
@@ -118,7 +118,7 @@ export default function CustomerViewForm() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
           </Breadcrumbs>
         </Grid>

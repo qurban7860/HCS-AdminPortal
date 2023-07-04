@@ -86,7 +86,7 @@ export default function StatusAddForm() {
 
   const toggleCancel = () => 
   {
-    navigate(PATH_MACHINE.supplier.list);
+    navigate(PATH_MACHINE.machines.settings.supplier.list);
   };
 
   const handlePhoneChange = (newValue) => {
@@ -118,7 +118,7 @@ export default function StatusAddForm() {
       await dispatch(addSupplier(data));
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.supplier.list); 
+      navigate(PATH_MACHINE.machines.settings.supplier.list); 
     } catch(error){
       // enqueueSnackbar('Saving failed!');
       enqueueSnackbar(error?.message, { variant: `error` })

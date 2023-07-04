@@ -155,7 +155,7 @@ export function addCustomerDocument(customerId,params) {
           if(params?.images){
             formData.append('images', params?.images);
           }
-// console.log("formData : ",params?.image);
+console.log("formData : ",params?.image);
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData,{
         headers: {
           'Content-Type':"multupart/form-data"
@@ -233,6 +233,7 @@ export function getCustomerDocuments(customerId) {
           isArchived: false,
           customer:customerId,
           machine: null,
+          // basic: true
         }
       }
       );

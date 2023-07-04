@@ -4,7 +4,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Stack,
+  Breadcrumbs,
   Card,
   Grid,
   Button,
@@ -12,7 +12,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Breadcrumbs,
 } from '@mui/material';
 import { fDate, fDateTime } from '../../utils/formatTime';
 // redux
@@ -26,6 +25,7 @@ import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import EmptyContent from '../../components/empty-content';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import NotesViewForm from './note/NotesViewForm';
@@ -67,22 +67,13 @@ const STATUS_OPTIONS = [
 
 export default function CustomerNoteList() {
   const {
-    dense,
     page,
     order,
     orderBy,
     rowsPerPage,
-    setPage,
     //
     selected,
     setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });

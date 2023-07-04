@@ -1,6 +1,6 @@
 // routes
 import { Button } from '@mui/material';
-import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY } from '../../../routes/paths';
 // components
 import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
@@ -50,12 +50,12 @@ const navConfig = [
     subheader: 'general',
     items: [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
-      { title: 'Customers', path: PATH_DASHBOARD.customer.list, icon: ICONS.users },
-      { title: 'Machines', path: PATH_MACHINE.machine.list, icon: ICONS.machines },
-      { title: 'Security', path: PATH_DASHBOARD.user.list, icon: ICONS.user },
-      { title: 'Settings', path: PATH_DASHBOARD.setting, icon: ICONS.setting },
-      { title: 'Document', path: PATH_DASHBOARD.document.dashboard, icon: ICONS.document },
-      { title: 'Site Map', path: PATH_DASHBOARD.reports, icon: ICONS.reports },
+      { title: 'Customers', path: PATH_CUSTOMER.list, icon: ICONS.users },
+      { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
+      { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user },
+      { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting },
+      { title: 'Document', path: PATH_DOCUMENT.document.list, icon: ICONS.document },
+      { title: 'Site Map', path: PATH_SITEMAP.app, icon: ICONS.reports },
       // {
       //   title: 'Button Title',
       //   path: '/PATH_DASHBOARD.customer.new',
