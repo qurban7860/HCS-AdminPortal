@@ -174,13 +174,13 @@ export function addDocument(customerId , machineId , params) {
             formData.append('doctype', params?.documentType);
           }
           console.log("params?.multiUpload : ", params?.multiUpload)
-          if(params?.multiUpload){
-            formData.append('images', params?.multiUpload);
-          }
+          // if(params?.multiUpload){
+          //   formData.append('images', params?.multiUpload);
+          // }
           console.log("params?.multiUpload : ", params?.multiUpload);
           if (params?.multiUpload) {
             params.multiUpload.forEach((file, index) => {
-              formData.append(`images[${index}]`, file);
+              formData.append(`images`, file);
             });
           }
           console.log("formData", formData);
