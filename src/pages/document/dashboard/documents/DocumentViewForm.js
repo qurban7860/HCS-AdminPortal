@@ -3,7 +3,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import download from 'downloadjs';
-import { Container, Grid, Card, Tooltip, Typography, Dialog, Link } from '@mui/material';
+import { Container, Grid, Card, Tooltip, Typography, Dialog, Link, DialogContent } from '@mui/material';
 import { PATH_CUSTOMER, PATH_MACHINE, PATH_DOCUMENT } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../components/ViewFormAudit';
@@ -180,6 +180,7 @@ export default function Document() {
   };
 
   return (
+    <>
     <Container maxWidth={false}>
       <DocumentCover content={defaultValues?.displayName} />
       <Grid container>
@@ -265,15 +266,16 @@ export default function Document() {
         </Grid>
       </Grid>
 
-      {/* dialog for customer */}
-      <Dialog
-        disableEnforceFocus
+      
+    </Container>
+    {/* dialog for customer */}
+    <Dialog
         open={openCustomer}
         onClose={handleCloseCustomer}
         keepMounted
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogLabel onClick={() => handleCloseCustomer()} content="Customer" />
+        <DialogLabel onClick={handleCloseCustomer} content="Customer" />
         <Grid item container sx={{ px: 2, pt: 2 }}>
           <ViewFormField sm={12} heading="Name" param={customer?.name} />
           <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
@@ -339,6 +341,7 @@ export default function Document() {
         aria-describedby="alert-dialog-slide-description"
       >
         <DialogLabel onClick={() => handleCloseMachine()} content="Machine" />
+        <DialogContent dividers>
         <Grid container sx={{ px: 2, pt: 2 }}>
           <ViewFormField sm={6} heading="Serial No" param={machine?.serialNo} />
           <ViewFormField sm={6} heading="Name" param={machine?.name} />
@@ -391,8 +394,9 @@ export default function Document() {
             secondParam={machine?.supportManager?.lastName}
           />
         </Grid>
+        </DialogContent>
         <DialogLink onClick={() => handleViewMachine(machine._id)} content="Go to machine" />
       </Dialog>
-    </Container>
+    </>
   );
 }
