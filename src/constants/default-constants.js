@@ -48,3 +48,18 @@ export const BREADCRUMBS = {
   NEWCONTACT: 'Add new Contact',
   NEWSITE: 'Add new Site',
 };
+
+export const ICONS = {
+  // @root - src/components/IconPopover -ViewFormFields
+  // isActive
+  ACTIVE: {
+    icon: 'mdi:check-circle',
+    color: 'green',
+    heading: 'Active',
+  },
+  INACTIVE: {
+    icon: 'mdi:power-off',
+    color: 'red',
+    heading: 'Inactive',
+  },
+};

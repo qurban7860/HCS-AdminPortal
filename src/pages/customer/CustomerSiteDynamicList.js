@@ -49,15 +49,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const [googleMapsVisibility, setGoogleMapsVisibility] = useState(false);
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
-  const {
-    sites,
-    isLoading,
-    error,
-    initial,
-    responseMessage,
-    siteEditFormVisibility,
-    siteAddFormVisibility,
-  } = useSelector((state) => state.site);
+  const { sites, error, responseMessage, siteEditFormVisibility, siteAddFormVisibility } =
+    useSelector((state) => state.site);
   const { customer } = useSelector((state) => state.customer);
   // for filtering sites
   const isFiltered = filterName !== '' || !!filterStatus.length;
