@@ -6,16 +6,11 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { LoadingButton } from '@mui/lab';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   Switch,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  Breadcrumbs,
   Box,
   Card,
   Grid,
@@ -23,8 +18,6 @@ import {
   Typography,
   Autocomplete,
   TextField,
-  Link,
-  FormControl,
   Dialog,
 } from '@mui/material';
 // routes
@@ -55,8 +48,19 @@ import { useSnackbar } from '../../../components/snackbar';
 import { countries } from '../../../assets/data';
 import FormProvider, { RHFTextField, RHFUpload } from '../../../components/hook-form';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
+import RadioButtons from '../../components/DocumentForms/RadioButtons';
 import FormHeading from '../../components/FormHeading';
 import AddFormButtons from '../../components/AddFormButtons';
+import DialogLabel from '../../components/Dialog/DialogLabel';
+import {
+  fileTypesArray,
+  allowedExtensions,
+  fileTypesMessage,
+  DocRadioLabel,
+  DocRadioValue,
+  Snacks,
+} from '../../../constants/document-constants';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 
@@ -94,21 +98,7 @@ export default function DocumentAddForm({ currentDocument }) {
   const [customerVal, setCustomerVal] = useState('');
   const [siteVal, setSiteVal] = useState('');
   const [contactVal, setContactVal] = useState('');
-  const allowedExtension = [
-    'png',
-    'jpeg',
-    'jpg',
-    'gif',
-    'bmp',
-    'webp',
-    'pdf',
-    'doc',
-    'docx',
-    'xls',
-    'xlsx',
-    'ppt',
-    'pptx',
-  ];
+
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -141,32 +131,13 @@ export default function DocumentAddForm({ currentDocument }) {
     description: Yup.string().max(10000),
     images: Yup.mixed()
       .required('File is required!')
-      .test(
-        'fileType',
-        'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx',
-        (value) => {
-          if (value && value?.name) {
-            const allowedExtensions = [
-              'png',
-              'jpeg',
-              'jpg',
-              'gif',
-              'bmp',
-              'webp',
-              'pdf',
-              'doc',
-              'docx',
-              'xls',
-              'xlsx',
-              'ppt',
-              'pptx',
-            ];
-            const fileExtension = value?.name?.split('.').pop().toLowerCase();
-            return allowedExtensions.includes(fileExtension);
-          }
-          return false;
+      .test('fileType', fileTypesMessage, (value) => {
+        if (value && value?.name) {
+          const fileExtension = value?.name?.split('.').pop().toLowerCase();
+          return allowedExtensions.includes(fileExtension);
         }
-      )
+        return false;
+      })
       .nullable(true),
     isActive: Yup.boolean(),
   });
@@ -230,14 +201,15 @@ export default function DocumentAddForm({ currentDocument }) {
       }
       if (selectedValue === 'new') {
         await dispatch(addCustomerDocument(customer._id, data));
+        enqueueSnackbar(Snacks.addedDoc);
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));
+        enqueueSnackbar(Snacks.updatedDoc);
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
       }
-      enqueueSnackbar('Customer document save successfully!');
       dispatch(getCustomerDocuments(customer?._id));
       dispatch(setCustomerDocumentFormVisibility(false));
       setDocumentCategoryVal('');
@@ -255,7 +227,7 @@ export default function DocumentAddForm({ currentDocument }) {
       setDescriptionVal('');
       reset();
     } catch (error) {
-      enqueueSnackbar('Customer document save failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedDoc, { variant: `error` });
       console.error(error);
     }
   };
@@ -298,23 +270,7 @@ export default function DocumentAddForm({ currentDocument }) {
       const file = acceptedFiles[0];
       const fileName = file.name.split('.');
 
-      if (
-        [
-          'png',
-          'jpeg',
-          'jpg',
-          'gif',
-          'bmp',
-          'webp',
-          'pdf',
-          'doc',
-          'docx',
-          'xls',
-          'xlsx',
-          'ppt',
-          'pptx',
-        ].includes(fileName[fileName.length - 1])
-      ) {
+      if (fileTypesArray.includes(fileName[fileName.length - 1])) {
         setNameVal(fileName[0]);
       }
 
@@ -375,43 +331,25 @@ export default function DocumentAddForm({ currentDocument }) {
         // display="grid"
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
       >
-        <Grid container xs={12} md={12} lg={12} mt={2}>
+        <Grid container>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <Grid container lg={12}>
                   <FormHeading heading="New Document" />
                 </Grid>
-                <FormControl>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={selectedValue}
-                    onChange={handleRadioChange}
-                  >
-                    <Grid item xs={12} sm={6}>
-                      <FormControlLabel
-                        item
-                        sm={6}
-                        value="new"
-                        control={<Radio />}
-                        label="New Document"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControlLabel
-                        item
-                        sm={6}
-                        value="newVersion"
-                        control={<Radio />}
-                        label="Upload new file against existing Document"
-                      />
-                    </Grid>
-                  </RadioGroup>
-                </FormControl>
+
+                <RadioButtons
+                  value={selectedValue}
+                  radioOnChange={handleRadioChange}
+                  newLabel={DocRadioLabel.new}
+                  newValue={DocRadioValue.new}
+                  secondLabel={DocRadioLabel.existing}
+                  secondValue={DocRadioValue.newVersion}
+                />
+
                 {selectedValue === 'newVersion' && (
-                  <Grid container lg={12}>
+                  <Grid container>
                     <Grid container spacing={2}>
                       <Grid item xs={12} lg={6}>
                         <Autocomplete
@@ -459,8 +397,9 @@ export default function DocumentAddForm({ currentDocument }) {
                     </Grid>
                   </Grid>
                 )}
+
                 {(selectedValue === 'new' || documentVal) && (
-                  <Grid container lg={12}>
+                  <Grid container>
                     <Grid container spacing={2}>
                       <Grid item lg={6}>
                         <Autocomplete
@@ -521,30 +460,14 @@ export default function DocumentAddForm({ currentDocument }) {
                 )}
 
                 {documentVal && (
-                  <FormControl>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
-                      value={selectedVersionValue}
-                      onChange={handleVersionRadioChange}
-                    >
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          value="newVersion"
-                          control={<Radio />}
-                          label="New Version"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          value="existingVersion"
-                          control={<Radio />}
-                          label="Current Version"
-                        />
-                      </Grid>
-                    </RadioGroup>
-                  </FormControl>
+                  <RadioButtons
+                    value={selectedVersionValue}
+                    radioOnChange={handleVersionRadioChange}
+                    newLabel={DocRadioLabel.newVersion}
+                    newValue={DocRadioValue.newVersion}
+                    secondLabel={DocRadioLabel.currentVersion}
+                    secondValue={DocRadioValue.existing}
+                  />
                 )}
 
                 {selectedValue === 'new' && (
@@ -559,6 +482,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     }}
                   />
                 )}
+
                 {(selectedValue === 'new' ||
                   (documentVal && selectedVersionValue !== 'existingVersion')) && (
                   <RHFTextField
@@ -570,6 +494,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     multiline
                   />
                 )}
+
                 {(selectedValue === 'new' || documentVal) && (
                   <Grid item xs={12} md={6} lg={12}>
                     <RHFUpload
@@ -589,41 +514,15 @@ export default function DocumentAddForm({ currentDocument }) {
                     />
                   </Grid>
                 )}
-                {selectedValue === 'new' && (
-                  <Grid container lg={12} display="flex">
-                    <Grid display="flex">
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          pl: 2,
-                          pt: 1,
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          alignItems: 'center',
-                        }}
-                      >
-                        Customer Access
-                      </Typography>
-                      <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-                    </Grid>
-                    <Grid display="flex">
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          pl: 2,
-                          pt: 1,
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          alignItems: 'center',
-                        }}
-                      >
-                        isActive
-                      </Typography>
-                      <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
-                    </Grid>
-                  </Grid>
-                )}
 
+                {selectedValue === 'new' && (
+                  <ToggleButtons
+                    handleChange={handleChange}
+                    customerAccessVal={customerAccessVal}
+                    isActive={isActive}
+                    handleIsActiveChange={handleIsActiveChange}
+                  />
+                )}
                 {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />
                 {!!files.length && (
           <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
@@ -636,6 +535,8 @@ export default function DocumentAddForm({ currentDocument }) {
           </Grid>
         </Grid>
       </Box>
+
+      {/* dialog preview */}
       <Dialog
         maxWidth="md"
         open={preview}
@@ -643,29 +544,8 @@ export default function DocumentAddForm({ currentDocument }) {
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
-        <Grid
-          container
-          item
-          sx={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            bgcolor: 'primary.main',
-            color: 'primary.contrastText',
-            padding: '10px',
-          }}
-        >
-          <Typography variant="h4" sx={{ px: 2 }}>
-            {nameVal}
-          </Typography>{' '}
-          <Link onClick={() => handleClosePreview()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
-            <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-          </Link>
-        </Grid>
-        {/* <Grid  > */}
+        <DialogLabel content={nameVal} onClick={() => handleClosePreview()} />
         <Box component="img" alt={defaultValues?.name} src={previewVal} />
-        {/* </Grid> */}
       </Dialog>
     </FormProvider>
   );

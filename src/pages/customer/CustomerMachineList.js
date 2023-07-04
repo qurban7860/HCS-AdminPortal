@@ -86,11 +86,6 @@ export default function CustomerContactList() {
 
   console.log('customerMachines : ', customerMachines);
   const [checked, setChecked] = useState(false);
-  // const toggleChecked = () =>
-  //   {
-  //     setChecked(value => !value);
-  //     dispatch(setContactFormVisibility(!formVisibility));
-  //   };
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -147,28 +142,33 @@ export default function CustomerContactList() {
 
   return (
     <>
-      <AddButtonAboveAccordion isCustomer="true" />
-      <Stack direction="row" justifyContent="space-between" alignItems="center" mt={5} mb={1}>
-        <Breadcrumbs
-          aria-label="breadcrumb"
-          separator="›"
-          sx={{ fontSize: '12px', color: 'text.disabled' }}
-        >
-          <BreadcrumbsLink to={PATH_CUSTOMER.list} name="Customers" />
-          <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
-          <BreadcrumbsLink
-            to={PATH_DOCUMENT.document.list}
-            name={
-              <Stack>
-                {customerMachines.length > 0 ? customerMachines.length : 'No Machines'}{' '}
-                {customerMachines.length > 1
-                  ? 'Machines'
-                  : customerMachines.length > 0 && 'Machine'}
-              </Stack>
-            }
-          />
-        </Breadcrumbs>
-      </Stack>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink
+              to={PATH_DASHBOARD.customer.document}
+              name={
+                <Stack>
+                  {customerMachines.length > 0 ? customerMachines.length : 'No Machines'}{' '}
+                  {customerMachines.length > 1
+                    ? 'Machines'
+                    : customerMachines.length > 0 && 'Machine'}
+                </Stack>
+              }
+            />
+          </Breadcrumbs>
+        </Grid>
+        <AddButtonAboveAccordion isCustomer="true" />
+      </Grid>
+      <Grid item lg={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
       <Card>
         {customerMachines.map((customerMachine, index) => {
           address.city = customerMachine?.instalationSite?.address?.city;
@@ -240,9 +240,7 @@ export default function CustomerContactList() {
             </Accordion>
           );
         })}
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
+
         <Dialog
           maxWidth="md"
           open={openMachine}

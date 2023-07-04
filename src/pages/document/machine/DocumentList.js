@@ -3,7 +3,18 @@ import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Card, Grid, Table, Button, Tooltip, TableBody, Container, IconButton, TableContainer, DialogTitle, Dialog,  TextField, Typography, InputAdornment, Accordion, AccordionSummary, AccordionDetails, Divider
+import {
+  Stack,
+  Card,
+  Grid,
+  Button,
+  TextField,
+  Typography,
+  InputAdornment,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Divider,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
@@ -12,29 +23,26 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
-import { useTable, getComparator, emptyRows, TableNoData, TableSkeleton, TableEmptyRows, TableHeadCustom, TableSelectedAction, TablePaginationCustom,
-} from '../../../components/table';
+import { useTable, getComparator, TableNoData } from '../../../components/table';
 import Iconify from '../../../components/iconify';
-import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import { getMachineDocuments, setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility } from '../../../redux/slices/document/machineDocument';
-import { setDocumentTypeFormVisibility} from '../../../redux/slices/document/documentType';
+import {
+  getMachineDocuments,
+  setMachineDocumentFormVisibility,
+  setMachineDocumentEditFormVisibility,
+} from '../../../redux/slices/document/machineDocument';
+import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
 
-import DocumentAddForm from './DocumentAddForm'
+import DocumentAddForm from './DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
 import ListSwitch from '../../components/ListSwitch';
-
+import { BUTTONS } from '../../../constants/default-constants';
 import _mock from '../../../_mock';
-import EmptyContent from '../../../components/empty-content';
-import { fDate,fDateTime } from '../../../utils/formatTime';
-
-
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +78,6 @@ export default function DocumentList() {
     defaultOrderBy: '-createdAt',
   });
 
-
   const [controlled, setControlled] = useState(false);
 
   const handleChangeControlled = (panel) => (event, isExpanded) => {
@@ -78,11 +85,20 @@ export default function DocumentList() {
   };
   const dispatch = useDispatch();
 
-  const { initial,error, responseMessage , machineDocuments, machineDocumentEditFormVisibility, machineDocumentFormVisibility } = useSelector((state) => state.machineDocument);
+  const {
+    initial,
+    error,
+    responseMessage,
+    machineDocuments,
+    machineDocumentEditFormVisibility,
+    machineDocumentFormVisibility,
+  } = useSelector((state) => state.machineDocument);
   const { documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
   const { documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { machine } = useSelector((state) => state.machine);
-  const toggleChecked = async () =>{ dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility))};
+  const toggleChecked = async () => {
+    dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility));
+  };
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const [filterName, setFilterName] = useState('');
@@ -92,21 +108,21 @@ export default function DocumentList() {
   const [expanded, setExpanded] = useState(false);
 
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
-useEffect(() => {
-    if(machine?._id){
+  useEffect(() => {
+    if (machine?._id) {
       dispatch(getMachineDocuments(machine?._id));
     }
-    dispatch(setMachineDocumentEditFormVisibility(false))
-    dispatch(setMachineDocumentFormVisibility(false))
-    dispatch(setDocumentCategoryFormVisibility(false))
-    dispatch(setDocumentTypeFormVisibility(false))
-}, [dispatch, machine._id ]);
+    dispatch(setMachineDocumentEditFormVisibility(false));
+    dispatch(setMachineDocumentFormVisibility(false));
+    dispatch(setDocumentCategoryFormVisibility(false));
+    dispatch(setDocumentTypeFormVisibility(false));
+  }, [dispatch, machine._id]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -114,7 +130,7 @@ useEffect(() => {
 
   useEffect(() => {
     setTableData(machineDocuments);
-  }, [machineDocuments, error, responseMessage ]);
+  }, [machineDocuments, error, responseMessage]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -126,7 +142,12 @@ useEffect(() => {
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = dense ? 60 : 80;
   const isFiltered = filterName !== '' || !!filterStatus.length;
-  const isNotFound = !machineDocuments.length && !machineDocumentFormVisibility && !machineDocumentEditFormVisibility && !documentTypeFormVisibility && !documentCategoryFormVisibility;
+  const isNotFound =
+    !machineDocuments.length &&
+    !machineDocumentFormVisibility &&
+    !machineDocumentEditFormVisibility &&
+    !documentTypeFormVisibility &&
+    !documentCategoryFormVisibility;
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
@@ -139,59 +160,66 @@ useEffect(() => {
 
   return (
     <>
-    {!machineDocumentEditFormVisibility && !documentTypeFormVisibility && !documentCategoryFormVisibility && 
-      <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row' }} sx={{ py: 2 }}>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
-            <Grid item xs={12} sm={8}>
-              {!machineDocumentFormVisibility && (
-                <TextField
-                  fullWidth
-                  value={filterName}
-                  onChange={handleFilterName}
-                  placeholder="Search..."
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              )}
+      {!machineDocumentEditFormVisibility &&
+        !documentTypeFormVisibility &&
+        !documentCategoryFormVisibility && (
+          <Stack
+            spacing={2}
+            alignItems="center"
+            direction={{ xs: 'column', md: 'row' }}
+            sx={{ py: 2 }}
+          >
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
+                <Grid item xs={12} sm={8}>
+                  {!machineDocumentFormVisibility && (
+                    <TextField
+                      fullWidth
+                      value={filterName}
+                      onChange={handleFilterName}
+                      placeholder="Search..."
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
+                          </InputAdornment>
+                        ),
+                      }}
+                    />
+                  )}
+                </Grid>
+                {isFiltered && (
+                  <Button
+                    color="error"
+                    sx={{ flexShrink: 0, ml: 1 }}
+                    onClick={handleResetFilter}
+                    startIcon={<Iconify icon="eva:trash-2-outline" />}
+                  >
+                    {BUTTONS.CLEAR}
+                  </Button>
+                )}
+              </Grid>
+              <Grid item xs={8} sm={3}>
+                <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
+                  <Button
+                    sx={{ p: 1 }}
+                    onClick={toggleChecked}
+                    variant="contained"
+                    startIcon={
+                      !machineDocumentFormVisibility ? (
+                        <Iconify icon="eva:plus-fill" />
+                      ) : (
+                        <Iconify icon="eva:minus-fill" />
+                      )
+                    }
+                  >
+                    {BUTTONS.DOCUMENT}
+                  </Button>
+                </Stack>
+              </Grid>
             </Grid>
-            {isFiltered && (
-              <Button
-                color="error"
-                sx={{ flexShrink: 0, ml: 1 }}
-                onClick={handleResetFilter}
-                startIcon={<Iconify icon="eva:trash-2-outline" />}
-              >
-                {' '}
-                Clear{' '}
-              </Button>
-            )}
-          </Grid>
-          <Grid item xs={8} sm={3}>
-            <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
-              <Button
-                sx={{ p: 1 }}
-                onClick={toggleChecked}
-                variant="contained"
-                startIcon={
-                  !machineDocumentFormVisibility ? (
-                    <Iconify icon="eva:plus-fill" />
-                  ) : (
-                    <Iconify icon="eva:minus-fill" />
-                  )
-                }
-              >
-                New Document
-              </Button>
-            </Stack>
-          </Grid>
-        </Grid>
-      </Stack>}
+          </Stack>
+        )}
 
       {!machineDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
@@ -250,7 +278,12 @@ useEffect(() => {
                           ? 'customer Access : No'
                           : 'customer Access : Yes'}
                       </Grid> */}
-                      <Grid item xs={12} display={{ xs:"none", sm:"none", md:"block",  lg:"block"}} md={2.4}>
+                      <Grid
+                        item
+                        xs={12}
+                        display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
+                        md={2.4}
+                      >
                         <ListSwitch isActive={document?.customerAccess} />
                       </Grid>
                       <Grid
@@ -259,7 +292,7 @@ useEffect(() => {
                         display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
                         md={2.4}
                       >
-                        <Typography >{fDate(document?.createdAt || '')}</Typography>
+                        <Typography>{fDate(document?.createdAt || '')}</Typography>
                       </Grid>
                       <Divider />
                     </Grid>
@@ -304,7 +337,7 @@ useEffect(() => {
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   const stabilizedThis = inputData.map((el, index) => [el, index]);
-// console.log(filterName)
+  // console.log(filterName)
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -314,11 +347,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter((document) => document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0
+    inputData = inputData.filter(
+      (document) =>
+        document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

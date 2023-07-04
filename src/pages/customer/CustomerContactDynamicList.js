@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Grid, Link, CardActionArea } from '@mui/material';
+import { Stack, Grid, Link, CardActionArea, Breadcrumbs } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -15,7 +15,7 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import { TableNoData } from '../../components/table';
+import { TableNoData, useTable, getComparator } from '../../components/table';
 // sections
 import {
   getContacts,
@@ -26,14 +26,19 @@ import {
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
-// import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import DetailsSection from '../components/sections/DetailsSection';
 import AvatarSection from '../components/sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
+import SearchInput from '../components/SearchInput';
+import { fDate } from '../../utils/formatTime';
+import { Snacks } from '../../constants/customer-constants';
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList(currentContact = null) {
+  const { order, orderBy } = useTable({ defaultOrderBy: 'name' });
   const { customer } = useSelector((state) => state.customer);
   const [openContact, setOpenContact] = useState(false);
   const dispatch = useDispatch();
@@ -50,8 +55,13 @@ export default function CustomerContactList(currentContact = null) {
   const { enqueueSnackbar } = useSnackbar();
   const [activeIndex, setActiveIndex] = useState(null);
   const [activeCardIndex, setCardActiveIndex] = useState(null);
-  // const [currentContactData, setCurrentContactData] = useState({});
+  // for filtering contacts -------------------------------------
   const [isExpanded, setIsExpanded] = useState(false);
+  const [filterName, setFilterName] = useState('');
+  const [filterStatus, setFilterStatus] = useState([]);
+  const [tableData, setTableData] = useState([]);
+  const isFiltered = filterName !== '' || !!filterStatus.length;
+  // ------------------------------------------------------------
   const isMobile = useResponsive('down', 'sm');
 
   const toggleChecked = () => {
@@ -69,6 +79,30 @@ export default function CustomerContactList(currentContact = null) {
       setIsExpanded(false);
     }
   };
+
+  // -----------------------Filtering----------------------------
+
+  const handleFilterName = (e) => {
+    setFilterName(e.target.value);
+  };
+
+  const handleResetFilter = () => {
+    setFilterName('');
+    setFilterStatus([]);
+  };
+
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+    filterStatus,
+  });
+
+  useEffect(() => {
+    setTableData(contacts);
+  }, [contacts, error, responseMessage]);
+
+  // ------------------------------------------------------------
 
   const toggleCancel = () => {
     dispatch(setContactFormVisibility(false));
@@ -101,144 +135,168 @@ export default function CustomerContactList(currentContact = null) {
 
   return (
     <>
-      <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.root} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={customer.name} />
+            <BreadcrumbsLink
+              to={PATH_DASHBOARD.customer.contacts}
+              name={
+                <Stack>
+                  {!formVisibility && !contactEditFormVisibility && !isExpanded && 'Contacts'}
+                  {contactEditFormVisibility
+                    ? `Edit ${currentContactData?.firstName}`
+                    : isExpanded && currentContactData?.firstName}
+                  {formVisibility && !isExpanded && 'Add new contact'}
+                </Stack>
+              }
+            />
+          </Breadcrumbs>
+        </Grid>
         <AddButtonAboveAccordion
-          name="New Contact"
+          name={BUTTONS.NEWCONTACT}
           toggleChecked={toggleChecked}
           FormVisibility={formVisibility}
           toggleCancel={toggleCancel}
+          disabled={contactEditFormVisibility}
         />
-        {/* <BreadcrumbsProducer
-          underline="none"
-          step={1}
-          step2
-          step3
-          path={PATH_CUSTOMER.list}
-          name="Customers"
-          path2={PATH_CUSTOMER.root}
-          name2={customer.name}
-          path3={PATH_CUSTOMER.contact.list}
-          name3={
-            <Stack>
-              {contactEditFormVisibility
-                ? `Edit ${currentContactData?.firstName}`
-                : isExpanded && currentContactData?.firstName}
-              {formVisibility && !isExpanded && 'Add new contact'}
-            </Stack>
-          }
-        /> */}
-      </Stack>
+      </Grid>
       <Grid container spacing={1} direction="row" justifyContent="flex-start">
-        <Grid item lg={12}>
-          <TableNoData isNotFound={isNotFound} />
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          sm={12}
-          md={12}
-          lg={4}
-          sx={{ display: formVisibility && isMobile && 'none', borderRadius: '15px' }}
-        >
-          <StyledScrollbar
-            snap
-            snapOffset={100}
-            onClick={(e) => e.stopPropagation()}
-            snapAlign="start"
-            contacts={contacts.length}
+        {contacts.length === 0 && (
+          <Grid item lg={12}>
+            <TableNoData isNotFound={isNotFound} />
+          </Grid>
+        )}
+        {contacts.length > 0 && (
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={12}
+            lg={4}
+            sx={{ display: formVisibility && isMobile && 'none' }}
           >
-            <Grid container justifyContent="flex-start" direction="column" gap={1}>
-              {contacts.map((contact, index) => {
-                const borderTopVal = index !== 0 ? '0px solid white' : '';
-                return (
-                  <>
-                    {index !== activeIndex && (
-                      <Grid
-                        item
-                        key={index}
-                        xs={12}
-                        sm={12}
-                        md={12}
-                        lg={4}
-                        display={{ xs: 'flex', lg: 'block' }}
-                        onClick={() => {
-                          if (!contactEditFormVisibility && !formVisibility) {
-                            handleActiveCard(index);
-                            handleExpand(index);
-                          }
-                        }}
-                        sx={{
-                          width: { xs: '100%', lg: '100%' },
-                        }}
-                      >
-                        <StyledCardWrapper
-                          condition1={activeCardIndex !== index}
-                          condition2={activeCardIndex === index}
-                          isMobile={isMobile}
+            {contacts.length > 5 && (
+              <Grid item md={12}>
+                <SearchInput
+                  // searchFormVisibility={formVisibility || contactEditFormVisibility}
+                  filterName={filterName}
+                  handleFilterName={handleFilterName}
+                  isFiltered={isFiltered}
+                  handleResetFilter={handleResetFilter}
+                  toggleChecked={toggleChecked}
+                  toggleCancel={toggleCancel}
+                  FormVisibility={formVisibility}
+                  disabled={contactEditFormVisibility || formVisibility}
+                  sx={{ position: 'fixed', top: '0px', zIndex: '1000' }}
+                />
+              </Grid>
+            )}
+            <StyledScrollbar
+              snap
+              snapOffset={100}
+              onClick={(e) => e.stopPropagation()}
+              snapAlign="start"
+              contacts={contacts.length}
+              disabled={contactEditFormVisibility || formVisibility}
+            >
+              <Grid container justifyContent="flex-start" direction="column" gap={1}>
+                {dataFiltered.map((contact, index) => {
+                  const borderTopVal = index !== 0 ? '0px solid white' : '';
+                  return (
+                    <>
+                      {index !== activeIndex && (
+                        <Grid
+                          item
+                          key={index}
+                          xs={12}
+                          sm={12}
+                          md={12}
+                          lg={4}
+                          display={{ xs: 'flex', lg: 'block' }}
+                          onClick={() => {
+                            if (!contactEditFormVisibility && !formVisibility) {
+                              handleActiveCard(index);
+                              handleExpand(index);
+                            }
+                          }}
+                          sx={{
+                            width: { xs: '100%', lg: '100%' },
+                          }}
                         >
-                          <CardActionArea
-                            active={activeIndex === index}
-                            disabled={contactEditFormVisibility || formVisibility}
+                          <StyledCardWrapper
+                            condition1={activeCardIndex !== index}
+                            condition2={activeCardIndex === index}
+                            isMobile={isMobile}
                           >
-                            <Link
-                              underline="none"
+                            <CardActionArea
+                              active={activeIndex === index}
                               disabled={contactEditFormVisibility || formVisibility}
-                              onClick={async () => {
-                                await dispatch(getContact(customer._id, contact._id));
-                                setOpenContact(true);
-                                if (!isExpanded && !formVisibility) {
-                                  handleExpand(index);
-                                  setContactFormVisibility(!formVisibility);
-                                } else if (
-                                  isExpanded &&
-                                  currentContactData !== contact &&
-                                  !formVisibility
-                                ) {
-                                  handleExpand(index);
-                                } else {
-                                  setIsExpanded(false);
-                                  index = null;
-                                }
-                              }}
                             >
-                              <Grid
-                                container
-                                direction="row"
-                                justifyContent="flex-start"
-                                alignItems="center"
-                              >
-                                {!isMobile && (
-                                  <AvatarSection
-                                    name={fullName[index]}
-                                    image="/assets/images/covers/bg.jpg"
-                                  />
-                                )}
-                                <DetailsSection
-                                  content={
-                                    fullName[index].length >= 15
-                                      ? contact.firstName
-                                      : fullName[index]
+                              <Link
+                                underline="none"
+                                disabled={contactEditFormVisibility || formVisibility}
+                                onClick={async () => {
+                                  await dispatch(getContact(customer._id, contact._id));
+                                  setOpenContact(true);
+                                  if (!isExpanded && !formVisibility) {
+                                    handleExpand(index);
+                                    setContactFormVisibility(!formVisibility);
+                                  } else if (
+                                    isExpanded &&
+                                    currentContactData !== contact &&
+                                    !formVisibility
+                                  ) {
+                                    handleExpand(index);
+                                  } else {
+                                    setIsExpanded(false);
+                                    index = null;
                                   }
-                                  content2={contact.title ? contact.title : <br />}
-                                  content3={contact.email ? contact.email : <br />}
-                                />
-                              </Grid>
-                            </Link>
-                          </CardActionArea>
-                        </StyledCardWrapper>
-                      </Grid>
-                    )}
-                  </>
-                );
-              })}
-            </Grid>
-          </StyledScrollbar>
-        </Grid>
+                                }}
+                              >
+                                <Grid
+                                  container
+                                  direction="row"
+                                  justifyContent="flex-start"
+                                  alignItems="center"
+                                >
+                                  {!isMobile && (
+                                    <AvatarSection
+                                      name={fullName[index]}
+                                      image="/assets/images/covers/bg.jpg"
+                                    />
+                                  )}
+                                  <DetailsSection
+                                    content={
+                                      fullName[index].length >= 15
+                                        ? contact.firstName
+                                        : fullName[index]
+                                    }
+                                    content2={contact.title ? contact.title : <br />}
+                                    content3={contact.email ? contact.email : <br />}
+                                  />
+                                </Grid>
+                              </Link>
+                            </CardActionArea>
+                          </StyledCardWrapper>
+                        </Grid>
+                      )}
+                    </>
+                  );
+                })}
+              </Grid>
+            </StyledScrollbar>
+          </Grid>
+        )}
 
         {/* Conditional View Forms */}
         {!isMobile && (
-          <GridBaseViewForm item lg={8}>
+          <GridBaseViewForm item lg={contacts.length === 0 ? 12 : 8}>
             {shouldShowContactView && (
               <CardBase>
                 <ContactViewForm setIsExpanded={setIsExpanded} />
@@ -267,3 +325,25 @@ export default function CustomerContactList(currentContact = null) {
 }
 
 // ----------------------------------------------------------------------
+
+export function applyFilter({ inputData, comparator, filterName, filterStatus }) {
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) return order;
+    return a[1] - b[1];
+  });
+
+  inputData = stabilizedThis.map((el) => el[0]);
+
+  if (filterName) {
+    inputData = inputData.filter(
+      (contact) =>
+        contact?.firstName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
+  }
+
+  return inputData;
+}

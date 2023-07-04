@@ -4,6 +4,7 @@ import { IconButton, Button, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
 import { StyledPopover } from '../../theme/styles/default-styles';
 import Iconify from '../../components/iconify';
+import { ICONS } from '../../constants/icons/default-icons';
 
 export default function IconPopover({
   isActive,
@@ -31,18 +32,18 @@ export default function IconPopover({
   return (
     <>
       {/* isActive Icon */}
-      {isActive && (
+      {isActive !== undefined && (
         <>
           <IconButton
-            aria-label={isActive ? 'Active' : 'Inactive'}
+            aria-label={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
           >
             <Iconify
-              heading={isActive ? 'Active' : 'Inactive'}
-              icon={isActive ? 'mdi:check-circle' : 'mdi:checkbox-multiple-blank-circle-outline'}
-              style={{ color: isActive ? 'green' : 'red' }}
-              width="30px"
+              heading={isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
+              icon={isActive ? ICONS.ACTIVE.icon : ICONS.INACTIVE.icon}
+              style={{ color: isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color }}
+              width={ICONS.size}
             />
           </IconButton>
           <StyledPopover
@@ -59,8 +60,11 @@ export default function IconPopover({
             }}
             id="mouse-over-popover"
           >
-            <Typography variant="overline" color={isActive ? 'green' : 'red'}>
-              {isActive ? 'Active' : 'Inactive'}
+            <Typography
+              variant={ICONS.variant}
+              color={isActive ? ICONS.ACTIVE.color : ICONS.INACTIVE.color}
+            >
+              {isActive ? ICONS.ACTIVE.heading : ICONS.INACTIVE.heading}
             </Typography>
           </StyledPopover>
         </>
@@ -70,15 +74,21 @@ export default function IconPopover({
       {deleteDisabled && (
         <>
           <IconButton
-            aria-label={deleteDisabled ? 'Delete Disabled' : 'Delete Enabled'}
+            aria-label={
+              deleteDisabled ? ICONS.DELETE_DISABLED.heading : ICONS.DELETE_ENABLED.heading
+            }
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
           >
             <Iconify
-              heading={deleteDisabled ? 'Delete Disabled' : 'Delete Enabled'}
-              icon={deleteDisabled ? 'mdi:delete-forever' : 'mdi:delete'}
-              style={{ color: deleteDisabled ? 'green' : 'red' }}
-              width="30px"
+              heading={
+                deleteDisabled ? ICONS.DELETE_DISABLED.heading : ICONS.DELETE_ENABLED.heading
+              }
+              icon={deleteDisabled ? ICONS.DELETE_DISABLED.icon : ICONS.DELETE_ENABLED.icon}
+              style={{
+                color: deleteDisabled ? ICONS.DELETE_DISABLED.color : ICONS.DELETE_ENABLED.color,
+              }}
+              width={ICONS.size}
             />
           </IconButton>
           <StyledPopover
@@ -95,8 +105,11 @@ export default function IconPopover({
             }}
             id="mouse-over-popover"
           >
-            <Typography variant="overline" color={deleteDisabled ? 'green' : 'red'}>
-              {deleteDisabled ? 'Delete Disabled' : 'Delete Enabled'}
+            <Typography
+              variant={ICONS.variant}
+              color={deleteDisabled ? ICONS.DELETE_DISABLED.color : ICONS.DELETE_ENABLED.color}
+            >
+              {deleteDisabled ? ICONS.DELETE_DISABLED.heading : ICONS.DELETE_ENABLED.heading}
             </Typography>
           </StyledPopover>
         </>
@@ -108,8 +121,8 @@ export default function IconPopover({
           <IconButton
             aria-label={
               customerVerificationCount || machineVerificationCount > 0
-                ? 'Verified'
-                : 'Not Verified'
+                ? ICONS.VERIFIED.heading
+                : ICONS.NOT_VERIFIED.heading
             }
             onClick={handlePopoverOpen}
             onMouseEnter={handlePopoverOpen}
@@ -118,14 +131,17 @@ export default function IconPopover({
             <Iconify
               heading={
                 customerVerificationCount || machineVerificationCount > 0
-                  ? 'Verified'
-                  : 'Not Verified'
+                  ? ICONS.VERIFIED.heading
+                  : ICONS.NOT_VERIFIED.heading
               }
-              icon="ic:round-verified-user"
+              icon={ICONS.VERIFIED.icon}
               style={{
-                color: customerVerificationCount || machineVerificationCount > 0 ? 'green' : 'red',
+                color:
+                  customerVerificationCount || machineVerificationCount > 0
+                    ? ICONS.VERIFIED.color
+                    : ICONS.NOT_VERIFIED.color,
               }}
-              width="30px"
+              width={ICONS.size}
             />
             <StyledPopover
               open={isPopoverOpen}
@@ -142,12 +158,16 @@ export default function IconPopover({
               id="mouse-over-popover"
             >
               <Typography
-                variant="overline"
-                color={customerVerificationCount || machineVerificationCount > 0 ? 'green' : 'red'}
+                variant={ICONS.variant}
+                color={
+                  customerVerificationCount || machineVerificationCount > 0
+                    ? ICONS.VERIFIED.color
+                    : ICONS.NOT_VERIFIED.color
+                }
               >
                 {customerVerificationCount || machineVerificationCount > 0
-                  ? 'Verified'
-                  : 'Not Verified'}
+                  ? ICONS.VERIFIED.heading
+                  : ICONS.NOT_VERIFIED.heading}
               </Typography>
             </StyledPopover>
           </IconButton>
@@ -160,14 +180,14 @@ export default function IconPopover({
                 height: '24px',
                 bottom: 17,
                 left: -24,
-                color: (themee) => alpha(themee.palette.common.white, 0.8),
-                bgcolor: (themee) => alpha(themee.palette.grey[900], 0.72),
+                color: (theme) => alpha(theme.palette.common.white, 0.8),
+                bgcolor: (theme) => alpha(theme.palette.grey[900], 0.72),
                 '&:hover': {
-                  bgcolor: (themee) => alpha(themee.palette.grey[900], 0.98),
+                  bgcolor: (theme) => alpha(theme.palette.grey[900], 0.98),
                 },
               }}
             >
-              <Typography variant="body2">
+              <Typography variant={ICONS.badge}>
                 {(customerVerificationCount || machineVerificationCount) > 99
                   ? 99
                   : customerVerificationCount || machineVerificationCount}
@@ -181,16 +201,24 @@ export default function IconPopover({
       {documentIsActive !== undefined && (
         <>
           <IconButton
-            aria-label={documentIsActive ? 'Active' : 'Inactive'}
+            aria-label={
+              documentIsActive ? ICONS.DOCUMENT_ACTIVE.heading : ICONS.DOCUMENT_INACTIVE.heading
+            }
             onClick={handlePopoverOpen}
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
           >
             <Iconify
-              heading={documentIsActive ? 'Active' : 'Inactive'}
-              icon={documentIsActive ? 'basil:document-solid' : 'basil:document-solid'}
-              style={{ color: documentIsActive ? 'green' : 'red' }}
-              width="30px"
+              heading={
+                documentIsActive ? ICONS.DOCUMENT_ACTIVE.heading : ICONS.DOCUMENT_INACTIVE.heading
+              }
+              icon={ICONS.DOCUMENT_ACTIVE.icon}
+              style={{
+                color: documentIsActive
+                  ? ICONS.DOCUMENT_ACTIVE.color
+                  : ICONS.DOCUMENT_INACTIVE.color,
+              }}
+              width={ICONS.size}
             />
           </IconButton>
           <StyledPopover
@@ -207,8 +235,11 @@ export default function IconPopover({
             }}
             id="mouse-over-popover"
           >
-            <Typography variant="overline" color={documentIsActive ? 'green' : 'red'}>
-              {documentIsActive ? 'Active' : 'Inactive'}
+            <Typography
+              variant={ICONS.variant}
+              color={documentIsActive ? ICONS.DOCUMENT_ACTIVE.color : ICONS.DOCUMENT_INACTIVE.color}
+            >
+              {documentIsActive ? ICONS.DOCUMENT_ACTIVE.heading : ICONS.DOCUMENT_INACTIVE.heading}
             </Typography>
           </StyledPopover>
         </>
@@ -218,16 +249,16 @@ export default function IconPopover({
       {customerAccess !== undefined && (
         <>
           <IconButton
-            aria-label={customerAccess ? 'Allowed' : 'Disallowed'}
+            aria-label={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
             onClick={handlePopoverOpen}
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
           >
             <Iconify
-              heading={customerAccess ? 'Allowed' : 'Disallowed'}
-              icon={customerAccess ? 'mdi:book-check' : 'mdi:book-cancel-outline'}
-              style={{ color: customerAccess ? 'green' : 'red' }}
-              width="30px"
+              heading={customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
+              icon={customerAccess ? ICONS.ALLOWED.icon : ICONS.DISALLOWED.icon}
+              style={{ color: customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color }}
+              width={ICONS.size}
             />
           </IconButton>
           <StyledPopover
@@ -244,8 +275,11 @@ export default function IconPopover({
             }}
             id="mouse-over-popover"
           >
-            <Typography variant="overline" color={customerAccess ? 'green' : 'red'}>
-              {customerAccess ? 'Allowed' : 'Disallowed'}
+            <Typography
+              variant="overline"
+              color={customerAccess ? ICONS.ALLOWED.color : ICONS.DISALLOWED.color}
+            >
+              {customerAccess ? ICONS.ALLOWED.heading : ICONS.DISALLOWED.heading}
             </Typography>
           </StyledPopover>
         </>
@@ -255,16 +289,16 @@ export default function IconPopover({
       {sites && (
         <Button onClick={onMapClick} sx={{ display: { sm: 'block', md: 'none' } }}>
           <IconButton
-            aria-label="google-maps"
+            aria-label={ICONS.MAP.heading}
             onClick={handlePopoverOpen}
             onMouseEnter={handlePopoverOpen}
             onMouseLeave={handlePopoverClose}
           >
             <Iconify
-              heading="Open Map"
-              icon="mdi:google-maps"
-              style={{ color: 'red' }}
-              width="30px"
+              heading={ICONS.MAP.heading}
+              icon={ICONS.MAP.icon}
+              style={{ color: ICONS.MAP.color }}
+              width={ICONS.size}
             />
           </IconButton>
           <StyledPopover
@@ -281,8 +315,8 @@ export default function IconPopover({
             }}
             id="mouse-over-popover"
           >
-            <Typography variant="overline" color="red">
-              Open MAP
+            <Typography variant={ICONS.variant} color={ICONS.MAP.color}>
+              {ICONS.MAP.heading}
             </Typography>
           </StyledPopover>
         </Button>

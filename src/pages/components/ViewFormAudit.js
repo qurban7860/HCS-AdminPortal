@@ -8,8 +8,13 @@ ViewFormAudit.propTypes = {
 export default function ViewFormAudit({ defaultValues }) {
   const { createdByFullName, createdAt, createdIP, updatedByFullName, updatedAt, updatedIP } =
     defaultValues;
+
   const created = [createdByFullName, createdAt, createdIP];
   const updated = [updatedByFullName, updatedAt, updatedIP];
+
+  const createdDate = fDateTime(createdAt);
+  const updatedDate = fDateTime(updatedAt);
+
   return (
     <Grid container item md={12} sx={{ overflowWrap: 'break-word', display: 'flex' }}>
       <Grid item xs={12} sm={6}>
@@ -19,13 +24,16 @@ export default function ViewFormAudit({ defaultValues }) {
           {createdIP ? `${createdIP} ` : ''}
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={6}>
-        <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
-          updated by: {updatedByFullName ? `${updatedByFullName} / ` : ''}
-          {fDateTime(updatedAt) ? `${fDateTime(updatedAt)} / ` : ''}
-          {updatedIP ? `${updatedIP}` : ''}
-        </Typography>
-      </Grid>
+
+      {createdDate !== updatedDate && (
+        <Grid item xs={12} sm={6}>
+          <Typography variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
+            updated by: {updatedByFullName ? `${updatedByFullName} / ` : ''}
+            {fDateTime(updatedAt) ? `${fDateTime(updatedAt)} / ` : ''}
+            {updatedIP ? `${updatedIP}` : ''}
+          </Typography>
+        </Grid>
+      )}
     </Grid>
   );
 }

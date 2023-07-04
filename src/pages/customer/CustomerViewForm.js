@@ -5,16 +5,15 @@ import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Stack, Typography, Button, Link, Breadcrumbs, Tooltip } from '@mui/material';
+import { Card, Grid, Breadcrumbs, Tooltip } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import CustomerEditForm from './CustomerEditForm';
 import FormLabel from '../components/FormLabel';
+import { TableNoData } from '../../components/table';
 // slices
 import {
-  getCustomers,
   getCustomer,
   setCustomerEditFormVisibility,
   deleteCustomer,
@@ -23,8 +22,11 @@ import {
 import ViewFormAudit from '../components/ViewFormAudit';
 import ViewFormField from '../components/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-// import BreadcrumbsProducer from '../components/Breadcrumbs/';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
+import { Snacks } from '../../constants/customer-constants';
+import useResponsive from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -32,9 +34,11 @@ export default function CustomerViewForm() {
   const [isExpanded, setIsExpanded] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const isMobile = useResponsive('down', 'sm');
   const { customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
+  const isNotFound = !customer;
   // console.log("customer : ",customer)
   // const toggleEdit = () => {
   //   dispatch(setCustomerEditFormVisibility(true));
@@ -56,7 +60,7 @@ export default function CustomerViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteCustomer(customer._id));
-      navigate(PATH_CUSTOMER.customer.list);
+      navigate(PATH_DASHBOARD.customer.list);
     } catch (err) {
       // if(err.Message){
       //   enqueueSnackbar(err.Message,{ variant: `error` })
@@ -65,7 +69,7 @@ export default function CustomerViewForm() {
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar('Customer delete failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.FAILED_DELETE, { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -75,7 +79,7 @@ export default function CustomerViewForm() {
       enqueueSnackbar('Customer Verified!');
     } catch (error) {
       console.log(error);
-      enqueueSnackbar('Customer Verify failed!', { variant: 'error' });
+      enqueueSnackbar(Snacks.FAILED_VERIFY, { variant: 'error' });
     }
   };
 
@@ -102,23 +106,28 @@ export default function CustomerViewForm() {
     [customer]
   );
 
-  const shouldShowCustomerView = isExpanded && !setCustomerEditFormVisibility;
-  const shouldShowCustomerEdit = setCustomerEditFormVisibility && !isExpanded;
+  // const shouldShowCustomerView = isExpanded && !setCustomerEditFormVisibility;
+  // const shouldShowCustomerEdit = setCustomerEditFormVisibility && !isExpanded;
+
   return (
     <>
-      <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-        <AddButtonAboveAccordion isCustomer="true" />
-        {/* <BreadcrumbsProducer
-          underline="none"
-          step={1}
-          step2
-          path={PATH_CUSTOMER.root}
-          name="Customers"
-          path2={PATH_CUSTOMER.view}
-          name2={customer?.name}
-        /> */}
-      </Stack>
-      <Grid container direction="row">
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+          </Breadcrumbs>
+        </Grid>
+        {!isMobile && <AddButtonAboveAccordion isCustomer />}
+      </Grid>
+      <Grid item lg={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
+      <Grid container direction="row" mt={isMobile && 2}>
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons
@@ -129,10 +138,8 @@ export default function CustomerViewForm() {
               handleEdit={handleEdit}
               onDelete={onDelete}
             />
-            <Grid display="inline-flex">
-              <Tooltip title="Active">
-                <ViewFormField sm={12} isActive={defaultValues.isActive} />
-              </Tooltip>
+            <Grid display="inline-flex" mx={0}>
+              <ViewFormField sm={12} isActive={defaultValues.isActive} />
               <Tooltip title="Verified By">
                 <ViewFormField
                   sm={12}
@@ -164,7 +171,7 @@ export default function CustomerViewForm() {
 
             {defaultValues.mainSite && (
               <Grid container>
-                <FormLabel content="Address Information" />
+                <FormLabel content={FORMLABELS.ADDRESS} />
                 <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
                 <ViewFormField
                   sm={6}
@@ -199,7 +206,7 @@ export default function CustomerViewForm() {
               </Grid>
             )}
             <Grid container>
-              <FormLabel content="Howick Resources" />
+              <FormLabel content={FORMLABELS.HOWICK} />
               <ViewFormField
                 sm={6}
                 heading="Account Manager"

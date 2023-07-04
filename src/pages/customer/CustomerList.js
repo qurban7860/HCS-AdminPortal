@@ -1,54 +1,29 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Switch,
-  Grid,
-  Card,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  Stack,
-} from '@mui/material';
-// redux
-import { useDispatch, useSelector } from '../../redux/store';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
-import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import CustomerStepper from './CustomerStepper';
-import {
-  getCustomers,
-  deleteCustomer,
-  getCustomer,
-  resetCustomer,
-  resetCustomers,
-} from '../../redux/slices/customer/customer';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
+import { getCustomers, deleteCustomer, resetCustomer } from '../../redux/slices/customer/customer';
 import {
   resetSite,
   resetSites,
@@ -72,10 +47,11 @@ import {
   resetCustomerDocuments,
 } from '../../redux/slices/document/customerDocument';
 import { resetCustomerMachines } from '../../redux/slices/products/machine';
-
+// hooks
+import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../components/Cover';
 import { fDate } from '../../utils/formatTime';
-
+import { DIALOGS, BUTTONS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -110,21 +86,14 @@ export default function CustomerList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-  const [filterAddress, setAddress] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
+  const { isMobile } = useResponsive('down', 'sm');
 
   const { customers, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.customer
@@ -163,11 +132,8 @@ export default function CustomerList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = 60;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -334,15 +300,12 @@ export default function CustomerList() {
           />
         </Card>
       </Container>
+
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        title={DIALOGS.DELETE_TITLE}
+        content={DIALOGS.DELETE}
         action={
           <Button
             variant="contained"
@@ -352,7 +315,7 @@ export default function CustomerList() {
               handleCloseConfirm();
             }}
           >
-            Delete
+            {BUTTONS.DELETE}
           </Button>
         }
       />
