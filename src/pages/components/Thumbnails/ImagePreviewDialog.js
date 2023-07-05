@@ -48,7 +48,7 @@ export default function ImagePreviewDialog({
           onClick={handleClosePreview}
           sx={{
             top: 15,
-            right: 15,
+            right: 0,
             zIndex: 9,
             height: '60',
             position: 'absolute',
@@ -76,7 +76,7 @@ export default function ImagePreviewDialog({
         >
           <Iconify icon="line-md:download-loop" width={18} />
         </IconButton>
-      <CardContent sx={{m:-2}}>
+      <CardContent>
         <CardMedia
           component="img"
           sx={{ minWidth: '350px', minHeight: '350px', }}

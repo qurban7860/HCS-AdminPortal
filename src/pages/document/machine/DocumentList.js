@@ -34,7 +34,7 @@ import {
 import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
 
-import DocumentAddForm from './DocumentAddForm';
+import DocumentAddForm from '../dashboard/documents/DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
@@ -114,23 +114,32 @@ export default function DocumentList() {
       setActiveIndex(accordianIndex);
     }
   };
+
   useEffect(() => {
-    if (machine?._id) {
+    if (machine && machine?._id && !machineDocumentFormVisibility && ! machineDocumentEditFormVisibility) {
+      console.log("machineDocumentFormVisibility : ",machineDocumentFormVisibility)
       dispatch(getMachineDocuments(machine?._id));
     }
-    dispatch(setMachineDocumentEditFormVisibility(false));
-    dispatch(setMachineDocumentFormVisibility(false));
+    if(!machineDocumentEditFormVisibility){
+      dispatch(setMachineDocumentEditFormVisibility(false));
+    }
+    if(!machineDocumentFormVisibility){
+      dispatch(setMachineDocumentFormVisibility(false))
+    }
     dispatch(setDocumentCategoryFormVisibility(false));
     dispatch(setDocumentTypeFormVisibility(false));
-  }, [dispatch, machine._id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, machine._id, machineDocumentFormVisibility, machineDocumentEditFormVisibility]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
   useEffect(() => {
+    dispatch(setMachineDocumentFormVisibility(false))
+    dispatch(setMachineDocumentEditFormVisibility(false));
     setTableData(machineDocuments);
-  }, [machineDocuments, error, responseMessage]);
+  }, [machineDocuments, dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -158,6 +167,9 @@ export default function DocumentList() {
     setFilterStatus([]);
   };
 
+  const handleFormVisibility = () => {
+    dispatch(setMachineDocumentFormVisibility(false));
+  }
   return (
     <>
       {!machineDocumentEditFormVisibility &&
@@ -224,7 +236,7 @@ export default function DocumentList() {
       {!machineDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         !documentCategoryFormVisibility &&
-        machineDocumentFormVisibility && <DocumentAddForm />}
+        machineDocumentFormVisibility && <DocumentAddForm machinePage handleFormVisibility={handleFormVisibility}/>}
       {!machineDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         documentCategoryFormVisibility &&

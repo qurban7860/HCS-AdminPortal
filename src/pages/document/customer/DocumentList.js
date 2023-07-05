@@ -36,7 +36,7 @@ import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/do
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
 import { getMachines } from '../../../redux/slices/products/machine';
 import { getCustomers } from '../../../redux/slices/customer/customer';
-import DocumentAddForm from './DocumentAddForm';
+import DocumentAddForm from '../dashboard/documents/DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
@@ -102,15 +102,17 @@ export default function DocumentList() {
   };
 
   useEffect(() => {
-    if (customer && customer?._id) {
+    if (customer && customer?._id && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility) {
       dispatch(getCustomerDocuments(customer?._id));
     }
-    dispatch(setCustomerDocumentEditFormVisibility(false));
-    dispatch(setCustomerDocumentFormVisibility(false));
-    dispatch(setDocumentCategoryFormVisibility(false));
-    dispatch(setDocumentTypeFormVisibility(false));
+    if(!customerDocumentEditFormVisibility){
+      dispatch(setCustomerDocumentEditFormVisibility(false));
+    }
+    if(!customerDocumentFormVisibility){
+      dispatch(setCustomerDocumentFormVisibility(false));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customer._id]);
+  }, [dispatch, customer._id, customerDocumentFormVisibility, customerDocumentEditFormVisibility]);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -118,7 +120,9 @@ export default function DocumentList() {
 
   useEffect(() => {
     setTableData(customerDocuments);
-  }, [customerDocuments, error, responseMessage]);
+    dispatch(setCustomerDocumentFormVisibility(false));
+    dispatch(setCustomerDocumentEditFormVisibility(false));
+  }, [customerDocuments,dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -146,7 +150,9 @@ export default function DocumentList() {
     setFilterName('');
     setFilterStatus([]);
   };
-
+const handleFormVisibility = () => {
+  dispatch(setCustomerDocumentFormVisibility(false))
+}
   const toggleCancel = () => {
     dispatch(setCustomerDocumentFormVisibility(false));
     setChecked(false);
@@ -258,7 +264,7 @@ export default function DocumentList() {
         !documentCategoryFormVisibility &&
         customerDocumentFormVisibility && (
           <Grid item md={12}>
-            <DocumentAddForm />
+            <DocumentAddForm customerPage handleFormVisibility={handleFormVisibility}/>
           </Grid>
         )}
       {!customerDocumentEditFormVisibility &&

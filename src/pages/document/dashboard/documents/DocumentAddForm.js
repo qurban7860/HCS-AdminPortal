@@ -72,16 +72,19 @@ import DocumentMachineAddForm from './DocumentAddForms/DocumentMachineAddForm';
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
+  customerPage: PropTypes.bool,
+  machinePage: PropTypes.bool,
+  handleFormVisibility: PropTypes.func,
 };
 
-export default function DocumentAddForm({ currentDocument }) {
+export default function DocumentAddForm({ currentDocument, customerPage, machinePage, handleFormVisibility }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const { activeMachines } = useSelector((state) => state.machine);
+  const { activeMachines, machine } = useSelector((state) => state.machine);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeDocuments } = useSelector((state) => state.document);
   // console.log("activeMachineModels : ",activeMachineModels)
-  const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeCustomers, customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
   // ------------------ document values states ------------------------------
@@ -122,6 +125,7 @@ export default function DocumentAddForm({ currentDocument }) {
     setNameVal('');
     setDocumentTypeVal('');
     setDocumentCategoryVal('');
+    setDocumentVal('');
     setCustomerAccessVal(false);
     setCustomerSiteVal('');
     setCustomerVal('');
@@ -138,6 +142,13 @@ export default function DocumentAddForm({ currentDocument }) {
     // dispatch(getActiveCustomers());
     // dispatch(getActiveMachines());
     // dispatch(getActiveMachineModels());
+    if(customerPage){
+      setCustomerVal(customer)
+    }
+    if(machinePage){
+      setMachineVal(machine)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {
@@ -151,7 +162,7 @@ export default function DocumentAddForm({ currentDocument }) {
       // dispatch(getActiveMachines());
       dispatch(getActiveMachineModels());
     }
-    if (documentDependency === 'customer') {
+    if (documentDependency === 'customer' && !(customerPage || machinePage)) {
       dispatch(getActiveCustomers());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -230,7 +241,7 @@ export default function DocumentAddForm({ currentDocument }) {
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
     .required('File is required!')
-  .test('fileType', 'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx', validateFileType)
+  .test('fileType', 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx', validateFileType)
   .nullable(true),
     isActive: Yup.boolean(),
   });
@@ -271,6 +282,7 @@ export default function DocumentAddForm({ currentDocument }) {
       data.displayName = displayNameVal;
       data.isActive = isActive;
       data.customerAccess = customerAccessVal;
+
       if (customerVal) {
         data.customer = customerVal._id;
       }
@@ -292,22 +304,37 @@ export default function DocumentAddForm({ currentDocument }) {
       if (descriptionVal) {
         data.description = descriptionVal;
       }
+      console.log('Data : ',data);
       if (selectedValue === 'new') {
         await dispatch(addDocument(customerVal?._id, machineVal._id, data));
         enqueueSnackbar('Document saved successfully!');
-        navigate(PATH_DOCUMENT.document.list);
+          if(!customerPage && !machinePage){
+            navigate(PATH_DOCUMENT.document.list);
+          }else{
+            handleFormVisibility()
+          }
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar('Document version updated successfully!');
-        navigate(PATH_DOCUMENT.document.list);
+          if(!customerPage && !machinePage){
+            navigate(PATH_DOCUMENT.document.list);
+          }else{
+            handleFormVisibility()
+          }
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
         enqueueSnackbar('Document updated successfully!');
-        navigate(PATH_DOCUMENT.document.list);
+          if(!customerPage && !machinePage){
+            navigate(PATH_DOCUMENT.document.list);
+          }else{
+            handleFormVisibility()
+          }
       }
-      dispatch(getDocuments());
+      if(!customerPage && !machinePage){
+        dispatch(getDocuments());
+      }
       setDocumentCategoryVal('');
       setDocumentTypeVal('');
       setCustomerAccessVal('');
@@ -333,7 +360,11 @@ export default function DocumentAddForm({ currentDocument }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_DOCUMENT.document.list);
+    if(!customerPage && !machinePage){
+      navigate(PATH_DOCUMENT.document.list);
+    }else{
+      handleFormVisibility()
+    }
   };
 
   const previewHandle = () => {
@@ -388,6 +419,7 @@ export default function DocumentAddForm({ currentDocument }) {
     dispatch(resetActiveDocuments());
     // }
   };
+
   const handleVersionRadioChange = (event) => {
     setSelectedVersionValue(event.target.value);
   };
@@ -417,8 +449,6 @@ export default function DocumentAddForm({ currentDocument }) {
   );
 
   return (
-    <Container maxWidth={false}>
-        <DocumentCover content="New Document" />
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Box
           column={12}
@@ -432,17 +462,16 @@ export default function DocumentAddForm({ currentDocument }) {
             <Grid item xs={12} md={12}>
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
-                  <RadioButtons
+                  {!(customerPage || machinePage) && <RadioButtons
                     value={documentDependency}
                     radioOnChange={handleDependencyChange}
                     newLabel={DocRadioLabel.customer}
                     newValue={DocRadioValue.customer}
                     secondLabel={DocRadioLabel.machine}
                     secondValue={DocRadioValue.machine}
-                  />
+                  />}
 
-                  {/* Customer */}
-                  {documentDependency === 'customer' && (
+                  {documentDependency === 'customer' && !(customerPage || machinePage) && (
                     <Grid container lg={12}>
                       <Grid container spacing={2}>
                         <Grid item lg={6}>
@@ -514,7 +543,7 @@ export default function DocumentAddForm({ currentDocument }) {
 
                   {/* Machine */}
                   {/* will write a better way */}
-                  {documentDependency === 'machine' && (
+                  {documentDependency === 'machine' && !(customerPage || machinePage) && (
                     <DocumentMachineAddForm
                       disabled={readOnlyVal}
                       value={machineModelVal || null}
@@ -774,6 +803,5 @@ export default function DocumentAddForm({ currentDocument }) {
           />
         </Dialog>
       </FormProvider>
-    </Container>
   );
 }

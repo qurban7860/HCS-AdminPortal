@@ -32,7 +32,7 @@ export const BUTTONS = {
   CONTINUE: 'Continue',
   DELETE: 'Delete',
   // New Buttons on the TOP of Modules
-  NEWDOCUMENT: 'New Document',
+  NEWDOCUMENT: 'New',
   NEWNOTE: 'New Note',
   NEWSITE: 'New Site',
   NEWCONTACT: 'New Contact',

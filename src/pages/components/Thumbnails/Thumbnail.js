@@ -160,7 +160,7 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
             <ThumbnailCardMedia
               component="img"
               image={`data:image/png;base64, ${file?.thumbnail}`}
-              alt="customer's contact cover photo was here"
+              alt="Document photo was here"
             />
           )}
           {document.icon[file.extension] && document.color[file.extension] && (
