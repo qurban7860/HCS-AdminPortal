@@ -18,7 +18,11 @@ import {
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getCategories, getCategory, deleteCategory } from '../../../redux/slices/products/category';
+import {
+  getCategories,
+  getCategory,
+  deleteCategory,
+} from '../../../redux/slices/products/category';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -42,10 +46,8 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import CategoryListTableRow from './CategoryListTableRow';
 import CategoryListTableToolbar from './CategoryListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +55,6 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'description', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -65,10 +66,7 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
 // ----------------------------------------------------------------------
-
-
 
 export default function CategoryList() {
   const {
@@ -108,15 +106,17 @@ export default function CategoryList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { categories, isLoading, error, initial, responseMessage } = useSelector((state) => state.category);
+  const { categories, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.category
+  );
 
   // useLayoutEffect(() => {
   //   dispatch(getCustomers());
   // }, [dispatch]);
 
-  useLayoutEffect( () => {
+  useLayoutEffect(() => {
     // console.log('Testing done')
-     dispatch(getCategories());
+    dispatch(getCategories());
   }, [dispatch]);
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function CategoryList() {
 
   const dataFiltered = applyFilter({
     inputData: tableData,
-    comparator: getComparator(order,orderBy),
+    comparator: getComparator(order, orderBy),
     filterName,
     filterStatus,
   });
@@ -176,7 +176,7 @@ export default function CategoryList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
@@ -196,7 +196,7 @@ export default function CategoryList() {
     // dispatch delete supplier
     // await dispatch(deleteSuppliers(selectedRows));
     // await dispatch(getCategoriess())
-    handleClose()
+    handleClose();
   };
 
   const handleEditRow = (id) => {
@@ -213,12 +213,10 @@ export default function CategoryList() {
     setFilterStatus([]);
   };
 
-
-
   return (
     <>
       <Container maxWidth={false}>
-      <Card
+        <Card
           sx={{
             mb: 3,
             height: 160,
@@ -226,11 +224,10 @@ export default function CategoryList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Categories' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name="Categories" icon="material-symbols:list-alt-outline" setting="enable" />
         </Card>
 
-
-        <Card sx={{mt: 3 }}>
+        <Card sx={{ mt: 3 }}>
           <CategoryListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -262,7 +259,7 @@ export default function CategoryList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -308,7 +305,6 @@ export default function CategoryList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
           />
         </Card>
       </Container>
@@ -350,13 +346,15 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     return a[1] - b[1];
   });
 
-
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (category) => category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (category) =>
+        category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (category.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(category?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

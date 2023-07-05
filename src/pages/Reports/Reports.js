@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate,useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Card } from '@mui/material';
 import List from '@mui/material/List';
@@ -16,11 +16,9 @@ import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE, PATH_DOCUMENT } from '../../routes/paths';
-import {
-  searchSites,
-} from '../../redux/slices/customer/site';
+import { searchSites } from '../../redux/slices/customer/site';
 import { useDispatch, useSelector } from '../../redux/store';
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 import Iconify from '../../components/iconify';
 import GoogleMaps from '../../assets/GoogleMaps';
 
@@ -35,18 +33,19 @@ export default function Reports() {
     dispatch(searchSites());
   }, [dispatch]);
 
-  const {
-    sites
-  } = useSelector((state) => state.site);
-
+  const { sites } = useSelector((state) => state.site);
 
   const latLongValues = sites
-  .filter(({ lat, long }) => lat && long)
-  .map(({ lat, long }) => ({ lat, long }));
+    .filter(({ lat, long }) => lat && long)
+    .map(({ lat, long }) => ({ lat, long }));
 
-   // Functions to navigate to different pages
-   const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentName.list); };
-   const linkFileCategory = () => { navigate(PATH_DOCUMENT.fileCategory.list); };
+  // Functions to navigate to different pages
+  const linkDocumentName = () => {
+    navigate(PATH_DOCUMENT.documentName.list);
+  };
+  const linkFileCategory = () => {
+    navigate(PATH_DOCUMENT.fileCategory.list);
+  };
 
   return (
     <Container maxWidth={false}>
@@ -59,23 +58,21 @@ export default function Reports() {
       >
         <Cover name="Site Map" icon="material-symbols:list-alt-outline" />
       </Card>
-      <Grid container spacing={3} >
-          <Grid item sm={12}>
-            <Card sx={{ height: '840px', mb: 5}} >
+      <Grid container spacing={3}>
+        <Grid item sm={12}>
+          <Card sx={{ height: '840px', mb: 5 }}>
             <List
-                component="nav"
-                aria-labelledby="nested-list-subheader"
-                subheader={
-                  <ListSubheader component="div" id="nested-list-subheader">
-                    Site Locations
-                  </ListSubheader>
-                }
-              /> 
-              {/* </List> */}
-            <GoogleMaps
-              latlongArr={latLongValues}
+              component="nav"
+              aria-labelledby="nested-list-subheader"
+              subheader={
+                <ListSubheader component="div" id="nested-list-subheader">
+                  Site Locations
+                </ListSubheader>
+              }
             />
-                {/* <ListItemButton onClick={} sx={{ color: 'text.disabled' }}>
+            {/* </List> */}
+            <GoogleMaps latlongArr={latLongValues} />
+            {/* <ListItemButton onClick={} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
                     <Iconify icon="" />
                   </ListItemIcon>
@@ -88,14 +85,13 @@ export default function Reports() {
                   </ListItemIcon>
                   <ListItemText primary="" />
                 </ListItemButton> */}
-            </Card>
+          </Card>
         </Grid>
       </Grid>
       <Grid container spacing={0}>
         {/* <GoogleMaps
           latlongArr={latLongValues}
         /> */}
-
       </Grid>
     </Container>
   );

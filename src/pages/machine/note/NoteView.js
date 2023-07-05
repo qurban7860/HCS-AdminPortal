@@ -7,7 +7,7 @@ import { Tab, Card, Tabs, Container, Box, Button } from '@mui/material';
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-import {  getNote } from '../../../redux/slices/products/machineNote';
+import { getNote } from '../../../redux/slices/products/machineNote';
 
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -24,23 +24,22 @@ import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import Cover from '../../components/Cover';
+import Cover from '../../components/Defaults/Cover';
 
-import NoteViewForm from './NotesViewForm'
+import NoteViewForm from './NotesViewForm';
 // ----------------------------------------------------------------------
 
 export default function NoteViewPage() {
-
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   useLayoutEffect(() => {
     dispatch(getNote(id));
   }, [dispatch, id]);
-  // 
+  //
 
-  const { note } = useSelector((state) => state.machine-note);
+  const { note } = useSelector((state) => state.machine - note);
   const { themeStretch } = useSettingsContext();
 
   const [currentTab, setCurrentTab] = useState('note-edit');
@@ -50,7 +49,7 @@ export default function NoteViewPage() {
       value: 'note-edit',
       label: 'Basic Info',
       icon: <Iconify icon="ic:round-account-box" />,
-      component: <NoteViewForm/>,
+      component: <NoteViewForm />,
     },
     {
       value: 'configuration',
@@ -90,10 +89,7 @@ export default function NoteViewPage() {
             position: 'relative',
           }}
         >
-          <Cover name={note?.name}/>
-
-          
-           
+          <Cover name={note?.name} />
 
           <Tabs
             value={currentTab}
@@ -117,23 +113,29 @@ export default function NoteViewPage() {
               <Tab key={tab.value} value={tab.value} icon={tab.icon} label={tab.label} />
             ))}
           </Tabs>
-          
         </Card>
 
-        {/* <Button 
-                  size ="medium" 
-                  color ="secondary" 
-                  variant ="contained" 
+        {/* <Button
+                  size ="medium"
+                  color ="secondary"
+                  variant ="contained"
                   // href = {currentNote.image === undefined ? '' : `localhost:5000/${currentNote.image}`}
                   >
                     Edit Note
           </Button>  */}
         {TABS.map(
-          (tab) => tab.value === currentTab && <Box key={tab.value}> {tab.component ? 
-            tab.component : <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
-          } </Box>
+          (tab) =>
+            tab.value === currentTab && (
+              <Box key={tab.value}>
+                {' '}
+                {tab.component ? (
+                  tab.component
+                ) : (
+                  <img src="/assets/background/construction.jpg" alt="UNDER CONSTRUCTION" />
+                )}{' '}
+              </Box>
+            )
         )}
-        
       </Container>
     </>
   );

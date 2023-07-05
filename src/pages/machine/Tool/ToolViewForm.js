@@ -2,11 +2,15 @@ import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate,useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // @mui
-import { Switch ,Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
 // redux
-import { getTool, setToolEditFormVisibility , deleteTool } from '../../../redux/slices/products/tools';
+import {
+  getTool,
+  setToolEditFormVisibility,
+  deleteTool,
+} from '../../../redux/slices/products/tools';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -19,15 +23,12 @@ import { fDate } from '../../../utils/formatTime';
 import ToolEditForm from './ToolEditForm';
 
 import Iconify from '../../../components/iconify/Iconify';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
-import ViewFormSwitch from '../../components/ViewFormSwitch';
-
-
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
-
 
 ToolViewForm.propTypes = {
   currentTool: PropTypes.object,
@@ -36,14 +37,12 @@ ToolViewForm.propTypes = {
 // ----------------------------------------------------------------------
 
 export default function ToolViewForm({ currentTool = null }) {
-
-
   const [editFlag, setEditFlag] = useState(false);
 
   const handleEdit = () => {
     // dispatch(setToolEditFormVisibility(true));
     navigate(PATH_MACHINE.machines.settings.tool.edit(id));
-  }
+  };
 
   const navigate = useNavigate();
 
@@ -53,7 +52,7 @@ export default function ToolViewForm({ currentTool = null }) {
   // const tool = tools
   const { id } = useParams();
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   // useLayoutEffect(() => {
   //   console.log(id,"useEffectNow")
   //   if(id != null){
@@ -62,49 +61,48 @@ export default function ToolViewForm({ currentTool = null }) {
   // }, [dispatch, id]);
 
   const defaultValues = useMemo(
-    () => (
-      {
-        name:tool?.name || '',
-        description:tool?.description || '',
-        isActive: tool?.isActive ,
-        createdByFullName:        tool?.createdBy?.name || "",
-        createdAt:                tool?.createdAt || "",
-        createdIP:                tool?.createdIP || "",
-        updatedByFullName:        tool?.updatedBy?.name || "",
-        updatedAt:                tool?.updatedAt || "",
-        updatedIP:                tool?.updatedIP || "",
-      }),
+    () => ({
+      name: tool?.name || '',
+      description: tool?.description || '',
+      isActive: tool?.isActive,
+      createdByFullName: tool?.createdBy?.name || '',
+      createdAt: tool?.createdAt || '',
+      createdIP: tool?.createdIP || '',
+      updatedByFullName: tool?.updatedBy?.name || '',
+      updatedAt: tool?.updatedAt || '',
+      updatedIP: tool?.updatedIP || '',
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentTool, tool]
-    );
+  );
 
-    const onDelete = () => {
-      try{
-        dispatch(deleteTool(id))
-        navigate(PATH_MACHINE.machines.settings.tool.list);
-      } catch (err) {
-        // if(err.Message){
-        //   enqueueSnackbar(err.Message,{ variant: `error` })
-        // }else if(err.message){
-        //   enqueueSnackbar(err.message,{ variant: `error` })
-        // }else{
-        //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-        // }
-        enqueueSnackbar("Tool delete failed!",{ variant: `error` })
-        console.log("Error:", err);
-      }
+  const onDelete = () => {
+    try {
+      dispatch(deleteTool(id));
+      navigate(PATH_MACHINE.machines.settings.tool.list);
+    } catch (err) {
+      // if(err.Message){
+      //   enqueueSnackbar(err.Message,{ variant: `error` })
+      // }else if(err.message){
+      //   enqueueSnackbar(err.message,{ variant: `error` })
+      // }else{
+      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      // }
+      enqueueSnackbar('Tool delete failed!', { variant: `error` });
+      console.log('Error:', err);
     }
+  };
 
   return (
     <Card sx={{ p: 2 }}>
-      <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
+      <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField  isActive={defaultValues.isActive}/>
-        <ViewFormField  sm={12} heading="Name" param={defaultValues?.name} />
-        <ViewFormField  sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField isActive={defaultValues.isActive} />
+        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
-        <Grid container sx={{mt:2}}>
-          <ViewFormAudit defaultValues={defaultValues}/>
+        <Grid container sx={{ mt: 2 }}>
+          <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
     </Card>

@@ -39,7 +39,7 @@ import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
-import ListSwitch from '../../components/ListSwitch';
+import ListSwitch from '../../components/Defaults/ListSwitch';
 import { BUTTONS } from '../../../constants/default-constants';
 import _mock from '../../../_mock';
 import { fDate } from '../../../utils/formatTime';

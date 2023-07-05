@@ -9,7 +9,7 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify';
 // import Logo from '../../../components/logo-avatar/LogoAvatar';
-import CoverCustomAvatar from '../CoverCustomAvatar';
+import CoverCustomAvatar from '../Defaults/CoverCustomAvatar';
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
 import { CustomAvatar } from '../../../components/custom-avatar';
 
@@ -35,7 +35,7 @@ export default function HowickOperators({ title, subheader, list, ...other }) {
       <Divider />
       <Stack spacing={3} sx={{ p: 3 }}>
         {spContacts.map((operator, index) => (
-            <OperatorItem key={operator._id || index} operator={operator} index={index} />
+          <OperatorItem key={operator._id || index} operator={operator} index={index} />
         ))}
       </Stack>
     </Card>

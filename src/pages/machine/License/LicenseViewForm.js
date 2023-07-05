@@ -13,9 +13,16 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
-import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , getLicenses , getLicense, deleteLicense } from '../../../redux/slices/products/license';
-import { fDate,fDateTime } from '../../../utils/formatTime';
-import ViewFormAudit from '../../components/ViewFormAudit';
+import {
+  setLicenseEditFormVisibility,
+  setLicenseFormVisibility,
+  updateLicense,
+  getLicenses,
+  getLicense,
+  deleteLicense,
+} from '../../../redux/slices/products/license';
+import { fDate, fDateTime } from '../../../utils/formatTime';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import { useSnackbar } from '../../../components/snackbar';
 
 // ----------------------------------------------------------------------
@@ -24,14 +31,21 @@ LicenseViewForm.propTypes = {
 };
 
 export default function LicenseViewForm({ currentLicense = null }) {
-
-  const { initial,error, responseMessage , licenseEditFormVisibility ,licenses, license, formVisibility } = useSelector((state) => state.license);
+  const {
+    initial,
+    error,
+    responseMessage,
+    licenseEditFormVisibility,
+    licenses,
+    license,
+    formVisibility,
+  } = useSelector((state) => state.license);
   const { machine } = useSelector((state) => state.machine);
 
   const navigate = useNavigate();
 
-  const dispatch = useDispatch(); 
-  
+  const dispatch = useDispatch();
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -51,7 +65,7 @@ export default function LicenseViewForm({ currentLicense = null }) {
   };
 
   const onDelete = async () => {
-    try{
+    try {
       await dispatch(deleteLicense(machine._id, currentLicense._id));
       handleCloseConfirm();
       dispatch(getLicenses(machine._id));
@@ -64,28 +78,26 @@ export default function LicenseViewForm({ currentLicense = null }) {
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar("License delete failed!",{ variant: `error` })
-      console.log("Error:", err);
+      enqueueSnackbar('License delete failed!', { variant: `error` });
+      console.log('Error:', err);
     }
   };
 
-  const  handleEdit = async () => {
+  const handleEdit = async () => {
     await dispatch(getLicense(machine._id, currentLicense._id));
-    dispatch(setLicenseEditFormVisibility (true));
+    dispatch(setLicenseEditFormVisibility(true));
   };
 
-
   const defaultValues = useMemo(
-    () => (
-      {
-        licenseDetail:            currentLicense?.licenseDetail || "",
-        createdByFullName:        currentLicense?.createdBy?.name || "",
-        createdAt:                currentLicense?.createdAt || "",
-        createdIP:                currentLicense?.createdIP || "",
-        updatedByFullName:        currentLicense?.updatedBy?.name || "",
-        updatedAt:                currentLicense?.updatedAt || "",
-        updatedIP:                currentLicense?.updatedIP || "",
-      }),
+    () => ({
+      licenseDetail: currentLicense?.licenseDetail || '',
+      createdByFullName: currentLicense?.createdBy?.name || '',
+      createdAt: currentLicense?.createdAt || '',
+      createdIP: currentLicense?.createdIP || '',
+      updatedByFullName: currentLicense?.updatedBy?.name || '',
+      updatedAt: currentLicense?.updatedAt || '',
+      updatedIP: currentLicense?.updatedIP || '',
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentLicense, machine]
   );
@@ -113,55 +125,53 @@ export default function LicenseViewForm({ currentLicense = null }) {
         </Button>
       </Stack>
       <Grid container>
-
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
-              Technical Perameter 
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+        <Grid item xs={12} sm={6} sx={{ pt: 2 }}>
+          <Grid item xs={12} sm={12}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+              Technical Perameter
+            </Typography>
+          </Grid>
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
             {defaultValues.techParamName ? defaultValues.techParamName : ''}
-            </Typography>
-          </Grid>
+          </Typography>
+        </Grid>
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt: 2 }}>
+          <Grid item xs={12} sm={12}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Technical Perameter Code
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
+            </Typography>
+          </Grid>
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
             {defaultValues.techParamCode ? defaultValues.techParamCode : ''}
-            </Typography>
-          </Grid>
+          </Typography>
+        </Grid>
 
-          <Grid item xs={12} sm={6} sx={{  pt:2}}>
-            <Grid item xs={12} sm={12} >
-              <Typography variant="overline" sx={{ color: 'text.disabled' }}>
+        <Grid item xs={12} sm={6} sx={{ pt: 2 }}>
+          <Grid item xs={12} sm={12}>
+            <Typography variant="overline" sx={{ color: 'text.disabled' }}>
               Technical Perameter Value
-              </Typography>
-            </Grid>
-            <Typography variant="body2" sx={{ whiteSpace: 'pre-line'}}>
-            {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
             </Typography>
           </Grid>
+          <Typography variant="body2" sx={{ whiteSpace: 'pre-line' }}>
+            {defaultValues.techParamValue ? defaultValues.techParamValue : ''}
+          </Typography>
+        </Grid>
 
-          <Grid container>
-          <ViewFormAudit defaultValues={defaultValues}/>
+        <Grid container>
+          <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
         <ConfirmDialog
-            open={openConfirm}
-            onClose={handleCloseConfirm}
-            title="Delete"
-            content="Are you sure want to delete?"
-            action={
-              <Button variant="contained" color="error" onClick={onDelete}>
-                Delete
-              </Button>
-            }
-          />
-
+          open={openConfirm}
+          onClose={handleCloseConfirm}
+          title="Delete"
+          content="Are you sure want to delete?"
+          action={
+            <Button variant="contained" color="error" onClick={onDelete}>
+              Delete
+            </Button>
+          }
+        />
       </Grid>
     </Grid>
   );

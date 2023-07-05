@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_DASHBOARD, PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
 // redux
 
-import { getRole} from '../../../redux/slices/securityUser/role';
+import { getRole } from '../../../redux/slices/securityUser/role';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -18,27 +18,25 @@ import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import RoleViewForm from './RoleViewForm';
 /* eslint-disable */
-
-
 
 // ----------------------------------------------------------------------
 
 export default function RoleView() {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
-useLayoutEffect(() => {
-  dispatch(getRole(id));
-},[id,dispatch])
+  const { id } = useParams();
+  useLayoutEffect(() => {
+    dispatch(getRole(id));
+  }, [id, dispatch]);
 
   const { role } = useSelector((state) => state.role);
   // console.log("role : ",role)
   return (
     <>
-      <Container maxWidth={false }>
+      <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
@@ -47,12 +45,9 @@ useLayoutEffect(() => {
             // mt: '24px',
           }}
         >
-          <Cover 
-            name={role?.name}
-            generalSettings="enabled"
-            backLink={PATH_SETTING.role.list}/> 
+          <Cover name={role?.name} generalSettings="enabled" backLink={PATH_SETTING.role.list} />
         </Card>
-        <RoleViewForm/>
+        <RoleViewForm />
       </Container>
     </>
   );

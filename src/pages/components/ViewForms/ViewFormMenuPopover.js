@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider, Grid, Typography } from '@mui/material';
-import MenuPopover from '../../components/menu-popover/MenuPopover';
-import { fDate } from '../../utils/formatTime';
+import MenuPopover from '../../../components/menu-popover/MenuPopover';
+import { fDate } from '../../../utils/formatTime';
 
 export default function ViewFormMenuPopover({ open, onClose, ListArr, ListTitle }) {
   return (

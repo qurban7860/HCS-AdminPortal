@@ -6,13 +6,13 @@ import { useForm } from 'react-hook-form';
 import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { StyledStack } from '../../theme/styles/default-styles';
-import ConfirmDialog from '../../components/confirm-dialog';
-import Iconify from '../../components/iconify';
-import useResponsive from '../../hooks/useResponsive';
-import { setTransferDialogBoxVisibility } from '../../redux/slices/products/machine';
-import IconPopover from './IconPopover';
-import IconTooltip from './IconTooltip';
+import { StyledStack } from '../../../theme/styles/default-styles';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import Iconify from '../../../components/iconify';
+import useResponsive from '../../../hooks/useResponsive';
+import { setTransferDialogBoxVisibility } from '../../../redux/slices/products/machine';
+import IconPopover from '../Icons/IconPopover';
+import IconTooltip from '../Icons/IconTooltip';
 
 export default function ViewFormEditDeleteButtons({
   disableTransferButton = false,

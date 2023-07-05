@@ -12,7 +12,7 @@ import {
   TableBody,
   Container,
   IconButton,
-  TableContainer
+  TableContainer,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
@@ -41,14 +41,14 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ToolListTableRow from './ToolListTableRow';
 import ToolListTableToolbar from './ToolListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'isDisabled', label: 'Active', align: 'center'},
+  { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -61,10 +61,7 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
 // ----------------------------------------------------------------------
-
-
 
 export default function ToolList() {
   const {
@@ -110,9 +107,9 @@ export default function ToolList() {
   //   dispatch(getCustomers());
   // }, [dispatch]);
 
-  useLayoutEffect( () => {
+  useLayoutEffect(() => {
     // console.log('Testing done')
-     dispatch(getTools());
+    dispatch(getTools());
   }, [dispatch]);
 
   useEffect(() => {
@@ -177,7 +174,7 @@ export default function ToolList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
@@ -193,7 +190,7 @@ export default function ToolList() {
         setPage(newPage);
       }
     }
-    handleClose()
+    handleClose();
   };
 
   const handleEditRow = async (id) => {
@@ -218,7 +215,7 @@ export default function ToolList() {
   return (
     <>
       <Container maxWidth={false}>
-      <Card
+        <Card
           sx={{
             mb: 3,
             height: 160,
@@ -226,10 +223,8 @@ export default function ToolList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Tools' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name="Tools" icon="material-symbols:list-alt-outline" setting="enable" />
         </Card>
-
-
 
         <Card sx={{ mt: 3 }}>
           <ToolListTableToolbar
@@ -263,7 +258,7 @@ export default function ToolList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -309,10 +304,8 @@ export default function ToolList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
           />
         </Card>
-
       </Container>
 
       <ConfirmDialog
@@ -355,9 +348,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filtertool) => filtertool?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (filtertool?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(filtertool?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (filtertool) =>
+        filtertool?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (filtertool?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(filtertool?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

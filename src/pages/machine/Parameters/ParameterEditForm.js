@@ -11,30 +11,51 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Switch , TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
+import {
+  Switch,
+  TextField,
+  Autocomplete,
+  Box,
+  Card,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
+  Link,
+} from '@mui/material';
 // global
 
 // slice
-import { updateTechparam, } from '../../../redux/slices/products/machineTechParam';
+import { updateTechparam } from '../../../redux/slices/products/machineTechParam';
 
 import { useSettingsContext } from '../../../components/settings';
-import {CONFIG} from '../../../config-global';
+import { CONFIG } from '../../../config-global';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import {useSnackbar} from '../../../components/snackbar'
+import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
-import FormProvider, { RHFSelect, RHFAutocomplete, RHFTextField, RHFSwitch, RHFMultiSelect, RHFEditor, RHFUpload, } from '../../../components/hook-form';
-import {Cover} from '../../components/Cover'
-import AddFormButtons from '../../components/AddFormButtons';
+import FormProvider, {
+  RHFSelect,
+  RHFAutocomplete,
+  RHFTextField,
+  RHFSwitch,
+  RHFMultiSelect,
+  RHFEditor,
+  RHFUpload,
+} from '../../../components/hook-form';
+import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-
 export default function ParameterEditForm() {
-
-  const { techparam, error} = useSelector((state) => state.techparam);
+  const { techparam, error } = useSelector((state) => state.techparam);
 
   const { techparamcategories } = useSelector((state) => state.techparamcategory);
 
@@ -48,24 +69,22 @@ export default function ParameterEditForm() {
   const { id } = useParams();
 
   const ParameterEditSchema = Yup.object().shape({
-    name: Yup.string().max(50).required('Name is required') ,
+    name: Yup.string().max(50).required('Name is required'),
     description: Yup.string().max(2000),
-    isActive : Yup.boolean(),
+    isActive: Yup.boolean(),
     code: Yup.string(),
   });
 
-
   const defaultValues = useMemo(
-    () => (
-      {
-        name:techparam?.name || '',
-        code: techparam?.code || '',
-        description: techparam?.description || '',
-        isActive: techparam.isActive,
-      }),
+    () => ({
+      name: techparam?.name || '',
+      code: techparam?.code || '',
+      description: techparam?.description || '',
+      isActive: techparam.isActive,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [techparam]
-    );
+  );
   const { themeStretch } = useSettingsContext();
   const methods = useForm({
     resolver: yupResolver(ParameterEditSchema),
@@ -90,27 +109,26 @@ export default function ParameterEditForm() {
     if (techparam) {
       reset(defaultValues);
     }
-    setParamVal(techparam.category)
+    setParamVal(techparam.category);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [techparam]);
 
-  const toggleCancel = () => 
-    {
-      navigate(PATH_MACHINE.machines.settings.machineParameters.view(id));
-    };
+  const toggleCancel = () => {
+    navigate(PATH_MACHINE.machines.settings.machineParameters.view(id));
+  };
 
   const onSubmit = async (data) => {
     try {
-      if(paramVal  !== null && paramVal  !== ""){
-        data.category = paramVal?._id
+      if (paramVal !== null && paramVal !== '') {
+        data.category = paramVal?._id;
       }
-      console.log("Submit Data : ",data)
-      await dispatch(updateTechparam(data,techparam._id));
+      console.log('Submit Data : ', data);
+      await dispatch(updateTechparam(data, techparam._id));
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.machines.settings.machineParameters.view(id));
     } catch (err) {
-      console.log(err)
+      console.log(err);
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
@@ -119,39 +137,65 @@ export default function ParameterEditForm() {
   return (
     // <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-                <Cover name='Edit Parameter' icon='ic:round-flare' />
-            </Card>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover name="Edit Parameter" icon="ic:round-flare" />
+      </Card>
       <Grid container>
-        <Grid item xs={18} md={12} sx={{mt: 3}}>
-          <Card sx={{ p: 3}}>
+        <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+          <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
-            <Autocomplete
-                value={paramVal || null}
-                options={techparamcategories}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  setParamVal(newValue);
-                }}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params} label="Parameter Category" />}
-                ChipProps={{ size: 'small' }}
-              />
-              <RHFTextField name="name" label="Name" required />
-              <RHFTextField name="code" label="Code" required />
-            </Box>
-            <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-              <RHFTextField name="description" label="Description" minRows={7} multiline />
-              <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
-             </Box>
-             
-              </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>         
-            </Card>
-          </Grid>
-          </Grid>
-        
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
+                <Autocomplete
+                  value={paramVal || null}
+                  options={techparamcategories}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    setParamVal(newValue);
+                  }}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Parameter Category" />}
+                  ChipProps={{ size: 'small' }}
+                />
+                <RHFTextField name="name" label="Name" required />
+                <RHFTextField name="code" label="Code" required />
+              </Box>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+              >
+                <RHFTextField name="description" label="Description" minRows={7} multiline />
+                <RHFSwitch
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Active
+                    </Typography>
+                  }
+                />
+              </Box>
+            </Stack>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+          </Card>
+        </Grid>
+      </Grid>
     </FormProvider>
     // </Container>
   );

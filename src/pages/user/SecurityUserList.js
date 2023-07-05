@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer, } from '@mui/material';
+import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -10,24 +10,30 @@ import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
-import {Cover} from '../components/Cover';
-import { useTable, getComparator, TableNoData, TableHeadCustom, TableSelectedAction, TablePaginationCustom, } from '../../components/table';
+import { Cover } from '../components/Defaults/Cover';
+import {
+  useTable,
+  getComparator,
+  TableNoData,
+  TableHeadCustom,
+  TableSelectedAction,
+  TablePaginationCustom,
+} from '../../components/table';
 // sections
 import UserTableToolbar from './SecurityUserTableToolbar';
-import  UserTableRow  from './SecurityUserTableRow';
-import { getSecurityUsers, deleteSecurityUser , setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import UserTableRow from './SecurityUserTableRow';
+import {
+  getSecurityUsers,
+  deleteSecurityUser,
+  setSecurityUserEditFormVisibility,
+} from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 // const STATUS_OPTIONS = ['all', 'active', 'banned'];
 
-const ROLE_OPTIONS = [
-  'Administrator',
-  'Normal User',
-  'Guest User',
-  'Restriced User',
-];
+const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced User'];
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
@@ -61,12 +67,19 @@ export default function SecurityUserList() {
     onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
-});
+  });
 
   const dispatch = useDispatch();
 
-  const { securityUsers, error, responseMessage, initial,securityUserEditFormVisibility,securityUserFormVisibility} = useSelector((state) => state.user);
-// console.log("securityUsers", securityUsers);
+  const {
+    securityUsers,
+    error,
+    responseMessage,
+    initial,
+    securityUserEditFormVisibility,
+    securityUserFormVisibility,
+  } = useSelector((state) => state.user);
+  // console.log("securityUsers", securityUsers);
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -83,22 +96,21 @@ export default function SecurityUserList() {
   const [filterStatus, setFilterStatus] = useState('all');
 
   useLayoutEffect(() => {
-    dispatch(getSecurityUsers())
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch,securityUserEditFormVisibility,securityUserFormVisibility]);
+    dispatch(getSecurityUsers());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, securityUserEditFormVisibility, securityUserFormVisibility]);
 
   useEffect(() => {
     if (initial) {
-    //   if (users && !error) {
-    //     enqueueSnackbar(responseMessage);
-    //   }
+      //   if (users && !error) {
+      //     enqueueSnackbar(responseMessage);
+      //   }
       // if(error) {
       //   enqueueSnackbar(error, { variant: `error` });
       // }
       setTableData(securityUsers);
     }
   }, [securityUsers, error, enqueueSnackbar, responseMessage, initial]);
-
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -144,8 +156,6 @@ export default function SecurityUserList() {
       } catch (err) {
         console.log(err);
       }
-
-
     } catch (err) {
       console.log(err.message);
     }
@@ -171,7 +181,7 @@ export default function SecurityUserList() {
   const handleEditRow = (id) => {
     // console.log('id', id);
     // console.log('edit');
-    dispatch(setSecurityUserEditFormVisibility(true))
+    dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(id));
   };
   const handleViewRow = (id) => {
@@ -285,7 +295,6 @@ export default function SecurityUserList() {
                         onViewRow={() => handleViewRow(row._id)}
                       />
                     ))}
-
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -345,12 +354,19 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (securityUser) => securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
-    securityUser?.roles?.map((obj) => obj.name).join(', ').toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (securityUser) =>
+        securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        securityUser?.roles
+          ?.map((obj) => obj.name)
+          .join(', ')
+          .toLowerCase()
+          .indexOf(filterName.toLowerCase()) >= 0 ||
+        // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus !== 'all') {

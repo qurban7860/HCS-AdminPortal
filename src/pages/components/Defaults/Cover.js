@@ -1,18 +1,18 @@
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
-import { StyledRoot, StyledInfo } from '../../theme/styles/default-styles';
+import { StyledRoot, StyledInfo } from '../../../theme/styles/default-styles';
 // utils
-import { PATH_DASHBOARD, PATH_MACHINE, PATH_SETTING } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_MACHINE, PATH_SETTING } from '../../../routes/paths';
 // auth
-import { useAuthContext } from '../../auth/useAuthContext';
+import { useAuthContext } from '../../../auth/useAuthContext';
 // components
-import Image from '../../components/image';
+import Image from '../../../components/image';
 import CoverCustomAvatar from './CoverCustomAvatar';
 import CoverSettingsIcons from './CoverSettingsIcons';
 import CoverTitles from './CoverTitles';
-import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
-import useResponsive from '../../hooks/useResponsive';
+import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
+import useResponsive from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -45,9 +45,15 @@ export function Cover({
   generalSettings,
 }) {
   const navigate = useNavigate();
-  const handleNavigate = () => {navigate(PATH_MACHINE.machines.settings.root);};
-  const handleSettingsNavigate = () => { navigate(PATH_SETTING.app)};
-  const handleBacklink = () => {navigate(backLink)};
+  const handleNavigate = () => {
+    navigate(PATH_MACHINE.machines.settings.root);
+  };
+  const handleSettingsNavigate = () => {
+    navigate(PATH_SETTING.app);
+  };
+  const handleBacklink = () => {
+    navigate(backLink);
+  };
 
   const isMobile = useResponsive('down', 'sm');
   const nameNumMaxLength = name?.split(' ')[0];

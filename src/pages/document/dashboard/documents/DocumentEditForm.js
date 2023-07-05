@@ -28,10 +28,10 @@ import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/
 import { useSnackbar } from '../../../../components/snackbar';
 import Iconify from '../../../../components/iconify';
 import FormProvider, { RHFSelect, RHFTextField } from '../../../../components/hook-form';
-import AddFormButtons from '../../../components/AddFormButtons';
-import FormHeading from '../../../components/FormHeading';
-import ViewFormSWitch from '../../../components/ViewFormSwitch';
-import { Cover } from '../../../components/Cover';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
+import ViewFormSWitch from '../../../components/ViewForms/ViewFormSwitch';
+import { Cover } from '../../../components/Defaults/Cover';
 
 // slice
 import { updateDocument } from '../../../../redux/slices/document/document';

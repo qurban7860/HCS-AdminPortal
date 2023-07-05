@@ -14,7 +14,7 @@ import { getContacts } from '../../redux/slices/customer/contact';
 // components
 import Iconify from '../../components/iconify';
 // sections
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 
 import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';

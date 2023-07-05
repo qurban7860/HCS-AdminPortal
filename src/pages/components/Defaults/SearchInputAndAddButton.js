@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Stack, TextField, Button, InputAdornment } from '@mui/material';
 import AddButtonAboveAccordion from './AddButtonAboveAcoordion';
-import Iconify from '../../components/iconify';
-import { BUTTONS } from '../../constants/default-constants';
+import Iconify from '../../../components/iconify';
+import { BUTTONS } from '../../../constants/default-constants';
 
 function SearchInputAndAddButton({
   searchFormVisibility,

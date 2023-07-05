@@ -14,7 +14,7 @@ import { addNote, setNoteFormVisibility } from '../../../redux/slices/customer/n
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFSelect, RHFTextField } from '../../../components/hook-form';
-import AddFormButtons from '../../components/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 NoteAddForm.propTypes = {

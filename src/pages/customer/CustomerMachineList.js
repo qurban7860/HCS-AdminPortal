@@ -23,16 +23,16 @@ import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import FormLabel from '../components/FormLabel';
+import FormLabel from '../components/DocumentForms/FormLabel';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 // sections
 import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slices/products/machine';
 
 // import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
-import ViewFormField from '../components/ViewFormField';
+import ViewFormField from '../components/ViewForms/ViewFormField';
 
 // ----------------------------------------------------------------------
 

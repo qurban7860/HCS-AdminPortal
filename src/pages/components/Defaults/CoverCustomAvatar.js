@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { CustomAvatar } from '../../components/custom-avatar';
+import { CustomAvatar } from '../../../components/custom-avatar';
 
 function CoverCustomAvatar({ name, children }) {
   return (

@@ -14,16 +14,15 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { fData,fCurrency } from '../../../utils/formatNumber';
+import { fData, fCurrency } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-import LinkTableCell from '../../components/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
-
 
 // ----------------------------------------------------------------------
 
@@ -44,12 +43,11 @@ export default function ParameterListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, category, isActive, createdAt} = row;
+  const { name, category, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
-
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -67,7 +65,6 @@ export default function ParameterListTableRow({
     setOpenPopover(null);
   };
 
-
   return (
     <>
       <TableRow hover selected={selected}>
@@ -75,7 +72,7 @@ export default function ParameterListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-        <LinkTableCell onClick={onViewRow} align='left' param={name} />
+        <LinkTableCell onClick={onViewRow} align="left" param={name} />
         <TableCell>{category?.name || ''}</TableCell>
         {/* <TableCell>category</TableCell> */}
         <TableCell align="center">

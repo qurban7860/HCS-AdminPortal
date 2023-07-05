@@ -40,10 +40,9 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import RoleListTableRow from './RoleListTableRow';
 import RoleListTableToolbar from './RoleListTableToolbar';
-import { deleteRole, getRoles ,getRole } from '../../../redux/slices/securityUser/role';
-import { Cover } from '../../components/Cover';
+import { deleteRole, getRoles, getRole } from '../../../redux/slices/securityUser/role';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
-
 
 // ----------------------------------------------------------------------
 
@@ -153,14 +152,14 @@ export default function RoleList() {
         }
       }
     } catch (error) {
-      if(error.Message){
-        enqueueSnackbar(error.Message,{ variant: `error` })
-      }else if(error.message){
-        enqueueSnackbar(error.message,{ variant: `error` })
-      }else{
-        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      if (error.Message) {
+        enqueueSnackbar(error.Message, { variant: `error` });
+      } else if (error.message) {
+        enqueueSnackbar(error.message, { variant: `error` });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: `error` });
       }
-      console.log("Error:", error);
+      console.log('Error:', error);
     }
   };
 
@@ -206,11 +205,7 @@ export default function RoleList() {
             // mt: '24px',
           }}
         >
-          <Cover
-            generalSettings='enabled'
-            name="Roles"
-            icon="ph:users-light"
-          />
+          <Cover generalSettings="enabled" name="Roles" icon="ph:users-light" />
         </Card>
 
         <Card sx={{ mt: 3 }}>
@@ -340,9 +335,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (role) => role?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    role?.roleType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    fDate(role?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (role) =>
+        role?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        role?.roleType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(role?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

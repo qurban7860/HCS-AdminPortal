@@ -20,7 +20,7 @@ import {
   setContactEditFormVisibility,
   resetContact,
   getContacts,
-  getContact
+  getContact,
 } from '../../../redux/slices/customer/contact';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -38,7 +38,7 @@ import FormProvider, {
 } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
-import AddFormButtons from '../../components/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -165,13 +165,13 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       await dispatch(updateContact(customer._id, data));
       reset();
       dispatch(setContactEditFormVisibility(false));
-      dispatch(resetContact())
+      dispatch(resetContact());
       dispatch(getContacts(customer._id));
       dispatch(getContact(customer._id, contact._id));
 
       enqueueSnackbar('Contact updated Successfully!');
     } catch (err) {
-      enqueueSnackbar('Update failed!',{variant:"error"});
+      enqueueSnackbar('Update failed!', { variant: 'error' });
       console.error(err);
     }
   };

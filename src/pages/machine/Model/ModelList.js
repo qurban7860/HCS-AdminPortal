@@ -19,7 +19,11 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { getMachine } from '../../../redux/slices/products/machine';
 // routes
-import { getMachineModels, getMachineModel, deleteMachineModel } from '../../../redux/slices/products/model';
+import {
+  getMachineModels,
+  getMachineModel,
+  deleteMachineModel,
+} from '../../../redux/slices/products/model';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -43,7 +47,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -53,7 +57,6 @@ const TABLE_HEAD = [
   { id: 'category', label: 'Category', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -65,10 +68,7 @@ const STATUS_OPTIONS = [
   // { id: '6', value: 'Archived' },
 ];
 
-
 // ----------------------------------------------------------------------
-
-
 
 export default function ModelList() {
   const [tableData, setTableData] = useState([]);
@@ -107,13 +107,13 @@ export default function ModelList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { machineModels, isLoading, error, initial, responseMessage } = useSelector((state) => state.machinemodel);
+  const { machineModels, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.machinemodel
+  );
 
-
-
-  useLayoutEffect( () => {
+  useLayoutEffect(() => {
     // console.log('Testing done')
-     dispatch(getMachineModels());
+    dispatch(getMachineModels());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -129,8 +129,6 @@ export default function ModelList() {
     filterName,
     filterStatus,
   });
-
-
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -173,7 +171,7 @@ export default function ModelList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
@@ -189,7 +187,7 @@ export default function ModelList() {
         setPage(newPage);
       }
     }
-    handleClose()
+    handleClose();
   };
 
   const handleEditRow = async (id) => {
@@ -201,10 +199,10 @@ export default function ModelList() {
 
   const handleViewRow = async (id) => {
     try {
-    await  dispatch(getMachineModel(id));
-    navigate(PATH_MACHINE.machines.settings.machineModel.view(id));
-    }catch (e) {
-      enqueueSnackbar("Couldn't find machine model!",{variant:"error"})
+      await dispatch(getMachineModel(id));
+      navigate(PATH_MACHINE.machines.settings.machineModel.view(id));
+    } catch (e) {
+      enqueueSnackbar("Couldn't find machine model!", { variant: 'error' });
     }
   };
 
@@ -213,12 +211,10 @@ export default function ModelList() {
     setFilterStatus([]);
   };
 
-
-
   return (
     <>
       <Container maxWidth={false}>
-      <Card
+        <Card
           sx={{
             mb: 3,
             height: 160,
@@ -226,7 +222,7 @@ export default function ModelList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Models' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name="Models" icon="material-symbols:list-alt-outline" setting="enable" />
         </Card>
         <Card sx={{ mt: 3 }}>
           <ModelListTableToolbar
@@ -260,7 +256,7 @@ export default function ModelList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -306,10 +302,8 @@ export default function ModelList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
           />
         </Card>
-
       </Container>
 
       <ConfirmDialog
@@ -352,15 +346,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterModel) => filterModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    filterModel?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    // (filterModel?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(filterModel?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (filterModel) =>
+        filterModel?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterModel?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (filterModel?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(filterModel?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {
     inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
   return inputData;
-
 }

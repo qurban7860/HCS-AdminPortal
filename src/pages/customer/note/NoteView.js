@@ -23,7 +23,7 @@ import {
 import Iconify from '../../../components/iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import NoteViewForm from './NotesViewForm';
 // ----------------------------------------------------------------------
 

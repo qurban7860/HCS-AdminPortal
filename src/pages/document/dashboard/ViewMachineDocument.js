@@ -4,13 +4,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Container, Grid, Card, Tooltip, Dialog, Link } from '@mui/material';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
-import FormLabel from '../../components/FormLabel';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 import DialogLink from '../../components/Dialog/DialogLink';
 import DialogLabel from '../../components/Dialog/DialogLabel';
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { Cover } from '../../components/Cover';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
+import { Cover } from '../../components/Defaults/Cover';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
 
 // ----------------------------------------------------------------------
 

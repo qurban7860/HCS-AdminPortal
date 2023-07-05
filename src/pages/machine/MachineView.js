@@ -35,7 +35,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import Iconify from '../../components/iconify';
 import UnderDevelopment from '../components/UnderDevelopment';
 // sections
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 
 // import CustomerAddForm from './CustomerAddForm'
 // import SiteAddForm from './site/SiteAddForm';
@@ -98,9 +98,9 @@ export default function MachineView({ editPage }) {
 
   useEffect(() => {
     /* eslint-disable */
-    if(machine && machine.transferredMachine){
+    if (machine && machine.transferredMachine) {
       setDisableTab(true);
-    }else{
+    } else {
       setDisableTab(false);
     }
     if (machineEditFormFlag) {

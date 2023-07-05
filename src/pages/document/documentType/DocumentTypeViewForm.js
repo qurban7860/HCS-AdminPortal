@@ -4,83 +4,91 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button ,Tooltip} from '@mui/material';
+import { Switch, Card, Grid, Stack, Typography, Button, Tooltip } from '@mui/material';
 // redux
-import {  setDocumentTypeEditFormVisibility , deleteDocumentType , getDocumentTypes , getDocumentType } from '../../../redux/slices/document/documentType';
+import {
+  setDocumentTypeEditFormVisibility,
+  deleteDocumentType,
+  getDocumentTypes,
+  getDocumentType,
+} from '../../../redux/slices/document/documentType';
 // paths
 import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { fDate,fDateTime } from '../../../utils/formatTime';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormSWitch from '../../components/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import { fDate, fDateTime } from '../../../utils/formatTime';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 
 export default function DocumentTypeViewForm() {
   const { documentType } = useSelector((state) => state.documentType);
-// console.log("documentType : ",documentType)
+  // console.log("documentType : ",documentType)
   const navigate = useNavigate();
 
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
   const onDelete = async () => {
-    try{
+    try {
       await dispatch(deleteDocumentType(documentType?._id));
       navigate(PATH_SETTING.documentType.list);
       enqueueSnackbar('Document Type delete Successfully!');
-
-    }catch(error){
+    } catch (error) {
       enqueueSnackbar('Document Type delete failed!', { variant: `error` });
       console.error(error);
     }
   };
 
-  const  handleEdit = async () => {
-    navigate(PATH_SETTING.documentType.edit(documentType._id))
+  const handleEdit = async () => {
+    navigate(PATH_SETTING.documentType.edit(documentType._id));
   };
 
   const defaultValues = useMemo(
-    () => (
-      {
-        isActive:                 documentType?.isActive,
-        customerAccess:           documentType?.customerAccess,
-        name:                     documentType?.name,
-        category:                 documentType?.docCategory?.name,
-        description:              documentType?.description || "",
-        createdAt:                documentType?.createdAt || "",
-        createdByFullName:        documentType?.createdBy?.name || "",
-        createdIP:                documentType?.createdIP || "",
-        updatedAt:                documentType?.updatedAt || "",
-        updatedByFullName:        documentType?.updatedBy?.name || "",
-        updatedIP:                documentType?.updatedIP || "",
-      }),
+    () => ({
+      isActive: documentType?.isActive,
+      customerAccess: documentType?.customerAccess,
+      name: documentType?.name,
+      category: documentType?.docCategory?.name,
+      description: documentType?.description || '',
+      createdAt: documentType?.createdAt || '',
+      createdByFullName: documentType?.createdBy?.name || '',
+      createdIP: documentType?.createdIP || '',
+      updatedAt: documentType?.updatedAt || '',
+      updatedByFullName: documentType?.updatedBy?.name || '',
+      updatedIP: documentType?.updatedIP || '',
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentType]
   );
-  console.log("documentType : ", documentType, defaultValues.customerAccess, defaultValues.description)
+  console.log(
+    'documentType : ',
+    documentType,
+    defaultValues.customerAccess,
+    defaultValues.description
+  );
 
   return (
-    <Card sx={{p:2}}>
-      <Grid >
-        <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/>
-          <Grid sm={12} display="flex">
-            <Tooltip >
-              <ViewFormField  documentIsActive={defaultValues.isActive}  />
-            </Tooltip>
-            <Tooltip >
-              <ViewFormField  customerAccess={defaultValues?.customerAccess} />
-            </Tooltip>
-          </Grid>
+    <Card sx={{ p: 2 }}>
+      <Grid>
+        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <Grid sm={12} display="flex">
+          <Tooltip>
+            <ViewFormField documentIsActive={defaultValues.isActive} />
+          </Tooltip>
+          <Tooltip>
+            <ViewFormField customerAccess={defaultValues?.customerAccess} />
+          </Tooltip>
+        </Grid>
         <Grid container>
-            <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
-            <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
-            <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-            {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
-            <ViewFormAudit  defaultValues={defaultValues}/>
+          <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
+          <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+          <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+          {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
+          <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
     </Card>

@@ -25,7 +25,7 @@ import FormProvider, {
 } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
-import AddFormButtons from '../../components/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import { FORMLABELS as FORM_LABELS } from '../../../constants/default-constants';
 import { Snacks, FORMLABELS } from '../../../constants/customer-constants';
@@ -99,7 +99,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   };
 
   const onSubmit = async (data) => {
-    // console.log(data);
     try {
       if (phone && phone.length > 7) {
         data.phone = phone;
@@ -110,7 +109,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       await dispatch(addContact(data));
       reset();
     } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.SAVE_FAILED, { variant: `error` });
       console.error(error);
     }
   };

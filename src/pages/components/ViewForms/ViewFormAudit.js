@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Typography, Grid } from '@mui/material';
-import { fDateTime, fDate } from '../../utils/formatTime';
+import { fDateTime, fDate } from '../../../utils/formatTime';
 
 ViewFormAudit.propTypes = {
   defaultValues: PropTypes.object,

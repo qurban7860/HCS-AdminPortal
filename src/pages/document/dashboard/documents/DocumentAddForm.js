@@ -40,7 +40,7 @@ import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFUpload } from '../../../../components/hook-form';
 // assets
 import DialogLabel from '../../../components/Dialog/DialogLabel';
-import AddFormButtons from '../../../components/AddFormButtons';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import RadioButtons from '../../../components/DocumentForms/RadioButtons';
 import {
   allowedExtensions,

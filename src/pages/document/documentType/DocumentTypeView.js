@@ -18,29 +18,25 @@ import Iconify from '../../../components/iconify/Iconify';
 import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import { useSettingsContext } from '../../../components/settings';
 // sections
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import DocumentTypeViewForm from './DocumentTypeViewForm';
 /* eslint-disable */
-
-
 
 // ----------------------------------------------------------------------
 
 export default function DocumentTypeView() {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
-useLayoutEffect(() => {
-  dispatch(getDocumentType(id));
-},[id,dispatch])
+  const { id } = useParams();
+  useLayoutEffect(() => {
+    dispatch(getDocumentType(id));
+  }, [id, dispatch]);
 
   const { documentType } = useSelector((state) => state.documentType);
   // console.log("documentType : ",documentType)
   return (
     <>
-      <Container maxWidth={false }>
-        
-
+      <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
@@ -49,10 +45,14 @@ useLayoutEffect(() => {
             // mt: '24px',
           }}
         >
-          <Cover name={documentType?.name} generalSettings backLink={PATH_SETTING.documentType.list}/> 
+          <Cover
+            name={documentType?.name}
+            generalSettings
+            backLink={PATH_SETTING.documentType.list}
+          />
         </Card>
-        
-        <DocumentTypeViewForm/>
+
+        <DocumentTypeViewForm />
       </Container>
     </>
   );

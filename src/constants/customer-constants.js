@@ -10,6 +10,7 @@ export const Snacks = {
   // @root - ContactAddForm - Schema
   EMAIL_WARN: 'The email name cannot include leading or trailing spaces',
   EMAIL_INVALID: 'Email must be a valid email address',
+  SAVE_FAILED: 'Contact save failed!',
 };
 
 export const FORMLABELS = {

@@ -2,30 +2,27 @@ import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
-import ConfirmDialog from '../../components/confirm-dialog';
+import ConfirmDialog from '../../../components/confirm-dialog';
 
-AddFormButtons.propTypes = {
+UpdateFormButtons.propTypes = {
   saveButtonName: PropTypes.string,
   cancelButtonName: PropTypes.string,
   toggleCancel: PropTypes.func,
   isSubmitting: PropTypes.bool,
 };
 
-export default function AddFormButtons({
+export default function UpdateFormButtons({
   saveButtonName,
   toggleCancel,
   isSubmitting,
   cancelButtonName,
 }) {
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
-
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-    // toggleCancel();
   };
   const onConfirm = () => {
     setOpenConfirm(false);
@@ -55,12 +52,11 @@ export default function AddFormButtons({
           </Stack>
         </Grid>
       </Stack>
-
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
         title="Cancel"
-        content="Are you sure you want to cancel?"
+        content="Are you sure want to discard Changes?"
         action={
           <Button variant="contained" color="error" onClick={onConfirm}>
             Confirm

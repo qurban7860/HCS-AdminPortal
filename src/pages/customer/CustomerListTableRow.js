@@ -22,7 +22,7 @@ import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Label from '../../components/label';
-import LinkTableCellWithIcon from '../components/LinkTableCellWithIcon';
+import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
 import { useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -55,7 +55,7 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isActive, type, createdAt , verifications } = row;
+  const { name, tradingName, mainSite, isActive, type, createdAt, verifications } = row;
   const address = [];
   if (mainSite?.address?.city) {
     address.push(mainSite?.address?.city);
@@ -99,7 +99,12 @@ export default function CustomerListTableRow({
             ''
           )}
         </TableCell>
-        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={name} isVerified={verifications?.length > 0}/>
+        <LinkTableCellWithIcon
+          align="left"
+          onClick={onViewRow}
+          param={name}
+          isVerified={verifications?.length > 0}
+        />
         <TableCell>{tradingName}</TableCell>
         <TableCell>
           {Object.values(address ?? {})

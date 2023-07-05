@@ -19,9 +19,9 @@ import {
   Typography,
   Accordion,
   AccordionSummary,
-  AccordionDetails
+  AccordionDetails,
 } from '@mui/material';
-import { fDate,fDateTime } from '../../utils/formatTime';
+import { fDate, fDateTime } from '../../utils/formatTime';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -51,17 +51,22 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import NotesViewForm from './note/NotesViewForm';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
-import { getNotes, deleteNote, getNote ,updateNote,setNoteFormVisibility} from '../../redux/slices/products/machineNote';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import {
+  getNotes,
+  deleteNote,
+  getNote,
+  updateNote,
+  setNoteFormVisibility,
+} from '../../redux/slices/products/machineNote';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'note', label: 'Note', align: "left"},
-  { id: 'isDisabled', label: 'Disabled', align: "left"},
-  { id: 'created_at', label: 'Created At', align: "left"},
-  { id: 'action', label: 'Actions', align: "left"},
-
+  { id: 'note', label: 'Note', align: 'left' },
+  { id: 'isDisabled', label: 'Disabled', align: 'left' },
+  { id: 'created_at', label: 'Created At', align: 'left' },
+  { id: 'action', label: 'Actions', align: 'left' },
 ];
 
 const STATUS_OPTIONS = [
@@ -117,26 +122,33 @@ export default function MachineNoteList() {
   const [expanded, setExpanded] = useState(false);
 
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
 
-
-  const { notes, isLoading, error, initial, responseMessage ,noteEditFormVisibility, formVisibility} = useSelector((state) => state.machinenote);
+  const {
+    notes,
+    isLoading,
+    error,
+    initial,
+    responseMessage,
+    noteEditFormVisibility,
+    formVisibility,
+  } = useSelector((state) => state.machinenote);
   const { machine } = useSelector((state) => state.machine);
   const [checked, setChecked] = useState(false);
   useLayoutEffect(() => {
-    if(!formVisibility && !noteEditFormVisibility){
-    dispatch(getNotes(machine._id));
+    if (!formVisibility && !noteEditFormVisibility) {
+      dispatch(getNotes(machine._id));
     }
-  }, [dispatch, machine._id, noteEditFormVisibility, formVisibility ]);
+  }, [dispatch, machine._id, noteEditFormVisibility, formVisibility]);
 
   useEffect(() => {
     if (initial) {
@@ -147,7 +159,7 @@ export default function MachineNoteList() {
       // }
       setTableData(notes);
     }
-  }, [notes, error,checked, machine, responseMessage, enqueueSnackbar, initial]);
+  }, [notes, error, checked, machine, responseMessage, enqueueSnackbar, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -156,52 +168,51 @@ export default function MachineNoteList() {
     filterStatus,
   });
 
-//  -----------------------------------------------------------------------
+  //  -----------------------------------------------------------------------
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-//   const denseHeight = dense ? 60 : 80;
+  //   const denseHeight = dense ? 60 : 80;
 
-//   const isFiltered = filterName !== '' || !!filterStatus.length;
+  //   const isFiltered = filterName !== '' || !!filterStatus.length;
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-//   const handleOpenConfirm = () => {
-//     setOpenConfirm(true);
-//   };
+  //   const handleOpenConfirm = () => {
+  //     setOpenConfirm(true);
+  //   };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
 
-//   const handleFilterName = (event) => {
-//     setPage(0);
-//     setFilterName(event.target.value);
-//   };
+  //   const handleFilterName = (event) => {
+  //     setPage(0);
+  //     setFilterName(event.target.value);
+  //   };
 
-//   const handleFilterStatus = (event) => {
-//     setPage(0);
-//     setFilterStatus(event.target.value);
-//   };
+  //   const handleFilterStatus = (event) => {
+  //     setPage(0);
+  //     setFilterStatus(event.target.value);
+  //   };
 
-// const showHide = ()=>{
-//   if(this.state.showHide === 'hide') {
-//       this.setState({
-//           showHide: 'show'
-//       ))};
-//   } else {
-//       this.setState({
-//           showHide: 'hide'
-//       });
-//   }
+  // const showHide = ()=>{
+  //   if(this.state.showHide === 'hide') {
+  //       this.setState({
+  //           showHide: 'show'
+  //       ))};
+  //   } else {
+  //       this.setState({
+  //           showHide: 'hide'
+  //       });
+  //   }
 
-// }
-const toggleChecked = () =>
-    {
-      setChecked(value => !value);
-      dispatch(setNoteFormVisibility(!formVisibility));
-    };
-// console.log("screen Width : ",window.innerWidth)
+  // }
+  const toggleChecked = () => {
+    setChecked((value) => !value);
+    dispatch(setNoteFormVisibility(!formVisibility));
+  };
+  // console.log("screen Width : ",window.innerWidth)
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteNote(id));
@@ -235,20 +246,20 @@ const toggleChecked = () =>
   //   }
   // };
 
-//   const handleEditRow = (id) => {
-//     console.log(id);
-//     navigate(PATH_DASHBOARD.note.edit(id));
-//   };
+  //   const handleEditRow = (id) => {
+  //     console.log(id);
+  //     navigate(PATH_DASHBOARD.note.edit(id));
+  //   };
 
-//   const handleViewRow = (id) => {
-//     navigate(PATH_DASHBOARD.note.view(id));
-//   };
+  //   const handleViewRow = (id) => {
+  //     navigate(PATH_DASHBOARD.note.view(id));
+  //   };
 
-//   const handleResetFilter = () => {
-//     setFilterName('');
-//     setFilterStatus([]);
-//   };
-// ------------------------------------------------------------------------------------
+  //   const handleResetFilter = () => {
+  //     setFilterName('');
+  //     setFilterStatus([]);
+  //   };
+  // ------------------------------------------------------------------------------------
 
   return (
     <>
@@ -280,13 +291,13 @@ const toggleChecked = () =>
                   {index !== activeIndex ? (
                     <Grid container spacing={0}>
                       <Grid item xs={12} sm={9} md={10}>
-                        <Typography >
+                        <Typography>
                           {window.innerWidth > 1200 ? note.note.substring(0, 100) : note.note}
                           {note.note.length > 50 ? '...' : null}
                         </Typography>
                       </Grid>
                       <Grid item xs={12} sm={3} md={2}>
-                        <Typography >{fDate(note.createdAt)}</Typography>
+                        <Typography>{fDate(note.createdAt)}</Typography>
                       </Grid>
                     </Grid>
                   ) : null}

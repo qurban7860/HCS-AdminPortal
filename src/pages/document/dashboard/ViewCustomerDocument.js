@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Container, Grid, Card, Tooltip, Typography, Dialog, Link } from '@mui/material';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
-import FormLabel from '../../components/FormLabel';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 import { PATH_CUSTOMER } from '../../../routes/paths';
-import { Cover } from '../../components/Cover';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
+import { Cover } from '../../components/Defaults/Cover';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
 import DialogLabel from '../../components/Dialog/DialogLabel';
 import DialogLink from '../../components/Dialog/DialogLink';
 

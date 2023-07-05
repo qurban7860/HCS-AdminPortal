@@ -29,7 +29,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import TechParamListTableRow from './TechParamListTableRow';
 import TechParamListTableToolbar from './TechParamListTableToolbar';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
@@ -73,7 +73,7 @@ export default function TechParamList() {
     // modifiedOnSort('name')
   });
 
-// Modify the orderBy value to lowercase before comparing
+  // Modify the orderBy value to lowercase before comparing
 
   const dispatch = useDispatch();
 

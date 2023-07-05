@@ -45,8 +45,8 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // asset
 import { countries } from '../../assets/data';
 // util
-import { Cover } from '../components/Cover';
-import AddFormButtons from '../components/AddFormButtons';
+import { Cover } from '../components/Defaults/Cover';
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 CustomerAddForm.propTypes = {
@@ -65,7 +65,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
 
   const { spContacts } = useSelector((state) => state.contact);
-  const filteredContacts = spContacts.filter(contact => contact.isActive === true);
+  const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
 
   const [contactFlag, setCheckboxFlag] = useState(false);
 

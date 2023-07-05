@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate,useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Card } from '@mui/material';
 import List from '@mui/material/List';
@@ -15,9 +15,9 @@ import Diversity1Icon from '@mui/icons-material/Diversity1';
 import FlareIcon from '@mui/icons-material/Flare';
 import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
-import { PATH_MACHINE, PATH_DOCUMENT, PATH_DASHBOARD,PATH_SETTING } from '../../routes/paths';
+import { PATH_MACHINE, PATH_DOCUMENT, PATH_DASHBOARD, PATH_SETTING } from '../../routes/paths';
 import { useDispatch } from '../../redux/store';
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
@@ -27,13 +27,19 @@ export default function Setting() {
   const theme = useTheme();
   const navigate = useNavigate();
 
-
-   // Functions to navigate to different pages
-   const linkDocumentName = () => {  navigate(PATH_SETTING.documentType.list); };
-   const linkFileCategory = () => { navigate(PATH_SETTING.documentCategory.list); };
-   const linkRole = () => { navigate(PATH_SETTING.role.list); };
-   const linkSignInLogs = () => { navigate(PATH_SETTING.signInLogs.list); };
-
+  // Functions to navigate to different pages
+  const linkDocumentName = () => {
+    navigate(PATH_SETTING.documentType.list);
+  };
+  const linkFileCategory = () => {
+    navigate(PATH_SETTING.documentCategory.list);
+  };
+  const linkRole = () => {
+    navigate(PATH_SETTING.role.list);
+  };
+  const linkSignInLogs = () => {
+    navigate(PATH_SETTING.signInLogs.list);
+  };
 
   return (
     <Container maxWidth={false}>
@@ -49,7 +55,7 @@ export default function Setting() {
       <Grid container spacing={3}>
         {/* Grid for displaying Settings related information */}
         <Grid container spacing={2}>
-          <Grid item xs={12} md={6} lg={4} sx={{ ml: '22px'}}>
+          <Grid item xs={12} md={6} lg={4} sx={{ ml: '22px' }}>
             <Card sx={{ height: '234px', mt: '14px' }}>
               <List
                 component="nav"
@@ -83,7 +89,8 @@ export default function Setting() {
                   <ListSubheader component="div" id="nested-list-subheader">
                     Security Settings
                   </ListSubheader>
-                }>
+                }
+              >
                 <ListItemButton onClick={linkRole} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
                     <Iconify icon="carbon:user-role" />

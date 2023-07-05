@@ -1,11 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Button, Typography, Tooltip, alpha } from '@mui/material';
-import { StyledTooltip } from '../../theme/styles/default-styles';
-import Iconify from '../../components/iconify';
-import theme from '../../theme';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import Iconify from '../../../components/iconify';
+import theme from '../../../theme';
 
-export default function IconTooltip({ onDelete, onClick, color, title, placement, icon, disabled }) {
+export default function IconTooltip({
+  onDelete,
+  onClick,
+  color,
+  title,
+  placement,
+  icon,
+  disabled,
+}) {
   return (
     <Button
       onClick={onClick}

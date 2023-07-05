@@ -1,14 +1,26 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Link, Switch, Stack, Avatar, Button, Checkbox, TableRow, MenuItem, TableCell, IconButton, Typography, } from '@mui/material';
+import {
+  Link,
+  Switch,
+  Stack,
+  Avatar,
+  Button,
+  Checkbox,
+  TableRow,
+  MenuItem,
+  TableCell,
+  IconButton,
+  Typography,
+} from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import LinkTableCell from '../components/LinkTableCell';
+import LinkTableCell from '../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -21,8 +33,15 @@ SecurityUserTableRow.propTypes = {
   onViewRow: PropTypes.func,
 };
 
-export default function SecurityUserTableRow({ row, selected, onEditRow, onViewRow, onSelectRow, onDeleteRow }) {
-  const { email, name, roles, phone, status, image , createdAt ,isActive} = row;
+export default function SecurityUserTableRow({
+  row,
+  selected,
+  onEditRow,
+  onViewRow,
+  onSelectRow,
+  onDeleteRow,
+}) {
+  const { email, name, roles, phone, status, image, createdAt, isActive } = row;
   const names = roles.map((a) => a.name);
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -44,7 +63,7 @@ export default function SecurityUserTableRow({ row, selected, onEditRow, onViewR
     setOpenPopover(null);
   };
   const onDelete = () => {
-    onDeleteRow()
+    onDeleteRow();
     setOpenConfirm(false);
   };
 
@@ -55,11 +74,10 @@ export default function SecurityUserTableRow({ row, selected, onEditRow, onViewR
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-          <Stack direction="row" alignItems="center" >
-              <CustomAvatar name={name} alt={name}  sx={{ml:0.5,my:0.3}}/>
-            <LinkTableCell align='left' onClick={onViewRow} param={name} />
-            
-          </Stack>
+        <Stack direction="row" alignItems="center">
+          <CustomAvatar name={name} alt={name} sx={{ ml: 0.5, my: 0.3 }} />
+          <LinkTableCell align="left" onClick={onViewRow} param={name} />
+        </Stack>
 
         <TableCell align="left">{email}</TableCell>
 

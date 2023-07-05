@@ -41,9 +41,8 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import RoleListTableRow from './SignInLogListTableRow';
 import RoleListTableToolbar from './SignInLogListTableToolbar';
 import { getSignInLogs } from '../../../redux/slices/securityUser/securityUser';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
-
 
 // ----------------------------------------------------------------------
 
@@ -140,7 +139,6 @@ export default function SignInLogList() {
     setFilterStatus(event.target.value);
   };
 
-
   const handleViewRow = (id) => {
     navigate(PATH_DASHBOARD.role.view(id));
   };
@@ -161,11 +159,7 @@ export default function SignInLogList() {
             // mt: '24px',
           }}
         >
-          <Cover
-            generalSettings='enabled'
-            name="Sign In Logs"
-            icon="ph:users-light"
-          />
+          <Cover generalSettings="enabled" name="Sign In Logs" icon="ph:users-light" />
         </Card>
 
         <Card sx={{ mt: 3 }}>
@@ -295,10 +289,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (logs) => logs?.user?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    logs?.loginIP?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    fDate(logs?.loginTime)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0   ||
-    fDate(logs?.logoutTime)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 );
+    inputData = inputData.filter(
+      (logs) =>
+        logs?.user?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        logs?.loginIP?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(logs?.loginTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(logs?.logoutTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

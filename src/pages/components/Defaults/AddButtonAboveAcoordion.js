@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Stack } from '@mui/material';
-import Iconify from '../../components/iconify';
-import ConfirmDialog from '../../components/confirm-dialog';
-import useResponsive from '../../hooks/useResponsive';
-import { BUTTONS, DIALOGS } from '../../constants/default-constants';
+import Iconify from '../../../components/iconify';
+import ConfirmDialog from '../../../components/confirm-dialog';
+import useResponsive from '../../../hooks/useResponsive';
+import { BUTTONS, DIALOGS } from '../../../constants/default-constants';
 
 export default function AddButtonAboveAccordion({
   name,

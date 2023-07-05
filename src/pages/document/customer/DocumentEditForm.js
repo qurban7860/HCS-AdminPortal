@@ -14,8 +14,8 @@ import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/pat
 import { useSnackbar } from '../../../components/snackbar';
 import Iconify from '../../../components/iconify';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
-import AddFormButtons from '../../components/AddFormButtons';
-import FormHeading from '../../components/FormHeading';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // slice

@@ -14,16 +14,15 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { fData,fCurrency } from '../../../utils/formatNumber';
+import { fData, fCurrency } from '../../../utils/formatNumber';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
-import LinkTableCell from '../../components/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
-
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +43,7 @@ export default function ModelListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, category, isActive, createdAt} = row;
+  const { name, category, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -68,12 +67,10 @@ export default function ModelListTableRow({
     setOpenPopover(null);
   };
 
-
   return (
     <>
       <TableRow hover selected={selected}>
-
-        <LinkTableCell align='left' onClick={onViewRow} param={name} />
+        <LinkTableCell align="left" onClick={onViewRow} param={name} />
         <TableCell align="left">{category?.name || ''}</TableCell>
 
         <TableCell align="center">

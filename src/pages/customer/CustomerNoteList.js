@@ -24,7 +24,7 @@ import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import EmptyContent from '../../components/empty-content';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections

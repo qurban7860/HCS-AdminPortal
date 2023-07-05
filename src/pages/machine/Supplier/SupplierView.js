@@ -9,7 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getSuppliers, getSupplier, setSupplierEditFormVisibility } from '../../../redux/slices/products/supplier';
+import {
+  getSuppliers,
+  getSupplier,
+  setSupplierEditFormVisibility,
+} from '../../../redux/slices/products/supplier';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -22,8 +26,7 @@ import SupplierList from './SupplierList';
 import SupplierViewForm from './SupplierViewForm';
 /* eslint-disable */
 import SupplierEditForm from './SupplierEditForm';
-import {Cover} from '../../components/Cover';
-
+import { Cover } from '../../components/Defaults/Cover';
 
 SupplierView.propTypes = {
   editPage: PropTypes.bool,
@@ -31,45 +34,41 @@ SupplierView.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export default function SupplierView({editPage}) {
+export default function SupplierView({ editPage }) {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const { themeStretch } = useSettingsContext();
 
   const { supplierEditFormFlag } = useSelector((state) => state.supplier);
 
   const { supplierEditFormVisibility } = useSelector((state) => state.supplier);
-  
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
 
-  const [currentComponent, setCurrentComponent] = useState(<SupplierViewForm/>);
+  const [editFlag, setEditFlag] = useState(false);
+  const toggleEditFlag = () => setEditFlag((value) => !value);
+
+  const [currentComponent, setCurrentComponent] = useState(<SupplierViewForm />);
 
   const [supplierFlag, setSupplierFlag] = useState(true);
-  const {supplier} = useSelector((state) => state.supplier);
-  
+  const { supplier } = useSelector((state) => state.supplier);
+
   // useLayoutEffect(() => {
   //   dispatch(setSupplierEditFormVisibility(editFlag));
   // }, [dispatch, editFlag]);
 
-
-  
   useEffect(() => {
-    if(supplierEditFormFlag){
-      setCurrentComponent(<SupplierEditForm/>);
-    }else{
+    if (supplierEditFormFlag) {
+      setCurrentComponent(<SupplierEditForm />);
+    } else {
       setSupplierFlag(false);
-      setCurrentComponent(<SupplierViewForm/>);        
+      setCurrentComponent(<SupplierViewForm />);
     }
   }, [editPage, supplierEditFormFlag, supplier]);
   // console.log( "muzna")
   return (
     <>
-      <Container maxWidth={false }>
-        
-
+      <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
@@ -78,10 +77,14 @@ export default function SupplierView({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={supplier?.name} setting="enable" backLink={PATH_MACHINE.machines.settings.supplier.list}/> 
+          <Cover
+            name={supplier?.name}
+            setting="enable"
+            backLink={PATH_MACHINE.machines.settings.supplier.list}
+          />
         </Card>
-        
-        <SupplierViewForm/>
+
+        <SupplierViewForm />
       </Container>
     </>
   );

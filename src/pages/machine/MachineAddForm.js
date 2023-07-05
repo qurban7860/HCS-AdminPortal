@@ -40,7 +40,7 @@ import { getMachineModels } from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
 
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
@@ -60,7 +60,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
-import AddFormButtons from '../components/AddFormButtons';
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,

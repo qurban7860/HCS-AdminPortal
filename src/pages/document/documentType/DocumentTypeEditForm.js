@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo , useState, useLayoutEffect} from 'react';
+import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -10,7 +10,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, Container} from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
+  Link,
+  Autocomplete,
+  TextField,
+  Container,
+} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
@@ -23,22 +37,20 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch
+  RHFSwitch,
 } from '../../../components/hook-form';
-import { getDocumentTypes,  updateDocumentType } from '../../../redux/slices/document/documentType';
+import { getDocumentTypes, updateDocumentType } from '../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
-import AddFormButtons from '../../components/AddFormButtons';
-import FormHeading from '../../components/FormHeading';
-import { Cover } from '../../components/Cover';
-
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 
 export default function DocumentTypeEditForm() {
-
   const { documentType } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const [ documentCategoryVal, setDocumentCategoryVal] = useState('')
+  const [documentCategoryVal, setDocumentCategoryVal] = useState('');
 
   const dispatch = useDispatch();
 
@@ -46,16 +58,16 @@ export default function DocumentTypeEditForm() {
 
   const navigate = useNavigate();
   useEffect(() => {
-    dispatch(getActiveDocumentCategories())
-    setDocumentCategoryVal(documentType.docCategory)
+    dispatch(getActiveDocumentCategories());
+    setDocumentCategoryVal(documentType.docCategory);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-},[dispatch]);
+  }, [dispatch]);
 
   const defaultValues = useMemo(
     () => ({
       name: documentType?.name || '',
       description: documentType?.description || '',
-      isActive : documentType?.isActive ,
+      isActive: documentType?.isActive,
       customerAccess: documentType?.customerAccess,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,7 +76,7 @@ export default function DocumentTypeEditForm() {
   const EditDocumentNameSchema = Yup.object().shape({
     name: Yup.string().max(40),
     description: Yup.string().max(1500),
-    isActive : Yup.boolean(),
+    isActive: Yup.boolean(),
     customerAccess: Yup.boolean(),
   });
 
@@ -89,20 +101,18 @@ export default function DocumentTypeEditForm() {
   //   }
   // }, [site, reset, defaultValues]);
 
-  const toggleCancel = () => 
-  {
-    navigate(PATH_SETTING.documentType.view(documentType._id))
-
+  const toggleCancel = () => {
+    navigate(PATH_SETTING.documentType.view(documentType._id));
   };
 
   const onSubmit = async (data) => {
     try {
-      if(documentCategoryVal){
-        data.docCategory = documentCategoryVal._id
+      if (documentCategoryVal) {
+        data.docCategory = documentCategoryVal._id;
       }
-      await dispatch(updateDocumentType(documentType._id,data));
+      await dispatch(updateDocumentType(documentType._id, data));
       dispatch(getDocumentTypes(documentType._id));
-      navigate(PATH_SETTING.documentType.view(documentType._id))
+      navigate(PATH_SETTING.documentType.view(documentType._id));
       enqueueSnackbar('Document Type updated Successfully!');
       reset();
     } catch (err) {
@@ -111,81 +121,102 @@ export default function DocumentTypeEditForm() {
     }
   };
 
-
   return (
-    <Container maxWidth={false }>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name={documentType?.name}  generalSettings backLink={PATH_SETTING.documentType.view(documentType?._id)}/> 
-        </Card>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={4}>
-            <Grid item xs={18} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
-                  <FormHeading heading='Edit Document Type'/>
-                  <Autocomplete
-                        // freeSolo
-                        value={documentCategoryVal || null}
-                        options={activeDocumentCategories}
-                        isOptionEqualToValue={(option, value) => option.name === value.name}
-                        getOptionLabel={(option) => `${option.name ? option.name : ""}`}
-                        onChange={(event, newValue) => {
-                          if (newValue) {
-                            setDocumentCategoryVal(newValue);
-                          } else {
-                            setDocumentCategoryVal('');
-                          }
-                        }}
-                        renderOption={(props, option) => (
-                          <li {...props} key={option._id}>
-                            {option.name}
-                          </li>
-                        )}
-                        id="controllable-states-demo"
-                        renderInput={(params) => <TextField {...params} required label="Document Category" />}
-                        ChipProps={{ size: 'small' }}
-                      />
-                  <RHFTextField name="name" label="Name" />
-                  <RHFTextField name="description" label="Description" minRows={8} multiline />
-                  <Grid display="flex">
+    <Container maxWidth={false}>
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+          // mt: '24px',
+        }}
+      >
+        <Cover
+          name={documentType?.name}
+          generalSettings
+          backLink={PATH_SETTING.documentType.view(documentType?._id)}
+        />
+      </Card>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={4}>
+          <Grid item xs={18} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <FormHeading heading="Edit Document Type" />
+                <Autocomplete
+                  // freeSolo
+                  value={documentCategoryVal || null}
+                  options={activeDocumentCategories}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setDocumentCategoryVal(newValue);
+                    } else {
+                      setDocumentCategoryVal('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>
+                      {option.name}
+                    </li>
+                  )}
+                  id="controllable-states-demo"
+                  renderInput={(params) => (
+                    <TextField {...params} required label="Document Category" />
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
+                <RHFTextField name="name" label="Name" />
+                <RHFTextField name="description" label="Description" minRows={8} multiline />
+                <Grid display="flex">
                   <RHFSwitch
                     name="customerAccess"
                     labelPlacement="start"
                     label={
                       <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
                           Customer Access
                         </Typography>
                       </>
-                    } 
+                    }
                   />
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"
                     label={
                       <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
                           Active
                         </Typography>
                       </>
-                    } 
+                    }
                   />
-                  
-                  </Grid>
-                </Stack>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-              </Card>
-                  
-            </Grid>
+                </Grid>
+              </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            </Card>
           </Grid>
-        </FormProvider>
+        </Grid>
+      </FormProvider>
     </Container>
   );
 }

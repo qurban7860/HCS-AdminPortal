@@ -29,18 +29,18 @@ import {
 // components
 // import { ProfileCover} from '../../sections/@dashboard/user/profile';
 import { useSnackbar } from '../../components/snackbar';
-import ViewFormField from '../components/ViewFormField';
-import ViewFormAudit from '../components/ViewFormAudit';
+import ViewFormField from '../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
-import FormLabel from '../components/FormLabel';
+import FormLabel from '../components/DocumentForms/FormLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import ViewFormSWitch from '../components/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import ViewFormSWitch from '../components/ViewForms/ViewFormSwitch';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfile() {
@@ -63,7 +63,7 @@ export default function SecurityUserProfile() {
 
   useEffect(() => {
     if (userId) {
-      dispatch(getSecurityUser(userId))
+      dispatch(getSecurityUser(userId));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, userId, initial]);

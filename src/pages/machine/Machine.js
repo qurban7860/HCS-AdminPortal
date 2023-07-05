@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate,useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Card } from '@mui/material';
 import List from '@mui/material/List';
@@ -17,7 +17,7 @@ import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE } from '../../routes/paths';
 import { useDispatch } from '../../redux/store';
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 import Iconify from '../../components/iconify';
 
 // ----------------------------------------------------------------------
@@ -27,25 +27,61 @@ export default function Machine() {
   const theme = useTheme();
   const navigate = useNavigate();
 
-
-
   const MACHINES = [
-    { group: 'FRAMA', classify: ['FRAMA 3200', 'FRAMA 3600', 'FRAMA 4200', 'FRAMA 5200', 'FRAMA 5600', 'FRAMA 6800', 'FRAMA 7600', 'FRAMA 7800', 'FRAMA 8800', 'FRAMA Custom Female interlock'] },
-    { group: 'Decoiler', classify: ['0.5T Decoiler', '1.0T Decoiler', '1.5T Decoiler', '3.0T Decoiler', '5.0T Decoiler', '6.0T Decoiler'] },
-    { group: 'Rivet Cutter', classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'] },
+    {
+      group: 'FRAMA',
+      classify: [
+        'FRAMA 3200',
+        'FRAMA 3600',
+        'FRAMA 4200',
+        'FRAMA 5200',
+        'FRAMA 5600',
+        'FRAMA 6800',
+        'FRAMA 7600',
+        'FRAMA 7800',
+        'FRAMA 8800',
+        'FRAMA Custom Female interlock',
+      ],
+    },
+    {
+      group: 'Decoiler',
+      classify: [
+        '0.5T Decoiler',
+        '1.0T Decoiler',
+        '1.5T Decoiler',
+        '3.0T Decoiler',
+        '5.0T Decoiler',
+        '6.0T Decoiler',
+      ],
+    },
+    {
+      group: 'Rivet Cutter',
+      classify: ['Rivet Former', 'Rivet Cutter Red', 'Rivet Cutter Green', 'Rivet Cutter Blue'],
+    },
   ];
 
-   // Functions to navigate to different pages
-   const linkCategory = () => { navigate(PATH_MACHINE.machines.settings.categories.list); };
-   const linkModel = () => { navigate(PATH_MACHINE.machines.settings.machineModel.list); };
-   const linkStatus = () => { navigate(PATH_MACHINE.machines.settings.machineStatus.list); };
-   const linkSupplier = () => { navigate(PATH_MACHINE.machines.settings.supplier.list); };
-   const linkTechParam = () => { navigate(PATH_MACHINE.machines.settings.machineParameters.list); };
-   const linktpCategory = () => { navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list); };
-   const linkTool = () => { navigate(PATH_MACHINE.machines.settings.tool.list); };
-
-
-
+  // Functions to navigate to different pages
+  const linkCategory = () => {
+    navigate(PATH_MACHINE.machines.settings.categories.list);
+  };
+  const linkModel = () => {
+    navigate(PATH_MACHINE.machines.settings.machineModel.list);
+  };
+  const linkStatus = () => {
+    navigate(PATH_MACHINE.machines.settings.machineStatus.list);
+  };
+  const linkSupplier = () => {
+    navigate(PATH_MACHINE.machines.settings.supplier.list);
+  };
+  const linkTechParam = () => {
+    navigate(PATH_MACHINE.machines.settings.machineParameters.list);
+  };
+  const linktpCategory = () => {
+    navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list);
+  };
+  const linkTool = () => {
+    navigate(PATH_MACHINE.machines.settings.tool.list);
+  };
 
   return (
     <Container maxWidth={false}>

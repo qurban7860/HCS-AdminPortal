@@ -6,8 +6,8 @@ import download from 'downloadjs';
 import { Container, Grid, Card, Tooltip, Typography, Dialog, Link } from '@mui/material';
 import { PATH_CUSTOMER, PATH_MACHINE, PATH_DOCUMENT } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
-import ViewFormAudit from '../../../components/ViewFormAudit';
-import ViewFormField from '../../../components/ViewFormField';
+import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../../components/ViewForms/ViewFormField';
 import { getDocumentDownload } from '../../../../redux/slices/document/documentFile';
 import {
   getDocumentHistory,
@@ -18,7 +18,7 @@ import {
 import { getCustomer, resetCustomer } from '../../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../../redux/slices/products/machine';
 import { Thumbnail } from '../../../components/Thumbnails/Thumbnail';
-import FormLabel from '../../../components/FormLabel';
+import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DialogLink from '../../../components/Dialog/DialogLink';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import { document as documentType } from '../../../../constants/document-constants';

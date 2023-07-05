@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { Typography, Grid } from '@mui/material';
-import IconPopover from './IconPopover';
-import useResponsive from '../../hooks/useResponsive';
+import IconPopover from '../Icons/IconPopover';
+import useResponsive from '../../../hooks/useResponsive';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 
 export default function ViewFormField({

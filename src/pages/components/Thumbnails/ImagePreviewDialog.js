@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Typography, Dialog, DialogActions, Grid, Link, IconButton, Box } from '@mui/material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
-import { CloseButton } from '../CloseButton';
+import { CloseButton } from '../Defaults/CloseButton';
 // import Image from '../../../components/image';
 
 export default function ImagePreviewDialog({
@@ -43,21 +43,21 @@ export default function ImagePreviewDialog({
         >
           {`${imageName}.${imageExtension}`}
         </Typography>{' '}
-          <DialogActions>
-        <Link
-          onClick={handleClosePreview}
-          href="#"
-          underline="none"
-          sx={{
-            top: 15,
-            right: 15,
-            zIndex: 9,
-            height: '60',
-            position: 'absolute',
-          }}
-        >
-          <CloseButton />
-        </Link>
+        <DialogActions>
+          <Link
+            onClick={handleClosePreview}
+            href="#"
+            underline="none"
+            sx={{
+              top: 15,
+              right: 15,
+              zIndex: 9,
+              height: '60',
+              position: 'absolute',
+            }}
+          >
+            <CloseButton />
+          </Link>
         </DialogActions>
       </Grid>
       <Link>
@@ -83,7 +83,7 @@ export default function ImagePreviewDialog({
       {/* <Image
         alt={file?.name}
         src={`data:image/png;base64, ${imageData}`}
-        sx={{minWidth:"350px", minHeight:"350px"}} 
+        sx={{minWidth:"350px", minHeight:"350px"}}
       /> */}
       <Box
         component="img"

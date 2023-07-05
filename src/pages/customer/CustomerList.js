@@ -49,7 +49,7 @@ import {
 import { resetCustomerMachines } from '../../redux/slices/products/machine';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 import { fDate } from '../../utils/formatTime';
 import { DIALOGS, BUTTONS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------

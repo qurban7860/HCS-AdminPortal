@@ -59,7 +59,7 @@ import FormProvider, {
   RHFTextField,
   RHFSwitch,
 } from '../../components/hook-form';
-import AddFormButtons from '../components/AddFormButtons';
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -85,11 +85,11 @@ export default function MachineEditForm() {
   const [modelVal, setModelVal] = useState('');
   const [customerVal, setCustomerVal] = useState('');
   const [installVal, setInstallVal] = useState('');
-  const [billingVal, setBillingVal] = useState('');  
+  const [billingVal, setBillingVal] = useState('');
   const [shippingDate, setShippingDate] = useState(null);
   const [installationDate, setInstallationDate] = useState(null);
   const [disableInstallationDate, setInstallationDateToggle] = useState(true);
-  const [disableShippingDate, setShippingDateToggle ] = useState(true);
+  const [disableShippingDate, setShippingDateToggle] = useState(true);
   const [accoVal, setAccoManVal] = useState('');
   const [projVal, setProjManVal] = useState('');
   const [suppVal, setSuppManVal] = useState('');
@@ -121,7 +121,7 @@ export default function MachineEditForm() {
     setSuppManVal(machine?.supportManager);
     setMachineConnectionVal(machine?.machineConnections);
     setConnections(machine?.machineConnections);
-    if(machine?.instalationSite){
+    if (machine?.instalationSite) {
       setInstallationDateToggle(false);
       setShippingDateToggle(false);
     }
@@ -300,7 +300,7 @@ export default function MachineEditForm() {
                 display="grid"
                 gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
               >
-                <RHFTextField name="serialNo" label="Serial No." disabled/>
+                <RHFTextField name="serialNo" label="Serial No." disabled />
                 <RHFTextField name="name" label="Name" />
 
                 <Autocomplete
@@ -558,7 +558,7 @@ export default function MachineEditForm() {
               >
                 <DatePicker
                   label="Installation Date"
-                  value={installationDate  || new Date()}
+                  value={installationDate || new Date()}
                   disabled={disableInstallationDate}
                   onChange={(newValue) => setInstallationDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
@@ -566,7 +566,7 @@ export default function MachineEditForm() {
                 <DatePicker
                   label="Shipping Date"
                   value={shippingDate || new Date()}
-                  disabled={disableShippingDate}                    
+                  disabled={disableShippingDate}
                   onChange={(newValue) => setShippingDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                 />

@@ -10,7 +10,16 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography, Container} from '@mui/material';
+import {
+  TextField,
+  Autocomplete,
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Container,
+} from '@mui/material';
 // slice
 import { addMachineModel } from '../../../redux/slices/products/model';
 import { getCategories } from '../../../redux/slices/products/category';
@@ -23,35 +32,34 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // util
-import {Cover} from '../../components/Cover';
-import AddFormButtons from '../../components/AddFormButtons';
+import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
 export default function ModelAddForm() {
-
   const { userId, user } = useAuthContext();
 
   const { categories } = useSelector((state) => state.category);
 
   const dispatch = useDispatch();
-  
+
   const navigate = useNavigate();
   const [modelVal, setModelVal] = useState(null);
 
   const { enqueueSnackbar } = useSnackbar();
 
   const ModelAddSchema = Yup.object().shape({
-    name: Yup.string().trim().max(50).required('Name is required') ,
+    name: Yup.string().trim().max(50).required('Name is required'),
     description: Yup.string().max(2000),
-    isActive : Yup.boolean(),
+    isActive: Yup.boolean(),
     // category: Yup.string().required('Category is required'),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: ''  ,
-      description:'',
+      name: '',
+      description: '',
       isActive: true,
       // category: '',
     }),
@@ -78,49 +86,52 @@ export default function ModelAddForm() {
   }, [dispatch]);
 
   useEffect(() => {
-    if(modelVal && modelVal._id){
+    if (modelVal && modelVal._id) {
       setValue('category', modelVal._id);
     }
-  }, [modelVal, setValue])
+  }, [modelVal, setValue]);
 
-
-  const onSubmit = async (data) => {   
-    // console.log("data : ",data) 
-  //  await dispatchReqAddAndList(dispatch, addMachineModel(data),  reset, navigate, PATH_MACHINE.machineModel.list, enqueueSnackbar)
-      try{
-        await dispatch(addMachineModel(data));
-        reset();
-        enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.machines.settings.machineModel.list); 
-      } catch(error){
-        if(error.Message){
-          enqueueSnackbar(error.Message,{ variant: `error` })
-        }else if(error.message){
-          enqueueSnackbar(error.message,{ variant: `error` })
-        }else{
-          enqueueSnackbar("Something went wrong!",{ variant: `error` })
-        }
-        console.log("Error:", error);
+  const onSubmit = async (data) => {
+    // console.log("data : ",data)
+    //  await dispatchReqAddAndList(dispatch, addMachineModel(data),  reset, navigate, PATH_MACHINE.machineModel.list, enqueueSnackbar)
+    try {
+      await dispatch(addMachineModel(data));
+      reset();
+      enqueueSnackbar('Create success!');
+      navigate(PATH_MACHINE.machines.settings.machineModel.list);
+    } catch (error) {
+      if (error.Message) {
+        enqueueSnackbar(error.Message, { variant: `error` });
+      } else if (error.message) {
+        enqueueSnackbar(error.message, { variant: `error` });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: `error` });
       }
+      console.log('Error:', error);
+    }
   };
-  const toggleCancel = () => 
-  {
+  const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.settings.machineModel.list);
   };
 
   const { themeStretch } = useSettingsContext();
   return (
     <>
-    <Container maxWidth={false }>
-              <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-                  <Cover name='New Model' icon='material-symbols:model-training-outline-rounded' />
-              </Card>
-          <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-            <Grid container>
-              <Grid item xs={18} md={12} sx={{mt: 3}}>
-                <Card sx={{ p: 3}}>
-                  <Stack spacing={3}>
-                  <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
+      <Container maxWidth={false}>
+        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <Cover name="New Model" icon="material-symbols:model-training-outline-rounded" />
+        </Card>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <Grid container>
+            <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+              <Card sx={{ p: 3 }}>
+                <Stack spacing={3}>
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                  >
                     <Autocomplete
                       value={modelVal || null}
                       options={categories}
@@ -133,30 +144,37 @@ export default function ModelAddForm() {
                       renderInput={(params) => <TextField {...params} label="Category" />}
                       ChipProps={{ size: 'small' }}
                     />
-                    <RHFTextField name="name" label="Name"  />
+                    <RHFTextField name="name" label="Name" />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                     <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    
-                    label={
-                      <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                          Active
-                        </Typography>
-                      </>
-                    } 
-                  />
+                      name="isActive"
+                      labelPlacement="start"
+                      label={
+                        <>
+                          <Typography
+                            variant="subtitle2"
+                            sx={{
+                              mx: 0,
+                              width: 1,
+                              justifyContent: 'space-between',
+                              mb: 0.5,
+                              color: 'text.secondary',
+                            }}
+                          >
+                            Active
+                          </Typography>
+                        </>
+                      }
+                    />
                   </Box>
-                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-                    </Stack>
-                  </Card>
-                
-                </Grid>
+                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+                </Stack>
+              </Card>
             </Grid>
-          </FormProvider>
-    </Container>
+          </Grid>
+        </FormProvider>
+      </Container>
     </>
   );
 }

@@ -21,9 +21,9 @@ import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
 import LoadingScreen from '../../../components/loading-screen';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import VersionsLink from '../../components/DocumentForms/VersionsLink';
 
 const Loadable = (Component) => (props) =>

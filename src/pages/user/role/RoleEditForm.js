@@ -10,7 +10,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link, Autocomplete, TextField, Container } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
+  Link,
+  Autocomplete,
+  TextField,
+  Container,
+} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
@@ -23,27 +37,27 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch
+  RHFSwitch,
 } from '../../../components/hook-form';
 import { getRole, updateRole } from '../../../redux/slices/securityUser/role';
-import AddFormButtons from '../../components/AddFormButtons';
-import FormHeading from '../../components/FormHeading';
-import { Cover } from '../../components/Cover';
-
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 
 export default function RoleEditForm() {
-
   const { role, userRoleTypes } = useSelector((state) => state.role);
-  const [ roleType, setRoleType ] = useState('');
+  const [roleType, setRoleType] = useState('');
 
-  const roleTypesArray = useMemo(() => (
-    Object.keys(userRoleTypes).map((key) => ({
-      key,
-      name: userRoleTypes[key],
-    }))
-  ), [userRoleTypes]);
+  const roleTypesArray = useMemo(
+    () =>
+      Object.keys(userRoleTypes).map((key) => ({
+        key,
+        name: userRoleTypes[key],
+      })),
+    [userRoleTypes]
+  );
 
   const dispatch = useDispatch();
 
@@ -52,12 +66,12 @@ export default function RoleEditForm() {
   const navigate = useNavigate();
 
   const EditRoleSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required("Name Field is required!"),
+    name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
     /* eslint-disable */
     roleTypes: Yup.string().when('roleType', {
-      is: (roleType) => roleType !== '',      
-      then: Yup.string().required("Role type is required!"),
+      is: (roleType) => roleType !== '',
+      then: Yup.string().required('Role type is required!'),
       otherwise: Yup.string().notRequired(),
     }),
     /* eslint-enable */
@@ -67,7 +81,6 @@ export default function RoleEditForm() {
     disableDelete: Yup.boolean(),
   });
 
-
   const defaultValues = useMemo(
     () => ({
       name: role?.name || '',
@@ -75,7 +88,7 @@ export default function RoleEditForm() {
       isActive: role?.isActive || false,
       allModules: role?.allModules || false,
       allWriteAccess: role?.allWriteAccess || false,
-      disableDelete: role?.disableDelete || false
+      disableDelete: role?.disableDelete || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -92,38 +105,37 @@ export default function RoleEditForm() {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
-    trigger
+    trigger,
   } = methods;
 
   const values = watch();
 
- useLayoutEffect(() => {
-  const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);
+  useLayoutEffect(() => {
+    const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);
     if (filteredRole) {
       setRoleType(filteredRole);
-      setValue("roleTypes", filteredRole?.name);
+      setValue('roleTypes', filteredRole?.name);
     }
   }, [role, roleTypesArray, setValue]);
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.role.view(role._id))
-
+    navigate(PATH_SETTING.role.view(role._id));
   };
 
   const handleRoleTypeChange = (event, newValue) => {
     setRoleType(newValue);
-    setValue("roleTypes", newValue?.name || "");
-    trigger("roleTypes");
+    setValue('roleTypes', newValue?.name || '');
+    trigger('roleTypes');
   };
 
   const onSubmit = async (data) => {
     try {
-      if(roleType){
+      if (roleType) {
         data.roleType = roleType.key;
       }
       await dispatch(updateRole(role._id, data));
       dispatch(getRole(role._id));
-      navigate(PATH_SETTING.role.view(role._id))
+      navigate(PATH_SETTING.role.view(role._id));
       enqueueSnackbar('Role updated Successfully!');
       reset();
     } catch (err) {
@@ -150,7 +162,7 @@ export default function RoleEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <RHFTextField name="name" label="Name" />
-                <Autocomplete 
+                <Autocomplete
                   required
                   value={roleType || null}
                   options={roleTypesArray}
@@ -164,7 +176,7 @@ export default function RoleEditForm() {
                     </li>
                   )}
                   renderInput={(params) => (
-                    <RHFTextField {...params} name='roleTypes' label="Role Types"/>
+                    <RHFTextField {...params} name="roleTypes" label="Role Types" />
                   )}
                   ChipProps={{ size: 'small' }}
                 >
@@ -173,7 +185,7 @@ export default function RoleEditForm() {
                       <span>{option.name}</span>
                     </div>
                   )}
-                </Autocomplete>                
+                </Autocomplete>
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex">
                   <RHFSwitch
@@ -181,29 +193,44 @@ export default function RoleEditForm() {
                     labelPlacement="start"
                     label={
                       <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
                           Active
                         </Typography>
                       </>
-                    } />
-                  <RHFSwitch name="disableDelete" labelPlacement="start" label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary'
-                      }}> Disable Delete
-                    </Typography>
-                  } />
-
+                    }
+                  />
+                  <RHFSwitch
+                    name="disableDelete"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        {' '}
+                        Disable Delete
+                      </Typography>
+                    }
+                  />
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
-
           </Grid>
         </Grid>
       </FormProvider>

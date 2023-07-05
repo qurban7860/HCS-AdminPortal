@@ -25,7 +25,7 @@ import { useTable, getComparator, TableNoData } from '../../../components/table'
 // components
 import Iconify from '../../../components/iconify';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
-import SearchInput from '../../components/SearchInput';
+import SearchInput from '../../components/Defaults/SearchInput';
 // sections
 import {
   setCustomerDocumentFormVisibility,
@@ -42,9 +42,9 @@ import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
 import _mock from '../../../_mock';
-import SearchInputAndAddButton from '../../components/SearchInputAndAddButton';
-import AddButtonAboveAccordion from '../../components/AddButtonAboveAcoordion';
-import ListSwitch from '../../components/ListSwitch';
+import SearchInputAndAddButton from '../../components/Defaults/SearchInputAndAddButton';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
+import ListSwitch from '../../components/Defaults/ListSwitch';
 import { fDate } from '../../../utils/formatTime';
 import { BUTTONS, FORMLABELS } from '../../../constants/default-constants';
 

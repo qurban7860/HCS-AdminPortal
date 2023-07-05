@@ -49,8 +49,8 @@ import { countries } from '../../../assets/data';
 import FormProvider, { RHFTextField, RHFUpload } from '../../../components/hook-form';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import RadioButtons from '../../components/DocumentForms/RadioButtons';
-import FormHeading from '../../components/FormHeading';
-import AddFormButtons from '../../components/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import DialogLabel from '../../components/Dialog/DialogLabel';
 import {
   fileTypesArray,

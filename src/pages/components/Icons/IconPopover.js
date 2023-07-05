@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { IconButton, Button, Typography } from '@mui/material';
 import { alpha } from '@mui/material/styles';
-import { StyledPopover } from '../../theme/styles/default-styles';
-import Iconify from '../../components/iconify';
-import { ICONS } from '../../constants/icons/default-icons';
+import { StyledPopover } from '../../../theme/styles/default-styles';
+import Iconify from '../../../components/iconify';
+import { ICONS } from '../../../constants/icons/default-icons';
 
 export default function IconPopover({
   isActive,

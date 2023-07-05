@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Button, TextField, InputAdornment } from '@mui/material';
-import Iconify from '../../components/iconify';
-import { BUTTONS } from '../../constants/default-constants';
+import Iconify from '../../../components/iconify';
+import { BUTTONS } from '../../../constants/default-constants';
 
 function SearchInput({
   filterName,

@@ -1,4 +1,15 @@
 export const FORMLABELS = {
+  // Default FormLabels
+  isACTIVE: {
+    label: 'Active',
+    name: 'isActive',
+    required: true,
+  },
+
+  COVER: {
+    EDIT_MODEL: 'Edit Model',
+  },
+
   // for FormLabels
   HOWICK: 'Howick Resources',
   ADDRESS: 'Address Information',
@@ -17,6 +28,16 @@ export const FORMLABELS = {
 
   DOCUMENT_NAME: 'Document Name',
   DOCUMENT_DESC: 'Description',
+
+  // @root - ModelEditForm - machine
+  MODEL_NAME: {
+    label: 'Name',
+    name: 'name',
+  },
+  MODEL_DESC: {
+    label: 'Description',
+    name: 'description',
+  },
 };
 
 // dialog contents

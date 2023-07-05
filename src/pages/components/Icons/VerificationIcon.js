@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyledTooltip } from '../../theme/styles/default-styles';
-import Iconify from '../../components/iconify';
+import { StyledTooltip } from '../../../theme/styles/default-styles';
+import Iconify from '../../../components/iconify';
 
 export default function VerificationIcon({ isVerified }) {
   return (

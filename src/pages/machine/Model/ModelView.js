@@ -9,7 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PATH_MACHINE } from '../../../routes/paths';
 // redux
 
-import { getMachineModels, updateMachineModel, setMachinemodelsEditFormVisibility } from '../../../redux/slices/products/model';
+import {
+  getMachineModels,
+  updateMachineModel,
+  setMachinemodelsEditFormVisibility,
+} from '../../../redux/slices/products/model';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -21,7 +25,7 @@ import { useSettingsContext } from '../../../components/settings';
 
 import ModelList from './ModelList';
 import ModelViewForm from './ModelViewForm';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import ModelEditForm from './ModelEditForm';
 
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
@@ -32,7 +36,7 @@ ModelViewPage.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export default function ModelViewPage({editPage}) {
+export default function ModelViewPage({ editPage }) {
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -44,45 +48,44 @@ export default function ModelViewPage({editPage}) {
   const { machinemodelEditFormVisibility } = useSelector((state) => state.machinemodel);
 
   const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
+  const toggleEditFlag = () => setEditFlag((value) => !value);
 
-  const [currentComponent, setCurrentComponent] = useState(<ModelViewForm/>);
+  const [currentComponent, setCurrentComponent] = useState(<ModelViewForm />);
 
   const [machinemodelFlag, setMachinemodelFlag] = useState(true);
-  const {machineModel} = useSelector((state) => state.machinemodel);
+  const { machineModel } = useSelector((state) => state.machinemodel);
 
   useLayoutEffect(() => {
     dispatch(setMachinemodelsEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
 
   useEffect(() => {
-    if(machinemodelEditFormFlag){
-      setCurrentComponent(<ModelEditForm/>);
-    }else{
+    if (machinemodelEditFormFlag) {
+      setCurrentComponent(<ModelEditForm />);
+    } else {
       setMachinemodelFlag(false);
-      setCurrentComponent(<ModelViewForm/>);
+      setCurrentComponent(<ModelViewForm />);
     }
   }, [editPage, machinemodelEditFormFlag, machineModel]);
 
-
   return (
-      <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover
-            model={machineModel?.name}
-            name={machineModel?.name}
-            setting="enable"
-            backLink={PATH_MACHINE.machines.settings.machineModel.list}
-          />
-        </Card>
-        <ModelViewForm />
-      </Container>
+    <Container maxWidth={false}>
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+          // mt: '24px',
+        }}
+      >
+        <Cover
+          model={machineModel?.name}
+          name={machineModel?.name}
+          setting="enable"
+          backLink={PATH_MACHINE.machines.settings.machineModel.list}
+        />
+      </Card>
+      <ModelViewForm />
+    </Container>
   );
 }

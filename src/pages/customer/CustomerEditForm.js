@@ -26,8 +26,8 @@ import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Iconify from '../../components/iconify';
-import AddFormButtons from '../components/AddFormButtons';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 // import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
 import FormProvider, {
   RHFSelect,
@@ -42,7 +42,7 @@ export default function CustomerEditForm() {
   const { error, customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
   const { contacts, spContacts } = useSelector((state) => state.contact);
-  const filteredContacts = spContacts.filter(contact => contact.isActive === true);
+  const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
   const [projectManVal, setProjectManVal] = useState('');

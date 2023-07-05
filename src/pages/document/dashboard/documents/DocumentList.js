@@ -39,7 +39,7 @@ import ConfirmDialog from '../../../../components/confirm-dialog';
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
 import { getDocuments, deleteDocument } from '../../../../redux/slices/document/document';
-import { Cover } from '../../../components/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 
 // ----------------------------------------------------------------------

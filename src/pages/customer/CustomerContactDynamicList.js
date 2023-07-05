@@ -8,7 +8,7 @@ import {
   StyledScrollbar,
   StyledCardWrapper,
 } from '../../theme/styles/customer-styles';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -27,10 +27,10 @@ import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import DetailsSection from '../components/sections/DetailsSection';
-import AvatarSection from '../components/sections/AvatarSection';
+import DetailsSection from '../components/Sections/DetailsSection';
+import AvatarSection from '../components/Sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
-import SearchInput from '../components/SearchInput';
+import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';

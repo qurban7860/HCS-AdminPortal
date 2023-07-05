@@ -21,19 +21,18 @@ import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSite } from '../../redux/slices/customer/site';
 import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import Iconify from '../../components/iconify';
-import ViewFormField from '../components/ViewFormField';
-import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import ViewFormField from '../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
-import CommaJoinField from '../components/CommaJoinField';
+import CommaJoinField from '../components/Defaults/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
 import { DIALOGS } from '../../constants/default-constants';
-import FormLabel from '../components/FormLabel';
+import FormLabel from '../components/DocumentForms/FormLabel';
 import GoogleMaps from '../../assets/GoogleMaps';
 // utils
-import { fDateTime , fDate } from '../../utils/formatTime';
-
+import { fDateTime, fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
@@ -47,34 +46,37 @@ export default function MachineViewForm() {
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
-  const [ disableTransferButton, setDisableTransferButton ] = useState(true);
-  const [ disableEditButton, setDisableEditButton ] = useState(false);
-  const [ hasValidLatLong, setHasValidLatLong ] = useState(false);
+  const [disableTransferButton, setDisableTransferButton] = useState(true);
+  const [disableEditButton, setDisableEditButton] = useState(false);
+  const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const baseUrl = window.location.origin;
-  const isSuperAdmin = loggedInUser?.roles?.some(role => role.roleType === 'SuperAdmin');
+  const isSuperAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
 
   // function to check whether the lat long params exist or not
-  const hasValidArray = (array) => array.some((obj) => {
-    const lat = obj?.lat;
-    const long = obj?.long;
-    return lat !== undefined && long !== undefined && lat !== "" && long !== "";
-  });
+  const hasValidArray = (array) =>
+    array.some((obj) => {
+      const lat = obj?.lat;
+      const long = obj?.long;
+      return lat !== undefined && long !== undefined && lat !== '' && long !== '';
+    });
 
-  const latLongValues = useMemo(() => [
-    {
-      lat: machine?.instalationSite?.lat || "",
-      long: machine?.instalationSite?.long || "",
-    },
-    {
-      lat: machine?.billingSite?.lat || "",
-      long: machine?.billingSite?.long || "",
-    }
-  ], [machine]);
+  const latLongValues = useMemo(
+    () => [
+      {
+        lat: machine?.instalationSite?.lat || '',
+        long: machine?.instalationSite?.long || '',
+      },
+      {
+        lat: machine?.billingSite?.lat || '',
+        long: machine?.billingSite?.long || '',
+      },
+    ],
+    [machine]
+  );
 
   useEffect(() => {
     const isValid = hasValidArray(latLongValues);
     setHasValidLatLong(isValid);
-
   }, [machine, latLongValues, setHasValidLatLong]);
 
   useLayoutEffect(() => {
@@ -84,9 +86,9 @@ export default function MachineViewForm() {
     } else {
       setDisableTransferButton(false);
     }
-    if(machine.transferredMachine){
+    if (machine.transferredMachine) {
       setDisableEditButton(true);
-    }else{
+    } else {
       setDisableEditButton(false);
     }
     if (userId) {
@@ -161,35 +163,34 @@ export default function MachineViewForm() {
 
   const defaultValues = useMemo(
     () => ({
-      id:                       machine?._id || '',
-      name:                     machine?.name || '',
-      serialNo:                 machine?.serialNo || '',
-      parentMachine:            machine?.parentMachine?.name || '',
-      parentSerialNo:           machine?.parentMachine?.serialNo || '',
-      supplier:                 machine?.supplier?.name || '',
-      workOrderRef:             machine?.workOrderRef || '',
-      machineModel:             machine?.machineModel?.name || '',
-      status:                   machine?.status?.name || '',
-      customer:                 machine?.customer || '',
-      siteMilestone:            machine?.siteMilestone || '',
-      instalationSite:          machine?.instalationSite || '',
-      billingSite:              machine?.billingSite|| '',
-      installationDate:         machine?.installationDate || '',
-      shippingDate:             machine?.shippingDate || '',
-      description:              machine?.description || '',
-      customerTags:             machine?.customerTags || '',
-      accountManager:           machine?.accountManager || '',
-      projectManager:           machine?.projectManager || '',
-      supportManager:           machine?.supportManager || '',
-      isActive:                 machine?.isActive,
-      createdByFullName:        machine?.createdBy?.name ,
-      createdAt:                machine?.createdAt ,
-      createdIP:                machine?.createdIP ,
-      updatedByFullName:        machine?.updatedBy?.name ,
-      updatedAt:                machine?.updatedAt ,
-      updatedIP:                machine?.updatedIP ,
-    }
-    ),
+      id: machine?._id || '',
+      name: machine?.name || '',
+      serialNo: machine?.serialNo || '',
+      parentMachine: machine?.parentMachine?.name || '',
+      parentSerialNo: machine?.parentMachine?.serialNo || '',
+      supplier: machine?.supplier?.name || '',
+      workOrderRef: machine?.workOrderRef || '',
+      machineModel: machine?.machineModel?.name || '',
+      status: machine?.status?.name || '',
+      customer: machine?.customer || '',
+      siteMilestone: machine?.siteMilestone || '',
+      instalationSite: machine?.instalationSite || '',
+      billingSite: machine?.billingSite || '',
+      installationDate: machine?.installationDate || '',
+      shippingDate: machine?.shippingDate || '',
+      description: machine?.description || '',
+      customerTags: machine?.customerTags || '',
+      accountManager: machine?.accountManager || '',
+      projectManager: machine?.projectManager || '',
+      supportManager: machine?.supportManager || '',
+      isActive: machine?.isActive,
+      createdByFullName: machine?.createdBy?.name,
+      createdAt: machine?.createdAt,
+      createdIP: machine?.createdIP,
+      updatedByFullName: machine?.updatedBy?.name,
+      updatedAt: machine?.updatedAt,
+      updatedIP: machine?.updatedIP,
+    }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [machine]
   );
@@ -249,7 +250,11 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
         <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
+        <CommaJoinField
+          sm={6}
+          arrayParam={machine.machineConnections}
+          heading="Connected Machines"
+        />
         <ViewFormField
           sm={6}
           heading="Work Order / Purchase Order"
@@ -277,7 +282,11 @@ export default function MachineViewForm() {
             )
           }
         />
-        <ViewFormField sm={6} heading="Installation Date" param={fDate(defaultValues?.installationDate)} />
+        <ViewFormField
+          sm={6}
+          heading="Installation Date"
+          param={fDate(defaultValues?.installationDate)}
+        />
         <ViewFormField sm={6} heading="Shipping Date" param={fDate(defaultValues?.shippingDate)} />
 
         <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
@@ -311,16 +320,11 @@ export default function MachineViewForm() {
 
       <Grid container>
         <FormLabel content="Sites Locations" />
-        { hasValidLatLong ? <GoogleMaps
-              machineView
-              latlongArr={latLongValues}
-              mapHeight='500px'
-          /> : 
-          <ViewFormField
-            sm={6}
-            heading="No Site Locations Available"
-          />
-        }    
+        {hasValidLatLong ? (
+          <GoogleMaps machineView latlongArr={latLongValues} mapHeight="500px" />
+        ) : (
+          <ViewFormField sm={6} heading="No Site Locations Available" />
+        )}
       </Grid>
 
       <Grid container sx={{ mt: 2 }}>

@@ -21,11 +21,9 @@ import { useSettingsContext } from '../../../components/settings';
 
 import ToolList from './ToolList';
 import ToolViewForm from './ToolViewForm';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import ToolEditForm from './ToolEditForm';
 /* eslint-disable */
-
-
 
 ToolView.propTypes = {
   editPage: PropTypes.bool,
@@ -33,47 +31,42 @@ ToolView.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export default function ToolView({editPage}) {
+export default function ToolView({ editPage }) {
   const dispatch = useDispatch();
 
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const { themeStretch } = useSettingsContext();
 
   const { toolEditFormFlag } = useSelector((state) => state.tool);
 
   const { toolEditFormVisibility } = useSelector((state) => state.tool);
-  
-  const [editFlag, setEditFlag] = useState(false);
-  const toggleEditFlag = () => setEditFlag(value => !value);
 
-  const [currentComponent, setCurrentComponent] = useState(<ToolViewForm/>);
+  const [editFlag, setEditFlag] = useState(false);
+  const toggleEditFlag = () => setEditFlag((value) => !value);
+
+  const [currentComponent, setCurrentComponent] = useState(<ToolViewForm />);
 
   const [toolFlag, setToolFlag] = useState(true);
-  const {tool} = useSelector((state) => state.tool);
+  const { tool } = useSelector((state) => state.tool);
   // const tool = tools
-  
+
   useLayoutEffect(() => {
     dispatch(setToolEditFormVisibility(editFlag));
   }, [dispatch, editFlag]);
 
-  
-
-  
   useEffect(() => {
-    if(toolEditFormFlag){
-      setCurrentComponent(<ToolEditForm/>);
-    }else{
+    if (toolEditFormFlag) {
+      setCurrentComponent(<ToolEditForm />);
+    } else {
       setToolFlag(false);
-      setCurrentComponent(<ToolViewForm/>);        
+      setCurrentComponent(<ToolViewForm />);
     }
   }, [editPage, toolEditFormFlag, tool]);
   // console.log( "muzna")
   return (
     <>
-      <Container maxWidth={false }>
-        
-
+      <Container maxWidth={false}>
         <Card
           sx={{
             mb: 3,
@@ -82,10 +75,14 @@ export default function ToolView({editPage}) {
             // mt: '24px',
           }}
         >
-          <Cover name={tool?.name} setting="setting" backLink={PATH_MACHINE.machines.settings.tool.list}/> 
+          <Cover
+            name={tool?.name}
+            setting="setting"
+            backLink={PATH_MACHINE.machines.settings.tool.list}
+          />
         </Card>
-        
-        <ToolViewForm/>
+
+        <ToolViewForm />
       </Container>
     </>
   );

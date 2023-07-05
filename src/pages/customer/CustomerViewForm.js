@@ -10,7 +10,7 @@ import { Card, Grid, Breadcrumbs, Tooltip } from '@mui/material';
 import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormLabel from '../components/FormLabel';
+import FormLabel from '../components/DocumentForms/FormLabel';
 import { TableNoData } from '../../components/table';
 // slices
 import {
@@ -19,11 +19,11 @@ import {
   deleteCustomer,
   setCustomerVerification,
 } from '../../redux/slices/customer/customer';
-import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormField from '../components/ViewFormField';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
 import { Snacks } from '../../constants/customer-constants';
 import useResponsive from '../../hooks/useResponsive';

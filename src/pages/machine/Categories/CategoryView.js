@@ -11,7 +11,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 
 import CategoryList from './CategoryList';
 import CategoryViewForm from './CategoryViewForm';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 /* eslint-disable */
 
 CategoryView.propTypes = {
@@ -20,17 +20,19 @@ CategoryView.propTypes = {
 
 // ----------------------------------------------------------------------
 
-export default function CategoryView({editPage}) {
+export default function CategoryView({ editPage }) {
+  const { category } = useSelector((state) => state.category);
 
-  const {category} = useSelector((state) => state.category);
-  
- 
   return (
-      <Container maxWidth={false }>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }} >
-          <Cover name={category?.name} setting="setting" backLink={PATH_MACHINE.machines.settings.categories.list}/>
-        </Card>
-        <CategoryViewForm/>
-      </Container>
+    <Container maxWidth={false}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover
+          name={category?.name}
+          setting="setting"
+          backLink={PATH_MACHINE.machines.settings.categories.list}
+        />
+      </Card>
+      <CategoryViewForm />
+    </Container>
   );
 }
