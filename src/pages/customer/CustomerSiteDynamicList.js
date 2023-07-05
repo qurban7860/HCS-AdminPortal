@@ -31,7 +31,7 @@ import SiteViewForm from './site/SiteViewForm';
 import SearchInput from '../components/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
-import { BUTTONS } from '../../constants/default-constants';
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -134,10 +134,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
-              to={PATH_DASHBOARD.customer.contacts}
+              to={PATH_CUSTOMER.contacts}
               name={
                 <Stack>
                   {!siteAddFormVisibility && !siteEditFormVisibility && !isExpanded && 'Sites'}

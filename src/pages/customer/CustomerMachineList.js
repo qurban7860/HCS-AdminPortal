@@ -33,6 +33,8 @@ import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slice
 // import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
 import ViewFormField from '../components/ViewFormField';
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
+
 
 // ----------------------------------------------------------------------
 
@@ -149,10 +151,10 @@ export default function CustomerContactList() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
-              to={PATH_DASHBOARD.customer.document}
+              to={PATH_CUSTOMER.document}
               name={
                 <Stack>
                   {customerMachines.length > 0 ? customerMachines.length : 'No Machines'}{' '}

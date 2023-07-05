@@ -185,15 +185,17 @@ useLayoutEffect(() => {
     <>
       {!toolInstalledEditFormVisibility && (
         <Stack alignItems="flex-end" sx={{ mb: 3, px: 4 }}>
-          <Button
-            onClick={toggleChecked}
-            variant="contained"
-            startIcon={
-              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
-            }
-          >
-            New Tool
-          </Button>
+          {!machine.transferredMachine && 
+            <Button
+              onClick={toggleChecked}
+              variant="contained"
+              startIcon={
+                !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+              }
+            >
+              New Tool
+            </Button>
+          }
         </Stack>
       )}
 

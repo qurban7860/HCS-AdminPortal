@@ -163,10 +163,13 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
           aria-describedby="alert-dialog-description"
         >
           <Grid container lg={12}>
-            <GoogleMaps
-              lat={defaultValues.lat ? defaultValues.lat : 0}
-              lng={defaultValues.long ? defaultValues.long : 0}
-            />
+            {defaultValues.lat && defaultValues.long ? (
+              <GoogleMaps lat={defaultValues.lat} lng={defaultValues.long} />
+            ) : (
+              <ViewFormField
+                sm={6}
+                heading="No Site Locations Available"
+              />)}
           </Grid>
           {/* {defaultValues.lat && defaultValues.long && (
             <Grid container lg={12}>

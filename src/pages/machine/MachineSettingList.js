@@ -205,20 +205,22 @@ useLayoutEffect(() => {
           </Grid>
           <Grid item xs={8} sm={3}>
             <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
-              <Button
-                sx={{ p: 1 }}
-                onClick={toggleChecked}
-                variant="contained"
-                startIcon={
-                  !formVisibility ? (
-                    <Iconify icon="eva:plus-fill" />
-                  ) : (
-                    <Iconify icon="eva:minus-fill" />
-                  )
-                }
-              >
-                New Setting
-              </Button>
+              {!machine.transferredMachine &&
+                <Button
+                  sx={{ p: 1 }}
+                  onClick={toggleChecked}
+                  variant="contained"
+                  startIcon={
+                    !formVisibility ? (
+                      <Iconify icon="eva:plus-fill" />
+                    ) : (
+                      <Iconify icon="eva:minus-fill" />
+                    )
+                  }
+                >
+                  New Setting
+                </Button>
+              }
             </Stack>
           </Grid>
         </Grid>
