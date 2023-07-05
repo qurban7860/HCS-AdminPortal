@@ -17,7 +17,7 @@ import { fDate, fDateTime } from '../../utils/formatTime';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -35,7 +35,7 @@ import NoteAddForm from './note/NoteAddForm';
 import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
 import { getSites } from '../../redux/slices/customer/site';
 import { getContacts } from '../../redux/slices/customer/contact';
-import { BUTTONS } from '../../constants/default-constants';
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -243,9 +243,9 @@ export default function CustomerNoteList() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.notes} name="Notes" />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />  
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.notes} name="Notes" />
           </Breadcrumbs>
         </Grid>
         <AddButtonAboveAccordion

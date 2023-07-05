@@ -177,16 +177,18 @@ export default function MachineLicenseList() {
     <>
       {!licenseEditFormVisibility && (
         <Stack alignItems="flex-end" sx={{ mb: 3, px: 4 }}>
-          <Button
-            // alignItems
-            onClick={toggleChecked}
-            variant="contained"
-            startIcon={
-              !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
-            }
-          >
-            New License
-          </Button>
+          {!machine.transferredMachine && 
+            <Button
+              // alignItems
+              onClick={toggleChecked}
+              variant="contained"
+              startIcon={
+                !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+              }
+            >
+              New License
+            </Button>
+          }
         </Stack>
       )}
 

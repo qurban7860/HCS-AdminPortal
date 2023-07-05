@@ -89,7 +89,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const [projectManVal, setProjectManVal] = useState('');
 
   const AddCustomerSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required('Name is required').trim('Leading and trailing spaces are not allowed'),
     tradingName: Yup.string(),
     mainSite: Yup.string(),
     sites: Yup.array(),

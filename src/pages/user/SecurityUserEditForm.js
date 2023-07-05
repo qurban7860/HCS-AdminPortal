@@ -111,14 +111,14 @@ useEffect(() => {
       setPhone(securityUser?.phone);
     }
     if(securityUser.name !== undefined && securityUser.name !== null){
-      setName(securityUser?.name);
+      handleNameChange(securityUser?.name);   // eslint-disable-line
     }
     if(securityUser.email !== undefined && securityUser.email !== null){
       setEmail(securityUser?.email);
     }
   },[securityUser])
   const NewUserSchema = Yup.object().shape({
-    // name: Yup.string().required('First name is required'),
+    name: Yup.string().required("Name is required!").max(40, "Name must not exceed 40 characters!"),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address').trim(),
     password: Yup.string().min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
@@ -154,6 +154,7 @@ useEffect(() => {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    trigger
   } = methods;
 
   useEffect(() => {
@@ -169,6 +170,12 @@ useEffect(() => {
       setPhone(newValue)
     }
   }
+
+  const handleNameChange = (event) => {
+    setName(event);
+    setValue("name", event || "");
+    trigger("name");
+  };
 
   const onSubmit = async (data) => {
     data.customer = customerVal?._id || null
@@ -327,7 +334,7 @@ useEffect(() => {
                   else{
                   setCustomerVal("");
                   setContactVal("");
-                  setName("");
+                  handleNameChange("");
                   setPhone("")
                   setEmail("");
                   dispatch(resetContacts());
@@ -353,13 +360,13 @@ useEffect(() => {
                 onChange={(event, newValue) => {
                   if(newValue){
                   setContactVal(newValue);
-                  setName(`${newValue.firstName} ${newValue.lastName}`);
+                  handleNameChange(`${newValue.firstName} ${newValue.lastName}`);
                   setPhone(newValue.phone)
                   setEmail(newValue.email);
                   }
                   else{
                   setContactVal("");
-                  setName("");
+                  handleNameChange("");
                   setPhone("")
                   setEmail("");
                   }
@@ -375,7 +382,7 @@ useEffect(() => {
                   </div>
                 )}
               </Autocomplete> */}
-              <RHFTextField name="name" label="Full Name" onChange={(e) => setName(e.target.value)} value={name} required/>
+              <RHFTextField name="name" label="Full Name*" onChange={(e) => handleNameChange(e.target.value)} value={name}/>
               <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium" defaultCountry="NZ" onChange={handlePhoneChange} forceCallingCode/>
               </Box>
             <Box

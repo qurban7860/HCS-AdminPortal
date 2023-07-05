@@ -46,7 +46,7 @@ import SearchInputAndAddButton from '../../components/SearchInputAndAddButton';
 import AddButtonAboveAccordion from '../../components/AddButtonAboveAcoordion';
 import ListSwitch from '../../components/ListSwitch';
 import { fDate } from '../../../utils/formatTime';
-import { BUTTONS, FORMLABELS } from '../../../constants/default-constants';
+import { BUTTONS, FORMLABELS, BREADCRUMBS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -172,10 +172,10 @@ const handleFormVisibility = () => {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
-              to={PATH_DASHBOARD.customer.document}
+              to={PATH_CUSTOMER.document}
               name={
                 <Stack>
                   {!expanded &&

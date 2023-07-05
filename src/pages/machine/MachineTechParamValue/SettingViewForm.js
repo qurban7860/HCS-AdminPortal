@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,18 @@ export default function SettingViewForm({ currentSetting = null }) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [openPopover, setOpenPopover] = useState(null);
   const { enqueueSnackbar } = useSnackbar();
+  const [ disableDeleteButton, setDisableDeleteButton ] = useState(false);
+  const [ disableEditButton, setDisableEditButton ] = useState(false);
+
+  useLayoutEffect(() => {
+    if (machine.transferredMachine) {
+      setDisableDeleteButton(true);
+      setDisableEditButton(true);
+    } else {
+      setDisableDeleteButton(false);
+      setDisableEditButton(false);
+    }
+  }, [machine]);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -88,7 +100,12 @@ export default function SettingViewForm({ currentSetting = null }) {
   return (
     <Grid>
       <Grid container justifyContent="flex-end" sx={{pr: '2rem'}}>
-        <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
+        <ViewFormEditDeleteButtons
+          disableDeleteButton={disableDeleteButton}
+          disableTransferButton={disableEditButton}
+          handleEdit={handleEdit} 
+          onDelete={onDelete} 
+        />
       </Grid>
       <Grid container>
         <ViewFormField

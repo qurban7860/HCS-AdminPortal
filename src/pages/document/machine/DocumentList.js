@@ -213,7 +213,7 @@ export default function DocumentList() {
               </Grid>
               <Grid item xs={8} sm={3}>
                 <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
-                  <Button
+                {!machine.transferredMachine && <Button
                     sx={{ p: 1 }}
                     onClick={toggleChecked}
                     variant="contained"
@@ -227,6 +227,7 @@ export default function DocumentList() {
                   >
                     {BUTTONS.DOCUMENT}
                   </Button>
+                }
                 </Stack>
               </Grid>
             </Grid>
