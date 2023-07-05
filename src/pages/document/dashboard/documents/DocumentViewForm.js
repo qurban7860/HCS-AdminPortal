@@ -178,6 +178,9 @@ export default function Document() {
         }
       });
   };
+  const callAfterDelete = () => {
+    dispatch(getDocumentHistory(id));
+  }
 
   return (
     <>
@@ -244,11 +247,11 @@ export default function Document() {
                 documentHistory?.documentVersions?.map((files) => (
                   <Grid container>
                     <Grid container sx={{ pt: '2rem' }} mb={1}>
-                      <FormLabel content={`Version No. ${files?.versionNo}`} sx={{mb:1}}/>
+                      <FormLabel content={`Version No. ${files?.versionNo}`} />
                       {defaultValues.description !== files?.description && <ViewFormField sm={12} heading="Description" param={files?.description} />}
                     </Grid>
                     {files?.files?.map((file) => (
-                      <Grid item sx={{ display: 'flex-inline', m:0.5 }}>
+                      <Grid  sx={{ display: 'flex-inline', m:0.5 }}>
                         <Grid container justifyContent="flex-start" gap={1}>
                           <Thumbnail
                             // sx={{m:2}}
@@ -256,6 +259,7 @@ export default function Document() {
                             file={file}
                             currentDocument={documentHistory}
                             customer={customer}
+                            getCallAfterDelete={callAfterDelete}
                           />
                         </Grid>
                       </Grid>

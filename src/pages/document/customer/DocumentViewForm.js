@@ -90,7 +90,9 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentCustomerDocument, customerDocument]
   );
-
+  const callAfterDelete = () => {
+    dispatch(getCustomerDocuments(customer._id));
+  }
   return (
     <Grid>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
@@ -135,6 +137,7 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 file={file}
                 currentDocument={currentCustomerDocument}
                 customer={customer}
+                getCallAfterDelete={callAfterDelete}
               />
             ))}
           </Grid>
