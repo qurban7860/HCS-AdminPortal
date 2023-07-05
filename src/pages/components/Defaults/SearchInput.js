@@ -14,10 +14,11 @@ function SearchInput({
   disabled,
   size,
   padding,
+  display,
 }) {
   return (
-    <Grid container rowSpacing={1}>
-      <Grid item xs={isFiltered ? 9 : 12} md={isFiltered ? 10 : 12} sx={{ display: 'inline-flex' }}>
+    <Grid container rowSpacing={1} mb={1}>
+      <Grid item xs={12} md={12} sx={{ display: { display } }}>
         {!searchFormVisibility && (
           <TextField
             fullWidth
@@ -35,17 +36,17 @@ function SearchInput({
             }}
           />
         )}
+        {isFiltered && (
+          <Button
+            color="error"
+            sx={{ flexShrink: 0, ml: 1 }}
+            onClick={handleResetFilter}
+            startIcon={<Iconify icon="eva:trash-2-outline" />}
+          >
+            {BUTTONS.CLEAR}
+          </Button>
+        )}
       </Grid>
-      {isFiltered && (
-        <Button
-          color="error"
-          sx={{ flexShrink: 0, ml: 1 }}
-          onClick={handleResetFilter}
-          startIcon={<Iconify icon="eva:trash-2-outline" />}
-        >
-          {BUTTONS.CLEAR}
-        </Button>
-      )}
     </Grid>
   );
 }
@@ -60,11 +61,13 @@ SearchInput.propTypes = {
   disabled: PropTypes.bool,
   size: PropTypes.string,
   padding: PropTypes.string,
+  display: PropTypes.string,
 };
 
 SearchInput.defaultProps = {
   padding: 2,
   size: 'small',
+  display: 'inline-flex',
 };
 
 /**

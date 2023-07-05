@@ -77,7 +77,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const handleFilterName = (e) => {
     setFilterName(e.target.value);
   };
-
+  console.log('filterName', filterName);
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);

@@ -68,7 +68,7 @@ export default function CustomerContactList(currentContact = null) {
     setChecked((value) => !value);
     if (checked || contactEditFormVisibility) {
       dispatch(setContactFormVisibility(false));
-      enqueueSnackbar('Please close the form before opening a new one', {
+      enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {
         variant: 'warning',
       });
       setIsExpanded(false);
@@ -340,6 +340,7 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus })
     inputData = inputData.filter(
       (contact) =>
         contact?.firstName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.lastName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

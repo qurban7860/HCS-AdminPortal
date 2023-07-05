@@ -18,7 +18,6 @@ import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
 import useResponsive from '../../../hooks/useResponsive';
 import { useSettingsContext } from '../../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../../components/table';
@@ -190,7 +189,12 @@ export default function DocumentList() {
 
         {/* conditional reactive */}
         <Grid item xs={12} md={6}>
-          <Grid container direction={{ sm: 'column', lg: 'row' }} justifyContent="flex-end">
+          <Grid
+            container
+            direction={{ sm: 'column', lg: 'row' }}
+            justifyContent="flex-end"
+            alignItems="center"
+          >
             {isMobile && (
               <Grid item xs={12} md={3}>
                 <Grid container justifyContent="flex-end">
@@ -204,7 +208,7 @@ export default function DocumentList() {
                 </Grid>
               </Grid>
             )}
-            <Grid item xs={12} md={9}>
+            <Grid item xs={12} md={9} mt={1}>
               <SearchInput
                 // searchFormVisibility={formVisibility || contactEditFormVisibility}
                 filterName={filterName}
@@ -214,9 +218,14 @@ export default function DocumentList() {
                 toggleChecked={toggleChecked}
                 toggleCancel={toggleCancel}
                 FormVisibility={customerDocumentFormVisibility}
-                disabled={customerDocumentEditFormVisibility || customerDocumentFormVisibility}
+                disabled={
+                  customerDocumentEditFormVisibility ||
+                  customerDocumentFormVisibility ||
+                  customerDocuments.length === 0
+                }
                 size="small"
                 isSearchBar
+                display={customerDocuments.length === 0 ? 'none' : 'inline-flex'}
               />
             </Grid>
             {!isMobile && (

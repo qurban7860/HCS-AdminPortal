@@ -7,6 +7,9 @@ export const Snacks = {
   // @root - CustomerSiteDynamicList - toggkeChecked
   SITE_CLOSE_CONFIRM: 'Close the form before adding a new site',
 
+  // @root - CustomerContactDynamicList - toggkeChecked
+  CONTACT_CLOSE_CONFIRM: 'Close the form before adding a new contact',
+
   // @root - ContactAddForm - Schema
   EMAIL_WARN: 'The email name cannot include leading or trailing spaces',
   EMAIL_INVALID: 'Email must be a valid email address',
