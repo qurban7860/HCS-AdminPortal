@@ -3,42 +3,32 @@ import * as Yup from 'yup';
 import { m } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
   Grid,
   Stack,
-  Typography,
   Checkbox,
-  Container,
   FormControlLabel,
   Autocomplete,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
   TextField,
 } from '@mui/material';
 // slice
 import { addCustomer } from '../../redux/slices/customer/customer';
 import { getSPContacts } from '../../redux/slices/customer/contact';
+// schema
+import { AddCustomerSchema } from './schemas/AddCustomerSchema';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSwitch,
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-} from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFAutocomplete, RHFTextField } from '../../components/hook-form';
 import { MotionContainer, varBounce } from '../../components/animate';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -47,6 +37,9 @@ import { countries } from '../../assets/data';
 // util
 import { Cover } from '../components/Defaults/Cover';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+import { AddFormLabel } from '../components/DocumentForms/FormLabel';
+import { FORMLABELS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 CustomerAddForm.propTypes = {
@@ -55,30 +48,16 @@ CustomerAddForm.propTypes = {
   currentCustomer: PropTypes.object,
 };
 
-// const CONTACT_TYPES = [
-//   { value: 'technical', label: 'Technical' },
-//   { value: 'financial', label: 'Financial' },
-//   { value: 'support', label: 'Support' },
-// ];
-
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
-
   const { spContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
-
   const [contactFlag, setCheckboxFlag] = useState(false);
-
   const toggleCheckboxFlag = () => setCheckboxFlag((value) => !value);
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const numberRegExp = /^[0-9]+$/;
-
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
   const [country, setCountryVal] = useState('');
@@ -87,48 +66,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
   const [projectManVal, setProjectManVal] = useState('');
-
-  const AddCustomerSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required('Name is required'),
-    tradingName: Yup.string(),
-    mainSite: Yup.string(),
-    sites: Yup.array(),
-    contacts: Yup.array(),
-    accountManager: Yup.string().nullable(),
-    projectManager: Yup.string().nullable(),
-    supportManager: Yup.string().nullable(),
-    // site details
-    billingSite: Yup.string(),
-    // phone: Yup.string(),
-    email: Yup.string()
-      .trim('The contact name cannot include leading and trailing spaces')
-      .email('Email must be a valid email address'),
-    // fax: Yup.string(),
-    website: Yup.string(),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    city: Yup.string(),
-    postcode: Yup.string(),
-    region: Yup.string(),
-    // country: Yup.string().nullable(true),
-
-    // billing contact details
-    billingFirstName: Yup.string(),
-    billingLastName: Yup.string(),
-    billingTitle: Yup.string(),
-    billingContactTypes: Yup.array(),
-    // billingContactPhone: Yup.string(),
-    billingContactEmail: Yup.string().email('Email must be a valid email address'),
-
-    // technical contact details
-    technicalFirstName: Yup.string(),
-    technicalLastName: Yup.string(),
-    technicalTitle: Yup.string(),
-    technicalContactTypes: Yup.array(),
-    // technicalContactPhone: Yup.string(),
-    technicalContactEmail: Yup.string().email('Email must be a valid email address'),
-    isActive: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -241,13 +178,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      {/* <Grid container spacing={3}>
-        <CustomerDashboardNavbar/>
-      </Grid> */}
-      {/* <CustomBreadcrumbs
-            heading=" New Customer "
-            sx={{ mb: -2, mt: 3 }}
-          /> */}
       <Card
         sx={{
           mb: 3,
@@ -304,9 +234,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
-            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-              Address Information
-            </Typography>
+            <AddFormLabel content={FORMLABELS.ADDRESS} />
             <Box
               rowGap={3}
               columnGap={2}
@@ -372,9 +300,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
-            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-              Billing Contact Information
-            </Typography>
+            <AddFormLabel content={FORMLABELS.BILLING_CONTACT} />
 
             <Box
               rowGap={3}
@@ -411,9 +337,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <m.div variants={varBounce().in}>
             <Stack spacing={3}>
               <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={3}>
-                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Technical Contact Information
-                </Typography>
+                <AddFormLabel content={FORMLABELS.TECHNICAL_CONTACT} />
 
                 <FormControlLabel
                   label="Same as billing contact"
@@ -459,9 +383,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
-                  Howick Resources
-                </Typography>
+                <AddFormLabel content={FORMLABELS.HOWICK} />
 
                 <Box
                   rowGap={3}
@@ -554,25 +476,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
                 </Box>
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Active
-                    </Typography>
-                  }
-                />
+                <ToggleButtons name={FORMLABELS.isACTIVE.name} />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

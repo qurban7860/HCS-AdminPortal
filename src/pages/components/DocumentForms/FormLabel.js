@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 
-function FormLabel({ content }) {
+export default function FormLabel({ content }) {
   return (
     <Grid container sx={{ pt: '2rem' }}>
       <Grid
@@ -26,4 +26,14 @@ FormLabel.propTypes = {
   content: PropTypes.string,
 };
 
-export default FormLabel;
+export function AddFormLabel({ content }) {
+  return (
+    <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+      {content}
+    </Typography>
+  );
+}
+
+AddFormLabel.propTypes = {
+  content: PropTypes.string,
+};

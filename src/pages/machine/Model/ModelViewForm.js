@@ -14,19 +14,6 @@ import {
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-
-// Iconify
-
-import { fDate } from '../../../utils/formatTime';
-import ModelEditForm from './ModelEditForm';
-
-import Iconify from '../../../components/iconify/Iconify';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFSwitch,
-} from '../../../components/hook-form';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
@@ -101,7 +88,7 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
         <ViewFormField sm={6} heading="Category Name" param={defaultValues?.category?.name} />
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Description" param={defaultValues?.description} />
-        <ViewFormSWitch isActive={defaultValues.isActive} />
+
         <Grid container sx={{ mt: 2 }}>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

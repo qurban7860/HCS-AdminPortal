@@ -16,6 +16,8 @@ export const FORMLABELS = {
   CUSTOMER: 'Customer Information',
   SITE: 'Site Information',
   SITELOC: 'Site Location',
+  BILLING_CONTACT: 'Billing Contact Information',
+  TECHNICAL_CONTACT: 'Technical Contact Information',
 
   // for DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
