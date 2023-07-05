@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Link, DialogActions } from '@mui/material';
+import { Grid, Typography, Link, DialogActions, Button } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 function DialogLabel({ onClick, content }) {
@@ -20,9 +20,9 @@ function DialogLabel({ onClick, content }) {
         {content}
       </Typography>
       <DialogActions>
-        <Link onClick={onClick} href="#" underline="none" sx={{ ml: 'auto' }}>
+        <Button onClick={onClick} sx={{ mr: -4 }}>
           <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
-        </Link>
+        </Button>
       </DialogActions>
     </Grid>
   );

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { Typography, Dialog, DialogActions, Grid, Link, IconButton, Box } from '@mui/material';
+import { Typography, Dialog, DialogActions, Grid, Link, IconButton, Box ,CardContent, CardMedia, Button } from '@mui/material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import { CloseButton } from '../CloseButton';
@@ -44,23 +44,20 @@ export default function ImagePreviewDialog({
           {`${imageName}.${imageExtension}`}
         </Typography>{' '}
           <DialogActions>
-        <Link
+        <Button
           onClick={handleClosePreview}
-          href="#"
-          underline="none"
           sx={{
             top: 15,
-            right: 15,
+            right: 0,
             zIndex: 9,
             height: '60',
             position: 'absolute',
           }}
         >
-          <CloseButton />
-        </Link>
+          <CloseButton onClick={handleClosePreview} />
+        </Button>
         </DialogActions>
       </Grid>
-      <Link>
         <IconButton
           size="small"
           onClick={() => handleDownloadImage(imageName, imageExtension)}
@@ -79,19 +76,21 @@ export default function ImagePreviewDialog({
         >
           <Iconify icon="line-md:download-loop" width={18} />
         </IconButton>
-      </Link>
-      {/* <Image
-        alt={file?.name}
-        src={`data:image/png;base64, ${imageData}`}
-        sx={{minWidth:"350px", minHeight:"350px"}} 
-      /> */}
-      <Box
+      <CardContent>
+        <CardMedia
+          component="img"
+          sx={{ minWidth: '350px', minHeight: '350px', }}
+          alt={file?.name}
+          image={`data:image/png;base64, ${imageData}`}
+        />
+      </CardContent>
+      {/* <Box
         component="img"
         sx={{ minWidth: '350px', minHeight: '350px' }}
         alt={file?.name}
         src={`data:image/png;base64, ${imageData}`}
         loading="lazy"
-      />
+      /> */}
     </Dialog>
   );
 }

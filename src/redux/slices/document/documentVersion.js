@@ -126,9 +126,12 @@ export function addDocumentVersion(documentId,params) {
           if(params?.description){
             formData.append('description', params?.description);
           }
-          if(params?.images){
-            formData.append('images', params?.images);
+          if (params?.multiUpload) {
+            params.multiUpload.forEach((file, index) => {
+              formData.append(`images`, file);
+            });
           }
+
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/`, formData);
       dispatch(slice.actions.setResponseMessage('Document Version saved successfully'));
       dispatch(getDocumentVersions());
@@ -147,10 +150,14 @@ export function updateDocumentVersion(documentId,versionId,params) {
     dispatch(slice.actions.startLoading());
     try {
       const formData = new FormData();
-      
-      if(params?.images){
-        formData.append('images', params?.images);
+      if (params?.multiUpload) {
+          params.multiUpload.forEach((file, index) => {
+          formData.append(`images`, file);
+        });
       }
+      // if(params?.images){
+      //   formData.append('images', params?.images);
+      // }
       const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}`, formData, );
       dispatch(slice.actions.setResponseMessage('Document Version updated successfully'));
       dispatch(setDocumentVersionEditFormVisibility (false));

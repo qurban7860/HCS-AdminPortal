@@ -10,7 +10,7 @@ const FORMAT_ZIP = ['zip', 'rar', 'iso'];
 const FORMAT_ILLUSTRATOR = ['ai', 'esp'];
 const FORMAT_POWERPOINT = ['ppt', 'pptx', 'odp'];
 const FORMAT_AUDIO = ['wav', 'aif', 'mp3', 'aac'];
-const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'png', 'svg', 'webp', 'ico', 'x-icon', 'jpe'];
+const FORMAT_IMG_VISIBBLE = ['jpg', 'jpeg', 'gif', 'bmp', 'svg', 'webp', 'ico', 'jpe'];
 const FORMAT_IMG = [ 'exr', 'hdr', 'pbm', 'pfm', 'pgm', 'pict', 'ppm', 'sgi', 'tga', 'dds', 'cr2', 'dng', 'heic', 'heif', 'jp2', 'nef', 'orf', 'pef', 'raf', 'rw2',];
 const FORMAT_VIDEO = ['m4v', 'avi', 'mpg', 'mp4', 'webm'];
 const iconUrl = (icon) => `/assets/icons/files/${icon}.svg`;

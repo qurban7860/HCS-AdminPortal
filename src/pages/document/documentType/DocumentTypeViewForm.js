@@ -61,7 +61,6 @@ export default function DocumentTypeViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentType]
   );
-  console.log("documentType : ", documentType, defaultValues.customerAccess, defaultValues.description)
 
   return (
     <Card sx={{p:2}}>

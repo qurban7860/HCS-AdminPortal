@@ -120,11 +120,11 @@ export default function Document() {
               customerDocumentHistory?.documentVersions?.map((files) => (
                 <Grid container>
                   <FormLabel content={`Version No. ${files?.versionNo}`} />
-                  <Grid container>
-                    <ViewFormField sm={12} heading="Description" param={files?.description} />
+                  <Grid container >
+                    {defaultValues.description !== files?.description && <ViewFormField sm={12} heading="Description" param={files?.description} />}
                   </Grid>
                   {files?.files?.map((file) => (
-                    <Grid item sx={{ display: 'flex-inline' }}>
+                    <Grid  sx={{ display: 'flex-inline', m:0.5 }}>
                       <Grid container justifyContent="flex-start" gap={1}>
                         <Thumbnail
                           key={file?._id}
