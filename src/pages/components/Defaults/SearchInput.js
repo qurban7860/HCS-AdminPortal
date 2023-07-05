@@ -33,7 +33,6 @@ function SearchInput({
                 </InputAdornment>
               ),
             }}
-            sx={{ my: 1 }}
           />
         )}
       </Grid>

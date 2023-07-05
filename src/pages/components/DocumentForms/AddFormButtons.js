@@ -3,6 +3,7 @@ import { LoadingButton } from '@mui/lab';
 import { useState } from 'react';
 import { Button, Grid, Stack } from '@mui/material';
 import ConfirmDialog from '../../../components/confirm-dialog';
+import { BUTTONS, DIALOGS } from '../../../constants/default-constants';
 
 AddFormButtons.propTypes = {
   saveButtonName: PropTypes.string,
@@ -44,12 +45,12 @@ export default function AddFormButtons({
                 fullWidth
                 loading={isSubmitting}
               >
-                {saveButtonName || 'Save'}
+                {saveButtonName || BUTTONS.SAVE}
               </LoadingButton>
             </Grid>
             <Grid item sm={6}>
               <Button onClick={handleOpenConfirm} fullWidth variant="outlined" size="large">
-                {cancelButtonName || 'Cancel'}
+                {cancelButtonName || BUTTONS.CANCEL}
               </Button>
             </Grid>
           </Stack>
@@ -59,11 +60,11 @@ export default function AddFormButtons({
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Cancel"
-        content="Are you sure you want to cancel?"
+        title={DIALOGS.DISCARD_TITLE}
+        content={DIALOGS.DISCARD}
         action={
           <Button variant="contained" color="error" onClick={onConfirm}>
-            Confirm
+            {BUTTONS.DISCARD}
           </Button>
         }
       />

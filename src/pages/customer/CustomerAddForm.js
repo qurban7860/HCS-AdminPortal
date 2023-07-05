@@ -185,7 +185,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
           position: 'relative',
         }}
       >
-        <Cover name="New Customer" icon="mdi:user" />
+        <Cover name={FORMLABELS.COVER.NEW_CUSTOMER} />
       </Card>
       <Grid sx={{ mt: 3 }}>
         <Card sx={{ p: 3, mb: 3 }}>
@@ -245,24 +245,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               }}
             >
               <RHFTextField name="street" label="Street" />
-
               <RHFTextField name="suburb" label="Suburb" />
-
               <RHFTextField name="city" label="City" />
-
               <RHFTextField name="postcode" label="Post Code" />
-
               <RHFTextField name="region" label="Region" />
-
-              {/* <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-
-                  ChipProps={{ size: 'small' }}
-                />  */}
 
               <RHFAutocomplete
                 id="country-select-demo"
@@ -301,7 +287,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
             <AddFormLabel content={FORMLABELS.BILLING_CONTACT} />
-
             <Box
               rowGap={3}
               columnGap={2}
@@ -381,7 +366,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         </Card>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
-            <Card sx={{ p: 3 }}>
+            <Card sx={{ p: 3, mb: 3 }}>
               <Stack spacing={3}>
                 <AddFormLabel content={FORMLABELS.HOWICK} />
 
@@ -393,6 +378,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     xs: 'repeat(1, 1fr)',
                     sm: 'repeat(2, 1fr)',
                   }}
+                  mb={2}
                 >
                   <Autocomplete
                     // freeSolo

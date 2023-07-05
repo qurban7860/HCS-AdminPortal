@@ -5,12 +5,11 @@ export const FORMLABELS = {
     name: 'isActive',
     required: true,
   },
-
   COVER: {
+    NEW_CUSTOMER: 'New Customer',
     EDIT_MODEL: 'Edit Model',
   },
-
-  // for FormLabels
+  // @root FormLabels
   HOWICK: 'Howick Resources',
   ADDRESS: 'Address Information',
   CUSTOMER: 'Customer Information',
@@ -19,7 +18,7 @@ export const FORMLABELS = {
   BILLING_CONTACT: 'Billing Contact Information',
   TECHNICAL_CONTACT: 'Technical Contact Information',
 
-  // for DocumentAddForm in dashboard/documents
+  // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
   SELECT_SITE: 'Select Site',
   SELECT_MACHINE: 'Select Machine',
@@ -30,6 +29,12 @@ export const FORMLABELS = {
 
   DOCUMENT_NAME: 'Document Name',
   DOCUMENT_DESC: 'Description',
+
+  // @root CustomerAddForm
+  NAME: {
+    label: 'Name',
+    name: 'name',
+  },
 
   // @root - ModelEditForm - machine
   MODEL_NAME: {
@@ -62,10 +67,14 @@ export const DIALOGS = {
 };
 
 export const BUTTONS = {
+  SAVE: 'Save',
+
   CLEAR: 'Clear',
+  CANCEL: 'Cancel',
   DISCARD: 'Discard',
   CONTINUE: 'Continue',
   DELETE: 'Delete',
+
   // New Buttons on the TOP of Modules
   NEWDOCUMENT: 'New Document',
   NEWNOTE: 'New Note',
