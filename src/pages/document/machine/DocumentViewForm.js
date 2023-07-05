@@ -94,7 +94,9 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
 
     [currentMachineDocument]
   );
-
+  const callAfterDelete = () => {
+    dispatch(getMachineDocuments(machine._id));
+  }
   return (
     <Grid sx={{ mt: -2 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
@@ -139,6 +141,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
                 file={file}
                 currentDocument={currentMachineDocument}
                 customer={machine}
+                getCallAfterDelete={callAfterDelete}
               />
             ))}
           </Grid>
