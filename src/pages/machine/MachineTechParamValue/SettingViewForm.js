@@ -102,7 +102,7 @@ export default function SettingViewForm({ currentSetting = null }) {
       <Grid container justifyContent="flex-end" sx={{pr: '2rem'}}>
         <ViewFormEditDeleteButtons
           disableDeleteButton={disableDeleteButton}
-          disableTransferButton={disableEditButton}
+          disableEditButton={disableEditButton}
           handleEdit={handleEdit} 
           onDelete={onDelete} 
         />
