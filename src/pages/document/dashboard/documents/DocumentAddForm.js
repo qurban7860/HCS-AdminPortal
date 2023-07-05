@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container } from '@mui/material';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // PATH
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
 import {
   getDocuments,
@@ -318,7 +318,7 @@ export default function DocumentAddForm({ currentDocument }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_DASHBOARD.document.dashboard);
+    navigate(PATH_DOCUMENT.document.list);
   };
 
   const previewHandle = () => {

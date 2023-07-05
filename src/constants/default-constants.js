@@ -87,6 +87,9 @@ export const BUTTONS = {
   ADDCUSTOMER: 'Add Customer',
   ADDMACHINE: 'Add Machine',
   ADDUSER: 'Add User',
+  ADDMODEL: 'Add Model',
+  ADDSITE: 'Add Site',
+  ADDDOCUMENT: 'Add Document',
 };
 
 export const BREADCRUMBS = {
