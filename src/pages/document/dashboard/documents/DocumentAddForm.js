@@ -142,7 +142,6 @@ export default function DocumentAddForm({ currentDocument }) {
 
   useEffect(() => {
     if (documentCategoryVal?._id) {
-      console.log('getActiveDocumentCategories');
       dispatch(getActiveDocumentTypesWithCategory(documentCategoryVal?._id));
     }
   }, [documentCategoryVal, dispatch]);
@@ -296,17 +295,17 @@ export default function DocumentAddForm({ currentDocument }) {
       if (selectedValue === 'new') {
         await dispatch(addDocument(customerVal?._id, machineVal._id, data));
         enqueueSnackbar('Document saved successfully!');
-        navigate(PATH_DASHBOARD.document.dashboard);
+        navigate(PATH_DOCUMENT.document.list);
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar('Document version updated successfully!');
-        navigate(PATH_DASHBOARD.document.dashboard);
+        navigate(PATH_DOCUMENT.document.list);
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
         enqueueSnackbar('Document updated successfully!');
-        navigate(PATH_DASHBOARD.document.dashboard);
+        navigate(PATH_DOCUMENT.document.list);
       }
       dispatch(getDocuments());
       setDocumentCategoryVal('');
@@ -334,7 +333,7 @@ export default function DocumentAddForm({ currentDocument }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_DASHBOARD.document.dashboard);
+    navigate(PATH_DOCUMENT.document.list);
   };
 
   const previewHandle = () => {
@@ -419,8 +418,8 @@ export default function DocumentAddForm({ currentDocument }) {
 
   return (
     <Container maxWidth={false}>
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <DocumentCover content="New Document" />
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Box
           column={12}
           rowGap={3}

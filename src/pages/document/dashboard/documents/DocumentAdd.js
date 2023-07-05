@@ -7,15 +7,15 @@ import { PATH_CUSTOMER } from '../../../../routes/paths';
 // components
 import { useSettingsContext } from '../../../../components/settings';
 // sections
-import DocumentCategoryAddForm from './DocumentAddForm';
+import DocumentAddForm from './DocumentAddForm';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentCategoryAdd() {
+export default function DocumentAdd() {
   const { themeStretch } = useSettingsContext();
   return (
     <Container maxWidth={false}>
-      <DocumentCategoryAddForm />
+      <DocumentAddForm />
     </Container>
   );
 }
