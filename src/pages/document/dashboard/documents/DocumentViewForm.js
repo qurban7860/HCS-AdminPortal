@@ -244,8 +244,8 @@ export default function Document() {
                 documentHistory?.documentVersions?.map((files) => (
                   <Grid container>
                     <Grid container sx={{ pt: '2rem' }} mb={1}>
-                      <FormLabel content={`Version No. ${files?.versionNo}`} />
-                      <ViewFormField sm={12} heading="Description" param={files?.description} />
+                      <FormLabel content={`Version No. ${files?.versionNo}`} sx={{mb:1}}/>
+                      {defaultValues.description !== files?.description && <ViewFormField sm={12} heading="Description" param={files?.description} />}
                     </Grid>
                     {files?.files?.map((file) => (
                       <Grid item sx={{ display: 'flex-inline', m:0.5 }}>
