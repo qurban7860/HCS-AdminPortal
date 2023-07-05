@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
+import { Stack } from '@mui/material';
 // components
-import Iconify from '../../components/iconify';
-import { PATH_MACHINE } from '../../routes/paths';
 import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
+import { PATH_MACHINE } from '../../routes/paths';
 import { BUTTONS } from '../../constants/default-constants';
+import { options } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -36,15 +35,7 @@ export default function MachineListTableToolbar({
   };
 
   return (
-    <Stack
-      spacing={2}
-      alignItems="center"
-      direction={{
-        xs: 'column',
-        md: 'row',
-      }}
-      sx={{ px: 2.5, py: 3 }}
-    >
+    <Stack {...options}>
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}

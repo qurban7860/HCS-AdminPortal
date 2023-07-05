@@ -62,8 +62,10 @@ export const DIALOGS = {
   DISCARD_TITLE: 'Discard Changes',
 
   //   delete
-  DELETE: 'Are you sure you want to Delete?',
-  DELETE_TITLE: 'Delete',
+  DELETE: {
+    content: 'Are you sure you want to Delete?',
+    title: 'Delete',
+  },
 };
 
 export const BUTTONS = {
@@ -84,6 +86,7 @@ export const BUTTONS = {
   // Add Buttons on the list pages
   ADDCUSTOMER: 'Add Customer',
   ADDMACHINE: 'Add Machine',
+  ADDUSER: 'Add User',
 };
 
 export const BREADCRUMBS = {

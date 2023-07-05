@@ -130,3 +130,15 @@ export const StyledBg = styled('div')(({ theme }) => ({
   }),
 }));
 
+/**
+ * @options components props --------------------------------------------------------------------------------------------
+ */
+
+// @root CustomerListTableToolbar
+
+export const options = {
+  spacing: 2,
+  alignItems: 'center',
+  direction: { xs: 'column', md: 'row' },
+  sx: { px: 2.5, py: 3 },
+};

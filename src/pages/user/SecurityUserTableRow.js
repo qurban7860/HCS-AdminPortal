@@ -70,12 +70,12 @@ export default function SecurityUserTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
-
         <Stack direction="row" alignItems="center">
-          <CustomAvatar name={name} alt={name} sx={{ ml: 0.5, my: 0.3 }} />
+          <CustomAvatar
+            name={name}
+            alt={name}
+            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }}
+          />
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
 

@@ -304,8 +304,8 @@ export default function CustomerList() {
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title={DIALOGS.DELETE_TITLE}
-        content={DIALOGS.DELETE}
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"

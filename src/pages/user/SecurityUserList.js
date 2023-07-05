@@ -20,7 +20,7 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 // sections
-import UserTableToolbar from './SecurityUserTableToolbar';
+import SecurityUserTableToolbar from './SecurityUserTableToolbar';
 import UserTableRow from './SecurityUserTableRow';
 import {
   getSecurityUsers,
@@ -28,6 +28,8 @@ import {
   setSecurityUserEditFormVisibility,
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
+// constants
+import { BUTTONS, DIALOGS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -82,17 +84,11 @@ export default function SecurityUserList() {
   // console.log("securityUsers", securityUsers);
 
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [tableData, setTableData] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [filterName, setFilterName] = useState('');
-
   const [filterRole, setFilterRole] = useState('all');
-
   const [filterStatus, setFilterStatus] = useState('all');
 
   useLayoutEffect(() => {
@@ -197,44 +193,11 @@ export default function SecurityUserList() {
   return (
     <>
       <Container maxWidth={false}>
-        {/* <CustomBreadcrumbs
-          heading="User List"
-          links={[
-            { name: 'Dashboard', href: PATH_SECURITY.root },
-            { name: 'Users', href: PATH_SECURITY.users.root },
-            { name: 'List' },
-          ]}
-          action={
-            <Button
-              component={RouterLink}
-              to={PATH_SECURITY.users.new}
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New User
-            </Button>
-          }
-        /> */}
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
           <Cover name="Users" icon="ph:users-light" />
         </Card>
         <Card>
-          {/* <Tabs
-            value={filterStatus}
-            onChange={handleFilterStatus}
-            sx={{
-              px: 2,
-              bgcolor: 'background.neutral',
-            }}
-          >
-            {STATUS_OPTIONS.map((tab) => (
-              <Tab key={tab} label={tab} value={tab} />
-            ))}
-          </Tabs>
-
-          <Divider /> */}
-
-          <UserTableToolbar
+          <SecurityUserTableToolbar
             isFiltered={isFiltered}
             filterName={filterName}
             filterRole={filterRole}
@@ -249,19 +212,6 @@ export default function SecurityUserList() {
               dense={dense}
               numSelected={selected.length}
               rowCount={tableData.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row) => row._id)
-              //   )
-              // }
-              // action={
-              //   <Tooltip title="Delete">
-              //     <IconButton color="primary" onClick={handleOpenConfirm}>
-              //       <Iconify icon="eva:trash-2-outline" />
-              //     </IconButton>
-              //   </Tooltip>
-              // }
             />
 
             <Scrollbar>
@@ -270,15 +220,7 @@ export default function SecurityUserList() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -317,12 +259,8 @@ export default function SecurityUserList() {
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"
@@ -332,7 +270,7 @@ export default function SecurityUserList() {
               handleCloseConfirm();
             }}
           >
-            Delete
+            {DIALOGS.DELETE.title}
           </Button>
         }
       />
