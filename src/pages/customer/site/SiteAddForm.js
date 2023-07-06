@@ -159,10 +159,10 @@ export default function SiteAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 7) {
+      if (phone) {
         data.phone = phone;
       }
-      if (fax && fax.length > 7) {
+      if (fax) {
         data.fax = fax;
       }
       if (country) {

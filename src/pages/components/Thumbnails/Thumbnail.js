@@ -5,6 +5,7 @@ import download from 'downloadjs';
 import { useTheme } from '@mui/material/styles';
 import { Stack, Tooltip, Typography } from '@mui/material';
 import { getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
+import { getDocumentHistory } from '../../../redux/slices/document/document';
 import {
   ThumbnailCard,
   ThumbnailCardContent,
@@ -22,7 +23,14 @@ import {
 } from '../../../redux/slices/document/documentFile';
 import { document } from '../../../constants/document-constants';
 
-export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument, customer }) {
+export function Thumbnail({
+  deleteOnClick,
+  file,
+  previewOnClick,
+  currentDocument,
+  customer,
+  getCallAfterDelete,
+}) {
   const [onPreview, setOnPreview] = useState(false);
   const [imageName, setImageName] = useState('');
   const [imageData, setImageData] = useState('');
@@ -44,7 +52,7 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
   const handleDelete = async (documentId, versionId, fileId) => {
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
-      dispatch(getCustomerDocuments(customer._id));
+      getCallAfterDelete();
       enqueueSnackbar('File deleted successfully!');
     } catch (err) {
       console.log(err);
@@ -160,7 +168,7 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
             <ThumbnailCardMedia
               component="img"
               image={`data:image/png;base64, ${file?.thumbnail}`}
-              alt="customer's contact cover photo was here"
+              alt="Document photo was here"
             />
           )}
           {document.icon[file.extension] && document.color[file.extension] && (
@@ -189,6 +197,7 @@ Thumbnail.propTypes = {
   previewOnClick: PropTypes.func,
   currentDocument: PropTypes.object,
   customer: PropTypes.object,
+  getCallAfterDelete: PropTypes.func,
 };
 
 export default Thumbnail;

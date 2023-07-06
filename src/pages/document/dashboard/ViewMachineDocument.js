@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useMemo, useEffect, useLayoutEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container, Grid, Card, Tooltip, Dialog, Link } from '@mui/material';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
@@ -11,6 +11,7 @@ import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { Cover } from '../../components/Defaults/Cover';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
+import { getMachineDocumentHistory } from '../../../redux/slices/document/machineDocument';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +22,7 @@ export default function Document() {
   const { machine } = useSelector((state) => state.machine);
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openMachine, setOpenMachine] = useState(false);
+  const dispatch = useDispatch();
 
   // If not needed, remove this block:
   //   useEffect(() =>{
@@ -80,7 +82,9 @@ export default function Document() {
     }),
     [machineDocumentHistory]
   );
-
+  const callAfterDelete = () => {
+    dispatch(getMachineDocumentHistory(machineDocumentHistory._id));
+  };
   return (
     <Container maxWidth={false}>
       <Card
@@ -143,16 +147,20 @@ export default function Document() {
                 <Grid container>
                   <Grid container sx={{ pt: '2rem' }}>
                     <FormLabel content={`Version No. ${files?.versionNo}`} />
-                    <ViewFormField sm={12} heading="Description" param={files?.description} />
+
+                    {defaultValues.description !== files?.description && (
+                      <ViewFormField sm={12} heading="Description" param={files?.description} />
+                    )}
                   </Grid>
                   {files?.files?.map((file) => (
-                    <Grid item sx={{ display: 'flex-inline' }}>
+                    <Grid item sx={{ display: 'flex-inline', m: 0.5 }}>
                       <Grid container justifyContent="flex-start" gap={1}>
                         <Thumbnail
                           key={file._id}
                           file={file}
                           currentDocument={machineDocumentHistory}
                           customer={customer}
+                          getCallAfterDelete={callAfterDelete}
                         />
                       </Grid>
                     </Grid>

@@ -142,10 +142,10 @@ export default function CustomerContactList(currentContact = null) {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.root} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
-              to={PATH_DASHBOARD.customer.contacts}
+              to={PATH_CUSTOMER.contacts}
               name={
                 <Stack>
                   {!formVisibility && !contactEditFormVisibility && !isExpanded && 'Contacts'}

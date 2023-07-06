@@ -37,9 +37,8 @@ export default function MachineView({ editPage }) {
   const [currentTab, setCurrentTab] = useState('Machine-info');
   const [currentComponent, setCurrentComponent] = useState(<MachineViewForm />);
   const [machineFlag, setMachineFlag] = useState(true);
-  const [disableTab, setDisableTab] = useState(false);
 
-  const TABS = TABSFunc(currentComponent, disableTab);
+  const TABS = TABSFunc(currentComponent);
 
   useEffect(() => {
     if (id !== 'null') {
@@ -51,11 +50,6 @@ export default function MachineView({ editPage }) {
 
   useEffect(() => {
     /* eslint-disable */
-    if (machine && machine.transferredMachine) {
-      setDisableTab(true);
-    } else {
-      setDisableTab(false);
-    }
     if (machineEditFormFlag) {
       setCurrentComponent(<MachineEditForm />);
     } else {

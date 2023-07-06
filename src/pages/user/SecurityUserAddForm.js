@@ -126,7 +126,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   }, [roles]);
 
   const NewUserSchema = Yup.object().shape({
-    // name: Yup.string().required('First name is required'),
+    name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
     password: Yup.string().required('Password is required').min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
@@ -159,6 +159,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    trigger,
   } = methods;
 
   useEffect(() => {
@@ -176,6 +177,12 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     if (newValue.length < 20) {
       setPhone(newValue);
     }
+  };
+
+  const handleNameChange = (event) => {
+    setName(event);
+    setValue('name', event || '');
+    trigger('name');
   };
 
   const onSubmit = async (data) => {
@@ -335,7 +342,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                     setCustomerVal('');
                     dispatch(resetContacts());
                     setContactVal('');
-                    setName('');
+                    handleNameChange('');
                     setPhone('');
                     setEmail('');
                   }
@@ -367,12 +374,12 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setContactVal(newValue);
-                    setName(`${newValue.firstName} ${newValue.lastName}`);
+                    handleNameChange(`${newValue.firstName} ${newValue.lastName}`);
                     setPhone(newValue.phone);
                     setEmail(newValue.email);
                   } else {
                     setContactVal('');
-                    setName('');
+                    handleNameChange('');
                     setPhone('');
                     setEmail('');
                   }
@@ -395,10 +402,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
               <RHFTextField
                 name="name"
-                label="Full Name"
-                onChange={(e) => setName(e.target.value)}
+                label="Full Name*"
+                onChange={(e) => handleNameChange(e.target.value)}
                 value={name}
-                required
               />
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput

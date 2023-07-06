@@ -136,7 +136,7 @@ export const DocRadioValue = {
 // Labels for the radio buttons
 export const DocRadioLabel = {
   new: 'New Document',
-  existing: 'Upload new file against existing Document',
+  existing: 'Upload New File Against Existing Document',
   newVersion: 'New Version',
   currentVersion: 'Current Version',
 

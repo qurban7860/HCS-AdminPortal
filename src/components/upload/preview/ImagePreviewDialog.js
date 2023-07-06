@@ -51,27 +51,15 @@ export default function ImagePreviewDialog({ file, preview ,closePreview }) {
                         </Button>
                       </DialogActions>
                     </Grid>
-                    {/* <CardContent
-                      component={Stack}
-                      display="block"
-                      sx={{ position: 'relative', zIndex: '1' }}
-                    >
+                    <CardContent>
                       <CardMedia
                         component="img" 
-                        // component="video, audio, picture, iframe, or img" 
                         sx={{minWidth:"350px", minHeight:"350px"}} 
                         alt={file?.name}  
                         image={file.preview}
                       />
-                      
-                    </CardContent> */}
-                    <Image
-                        alt={file?.name}
-                        src={file.preview}
-                        sx={{minWidth:"350px", minHeight:"350px"}} 
-                        
-                      />
-                      {/* <Avatar
+                    </CardContent>
+                    {/* <Image
                         alt={file?.name}
                         src={file.preview}
                         sx={{minWidth:"350px", minHeight:"350px"}} 

@@ -17,7 +17,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_DOCUMENT, PATH_MACHINE } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
@@ -27,8 +27,11 @@ import FormLabel from '../components/DocumentForms/FormLabel';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+
 // sections
 import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slices/products/machine';
+// constants
+import { BREADCRUMBS } from '../../constants/default-constants';
 
 // import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
@@ -56,24 +59,7 @@ const _accordions = [...Array(8)].map((_, index) => ({
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+  const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: '-createdAt',
   });
   const [controlled, setControlled] = useState(false);
@@ -149,10 +135,10 @@ export default function CustomerContactList() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
-              to={PATH_DASHBOARD.customer.document}
+              to={PATH_CUSTOMER.document}
               name={
                 <Stack>
                   {customerMachines.length > 0 ? customerMachines.length : 'No Machines'}{' '}

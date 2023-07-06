@@ -108,14 +108,15 @@ export default function SecurityUserEditForm() {
       setPhone(securityUser?.phone);
     }
     if (securityUser.name !== undefined && securityUser.name !== null) {
-      setName(securityUser?.name);
+      handleNameChange(securityUser?.name); // eslint-disable-line
     }
     if (securityUser.email !== undefined && securityUser.email !== null) {
       setEmail(securityUser?.email);
     }
-  }, [securityUser]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [securityUser, customerVal, contactVal]);
   const NewUserSchema = Yup.object().shape({
-    // name: Yup.string().required('First name is required'),
+    name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address').trim(),
     password: Yup.string().min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
@@ -151,6 +152,7 @@ export default function SecurityUserEditForm() {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
+    trigger,
   } = methods;
 
   useEffect(() => {
@@ -165,6 +167,12 @@ export default function SecurityUserEditForm() {
     if (newValue.length < 20) {
       setPhone(newValue);
     }
+  };
+
+  const handleNameChange = (e) => {
+    setName(e);
+    setValue('name', e || '');
+    trigger('name');
   };
 
   const onSubmit = async (data) => {
@@ -322,7 +330,7 @@ export default function SecurityUserEditForm() {
                   } else {
                     setCustomerVal('');
                     setContactVal('');
-                    setName('');
+                    handleNameChange('');
                     setPhone('');
                     setEmail('');
                     dispatch(resetContacts());
@@ -348,12 +356,12 @@ export default function SecurityUserEditForm() {
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setContactVal(newValue);
-                    setName(`${newValue.firstName} ${newValue.lastName}`);
+                    handleNameChange(`${newValue.firstName} ${newValue.lastName}`);
                     setPhone(newValue.phone);
                     setEmail(newValue.email);
                   } else {
                     setContactVal('');
-                    setName('');
+                    handleNameChange('');
                     setPhone('');
                     setEmail('');
                   }
@@ -371,10 +379,9 @@ export default function SecurityUserEditForm() {
               </Autocomplete> */}
               <RHFTextField
                 name="name"
-                label="Full Name"
-                onChange={(e) => setName(e.target.value)}
+                label="Full Name*"
+                onChange={(e) => handleNameChange(e.target.value)}
                 value={name}
-                required
               />
               <MuiTelInput
                 value={phone}

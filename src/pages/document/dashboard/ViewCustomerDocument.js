@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useMemo, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Container, Grid, Card, Tooltip, Typography, Dialog, Link } from '@mui/material';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
@@ -11,7 +11,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import DialogLabel from '../../components/Dialog/DialogLabel';
 import DialogLink from '../../components/Dialog/DialogLink';
-
+import { getCustomerDocumentHistory } from '../../../redux/slices/document/customerDocument'
 // ----------------------------------------------------------------------
 
 export default function Document() {
@@ -20,25 +20,8 @@ export default function Document() {
     (state) => state.customerDocument
   );
   const { customer } = useSelector((state) => state.customer);
-  console.log('customerDocumentHistory : ', customerDocumentHistory);
   const [openCustomer, setOpenCustomer] = useState(false);
-
-  // if not using, delete this block:
-  //   useEffect(() =>{
-  //     dispatch(resetMachineDocument())
-  //     console.log("getMachineDocument")
-  //     dispatch(getMachineDocument(id))
-  //     dispatch(resetCustomer())
-  //     dispatch(resetMachine())
-  //   },[id,dispatch])
-
-  //   useEffect(() =>{
-  //     console.log("getCustomer")
-  // if(customerDocument?.customer){
-  //   dispatch(getCustomer(customerDocument.customer._id))
-  // }
-  //   },[customerDocument,dispatch])
-
+  const dispatch = useDispatch();
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
   const handleViewCustomer = (Id) => {
@@ -69,7 +52,9 @@ export default function Document() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [customerDocumentHistory]
   );
-
+  const callAfterDelete = () => {
+    dispatch(getCustomerDocumentHistory(customerDocumentHistory._id));
+  }
   return (
     <Container maxWidth={false}>
       <Card
@@ -120,17 +105,18 @@ export default function Document() {
               customerDocumentHistory?.documentVersions?.map((files) => (
                 <Grid container>
                   <FormLabel content={`Version No. ${files?.versionNo}`} />
-                  <Grid container>
-                    <ViewFormField sm={12} heading="Description" param={files?.description} />
+                  <Grid container >
+                    {defaultValues.description !== files?.description && <ViewFormField sm={12} heading="Description" param={files?.description} />}
                   </Grid>
                   {files?.files?.map((file) => (
-                    <Grid item sx={{ display: 'flex-inline' }}>
+                    <Grid  sx={{ display: 'flex-inline', m:0.5 }}>
                       <Grid container justifyContent="flex-start" gap={1}>
                         <Thumbnail
                           key={file?._id}
                           file={file}
                           currentDocument={customerDocumentHistory}
                           customer={customer}
+                          getCallAfterDelete={callAfterDelete}
                         />
                       </Grid>
                     </Grid>

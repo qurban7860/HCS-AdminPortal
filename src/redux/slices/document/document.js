@@ -173,17 +173,15 @@ export function addDocument(customerId , machineId , params) {
             formData.append('documentType', params?.documentType);
             formData.append('doctype', params?.documentType);
           }
-          console.log("params?.multiUpload : ", params?.multiUpload)
           // if(params?.multiUpload){
           //   formData.append('images', params?.multiUpload);
           // }
-          console.log("params?.multiUpload : ", params?.multiUpload);
           if (params?.multiUpload) {
             params.multiUpload.forEach((file, index) => {
               formData.append(`images`, file);
             });
           }
-          console.log("formData", formData);
+          // console.log("formData", formData);
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getDocuments());

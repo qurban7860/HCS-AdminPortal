@@ -208,7 +208,6 @@ return async (dispatch) => {
   try {
     const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}/files/${Id}` , 
     {
-        customer: customerId,
         isArchived: true, 
     });
     dispatch(slice.actions.setResponseMessage(response.data));

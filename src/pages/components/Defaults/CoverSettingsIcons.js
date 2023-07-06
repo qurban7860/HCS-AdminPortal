@@ -18,6 +18,7 @@ function CoverSettingsIcons({
           title="Go Back"
           sx={{
             ml: 'auto',
+            mr: 1,
             mt: 'auto',
             mb: 1,
             color: 'common.white',
@@ -36,7 +37,7 @@ function CoverSettingsIcons({
             cursor: 'hover',
             mt: 'auto',
             color: 'common.white',
-            mx: 2,
+            mr: 2,
             mb: { xs: 0, md: 1 },
           }}
           component="button"

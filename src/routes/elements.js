@@ -200,7 +200,7 @@ export const DocumentList = Loadable(
   lazy(() => import('../pages/document/dashboard/documents/DocumentList'))
 );
 export const DocumentAddForm = Loadable(
-  lazy(() => import('../pages/document/dashboard/documents/DocumentAddForm'))
+  lazy(() => import('../pages/document/dashboard/documents/DocumentAdd'))
 );
 export const DocumentEditForm = Loadable(
   lazy(() => import('../pages/document/dashboard/documents/DocumentEditForm'))

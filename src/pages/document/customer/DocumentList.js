@@ -33,6 +33,8 @@ import {
 import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
 import DocumentAddForm from './DocumentAddForm';
+import { getMachines } from '../../../redux/slices/products/machine';
+import { getCustomers } from '../../../redux/slices/customer/customer';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
@@ -80,19 +82,28 @@ export default function DocumentList() {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
-    if (customer && customer?._id) {
+    if (
+      customer &&
+      customer?._id &&
+      !customerDocumentFormVisibility &&
+      !customerDocumentEditFormVisibility
+    ) {
       dispatch(getCustomerDocuments(customer?._id));
     }
-    dispatch(setCustomerDocumentEditFormVisibility(false));
-    dispatch(setCustomerDocumentFormVisibility(false));
-    dispatch(setDocumentCategoryFormVisibility(false));
-    dispatch(setDocumentTypeFormVisibility(false));
+    if (!customerDocumentEditFormVisibility) {
+      dispatch(setCustomerDocumentEditFormVisibility(false));
+    }
+    if (!customerDocumentFormVisibility) {
+      dispatch(setCustomerDocumentFormVisibility(false));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customer._id]);
+  }, [dispatch, customer._id, customerDocumentFormVisibility, customerDocumentEditFormVisibility]);
 
   useEffect(() => {
     setTableData(customerDocuments);
-  }, [customerDocuments, error, responseMessage]);
+    dispatch(setCustomerDocumentFormVisibility(false));
+    dispatch(setCustomerDocumentEditFormVisibility(false));
+  }, [customerDocuments, dispatch]);
 
   const toggleChecked = async () => {
     dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
@@ -137,6 +148,9 @@ export default function DocumentList() {
     !customerDocumentEditFormVisibility &&
     !documentTypeFormVisibility &&
     !documentCategoryFormVisibility;
+  const handleFormVisibility = () => {
+    dispatch(setCustomerDocumentFormVisibility(false));
+  };
 
   return (
     <>
@@ -155,7 +169,7 @@ export default function DocumentList() {
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view(customer._id)} name={customer.name} />
             <BreadcrumbsLink
-              to={PATH_DASHBOARD.customer.document}
+              to={PATH_CUSTOMER.document}
               name={
                 <Stack>
                   {!expanded &&
@@ -240,7 +254,7 @@ export default function DocumentList() {
         !documentCategoryFormVisibility &&
         customerDocumentFormVisibility && (
           <Grid item md={12}>
-            <DocumentAddForm />
+            <DocumentAddForm customerPage handleFormVisibility={handleFormVisibility} />
           </Grid>
         )}
       {!customerDocumentEditFormVisibility &&
