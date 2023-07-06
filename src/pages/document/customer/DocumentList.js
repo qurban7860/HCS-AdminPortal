@@ -40,7 +40,7 @@ import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm
 import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
 import ListSwitch from '../../components/Defaults/ListSwitch';
 import { fDate } from '../../../utils/formatTime';
-import { BUTTONS } from '../../../constants/default-constants';
+import { BUTTONS, BREADCRUMBS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -98,6 +98,11 @@ export default function DocumentList() {
     dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
   };
 
+  const toggleCancel = () => {
+    dispatch(setCustomerDocumentFormVisibility(false));
+    setChecked(false);
+  };
+
   const handleAccordianClick = (accordianIndex) => {
     if (accordianIndex === activeIndex) {
       setActiveIndex(null);
@@ -125,11 +130,6 @@ export default function DocumentList() {
     setFilterStatus([]);
   };
 
-  const toggleCancel = () => {
-    dispatch(setCustomerDocumentFormVisibility(false));
-    setChecked(false);
-  };
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound =
     !customerDocuments.length &&
@@ -152,7 +152,7 @@ export default function DocumentList() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_CUSTOMER.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view(customer._id)} name={customer.name} />
             <BreadcrumbsLink
               to={PATH_DASHBOARD.customer.document}
@@ -161,13 +161,13 @@ export default function DocumentList() {
                   {!expanded &&
                     !customerDocumentEditFormVisibility &&
                     customerDocumentFormVisibility &&
-                    'New Document'}
+                    BREADCRUMBS.NEWDOCUMENT}
                   {!customerDocumentFormVisibility &&
                     !customerDocumentEditFormVisibility &&
-                    'Documents'}
-                  {customerDocumentEditFormVisibility && 'Edit Document'}
-                  {documentTypeFormVisibility && 'New Document Type'}
-                  {documentCategoryFormVisibility && 'New Document Category'}
+                    BREADCRUMBS.DOCUMENTS}
+                  {customerDocumentEditFormVisibility && BREADCRUMBS.EDITDOCUMENT}
+                  {documentTypeFormVisibility && BREADCRUMBS.NEWDOCUMENT_TYPE}
+                  {documentCategoryFormVisibility && BREADCRUMBS.NEWDOCUMENT_CATEGORY}
                 </Stack>
               }
             />

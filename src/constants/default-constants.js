@@ -127,6 +127,13 @@ export const BREADCRUMBS = {
   MACHINES: 'Machines',
   MODELS: 'Models',
 
+  // @root - DocumentList - customer
+  DOCUMENTS: 'Documents',
+  NEWDOCUMENT: 'New Document',
+  EDITDOCUMENT: 'Edit Document',
+  NEWDOCUMENT_TYPE: 'New Document Type',
+  NEWDOCUMENT_CATEGORY: 'New Document Category',
+
   // @root - MachineLicenseList
   NEWLICENSE: ' New License',
   LICENSE: 'License',

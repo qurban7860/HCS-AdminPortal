@@ -17,20 +17,11 @@ import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
-
 // slice
 import {
-  setCustomerDocumentFormVisibility,
-  setCustomerDocumentEdit,
   setCustomerDocumentEditFormVisibility,
   updateCustomerDocument,
 } from '../../../redux/slices/document/customerDocument';
-
-import {
-  setDocumentCategoryFormVisibility,
-  getActiveDocumentCategories,
-} from '../../../redux/slices/document/documentCategory';
-import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
@@ -40,10 +31,7 @@ export default function DocumentEditForm() {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer);
-  const { contacts } = useSelector((state) => state.contact);
-  const { sites } = useSelector((state) => state.site);
   const { enqueueSnackbar } = useSnackbar();
-
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const [descriptionVal, setDescriptionVal] = useState('');

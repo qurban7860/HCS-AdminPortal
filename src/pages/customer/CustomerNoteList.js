@@ -142,35 +142,6 @@ export default function CustomerNoteList() {
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const isNotFound = !notes.length && !noteEditFormVisibility && !formVisibility;
 
-  //   const denseHeight = dense ? 60 : 80;
-  //   const isFiltered = filterName !== '' || !!filterStatus.length;
-
-  //   const handleOpenConfirm = () => {
-  //     setOpenConfirm(true);
-  //   };
-
-  //   const handleFilterName = (event) => {
-  //     setPage(0);
-  //     setFilterName(event.target.value);
-  //   };
-
-  //   const handleFilterStatus = (event) => {
-  //     setPage(0);
-  //     setFilterStatus(event.target.value);
-  //   };
-
-  // const showHide = ()=>{
-  //   if(this.state.showHide === 'hide') {
-  //       this.setState({
-  //           showHide: 'show'
-  //       ))};
-  //   } else {
-  //       this.setState({
-  //           showHide: 'hide'
-  //       });
-  //   }
-
-  // }
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
   };
@@ -201,38 +172,6 @@ export default function CustomerNoteList() {
     dispatch(setNoteFormVisibility(!formVisibility));
     setChecked(false);
   };
-
-  // const handleDeleteRows = (selectedRows) => {
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  // };
-
-  //   const handleEditRow = (id) => {
-  //     console.log(id);
-  //     navigate(PATH_DASHBOARD.note.edit(id));
-  //   };
-
-  //   const handleViewRow = (id) => {
-  //     navigate(PATH_DASHBOARD.note.view(id));
-  //   };
-
-  //   const handleResetFilter = () => {
-  //     setFilterName('');
-  //     setFilterStatus([]);
-  //   };
-  // ------------------------------------------------------------------------------------
 
   return (
     <>

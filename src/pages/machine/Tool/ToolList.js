@@ -60,7 +60,6 @@ export default function ToolList() {
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onSort,
     onChangeDense,
