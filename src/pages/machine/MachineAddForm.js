@@ -40,6 +40,8 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-for
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useSettingsContext } from '../../components/settings';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+import { FORMLABELS } from '../../constants/default-constants';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -636,25 +638,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     sx={{ mt: -3 }}
                   />
                 </Box>
-                <RHFSwitch
-                  sx={{ my: -3 }}
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      Active
-                    </Typography>
-                  }
-                />
+                <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
               </Stack>
 
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

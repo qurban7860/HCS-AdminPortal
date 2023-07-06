@@ -95,6 +95,7 @@ export const BUTTONS = {
   DELETE: 'Delete',
 
   // New Buttons on the TOP of Modules
+  NEWCUSTOMER: 'New Customer',
   NEWDOCUMENT: 'New Document',
   NEWNOTE: 'New Note',
   NEWSITE: 'New Site',
@@ -102,8 +103,8 @@ export const BUTTONS = {
   NEWSETTING: 'New Setting',
   NEWMODEL: 'New Model',
   NEWMACHINE: 'New Machine',
-  NEWCUSTOMER: 'New Customer',
   NEWLICENSE: 'New License',
+  NEWTOOL: 'New Tool',
 
   // Add Buttons on the list pages
   ADDCUSTOMER: 'Add Customer',
@@ -113,6 +114,7 @@ export const BUTTONS = {
   ADDSITE: 'Add Site',
   ADDDOCUMENT: 'Add Document',
   ADDSETTING: 'Add Setting',
+  ADDTOOL: 'Add Tool',
 };
 
 export const BREADCRUMBS = {
