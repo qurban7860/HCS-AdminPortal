@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // slice
 import { addSetting } from '../../../redux/slices/products/machineTechParamValue';
 import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
@@ -13,9 +13,11 @@ import {
   getTechparamsByCategory,
   resetTechParamByCategory,
 } from '../../../redux/slices/products/machineTechParam';
+// schema
+import { AddSettingSchema } from './schemas/AddSettingSchema';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import SingleButton from '../../components/DocumentForms/SingleButton';
 // constants
@@ -62,11 +64,6 @@ export default function SettingAddForm() {
     setparamData(filteredsetting);
   }, [settings, techparamsByCategory]);
 
-  const AddSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(20),
-    isActive: Yup.boolean(),
-  });
-
   useEffect(() => {
     if (category) {
       dispatch(resetTechParamByCategory());
@@ -93,20 +90,13 @@ export default function SettingAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const onChange = (event) => {
-    const value = event.target.value;
-  };
-
   const onSubmit = async (data) => {
     try {
       if (techParamVal !== '') {
         data.techParam = techParamVal;
       }
-      console.log('params', data);
       await dispatch(addSetting(machine._id, data));
       reset();
-      // setCategory("")
-      // navigate tosettings list
       setTechParamVal('');
       enqueueSnackbar(Snacks.settingAdded);
     } catch (err) {
@@ -132,6 +122,8 @@ export default function SettingAddForm() {
                       sm: 'repeat(2, 1fr)',
                     }}
                   >
+                    {/* will be cleaning this.. */}
+                    {/* tech param name */}
                     <Autocomplete
                       // freeSolo
                       required
@@ -157,6 +149,8 @@ export default function SettingAddForm() {
                       ChipProps={{ size: 'small' }}
                     />
 
+                    {/* will be cleaning this.. */}
+                    {/* tech param value */}
                     <Autocomplete
                       // freeSolo
                       required
@@ -196,24 +190,6 @@ export default function SettingAddForm() {
                   >
                     <RHFTextField name="techParamValue" label="Technical Parameter Value" />
                     <ToggleButtons isMachine name="isActive" />
-                    {/* <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          Active
-                        </Typography>
-                      }
-                    /> */}
                   </Box>
                 </Grid>
                 <SingleButton
@@ -221,18 +197,6 @@ export default function SettingAddForm() {
                   disabled={!techParamVal}
                   name={BUTTONS.ADDSETTING}
                 />
-                {/* <Grid item xs={18} md={3} display="flex">
-                  <Button
-                    m="auto"
-                    variant="contained"
-                    type="submit"
-                    size="large"
-                    loading={isSubmitting}
-                    disabled={!techParamVal}
-                  >
-                    Add Setting
-                  </Button>
-                </Grid> */}
               </Grid>
             </Stack>
           </Card>

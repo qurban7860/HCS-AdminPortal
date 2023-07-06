@@ -61,6 +61,7 @@ export default function MachineSettingList() {
   useEffect(() => {
     setTableData(settings);
   }, [settings, error, responseMessage]);
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),

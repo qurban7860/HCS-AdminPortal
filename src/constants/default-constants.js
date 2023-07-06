@@ -46,6 +46,12 @@ export const FORMLABELS = {
     label: 'Description',
     name: 'description',
   },
+
+  // @root SettingAddForm
+  SETTING_TECHPARAM: {
+    label: 'Technical Parameter Value',
+    name: 'techParamValue',
+  },
 };
 
 // dialog contents

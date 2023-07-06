@@ -2,25 +2,25 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Divider, Switch, Card, Grid, Typography, Link, Dialog, Tooltip } from '@mui/material';
+import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs } from '@mui/material';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
 // slices
-import { useAuthContext } from '../../auth/useAuthContext';
 import {
   getMachines,
   getMachine,
   deleteMachine,
   setMachineEditFormVisibility,
-  setTransferMachineFlag,
-  updateMachine,
   transferMachine,
   setMachineVerification,
 } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
-import { getSite } from '../../redux/slices/customer/site';
 import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
-import Iconify from '../../components/iconify';
+// hooks
+import useResponsive from '../../hooks/useResponsive';
+// components
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
@@ -28,11 +28,12 @@ import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
 import CommaJoinField from '../components/Defaults/CommaJoinField';
 import { useSnackbar } from '../../components/snackbar';
-import { DIALOGS } from '../../constants/default-constants';
+import { DIALOGS, BREADCRUMBS } from '../../constants/default-constants';
+import { Snacks } from '../../constants/machine-constants';
 import FormLabel from '../components/DocumentForms/FormLabel';
 import GoogleMaps from '../../assets/GoogleMaps';
 // utils
-import { fDateTime, fDate } from '../../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
@@ -49,8 +50,8 @@ export default function MachineViewForm() {
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
-  const baseUrl = window.location.origin;
   const isSuperAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
+  const isMobile = useResponsive('down', 'sm');
 
   // function to check whether the lat long params exist or not
   const hasValidArray = (array) =>
@@ -107,14 +108,16 @@ export default function MachineViewForm() {
     try {
       const response = await dispatch(transferMachine(machine));
       const machineId = response.data.Machine._id;
-      window.open(`${baseUrl}/products/machines/${machineId}/view`);
+      // window.open(`${baseUrl}/products/machines/${machineId}/view`);
+      navigate(PATH_MACHINE.view(machineId));
+      enqueueSnackbar(Snacks.machineTransferSuccess);
     } catch (error) {
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
       } else if (error.message) {
         enqueueSnackbar(error.message, { variant: `error` });
       } else {
-        enqueueSnackbar('Something went wrong!', { variant: `error` });
+        enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
       }
       console.log('Error:', error);
     }
@@ -129,14 +132,7 @@ export default function MachineViewForm() {
       dispatch(getMachines());
       navigate(PATH_MACHINE.machines.list);
     } catch (err) {
-      // if(err.Message){
-      //     enqueueSnackbar(err.Message,{ variant: `error` })
-      //   }else if(err.message){
-      //     enqueueSnackbar(err.message,{ variant: `error` })
-      //   }else{
-      //     enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      //   }
-      enqueueSnackbar('Machine delete failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.machineFailedDelete, { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -144,10 +140,10 @@ export default function MachineViewForm() {
     try {
       await dispatch(setMachineVerification(machine._id, machine?.isVerified));
       dispatch(getMachine(machine._id));
-      enqueueSnackbar('Machine Verified successfully!');
+      enqueueSnackbar(Snacks.machineVerifiedSuccess);
     } catch (error) {
       console.log(error);
-      enqueueSnackbar('Machine Verification failed!', { variant: 'error' });
+      enqueueSnackbar(Snacks.machineFailedVerification, { variant: 'error' });
     }
   };
   const [openCustomer, setOpenCustomer] = useState(false);
@@ -196,141 +192,169 @@ export default function MachineViewForm() {
   );
 
   return (
-    <Card sx={{ p: 3 }}>
-      <Grid container justifyContent="flex-end" alignContent="flex-end">
-        <ViewFormEditDeleteButtons
-          sx={{ pt: 5 }}
-          verificationCount={machine?.verifications?.length}
-          isVerified={machine?.verifications?.find(
-            (verified) => verified.verifiedBy?._id === userId
-          )}
-          handleVerification={handleVerification}
-          disableTransferButton={disableTransferButton}
-          disableEditButton={disableEditButton}
-          handleEdit={handleEdit}
-          onDelete={onDelete}
-          handleTransfer={handleTransfer}
-        />
-      </Grid>
-      <Grid display="inline-flex">
-        <Tooltip title="Active">
-          <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        </Tooltip>
-        <Tooltip title="Verified By">
-          <ViewFormField
-            sm={12}
-            machineVerificationCount={machine?.verifications?.length}
-            verified
-            machineVerifiedBy={machine?.verifications}
-          />
-        </Tooltip>
-      </Grid>
-      <Grid container>
-        <FormLabel content="Key Details" />
-        <Grid container>
-          <Card sx={{ width: '100%', p: '1rem' }}>
-            <Grid container>
-              <ViewFormField sm={4} heading="Serial No" param={defaultValues?.serialNo} />
-              <ViewFormField sm={4} heading="Machine Model" param={defaultValues?.machineModel} />
-              <ViewFormField
-                sm={4}
-                heading="Customer"
-                objectParam={
-                  defaultValues.customer && (
-                    <Link onClick={handleOpenCustomer} href="#" underline="none">
-                      {defaultValues.customer?.name}
-                    </Link>
-                  )
-                }
-              />
-            </Grid>
-          </Card>
+    <>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
+          </Breadcrumbs>
         </Grid>
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-        <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
-        <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
-        <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-        <CommaJoinField
-          sm={6}
-          arrayParam={machine.machineConnections}
-          heading="Connected Machines"
-        />
-        <ViewFormField
-          sm={6}
-          heading="Work Order / Purchase Order"
-          param={defaultValues?.workOrderRef}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Installation Site"
-          objectParam={
-            defaultValues.instalationSite && (
-              <Link onClick={handleOpenInstallationSite} href="#" underline="none">
-                {defaultValues.instalationSite?.name}
-              </Link>
-            )
-          }
-        />
-        <ViewFormField
-          sm={6}
-          heading="Billing Site"
-          objectParam={
-            defaultValues.billingSite && (
-              <Link onClick={handleOpenBillingSite} href="#" underline="none">
-                {defaultValues.billingSite?.name}
-              </Link>
-            )
-          }
-        />
-        <ViewFormField
-          sm={6}
-          heading="Installation Date"
-          param={fDate(defaultValues?.installationDate)}
-        />
-        <ViewFormField sm={6} heading="Shipping Date" param={fDate(defaultValues?.shippingDate)} />
-
-        <ViewFormField sm={12} heading="Nearby Milestone" param={defaultValues?.siteMilestone} />
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
+        {!isMobile && <AddButtonAboveAccordion isCustomer />}
       </Grid>
-      <Grid container>
-        <FormLabel content="Howick Resources" />
+      <Grid container direction="row" mt={isMobile && 2}>
+        <Card sx={{ p: 3 }}>
+          <ViewFormEditDeleteButtons
+            sx={{ pt: 5 }}
+            verificationCount={machine?.verifications?.length}
+            isVerified={machine?.verifications?.find(
+              (verified) => verified.verifiedBy?._id === userId
+            )}
+            handleVerification={handleVerification}
+            disableTransferButton={disableTransferButton}
+            disableEditButton={disableEditButton}
+            handleEdit={handleEdit}
+            onDelete={onDelete}
+            handleTransfer={handleTransfer}
+          />
 
-        <ViewFormField
-          sm={6}
-          heading="Account Manager"
-          param={defaultValues?.accountManager?.firstName}
-          secondParam={defaultValues?.accountManager?.lastName}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Project Manager"
-          param={defaultValues?.projectManager?.firstName}
-          secondParam={defaultValues?.projectManager?.lastName}
-        />
-        <ViewFormField
-          sm={6}
-          heading="Suppport Manager"
-          param={defaultValues?.supportManager?.firstName}
-          secondParam={defaultValues?.supportManager?.lastName}
-        />
-        <ViewFormField />
-        {/* <ViewFormSwitch isActive={defaultValues.isActive} /> */}
+          <Grid display="inline-flex">
+            <Tooltip title="Active">
+              <ViewFormField sm={12} isActive={defaultValues.isActive} />
+            </Tooltip>
+            <Tooltip title="Verified By">
+              <ViewFormField
+                sm={12}
+                machineVerificationCount={machine?.verifications?.length}
+                verified
+                machineVerifiedBy={machine?.verifications}
+              />
+            </Tooltip>
+          </Grid>
+
+          <Grid container>
+            <FormLabel content="Key Details" />
+            <Grid container>
+              <Card sx={{ width: '100%', p: '1rem' }}>
+                <Grid container>
+                  <ViewFormField sm={4} heading="Serial No" param={defaultValues?.serialNo} />
+                  <ViewFormField
+                    sm={4}
+                    heading="Machine Model"
+                    param={defaultValues?.machineModel}
+                  />
+                  <ViewFormField
+                    sm={4}
+                    heading="Customer"
+                    objectParam={
+                      defaultValues.customer && (
+                        <Link onClick={handleOpenCustomer} href="#" underline="none">
+                          {defaultValues.customer?.name}
+                        </Link>
+                      )
+                    }
+                  />
+                </Grid>
+              </Card>
+            </Grid>
+            <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+            <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
+            <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
+            <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
+            <CommaJoinField
+              sm={6}
+              arrayParam={machine.machineConnections}
+              heading="Connected Machines"
+            />
+            <ViewFormField
+              sm={6}
+              heading="Work Order / Purchase Order"
+              param={defaultValues?.workOrderRef}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Installation Site"
+              objectParam={
+                defaultValues.instalationSite && (
+                  <Link onClick={handleOpenInstallationSite} href="#" underline="none">
+                    {defaultValues.instalationSite?.name}
+                  </Link>
+                )
+              }
+            />
+            <ViewFormField
+              sm={6}
+              heading="Billing Site"
+              objectParam={
+                defaultValues.billingSite && (
+                  <Link onClick={handleOpenBillingSite} href="#" underline="none">
+                    {defaultValues.billingSite?.name}
+                  </Link>
+                )
+              }
+            />
+            <ViewFormField
+              sm={6}
+              heading="Installation Date"
+              param={fDate(defaultValues?.installationDate)}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Shipping Date"
+              param={fDate(defaultValues?.shippingDate)}
+            />
+
+            <ViewFormField
+              sm={12}
+              heading="Nearby Milestone"
+              param={defaultValues?.siteMilestone}
+            />
+            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+            {/* <ViewFormField sm={6} heading="Tags" param={defaultValues?.customerTags?  Object.values(defaultValues.customerTags).join(",") : ''} /> */}
+          </Grid>
+
+          <Grid container>
+            <FormLabel content="Howick Resources" />
+            <ViewFormField
+              sm={6}
+              heading="Account Manager"
+              param={defaultValues?.accountManager?.firstName}
+              secondParam={defaultValues?.accountManager?.lastName}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Project Manager"
+              param={defaultValues?.projectManager?.firstName}
+              secondParam={defaultValues?.projectManager?.lastName}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Suppport Manager"
+              param={defaultValues?.supportManager?.firstName}
+              secondParam={defaultValues?.supportManager?.lastName}
+            />
+            <ViewFormField />
+          </Grid>
+
+          <Grid container>
+            <FormLabel content="Sites Locations" />
+            {hasValidLatLong ? (
+              <GoogleMaps machineView latlongArr={latLongValues} mapHeight="500px" />
+            ) : (
+              <ViewFormField sm={6} heading="No Site Locations Available" />
+            )}
+          </Grid>
+
+          <Grid container sx={{ mt: 2 }}>
+            <ViewFormAudit defaultValues={defaultValues} />
+          </Grid>
+        </Card>
       </Grid>
-
-      <Grid container>
-        <FormLabel content="Sites Locations" />
-        {hasValidLatLong ? (
-          <GoogleMaps machineView latlongArr={latLongValues} mapHeight="500px" />
-        ) : (
-          <ViewFormField sm={6} heading="No Site Locations Available" />
-        )}
-      </Grid>
-
-      <Grid container sx={{ mt: 2 }}>
-        <ViewFormAudit defaultValues={defaultValues} />
-      </Grid>
-
+      {/* // primary billing dialog */}
       <Dialog
         open={openCustomer}
         onClose={handleCloseCustomer}
@@ -393,6 +417,7 @@ export default function MachineViewForm() {
         <DialogLink content={DIALOGS.CUSTOMER} onClick={() => handleViewCustomer(customer._id)} />
       </Dialog>
 
+      {/* installation site dialog */}
       <Dialog
         open={openInstallationSite}
         onClose={handleCloseInstallationSite}
@@ -438,6 +463,8 @@ export default function MachineViewForm() {
           />
         </Grid>
       </Dialog>
+
+      {/* Billing site dialog */}
       <Dialog
         open={openBilingSite}
         onClose={handleCloseBillingSite}
@@ -479,6 +506,6 @@ export default function MachineViewForm() {
           />
         </Grid>
       </Dialog>
-    </Card>
+    </>
   );
 }

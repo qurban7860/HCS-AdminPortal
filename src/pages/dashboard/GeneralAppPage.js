@@ -42,7 +42,7 @@ export default function GeneralAppPage() {
   const countryWiseCustomerCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
-  
+
   if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {
       modelWiseMachineNumber.push(model.count);
@@ -51,7 +51,6 @@ export default function GeneralAppPage() {
     });
   }
 
-  
   if (count && count.countryWiseCustomerCount) {
     count.countryWiseCustomerCount.map((customer) => {
       countryWiseCustomerCountNumber.push(customer.count);
@@ -60,7 +59,6 @@ export default function GeneralAppPage() {
     });
   }
 
-  
   if (count && count.countryWiseSiteCount) {
     count.countryWiseSiteCount.map((site) => {
       countryWiseSiteCountNumber.push(site.count);
@@ -267,7 +265,8 @@ export default function GeneralAppPage() {
             </Grid>
 
             {/* Production Log */}
-            <Grid item xs={12} md={6} lg={8}>
+            {/* don't delete, will be activated once integrated with the HLC */}
+            {/* <Grid item xs={12} md={6} lg={8}>
               <ProductionLog
                 title="Production Log"
                 chart={{
@@ -293,24 +292,23 @@ export default function GeneralAppPage() {
                 sx={{ bg: 'transparent' }}
               />
               <StyledBg />
-            </Grid>
+            </Grid> */}
 
             {/* Operators */}
-            <Grid item xs={12} lg={4}>
+            {/* don't delete, will be activated once integrated with the HLC */}
+            {/* <Grid item xs={12} lg={4}>
               <Grid item>
                 <HowickOperators title="Operators" list={_appAuthors} />
               </Grid>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Grid>
 
-        {/* extra */}
-        <Grid item xs={12} md={6} lg={12}>
+        {/* TESTs DONT REMOVE */}
+        {/* <Grid item xs={12} md={6} lg={12}>
           <ChartColumnNegative optionsData={modelWiseMachineModel} />
           <StyledBg />
-        </Grid>
-
-        {/* TESTs DONT REMOVE */}
+        </Grid> */}
 
         {/* <ContainerView selectVariant="panLeft">
           <Grid container spacing={3}>
