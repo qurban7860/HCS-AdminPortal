@@ -19,7 +19,7 @@ import { Cover } from '../components/Defaults/Cover';
 import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
 import useResponsive from '../../hooks/useResponsive';
-import UnderDevelopment from '../components/UnderDevelopment';
+import UnderDevelopment from '../boundaries/UnderDevelopment';
 import CustomerEditForm from './CustomerEditForm';
 // import CustomerSiteList from './CustomerSiteList';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';

@@ -1,27 +1,15 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Stack,
   Card,
-  Item,
   Grid,
-  Box,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
   Typography,
   Accordion,
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
-import { fDate, fDateTime } from '../../utils/formatTime';
+import { fDate } from '../../utils/formatTime';
 
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -30,33 +18,16 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import EmptyContent from '../../components/empty-content';
-
-import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import NotesViewForm from './note/NotesViewForm';
-import NoteEditForm from './note/NoteEditForm';
-import NoteAddForm from './note/NoteAddForm';
+import NotesViewForm from './Note/NotesViewForm';
+import NoteEditForm from './Note/NoteEditForm';
+import NoteAddForm from './Note/NoteAddForm';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import {
   getNotes,
   deleteNote,
-  getNote,
-  updateNote,
   setNoteFormVisibility,
 } from '../../redux/slices/products/machineNote';
 
@@ -89,24 +60,7 @@ const STATUS_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function MachineNoteList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+  const { page, order, orderBy, rowsPerPage, setSelected } = useTable({
     defaultOrderBy: 'createdAt',
   });
 

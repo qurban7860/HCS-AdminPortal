@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -17,18 +16,10 @@ import {
   Stack,
   TextField,
   Autocomplete,
-  Select,
-  Chip,
   Typography,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
 } from '@mui/material';
 // import { LocalizationProvider, DatePicker } from '@mui/lab';
-
 import { DatePicker } from '@mui/x-date-pickers';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
 
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
@@ -39,26 +30,14 @@ import { getMachinestatuses } from '../../redux/slices/products/statuses';
 import { getMachineModels } from '../../redux/slices/products/model';
 import { getSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
-
 import { Cover } from '../components/Defaults/Cover';
-
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-  RHFSwitch,
-} from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-import MachineDashboardNavbar from './util/MachineDashboardNavbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
@@ -122,11 +101,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     setInstallVal(null);
     setBillingVal(null);
   }, [dispatch, customerVal]);
-
-  // useEffect(()=>{
-  //   setMachSerVal()
-  //   setMachSerVal(machSerVal?.serialNo);
-  // },[machineVal])
 
   const AddMachineSchema = Yup.object().shape({
     // keep the serial no. at 6 characters, all machines, decoilers, and custom all have 5 characters,

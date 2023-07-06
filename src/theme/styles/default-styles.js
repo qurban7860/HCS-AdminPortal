@@ -1,7 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
-import { Popover, Stack } from '@mui/material';
-import { m } from 'framer-motion';
+import { Popover, Stack, Card } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { m } from 'framer-motion';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
 import Image from '../../components/image';
 import { MotionContainer, varFade } from '../../components/animate';
@@ -130,12 +130,17 @@ export const StyledBg = styled('div')(({ theme }) => ({
   }),
 }));
 
+export const StyledCardContainer = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  height: 160,
+  position: 'relative',
+}));
+
 /**
  * @options components props --------------------------------------------------------------------------------------------
  */
 
 // @root CustomerListTableToolbar
-
 export const options = {
   spacing: 2,
   alignItems: 'center',

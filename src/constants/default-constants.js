@@ -8,6 +8,7 @@ export const FORMLABELS = {
   COVER: {
     NEW_CUSTOMER: 'New Customer',
     EDIT_MODEL: 'Edit Model',
+    MACHINE_PLACEHOLDER: 'Machine',
   },
   // @root FormLabels
   HOWICK: 'Howick Resources',
@@ -82,6 +83,7 @@ export const BUTTONS = {
   NEWNOTE: 'New Note',
   NEWSITE: 'New Site',
   NEWCONTACT: 'New Contact',
+  NEWSETTING: 'New Setting',
 
   // Add Buttons on the list pages
   ADDCUSTOMER: 'Add Customer',
@@ -90,6 +92,7 @@ export const BUTTONS = {
   ADDMODEL: 'Add Model',
   ADDSITE: 'Add Site',
   ADDDOCUMENT: 'Add Document',
+  ADDSETTING: 'Add Setting',
 };
 
 export const BREADCRUMBS = {

@@ -16,21 +16,27 @@ export default function ToggleButtons({
   return (
     <Grid item lg={12} display="flex">
       {isDocument && (
-        <Grid display="flex">
-          <StyledToggleButtonLabel variant="body2">Customer Access</StyledToggleButtonLabel>
-          <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
+        <Grid display="flex" alignItems="center" mt={1}>
+          <StyledToggleButtonLabel variant="body2" p={1}>
+            Customer Access
+          </StyledToggleButtonLabel>
+          <Switch checked={customerAccessVal} onChange={handleChange} />
         </Grid>
       )}
       {!isMachine && (
-        <Grid display="flex">
-          <StyledToggleButtonLabel variant="body2">Active</StyledToggleButtonLabel>
-          <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
+        <Grid display="flex" alignItems="center" mt={1}>
+          <StyledToggleButtonLabel variant="body2" p={1}>
+            Active
+          </StyledToggleButtonLabel>
+          <Switch checked={isActive} onChange={handleIsActiveChange} />
         </Grid>
       )}
       {isMachine && (
-        <Grid display="flex">
-          <StyledToggleButtonLabel variant="body2">Active</StyledToggleButtonLabel>
-          <RHFSwitch sx={{ mt: 1 }} name={name} />
+        <Grid display="flex" alignItems="center" mt={1}>
+          <StyledToggleButtonLabel variant="body2" p={1}>
+            Active
+          </StyledToggleButtonLabel>
+          <RHFSwitch name={name} />
         </Grid>
       )}
     </Grid>

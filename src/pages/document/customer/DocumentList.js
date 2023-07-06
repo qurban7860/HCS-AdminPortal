@@ -19,7 +19,6 @@ import { useDispatch, useSelector } from '../../../redux/store';
 import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import useResponsive from '../../../hooks/useResponsive';
-import { useSettingsContext } from '../../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../../components/table';
 // components
 import Iconify from '../../../components/iconify';
@@ -33,36 +32,30 @@ import {
 } from '../../../redux/slices/document/customerDocument';
 import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
-import { getMachines } from '../../../redux/slices/products/machine';
-import { getCustomers } from '../../../redux/slices/customer/customer';
 import DocumentAddForm from './DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
-import _mock from '../../../_mock';
-import SearchInputAndAddButton from '../../components/Defaults/SearchInputAndAddButton';
 import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
 import ListSwitch from '../../components/Defaults/ListSwitch';
 import { fDate } from '../../../utils/formatTime';
-import { BUTTONS, FORMLABELS } from '../../../constants/default-constants';
+import { BUTTONS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
+// const _accordions = [...Array(8)].map((_, index) => ({
+//   id: _mock.id(index),
+//   value: `panel${index + 1}`,
+//   heading: `Site ${index + 1}`,
+//   subHeading: _mock.text.title(index),
+//   detail: _mock.text.description(index),
+// }));
 
 // ----------------------------------------------------------------------
 
 export default function DocumentList() {
-  const { dense, page, order, orderBy, rowsPerPage } = useTable({
-    defaultOrderBy: '-createdAt',
-  });
+  const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
 
@@ -74,31 +67,17 @@ export default function DocumentList() {
     customerDocumentFormVisibility,
   } = useSelector((state) => state.customerDocument);
 
-  const { fileCategories, fileCategory, documentCategoryFormVisibility } = useSelector(
-    (state) => state.documentCategory
-  );
-  const { documentName, documentNames, documentTypeFormVisibility } = useSelector(
-    (state) => state.documentType
-  );
+  const { documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
+  const { documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { customer } = useSelector((state) => state.customer);
   // console.log("customerDocuments : ",customerDocuments)
-  const toggleChecked = async () => {
-    dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
-  };
+
   const [checked, setChecked] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-
-  const handleAccordianClick = (accordianIndex) => {
-    if (accordianIndex === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(accordianIndex);
-    }
-  };
 
   useEffect(() => {
     if (customer && customer?._id) {
@@ -111,13 +90,24 @@ export default function DocumentList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customer._id]);
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
   useEffect(() => {
     setTableData(customerDocuments);
   }, [customerDocuments, error, responseMessage]);
+
+  const toggleChecked = async () => {
+    dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
+  };
+
+  const handleAccordianClick = (accordianIndex) => {
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
+  };
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -125,17 +115,6 @@ export default function DocumentList() {
     filterName,
     filterStatus,
   });
-
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
-
-  const isNotFound =
-    !customerDocuments.length &&
-    !customerDocumentFormVisibility &&
-    !customerDocumentEditFormVisibility &&
-    !documentTypeFormVisibility &&
-    !documentCategoryFormVisibility;
 
   const handleFilterName = (e) => {
     setFilterName(e.target.value);
@@ -151,6 +130,14 @@ export default function DocumentList() {
     setChecked(false);
   };
 
+  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isNotFound =
+    !customerDocuments.length &&
+    !customerDocumentFormVisibility &&
+    !customerDocumentEditFormVisibility &&
+    !documentTypeFormVisibility &&
+    !documentCategoryFormVisibility;
+
   return (
     <>
       <Grid
@@ -165,8 +152,8 @@ export default function DocumentList() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.list} name="Customers" />
-            <BreadcrumbsLink to={PATH_DASHBOARD.customer.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name="Customers" />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view(customer._id)} name={customer.name} />
             <BreadcrumbsLink
               to={PATH_DASHBOARD.customer.document}
               name={
@@ -242,20 +229,6 @@ export default function DocumentList() {
               </Grid>
             )}
           </Grid>
-
-          {/* <SearchInputAndAddButton
-            searchFormVisibility={
-              customerDocumentFormVisibility || customerDocumentEditFormVisibility
-            }
-            filterName={filterName}
-            handleFilterName={handleFilterName}
-            addButtonName={BUTTONS.DOCUMENT}
-            isFiltered={isFiltered}
-            handleResetFilter={handleResetFilter}
-            toggleChecked={toggleChecked}
-            toggleCancel={toggleCancel}
-            FormVisibility={customerDocumentFormVisibility}
-          /> */}
         </Grid>
       </Grid>
 
