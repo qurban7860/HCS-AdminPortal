@@ -1,5 +1,5 @@
 import { styled, alpha } from '@mui/material/styles';
-import { Popover, Stack, Card } from '@mui/material';
+import { Popover, Stack, Card, Container } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { m } from 'framer-motion';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
@@ -111,6 +111,36 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
   boxShadow: 'none',
   pointerEvents: 'none',
 }));
+
+// @root - GeneralAppPage - dashboard
+
+export const StyledContainer = styled(Container)(({ theme }) => ({
+  backgroundImage: `url(../../assets/illustrations/illustration_howick_icon.svg)`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'top right',
+  backgroundSize: 'auto 90%',
+  backgroundOpacity: 0.1,
+  backgroundAttachment: 'fixed',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 0,
+  alignContent: 'center',
+  color: 'text.primary',
+}));
+
+export const StyledGlobalCard = styled(Card)(({ theme }) => ({
+  paddingRight: theme.spacing(3),
+  paddingLeft: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  backgroundImage: ` url(../../assets/illustrations/world.svg)`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'top right',
+  backgroundSize: 'auto 90%',
+}));
+
+// --------------------------------------------------------------------------------------------
 
 /**
  * @styled components from minimal layout

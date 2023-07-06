@@ -107,3 +107,11 @@ export const BREADCRUMBS = {
   NEWCONTACT: 'Add new Contact',
   NEWSITE: 'Add new Site',
 };
+
+export const TITLES = {
+  // @root - GeneralAppPage - dashboard
+  //  Welcome
+  WELCOME: `CUSTOMER \n SERVICE & SUPPORT`,
+  WELCOME_DESC:
+    'Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals.',
+};
