@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate,useParams, Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Card } from '@mui/material';
@@ -23,11 +24,16 @@ import Iconify from '../../components/iconify';
 // ----------------------------------------------------------------------
 
 export default function Setting() {
+  const userRolesString = localStorage.getItem('userRoles');
+  // const userRoles = JSON.parse(userRolesString);
+
+  const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
   const dispatch = useDispatch();
   const theme = useTheme();
   const navigate = useNavigate();
-
-
+  const { loggedInUser } = useSelector((state) => state.user);
+  
+  const superAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
    // Functions to navigate to different pages
    const linkDocumentName = () => {  navigate(PATH_SETTING.documentType.list); };
    const linkFileCategory = () => { navigate(PATH_SETTING.documentCategory.list); };
@@ -75,29 +81,31 @@ export default function Setting() {
                 </ListItemButton>
               </List>
             </Card>
-            <Card sx={{ height: '234px', mt: '14px' }}>
-              <List
-                component="nav"
-                aria-labelledby="nested-list-subheader"
-                subheader={
-                  <ListSubheader component="div" id="nested-list-subheader">
-                    Security Settings
-                  </ListSubheader>
-                }>
-                <ListItemButton onClick={linkRole} sx={{ color: 'text.disabled' }}>
-                  <ListItemIcon>
-                    <Iconify icon="carbon:user-role" />
-                  </ListItemIcon>
-                  <ListItemText primary="User Roles" />
-                </ListItemButton>
-                <ListItemButton onClick={linkSignInLogs} sx={{ color: 'text.disabled' }}>
-                  <ListItemIcon>
-                    <Iconify icon="mdi:clipboard-text" />
-                  </ListItemIcon>
-                  <ListItemText primary="User Sign In Logs" />
-                </ListItemButton>
-              </List>
-            </Card>
+            {superAdmin && 
+              <Card sx={{ height: '234px', mt: '14px' }}>
+                <List
+                  component="nav"
+                  aria-labelledby="nested-list-subheader"
+                  subheader={
+                    <ListSubheader component="div" id="nested-list-subheader">
+                      Security Settings
+                    </ListSubheader>
+                  }>
+                  <ListItemButton onClick={linkRole} sx={{ color: 'text.disabled' }}>
+                    <ListItemIcon>
+                      <Iconify icon="carbon:user-role" />
+                    </ListItemIcon>
+                    <ListItemText primary="User Roles" />
+                  </ListItemButton>
+                  <ListItemButton onClick={linkSignInLogs} sx={{ color: 'text.disabled' }}>
+                    <ListItemIcon>
+                      <Iconify icon="mdi:clipboard-text" />
+                    </ListItemIcon>
+                    <ListItemText primary="User Sign In Logs" />
+                  </ListItemButton>
+                </List>
+              </Card>
+            }
           </Grid>
         </Grid>
       </Grid>

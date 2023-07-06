@@ -18,7 +18,7 @@ import {
   updateCustomer,
   setCustomerEditFormVisibility,
 } from '../../redux/slices/customer/customer';
-import { getContacts, getSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveContacts, getSPContacts } from '../../redux/slices/customer/contact';
 import { getSites } from '../../redux/slices/customer/site';
 
 // routes
@@ -41,7 +41,7 @@ import FormProvider, {
 export default function CustomerEditForm() {
   const { error, customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
-  const { contacts, spContacts } = useSelector((state) => state.contact);
+  const { contacts, spContacts, activeContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter(contact => contact.isActive === true);
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
@@ -103,7 +103,7 @@ export default function CustomerEditForm() {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getContacts(customer._id));
+    dispatch(getActiveContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
     setSiteVal(customer?.mainSite);
@@ -211,7 +211,7 @@ export default function CustomerEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={billingContactVal || null}
-                    options={contacts}
+                    options={activeContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
@@ -241,7 +241,7 @@ export default function CustomerEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={technicalContactVal || null}
-                    options={contacts}
+                    options={activeContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${

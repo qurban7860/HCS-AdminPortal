@@ -22,7 +22,7 @@ import FormProvider, {
 // slice
 import { updateSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
 import { getCustomers } from '../../redux/slices/customer/customer';
-import { getContacts , resetContacts} from '../../redux/slices/customer/contact';
+import { getContacts, getActiveContacts, resetContacts} from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import AddFormButtons from '../components/AddFormButtons';
@@ -50,7 +50,7 @@ export default function SecurityUserEditForm() {
   const [ email, setEmail ] = useState("");
   const { customers } = useSelector((state) => state.customer);
   const [ customerVal, setCustomerVal ] = useState('');
-  const { contacts } = useSelector((state) => state.contact);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
   const [ contactVal, setContactVal ] = useState('');
   const [ valid, setValid ] = useState(true);
   const [phone, setPhone] = useState('');
@@ -71,7 +71,7 @@ useEffect(() => {
 
 useEffect(() => {
   if(customerVal){
-    dispatch(getContacts(customerVal._id));
+    dispatch(getActiveContacts(customerVal._id));
   }
   if(userRoles){
     if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
@@ -100,6 +100,7 @@ useEffect(() => {
   setSortedRoles(sortedRolesTemp);
 }, [roles]);
 
+  /* eslint-disable */
   useLayoutEffect(()=>{
     if(securityUser.customer !== undefined && securityUser.customer !== null){
       setCustomerVal(securityUser?.customer);
@@ -111,12 +112,14 @@ useEffect(() => {
       setPhone(securityUser?.phone);
     }
     if(securityUser.name !== undefined && securityUser.name !== null){
-      handleNameChange(securityUser?.name);   // eslint-disable-line
+      handleNameChange(securityUser?.name);
     }
     if(securityUser.email !== undefined && securityUser.email !== null){
       setEmail(securityUser?.email);
     }
   },[securityUser])
+  /* eslint-enable */
+    
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required("Name is required!").max(40, "Name must not exceed 40 characters!"),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address').trim(),
@@ -133,7 +136,7 @@ useEffect(() => {
   const defaultValues = useMemo(
     () => ({
       id: securityUser?._id || '',
-      name: name || '',
+      name: securityUser?.name || '',
       email: email || '',
       roles: securityUserRoles || [],
       loginEmail: securityUser?.login,
@@ -180,7 +183,7 @@ useEffect(() => {
   const onSubmit = async (data) => {
     data.customer = customerVal?._id || null
     data.contact = contactVal?._id || null
-    if(phone && phone.length > 7 ){
+    if(phone && phone.length > 4){
       data.phone = phone
     }else{
       data.phone = ""
@@ -354,7 +357,7 @@ useEffect(() => {
               <Autocomplete
                 // freeSolo
                 value={ contactVal || null}
-                options={contacts}
+                options={activeContacts}
                 getOptionLabel={(option) => `${option?.firstName || ""} ${option?.lastName || ""}`}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {

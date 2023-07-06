@@ -138,12 +138,12 @@ export default function SupplierEditForm() {
   const onSubmit = async (data) => {
     try {
       console.log(typeof phone);
-      if(phone && phone.length > 7){
+      if(phone && phone.length > 4){
         data.phone = phone ;
       }else{
         data.phone = "" ;
       }
-      if(fax && fax.length > 7){
+      if(fax && fax.length > 4){
         data.fax = fax
       }else{
         data.fax = "";

@@ -34,7 +34,7 @@ export default function CustomerEdit() {
   useLayoutEffect(() => {
     dispatch(getCustomer(id));
     dispatch(getSites());
-    dispatch(getContacts());
+    // dispatch(getContacts());
   }, [dispatch, id]);
 
 

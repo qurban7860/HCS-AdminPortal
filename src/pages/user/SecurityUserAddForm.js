@@ -22,7 +22,7 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect, } from '../../co
 // slice
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import { getCustomers } from '../../redux/slices/customer/customer';
-import { getContacts , resetContacts} from '../../redux/slices/customer/contact';
+import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -46,7 +46,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const [ email, setEmail] = useState("");
   const { customers } = useSelector((state) => state.customer);
   const [ customerVal, setCustomerVal] = useState("");
-  const { contacts } = useSelector((state) => state.contact);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
   const [ contactVal, setContactVal] = useState("");
   const { roles } = useSelector((state) => state.role);
   const [sortedRoles, setSortedRoles] = useState([]);
@@ -84,7 +84,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   useEffect(() => {
     if(customerVal){
-      dispatch(getContacts(customerVal._id));
+      dispatch(getActiveContacts(customerVal._id));
     }
     if(userRoles){
       if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
@@ -175,7 +175,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   };
 
   const onSubmit = async (data) => {
-    if(phone && phone.length > 7){
+    if(phone && phone.length > 4){
       data.phone = phone ;
     }
     if(customerVal){
@@ -353,7 +353,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               <Autocomplete 
                 // freeSolo
                 value={ contactVal || null}
-                options={contacts}
+                options={activeContacts}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {

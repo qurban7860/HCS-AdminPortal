@@ -34,7 +34,7 @@ import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
 import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
 import { getSites } from '../../redux/slices/customer/site';
-import { getContacts } from '../../redux/slices/customer/contact';
+import { getContacts, getActiveContacts } from '../../redux/slices/customer/contact';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
@@ -119,7 +119,7 @@ export default function CustomerNoteList() {
   useLayoutEffect(() => {
     if (!formVisibility && !noteEditFormVisibility) {
       dispatch(getNotes(customer._id));
-      dispatch(getContacts(customer._id));
+      dispatch(getActiveContacts(customer._id));
       dispatch(getSites(customer._id));
     }
   }, [dispatch, customer._id, noteEditFormVisibility, formVisibility]);

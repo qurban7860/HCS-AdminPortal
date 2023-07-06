@@ -37,7 +37,7 @@ export default function NoteEditForm() {
 
   const { sites } = useSelector((state) => state.site);
 
-  const { contacts } = useSelector((state) => state.contact);
+  const { activeContacts } = useSelector((state) => state.contact);
 
   const { customer } = useSelector((state) => state.customer);
   const [siteVal, setSiteVal]= useState("");
@@ -184,7 +184,7 @@ export default function NoteEditForm() {
               <Autocomplete 
                 // freeSolo
                 value={contactVal || null}
-                options={contacts}
+                options={activeContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                 getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
                 onChange={(event, newValue) => {

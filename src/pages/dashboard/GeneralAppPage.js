@@ -28,6 +28,9 @@ import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count';
 
+// config-global
+import { CONFIG } from '../../config-global';
+
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
@@ -35,6 +38,7 @@ export default function GeneralAppPage() {
   const { user } = useAuthContext();
   const theme = useTheme();
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
+  const enviroment = CONFIG.ENV.toLowerCase();
 
   const modelWiseMachineNumber = [];
   const modelWiseMachineModel = [];
@@ -266,49 +270,55 @@ export default function GeneralAppPage() {
               <StyledBg />
             </Grid>
 
-            {/* Production Log */}
-            <Grid item xs={12} md={6} lg={8}>
-              <ProductionLog
-                title="Production Log"
-                chart={{
-                  categories: [
-                    '2:00:00PM',
-                    '2:30:00PM',
-                    '2:45:00PM',
-                    '4:00:00PM',
-                    '7:00:00AM',
-                    '10:05:00AM',
-                  ],
-                  series: [
-                    {
-                      day: '28-June-2023',
-                      data: [
-                        { name: 'Operator 1', data: [5000, 0, 3000, 0, 2000, 0] },
-                        { name: 'Operator 2', data: [5000, 0, 4000, 0, 3000, 0] },
-                        { name: 'Operator 3', data: [5500, 0, 2500, 0, 1500, 0] },
-                      ],
-                    },
-                  ],
-                }}
-                sx={{ bg: 'transparent' }}
-              />
-              <StyledBg />
-            </Grid>
-
-            {/* Operators */}
-            <Grid item xs={12} lg={4}>
-              <Grid item>
-                <HowickOperators title="Operators" list={_appAuthors} />
+            {enviroment !== 'live' && (
+              <>
+              {/* Production Log */}
+              <Grid item xs={12} md={6} lg={8}>
+                <ProductionLog
+                  title="Production Log"
+                  chart={{
+                    categories: [
+                      '2:00:00PM',
+                      '2:30:00PM',
+                      '2:45:00PM',
+                      '4:00:00PM',
+                      '7:00:00AM',
+                      '10:05:00AM',
+                    ],
+                    series: [
+                      {
+                        day: '28-June-2023',
+                        data: [
+                          { name: 'Operator 1', data: [5000, 0, 3000, 0, 2000, 0] },
+                          { name: 'Operator 2', data: [5000, 0, 4000, 0, 3000, 0] },
+                          { name: 'Operator 3', data: [5500, 0, 2500, 0, 1500, 0] },
+                        ],
+                      },
+                    ],
+                  }}
+                  sx={{ bg: 'transparent' }}
+                />
+                <StyledBg />
               </Grid>
-            </Grid>
+
+              {/* Operators */}
+              <Grid item xs={12} lg={4}>
+                <Grid item>
+                  <HowickOperators title="Operators" list={_appAuthors} />
+                </Grid>
+              </Grid>
+
+              {/* extra */}
+              <Grid item xs={12} md={6} lg={12}>
+                <ChartColumnNegative optionsData={modelWiseMachineModel} />
+                <StyledBg />
+              </Grid>
+              </>
+            )}    
+
           </Grid>
         </Grid>
 
-        {/* extra */}
-        <Grid item xs={12} md={6} lg={12}>
-          <ChartColumnNegative optionsData={modelWiseMachineModel} />
-          <StyledBg />
-        </Grid>
 
         {/* TESTs DONT REMOVE */}
 

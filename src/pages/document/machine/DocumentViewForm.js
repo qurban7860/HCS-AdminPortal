@@ -159,7 +159,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
                 file={file}
                 currentDocument={currentMachineDocument}
                 customer={machine}
-                disableDelete={!machine.transferredMachine}
+                hideDelete={machine.transferredMachine}
                 getCallAfterDelete={callAfterDelete}
               />
             ))}

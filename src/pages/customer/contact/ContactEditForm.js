@@ -152,7 +152,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 7) {
+      if (phone && phone.length > 4) {
         data.phone = phone;
       } else {
         data.phone = '';
