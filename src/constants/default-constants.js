@@ -9,6 +9,8 @@ export const FORMLABELS = {
     NEW_CUSTOMER: 'New Customer',
     EDIT_MODEL: 'Edit Model',
     MACHINE_PLACEHOLDER: 'Machine',
+    TOOLS: 'Tools',
+    CUSTOMERS: 'Customers',
   },
   // @root FormLabels
   HOWICK: 'Howick Resources',
@@ -129,6 +131,16 @@ export const BREADCRUMBS = {
   NEWLICENSE: ' New License',
   LICENSE: 'License',
   EDITLICENSE: 'Edit License',
+
+  // @root - MachineToolInstalledList
+  NEWTOOL: 'New Tool',
+  TOOL: 'Tools',
+  EDITTOOL: 'Edit Tool',
+
+  // @root - MachineNoteList
+  MACHINE_NEWNOTE: 'New Note',
+  MACHINE_NOTE: 'Notes',
+  MACHINE_EDITNOTE: 'Edit Note',
 };
 
 export const TITLES = {

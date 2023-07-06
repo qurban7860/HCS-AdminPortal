@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
@@ -51,7 +52,7 @@ import { resetCustomerMachines } from '../../redux/slices/products/machine';
 import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../components/Defaults/Cover';
 import { fDate } from '../../utils/formatTime';
-import { DIALOGS, BUTTONS } from '../../constants/default-constants';
+import { DIALOGS, BUTTONS, FORMLABELS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -76,7 +77,6 @@ export default function CustomerList() {
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onSort,
     onChangePage,
@@ -205,15 +205,9 @@ export default function CustomerList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
-          <Cover name="Customers" icon="ph:users-light" />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={FORMLABELS.COVER.CUSTOMERS} />
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <CustomerListTableToolbar
@@ -226,23 +220,7 @@ export default function CustomerList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={selected.length}
-              // rowCount={tableData.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row) => row._id)
-              //   )
-              // }
-              // action={
-              //   <Tooltip title="Delete">
-              //     <IconButton color="primary" onClick={handleOpenConfirm}>
-              //       <Iconify icon="eva:trash-2-outline" />
-              //     </IconButton>
-              //   </Tooltip>
-              // }
-            />
+            <TableSelectedAction numSelected={selected.length} />
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
@@ -280,11 +258,6 @@ export default function CustomerList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
                 </TableBody>
               </Table>
             </Scrollbar>

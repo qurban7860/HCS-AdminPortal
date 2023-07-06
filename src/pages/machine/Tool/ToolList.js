@@ -1,19 +1,7 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Grid,
-  Card,
-  Table,
-  Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-} from '@mui/material';
+import { Grid, Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
@@ -25,24 +13,21 @@ import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify/Iconify';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import Scrollbar from '../../../components/scrollbar';
-import CustomBreadcrumbs from '../../../components/custom-breadcrumbs/CustomBreadcrumbs';
 import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import ToolListTableRow from './ToolListTableRow';
 import ToolListTableToolbar from './ToolListTableToolbar';
-import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
+// constants
+import { FORMLABELS, DIALOGS, BUTTONS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -86,26 +71,14 @@ export default function ToolList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const { tools, isLoading, error, initial, responseMessage } = useSelector((state) => state.tool);
-
-  // useLayoutEffect(() => {
-  //   dispatch(getCustomers());
-  // }, [dispatch]);
 
   useLayoutEffect(() => {
     // console.log('Testing done')
@@ -131,11 +104,8 @@ export default function ToolList() {
   });
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = dense ? 60 : 80;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -174,25 +144,6 @@ export default function ToolList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows, handleClose) => {
-    // console.log(selectedRows)
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-    handleClose();
-  };
-
   const handleEditRow = async (id) => {
     // console.log(id);
     // dispatch(getTool(id));
@@ -215,16 +166,9 @@ export default function ToolList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name="Tools" icon="material-symbols:list-alt-outline" setting="enable" />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={FORMLABELS.COVER.TOOLS} setting="enable" />
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <ToolListTableToolbar
@@ -238,40 +182,13 @@ export default function ToolList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* <TableSelectedAction
-
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            /> */}
-
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
                   onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
                 />
 
                 <TableBody>
@@ -292,7 +209,6 @@ export default function ToolList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-                  <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -307,26 +223,24 @@ export default function ToolList() {
           />
         </Card>
       </Container>
-
+      <Grid item lg={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRow(selected);
+              // handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >
-            Delete
+            {BUTTONS.DELETE}
           </Button>
         }
       />
