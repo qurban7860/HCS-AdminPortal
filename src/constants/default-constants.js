@@ -52,6 +52,16 @@ export const FORMLABELS = {
     label: 'Technical Parameter Value',
     name: 'techParamValue',
   },
+
+  // @root LicenseAddForm
+  LICENSE_KEY: {
+    label: 'License Key',
+    name: 'licenseKey',
+  },
+  LICENSE_DETAILS: {
+    label: 'License Details',
+    name: 'licenseDetail',
+  },
 };
 
 // dialog contents
@@ -90,6 +100,10 @@ export const BUTTONS = {
   NEWSITE: 'New Site',
   NEWCONTACT: 'New Contact',
   NEWSETTING: 'New Setting',
+  NEWMODEL: 'New Model',
+  NEWMACHINE: 'New Machine',
+  NEWCUSTOMER: 'New Customer',
+  NEWLICENSE: 'New License',
 
   // Add Buttons on the list pages
   ADDCUSTOMER: 'Add Customer',
@@ -106,12 +120,24 @@ export const BREADCRUMBS = {
   CUSTOMERS: 'Customers',
   NEWCONTACT: 'Add new Contact',
   NEWSITE: 'Add new Site',
+  MACHINES: 'Machines',
+  MODELS: 'Models',
+
+  // @root - MachineLicenseList
+  NEWLICENSE: ' New License',
+  LICENSE: 'License',
+  EDITLICENSE: 'Edit License',
 };
 
 export const TITLES = {
+  UNDERDEVELOPMENT: 'Under Development',
+
   // @root - GeneralAppPage - dashboard
   //  Welcome
   WELCOME: `CUSTOMER \n SERVICE & SUPPORT`,
   WELCOME_DESC:
     'Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals.',
+
+  // @root - LicenseAddForm
+  NEWLICENSE: 'New License',
 };

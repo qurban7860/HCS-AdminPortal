@@ -1,29 +1,27 @@
 import PropTypes from 'prop-types';
 import { useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
-
 // @mui
 import { Card, Grid, Stack, Typography, Button } from '@mui/material';
-// redux
-
+// hooks
+import { useDispatch, useSelector } from 'react-redux';
+import { useSnackbar } from '../../../components/snackbar';
 // paths
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import {
   setLicenseEditFormVisibility,
-  setLicenseFormVisibility,
-  updateLicense,
   getLicenses,
   getLicense,
   deleteLicense,
 } from '../../../redux/slices/products/license';
-import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import { useSnackbar } from '../../../components/snackbar';
+// constants
+import { DIALOGS } from '../../../constants/default-constants';
+import { Snacks } from '../../../constants/machine-constants';
 
 // ----------------------------------------------------------------------
 LicenseViewForm.propTypes = {
@@ -31,26 +29,22 @@ LicenseViewForm.propTypes = {
 };
 
 export default function LicenseViewForm({ currentLicense = null }) {
-  const {
-    initial,
-    error,
-    responseMessage,
-    licenseEditFormVisibility,
-    licenses,
-    license,
-    formVisibility,
-  } = useSelector((state) => state.license);
+  // const {
+  //   initial,
+  //   error,
+  //   responseMessage,
+  //   licenseEditFormVisibility,
+  //   licenses,
+  //   license,
+  //   formVisibility,
+  // } = useSelector((state) => state.license);
+
   const { machine } = useSelector((state) => state.machine);
-
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
-
   const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -71,14 +65,7 @@ export default function LicenseViewForm({ currentLicense = null }) {
       dispatch(getLicenses(machine._id));
       // dispatch(getContacts());
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
-      enqueueSnackbar('License delete failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedDeleteLicense, { variant: `error` });
       console.log('Error:', err);
     }
   };
@@ -103,27 +90,17 @@ export default function LicenseViewForm({ currentLicense = null }) {
   );
 
   return (
+    // needs cleanup
     <Grid sx={{ p: 2 }}>
-      <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mb: -4 }}>
-        <Button
-          onClick={() => handleEdit()}
-          variant="outlined"
-          startIcon={<Iconify icon="eva:edit-fill" />}
-        >
-          Edit
-        </Button>
-        <Button
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          variant="outlined"
-          color="error"
-          startIcon={<Iconify icon="eva:trash-2-fill" />}
-        >
-          Delete
-        </Button>
-      </Stack>
+      <ViewFormEditDeleteButtons
+        sx={{ pt: 5 }}
+        handleEdit={handleEdit}
+        onDelete={() => {
+          handleOpenConfirm();
+          handleClosePopover();
+        }}
+      />
+
       <Grid container>
         <Grid item xs={12} sm={6} sx={{ pt: 2 }}>
           <Grid item xs={12} sm={12}>
@@ -161,14 +138,15 @@ export default function LicenseViewForm({ currentLicense = null }) {
         <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
+
         <ConfirmDialog
           open={openConfirm}
           onClose={handleCloseConfirm}
-          title="Delete"
-          content="Are you sure want to delete?"
+          title={DIALOGS.DELETE.title}
+          content={DIALOGS.DELETE.content}
           action={
             <Button variant="contained" color="error" onClick={onDelete}>
-              Delete
+              {DIALOGS.DELETE.title}
             </Button>
           }
         />

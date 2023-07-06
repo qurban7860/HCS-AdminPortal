@@ -392,34 +392,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     )}
                   />
 
-                  {/* <Autocomplete
-                // freeSolo
-                value={ machineConnectionVal || null}
-                options={machineConnections}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setMachineConnectionVal(newValue);
-                  }
-                  else{
-                  setMachineConnectionVal("");
-                  }
-                }}
-                renderTags={(tagValue, getTagProps) =>
-                  tagValue.map((option, index) => (
-                    <Chip
-                      label={option.title}
-                      {...getTagProps({ index })}
-                    />
-                  ))
-                }
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Machine Connections" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
-
                   <Autocomplete
                     // freeSolo
                     value={statusVal || null}
@@ -664,36 +636,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     sx={{ mt: -3 }}
                   />
                 </Box>
-                {/* -------------------------start add chips------------------------- */}
-                {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
-
-                {/* <Card
-                      sx={{ di  splay: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
-                      {chipDat  a.map((data,index) =>
-                          <Lis  tItem key={index}>
-                            <C  hip
-                                label={data}
-                                onDelete={()=>handleDelete(data,index)}
-                            />
-                          </Li  stItem>
-                       )}
-                       <TextFi  eld name="tag" sx={{p:1}}   variant="standard"
-                        InputP  rops={{disableUnderline: true,}}
-                        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
-                    </Card>
-                <RHFSwitch
-                sx={{mt:-3}}
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <>
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                        Active
-                      </Typography>
-                    </>
-                  }
-                /> */}
-                {/* -------------------------end add chips------------------------- */}
                 <RHFSwitch
                   sx={{ my: -3 }}
                   name="isActive"

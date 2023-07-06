@@ -50,5 +50,5 @@ ToggleButtons.propTypes = {
   isActive: PropTypes.bool,
   isDocument: PropTypes.bool,
   isMachine: PropTypes.bool,
-  name: PropTypes.string,
+  name: PropTypes.object,
 };

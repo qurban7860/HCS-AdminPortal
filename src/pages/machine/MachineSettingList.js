@@ -34,7 +34,7 @@ import SettingEditForm from './MachineTechParamValue/SettingEditForm';
 import SettingViewForm from './MachineTechParamValue/SettingViewForm';
 import { fDate } from '../../utils/formatTime';
 // constants
-import { BUTTONS } from '../../constants/default-constants';
+import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ export default function MachineSettingList() {
             separator="›"
             sx={{ fontSize: '12px', color: 'text.disabled' }}
           >
-            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name="Machines" />
+            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
             <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
             <BreadcrumbsLink
               to={PATH_MACHINE.machines.settings}
