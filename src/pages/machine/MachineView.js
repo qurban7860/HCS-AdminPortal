@@ -59,6 +59,8 @@ import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
 import MachineToolsInstalledList from './MachineToolsInstalledList';
 
+import { CONFIG } from '../../config-global';
+
 // ----------------------------------------------------------------------
 
 /* eslint-disable */
@@ -70,9 +72,12 @@ MachineView.propTypes = {
 export default function MachineView({ editPage }) {
   const { id } = useParams();
 
-  const dispatch = useDispatch();
+  const environment = CONFIG.ENV.toLowerCase();
+  const showDevTabs = environment !== 'live';
 
+  const dispatch = useDispatch();
   const { machine, machines, machineEditFormFlag } = useSelector((state) => state.machine);
+
   const [editFlag, setEditFlag] = useState(false);
   const toggleEditFlag = () => setEditFlag((value) => !value);
 
@@ -123,13 +128,6 @@ export default function MachineView({ editPage }) {
     },
     {
       // disabled: setMachineEditFormVisibility,
-      value: 'license',
-      label: 'License',
-      icon: <Iconify icon="mdi:book-cog-outline" />,
-      component: <MachineLicenseList />,
-    },
-    {
-      // disabled: setMachineEditFormVisibility,
       value: 'toolsInstalled',
       label: 'Tools Installed',
       icon: <Iconify icon="mdi:folder-wrench" />,
@@ -149,6 +147,15 @@ export default function MachineView({ editPage }) {
       icon: <Iconify icon="mdi:folder-open" />,
       component: <DocumentList />,
     },
+    ...(showDevTabs
+      ? [
+    {
+      // disabled: setMachineEditFormVisibility,
+      value: 'license',
+      label: 'License',
+      icon: <Iconify icon="mdi:book-cog-outline" />,
+      component: <MachineLicenseList />,
+    },
     {
       // disabled: setMachineEditFormVisibility,
       value: 'repairHistory',
@@ -160,7 +167,8 @@ export default function MachineView({ editPage }) {
       value: 'serviceHistory',
       label: 'Service History',
       icon: <Iconify icon="mdi:clipboard-text-clock" />,
-    },
+    }]
+    : []),
   ];
 
   return (
