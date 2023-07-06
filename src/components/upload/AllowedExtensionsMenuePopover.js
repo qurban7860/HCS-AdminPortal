@@ -10,7 +10,7 @@ export default function AllowedExtensionsMenuePopover({open, onClose}) {
     <MenuPopover open={open} onClose={onClose} arrow='bottom-left' sx={{ p: 0, maxWidth:'900px'  }}>
       <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
         <Box sx={{ flexGrow: 1 }}>
-          <Typography variant="subtitle1">Allowed Extensions</Typography>
+          <Typography variant="subtitle1">Allowed Formats: </Typography>
               <Divider sx={{ borderStyle: 'solid' }} />
 
                 <Typography variant="body2" sx={{ color: 'text.secondary', mr: 3 }}>

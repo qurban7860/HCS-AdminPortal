@@ -39,7 +39,7 @@ export default function SiteEditForm() {
   const { site } = useSelector((state) => state.site);
   const {  customer } = useSelector((state) => state.customer);
 
-  const { contacts } = useSelector((state) => state.contact);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
   const [countryVal, setCountryVal] = useState("")
   const dispatch = useDispatch();
 
@@ -182,10 +182,10 @@ export default function SiteEditForm() {
   const onSubmit = async (data) => {
     try {
       // console.log("site Edit Data : ",data)
-      if(phone && phone.length > 7){
+      if(phone && phone.length > 4){
         data.phone = phone ;
       }
-      if(fax && fax.length > 7){
+      if(fax && fax.length > 4){
         data.fax = fax
       }
       if(countryVal){
@@ -334,7 +334,7 @@ export default function SiteEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={billingContactVal || null}
-                  options={contacts}
+                  options={activeContacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
                   onChange={(event, newValue) => {
@@ -354,7 +354,7 @@ export default function SiteEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={technicalContactVal || null}
-                  options={contacts}
+                  options={activeContacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                   getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
                   onChange={(event, newValue) => {

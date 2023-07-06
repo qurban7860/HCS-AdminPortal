@@ -27,7 +27,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   // const { users } = useSelector((state) => state.user);
 
   const { sites } = useSelector((state) => state.site);
-  const { contacts } = useSelector((state) => state.contact);
+  const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const [siteVal, setSiteVal] = useState('');
   const [contactVal, setContactVal] = useState('');
@@ -76,7 +76,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   // useLayoutEffect(() => {
   //   // dispatch(getUsers(customer._id));
   //   dispatch(getSites(customer._id));
-  //   dispatch(getContacts(customer._id));
+  //   dispatch(getactiveContacts(customer._id));
 
   // }, [dispatch,customer]);
 
@@ -151,7 +151,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                 <Autocomplete
                   // freeSolo
                   value={contactVal || null}
-                  options={contacts}
+                  options={activeContacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                   getOptionLabel={(option) =>
                     `${option.firstName ? option.firstName : ''} ${

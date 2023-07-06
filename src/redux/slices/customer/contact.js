@@ -299,11 +299,11 @@ export function getContacts(customerID ) {
 
 // ------------------------------ get Active Contacts ----------------------------------------
 
-export function getActiveSPContacts(customerID ) {
+export function getActiveSPContacts() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/sp/contacts`,
         {
           params: {
             isActive: true,

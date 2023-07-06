@@ -25,7 +25,7 @@ import {
 } from '../../../redux/slices/document/documentFile';
 import { document } from '../../../constants/document-constants';
 
-export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument, customer, getCallAfterDelete, disableDelete = false}) {
+export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument, customer, getCallAfterDelete, hideDelete = false}) {
   const [onPreview, setOnPreview] = useState(false);
   const [imageName, setImageName] = useState('');
   const [imageData, setImageData] = useState('');
@@ -110,7 +110,7 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
     <ThumbnailCard>
       <ThumbnailGrid item justifyContent="center">
         <ThumbnailCardContent component={Stack} display="block" height="110px">
-          {!disableDelete && <DeleteIconButton
+          {!hideDelete && <DeleteIconButton
             left={document.icon[file.extension] ? 76 : 44}
             onClick={() =>
               handleDelete(currentDocument._id, currentDocument?.documentVersions[0]._id, file._id)
@@ -193,7 +193,7 @@ Thumbnail.propTypes = {
   currentDocument: PropTypes.object,
   customer: PropTypes.object,
   getCallAfterDelete: PropTypes.func,
-  disableDelete: PropTypes.bool,
+  hideDelete: PropTypes.bool,
 };
 
 export default Thumbnail;

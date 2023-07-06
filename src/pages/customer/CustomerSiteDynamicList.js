@@ -23,6 +23,7 @@ import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
 import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
+import { getActiveContacts } from '../../redux/slices/customer/contact';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/sections/DetailsSection';
@@ -114,6 +115,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   useEffect(() => {
     if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
+      dispatch(getActiveContacts(customer._id));
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 

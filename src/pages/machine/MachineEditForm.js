@@ -138,7 +138,7 @@ export default function MachineEditForm() {
   }, [dispatch, customerVal]);
 
   const EditMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().required('Serial Number is required').max(10),
+    serialNo: Yup.string().required('Serial Number is required').max(6),
     name: Yup.string().max(50),
     // parentMachine: Yup.string(),
     // parentSerialNo: Yup.string(),
@@ -306,7 +306,7 @@ export default function MachineEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={parMachSerVal || null}
-                  options={machines}
+                  options={machines.filter(option => option.serialNo !== machine.serialNo)}
                   getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
                   isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                   onChange={(event, newValue) => {

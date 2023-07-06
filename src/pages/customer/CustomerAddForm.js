@@ -204,10 +204,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 7) {
+      if (phone && phone.length > 4) {
         data.phone = phone;
       }
-      if (fax && fax.length > 7) {
+      if (fax && fax.length > 4) {
         data.fax = fax;
       }
       if (country) {

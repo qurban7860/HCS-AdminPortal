@@ -33,7 +33,7 @@ export default function SiteAddForm() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const { contacts } = useSelector((state) => state.contact);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
 
@@ -305,7 +305,7 @@ useEffect(()=>{
                 <Autocomplete 
                 // freeSolo
                 value={billingContactVal || null}
-                options={contacts}
+                options={activeContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                 getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
                 onChange={(event, newValue) => {
@@ -325,7 +325,7 @@ useEffect(()=>{
                 <Autocomplete 
                 // freeSolo
                 value={technicalContactVal || null}
-                options={contacts}
+                options={activeContacts}
                 isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                 getOptionLabel={(option) => `${option.firstName ? option.firstName :''} ${option.lastName ? option.lastName: ''}`}
                 onChange={(event, newValue) => {

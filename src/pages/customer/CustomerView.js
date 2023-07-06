@@ -10,7 +10,7 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import { getSites } from '../../redux/slices/customer/site';
-import { getContacts } from '../../redux/slices/customer/contact';
+import { getContacts, getActiveContacts } from '../../redux/slices/customer/contact';
 // components
 import Iconify from '../../components/iconify';
 // sections
@@ -52,7 +52,7 @@ export default function CustomerView({ editPage }) {
     if (id !== 'null') {
       dispatch(getCustomer(id));
       dispatch(getSites(id));
-      dispatch(getContacts(id));
+      dispatch(getActiveContacts(id));
     }
   }, [dispatch, id]);
 
