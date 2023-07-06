@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import download from 'downloadjs';
 import { useTheme } from '@mui/material/styles';
 import { Stack, Tooltip, Typography } from '@mui/material';
+import { getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
+import { getDocumentHistory } from '../../../redux/slices/document/document';
 import {
   ThumbnailCard,
   ThumbnailCardContent,
