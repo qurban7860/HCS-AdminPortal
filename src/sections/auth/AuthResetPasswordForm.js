@@ -24,7 +24,7 @@ export default function AuthResetPasswordForm() {
   const navigate = useNavigate();
 
   const ResetPasswordSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    login: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const methods = useForm({
@@ -74,7 +74,7 @@ export default function AuthResetPasswordForm() {
           {errors.afterSubmit.message}
       </Alert>}
       
-      <RHFTextField name="email" label="Email address" />
+      <RHFTextField name="login" label="Email/Login " />
 
       <LoadingButton
         fullWidth
