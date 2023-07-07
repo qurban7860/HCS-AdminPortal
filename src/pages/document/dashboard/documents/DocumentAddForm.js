@@ -237,7 +237,8 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
   };
 
   const AddDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(50),
+    displayName: Yup.string().max(40, 'Document Name must not exceed 40 characters'),
+    // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
     .required('File is required!')
@@ -719,7 +720,7 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
                     <RHFTextField
                       required
                       disabled={readOnlyVal}
-                      name="name"
+                      name="displayName"
                       value={displayNameVal}
                       label="Document Name"
                       onChange={(e) => {
