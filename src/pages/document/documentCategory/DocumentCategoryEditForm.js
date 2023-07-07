@@ -119,7 +119,7 @@ export default function DocumentCategoryeEditForm() {
               <Card sx={{ p: 3 }}>
                 <Stack spacing={3}>
                   <FormHeading heading='Edit Document Category'/>
-                  <RHFTextField name="name" label="Name" />
+                  <RHFTextField name="name" label="Category Name" />
                   <RHFTextField name="description" label="Description" minRows={8} multiline />
                   <Grid display="flex">
                   <RHFSwitch

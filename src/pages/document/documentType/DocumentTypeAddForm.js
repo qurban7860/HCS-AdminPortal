@@ -80,13 +80,11 @@ export default function DocumentTypeAddForm({currentDocument}) {
   },[dispatch]);
 
   const onSubmit = async (data) => {
-    console.log("Document Type : ", data);
       try{
         if(documentCategoryVal){
           data.docCategory= documentCategoryVal._id 
         }
         const response = await dispatch(addDocumentType(data));
-        // console.log("response : ",response);
         reset();
         enqueueSnackbar('Document Save Successfully!');
         navigate(PATH_SETTING.documentType.list)
@@ -144,7 +142,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     {/* </Grid> */}
-              <RHFTextField name="name" label="Name" />
+              <RHFTextField name="name" label="Type Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               <Grid display="flex">
               <RHFSwitch name="customerAccess" labelPlacement="start" label={

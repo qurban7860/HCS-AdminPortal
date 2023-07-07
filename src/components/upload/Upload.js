@@ -152,7 +152,7 @@ export default function Upload({
         {hasFile && <SingleFilePreview file={file} />}
       </StyledDropZone>
       <Typography variant="body2" sx={{display: 'flex', justifyContent:'start', alignItems:'center', ml:2, mt:0.5}}>
-        Allowed Extensions: <Iconify onClick={ handleExtensionsPopoverOpen } icon="iconamoon:question-mark-circle-bold" sx={{ cursor:'pointer'}}/>
+        Allowed Formats: <Iconify onClick={ handleExtensionsPopoverOpen } icon="iconamoon:question-mark-circle-bold" sx={{ cursor:'pointer'}}/>
       </Typography>
        <AllowedExtensionsMenuePopover 
         open={verifiedAnchorEl}

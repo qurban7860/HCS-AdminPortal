@@ -74,10 +74,8 @@ export default function DocumentCategoryAddForm({currentDocument}) {
   },[]);
 
   const onSubmit = async (data) => {
-    // console.log("Document Category : ", data);
       try{
         const response = await dispatch(addDocumentCategory(data));
-        console.log("response : ",response);
         reset();
         enqueueSnackbar('Document Save Successfully!');
         navigate(PATH_SETTING.documentCategory.list)
@@ -108,7 +106,7 @@ export default function DocumentCategoryAddForm({currentDocument}) {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }} >
             <Stack spacing={2}>
-              <RHFTextField name="name" label="Name" />
+              <RHFTextField name="name" label="Category Name" />
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               <Grid display="flex">
               <RHFSwitch name="customerAccess" labelPlacement="start" label={
