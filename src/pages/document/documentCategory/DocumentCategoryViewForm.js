@@ -60,7 +60,6 @@ export default function DocumentCategoryViewForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentCategory]
   );
-console.log("documentCategory : ", documentCategory, defaultValues.customerAccess, defaultValues.description)
   return (
     <Card sx={{p:2}}>
       <Grid >
@@ -74,7 +73,7 @@ console.log("documentCategory : ", documentCategory, defaultValues.customerAcces
             </Tooltip>
           </Grid>
         <Grid container>
-            <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+            <ViewFormField sm={6} heading="Category Name" param={defaultValues.name} />
             <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
             {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
             <ViewFormAudit  defaultValues={defaultValues}/>
