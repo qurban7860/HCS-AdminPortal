@@ -6,13 +6,13 @@ import { TextField } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
-RHFDescriptionTextField.propTypes = {
+RHFDescription.propTypes = {
   name: PropTypes.string,
   schema: PropTypes.object,
   helperText: PropTypes.node,
 };
 
-export default function RHFDescriptionTextField({ name,schema, helperText, ...other }) {
+export default function RHFDescription({ name,schema, helperText, ...other }) {
   const { control, formState: { errors }, setValue } = useFormContext();
 
   return (

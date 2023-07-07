@@ -49,6 +49,7 @@ import FormProvider, {
   RHFSelect,
   RHFMultiSelect,
   RHFTextField,
+  RHFName,
   RHFSwitch,
   RHFUpload,
 } from '../../../../components/hook-form';
@@ -717,7 +718,7 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
                   )}
 
                   {selectedValue === 'new' && (
-                    <RHFTextField
+                    <RHFName
                       required
                       disabled={readOnlyVal}
                       name="displayName"
@@ -757,8 +758,7 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
                           { shouldValidate: true }
                         )
                       }
-                      onRemoveAll={() => setValue('multiUpload', [], { shouldValidate: true })}
-                      onUpload={() => console.log('ON UPLOAD')}
+                      onRemoveAll={() => setValue('multiUpload', '', { shouldValidate: true })}
                     />
                     
                     </Grid>
