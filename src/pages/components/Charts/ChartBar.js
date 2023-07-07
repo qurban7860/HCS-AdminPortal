@@ -8,7 +8,7 @@ ChartBar.propTypes = {
   seriesData: PropTypes.array,
 };
 export default function ChartBar({ optionsData, seriesData }) {
-  const series = [{ name: 'Customers', data: seriesData }];
+  const series = [{ name: 'Machines', data: seriesData }];
   const chartOptions = useChart({
     stroke: { show: false },
     plotOptions: {
