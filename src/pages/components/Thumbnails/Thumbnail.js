@@ -159,11 +159,17 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
             }
             theme={theme}
           />
-          {file?.fileType.startsWith('image') && (
+          {file?.fileType.startsWith('image') && file.thumbnail && (
             <ThumbnailCardMedia
               component="img"
               image={`data:image/png;base64, ${file?.thumbnail}`}
               alt="Document photo was here"
+            />
+          )}
+          {file?.fileType.startsWith('image') && !file.thumbnail && (
+            <ThumbnailIconify
+              icon={document.icon.img}
+              color={document.color.img}
             />
           )}
           {document.icon[file.extension] && document.color[file.extension] && (

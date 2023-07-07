@@ -360,8 +360,9 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus })
   if (filterName) {
     inputData = inputData.filter(
       (document) =>
-        document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

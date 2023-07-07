@@ -60,7 +60,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
         <Grid sx={{ margin: '0 auto', mt: -2, mb: 1 }}>
           <Typography
               // variant="body2"
-              sx={{ margin: '0 auto', mt: -1, mb: 3, color: '#897A69', fontsize: '0.5px' }}
+              sx={{ margin: '0 auto', mt: -1, mb: 3, color: '#897A69', fontSize:'10px' }}
               >
            {CONFIG.Version}
           </Typography>

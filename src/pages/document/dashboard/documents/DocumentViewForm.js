@@ -35,6 +35,7 @@ export default function Document() {
   const { enqueueSnackbar } = useSnackbar();
 
   const { document, documentHistory } = useSelector((state) => state.document);
+  // console.log("documentHistory : ", documentHistory)
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   // console.log("document : ",document)
