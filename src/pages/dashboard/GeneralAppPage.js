@@ -42,8 +42,8 @@ export default function GeneralAppPage() {
 
   const modelWiseMachineNumber = [];
   const modelWiseMachineModel = [];
-  const countryWiseCustomerCountNumber = [];
-  const countryWiseCustomerCountCountries = [];
+  const countryWiseMachineCountNumber = [];
+  const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
   
@@ -56,10 +56,10 @@ export default function GeneralAppPage() {
   }
 
   
-  if (count && count.countryWiseCustomerCount) {
-    count.countryWiseCustomerCount.map((customer) => {
-      countryWiseCustomerCountNumber.push(customer.count);
-      countryWiseCustomerCountCountries.push(customer._id);
+  if (count && count.countryWiseMachineCount) {
+    count.countryWiseMachineCount.map((customer) => {
+      countryWiseMachineCountNumber.push(customer.count);
+      countryWiseMachineCountCountries.push(customer._id);
       return null;
     });
   }
@@ -96,13 +96,13 @@ export default function GeneralAppPage() {
         id: 'basic-bar',
       },
       xaxis: {
-        categories: countryWiseCustomerCountCountries,
+        categories: countryWiseMachineCountCountries,
       },
     },
     series: [
       {
         name: 'Customers',
-        data: countryWiseCustomerCountNumber,
+        data: countryWiseMachineCountNumber,
       },
     ],
   };
@@ -180,7 +180,7 @@ export default function GeneralAppPage() {
                 icon="mdi:account-group"
                 color="warning"
                 chart={{
-                  series: countryWiseCustomerCountNumber,
+                  series: countryWiseMachineCountNumber,
                 }}
               />
             </Grid>
@@ -240,8 +240,8 @@ export default function GeneralAppPage() {
                 </Stack>
                 <Divider />
                 <ChartBar
-                  optionsData={countryWiseCustomerCountCountries}
-                  seriesData={countryWiseCustomerCountNumber}
+                  optionsData={countryWiseMachineCountCountries}
+                  seriesData={countryWiseMachineCountNumber}
                   type="bar"
                   height="300px"
                   width="100%"
@@ -257,7 +257,7 @@ export default function GeneralAppPage() {
                 variants={varFade().inDown}
               >
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine Performance</Typography>
+                  <Typography variant="h6">Machine</Typography>
                 </Stack>
                 <Divider />
                 <ChartBar
