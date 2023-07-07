@@ -45,7 +45,7 @@ export function Cover({
   generalSettings,
 }) {
   const navigate = useNavigate();
-  const handleNavigate = () => {navigate(PATH_MACHINE.machines.settings.root);};
+  const handleNavigate = () => {navigate(PATH_MACHINE.machines.settings.app);};
   const handleSettingsNavigate = () => { navigate(PATH_SETTING.app)};
   const handleBacklink = () => {navigate(backLink)};
 

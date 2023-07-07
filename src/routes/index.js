@@ -286,7 +286,7 @@ export default function Router() {
                 { path: ':id/edit', element: <MachineEdit /> }, 
                 { path: 'settings',
                   children: [
-                  {path: 'root', element: <MachineSetting />},
+                  {path: 'app', element: <MachineSetting />},
                   {
                     path: 'categories',
                     children:[
