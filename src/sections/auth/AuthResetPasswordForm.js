@@ -74,7 +74,7 @@ export default function AuthResetPasswordForm() {
           {errors.afterSubmit.message}
       </Alert>}
       
-      <RHFTextField name="login" label="Email address" />
+      <RHFTextField name="login" label="Email/Login " />
 
       <LoadingButton
         fullWidth
