@@ -10,7 +10,9 @@ export const FORMLABELS = {
     EDIT_MODEL: 'Edit Model',
     MACHINE_PLACEHOLDER: 'Machine',
     TOOLS: 'Tools',
+    SETTINGS: 'Settings',
     CUSTOMERS: 'Customers',
+    DOCUMENTS: 'Documents',
   },
   // @root FormLabels
   HOWICK: 'Howick Resources',
@@ -18,8 +20,14 @@ export const FORMLABELS = {
   CUSTOMER: 'Customer Information',
   SITE: 'Site Information',
   SITELOC: 'Site Location',
+  KEYDETAILS: 'Key Details',
   BILLING_CONTACT: 'Billing Contact Information',
   TECHNICAL_CONTACT: 'Technical Contact Information',
+
+  // @root - Machine -settings
+  COMMON_SETTINGS: 'Common Settings',
+  TECHNICAL_SETTINGS: 'Technical Settings',
+  TOOLS_INFO: ' Tools Information',
 
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
@@ -161,4 +169,7 @@ export const TITLES = {
 
   // @root - LicenseAddForm
   NEWLICENSE: 'New License',
+
+  // @root -MachineViewForm - site location
+  NO_SITELOC: 'No site location was provided',
 };

@@ -104,7 +104,6 @@ export default function DocumentListTableRow({
           <Switch checked={customerAccess} disabled size="small" />{' '}
         </TableCell>
         <TableCell align="center">
-          {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>

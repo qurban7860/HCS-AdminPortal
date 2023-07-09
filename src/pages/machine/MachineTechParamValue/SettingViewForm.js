@@ -5,11 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Switch, Card, Grid, Stack, Typography, Button } from '@mui/material';
+import { Grid } from '@mui/material';
 // redux
 import {
   setSettingEditFormVisibility,
-  setSettingFormVisibility,
   deleteSetting,
   getSettings,
   getSetting,

@@ -4,8 +4,6 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Switch,
-  Grid,
   Card,
   Table,
   Button,
@@ -14,7 +12,6 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
@@ -41,6 +38,8 @@ import DocumentListTableToolbar from './DocumentListTableToolbar';
 import { getDocuments, deleteDocument } from '../../../../redux/slices/document/document';
 import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import { FORMLABELS } from '../../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -174,15 +173,9 @@ export default function DocumentList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
-          <Cover name="Documents List" icon="ph:users-light" />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={FORMLABELS.COVER.CUSTOMERS} />
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <DocumentListTableToolbar

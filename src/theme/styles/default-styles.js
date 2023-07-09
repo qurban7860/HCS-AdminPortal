@@ -1,5 +1,5 @@
 import { styled, alpha } from '@mui/material/styles';
-import { Popover, Stack, Card, Container } from '@mui/material';
+import { Popover, Stack, Card, Container, TableRow } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { m } from 'framer-motion';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
@@ -112,6 +112,22 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
   pointerEvents: 'none',
 }));
 
+/**
+ * @table :components ____________________________________________________________________________________________
+ */
+
+// @root - StyledTableRow -
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: 'white',
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: '#f4f6f866',
+  },
+}));
+
+// --------------------------------------------------------------------------------------------
+
 // @root - GeneralAppPage - dashboard
 
 export const StyledContainer = styled(Container)(({ theme }) => ({
@@ -141,7 +157,6 @@ export const StyledGlobalCard = styled(Card)(({ theme }) => ({
 }));
 
 // --------------------------------------------------------------------------------------------
-
 /**
  * @styled components from minimal layout
  */

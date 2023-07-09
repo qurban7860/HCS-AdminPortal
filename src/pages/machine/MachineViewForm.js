@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs } from '@mui/material';
+import { StyledSettingsCardContainer } from '../../theme/styles/machine-styles';
 // routes
 import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
 // slices
@@ -18,6 +19,7 @@ import { getCustomer } from '../../redux/slices/customer/customer';
 import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
+import { useSnackbar } from '../../components/snackbar';
 // components
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
@@ -27,11 +29,12 @@ import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDelet
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
 import CommaJoinField from '../components/Defaults/CommaJoinField';
-import { useSnackbar } from '../../components/snackbar';
-import { DIALOGS, BREADCRUMBS } from '../../constants/default-constants';
-import { Snacks } from '../../constants/machine-constants';
 import FormLabel from '../components/DocumentForms/FormLabel';
+import NothingProvided from '../components/Defaults/NothingProvided';
 import GoogleMaps from '../../assets/GoogleMaps';
+// constants
+import { DIALOGS, BREADCRUMBS, TITLES, FORMLABELS } from '../../constants/default-constants';
+import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
 
@@ -237,7 +240,7 @@ export default function MachineViewForm() {
           </Grid>
 
           <Grid container>
-            <FormLabel content="Key Details" />
+            <FormLabel content={FORMLABELS.KEYDETAILS} />
             <Grid container>
               <Card sx={{ width: '100%', p: '1rem' }}>
                 <Grid container>
@@ -318,7 +321,7 @@ export default function MachineViewForm() {
           </Grid>
 
           <Grid container>
-            <FormLabel content="Howick Resources" />
+            <FormLabel content={FORMLABELS.HOWICK} />
             <ViewFormField
               sm={6}
               heading="Account Manager"
@@ -341,11 +344,11 @@ export default function MachineViewForm() {
           </Grid>
 
           <Grid container>
-            <FormLabel content="Sites Locations" />
+            <FormLabel content={FORMLABELS.SITELOC} />
             {hasValidLatLong ? (
               <GoogleMaps machineView latlongArr={latLongValues} mapHeight="500px" />
             ) : (
-              <ViewFormField sm={6} heading="No Site Locations Available" />
+              <NothingProvided content={TITLES.NO_SITELOC} />
             )}
           </Grid>
 
@@ -354,6 +357,7 @@ export default function MachineViewForm() {
           </Grid>
         </Card>
       </Grid>
+
       {/* // primary billing dialog */}
       <Dialog
         open={openCustomer}

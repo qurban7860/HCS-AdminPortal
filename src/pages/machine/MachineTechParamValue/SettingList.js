@@ -23,15 +23,11 @@ import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
-  TableSelectedAction,
   TablePaginationCustom,
 } from '../../../components/table';
-import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
@@ -39,6 +35,7 @@ import SiteListTableRow from './SettingListTableRow';
 import SiteListTableToolbar from './SettingListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
 import Cover from '../../components/Defaults/Cover';
+import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -108,7 +105,7 @@ export default function SettingList() {
       }
       setTableData(sites);
     }
-  }, [sites, error, responseMessage, enqueueSnackbar, initial]);
+  }, [enqueueSnackbar]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -192,7 +189,7 @@ export default function SettingList() {
     <>
       <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Cover name="Setting List" icon="material-symbols:list-alt-outline" setting="enable" />
+          <Cover name={FORMLABELS.COVER.SETTINGS} setting="enable" />
         </Grid>
         <Card>
           <SiteListTableToolbar
