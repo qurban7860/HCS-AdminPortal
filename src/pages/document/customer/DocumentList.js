@@ -209,6 +209,7 @@ export default function DocumentList() {
                 </Grid>
               </Grid>
             )}
+
             <Grid item xs={12} md={9} mt={1}>
               <SearchInput
                 // searchFormVisibility={formVisibility || contactEditFormVisibility}

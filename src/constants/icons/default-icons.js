@@ -109,4 +109,24 @@ export const ICONS = {
     icon: 'mdi:tools',
     heading: 'Tools',
   },
+
+  // @root - Settings - settings
+  // document settings
+  DOCUMENT_TYPE: {
+    icon: 'mdi:rename',
+    heading: 'Document Type',
+  },
+  DOCUMENT_CATEGORY: {
+    icon: 'ic:round-category',
+    heading: 'Document Category',
+  },
+  // security settings
+  SECURITY_ROLES: {
+    icon: 'carbon:user-role',
+    heading: 'User Roles',
+  },
+  SIGNIN_LOGS: {
+    icon: 'mdi:clipboard-text',
+    heading: 'User Sign In Logs',
+  },
 };

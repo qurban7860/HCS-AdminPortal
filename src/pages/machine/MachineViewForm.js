@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs } from '@mui/material';
-import { StyledSettingsCardContainer } from '../../theme/styles/machine-styles';
 // routes
 import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
 // slices

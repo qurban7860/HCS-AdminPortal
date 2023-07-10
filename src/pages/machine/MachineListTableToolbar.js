@@ -4,8 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Stack } from '@mui/material';
 // components
 import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
+// routes
 import { PATH_MACHINE } from '../../routes/paths';
+// constants
 import { BUTTONS } from '../../constants/default-constants';
+// styles
 import { options } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------

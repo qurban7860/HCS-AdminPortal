@@ -29,6 +29,10 @@ export const FORMLABELS = {
   TECHNICAL_SETTINGS: 'Technical Settings',
   TOOLS_INFO: ' Tools Information',
 
+  // @root - Settings
+  DOCUMENT_SETTINGS: 'Document Settings',
+  SECURITY_SETTINGS: 'Security Settings',
+
   // @root DocumentAddForm in dashboard/documents
   SELECT_CUSTOMER: 'Select Customer',
   SELECT_SITE: 'Select Site',
@@ -120,11 +124,17 @@ export const BUTTONS = {
   ADDCUSTOMER: 'Add Customer',
   ADDMACHINE: 'Add Machine',
   ADDUSER: 'Add User',
-  ADDMODEL: 'Add Model',
   ADDSITE: 'Add Site',
+  // settings
+  ADDCATEGORY: 'Add Category',
+  ADDMODEL: 'Add Model',
+  ADDSUPPLIER: 'Add Supplier',
+  ADDSTATUS: 'Add Status',
+  ADDTECHPARAM: 'Add Technical Parameter',
+
+  // documents
   ADDDOCUMENT: 'Add Document',
   ADDSETTING: 'Add Setting',
-  ADDCATEGORY: 'Add Category',
   ADDTOOL: 'Add Tool',
 };
 

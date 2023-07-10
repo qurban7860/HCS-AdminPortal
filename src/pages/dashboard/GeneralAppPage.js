@@ -10,8 +10,13 @@ import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
 // assets
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count';
+// components
+import ProductionLog from '../components/Charts/ProductionLog';
+import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
 // constants
 import { TITLES } from '../../constants/default-constants';
+// dummy data
+import { _appAuthors } from '../../_mock/arrays/_app';
 
 // ----------------------------------------------------------------------
 
@@ -163,8 +168,9 @@ export default function GeneralAppPage() {
             </Grid>
 
             {/* Production Log */}
+            {/* hide this in the live, but show in development and test  */}
             {/* don't delete, will be activated once integrated with the HLC */}
-            {/* <Grid item xs={12} md={6} lg={8}>
+            <Grid item xs={12} md={6} lg={8}>
               <ProductionLog
                 title="Production Log"
                 chart={{
@@ -190,15 +196,16 @@ export default function GeneralAppPage() {
                 sx={{ bg: 'transparent' }}
               />
               <StyledBg />
-            </Grid> */}
+            </Grid>
 
             {/* Operators */}
+            {/* hide this in the live, but show in development and test  */}
             {/* don't delete, will be activated once integrated with the HLC */}
-            {/* <Grid item xs={12} lg={4}>
+            <Grid item xs={12} lg={4}>
               <Grid item>
                 <HowickOperators title="Operators" list={_appAuthors} />
               </Grid>
-            </Grid> */}
+            </Grid>
           </Grid>
         </Grid>
 

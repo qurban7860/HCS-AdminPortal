@@ -7,19 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import {
-  Switch,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Autocomplete,
-  TextField,
-  Dialog,
-} from '@mui/material';
+import { Switch, Box, Card, Grid, Stack, Autocomplete, TextField, Dialog } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // slice

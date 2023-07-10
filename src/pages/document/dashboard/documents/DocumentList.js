@@ -16,7 +16,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
+import { PATH_DOCUMENT } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import { useSettingsContext } from '../../../../components/settings';
