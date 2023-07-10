@@ -164,6 +164,7 @@ export function addCategory(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          connections: params.connections
         };
         /* eslint-enable */
         if(params.description){
@@ -190,13 +191,13 @@ export function updateCategory(params,Id) {
         name: params.name,
         isActive: params.isActive,
         description: params.description,
+        connections: params.connections
       };
      /* eslint-enable */
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );
       dispatch(getCategories(params.id));
-      dispatch(slice.actions.setEditFormVisibility(false));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
