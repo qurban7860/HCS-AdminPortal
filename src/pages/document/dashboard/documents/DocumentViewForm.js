@@ -30,7 +30,9 @@ import { Thumbnail } from '../../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DialogLink from '../../../components/Dialog/DialogLink';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
-import { document as documentType } from '../../../../constants/document-constants';
+// constants
+import { document as documentType, FORMLABELS } from '../../../../constants/document-constants';
+import { FORMLABELS as DIALOGLABELS } from '../../../../constants/default-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 
 // ----------------------------------------------------------------------
@@ -49,6 +51,10 @@ export default function Document() {
   // console.log("document : ",document)
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openMachine, setOpenMachine] = useState(false);
+  const [onPreview, setOnPreview] = useState(false);
+  const [imageData, setImageData] = useState(false);
+  const [imageName, setImageName] = useState('');
+  const [imageExtension, setImageExtension] = useState('');
 
   useEffect(() => {
     dispatch(resetActiveDocuments());
@@ -149,11 +155,6 @@ export default function Document() {
       });
   };
 
-  const [onPreview, setOnPreview] = useState(false);
-  const [imageData, setImageData] = useState(false);
-  const [imageName, setImageName] = useState('');
-  const [imageExtension, setImageExtension] = useState('');
-
   const handleOpenPreview = () => {
     setOnPreview(true);
   };
@@ -187,6 +188,7 @@ export default function Document() {
         }
       });
   };
+
   const callAfterDelete = () => {
     dispatch(getDocumentHistory(id));
   };
@@ -198,20 +200,19 @@ export default function Document() {
         <Grid container>
           <Grid item md={12} mt={2}>
             <Card sx={{ p: 3 }}>
-              {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
               <Grid display="inline-flex">
-                <Tooltip>
-                  <ViewFormField isActive={defaultValues.isActive} />
-                </Tooltip>
-                <Tooltip>
-                  <ViewFormField customerAccess={defaultValues?.customerAccess} />
-                </Tooltip>
+                <ViewFormField isActive={defaultValues.isActive} />
+                <ViewFormField customerAccess={defaultValues?.customerAccess} />
               </Grid>
               <Grid container>
-                <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
                 <ViewFormField
                   sm={6}
-                  heading="Active Version"
+                  heading={FORMLABELS.DOCUMENT_NAME}
+                  param={defaultValues?.displayName}
+                />
+                <ViewFormField
+                  sm={6}
+                  heading={FORMLABELS.ACTIVE_VERSION}
                   objectParam={
                     defaultValues.documentVersion && (
                       <Typography display="flex">
@@ -222,13 +223,12 @@ export default function Document() {
                 />
                 <ViewFormField
                   sm={6}
-                  heading="Document Category"
-                  param={defaultValues?.docCategory}
+                  heading={FORMLABELS.DOCUMENT_TYPE}
+                  param={defaultValues?.docType}
                 />
-                <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
                 <ViewFormField
                   sm={6}
-                  heading="Customer"
+                  heading={FORMLABELS.DOCUMENT_CUSTOMER}
                   objectParam={
                     defaultValues.customer && (
                       <Link onClick={handleOpenCustomer} href="#" underline="none">
@@ -239,7 +239,7 @@ export default function Document() {
                 />
                 <ViewFormField
                   sm={6}
-                  heading="Machine"
+                  heading={FORMLABELS.DOCUMENT_MACHINE}
                   objectParam={
                     defaultValues.machine && (
                       <Link onClick={handleOpenMachine} href="#" underline="none">
@@ -248,7 +248,11 @@ export default function Document() {
                     )
                   }
                 />
-                <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+                <ViewFormField
+                  sm={12}
+                  heading={FORMLABELS.DOCUMENT_DESC}
+                  param={defaultValues?.description}
+                />
                 <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                   <ViewFormAudit defaultValues={defaultValues} />
                 </Grid>
@@ -258,7 +262,11 @@ export default function Document() {
                       <Grid container sx={{ pt: '2rem' }} mb={1}>
                         <FormLabel content={`Version No. ${files?.versionNo}`} />
                         {defaultValues.description !== files?.description && (
-                          <ViewFormField sm={12} heading="Description" param={files?.description} />
+                          <ViewFormField
+                            sm={12}
+                            heading={FORMLABELS.DOCUMENT_DESC}
+                            param={files?.description}
+                          />
                         )}
                       </Grid>
                       {files?.files?.map((file) => (
@@ -282,6 +290,7 @@ export default function Document() {
           </Grid>
         </Grid>
       </Container>
+
       {/* dialog for customer */}
       <Dialog
         open={openCustomer}
@@ -289,24 +298,64 @@ export default function Document() {
         keepMounted
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogLabel onClick={handleCloseCustomer} content="Customer" />
+        <DialogLabel onClick={handleCloseCustomer} content={DIALOGLABELS._def.CUSTOMER} />
         <Grid item container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <FormLabel content="Address Information" />
-          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
+          <ViewFormField sm={12} heading={FORMLABELS.CUSTOMER.NAME} param={customer?.name} />
           <ViewFormField
             sm={6}
-            heading="Primary Biling Contact"
+            heading={FORMLABELS.CUSTOMER.TRADING_NAME}
+            param={customer?.tradingName}
+          />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.PHONE}
+            param={customer?.mainSite?.phone}
+          />
+          <ViewFormField sm={6} heading={FORMLABELS.CUSTOMER.FAX} param={customer?.mainSite?.fax} />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.EMAIL}
+            param={customer?.mainSite?.email}
+          />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.SITE_NAME}
+            param={customer?.mainSite?.name}
+          />
+          <FormLabel content={DIALOGLABELS.ADDRESS} />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.ADDRESS.STREET}
+            param={customer?.mainSite?.address?.street}
+          />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.ADDRESS.SUBURB}
+            param={customer?.mainSite?.address?.suburb}
+          />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.ADDRESS.CITY}
+            param={customer?.mainSite?.address?.city}
+          />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.ADDRESS.REGION}
+            param={customer?.mainSite?.address?.region}
+          />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.ADDRESS.POSTCODE}
+            param={customer?.mainSite?.address?.postcode}
+          />
+          <ViewFormField
+            sm={12}
+            heading={FORMLABELS.CUSTOMER.ADDRESS.COUNTRY}
+            param={customer?.mainSite?.address?.country}
+          />
+          <ViewFormField
+            sm={6}
+            heading={FORMLABELS.CUSTOMER.BILLING}
             param={
               customer?.primaryBillingContact &&
               `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
@@ -314,7 +363,7 @@ export default function Document() {
           />
           <ViewFormField
             sm={6}
-            heading="Primary Technical Contact"
+            heading={FORMLABELS.CUSTOMER.TECHNICAL}
             param={
               customer?.primaryTechnicalContact &&
               `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
@@ -322,22 +371,22 @@ export default function Document() {
           />
         </Grid>
         <Grid item container sx={{ px: 2, pb: 3 }}>
-          <FormLabel content="Howick Resources" />
+          <FormLabel content={DIALOGLABELS.HOWICK} />
           <ViewFormField
             sm={6}
-            heading="Account Manager"
+            heading={FORMLABELS.CUSTOMER.ACCOUNT}
             param={customer?.accountManager?.firstName}
             secondParam={customer?.accountManager?.lastName}
           />
           <ViewFormField
             sm={6}
-            heading="Project Manager"
+            heading={FORMLABELS.CUSTOMER.PROJECT}
             param={customer?.projectManager?.firstName}
             secondParam={customer?.projectManager?.lastName}
           />
           <ViewFormField
             sm={6}
-            heading="Suppport Manager"
+            heading={FORMLABELS.CUSTOMER.SUPPORT}
             param={customer?.supportManager?.firstName}
             secondParam={customer?.supportManager?.lastName}
           />

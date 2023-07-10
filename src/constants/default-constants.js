@@ -1,5 +1,12 @@
 export const FORMLABELS = {
   // Default FormLabels
+  _def: {
+    CUSTOMER: 'Customer',
+    MACHINE: 'Machine',
+    USER: 'User',
+    DOCUMENT: 'Document',
+  },
+
   isACTIVE: {
     label: 'Active',
     name: 'isActive',

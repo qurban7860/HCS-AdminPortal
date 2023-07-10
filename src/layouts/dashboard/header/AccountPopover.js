@@ -38,23 +38,10 @@ import { defaultSettings } from '../../../components/settings/config-setting';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import { TITLES } from '../../../constants/default-constants';
+import { OPTIONS } from './util/OptionsListItems';
 
 // ----------------------------------------------------------------------
 const SPACING = 2.5;
-const OPTIONS = [
-  {
-    label: 'Home',
-    linkTo: '/',
-  },
-  {
-    label: 'Profile',
-    linkTo: PATH_SECURITY.users.profile,
-  },
-  {
-    label: 'Change Password',
-    linkTo: PATH_SECURITY.users.password,
-  },
-];
 
 // ----------------------------------------------------------------------
 

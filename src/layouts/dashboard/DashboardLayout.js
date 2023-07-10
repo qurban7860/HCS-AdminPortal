@@ -12,19 +12,15 @@ import Header from './header';
 import NavMini from './nav/NavMini';
 import NavVertical from './nav/NavVertical';
 import NavHorizontal from './nav/NavHorizontal';
-import { HEADER, NAV,CONFIG } from '../../config-global';
+import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardLayout() {
   const { themeLayout } = useSettingsContext();
-
   const isDesktop = useResponsive('up', 'lg');
-
   const [open, setOpen] = useState(false);
-
   const isNavHorizontal = themeLayout === 'horizontal';
-
   const isNavMini = themeLayout === 'mini';
 
   const handleOpen = () => {
@@ -40,10 +36,8 @@ export default function DashboardLayout() {
   if (isNavHorizontal) {
     return (
       <>
-        <Header onOpenNav={handleOpen} sx={{backgroundColor: bgcolor}} />
-
+        <Header onOpenNav={handleOpen} sx={{ backgroundColor: bgcolor }} />
         {isDesktop ? <NavHorizontal /> : renderNavVertical}
-
         <Main>
           <Outlet />
         </Main>
@@ -54,8 +48,7 @@ export default function DashboardLayout() {
   if (isNavMini) {
     return (
       <>
-        <Header onOpenNav={handleOpen} sx={{backgroundColor: bgcolor}}/>
-
+        <Header onOpenNav={handleOpen} sx={{ backgroundColor: bgcolor }} />
         <Box
           sx={{
             display: { lg: 'flex' },
@@ -75,7 +68,6 @@ export default function DashboardLayout() {
   return (
     <>
       <Header onOpenNav={handleOpen} />
-
       <Box
         sx={{
           display: { lg: 'flex' },

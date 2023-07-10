@@ -165,3 +165,38 @@ export const Snacks = {
   fileMaxSize: 'File size should be less than 10MB',
   fileMaxCount: 'Maximum 10 files can be uploaded at a time.',
 };
+
+// @root - DocumentViewForm - documents dashboard
+export const FORMLABELS = {
+  DOCUMENT_NAME: 'Name',
+  ACTIVE_VERSION: 'Active Version',
+  DOCUMENT_CATEGORY: 'Document Category',
+  DOCUMENT_TYPE: 'Document Type',
+  DOCUMENT_CUSTOMER: 'Customer',
+  DOCUMENT_MACHINE: 'Machine',
+  DOCUMENT_DESC: 'Description',
+
+  // dialog customer
+  CUSTOMER: {
+    NAME: 'Name',
+    TRADING_NAME: 'Trading Name',
+    PHONE: 'Phone',
+    FAX: 'Fax',
+    EMAIL: 'Email',
+    WEBSITE: 'Website',
+    SITE_NAME: 'Site Name',
+    ADDRESS: {
+      STREET: 'Street',
+      SUBURB: 'Suburb',
+      CITY: 'City',
+      REGION: 'Region',
+      POSTCODE: 'Post Code',
+      COUNTRY: 'Country',
+    },
+    BILLING: 'Primary Billing Contact',
+    TECHNICAL: 'Primary Technical Contact',
+    ACCOUNT: 'Account Manager',
+    PRORJECT: 'Project Manager',
+    SUPPORT: 'Support Manager',
+  },
+};
