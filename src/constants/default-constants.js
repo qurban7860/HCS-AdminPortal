@@ -124,6 +124,7 @@ export const BUTTONS = {
   ADDSITE: 'Add Site',
   ADDDOCUMENT: 'Add Document',
   ADDSETTING: 'Add Setting',
+  ADDCATEGORY: 'Add Category',
   ADDTOOL: 'Add Tool',
 };
 
