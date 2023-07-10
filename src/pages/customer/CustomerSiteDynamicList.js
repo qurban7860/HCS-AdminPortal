@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
+import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs, Typography } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -33,6 +33,7 @@ import SearchInput from '../components/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
+import ViewFormField from '../components/ViewFormField';
 
 // ----------------------------------------------------------------------
 
@@ -305,20 +306,29 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 }}
                 setIsExpanded={setIsExpanded}
               />
-              <Grid item lg={12} spacing={2}>
+              <Grid item lg={12} spacing={3}>
                 {!isMobile && (
-                  <Grid container direction="row" gap={1}>
+                  <Grid container direction="row" gap={4}>
                     <Grid item md={12}>
-                      <Card>
-                        <CardActionArea>
-                          {site?.lat && site?.long && (
-                            <GoogleMaps
-                              lat={site?.lat ? site.lat : 0}
-                              lng={site?.long ? site.long : 0}
-                            />
-                          )}
-                        </CardActionArea>
-                      </Card>
+                        {site?.lat && site?.long ? (
+                          <Card>
+                            <CardActionArea>
+                              <GoogleMaps
+                                lat={site?.lat ? site.lat : 0}
+                                lng={site?.long ? site.long : 0}
+                              />
+                            </CardActionArea>
+                          </Card>
+                        ) : 
+                        
+                        <Typography variant="overline" sx={{ color: 'text.disabled', fontStyle: 'italic', m: 1 }}>
+                          Fill GPS COORDINATES TO VIEW LOCATIONS ON MAP
+                         </Typography>
+                          // <ViewFormField
+                          //   sm={12}
+                          //   heading="Fill GPS(LAT LONG) COORDINATES TO SEE VIEW LOCATION ON MAPS"
+                          // />
+                        }                     
                     </Grid>
 
                     <Grid item md={12}>

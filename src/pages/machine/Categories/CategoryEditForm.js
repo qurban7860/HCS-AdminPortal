@@ -120,7 +120,7 @@ export default function CategoryEditForm() {
                     label={
                       <>
                         <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                          Connections
+                          Connectable as child
                         </Typography>
                       </>
                     } 
