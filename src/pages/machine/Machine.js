@@ -1,9 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { Container, Grid, List } from '@mui/material';
-// hooks
-import { useTheme } from '@mui/material/styles';
-// redux
-import { useDispatch } from '../../redux/store';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
 // components
@@ -19,8 +15,6 @@ import { ICONS } from '../../constants/icons/default-icons';
 // ----------------------------------------------------------------------
 
 export default function Machine() {
-  const dispatch = useDispatch();
-  const theme = useTheme();
   const navigate = useNavigate();
 
   // Functions to navigate to different pages

@@ -5,7 +5,16 @@ import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 import useResponsive from '../../../hooks/useResponsive';
 
-function SearchBarCombo({ isFiltered, value, onChange, onClick, SubOnClick, addButton, ...other }) {
+function SearchBarCombo({
+  isFiltered,
+  value,
+  onChange,
+  onClick,
+  SubOnClick,
+  addButton,
+  isDisabled,
+  ...other
+}) {
   const isMobile = useResponsive('down', 'sm');
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -38,19 +47,21 @@ function SearchBarCombo({ isFiltered, value, onChange, onClick, SubOnClick, addB
           </Button>
         )}
       </Grid>
-      <Grid item xs={12} sm={3}>
-        <Stack alignItems="flex-end">
-          <Button
-            sx={{ p: 1 }}
-            fullWidth={isMobile}
-            onClick={SubOnClick}
-            variant="contained"
-            startIcon={<Iconify icon="eva:plus-fill" />}
-          >
-            {addButton}
-          </Button>
-        </Stack>
-      </Grid>
+      {!isDisabled && (
+        <Grid item xs={12} sm={3}>
+          <Stack alignItems="flex-end">
+            <Button
+              sx={{ p: 1 }}
+              fullWidth={isMobile}
+              onClick={SubOnClick}
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              {addButton}
+            </Button>
+          </Stack>
+        </Grid>
+      )}
     </Grid>
   );
 }
@@ -62,6 +73,7 @@ SearchBarCombo.propTypes = {
   value: PropTypes.string,
   SubOnClick: PropTypes.func,
   addButton: PropTypes.string,
+  isDisabled: PropTypes.bool,
 };
 
 export default SearchBarCombo;

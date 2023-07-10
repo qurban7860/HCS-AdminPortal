@@ -136,6 +136,10 @@ export const BUTTONS = {
   ADDDOCUMENT: 'Add Document',
   ADDSETTING: 'Add Setting',
   ADDTOOL: 'Add Tool',
+
+  // security
+  ADDROLE: 'Add Role',
+  ADDDOCUMENT_CATEGORY: 'Add Document Category',
 };
 
 export const BREADCRUMBS = {
