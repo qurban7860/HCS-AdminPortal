@@ -100,7 +100,7 @@ export default function DocumentListTableRow({
         <TableCell align="left">{docType?.name}</TableCell>
         <TableCell align="left">{docCategory?.name}</TableCell>
         <TableCell align="center">
-          {' '}
+          
           <Switch checked={customerAccess} disabled size="small" />{' '}
         </TableCell>
         <TableCell align="center">

@@ -85,6 +85,7 @@ export default function ViewFormField({
         {numberParam || ''}
         &nbsp;
       </Typography>
+
       {/* popover for verification list */}
       <ViewFormMenuPopover
         open={verifiedAnchorEl}

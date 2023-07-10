@@ -3,16 +3,7 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import download from 'downloadjs';
-import {
-  Container,
-  Grid,
-  Card,
-  Tooltip,
-  Typography,
-  Dialog,
-  Link,
-  DialogContent,
-} from '@mui/material';
+import { Container, Grid, Card, Typography, Dialog, Link, DialogContent } from '@mui/material';
 import { PATH_CUSTOMER, PATH_MACHINE, PATH_DOCUMENT } from '../../../../routes/paths';
 import { useSnackbar } from '../../../../components/snackbar';
 import ViewFormAudit from '../../../components/ViewForms/ViewFormAudit';
@@ -32,14 +23,14 @@ import DialogLink from '../../../components/Dialog/DialogLink';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 // constants
 import { document as documentType, FORMLABELS } from '../../../../constants/document-constants';
-import { FORMLABELS as DIALOGLABELS } from '../../../../constants/default-constants';
+import { FORMLABELS as DIALOGLABELS, DIALOGS } from '../../../../constants/default-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
+import DialogsCustomer from './Dialogs/DialogsCustomer';
 
 // ----------------------------------------------------------------------
 
 export default function Document() {
   const dispatch = useDispatch();
-  // const theme = useTheme();
   const navigate = useNavigate();
   const { id } = useParams();
   const regEx = /^[^2]*/;
@@ -290,7 +281,12 @@ export default function Document() {
           </Grid>
         </Grid>
       </Container>
-
+      {/* <DialogsCustomer
+        open={openCustomer}
+        onClose={handleCloseCustomer}
+        customer={customer}
+        onClick={() => handleViewCustomer(customer._id)}
+      /> */}
       {/* dialog for customer */}
       <Dialog
         open={openCustomer}
@@ -391,7 +387,7 @@ export default function Document() {
             secondParam={customer?.supportManager?.lastName}
           />
         </Grid>
-        <DialogLink onClick={() => handleViewCustomer(customer._id)} content="Go to customer" />
+        <DialogLink onClick={() => handleViewCustomer(customer._id)} content={DIALOGS.CUSTOMER} />
       </Dialog>
 
       {/* dialog for machine */}
