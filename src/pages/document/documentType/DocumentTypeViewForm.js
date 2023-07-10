@@ -26,9 +26,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 
 export default function DocumentTypeViewForm() {
   const { documentType } = useSelector((state) => state.documentType);
-  // console.log("documentType : ",documentType)
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -79,7 +77,7 @@ export default function DocumentTypeViewForm() {
         </Grid>
         <Grid container>
           <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
-          <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+          <ViewFormField sm={6} heading="Type Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
           {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
           <ViewFormAudit defaultValues={defaultValues} />

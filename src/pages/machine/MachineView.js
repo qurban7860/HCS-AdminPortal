@@ -3,11 +3,8 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Container, Box, tabsClasses } from '@mui/material';
-import { useTheme } from '@emotion/react';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 import TabContainer from '../components/Tabs/TabContainer';
-// routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getMachine } from '../../redux/slices/products/machine';
@@ -20,6 +17,8 @@ import MachineEditForm from './MachineEditForm';
 import { TABS as TABSFunc } from './util/Tabs';
 import { FORMLABELS } from '../../constants/default-constants';
 
+import { CONFIG } from '../../config-global';
+
 // ----------------------------------------------------------------------
 
 /* eslint-disable */
@@ -30,6 +29,8 @@ MachineView.propTypes = {
 
 export default function MachineView({ editPage }) {
   const { id } = useParams();
+  const environment = CONFIG.ENV.toLowerCase();
+  const showDevTabs = environment !== 'live';
   const dispatch = useDispatch();
   const { machine, machines, machineEditFormFlag } = useSelector((state) => state.machine);
   const [editFlag, setEditFlag] = useState(false);

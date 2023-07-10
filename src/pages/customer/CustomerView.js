@@ -1,16 +1,13 @@
-import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Card, Tabs, Container, Box, tabsClasses } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getCustomer } from '../../redux/slices/customer/customer';
 import { getSites } from '../../redux/slices/customer/site';
-import { getContacts } from '../../redux/slices/customer/contact';
+import { getActiveContacts } from '../../redux/slices/customer/contact';
 // components
 import Iconify from '../../components/iconify';
 // sections
@@ -52,7 +49,7 @@ export default function CustomerView({ editPage }) {
     if (id !== 'null') {
       dispatch(getCustomer(id));
       dispatch(getSites(id));
-      dispatch(getContacts(id));
+      dispatch(getActiveContacts(id));
     }
   }, [dispatch, id]);
 

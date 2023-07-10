@@ -107,10 +107,10 @@ export default function StatusAddForm() {
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 7) {
+      if (phone && phone.length > 4) {
         data.phone = phone;
       }
-      if (fax && fax.length > 7) {
+      if (fax && fax.length > 4) {
         data.fax = fax;
       }
       if (country) {
@@ -144,7 +144,7 @@ export default function StatusAddForm() {
                 display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
-                <RHFTextField name="name" label="Name" />
+                <RHFTextField name="name" label="Name*" />
               </Box>
             </Stack>
           </Card>
@@ -202,8 +202,8 @@ export default function StatusAddForm() {
                     <RHFTextField name="street" label="Street" />
                     <RHFTextField name="suburb" label="Suburb" />
                     <RHFTextField name="city" label="City" />
-                    <RHFTextField name="postcode" label="Post Code" />
                     <RHFTextField name="region" label="Region" />
+                    <RHFTextField name="postcode" label="Post Code" />
                     <RHFAutocomplete
                       id="country-select-demo"
                       options={countries}

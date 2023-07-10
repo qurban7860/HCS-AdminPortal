@@ -99,13 +99,11 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   }, [dispatch]);
 
   const onSubmit = async (data) => {
-    console.log('Document Type : ', data);
     try {
       if (documentCategoryVal) {
         data.docCategory = documentCategoryVal._id;
       }
       const response = await dispatch(addDocumentType(data));
-      // console.log("response : ",response);
       reset();
       enqueueSnackbar('Document Save Successfully!');
       navigate(PATH_SETTING.documentType.list);
@@ -116,7 +114,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.documentName.list);
+    navigate(PATH_SETTING.documentType.list);
     dispatch(setDocumentTypeFormVisibility(false));
     dispatch(setMachineDocumentFormVisibility(true));
     dispatch(setCustomerDocumentFormVisibility(true));
@@ -144,7 +142,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                   value={documentCategoryVal || null}
                   options={activeDocumentCategories}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
-                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                  getOptionLabel={(option) => `${option.name && option.name}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setDocumentCategoryVal(newValue);
@@ -163,8 +161,8 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                   )}
                   ChipProps={{ size: 'small' }}
                 />
-                {/* </Grid> */}
-                <RHFTextField name="name" label="Name" />
+
+                <RHFTextField name="name" label="Type Name" />
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex">
                   <RHFSwitch
@@ -201,7 +199,6 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                           color: 'text.secondary',
                         }}
                       >
-                        {' '}
                         Active
                       </Typography>
                     }

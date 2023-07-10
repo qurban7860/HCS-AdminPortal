@@ -7,6 +7,7 @@ export const document = {
     xlsx: 'mdi:file-excel',
     ppt: 'mdi:file-powerpoint',
     pptx: 'mdi:file-powerpoint',
+    img:  'mdi:file-image'
   },
   color: {
     pdf: '#f44336',
@@ -16,6 +17,7 @@ export const document = {
     xlsx: '#388e3c',
     ppt: '#e65100',
     pptx: '#e65100',
+    img: '#0f8c20',
   },
 };
 

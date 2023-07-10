@@ -150,12 +150,12 @@ export default function SupplierEditForm() {
   const onSubmit = async (data) => {
     try {
       console.log(typeof phone);
-      if (phone && phone.length > 7) {
+      if (phone && phone.length > 4) {
         data.phone = phone;
       } else {
         data.phone = '';
       }
-      if (fax && fax.length > 7) {
+      if (fax && fax.length > 4) {
         data.fax = fax;
       } else {
         data.fax = '';
@@ -191,7 +191,7 @@ export default function SupplierEditForm() {
                 display="grid"
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
-                <RHFTextField name="name" label="Name" />
+                <RHFTextField name="name" label="Name*" />
               </Box>
             </Stack>
           </Card>
@@ -248,8 +248,8 @@ export default function SupplierEditForm() {
                 <RHFTextField name="street" label="Street" />
                 <RHFTextField name="suburb" label="Suburb" />
                 <RHFTextField name="city" label="City" />
-                <RHFTextField name="postcode" label="Post Code" />
                 <RHFTextField name="region" label="Region" />
+                <RHFTextField name="postcode" label="Post Code" />
                 <RHFAutocomplete
                   id="country-select-demo"
                   options={countries}

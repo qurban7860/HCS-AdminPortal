@@ -74,6 +74,7 @@ export default function DocumentList() {
     machineDocumentEditFormVisibility,
     machineDocumentFormVisibility,
   } = useSelector((state) => state.machineDocument);
+  // console.log("machineDocuments : ", machineDocuments)
   const { documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
   const { documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { machine } = useSelector((state) => state.machine);
@@ -93,7 +94,7 @@ export default function DocumentList() {
       !machineDocumentFormVisibility &&
       !machineDocumentEditFormVisibility
     ) {
-      console.log('machineDocumentFormVisibility : ', machineDocumentFormVisibility);
+      // console.log("machineDocumentFormVisibility : ",machineDocumentFormVisibility)
       dispatch(getMachineDocuments(machine?._id));
     }
     if (!machineDocumentEditFormVisibility) {
@@ -361,8 +362,9 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   if (filterName) {
     inputData = inputData.filter(
       (document) =>
-        document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

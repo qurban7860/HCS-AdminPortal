@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   categories: [],
+  activeCategories: [],
   category: {},
 };
 
@@ -45,6 +46,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.categories = action.payload;
+      state.initial = true;
+    },
+    // GET Active Categories
+    getActiveCategoriesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCategories = action.payload;
       state.initial = true;
     },
     // GET Category
@@ -118,6 +126,30 @@ export function getCategories (){
 
 // ----------------------------------------------------------------------
 
+export function getActiveCategories (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      dispatch(slice.actions.getActiveCategoriesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
 export function getCategory(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
@@ -164,6 +196,7 @@ export function addCategory(params) {
         let data = {
           name: params.name,
           isActive: params.isActive,
+          connections: params.connections
         };
         /* eslint-enable */
         if(params.description){
@@ -190,13 +223,13 @@ export function updateCategory(params,Id) {
         name: params.name,
         isActive: params.isActive,
         description: params.description,
+        connections: params.connections
       };
      /* eslint-enable */
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );
       dispatch(getCategories(params.id));
-      dispatch(slice.actions.setEditFormVisibility(false));
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));

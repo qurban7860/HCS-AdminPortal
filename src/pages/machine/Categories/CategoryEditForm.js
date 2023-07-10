@@ -1,35 +1,19 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo } from 'react';
+import { useEffect, useLayoutEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { LoadingButton } from '@mui/lab';
-import {
-  Box,
-  Card,
-  Container,
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
-} from '@mui/material';
+import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import {
   updateCategory,
   setCategoryEditFormVisibility,
   getCategory,
-  getCategories,
 } from '../../../redux/slices/products/category';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
@@ -49,6 +33,7 @@ export default function CategoryEditForm() {
     name: Yup.string().min(2).max(50).required('Name is required'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
+    connections: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -56,10 +41,12 @@ export default function CategoryEditForm() {
       name: category?.name || '',
       description: category?.description || '',
       isActive: category.isActive,
+      connections: category.connections || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [category]
   );
+
   const methods = useForm({
     resolver: yupResolver(EditCategorySchema),
     defaultValues,
@@ -123,25 +110,44 @@ export default function CategoryEditForm() {
                 >
                   <RHFTextField name="name" label="Name" />
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Active
-                      </Typography>
-                    }
-                  />
+                  <Grid display="flex" alignItems="end">
+                    <RHFSwitch
+                      name="isActive"
+                      labelPlacement="start"
+                      label={
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
+                          Active
+                        </Typography>
+                      }
+                    />
+                    <RHFSwitch
+                      name="connections"
+                      labelPlacement="start"
+                      label={
+                        <Typography
+                          variant="subtitle2"
+                          sx={{
+                            mx: 0,
+                            width: 1,
+                            justifyContent: 'space-between',
+                            mb: 0.5,
+                            color: 'text.secondary',
+                          }}
+                        >
+                          Connectable as child
+                        </Typography>
+                      }
+                    />
+                  </Grid>
                 </Box>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

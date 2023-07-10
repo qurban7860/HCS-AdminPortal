@@ -1,13 +1,10 @@
-import { blue } from '@mui/material/colors';
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
 import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Breadcrumbs, Tooltip } from '@mui/material';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormLabel from '../components/DocumentForms/FormLabel';
@@ -62,13 +59,6 @@ export default function CustomerViewForm() {
       await dispatch(deleteCustomer(customer._id));
       navigate(PATH_CUSTOMER.list);
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
       enqueueSnackbar(Snacks.FAILED_DELETE, { variant: `error` });
       console.log('Error:', err);
     }
@@ -150,8 +140,8 @@ export default function CustomerViewForm() {
               </Tooltip>
             </Grid>
             <Grid container>
-              <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-              <ViewFormField sm={6} heading="Trading Name" param={defaultValues?.tradingName} />
+              <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
+              <ViewFormField sm={12} heading="Trading Name" chips={defaultValues?.tradingName} />
               <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
               <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
               <ViewFormField sm={6} heading="Email" param={defaultValues?.mainSite?.email} />

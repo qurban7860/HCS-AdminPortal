@@ -64,7 +64,7 @@ const STATUS_OPTIONS = [
 ];
 
 const TABLE_HEAD = [
-  { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
+  // { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
   { id: 'serialNumber', label: 'Serial Number', align: 'left' },
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
   { id: 'machineName', label: 'Name', align: 'left' },

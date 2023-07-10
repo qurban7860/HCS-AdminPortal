@@ -4,14 +4,19 @@ import { StyledCardCover } from '../../../theme/styles/document-styles';
 import { Cover } from '../Defaults/Cover';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 
-export default function DocumentCover({ content }) {
+export default function DocumentCover({ content, backLink }) {
   return (
     <StyledCardCover>
-      <Cover name={content} icon="ph:users-light" backLink={PATH_DOCUMENT.document.list} />
+      <Cover
+        name={content}
+        icon="ph:users-light"
+        backLink={backLink && PATH_DOCUMENT.document.list}
+      />
     </StyledCardCover>
   );
 }
 
 DocumentCover.propTypes = {
   content: PropTypes.string,
+  backLink: PropTypes.bool,
 };

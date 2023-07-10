@@ -21,7 +21,6 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 
 export default function DocumentCategoryViewForm() {
   const { documentCategory } = useSelector((state) => state.documentCategory);
-  // console.log("documentCategory : ",documentCategory)
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -47,6 +46,7 @@ export default function DocumentCategoryViewForm() {
       isActive: documentCategory?.isActive,
       customerAccess: documentCategory?.customerAccess,
       name: documentCategory?.name,
+      documentTypes: documentCategory?.documentTypes || [],
       description: documentCategory?.description || '',
       createdAt: documentCategory?.createdAt || '',
       createdByFullName: documentCategory?.createdBy?.name || '',
@@ -57,12 +57,6 @@ export default function DocumentCategoryViewForm() {
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [documentCategory]
-  );
-  console.log(
-    'documentCategory : ',
-    documentCategory,
-    defaultValues.customerAccess,
-    defaultValues.description
   );
   return (
     <Card sx={{ p: 2 }}>
@@ -77,8 +71,13 @@ export default function DocumentCategoryViewForm() {
           </Tooltip>
         </Grid>
         <Grid container>
-          <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
+          <ViewFormField sm={12} heading="Category Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
+          <ViewFormField
+            sm={12}
+            heading="Document Types"
+            arrayParam={defaultValues.documentTypes}
+          />
           {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

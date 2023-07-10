@@ -29,13 +29,9 @@ export default function CategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt } = row;
-
+  const { name, isActive, connections, createdAt } = row;
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
-
-  // console.log('dep', departmentName);
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -60,6 +56,10 @@ export default function CategoryListTableRow({
 
         <TableCell align="center">
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
+        </TableCell>
+
+        <TableCell align="center">
+          <Switch checked={connections || false} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>

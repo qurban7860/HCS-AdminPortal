@@ -25,6 +25,7 @@ import {
   Dialog,
   InputAdornment,
 } from '@mui/material';
+import { MuiChipsInput } from 'mui-chips-input'
 import { DatePicker } from '@mui/x-date-pickers';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
@@ -96,8 +97,9 @@ export default function MachineEditForm() {
   const [currTag, setCurrTag] = useState('');
   const [chipData, setChipData] = useState([]);
   const [machineConnectionVal, setMachineConnectionVal] = useState([]);
-  console.log('machineconnectionVal : ', machineConnectionVal);
+  // console.log('machineconnectionVal : ', machineConnectionVal);
   const [connections, setConnections] = useState([]);
+  const [chips, setChips] = useState([])
 
   useLayoutEffect(() => {
     dispatch(getCustomers());
@@ -107,6 +109,7 @@ export default function MachineEditForm() {
     dispatch(getSuppliers());
     dispatch(getSPContacts());
     dispatch(getMachineConnections());
+    setChips(machine?.alias)
     setParMachineVal(machine?.parentMachine);
     setParMachSerVal(machine?.parentMachine);
     setStatusVal(machine?.status);
@@ -138,7 +141,7 @@ export default function MachineEditForm() {
   }, [dispatch, customerVal]);
 
   const EditMachineSchema = Yup.object().shape({
-    serialNo: Yup.string().required('Serial Number is required').max(10),
+    serialNo: Yup.string().required('Serial Number is required').max(6),
     name: Yup.string().max(50),
     // parentMachine: Yup.string(),
     // parentSerialNo: Yup.string(),
@@ -216,8 +219,11 @@ export default function MachineEditForm() {
   };
 
   const onSubmit = async (data) => {
-    console.log('installationDate------->', installationDate);
-    console.log('shippingDate------->', shippingDate);
+    // console.log('installationDate------->', installationDate);
+    // console.log('shippingDate------->', shippingDate);
+    if (chips && chips.length > 0) {
+      data.alias = chips;
+    }
     data.parentMachine = parMachineVal?._id || null;
     data.parentSerialNo = parMachSerVal?.serialNo || null;
     data.supplier = supplierVal?._id || null;
@@ -282,6 +288,10 @@ export default function MachineEditForm() {
     setCurrTag(e.target.value);
   };
 
+  const handleChipChange = (newChips) => {
+    setChips(newChips)
+  }
+
   //   const toggleCancel = () =>
   //     {
   //       dispatch(setMachineEditFormVisibility(false));
@@ -292,9 +302,8 @@ export default function MachineEditForm() {
       <Grid container spacing={4}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={6}>
+            <Stack spacing={3}>
               <Box
-                sx={{ mb: -3 }}
                 rowGap={3}
                 columnGap={2}
                 display="grid"
@@ -302,11 +311,19 @@ export default function MachineEditForm() {
               >
                 <RHFTextField name="serialNo" label="Serial No." disabled />
                 <RHFTextField name="name" label="Name" />
-
+              </Box>
+                <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
+              <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
+                
                 <Autocomplete
                   // freeSolo
                   value={parMachSerVal || null}
-                  options={machines}
+                  options={machines.filter(option => option.serialNo !== machine.serialNo)}
                   getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
                   isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                   onChange={(event, newValue) => {
@@ -477,7 +494,6 @@ export default function MachineEditForm() {
                 gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
               >
                 <Autocomplete
-                  sx={{ my: -3 }}
                   value={customerVal || null}
                   options={customers}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -582,7 +598,6 @@ export default function MachineEditForm() {
                   name="siteMilestone"
                   label="Nearby Milestone"
                   multiline
-                  sx={{ my: -3 }}
                 />
               </Box>
               <Box
@@ -681,7 +696,6 @@ export default function MachineEditForm() {
                   label="Description"
                   minRows={8}
                   multiline
-                  sx={{ my: -3 }}
                 />
               </Box>
               {/* -------------------------start add chips------------------------- */}

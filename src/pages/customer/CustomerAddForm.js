@@ -19,6 +19,7 @@ import {
   Autocomplete,
   TextField,
 } from '@mui/material';
+import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { addCustomer } from '../../redux/slices/customer/customer';
 import { getSPContacts } from '../../redux/slices/customer/contact';
@@ -28,7 +29,7 @@ import { AddCustomerSchema } from './schemas/AddCustomerSchema';
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFSwitch, RHFAutocomplete, RHFTextField } from '../../components/hook-form';
+import FormProvider, { RHFAutocomplete, RHFTextField } from '../../components/hook-form';
 import { MotionContainer, varBounce } from '../../components/animate';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -53,11 +54,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { spContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
   const [contactFlag, setCheckboxFlag] = useState(false);
+  const [chips, setChips] = useState([]);
+
   const toggleCheckboxFlag = () => setCheckboxFlag((value) => !value);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const numberRegExp = /^[0-9]+$/;
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
   const [country, setCountryVal] = useState('');
@@ -71,7 +73,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     () => ({
       name: '',
       mainSite: '',
-      tradingName: '',
+      // tradingName: chips   ,
       // accountManager: null,
       // projectManager: null,
       // supportManager: null,
@@ -86,8 +88,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [AddCustomerSchema]
   );
-
-  // console.log('samecheckboxflag', defaultValues.contactFlag);
 
   const methods = useForm({
     resolver: yupResolver(AddCustomerSchema),
@@ -141,10 +141,13 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
 
   const onSubmit = async (data) => {
     try {
-      if (phone && phone.length > 7) {
+      if (phone && phone.length > 4) {
         data.phone = phone;
       }
-      if (fax && fax.length > 7) {
+      if (chips && chips.length > 0) {
+        data.tradingName = chips;
+      }
+      if (fax && fax.length > 4) {
         data.fax = fax;
       }
       if (country) {
@@ -165,7 +168,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       if (supportManVal) {
         data.supportManager = supportManVal._id;
       }
-      console.log('customer : ', data);
+      // console.log('customer : ', data);
       dispatch(addCustomer(data));
       reset();
       enqueueSnackbar('Create success!');
@@ -174,6 +177,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
     }
+  };
+
+  const handleChipChange = (newChips) => {
+    console.log('newChips : ', newChips);
+    setChips(newChips);
   };
 
   return (
@@ -196,13 +204,28 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
+                sm: 'repeat(1, 1fr)',
               }}
             >
               <RHFTextField name="name" label="Customer Name" />
 
-              <RHFTextField name="tradingName" label="Trading Name" />
-
+              {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
+              <MuiChipsInput
+                name="tradingName"
+                label="Trading Name"
+                value={chips}
+                onChange={handleChipChange}
+              />
+            </Box>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput
                 value={phone}

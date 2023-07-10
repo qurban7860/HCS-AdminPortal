@@ -167,7 +167,7 @@ export default function DocumentTypeEditForm() {
                   )}
                   ChipProps={{ size: 'small' }}
                 />
-                <RHFTextField name="name" label="Name" />
+                <RHFTextField name="name" label="Type Name" />
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex">
                   <RHFSwitch

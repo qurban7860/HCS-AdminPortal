@@ -85,10 +85,10 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Category Name" param={defaultValues?.category?.name} />
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+        <ViewFormField sm={6} heading="Category Name" param={defaultValues?.category?.name} />
         <ViewFormField sm={6} heading="Description" param={defaultValues?.description} />
-
+        <ViewFormSWitch isActive={defaultValues.isActive} />
         <Grid container sx={{ mt: 2 }}>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

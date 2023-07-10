@@ -37,7 +37,14 @@ import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFUpload } from '../../../../components/hook-form';
+import FormProvider, {
+  RHFSelect,
+  RHFMultiSelect,
+  RHFTextField,
+  RHFName,
+  RHFSwitch,
+  RHFUpload,
+} from '../../../../components/hook-form';
 // assets
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
@@ -226,7 +233,8 @@ export default function DocumentAddForm({
   };
 
   const AddDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(50),
+    displayName: Yup.string().max(40, 'Document Name must not exceed 40 characters'),
+    // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
       .required('File is required!')
@@ -699,12 +707,12 @@ export default function DocumentAddForm({
                 )}
 
                 {selectedValue === 'new' && (
-                  <RHFTextField
+                  <RHFName
                     required
                     disabled={readOnlyVal}
-                    name="name"
+                    name="displayName"
                     value={displayNameVal}
-                    label={FORMLABELS.DOCUMENT_NAME}
+                    label="Document Name"
                     onChange={(e) => {
                       setDisplayNameVal(e.target.value);
                     }}
@@ -717,7 +725,7 @@ export default function DocumentAddForm({
                     value={descriptionVal}
                     name="description"
                     onChange={handleChangeDescription}
-                    label={FORMLABELS.DOCUMENT_DESC}
+                    label="Description"
                     minRows={3}
                     multiline
                   />
@@ -739,8 +747,7 @@ export default function DocumentAddForm({
                           { shouldValidate: true }
                         )
                       }
-                      onRemoveAll={() => setValue('multiUpload', [], { shouldValidate: true })}
-                      onUpload={() => console.log('ON UPLOAD')}
+                      onRemoveAll={() => setValue('multiUpload', '', { shouldValidate: true })}
                     />
                   </Grid>
                 )}

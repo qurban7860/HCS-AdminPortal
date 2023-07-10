@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-anonymous-default-export
 import PropTypes from 'prop-types';
-import { useMemo, useState, useEffect, useLayoutEffect, Suspense, lazy } from 'react';
+import { useMemo, useState, useLayoutEffect, Suspense } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Grid, Typography, Link, Tooltip } from '@mui/material';
@@ -10,14 +10,12 @@ import {
   deleteMachineDocument,
   getMachineDocuments,
   getMachineDocument,
-  updateMachineDocument,
   resetMachineDocument,
   getMachineDocumentHistory,
 } from '../../../redux/slices/document/machineDocument';
 // paths
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 // components
-import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
@@ -31,7 +29,6 @@ const Loadable = (Component) => (props) =>
       <Component {...props} />
     </Suspense>
   );
-const DownloadComponent = Loadable(lazy(() => import('../DownloadDocument')));
 
 // ----------------------------------------------------------------------
 
@@ -40,8 +37,8 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   const { machineDocument } = useSelector((state) => state.machineDocument);
   const { machine, machines } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
-  const [ disableDeleteButton, setDisableDeleteButton ] = useState(false);
-  const [ disableEditButton, setDisableEditButton ] = useState(false);
+  const [disableDeleteButton, setDisableDeleteButton] = useState(false);
+  const [disableEditButton, setDisableEditButton] = useState(false);
 
   useLayoutEffect(() => {
     if (machine.transferredMachine) {
@@ -52,7 +49,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
       setDisableEditButton(false);
     }
   }, [machine]);
-  
+
   // console.log(machineDocument)
   // console.log("currentMachineDocument", currentMachineDocument)
   const navigate = useNavigate();
@@ -109,14 +106,14 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
   );
   const callAfterDelete = () => {
     dispatch(getMachineDocuments(machine._id));
-  }
+  };
   return (
     <Grid sx={{ mt: -2 }}>
       <ViewFormEditDeleteButtons
         disableEditButton={disableEditButton}
-        disableDeleteButton={disableDeleteButton} 
-        handleEdit={handleEdit} 
-        onDelete={onDelete} 
+        disableDeleteButton={disableDeleteButton}
+        handleEdit={handleEdit}
+        onDelete={onDelete}
       />
       <Grid sm={12} display="flex">
         <Tooltip>
@@ -159,7 +156,7 @@ export default function DocumentViewForm({ currentMachineDocument = null }) {
                 file={file}
                 currentDocument={currentMachineDocument}
                 customer={machine}
-                disableDelete={!machine.transferredMachine}
+                hideDelete={machine.transferredMachine}
                 getCallAfterDelete={callAfterDelete}
               />
             ))}

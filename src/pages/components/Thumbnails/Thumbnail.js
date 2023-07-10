@@ -30,7 +30,7 @@ export function Thumbnail({
   currentDocument,
   customer,
   getCallAfterDelete,
-  disableDelete = false,
+  hideDelete = false,
 }) {
   const [onPreview, setOnPreview] = useState(false);
   const [imageName, setImageName] = useState('');
@@ -116,7 +116,7 @@ export function Thumbnail({
     <ThumbnailCard>
       <ThumbnailGrid item justifyContent="center">
         <ThumbnailCardContent component={Stack} display="block" height="110px">
-          {!disableDelete && (
+          {!hideDelete && (
             <DeleteIconButton
               left={document.icon[file.extension] ? 76 : 44}
               onClick={() =>
@@ -171,12 +171,15 @@ export function Thumbnail({
             }
             theme={theme}
           />
-          {file?.fileType.startsWith('image') && (
+          {file?.fileType.startsWith('image') && file.thumbnail && (
             <ThumbnailCardMedia
               component="img"
               image={`data:image/png;base64, ${file?.thumbnail}`}
               alt="Document photo was here"
             />
+          )}
+          {file?.fileType.startsWith('image') && !file.thumbnail && (
+            <ThumbnailIconify icon={document.icon.img} color={document.color.img} />
           )}
           {document.icon[file.extension] && document.color[file.extension] && (
             <ThumbnailIconify
@@ -205,7 +208,7 @@ Thumbnail.propTypes = {
   currentDocument: PropTypes.object,
   customer: PropTypes.object,
   getCallAfterDelete: PropTypes.func,
-  disableDelete: PropTypes.bool,
+  hideDelete: PropTypes.bool,
 };
 
 export default Thumbnail;

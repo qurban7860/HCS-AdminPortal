@@ -1,6 +1,9 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate, useSelector } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 // @mui
 import { Container, Grid, List } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
@@ -17,12 +20,11 @@ import { ICONS } from '../../constants/icons/default-icons';
 
 export default function Setting() {
   const navigate = useNavigate();
-
   // Functions to navigate to different pages
-  const linkDocumentName = () => {
+  const linkDocumentType = () => {
     navigate(PATH_SETTING.documentType.list);
   };
-  const linkFileCategory = () => {
+  const linkDocumentCategory = () => {
     navigate(PATH_SETTING.documentCategory.list);
   };
   const linkRole = () => {
@@ -48,14 +50,14 @@ export default function Setting() {
               subheader={<ListItemsHeader header={FORMLABELS.DOCUMENT_SETTINGS} />}
             >
               <ListItem
-                onClick={linkDocumentName}
-                icon={ICONS.DOCUMENT_TYPE.icon}
-                content={ICONS.DOCUMENT_TYPE.heading}
-              />
-              <ListItem
-                onClick={linkFileCategory}
+                onClick={linkDocumentCategory}
                 icon={ICONS.DOCUMENT_CATEGORY.icon}
                 content={ICONS.DOCUMENT_CATEGORY.heading}
+              />
+              <ListItem
+                onClick={linkDocumentType}
+                icon={ICONS.DOCUMENT_TYPE.icon}
+                content={ICONS.DOCUMENT_TYPE.heading}
               />
             </List>
           </StyledSettingsCardContainer>

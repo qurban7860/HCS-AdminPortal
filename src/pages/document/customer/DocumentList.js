@@ -1,7 +1,5 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
 // @mui
 import {
   Stack,
@@ -16,7 +14,7 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 // components
 import useResponsive from '../../../hooks/useResponsive';
 import { useTable, getComparator, TableNoData } from '../../../components/table';
@@ -30,11 +28,7 @@ import {
   setCustomerDocumentEditFormVisibility,
   getCustomerDocuments,
 } from '../../../redux/slices/document/customerDocument';
-import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
-import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
 import DocumentAddForm from './DocumentAddForm';
-import { getMachines } from '../../../redux/slices/products/machine';
-import { getCustomers } from '../../../redux/slices/customer/customer';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
@@ -351,8 +345,9 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus })
   if (filterName) {
     inputData = inputData.filter(
       (document) =>
-        document?.category?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.documentName?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

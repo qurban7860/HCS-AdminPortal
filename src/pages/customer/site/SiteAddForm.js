@@ -32,7 +32,7 @@ export default function SiteAddForm() {
 
   const { customer } = useSelector((state) => state.customer);
 
-  const { contacts } = useSelector((state) => state.contact);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
 
   const dispatch = useDispatch();
 
@@ -349,9 +349,7 @@ export default function SiteAddForm() {
                   options={contacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                   getOptionLabel={(option) =>
-                    `${option.firstName ? option.firstName : ''} ${
-                      option.lastName ? option.lastName : ''
-                    }`
+                    `${option.firstName && option.firstName} ${option.lastName && option.lastName}`
                   }
                   onChange={(event, newValue) => {
                     if (newValue) {
@@ -362,8 +360,8 @@ export default function SiteAddForm() {
                   }}
                   renderOption={(props, option) => (
                     <li {...props} key={option._id}>
-                      {option.firstName ? option.firstName : ''}{' '}
-                      {option.lastName ? option.lastName : ''}
+                      {option.firstName && option.firstName}
+                      {option.lastName && option.lastName}
                     </li>
                   )}
                   id="controllable-states-demo"

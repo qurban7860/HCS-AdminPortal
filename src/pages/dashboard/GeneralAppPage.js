@@ -20,16 +20,20 @@ import { _appAuthors } from '../../_mock/arrays/_app';
 // styles
 import { varFade } from '../../components/animate';
 
+// config-global
+import { CONFIG } from '../../config-global';
+
 // ----------------------------------------------------------------------
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
-  const { count } = useSelector((state) => state.count);
+  const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
+  const enviroment = CONFIG.ENV.toLowerCase();
 
   const modelWiseMachineNumber = [];
   const modelWiseMachineModel = [];
-  const countryWiseCustomerCountNumber = [];
-  const countryWiseCustomerCountCountries = [];
+  const countryWiseMachineCountNumber = [];
+  const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
 
@@ -41,10 +45,10 @@ export default function GeneralAppPage() {
     });
   }
 
-  if (count && count.countryWiseCustomerCount) {
-    count.countryWiseCustomerCount.map((customer) => {
-      countryWiseCustomerCountNumber.push(customer.count);
-      countryWiseCustomerCountCountries.push(customer._id);
+  if (count && count.countryWiseMachineCount) {
+    count.countryWiseMachineCount.map((customer) => {
+      countryWiseMachineCountNumber.push(customer.count);
+      countryWiseMachineCountCountries.push(customer._id);
       return null;
     });
   }
@@ -56,6 +60,57 @@ export default function GeneralAppPage() {
       return null;
     });
   }
+
+  const ModelData = {
+    options: {
+      chart: {
+        id: 'basic-bar',
+      },
+      xaxis: {
+        categories: modelWiseMachineModel,
+      },
+    },
+    series: [
+      {
+        name: 'Machine Models',
+        data: modelWiseMachineNumber,
+      },
+    ],
+  };
+
+  const CustomerData = {
+    options: {
+      chart: {
+        id: 'basic-bar',
+      },
+      xaxis: {
+        categories: countryWiseMachineCountCountries,
+      },
+    },
+    series: [
+      {
+        name: 'Customers',
+        data: countryWiseMachineCountNumber,
+      },
+    ],
+  };
+
+  const SiteData = {
+    options: {
+      chart: {
+        id: 'basic-bar',
+      },
+      xaxis: {
+        categories: countryWiseSiteCountCountries,
+      },
+    },
+    series: [
+      {
+        name: 'Sites',
+        data: countryWiseSiteCountNumber,
+      },
+    ],
+  };
 
   useLayoutEffect(() => {
     dispatch(getCount());
@@ -89,7 +144,7 @@ export default function GeneralAppPage() {
                 icon="mdi:account-group"
                 color="warning"
                 chart={{
-                  series: countryWiseCustomerCountNumber,
+                  series: countryWiseMachineCountNumber,
                 }}
               />
             </Grid>
@@ -135,12 +190,12 @@ export default function GeneralAppPage() {
             <Grid item xs={12} md={6} lg={6}>
               <StyledGlobalCard variants={varFade().inDown}>
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6"> GLOBAL</Typography>
+                  <Typography variant="h6">Machine by Countries</Typography>
                 </Stack>
                 <Divider />
                 <ChartBar
-                  optionsData={countryWiseCustomerCountCountries}
-                  seriesData={countryWiseCustomerCountNumber}
+                  optionsData={countryWiseMachineCountCountries}
+                  seriesData={countryWiseMachineCountNumber}
                   type="bar"
                   height="300px"
                   width="100%"
@@ -156,7 +211,7 @@ export default function GeneralAppPage() {
                 variants={varFade().inDown}
               >
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine Performance</Typography>
+                  <Typography variant="h6">Machine by Models</Typography>
                 </Stack>
                 <Divider />
                 <ChartBar

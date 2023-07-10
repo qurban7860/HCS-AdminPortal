@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Typography, Grid, Stack, Chip, Alert } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
 import useResponsive from '../../../hooks/useResponsive';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -8,6 +8,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 export default function ViewFormField({
   heading,
   param,
+  arrayParam,
   secondParam,
   objectParam,
   secondObjectParam,
@@ -22,6 +23,7 @@ export default function ViewFormField({
   machineVerifiedBy,
   customerAccess,
   documentIsActive,
+  chips,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -42,12 +44,12 @@ export default function ViewFormField({
   const handleVerifiedPopoverClose = () => {
     setVerifiedAnchorEl(null);
   };
-
   return (
     <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>
         {heading || ''}
       </Typography>
+
       <Typography
         variant={
           heading === 'Serial No' ||
@@ -77,11 +79,39 @@ export default function ViewFormField({
         {/* input fields params */}
         {documentIsActive !== undefined && <IconPopover documentIsActive={documentIsActive} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
-        {param && param.trim().length > 0 && param}
-        {param && param.trim().length > 0 && secondParam && secondParam.trim().length > 0 && '  '}
-        {secondParam && secondParam.trim().length > 0 && secondParam}
+        {param && typeof param === 'string' && param.trim().length > 0 && param}
+        {chips && typeof chips === 'object' ? (
+          <Stack direction="row" spacing={1}>
+            {chips.map(
+              (chip) => typeof chip === 'string' && chip.trim().length > 0 && <Chip label={chip} />
+            )}
+          </Stack>
+        ) : (
+          chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} />
+        )}
+        {param &&
+          typeof param === 'string' &&
+          param.trim().length > 0 &&
+          secondParam &&
+          typeof secondParam === 'string' &&
+          secondParam.trim().length > 0 &&
+          '  '}
+        {secondParam &&
+          typeof secondParam === 'string' &&
+          secondParam.trim().length > 0 &&
+          secondParam}
         {objectParam || ''}
         {secondObjectParam || ''}
+        {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
+          <Stack direction="row" spacing={1} sx={{ my: 2 }}>
+            {arrayParam.map(
+              (data) =>
+                data?.name &&
+                typeof data?.name === 'string' &&
+                data?.name.trim().length > 0 && <Chip label={data?.name} />
+            )}
+          </Stack>
+        )}
         {numberParam || ''}
         &nbsp;
       </Typography>
@@ -100,6 +130,7 @@ export default function ViewFormField({
 ViewFormField.propTypes = {
   heading: PropTypes.string,
   param: PropTypes.string,
+  arrayParam: PropTypes.array,
   numberParam: PropTypes.number,
   secondParam: PropTypes.string,
   objectParam: PropTypes.object,
@@ -114,4 +145,5 @@ ViewFormField.propTypes = {
   customerVerifiedBy: PropTypes.array,
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
+  chips: PropTypes.array,
 };

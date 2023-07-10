@@ -11,6 +11,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { MuiChipsInput } from 'mui-chips-input';
 // global
 import { CONFIG } from '../../config-global';
 // slice
@@ -18,7 +19,7 @@ import {
   updateCustomer,
   setCustomerEditFormVisibility,
 } from '../../redux/slices/customer/customer';
-import { getContacts, getSPContacts } from '../../redux/slices/customer/contact';
+import { getActiveContacts, getSPContacts } from '../../redux/slices/customer/contact';
 import { getSites } from '../../redux/slices/customer/site';
 
 // routes
@@ -41,7 +42,7 @@ import FormProvider, {
 export default function CustomerEditForm() {
   const { error, customer, customerEditFormVisibility } = useSelector((state) => state.customer);
   const { sites } = useSelector((state) => state.site);
-  const { contacts, spContacts } = useSelector((state) => state.contact);
+  const { contacts, spContacts, activeContacts } = useSelector((state) => state.contact);
   const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
@@ -49,6 +50,7 @@ export default function CustomerEditForm() {
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');
   const [siteVal, setSiteVal] = useState('');
+  const [chips, setChips] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -74,7 +76,7 @@ export default function CustomerEditForm() {
     () => ({
       id: customer?._id || '',
       name: customer?.name || '',
-      tradingName: customer?.tradingName || '',
+      // tradingName: customer?.tradingName || '',
       // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
       // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
       // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id,
@@ -103,10 +105,11 @@ export default function CustomerEditForm() {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getContacts(customer._id));
+    dispatch(getActiveContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
     setSiteVal(customer?.mainSite);
+    setChips(customer?.tradingName);
     setAccountManVal(customer?.accountManager);
     setSupportManVal(customer?.supportManager);
     setProjectManVal(customer?.projectManager);
@@ -127,6 +130,9 @@ export default function CustomerEditForm() {
   const onSubmit = async (data) => {
     // console.log("customer : ",data);
     data.mainSite = siteVal?._id || null;
+    if (chips && chips.length > 0) {
+      data.tradingName = chips;
+    }
     data.accountManager = accountManVal?._id || null;
     data.projectManager = projectManVal?._id || null;
     data.supportManager = supportManVal?._id || null;
@@ -141,6 +147,10 @@ export default function CustomerEditForm() {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
+  };
+
+  const handleChipChange = (newChips) => {
+    setChips(newChips);
   };
 
   return (
@@ -169,13 +179,28 @@ export default function CustomerEditForm() {
                   display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    sm: 'repeat(1, 1fr)',
                   }}
                 >
                   <RHFTextField name="name" label="Customer Name" />
 
-                  <RHFTextField name="tradingName" label="Trading Name" />
-
+                  {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
+                  <MuiChipsInput
+                    name="tradingName"
+                    label="Trading Name"
+                    value={chips}
+                    onChange={handleChipChange}
+                  />
+                </Box>
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
                   <Autocomplete
                     // freeSolo
                     value={siteVal || null}
@@ -211,7 +236,7 @@ export default function CustomerEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={billingContactVal || null}
-                    options={contacts}
+                    options={activeContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
@@ -241,7 +266,7 @@ export default function CustomerEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={technicalContactVal || null}
-                    options={contacts}
+                    options={activeContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${

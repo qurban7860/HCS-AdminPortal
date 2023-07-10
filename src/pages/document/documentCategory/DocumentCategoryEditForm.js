@@ -104,11 +104,11 @@ export default function DocumentCategoryeEditForm() {
     try {
       await dispatch(updateDocumentCategory(documentCategory._id, data));
       dispatch(getDocumentCategory(documentCategory._id));
-      navigate(PATH_DOCUMENT.documentCategory.view(documentCategory._id));
+      navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
       enqueueSnackbar('Document Category updated Successfully!');
       reset();
     } catch (err) {
-      enqueueSnackbar('Document Category Updating failed!', { variant: `error` });
+      enqueueSnackbar('Document Category Update failed!', { variant: `error` });
       console.error(err.message);
     }
   };
@@ -135,47 +135,43 @@ export default function DocumentCategoryeEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <FormHeading heading="Edit Document Category" />
-                <RHFTextField name="name" label="Name" />
+                <RHFTextField name="name" label="Category Name" />
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex">
                   <RHFSwitch
                     name="customerAccess"
                     labelPlacement="start"
                     label={
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          Customer Access
-                        </Typography>
-                      </>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        Customer Access
+                      </Typography>
                     }
                   />
                   <RHFSwitch
                     name="isActive"
                     labelPlacement="start"
                     label={
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          Active
-                        </Typography>
-                      </>
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        Active
+                      </Typography>
                     }
                   />
                 </Grid>

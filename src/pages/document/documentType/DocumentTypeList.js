@@ -51,7 +51,7 @@ import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
+  { id: 'name', label: 'Type Name', align: 'left' },
   { id: 'categoryName', label: 'Category', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
@@ -81,21 +81,13 @@ export default function DocumentTypeList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const { customer } = useSelector((state) => state.customer);
   const { documentTypes, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.documentType
@@ -119,13 +111,9 @@ export default function DocumentTypeList() {
     filterName,
     filterStatus,
   });
-
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = 60;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -197,7 +185,6 @@ export default function DocumentTypeList() {
             mb: 3,
             height: 160,
             position: 'relative',
-            // mt: '24px',
           }}
         >
           <Cover name="Document Types" icon="ph:users-light" generalSettings />

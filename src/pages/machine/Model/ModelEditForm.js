@@ -1,17 +1,18 @@
 import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+// @mui
 import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
 import { updateMachineModel } from '../../../redux/slices/products/model';
-import { EditModelSchema } from './schemas/EditModelSchema';
+import { getActiveCategories } from '../../../redux/slices/products/category';
 import { useSettingsContext } from '../../../components/settings';
+// schema
+import { EditModelSchema } from './schemas/EditModelSchema';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -27,7 +28,7 @@ import { Snacks } from '../../../constants/machine-constants';
 
 export default function ModelEditForm() {
   const { machineModel } = useSelector((state) => state.machinemodel);
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const [category, setCategory] = useState('');
   const navigate = useNavigate();
@@ -36,9 +37,9 @@ export default function ModelEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  // useLayoutEffect(() => {
-  //   dispatch(getMachineModel(id));
-  // }, [dispatch, id]);
+  useLayoutEffect(() => {
+    dispatch(getActiveCategories());
+  }, [dispatch]);
 
   useEffect(() => {
     if (machineModel) {
@@ -47,12 +48,6 @@ export default function ModelEditForm() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [machineModel]);
-
-  // const EditModelSchema = Yup.object().shape({
-  //   name: Yup.string().min(2).max(50).required('Name is required'),
-  //   description: Yup.string().max(2000),
-  //   isDisabled: Yup.boolean(),
-  // });
 
   const defaultValues = useMemo(
     () => ({
@@ -128,9 +123,10 @@ export default function ModelEditForm() {
                   sm: 'repeat(1, 1fr)',
                 }}
               >
+                <RHFTextField name="name" label="Name*" />
                 <Autocomplete
                   value={category || null}
-                  options={categories}
+                  options={activeCategories}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, newValue) => {
@@ -144,16 +140,8 @@ export default function ModelEditForm() {
                   renderInput={(params) => <TextField {...params} label="Category" />}
                   ChipProps={{ size: 'small' }}
                 />
-                <RHFTextField
-                  name={FORMLABELS.MODEL_NAME.name}
-                  label={FORMLABELS.MODEL_NAME.label}
-                />
-                <RHFTextField
-                  name={FORMLABELS.MODEL_DESC.name}
-                  label={FORMLABELS.MODEL_DESC.label}
-                  minRows={7}
-                  multiline
-                />
+
+                <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                 <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
               </Box>

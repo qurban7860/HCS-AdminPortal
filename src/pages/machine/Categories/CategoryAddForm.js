@@ -37,6 +37,7 @@ export default function CategoryAddForm() {
     name: Yup.string().min(2).max(50).required('Name is required'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
+    connections: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -44,6 +45,7 @@ export default function CategoryAddForm() {
       name: '',
       description: '',
       isActive: true,
+      connections: false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -82,59 +84,71 @@ export default function CategoryAddForm() {
 
   const { themeStretch } = useSettingsContext();
   return (
-    <>
-      <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover
-            name="New Category"
-            icon="material-symbols:category-outline"
-            url={PATH_MACHINE.machines.settings.categories.list}
-          />
-        </Card>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container>
-            <Grid item xs={18} md={12} sx={{ mt: 3 }}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={2}>
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{
-                      xs: 'repeat(1, 1fr)',
-                      sm: 'repeat(1, 1fr)',
-                    }}
-                  >
-                    <RHFTextField name="name" label="Name" />
-                    <RHFTextField name="description" label="Description" minRows={7} multiline />
-                    <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
-                        <>
-                          <Typography
-                            variant="subtitle2"
-                            sx={{
-                              mx: 0,
-                              width: 1,
-                              justifyContent: 'space-between',
-                              mb: 0.5,
-                              color: 'text.secondary',
-                            }}
-                          >
-                            Active
-                          </Typography>
-                        </>
-                      }
-                    />
-                  </Box>
-                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-                </Stack>
-              </Card>
-            </Grid>
+    <Container maxWidth={false}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover name="New Category" url={PATH_MACHINE.machines.settings.categories.list} />
+      </Card>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container>
+          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={2}>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(1, 1fr)',
+                  }}
+                >
+                  <RHFTextField name="name" label="Name" />
+                  <RHFTextField name="description" label="Description" minRows={7} multiline />
+                </Box>
+                <Grid display="flex" alignItems="end">
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        Active
+                      </Typography>
+                    }
+                  />
+                  <RHFSwitch
+                    name="connections"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        Connect as a child
+                      </Typography>
+                    }
+                  />
+                </Grid>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
           </Grid>
-        </FormProvider>
-      </Container>
-    </>
+        </Grid>
+      </FormProvider>
+    </Container>
   );
 }

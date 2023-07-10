@@ -1,9 +1,16 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
+import {
+  Stack,
+  Card,
+  CardMedia,
+  Grid,
+  CardActionArea,
+  Link,
+  Breadcrumbs,
+  Typography,
+} from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -14,7 +21,7 @@ import SiteCarousel from './site/util/SiteCarousel';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData, getComparator, useTable } from '../../components/table';
@@ -23,6 +30,7 @@ import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
 import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
+import { getActiveContacts } from '../../redux/slices/customer/contact';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/Sections/DetailsSection';
@@ -114,6 +122,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   useEffect(() => {
     if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
+      dispatch(getActiveContacts(customer._id));
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
 
@@ -303,20 +312,33 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 }}
                 setIsExpanded={setIsExpanded}
               />
-              <Grid item lg={12} spacing={2}>
+              <Grid item lg={12} spacing={3}>
                 {!isMobile && (
-                  <Grid container direction="row" gap={1}>
+                  <Grid container direction="row" gap={4}>
                     <Grid item md={12}>
-                      <Card>
-                        <CardActionArea>
-                          {site?.lat && site?.long && (
-                            <GoogleMaps
-                              lat={site?.lat ? site.lat : 0}
-                              lng={site?.long ? site.long : 0}
-                            />
-                          )}
-                        </CardActionArea>
-                      </Card>
+                      {
+                        site?.lat && site?.long ? (
+                          <Card>
+                            <CardActionArea>
+                              <GoogleMaps
+                                lat={site?.lat ? site.lat : 0}
+                                lng={site?.long ? site.long : 0}
+                              />
+                            </CardActionArea>
+                          </Card>
+                        ) : (
+                          <Typography
+                            variant="overline"
+                            sx={{ color: 'text.disabled', fontStyle: 'italic', m: 1 }}
+                          >
+                            Fill GPS COORDINATES TO VIEW LOCATIONS ON MAP
+                          </Typography>
+                        )
+                        // <ViewFormField
+                        //   sm={12}
+                        //   heading="Fill GPS(LAT LONG) COORDINATES TO SEE VIEW LOCATION ON MAPS"
+                        // />
+                      }
                     </Grid>
 
                     <Grid item md={12}>

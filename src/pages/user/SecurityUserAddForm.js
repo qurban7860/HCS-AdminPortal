@@ -32,7 +32,7 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../com
 // slice
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import { getCustomers } from '../../redux/slices/customer/customer';
-import { getContacts, resetContacts } from '../../redux/slices/customer/contact';
+import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -56,7 +56,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const [email, setEmail] = useState('');
   const { customers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
-  const { contacts } = useSelector((state) => state.contact);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState('');
   const { roles } = useSelector((state) => state.role);
   const [sortedRoles, setSortedRoles] = useState([]);
@@ -94,7 +94,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   useEffect(() => {
     if (customerVal) {
-      dispatch(getContacts(customerVal._id));
+      dispatch(getActiveContacts(customerVal._id));
     }
     if (userRoles) {
       if (userRoles.some((role) => role?.roleType === 'SuperAdmin')) {
@@ -186,7 +186,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   };
 
   const onSubmit = async (data) => {
-    if (phone && phone.length > 7) {
+    if (phone && phone.length > 4) {
       data.phone = phone;
     }
     if (customerVal) {
@@ -231,90 +231,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        {/* <Grid item xs={12} md={4}>
-          <Card sx={{ pt: 10, pb: 5, px: 3 }}>
-            {isEdit && (
-              <Label
-                color={values.status === 'active' ? 'success' : 'error'}
-                sx={{ textTransform: 'uppercase', position: 'absolute', top: 24, right: 24 }}
-              >
-                {values.status}
-              </Label>
-            )}
-
-            <Box sx={{ mb: 5 }}>
-              <RHFUploadAvatar
-                name="avatarUrl"
-                maxSize={3145728}
-                onDrop={handleDrop}
-                helperText={
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      mt: 2,
-                      mx: 'auto',
-                      display: 'block',
-                      textAlign: 'center',
-                      color: 'text.secondary',
-                    }}
-                  >
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
-                    <br /> max size of {fData(3145728)}
-                  </Typography>
-                }
-              />
-            </Box>
-
-            {isEdit && (
-              <FormControlLabel
-                labelPlacement="start"
-                control={
-                  <Controller
-                    name="status"
-                    control={control}
-                    render={({ field }) => (
-                      <Switch
-                        {...field}
-                        checked={field.value !== 'active'}
-                        onChange={(event) =>
-                          field.onChange(event.target.checked ? 'banned' : 'active')
-                        }
-                      />
-                    )}
-                  />
-                }
-                label={
-                  <>
-                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                      Banned
-                    </Typography>
-                    <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                      Apply disable account
-                    </Typography>
-                  </>
-                }
-                sx={{ mx: 0, mb: 3, width: 1, justifyContent: 'space-between' }}
-              />
-            )}
-
-            <RHFSwitch
-              name="isVerified"
-              labelPlacement="start"
-              label={
-                <>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Email Verified
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                    Disabling this will automatically send the user a verification email
-                  </Typography>
-                </>
-              }
-              sx={{ mx: 0, width: 1, justifyContent: 'space-between' }}
-            />
-          </Card>
-        </Grid> */}
-
         <Grid item xs={12} md={12}>
           <Card sx={{ p: 3 }}>
             <Box
@@ -368,7 +284,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               <Autocomplete
                 // freeSolo
                 value={contactVal || null}
-                options={contacts}
+                options={activeContacts}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {

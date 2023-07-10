@@ -313,7 +313,9 @@ export function addMachine(params) {
           machineConnections: params.machineConnections
         };
         /* eslint-enable */
-        
+        if(params.alias){
+          data.alias = params.alias;        
+        }
         if(params.serialNo){
           data.serialNo = params.serialNo;        
         }
@@ -384,6 +386,8 @@ export function updateMachine(params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
+
+      
         serialNo: params.serialNo,
         name: params.name,
         parentSerialNo: params.parentSerialNo,
@@ -406,6 +410,9 @@ export function updateMachine(params) {
         customerTags: params.customerTags,
         isActive: params.isActive,
       };
+      if(params?.alias){
+        data.alias =  params.alias
+      }
      /* eslint-enable */
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
         data

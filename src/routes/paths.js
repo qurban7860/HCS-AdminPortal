@@ -110,7 +110,7 @@ export const PATH_MACHINE = {
     view: (id) => path(ROOTS_MACHINE, `/machines/${id}/view`),
     edit: (id) => path(ROOTS_MACHINE, `/machines/${id}/edit`),
     settings: {
-      root: path(ROOTS_MACHINE, '/machines/settings/root'),
+      app: path(ROOTS_MACHINE, '/machines/settings/app'),
       categories: {
         new: (ROOTS_MACHINE, '/products/machines/settings/categories/new'),
         list: (ROOTS_MACHINE, '/products/machines/settings/categories/list'),
