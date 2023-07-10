@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
-import { Typography, Grid , Stack, Chip} from '@mui/material';
+import { Typography, Grid , Stack, Chip, Alert} from '@mui/material';
 import IconPopover from './IconPopover';
 import useResponsive from '../../hooks/useResponsive';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -8,6 +8,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 export default function ViewFormField({
   heading,
   param,
+  arrayParam,
   secondParam,
   objectParam,
   secondObjectParam,
@@ -48,6 +49,7 @@ export default function ViewFormField({
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>
         {heading || ''}
       </Typography>
+      
       <Typography
         variant={
           heading === 'Serial No' ||
@@ -90,6 +92,11 @@ export default function ViewFormField({
         {secondParam && typeof secondParam === 'string' && secondParam.trim().length > 0 && secondParam}
         {objectParam || ''}
         {secondObjectParam || ''}
+        {(arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0) && 
+        <Stack direction="row" spacing={1} sx={{my:2}} >
+        {arrayParam.map((data)=> ( data?.name && typeof data?.name === 'string' && data?.name.trim().length > 0 && <Chip label={data?.name } />))}
+        </Stack>
+        }
         {numberParam || ''}
         &nbsp;
       </Typography>
@@ -107,6 +114,7 @@ export default function ViewFormField({
 ViewFormField.propTypes = {
   heading: PropTypes.string,
   param: PropTypes.string,
+  arrayParam: PropTypes.array,
   numberParam: PropTypes.number,
   secondParam: PropTypes.string,
   objectParam: PropTypes.object,

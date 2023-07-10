@@ -83,7 +83,7 @@ export default function MachineListTableRow({
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
-        <TableCell align="right">
+        {/* <TableCell align="right">
           {parentMachine ? (
             <Iconify
               icon="bi:layer-backward"
@@ -93,7 +93,7 @@ export default function MachineListTableRow({
           ) : (
             ''
           )}
-        </TableCell>
+        </TableCell> */}
         <LinkTableCellWithIcon align="left" onClick={onViewRow} param={serialNo} isVerified={verifications?.length > 0}/>
         <TableCell>{name || ''}</TableCell>
         <TableCell>{machineModel?.name || ''}</TableCell>

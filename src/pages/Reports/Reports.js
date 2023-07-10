@@ -57,7 +57,7 @@ export default function Reports() {
           position: 'relative',
         }}
       >
-        <Cover name="Site Map" icon="material-symbols:list-alt-outline" />
+        <Cover name="Sites Map" icon="material-symbols:list-alt-outline" />
       </Card>
       <Grid container spacing={3} >
           <Grid item sm={12}>

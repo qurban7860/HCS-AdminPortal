@@ -221,6 +221,9 @@ export default function MachineEditForm() {
   const onSubmit = async (data) => {
     // console.log('installationDate------->', installationDate);
     // console.log('shippingDate------->', shippingDate);
+    if (chips && chips.length > 0) {
+      data.alias = chips;
+    }
     data.parentMachine = parMachineVal?._id || null;
     data.parentSerialNo = parMachSerVal?.serialNo || null;
     data.supplier = supplierVal?._id || null;

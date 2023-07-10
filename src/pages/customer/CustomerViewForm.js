@@ -150,8 +150,8 @@ export default function CustomerViewForm() {
               </Tooltip>
             </Grid>
             <Grid container>
-              <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-              <ViewFormField sm={6} heading="Trading Name" chips={defaultValues?.tradingName} />
+              <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
+              <ViewFormField sm={12} heading="Trading Name" chips={defaultValues?.tradingName} />
               <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
               <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
               <ViewFormField sm={6} heading="Email" param={defaultValues?.mainSite?.email} />
