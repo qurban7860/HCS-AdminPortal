@@ -91,11 +91,11 @@ export default function DocumentCategoryeEditForm() {
     try {
       await dispatch(updateDocumentCategory(documentCategory._id,data));
       dispatch(getDocumentCategory(documentCategory._id));
-      navigate(PATH_DOCUMENT.documentCategory.view(documentCategory._id))
+      navigate(PATH_SETTING.documentCategory.view(documentCategory._id))
       enqueueSnackbar('Document Category updated Successfully!');
       reset();
     } catch (err) {
-      enqueueSnackbar('Document Category Updating failed!', { variant: `error` });
+      enqueueSnackbar('Document Category Update failed!', { variant: `error` });
       console.error(err.message);
     }
   };
