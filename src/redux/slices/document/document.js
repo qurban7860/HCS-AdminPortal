@@ -114,7 +114,14 @@ const slice = createSlice({
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-    }
+    },
+    // reset Document History
+    resetDocumentHistory(state) {
+      state.isLoading = false;
+      state.success = false;
+      state.documentHistory = [];
+      state.responseMessage = null;
+    },
   },
 });
 
@@ -129,6 +136,7 @@ export const {
   resetDocument,
   resetDocuments,
   resetActiveDocuments,
+  resetDocumentHistory,
   setResponseMessage,
 } = slice.actions;
 

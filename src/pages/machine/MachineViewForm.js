@@ -165,6 +165,7 @@ export default function MachineViewForm() {
       name:                     machine?.name || '',
       serialNo:                 machine?.serialNo || '',
       parentMachine:            machine?.parentMachine?.name || '',
+      alias:                    machine?.alias || '',
       parentSerialNo:           machine?.parentMachine?.serialNo || '',
       supplier:                 machine?.supplier?.name || '',
       workOrderRef:             machine?.workOrderRef || '',
@@ -247,6 +248,7 @@ export default function MachineViewForm() {
         </Grid>
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
+        <ViewFormField sm={6} heading="Alias" chips={defaultValues?.alias} />
         <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
         <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>

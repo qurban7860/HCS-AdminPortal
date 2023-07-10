@@ -31,7 +31,7 @@ ViewFormSWitch.propTypes = {
     return (
       <Grid item xs={12} sm={12} sx={{  display: 'flex' }}>
         <Typography
-          variant="overline"
+          variant="subtitle2"
           sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
           {heading || ''}

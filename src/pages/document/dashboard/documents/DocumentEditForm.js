@@ -32,6 +32,7 @@ import AddFormButtons from '../../../components/AddFormButtons';
 import FormHeading from '../../../components/FormHeading';
 import ViewFormSWitch from '../../../components/ViewFormSwitch';
 import { Cover } from '../../../components/Cover';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
 
 // slice
 import { updateDocument } from '../../../../redux/slices/document/document';
@@ -172,16 +173,7 @@ export default function DocumentEditForm() {
   return (
     <Container maxWidth={false}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name={documentHistory?.displayName} icon="ph:users-light" />
-        </Card>
+        <DocumentCover content={documentHistory?.displayName} />
         <Grid container spacing={4}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
