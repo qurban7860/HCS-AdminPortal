@@ -96,7 +96,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
 
   const toggleCancel = () =>
   {
-    navigate(PATH_SETTING.documentName.list);
+    navigate(PATH_SETTING.documentType.list);
     dispatch(setDocumentTypeFormVisibility(false))
     dispatch(setMachineDocumentFormVisibility(true))
     dispatch(setCustomerDocumentFormVisibility(true))
