@@ -13,9 +13,8 @@ import {
   IconButton,
 } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_AUTH, PATH_SECURITY } from '../../../routes/paths';
+import { PATH_AUTH, PATH_SECURITY } from '../../../routes/paths';
 import { NAV } from '../../../config-global';
-
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
 // components
@@ -24,7 +23,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import MenuPopover from '../../../components/menu-popover';
 import { IconButtonAnimate } from '../../../components/animate';
 // import Drawer
-import ToggleButton from '../../../components/settings/drawer/ToggleButton';
 import SettingsDrawer from '../../../components/settings/drawer';
 import LayoutOptions from '../../../components/settings/drawer/LayoutOptions';
 import Block from '../../../components/settings/drawer/Block';
@@ -39,7 +37,7 @@ import { useSettingsContext } from '../../../components/settings';
 import { defaultSettings } from '../../../components/settings/config-setting';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
-// import Drawer from '../../../components/settings/drawer/SettingsDrawer';
+import { TITLES } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 const SPACING = 2.5;
@@ -52,23 +50,10 @@ const OPTIONS = [
     label: 'Profile',
     linkTo: PATH_SECURITY.users.profile,
   },
-  // {
-  //   label: 'Settings',
-  //   linkTo: PATH_DASHBOARD.user.account,
-  // },
   {
     label: 'Change Password',
     linkTo: PATH_SECURITY.users.password,
   },
-  // {
-  //   label: 'Change User Password',
-  //   linkTo: PATH_DASHBOARD.user.userPassword,
-  // },
-  // {
-  //   label: 'Customize',
-  //   // link to settings drawer
-
-  // },
 ];
 
 // ----------------------------------------------------------------------
@@ -184,7 +169,7 @@ export default function AccountPopover() {
             onClose={handleClose}
           >
             <Typography variant="body2" noWrap>
-              Customize
+              {TITLES.CUSTOMIZE}
             </Typography>
           </MenuItem>
         </Stack>
@@ -192,7 +177,7 @@ export default function AccountPopover() {
         <Divider sx={{ borderStyle: 'solid' }} />
 
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
-          Logout
+          {TITLES.LOGOUT}
         </MenuItem>
       </MenuPopover>
       <>
@@ -223,7 +208,7 @@ export default function AccountPopover() {
             sx={{ py: 2, pr: 1, pl: SPACING }}
           >
             <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
-              Settings
+              {TITLES.SETTINGS}
             </Typography>
 
             <Tooltip title="Reset">
@@ -242,27 +227,27 @@ export default function AccountPopover() {
           <Divider sx={{ borderStyle: 'solid' }} />
 
           <Scrollbar sx={{ p: SPACING, pb: 0 }}>
-            <Block title="Mode">
+            <Block title={TITLES.MODE}>
               <ModeOptions />
             </Block>
 
-            <Block title="Contrast">
+            <Block title={TITLES.CONTRAST}>
               <ContrastOptions />
             </Block>
 
-            <Block title="Direction">
+            <Block title={TITLES.DIRECTION}>
               <DirectionOptions />
             </Block>
 
-            <Block title="Layout">
+            <Block title={TITLES.LAYOUT}>
               <LayoutOptions />
             </Block>
 
-            <Block title="Stretch" tooltip="Only available at large resolutions > 1600px (xl)">
+            <Block title={TITLES.STRETCH.label} tooltip={TITLES.STRETCH.tooltip}>
               <StretchOptions />
             </Block>
 
-            <Block title="Presets">
+            <Block title={TITLES.PRESETS}>
               <ColorPresetsOptions />
             </Block>
           </Scrollbar>

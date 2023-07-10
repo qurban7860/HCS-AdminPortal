@@ -188,4 +188,18 @@ export const TITLES = {
 
   // @root -MachineViewForm - site location
   NO_SITELOC: 'No site location was provided',
+
+  // @root - AccountPopover - settings drawer
+  SETTINGS: 'Settings',
+  CUSTOMIZE: 'Customize',
+  LOGOUT: 'Logout',
+  MODE: 'Mode',
+  CONTRAST: 'Contrast',
+  DIRECTION: 'Direction',
+  LAYOUT: 'Layout',
+  STRETCH: {
+    label: 'Stretch',
+    tooltip: 'Only available at large resolutions > 1600px (xl)',
+  },
+  PRESETS: 'Presets',
 };
