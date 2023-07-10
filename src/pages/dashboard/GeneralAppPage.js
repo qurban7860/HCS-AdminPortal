@@ -1,22 +1,24 @@
 import { useLayoutEffect } from 'react';
 // @mui
-import { Typography, Container, Grid, Stack, Card, Divider } from '@mui/material';
-import { varFade } from '../../components/animate';
-import ChartBar from '../components/Charts/ChartBar';
+import { Typography, Grid, Stack, Card, Divider } from '@mui/material';
 import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
 import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
-// assets
+// assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count';
 // components
+import ChartBar from '../components/Charts/ChartBar';
 import ProductionLog from '../components/Charts/ProductionLog';
 import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
+import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
 // constants
 import { TITLES } from '../../constants/default-constants';
 // dummy data
 import { _appAuthors } from '../../_mock/arrays/_app';
+// styles
+import { varFade } from '../../components/animate';
 
 // ----------------------------------------------------------------------
 
@@ -209,12 +211,13 @@ export default function GeneralAppPage() {
           </Grid>
         </Grid>
 
-        {/* TESTs DONT REMOVE */}
-        {/* <Grid item xs={12} md={6} lg={12}>
+        {/* hide this in the live, but show in development and test for now  */}
+        <Grid item xs={12} md={6} lg={12}>
           <ChartColumnNegative optionsData={modelWiseMachineModel} />
           <StyledBg />
-        </Grid> */}
+        </Grid>
 
+        {/* TESTs DONT REMOVE */}
         {/* <ContainerView selectVariant="panLeft">
           <Grid container spacing={3}>
               <VerticalLinearStepper/>
