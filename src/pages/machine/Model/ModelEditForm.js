@@ -11,9 +11,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Container, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link } from '@mui/material';
-
 // slice
 import { updateMachineModel, getMachineModel, getMachineModels } from '../../../redux/slices/products/model';
+import { getActiveCategories } from '../../../redux/slices/products/category';
 
 import { useSettingsContext } from '../../../components/settings';
 import {CONFIG} from '../../../config-global';
@@ -39,7 +39,7 @@ import AddFormButtons from '../../components/AddFormButtons';
 export default function ModelEditForm() {
 
   const { machineModel } = useSelector((state) => state.machinemodel);
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
   const dispatch = useDispatch();
   const [category, setCategory] = useState("")
   const navigate = useNavigate();
@@ -48,9 +48,9 @@ export default function ModelEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { id } = useParams();
 
-  // useLayoutEffect(() => {
-  //   dispatch(getMachineModel(id));
-  // }, [dispatch, id]);
+  useLayoutEffect(() => {
+    dispatch(getActiveCategories());
+  }, [dispatch]);
 
   useEffect(() => {
     if (machineModel) {
@@ -148,7 +148,7 @@ export default function ModelEditForm() {
 
               <Autocomplete
                 value={category || null}
-                options={categories}
+                options={activeCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 onChange={(event, newValue) => {

@@ -13,7 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography, Container} from '@mui/material';
 // slice
 import { addMachineModel } from '../../../redux/slices/products/model';
-import { getCategories } from '../../../redux/slices/products/category';
+import { getActiveCategories } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -32,7 +32,7 @@ export default function ModelAddForm() {
 
   const { userId, user } = useAuthContext();
 
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
 
   const dispatch = useDispatch();
   
@@ -74,7 +74,7 @@ export default function ModelAddForm() {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getCategories());
+    dispatch(getActiveCategories());
   }, [dispatch]);
 
   useEffect(() => {
@@ -123,7 +123,7 @@ export default function ModelAddForm() {
                   <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
                     <Autocomplete
                       value={modelVal || null}
-                      options={categories}
+                      options={activeCategories}
                       isOptionEqualToValue={(option, value) => option.name === value.name}
                       getOptionLabel={(option) => option.name}
                       onChange={(event, newValue) => {

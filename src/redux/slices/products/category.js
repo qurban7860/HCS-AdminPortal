@@ -14,6 +14,7 @@ const initialState = {
   isLoading: false,
   error: null,
   categories: [],
+  activeCategories: [],
   category: {},
 };
 
@@ -45,6 +46,13 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.categories = action.payload;
+      state.initial = true;
+    },
+    // GET Active Categories
+    getActiveCategoriesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeCategories = action.payload;
       state.initial = true;
     },
     // GET Category
@@ -106,6 +114,30 @@ export function getCategories (){
         }
       });
       dispatch(slice.actions.getCategoriesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getActiveCategories (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/categories`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      dispatch(slice.actions.getActiveCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Categories loaded successfully'));
       // dispatch(slice.actions)
     } catch (error) {
