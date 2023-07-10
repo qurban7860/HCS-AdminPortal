@@ -39,6 +39,7 @@ export default function CategoryAddForm() {
     name: Yup.string().min(2).max(50).required('Name is required'),
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
+    connections : Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -46,6 +47,7 @@ export default function CategoryAddForm() {
       name: ''  ,
       description:'',
       isActive: true,
+      connections: false
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -114,6 +116,8 @@ export default function CategoryAddForm() {
 
               <RHFTextField name="name" label="Name" />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
+            </Box>
+            <Grid display="flex" alignItems="end">
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
@@ -125,20 +129,31 @@ export default function CategoryAddForm() {
                   </>
                 } 
               />
-             </Box>
-             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+              <RHFSwitch
+                name="connections"
+                labelPlacement="start"
+                label={
+                  <>
+                    <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                      Connections
+                    </Typography>
+                  </>
+                } 
+              />
+            </Grid>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
              
              
-              </Stack>
+            </Stack>
               
 
             
                         
-            </Card>
+          </Card>
             
 
-          </Grid> 
-          </Grid>
+        </Grid> 
+        </Grid>
         
     </FormProvider>
     </Container>

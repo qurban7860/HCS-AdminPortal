@@ -51,7 +51,8 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'description', label: 'Active', align: 'center' },
+  { id: 'isActive', label: 'Active', align: 'center' },
+  { id: 'connections', label: 'Connections', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 
 ];
