@@ -42,7 +42,7 @@ export default function ModelAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const ModelAddSchema = Yup.object().shape({
-    name: Yup.string().trim().max(50).required('Name is required') ,
+    name: Yup.string().trim().max(40).required('Name is required') ,
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
     // category: Yup.string().required('Category is required'),
@@ -121,6 +121,7 @@ export default function ModelAddForm() {
                 <Card sx={{ p: 3}}>
                   <Stack spacing={3}>
                   <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
+                    <RHFTextField name="name" label="Name*"  />
                     <Autocomplete
                       value={modelVal || null}
                       options={activeCategories}
@@ -133,7 +134,6 @@ export default function ModelAddForm() {
                       renderInput={(params) => <TextField {...params} label="Category" />}
                       ChipProps={{ size: 'small' }}
                     />
-                    <RHFTextField name="name" label="Name"  />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                     <RHFSwitch
