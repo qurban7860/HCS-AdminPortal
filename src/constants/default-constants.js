@@ -140,6 +140,7 @@ export const BUTTONS = {
   // security
   ADDROLE: 'Add Role',
   ADDDOCUMENT_CATEGORY: 'Add Document Category',
+  ADDDOCUMENT_TYPE: 'Add Document Type',
 };
 
 export const BREADCRUMBS = {
