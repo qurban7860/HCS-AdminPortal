@@ -11,6 +11,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { MuiChipsInput } from 'mui-chips-input'
+
 // global
 import { CONFIG } from '../../config-global';
 // slice
@@ -49,6 +51,7 @@ export default function CustomerEditForm() {
   const [billingContactVal, setBillingContactVal] = useState('');
   const [technicalContactVal, setTechnicalContactVal] = useState('');
   const [siteVal, setSiteVal] = useState('');
+  const [chips, setChips] = useState([])
 
   const dispatch = useDispatch();
 
@@ -74,7 +77,7 @@ export default function CustomerEditForm() {
     () => ({
       id: customer?._id || '',
       name: customer?.name || '',
-      tradingName: customer?.tradingName || '',
+      // tradingName: customer?.tradingName || '',
       // mainSite: customer?.mainSite?._id === null || customer?.mainSite?._id === undefined  ? null : customer.mainSite._id ,
       // accountManager: customer?.accountManager?._id === null || customer?.accountManager?._id === undefined  ? null : customer.accountManager?._id,
       // projectManager: customer?.projectManager?._id === null || customer?.projectManager?._id === undefined  ? null : customer.projectManager?._id,
@@ -107,6 +110,7 @@ export default function CustomerEditForm() {
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
     setSiteVal(customer?.mainSite);
+    setChips(customer?.tradingName)
     setAccountManVal(customer?.accountManager);
     setSupportManVal(customer?.supportManager);
     setProjectManVal(customer?.projectManager);
@@ -127,6 +131,9 @@ export default function CustomerEditForm() {
   const onSubmit = async (data) => {
     // console.log("customer : ",data);
     data.mainSite = siteVal?._id || null;
+    if(chips && chips.length > 0) {
+      data.tradingName = chips;
+    }
     data.accountManager = accountManVal?._id || null;
     data.projectManager = projectManVal?._id || null;
     data.supportManager = supportManVal?._id || null;
@@ -142,6 +149,10 @@ export default function CustomerEditForm() {
       console.error(err.message);
     }
   };
+
+  const handleChipChange = (newChips) => {
+    setChips(newChips)
+  }
 
   return (
     <>
@@ -169,13 +180,23 @@ export default function CustomerEditForm() {
                   display="grid"
                   gridTemplateColumns={{
                     xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
+                    sm: 'repeat(1, 1fr)',
                   }}
                 >
                   <RHFTextField name="name" label="Customer Name" />
 
-                  <RHFTextField name="tradingName" label="Trading Name" />
-
+                  {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
+                  <MuiChipsInput name="tradingName" label="Trading Name"  value={chips} onChange={handleChipChange} />
+                  </Box>
+                  <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
                   <Autocomplete
                     // freeSolo
                     value={siteVal || null}

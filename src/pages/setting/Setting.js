@@ -35,8 +35,8 @@ export default function Setting() {
   
   const superAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
    // Functions to navigate to different pages
-   const linkDocumentName = () => {  navigate(PATH_SETTING.documentType.list); };
-   const linkFileCategory = () => { navigate(PATH_SETTING.documentCategory.list); };
+   const linkDocumentType = () => {  navigate(PATH_SETTING.documentType.list); };
+   const linkDocumentCategory = () => { navigate(PATH_SETTING.documentCategory.list); };
    const linkRole = () => { navigate(PATH_SETTING.role.list); };
    const linkSignInLogs = () => { navigate(PATH_SETTING.signInLogs.list); };
 
@@ -66,19 +66,20 @@ export default function Setting() {
                   </ListSubheader>
                 }
               >
-                <ListItemButton onClick={linkDocumentName} sx={{ color: 'text.disabled' }}>
+                <ListItemButton onClick={linkDocumentCategory} sx={{ color: 'text.disabled' }}>
+                  <ListItemIcon>
+                    <Iconify icon="ic:round-category" />
+                  </ListItemIcon>
+                  <ListItemText primary="Document Category" />
+                </ListItemButton>
+
+                <ListItemButton onClick={linkDocumentType} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
                     <Iconify icon="mdi:rename" />
                   </ListItemIcon>
                   <ListItemText primary="Document Type" />
                 </ListItemButton>
 
-                <ListItemButton onClick={linkFileCategory} sx={{ color: 'text.disabled' }}>
-                  <ListItemIcon>
-                    <Iconify icon="ic:round-category" />
-                  </ListItemIcon>
-                  <ListItemText primary="Document Category" />
-                </ListItemButton>
               </List>
             </Card>
             {superAdmin && 

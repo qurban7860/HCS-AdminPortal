@@ -92,44 +92,48 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const [projectManVal, setProjectManVal] = useState('');
 
   const AddCustomerSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required('Name is required').trim('Leading and trailing spaces are not allowed'),
-    tradingName: Yup.string(),
-    mainSite: Yup.string(),
+    name: Yup.string().trim('Leading and trailing spaces are not allowed')
+    .min(2, 'Name must be at least 2 characters long')
+    .max(40, 'Name must not exceed 40 characters')
+    .required('Name is required'),
+    
+    // tradingName: Yup.string(),
+    mainSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
     sites: Yup.array(),
     contacts: Yup.array(),
     accountManager: Yup.string().nullable(),
     projectManager: Yup.string().nullable(),
     supportManager: Yup.string().nullable(),
     // site details
-    billingSite: Yup.string(),
+    billingSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
     // phone: Yup.string(),
     email: Yup.string()
       .trim('The contact name cannot include leading and trailing spaces')
       .email('Email must be a valid email address'),
     // fax: Yup.string(),
-    website: Yup.string(),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    city: Yup.string(),
-    postcode: Yup.string(),
-    region: Yup.string(),
+    website: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    street: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    suburb: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    city: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    postcode: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    region: Yup.string().trim('Leading and trailing spaces are not allowed'),
     // country: Yup.string().nullable(true),
 
     // billing contact details
-    billingFirstName: Yup.string(),
-    billingLastName: Yup.string(),
-    billingTitle: Yup.string(),
+    billingFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    billingLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    billingTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
     billingContactTypes: Yup.array(),
     // billingContactPhone: Yup.string(),
-    billingContactEmail: Yup.string().email('Email must be a valid email address'),
+    billingContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
 
     // technical contact details
-    technicalFirstName: Yup.string(),
-    technicalLastName: Yup.string(),
-    technicalTitle: Yup.string(),
+    technicalFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    technicalLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    technicalTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
     technicalContactTypes: Yup.array(),
     // technicalContactPhone: Yup.string(),
-    technicalContactEmail: Yup.string().email('Email must be a valid email address'),
+    technicalContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
     isActive: Yup.boolean(),
   });
 
@@ -137,7 +141,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     () => ({
       name: '',
       mainSite: '',
-      tradingName: chips   ,
+      // tradingName: chips   ,
       // accountManager: null,
       // projectManager: null,
       // supportManager: null,
@@ -246,6 +250,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   const handleChipChange = (newChips) => {
+    console.log("newChips : ",newChips)
     setChips(newChips)
   }
 
@@ -276,14 +281,23 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               display="grid"
               gridTemplateColumns={{
                 xs: 'repeat(1, 1fr)',
-                sm: 'repeat(2, 1fr)',
+                sm: 'repeat(1, 1fr)',
               }}
             >
               <RHFTextField name="name" label="Customer Name" />
 
               {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
               <MuiChipsInput name="tradingName" label="Trading Name"  value={chips} onChange={handleChipChange} />
-
+              </Box>
+              <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput
                 value={phone}

@@ -277,7 +277,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   return (
     <Container maxWidth={themeStretch ? false : 'xl'}>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Card sx={{ mb: 3, height: 150, position: 'relative', mt: '24px' }}>
+        <Card sx={{ mb: 3, height: 160, position: 'relative', mt: '24px' }}>
           <Cover name="New Machine" icon="material-symbols:list-alt-outline" setting="enable" />
         </Card>
         <Grid container>
