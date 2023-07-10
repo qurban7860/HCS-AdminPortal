@@ -26,6 +26,8 @@ import {
   InputAdornment,
   TextField,
 } from '@mui/material';
+import { MuiChipsInput } from 'mui-chips-input'
+
 // slice
 import { addCustomer } from '../../redux/slices/customer/customer';
 import { getSPContacts } from '../../redux/slices/customer/contact';
@@ -68,6 +70,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const filteredContacts = spContacts.filter(contact => contact.isActive === true);
 
   const [contactFlag, setCheckboxFlag] = useState(false);
+  const [chips, setChips] = useState([])
 
   const toggleCheckboxFlag = () => setCheckboxFlag((value) => !value);
 
@@ -134,7 +137,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     () => ({
       name: '',
       mainSite: '',
-      tradingName: '',
+      tradingName: chips   ,
       // accountManager: null,
       // projectManager: null,
       // supportManager: null,
@@ -207,6 +210,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       if (phone && phone.length > 4) {
         data.phone = phone;
       }
+      if (chips && chips.length > 0) {
+        data.tradingName = chips;
+      }
       if (fax && fax.length > 4) {
         data.fax = fax;
       }
@@ -228,7 +234,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       if (supportManVal) {
         data.supportManager = supportManVal._id;
       }
-      console.log('customer : ', data);
+      // console.log('customer : ', data);
       dispatch(addCustomer(data));
       reset();
       enqueueSnackbar('Create success!');
@@ -238,6 +244,10 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
       console.error(error);
     }
   };
+
+  const handleChipChange = (newChips) => {
+    setChips(newChips)
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -271,7 +281,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
             >
               <RHFTextField name="name" label="Customer Name" />
 
-              <RHFTextField name="tradingName" label="Trading Name" />
+              {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
+              <MuiChipsInput name="tradingName" label="Trading Name"  value={chips} onChange={handleChipChange} />
 
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput

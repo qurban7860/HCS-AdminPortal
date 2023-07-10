@@ -313,7 +313,9 @@ export function addMachine(params) {
           machineConnections: params.machineConnections
         };
         /* eslint-enable */
-        
+        if(params.alias){
+          data.alias = params.alias;        
+        }
         if(params.serialNo){
           data.serialNo = params.serialNo;        
         }

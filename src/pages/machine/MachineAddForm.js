@@ -29,7 +29,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-
+import { MuiChipsInput } from 'mui-chips-input'
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers } from '../../redux/slices/customer/customer';
@@ -104,6 +104,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [machineConnectionVal, setMachineConnectionVal] = useState([]);
 
   const [chipData, setChipData] = useState([]);
+  const [chips, setChips] = useState([])
+
 
   useLayoutEffect(() => {
     dispatch(getCustomers());
@@ -196,6 +198,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     margin: theme.spacing(0.5),
   }));
   const onSubmit = async (data) => {
+    if (chips && chips.length > 0) {
+      data.alias = chips;
+    }
     data.parentMachine = parMachineVal?._id || null;
     data.parentSerialNo = parMachSerVal?.serialNo || null;
     data.supplier = supplierVal?._id || null;
@@ -264,7 +269,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const toggleCancel = () => {
     navigate(PATH_MACHINE.machines.list);
   };
-
+  const handleChipChange = (newChips) => {
+    setChips(newChips)
+  }
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -276,9 +283,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
         <Grid container>
           <Grid item xs={18} md={12} sx={{ mt: 3 }}>
             <Card sx={{ p: 3 }}>
-              <Stack spacing={6}>
+              <Stack spacing={3}>
                 <Box
-                  sx={{ mb: -3 }}
                   rowGap={3}
                   columnGap={2}
                   display="grid"
@@ -286,6 +292,15 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                 >
                   <RHFTextField name="serialNo" label="Serial No." />
                   <RHFTextField name="name" label="Name" />
+                 
+                </Box>
+                  <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+                >
                   <Autocomplete
                     // freeSolo
                     value={parMachSerVal || null}
@@ -419,32 +434,32 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
 
                   {/* <Autocomplete
-                // freeSolo
-                value={ machineConnectionVal || null}
-                options={machineConnections}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setMachineConnectionVal(newValue);
+                  // freeSolo
+                  value={ machineConnectionVal || null}
+                  options={machineConnections}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    if(newValue){
+                    setMachineConnectionVal(newValue);
+                    }
+                    else{
+                    setMachineConnectionVal("");
+                    }
+                  }}
+                  renderTags={(tagValue, getTagProps) =>
+                    tagValue.map((option, index) => (
+                      <Chip
+                        label={option.title}
+                        {...getTagProps({ index })}
+                      />
+                    ))
                   }
-                  else{
-                  setMachineConnectionVal("");
-                  }
-                }}
-                renderTags={(tagValue, getTagProps) =>
-                  tagValue.map((option, index) => (
-                    <Chip
-                      label={option.title}
-                      {...getTagProps({ index })}
-                    />
-                  ))
-                }
-                renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                id="controllable-states-demo"
-                renderInput={(params) => <TextField {...params}  label="Machine Connections" />}
-                ChipProps={{ size: 'small' }}
-              /> */}
+                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params}  label="Machine Connections" />}
+                  ChipProps={{ size: 'small' }}
+                  /> */}
 
                   <Autocomplete
                     // freeSolo
@@ -471,12 +486,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
                 </Box>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                >
                   <Autocomplete
                     sx={{ my: -3 }}
                     value={customerVal || null}
@@ -498,7 +507,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     renderInput={(params) => <TextField {...params} label="Customer" />}
                     ChipProps={{ size: 'small' }}
                   />
-                </Box>
 
                 <Box
                   rowGap={3}
@@ -581,13 +589,12 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                  sx={{ mt: -3 }}
+                  
                 >
                   <RHFTextField
                     name="siteMilestone"
                     label="Nearby Milestone"
                     multiline
-                    sx={{ my: -3 }}
                   />
                 </Box>
                 <Box
@@ -680,14 +687,12 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                  sx={{ mb: -3 }}
                 >
                   <RHFTextField
                     name="description"
                     label="Description"
                     minRows={8}
                     multiline
-                    sx={{ mt: -3 }}
                   />
                 </Box>
                 {/* -------------------------start add chips------------------------- */}
@@ -740,7 +745,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   }
                 />
               </Stack>
-
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
