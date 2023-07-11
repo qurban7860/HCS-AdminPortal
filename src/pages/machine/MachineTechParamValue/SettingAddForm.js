@@ -9,7 +9,7 @@ import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // slice
 import { setSettingEditFormVisibility , setSettingFormVisibility , addSetting , getSettings , getSetting } from '../../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
+import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import { getTechparams , getTechparamsByCategory , resetTechParamByCategory } from '../../../redux/slices/products/machineTechParam';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -29,7 +29,7 @@ import FormProvider, {
 export default function SettingAddForm() {
   const { initial,error, responseMessage , settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
   const { techparamsByCategory , techparams } = useSelector((state) => state.techparam);
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
+  const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState('');
   const [paramData, setparamData] = useState([]);
@@ -38,7 +38,7 @@ export default function SettingAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
 useLayoutEffect(() => {
-  dispatch(getTechparamcategories())
+  dispatch(getActiveTechparamcategories())
   dispatch(resetTechParamByCategory())
 }, [dispatch]);
 
@@ -145,7 +145,7 @@ useEffect(()=>{
                 // freeSolo
                 required
                 value={ category || null}
-                options={techparamcategories}
+                options={activeTechParamCategories}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => option.name}
                 id="controllable-states-demo"
@@ -159,7 +159,7 @@ useEffect(()=>{
                   }
                 }}
                 renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="category" required />}
+                renderInput={(params) => <TextField {...params}  label="Category" required />}
                 ChipProps={{ size: 'small' }}
               />
               

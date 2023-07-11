@@ -128,8 +128,8 @@ export function getTechparams (){
     }
   }
 }
-// ----------------------------------------------------------------------
 
+// ----------------------------------------------------------------------
 
 export function getTechparamsByCategory (cateegoryId){
   return async (dispatch) =>{
@@ -140,6 +140,7 @@ export function getTechparamsByCategory (cateegoryId){
         params: {
           category: cateegoryId,
           isArchived: false,
+          isActive: true        
         }
       }
       );

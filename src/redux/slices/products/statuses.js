@@ -14,6 +14,7 @@ const initialState = {
   error: null,
   machinestatus: {},
   machinestatuses: [],
+  activeMachineStatuses:[]
 };
 
 const slice = createSlice({
@@ -42,6 +43,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.machinestatuses = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active STATUSES
+    getActiveMachineStatusesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeMachineStatuses = action.payload;
       state.initial = true;
     },
 
@@ -94,7 +103,6 @@ export const {
 
 // ----------------------------------------------------------------------
 
-
 export function getMachinestatuses (){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
@@ -116,6 +124,32 @@ export function getMachinestatuses (){
     }
   }
 }
+
+// ----------------------------------------------------------------------
+
+export function getActiveMachineStatuses (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/statuses`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+
+      dispatch(slice.actions.getActiveMachineStatusesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('statuses loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
 // ----------------------------------------------------------------------
  
 export function getMachineStatus(id) {
