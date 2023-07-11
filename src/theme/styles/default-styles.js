@@ -181,6 +181,11 @@ export const StyledCardContainer = styled(Card)(({ theme }) => ({
   position: 'relative',
 }));
 
+// @root - MachineEditForm - spacing
+export const ListItem = styled('li')(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
 /**
  * @options components props --------------------------------------------------------------------------------------------
  */

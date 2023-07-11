@@ -1,4 +1,5 @@
 export const Snacks = {
+  SAVE_FAILED: 'Update FAILED',
   // @root - CustomerViewForm
   FAILED_DELETE: 'Customer delete failed!',
   // failed verfify
@@ -13,10 +14,29 @@ export const Snacks = {
   // @root - ContactAddForm - Schema
   EMAIL_WARN: 'The email name cannot include leading or trailing spaces',
   EMAIL_INVALID: 'Email must be a valid email address',
-  SAVE_FAILED: 'Contact save failed!',
 };
 
 export const FORMLABELS = {
+  // @root - CustomerEditForm
+  CUSTOMER: {
+    NAME: {
+      label: 'Customer Name',
+      name: 'name',
+    },
+    TRADING_NAME: {
+      label: 'Trading Name / Alias',
+      name: 'tradingName',
+    },
+    MAINSITE: {
+      label: 'Main Site',
+      name: 'mainSite',
+    },
+    BILLING_CONTACT: 'Primary Billing Contact',
+    TECHNICAL_CONTACT: 'Primary Technical Contact',
+    ACCOUNT: 'Account Manager',
+    PROJECT: 'Project Manager',
+    SUPPORT: 'Support Manager',
+  },
   // @root - ContactAddForm
   FIRSTNAME: {
     label: 'First Name',

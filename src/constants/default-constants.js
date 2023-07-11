@@ -14,6 +14,7 @@ export const FORMLABELS = {
   },
   COVER: {
     NEW_CUSTOMER: 'New Customer',
+    NEW_DOCUMENT: 'New Document',
     EDIT_MODEL: 'Edit Model',
     MACHINE_PLACEHOLDER: 'Machine',
     TOOLS: 'Tools',
@@ -210,4 +211,10 @@ export const TITLES = {
     tooltip: 'Only available at large resolutions > 1600px (xl)',
   },
   PRESETS: 'Presets',
+};
+
+export const TOGGLE = {
+  // @root - TOGGLE BUTTONS
+  CUSTOMER_ACCESS: 'Customer Access',
+  ACTIVE: 'Active',
 };

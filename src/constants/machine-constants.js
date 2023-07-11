@@ -31,4 +31,7 @@ export const Snacks = {
   // @root - AddLicenseSchema
   licenseKeyRequired: 'License KEY is REQUIRED',
   licenseDetailRequired: 'License DETAIL is REQUIRED',
+
+  // @root - machine - EditMachineSchema
+  serialNoRequired: 'Serial Number is REQUIRED',
 };

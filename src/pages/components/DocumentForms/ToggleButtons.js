@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Typography, Switch } from '@mui/material';
 import { StyledToggleButtonLabel } from '../../../theme/styles/document-styles';
 import RHFSwitch from '../../../components/hook-form/RHFSwitch';
+import { TOGGLE } from '../../../constants/default-constants';
 
 export default function ToggleButtons({
   customerAccessVal,
@@ -18,7 +19,7 @@ export default function ToggleButtons({
       {isDocument && (
         <Grid display="flex" alignItems="center" mt={1}>
           <StyledToggleButtonLabel variant="body2" p={1}>
-            Customer Access
+            {TOGGLE.CUSTOMER_ACCESS}
           </StyledToggleButtonLabel>
           <Switch checked={customerAccessVal} onChange={handleChange} />
         </Grid>
@@ -26,7 +27,7 @@ export default function ToggleButtons({
       {!isMachine && (
         <Grid display="flex" alignItems="center" mt={1}>
           <StyledToggleButtonLabel variant="body2" p={1}>
-            Active
+            {TOGGLE.ACTIVE}
           </StyledToggleButtonLabel>
           <Switch checked={isActive} onChange={handleIsActiveChange} />
         </Grid>
@@ -34,7 +35,7 @@ export default function ToggleButtons({
       {isMachine && (
         <Grid display="flex" alignItems="center" mt={1}>
           <StyledToggleButtonLabel variant="body2" p={1}>
-            Active
+            {TOGGLE.ACTIVE}
           </StyledToggleButtonLabel>
           <RHFSwitch name={name} />
         </Grid>
