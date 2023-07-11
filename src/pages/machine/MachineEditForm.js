@@ -29,16 +29,17 @@ import { MuiChipsInput } from 'mui-chips-input'
 import { DatePicker } from '@mui/x-date-pickers';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getCustomers } from '../../redux/slices/customer/customer';
-import { getSites } from '../../redux/slices/customer/site';
-import { getMachinestatuses } from '../../redux/slices/products/statuses';
-import { getMachineModels } from '../../redux/slices/products/model';
-import { getSuppliers } from '../../redux/slices/products/supplier';
+import { getCustomers, getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getSites, getActiveSites } from '../../redux/slices/customer/site';
+import { getMachinestatuses, getActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getMachineModels, getActiveMachineModels } from '../../redux/slices/products/model';
+import { getSuppliers, getActiveSuppliers } from '../../redux/slices/products/supplier';
 // global
 import { CONFIG } from '../../config-global';
 // slice
 import {
   getMachines,
+  getActiveMachines,
   updateMachine,
   getMachine,
   setMachineEditFormVisibility,
@@ -65,19 +66,21 @@ import AddFormButtons from '../components/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function MachineEditForm() {
-  const { machine } = useSelector((state) => state.machine);
   const { users } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { activeMachines, machine } = useSelector((state) => state.machine);
+  const { activeSuppliers } = useSelector((state) => state.supplier);
+  const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeSites } = useSelector((state) => state.site);
+  const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
-  const { machines } = useSelector((state) => state.machine);
-  const { suppliers } = useSelector((state) => state.supplier);
-  const { machineModels } = useSelector((state) => state.machinemodel);
-  const { machinestatuses } = useSelector((state) => state.machinestatus);
-  const { customers } = useSelector((state) => state.customer);
-  const { sites } = useSelector((state) => state.site);
   const { machineConnections } = useSelector((state) => state.machineConnections);
+
+
   // console.log("machine Edit machine?.isDisabled : ",machine?.isDisabled)
   const [parMachineVal, setParMachineVal] = useState('');
   const [parMachSerVal, setParMachSerVal] = useState('');
@@ -102,11 +105,11 @@ export default function MachineEditForm() {
   const [chips, setChips] = useState([])
 
   useLayoutEffect(() => {
-    dispatch(getCustomers());
-    dispatch(getMachines());
-    dispatch(getMachinestatuses());
-    dispatch(getMachineModels());
-    dispatch(getSuppliers());
+    dispatch(getActiveCustomers());
+    dispatch(getActiveMachines());
+    dispatch(getActiveMachineModels());
+    dispatch(getActiveSuppliers());
+    dispatch(getActiveMachineStatuses());
     dispatch(getSPContacts());
     dispatch(getMachineConnections());
     setChips(machine?.alias)
@@ -124,17 +127,17 @@ export default function MachineEditForm() {
     setSuppManVal(machine?.supportManager);
     setMachineConnectionVal(machine?.machineConnections);
     setConnections(machine?.machineConnections);
-    if(machine?.instalationSite){
-      setInstallationDateToggle(false);
-      setShippingDateToggle(false);
-    }
+    // if(machine?.instalationSite){
+    //   setInstallationDateToggle(false);
+    //   setShippingDateToggle(false);
+    // }
     setInstallationDate(machine?.installationDate);
     setShippingDate(machine?.shippingDate);
   }, [dispatch, machine]);
 
   useLayoutEffect(() => {
     if (customerVal !== null && customerVal?.id !== '') {
-      dispatch(getSites(customerVal?._id));
+      dispatch(getActiveSites(customerVal?._id));
     }
     //   setInstallVal(null);
     //   setBillingVal(null);
@@ -323,7 +326,7 @@ export default function MachineEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={parMachSerVal || null}
-                  options={machines.filter(option => option.serialNo !== machine.serialNo)}
+                  options={activeMachines.filter(option => option.serialNo !== machine.serialNo)}
                   getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
                   isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                   onChange={(event, newValue) => {
@@ -357,7 +360,7 @@ export default function MachineEditForm() {
                   disablePortal
                   id="combo-box-demo"
                   value={parMachineVal || null}
-                  options={machines}
+                  options={activeMachines}
                   isOptionEqualToValue={(option, value) => option?.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
@@ -398,7 +401,7 @@ export default function MachineEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={supplierVal || null}
-                  options={suppliers}
+                  options={activeSuppliers}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
@@ -420,7 +423,7 @@ export default function MachineEditForm() {
                   // freeSolo
                   disabled={!!machine.machineModel}
                   value={modelVal || null}
-                  options={machineModels}
+                  options={activeMachineModels}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
@@ -465,7 +468,7 @@ export default function MachineEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={statusVal || null}
-                  options={machinestatuses}
+                  options={activeMachineStatuses}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   getOptionDisabled={(option) =>
@@ -495,7 +498,7 @@ export default function MachineEditForm() {
               >
                 <Autocomplete
                   value={customerVal || null}
-                  options={customers}
+                  options={activeCustomers}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
@@ -523,18 +526,18 @@ export default function MachineEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={installVal || null}
-                  options={sites}
+                  options={activeSites}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setInstallVal(newValue);
-                      setInstallationDateToggle(false);
-                      setShippingDateToggle(false);
+                      // setInstallationDateToggle(false);
+                      // setShippingDateToggle(false);
                     } else {
                       setInstallVal('');
-                      setInstallationDateToggle(true);
-                      setShippingDateToggle(true);
+                      // setInstallationDateToggle(true);
+                      // setShippingDateToggle(true);
                     }
                   }}
                   renderOption={(props, option) => (
@@ -547,7 +550,7 @@ export default function MachineEditForm() {
                 <Autocomplete
                   // freeSolo
                   value={billingVal || null}
-                  options={sites}
+                  options={activeSites}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
@@ -575,14 +578,14 @@ export default function MachineEditForm() {
                 <DatePicker
                   label="Installation Date"
                   value={installationDate  || new Date()}
-                  disabled={disableInstallationDate}
+                  // disabled={disableInstallationDate}
                   onChange={(newValue) => setInstallationDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                 />
                 <DatePicker
                   label="Shipping Date"
                   value={shippingDate || new Date()}
-                  disabled={disableShippingDate}                    
+                  // disabled={disableShippingDate}                    
                   onChange={(newValue) => setShippingDate(newValue)}
                   renderInput={(params) => <TextField {...params} />}
                 />

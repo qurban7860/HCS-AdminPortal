@@ -14,6 +14,7 @@ const initialState = {
   error: null,
   techparamcategory: {},
   techparamcategories: [],
+  activeTechParamCategories: []
 };
 
 const slice = createSlice({
@@ -37,7 +38,15 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET  TECH PARAM CATEGORY
+    // GET ACTIVE TECH PARAM CATEGORY
+    getActiveTechparamcategoriesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeTechParamCategories = action.payload;
+      state.initial = true;
+    },
+
+    // GET TECH PARAM CATEGORY
     getTechparamcategoriesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -86,6 +95,7 @@ export default slice.reducer;
 
 // Actions
 export const {
+  getActiveTechparamcategoriesSuccess,
   setTecparamEditFormVisibility,
   resetTechParamCategory,
   resetTechParamCategories,
@@ -107,6 +117,32 @@ export function getTechparamcategories(){
       );
       
       dispatch(slice.actions.getTechparamcategoriesSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('techparamcategories loaded successfully'));
+      // dispatch(slice.actions)
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getActiveTechparamcategories(){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/techparamcategories`, 
+        {
+          params: {
+            isArchived: false,
+            isActive: true
+          }
+        }
+      );
+      
+      dispatch(slice.actions.getActiveTechparamcategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('techparamcategories loaded successfully'));
       // dispatch(slice.actions)
     } catch (error) {
