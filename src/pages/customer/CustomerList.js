@@ -1,7 +1,7 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Card, Grid, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
@@ -86,14 +86,15 @@ export default function CustomerList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
+  // necessary. don't delete.
+  // const { themeStretch } = useSettingsContext();
+  // const { enqueueSnackbar } = useSnackbar();
+  // const { isMobile } = useResponsive('down', 'sm');
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { isMobile } = useResponsive('down', 'sm');
 
   const { customers, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.customer
@@ -261,7 +262,6 @@ export default function CustomerList() {
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom
@@ -272,6 +272,9 @@ export default function CustomerList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         </Card>
+        <Grid md={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
       </Container>
 
       <ConfirmDialog

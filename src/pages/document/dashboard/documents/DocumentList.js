@@ -39,7 +39,7 @@ import { getDocuments, deleteDocument } from '../../../../redux/slices/document/
 import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
 import { StyledCardContainer } from '../../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../../constants/default-constants';
+import { FORMLABELS, DIALOGS, BUTTONS } from '../../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -174,7 +174,7 @@ export default function DocumentList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.CUSTOMERS} />
+          <Cover name={FORMLABELS.COVER.DOCUMENTS} />
         </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
@@ -267,12 +267,8 @@ export default function DocumentList() {
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"
@@ -282,7 +278,7 @@ export default function DocumentList() {
               handleCloseConfirm();
             }}
           >
-            Delete
+            {BUTTONS.DELETE}
           </Button>
         }
       />

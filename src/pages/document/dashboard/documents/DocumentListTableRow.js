@@ -88,71 +88,23 @@ export default function DocumentListTableRow({
   };
 
   return (
-    <>
-      <StyledTableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
+    <StyledTableRow hover selected={selected}>
+      {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
-        {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
-        <TableCell align="left">{customer?.name}</TableCell>
-        <TableCell align="left">{machine?.serialNo}</TableCell>
-        <TableCell align="left">{docType?.name}</TableCell>
-        <TableCell align="left">{docCategory?.name}</TableCell>
-        <TableCell align="center">
-          
-          <Switch checked={customerAccess} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell align="center">
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-        {/* <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>   */}
-      </StyledTableRow>
-
-      {/* <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover> */}
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      /> */}
-    </>
+      {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
+      <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
+      <TableCell align="left">{customer?.name}</TableCell>
+      <TableCell align="left">{machine?.serialNo}</TableCell>
+      <TableCell align="left">{docType?.name}</TableCell>
+      <TableCell align="left">{docCategory?.name}</TableCell>
+      <TableCell align="center">
+        <Switch checked={customerAccess} disabled size="small" />{' '}
+      </TableCell>
+      <TableCell align="center">
+        <Switch checked={isActive} disabled size="small" />{' '}
+      </TableCell>
+      <TableCell align="right">{fDate(createdAt)}</TableCell>
+    </StyledTableRow>
   );
 }
