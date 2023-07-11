@@ -1,19 +1,7 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import {
-  Card,
-  Grid,
-  Dialog,
-  Typography,
-  Accordion,
-  AccordionSummary,
-  Link,
-  Stack,
-  Breadcrumbs,
-} from '@mui/material';
+import { Card, Grid, Typography, Accordion, AccordionSummary, Link, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -36,8 +24,6 @@ import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slice
 import { BREADCRUMBS } from '../../constants/default-constants';
 // import ContactViewForm from './contact/ContactViewForm';
 
-import ViewFormField from '../components/ViewForms/ViewFormField';
-
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList() {
@@ -46,15 +32,12 @@ export default function CustomerContactList() {
   });
   const [controlled, setControlled] = useState(false);
 
-  const dispatch = useDispatch();
   const { customer, error, initial, responseMessage } = useSelector((state) => state.customer);
   const { customerMachines, machine } = useSelector((state) => state.machine);
 
   console.log('customerMachines : ', customerMachines);
   const [checked, setChecked] = useState(false);
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
@@ -63,7 +46,12 @@ export default function CustomerContactList() {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
   const [openMachine, setOpenMachine] = useState(false);
   const [machineData, setMachineData] = useState({});
+  // hooks
   const address = {};
+  const dispatch = useDispatch();
+  const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
 
   // --------------------------hooks--------------------------------------
   useEffect(() => {

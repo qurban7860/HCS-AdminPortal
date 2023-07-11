@@ -1,5 +1,7 @@
 export const Snacks = {
   SAVE_FAILED: 'Update FAILED',
+  SAVE_SUCCESS: 'Update SUCCESS',
+
   // @root - CustomerViewForm
   FAILED_DELETE: 'Customer delete failed!',
   // failed verfify

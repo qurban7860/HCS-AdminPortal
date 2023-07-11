@@ -22,3 +22,23 @@ export const EditCustomerSchema = Yup.object().shape({
   // primaryBillingContact: Yup.string().nullable(),
   // primaryTechnicalContact: Yup.string().nullable(),
 });
+
+export const EditContactSchema = Yup.object().shape({
+  // customer: Yup.string(),
+  firstName: Yup.string().max(40).required(),
+  lastName: Yup.string().max(40),
+  title: Yup.string(),
+  contactTypes: Yup.array(),
+  // phone: Yup.string(),
+  email: Yup.string()
+    .trim('The contact name cannot include leading and trailing spaces')
+    .email('Email must be a valid email address'),
+  street: Yup.string(),
+  suburb: Yup.string(),
+  city: Yup.string(),
+  region: Yup.string(),
+  postcode: Yup.string(),
+  isActive: Yup.boolean(),
+  // country: Yup.string().nullable()
+  // isPrimary: Yup.boolean(),
+});

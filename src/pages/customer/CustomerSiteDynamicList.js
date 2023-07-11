@@ -1,16 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 // @mui
-import {
-  Stack,
-  Card,
-  CardMedia,
-  Grid,
-  CardActionArea,
-  Link,
-  Breadcrumbs,
-  Typography,
-} from '@mui/material';
+import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -26,6 +17,7 @@ import { PATH_CUSTOMER } from '../../routes/paths';
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData, getComparator, useTable } from '../../components/table';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
@@ -139,11 +131,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
@@ -156,7 +144,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 </Stack>
               }
             />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
         <AddButtonAboveAccordion
           name={BUTTONS.NEWSITE}
