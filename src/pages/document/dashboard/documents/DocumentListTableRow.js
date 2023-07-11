@@ -1,30 +1,10 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
-import {
-  Switch,
-  Stack,
-  Button,
-  TableRow,
-  Checkbox,
-  MenuItem,
-  TableCell,
-  IconButton,
-  Link,
-} from '@mui/material';
+import { Switch, TableCell } from '@mui/material';
+import { StyledTableRow } from '../../../../theme/styles/document-styles';
 // utils
-import { styled, alpha, useTheme } from '@mui/material/styles';
 import { fDate } from '../../../../utils/formatTime';
-import { fCurrency } from '../../../../utils/formatNumber';
-// components
-import Iconify from '../../../../components/iconify';
-import MenuPopover from '../../../../components/menu-popover';
-import ConfirmDialog from '../../../../components/confirm-dialog';
-import Label from '../../../../components/label';
 import LinkTableCell from '../../../components/ListTableTools/LinkTableCell';
-
-import { useSelector } from '../../../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -37,15 +17,6 @@ DocumentListTableRow.propTypes = {
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
 };
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: 'white',
-  },
-  '&:nth-of-type(even)': {
-    backgroundColor: '#f4f6f866',
-  },
-}));
 
 export default function DocumentListTableRow({
   row,
@@ -67,32 +38,8 @@ export default function DocumentListTableRow({
     createdAt,
   } = row;
 
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState(null);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
-
   return (
     <StyledTableRow hover selected={selected}>
-      {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
-      {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       <TableCell align="left">{customer?.name}</TableCell>
       <TableCell align="left">{machine?.serialNo}</TableCell>

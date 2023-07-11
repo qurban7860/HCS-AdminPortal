@@ -1,19 +1,13 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
-import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography, TextField } from '@mui/material';
-// global
-import { CONFIG } from '../../../config-global';
 // slice
 import {
   updateContact,
@@ -22,17 +16,11 @@ import {
   getContacts,
   getContact,
 } from '../../../redux/slices/customer/contact';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
-
 import FormProvider, {
   RHFAutocomplete,
-  RHFSelect,
   RHFMultiSelect,
-  RHFUpload,
   RHFTextField,
   RHFSwitch,
 } from '../../../components/hook-form';
@@ -196,9 +184,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 }}
               >
                 <RHFTextField name="firstName" label="First Name" />
-
                 <RHFTextField name="lastName" label="Last Name" />
-
                 <RHFTextField name="title" label="Title" />
 
                 <RHFMultiSelect
@@ -237,13 +223,9 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                 }}
               >
                 <RHFTextField name="street" label="Street" />
-
                 <RHFTextField name="suburb" label="Suburb" />
-
                 <RHFTextField name="city" label="City" />
-
                 <RHFTextField name="region" label="Region" />
-
                 <RHFTextField name="postcode" label="Post Code" />
 
                 {/* <RHFAutocomplete

@@ -1,19 +1,24 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
-// form
+// hooks
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Breadcrumbs,
+  Autocomplete,
+  TextField,
+} from '@mui/material';
 import { MuiChipsInput } from 'mui-chips-input';
-// global
-import { CONFIG } from '../../config-global';
+import useResponsive from '../../hooks/useResponsive';
 // slice
 import {
   updateCustomer,
@@ -23,19 +28,15 @@ import { getActiveContacts, getSPContacts } from '../../redux/slices/customer/co
 import { getSites } from '../../redux/slices/customer/site';
 
 // routes
-import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import Iconify from '../../components/iconify';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
-// import BreadcrumbsProducer from '../components/BreadcrumbsProducer';
-import FormProvider, {
-  RHFSelect,
-  RHFMultiSelect,
-  RHFTextField,
-  RHFSwitch,
-} from '../../components/hook-form';
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
+// constants
+import { BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -53,10 +54,9 @@ export default function CustomerEditForm() {
   const [chips, setChips] = useState([]);
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
+  const isMobile = useResponsive('sm', 'down');
 
   const EditCustomerSchema = Yup.object().shape({
     name: Yup.string().min(2).max(40).required('Name is required'),
@@ -155,19 +155,19 @@ export default function CustomerEditForm() {
 
   return (
     <>
-      <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}>
-        <AddButtonAboveAccordion name="New Site" toggleCancel={toggleCancel} isCustomer="true" />
-        {/* <BreadcrumbsProducer
-          underline="none"
-          step={1}
-          step2
-          step3
-          path={PATH_CUSTOMER.list}
-          name="Customer"
-          path2={PATH_CUSTOMER.view}
-          name2={!customerEditFormVisibility ? `Edit ${customer?.name}` : `${customer?.name}`}
-        /> */}
-      </Stack>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
+          </Breadcrumbs>
+        </Grid>
+        {!isMobile && <AddButtonAboveAccordion isCustomer />}
+      </Grid>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
           <Grid item xs={18} md={12}>
@@ -187,7 +187,7 @@ export default function CustomerEditForm() {
                   {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
                   <MuiChipsInput
                     name="tradingName"
-                    label="Trading Name"
+                    label="Trading Name / Alias"
                     value={chips}
                     onChange={handleChipChange}
                   />
@@ -383,38 +383,7 @@ export default function CustomerEditForm() {
                     renderInput={(params) => <TextField {...params} label="Support Manager" />}
                     ChipProps={{ size: 'small' }}
                   />
-
-                  {/* <RHFSelect native name="accountManager" label="Account Manager">
-                  <option defaultValue value="null" selected >No Account Manager Selected</option>
-                  {
-                    spContacts.length > 0 && spContacts.map((option) => (
-                      <option key={option._id} value={option._id}>
-                        {option.firstName} {option.lastName}
-                      </option>
-                    ))}
-                </RHFSelect>
-
-                <RHFSelect native name="projectManager" label="Project Manager">
-                  <option defaultValue value="null" selected >No Project Manager Selected</option>
-                  {
-                    spContacts.length > 0 && spContacts.map((option) => (
-                      <option key={option._id} value={option._id}>
-                        {option.firstName} {option.lastName}
-                      </option>
-                    ))}
-                </RHFSelect>
-
-                <RHFSelect native name="supportManager" label="Support Manager">
-                  <option defaultValue value="null" selected >No Support Manager Selected</option>
-                  {
-                    spContacts.length > 0 && spContacts.map((option) => (
-                      <option key={option._id} value={option._id}>
-                        {option.firstName} {option.lastName}
-                      </option>
-                    ))}
-                </RHFSelect> */}
                 </Box>
-
                 {customer?.type !== 'SP' ? (
                   <RHFSwitch
                     name="isActive"
@@ -430,7 +399,6 @@ export default function CustomerEditForm() {
                           color: 'text.secondary',
                         }}
                       >
-                        {' '}
                         Active
                       </Typography>
                     }

@@ -243,11 +243,6 @@ export default function DocumentList() {
                       )
                     )}
 
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>

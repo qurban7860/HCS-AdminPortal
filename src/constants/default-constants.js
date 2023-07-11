@@ -20,6 +20,7 @@ export const FORMLABELS = {
     SETTINGS: 'Settings',
     CUSTOMERS: 'Customers',
     DOCUMENTS: 'Documents',
+    EDIT_DOCUMENT: 'Edit Document',
   },
   // @root FormLabels
   HOWICK: 'Howick Resources',

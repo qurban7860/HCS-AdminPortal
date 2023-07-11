@@ -20,7 +20,6 @@ import FormProvider, {
   RHFMultiSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch,
 } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';

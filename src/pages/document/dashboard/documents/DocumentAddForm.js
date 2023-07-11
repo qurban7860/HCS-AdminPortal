@@ -12,7 +12,6 @@ import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
 import {
-  getDocuments,
   addDocument,
   getCustomerDocuments,
   getMachineDocuments,
@@ -37,18 +36,13 @@ import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../../../redux/slices/customer/site';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFMultiSelect,
-  RHFTextField,
-  RHFName,
-  RHFSwitch,
-  RHFUpload,
-} from '../../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFName, RHFUpload } from '../../../../components/hook-form';
 // assets
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import RadioButtons from '../../../components/DocumentForms/RadioButtons';
+import DocumentMachineAddForm from './DocumentAddForms/DocumentMachineAddForm';
+// constants
 import {
   allowedExtensions,
   DocRadioValue,
@@ -57,8 +51,7 @@ import {
   Snacks,
 } from '../../../../constants/document-constants';
 import { FORMLABELS } from '../../../../constants/default-constants';
-// import DocumentCover from '../../../components/DocumentForms/DocumentCover';
-import DocumentMachineAddForm from './DocumentAddForms/DocumentMachineAddForm';
+import DialogPreview from './Dialogs/DialogPreview';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -777,21 +770,12 @@ export default function DocumentAddForm({
       </Box>
 
       {/* dialog preview */}
-      <Dialog
-        maxWidth="md"
+      <DialogPreview
         open={preview}
         onClose={handleClosePreview}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel content={nameVal} onClick={() => handleClosePreview()} />
-        <Box
-          component="img"
-          sx={{ minWidth: '400px', minHeight: '400px' }}
-          alt={defaultValues?.name}
-          src={previewVal}
-        />
-      </Dialog>
+        content={nameVal}
+        src={previewVal}
+      />
     </FormProvider>
   );
 }
