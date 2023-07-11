@@ -335,6 +335,7 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus })
     inputData = inputData.filter(
       (contact) =>
         contact?.firstName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        contact?.lastName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

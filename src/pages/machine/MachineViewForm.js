@@ -253,7 +253,7 @@ export default function MachineViewForm() {
         <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
         <CommaJoinField sm={6} arrayParam={machine.machineConnections} heading='Connected Machines'/>
         <ViewFormField
-          sm={6}
+          sm={12}
           heading="Work Order / Purchase Order"
           param={defaultValues?.workOrderRef}
         />
