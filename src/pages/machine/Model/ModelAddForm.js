@@ -13,7 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography, Container} from '@mui/material';
 // slice
 import { addMachineModel } from '../../../redux/slices/products/model';
-import { getCategories } from '../../../redux/slices/products/category';
+import { getActiveCategories } from '../../../redux/slices/products/category';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -32,7 +32,7 @@ export default function ModelAddForm() {
 
   const { userId, user } = useAuthContext();
 
-  const { categories } = useSelector((state) => state.category);
+  const { activeCategories } = useSelector((state) => state.category);
 
   const dispatch = useDispatch();
   
@@ -42,7 +42,7 @@ export default function ModelAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   const ModelAddSchema = Yup.object().shape({
-    name: Yup.string().trim().max(50).required('Name is required') ,
+    name: Yup.string().trim().max(40).required('Name is required') ,
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
     // category: Yup.string().required('Category is required'),
@@ -74,7 +74,7 @@ export default function ModelAddForm() {
   const values = watch();
 
   useLayoutEffect(() => {
-    dispatch(getCategories());
+    dispatch(getActiveCategories());
   }, [dispatch]);
 
   useEffect(() => {
@@ -121,9 +121,10 @@ export default function ModelAddForm() {
                 <Card sx={{ p: 3}}>
                   <Stack spacing={3}>
                   <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
+                    <RHFTextField name="name" label="Name*"  />
                     <Autocomplete
                       value={modelVal || null}
-                      options={categories}
+                      options={activeCategories}
                       isOptionEqualToValue={(option, value) => option.name === value.name}
                       getOptionLabel={(option) => option.name}
                       onChange={(event, newValue) => {
@@ -133,7 +134,6 @@ export default function ModelAddForm() {
                       renderInput={(params) => <TextField {...params} label="Category" />}
                       ChipProps={{ size: 'small' }}
                     />
-                    <RHFTextField name="name" label="Name"  />
                     <RHFTextField name="description" label="Description" minRows={7} multiline />
 
                     <RHFSwitch

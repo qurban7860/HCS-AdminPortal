@@ -30,7 +30,7 @@ export default function CategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt} = row;
+  const { name, isActive, connections, createdAt} = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -65,6 +65,8 @@ export default function CategoryListTableRow({
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
 
         <TableCell align="center"> <Switch  checked = { isActive } disabled  sx={{my:-1}}/> </TableCell>
+
+        <TableCell align="center"> <Switch  checked = { connections || false } disabled  sx={{my:-1}}/> </TableCell>
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
 

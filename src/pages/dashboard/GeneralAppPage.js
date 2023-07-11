@@ -236,7 +236,7 @@ export default function GeneralAppPage() {
                 }}
               >
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6"> GLOBAL</Typography>
+                  <Typography variant="h6">Machine by Countries</Typography>
                 </Stack>
                 <Divider />
                 <ChartBar
@@ -257,7 +257,7 @@ export default function GeneralAppPage() {
                 variants={varFade().inDown}
               >
                 <Stack sx={{ pt: 2 }}>
-                  <Typography variant="h6">Machine</Typography>
+                  <Typography variant="h6">Machine by Models</Typography>
                 </Stack>
                 <Divider />
                 <ChartBar

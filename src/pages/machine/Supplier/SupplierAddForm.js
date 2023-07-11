@@ -137,7 +137,7 @@ export default function StatusAddForm() {
             <Card sx={{ p: 3, mt: 3}}>
               <Stack spacing={3}>
                 <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-                <RHFTextField name="name" label="Name"  />
+                <RHFTextField name="name" label="Name*"  />
                 </Box>
               </Stack>
             </Card>
@@ -169,8 +169,8 @@ export default function StatusAddForm() {
                   <RHFTextField name="street" label="Street"/>
                   <RHFTextField name="suburb" label="Suburb" />
                   <RHFTextField name="city" label="City" />
-                  <RHFTextField name="postcode" label="Post Code" />
                   <RHFTextField name="region" label="Region" />
+                  <RHFTextField name="postcode" label="Post Code" />
                   <RHFAutocomplete
                      id="country-select-demo"
                       options={countries}

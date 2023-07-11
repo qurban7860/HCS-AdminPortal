@@ -33,6 +33,7 @@ export default function CategoryEditForm() {
     name: Yup.string().min(2).max(50).required('Name is required') ,
     description: Yup.string().max(2000),
     isActive : Yup.boolean(),
+    connections : Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -40,10 +41,12 @@ export default function CategoryEditForm() {
         name:category?.name || '',
         description:category?.description || '',
         isActive: category.isActive ,
+        connections: category.connections || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [category]
   );
+
   const methods = useForm({
     resolver: yupResolver(EditCategorySchema),
     defaultValues,
@@ -99,9 +102,30 @@ export default function CategoryEditForm() {
               <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
                 <RHFTextField name="name" label="Name"/>
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
-                <RHFSwitch name="isActive" labelPlacement="start" label={
-                  <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } 
-                />
+                <Grid display="flex" alignItems="end">
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <>
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                          Active
+                        </Typography>
+                      </>
+                    } 
+                  />
+                  <RHFSwitch
+                    name="connections"
+                    labelPlacement="start"
+                    label={
+                      <>
+                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
+                          Connectable as child
+                        </Typography>
+                      </>
+                    } 
+                  />
+                </Grid>
               </Box>
             </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
