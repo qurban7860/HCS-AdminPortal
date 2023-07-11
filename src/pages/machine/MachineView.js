@@ -154,7 +154,7 @@ export default function MachineView({ editPage }) {
       value: 'license',
       label: 'License',
       icon: <Iconify icon="mdi:book-cog-outline" />,
-      component: <MachineLicenseList />,
+      // component: <MachineLicenseList />,
     },
     {
       // disabled: setMachineEditFormVisibility,
