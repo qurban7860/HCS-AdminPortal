@@ -127,7 +127,6 @@ export default function CustomerContactList(currentContact = null) {
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
   const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName || ''}`);
-
   // var conditions for rendering the contact view, edit, and add forms
   const shouldShowContactView = isExpanded && !contactEditFormVisibility;
   const shouldShowContactEdit = contactEditFormVisibility && !formVisibility;
@@ -207,13 +206,13 @@ export default function CustomerContactList(currentContact = null) {
             >
               <Grid container justifyContent="flex-start" direction="column" gap={1}>
                 {dataFiltered.map((contact, index) => {
-                  const borderTopVal = index !== 0 ? '0px solid white' : '';
+                  const borderTopVal = index !== 0 || null ? '0px solid white' : '';
                   return (
                     <>
-                      {index !== activeIndex && (
+                      {contact._id !== activeIndex && (
                         <Grid
                           item
-                          key={index}
+                          key={contact._id}
                           xs={12}
                           sm={12}
                           md={12}
@@ -221,8 +220,8 @@ export default function CustomerContactList(currentContact = null) {
                           display={{ xs: 'flex', lg: 'block' }}
                           onClick={() => {
                             if (!contactEditFormVisibility && !formVisibility) {
-                              handleActiveCard(index);
-                              handleExpand(index);
+                              handleActiveCard(contact._id);
+                              handleExpand(contact._id);
                             }
                           }}
                           sx={{
@@ -230,12 +229,12 @@ export default function CustomerContactList(currentContact = null) {
                           }}
                         >
                           <StyledCardWrapper
-                            condition1={activeCardIndex !== index}
-                            condition2={activeCardIndex === index}
+                            condition1={activeCardIndex !== contact._id}
+                            condition2={activeCardIndex === contact._id}
                             isMobile={isMobile}
                           >
                             <CardActionArea
-                              active={activeIndex === index}
+                              active={activeIndex === contact._id}
                               disabled={contactEditFormVisibility || formVisibility}
                             >
                               <Link
@@ -245,17 +244,17 @@ export default function CustomerContactList(currentContact = null) {
                                   await dispatch(getContact(customer._id, contact._id));
                                   setOpenContact(true);
                                   if (!isExpanded && !formVisibility) {
-                                    handleExpand(index);
+                                    handleExpand(contact._id);
                                     setContactFormVisibility(!formVisibility);
                                   } else if (
                                     isExpanded &&
                                     currentContactData !== contact &&
                                     !formVisibility
                                   ) {
-                                    handleExpand(index);
+                                    handleExpand(contact._id);
                                   } else {
                                     setIsExpanded(false);
-                                    index = null;
+                                    contact._id = null;
                                   }
                                 }}
                               >
@@ -272,11 +271,7 @@ export default function CustomerContactList(currentContact = null) {
                                     />
                                   )}
                                   <DetailsSection
-                                    content={
-                                      fullName[index].length >= 15
-                                        ? contact.firstName
-                                        : fullName[index]
-                                    }
+                                    content={`${contact.firstName} ${contact.lastName}`}
                                     content2={contact.title ? contact.title : <br />}
                                     content3={contact.email ? contact.email : <br />}
                                   />
