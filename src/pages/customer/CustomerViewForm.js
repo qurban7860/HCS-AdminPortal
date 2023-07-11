@@ -5,10 +5,9 @@ import { useNavigate } from 'react-router-dom';
 import { Card, Grid, Breadcrumbs, Tooltip } from '@mui/material';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
-// components
+// hooks
 import { useSnackbar } from '../../components/snackbar';
-import FormLabel from '../components/DocumentForms/FormLabel';
-import { TableNoData } from '../../components/table';
+import useResponsive from '../../hooks/useResponsive';
 // slices
 import {
   getCustomer,
@@ -16,14 +15,17 @@ import {
   deleteCustomer,
   setCustomerVerification,
 } from '../../redux/slices/customer/customer';
+// components
+import FormLabel from '../components/DocumentForms/FormLabel';
+import { TableNoData } from '../../components/table';
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
-import { Snacks } from '../../constants/customer-constants';
-import useResponsive from '../../hooks/useResponsive';
+import { Snacks, FORMLABELS as formLABELS } from '../../constants/customer-constants';
 
 // ----------------------------------------------------------------------
 
@@ -36,10 +38,32 @@ export default function CustomerViewForm() {
   const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
   const isNotFound = !customer;
-  // console.log("customer : ",customer)
-  // const toggleEdit = () => {
-  //   dispatch(setCustomerEditFormVisibility(true));
-  // };
+
+  // ----------------------------useMemo---------------------------------
+  const defaultValues = useMemo(
+    () => ({
+      id: customer?._id || '',
+      name: customer?.name || '',
+      tradingName: customer?.tradingName || '',
+      accountManager: customer?.accountManager || '',
+      projectManager: customer?.projectManager || '',
+      supportManager: customer?.supportManager || '',
+      mainSite: customer?.mainSite || null,
+      primaryBillingContact: customer?.primaryBillingContact || null,
+      primaryTechnicalContact: customer?.primaryTechnicalContact || null,
+      isActive: customer?.isActive,
+      createdAt: customer?.createdAt || '',
+      createdByFullName: customer?.createdBy?.name || '',
+      createdIP: customer?.createdIP || '',
+      updatedAt: customer?.updatedAt || '',
+      updatedByFullName: customer?.updatedBy?.name || '',
+      updatedIP: customer?.updatedIP || '',
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [customer]
+  );
+
+  // ----------------------------handle functions---------------------------------
 
   const handleEdit = async () => {
     await dispatch(getCustomer(customer._id));
@@ -73,50 +97,22 @@ export default function CustomerViewForm() {
     }
   };
 
-  const defaultValues = useMemo(
-    () => ({
-      id: customer?._id || '',
-      name: customer?.name || '',
-      tradingName: customer?.tradingName || '',
-      accountManager: customer?.accountManager || '',
-      projectManager: customer?.projectManager || '',
-      supportManager: customer?.supportManager || '',
-      mainSite: customer?.mainSite || null,
-      primaryBillingContact: customer?.primaryBillingContact || null,
-      primaryTechnicalContact: customer?.primaryTechnicalContact || null,
-      isActive: customer?.isActive,
-      createdAt: customer?.createdAt || '',
-      createdByFullName: customer?.createdBy?.name || '',
-      createdIP: customer?.createdIP || '',
-      updatedAt: customer?.updatedAt || '',
-      updatedByFullName: customer?.updatedBy?.name || '',
-      updatedIP: customer?.updatedIP || '',
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [customer]
-  );
-
-  // const shouldShowCustomerView = isExpanded && !setCustomerEditFormVisibility;
-  // const shouldShowCustomerEdit = setCustomerEditFormVisibility && !isExpanded;
-
   return (
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
         {!isMobile && <AddButtonAboveAccordion isCustomer />}
       </Grid>
       <Grid item lg={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
+
+      {/* customer view form */}
       <Grid container direction="row" mt={isMobile && 2}>
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
@@ -140,25 +136,41 @@ export default function CustomerViewForm() {
               </Tooltip>
             </Grid>
             <Grid container>
-              <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
               <ViewFormField
                 sm={12}
-                heading="Trading Name / Alias"
+                heading={formLABELS.CUSTOMER.NAME.label}
+                param={defaultValues?.name}
+              />
+              <ViewFormField
+                sm={12}
+                heading={formLABELS.CUSTOMER.TRADING_NAME.label}
                 chips={defaultValues?.tradingName}
               />
-              <ViewFormField sm={6} heading="Phone" param={defaultValues?.mainSite?.phone} />
-              <ViewFormField sm={6} heading="Fax" param={defaultValues?.mainSite?.fax} />
-              <ViewFormField sm={6} heading="Email" param={defaultValues?.mainSite?.email} />
+              <ViewFormField
+                sm={6}
+                heading={formLABELS.CUSTOMER.PHONE}
+                param={defaultValues?.mainSite?.phone}
+              />
+              <ViewFormField
+                sm={6}
+                heading={formLABELS.CUSTOMER.FAX}
+                param={defaultValues?.mainSite?.fax}
+              />
+              <ViewFormField
+                sm={6}
+                heading={formLABELS.CUSTOMER.EMAIL}
+                param={defaultValues?.mainSite?.email}
+              />
             </Grid>
             <ViewFormField
               sm={6}
-              heading="Primary Billing Contact"
+              heading={formLABELS.CUSTOMER.BILLING_CONTACT}
               param={defaultValues?.primaryBillingContact?.firstName}
               secondParam={defaultValues?.primaryBillingContact?.lastName}
             />
             <ViewFormField
               sm={6}
-              heading="Primary Technical Contact"
+              heading={formLABELS.CUSTOMER.TECHNICAL_CONTACT}
               param={defaultValues?.primaryTechnicalContact?.firstName}
               secondParam={defaultValues?.primaryTechnicalContact?.lastName}
             />
@@ -169,32 +181,32 @@ export default function CustomerViewForm() {
                 <ViewFormField sm={6} heading="Site Name" param={defaultValues?.mainSite?.name} />
                 <ViewFormField
                   sm={6}
-                  heading="Street"
+                  heading={formLABELS.STREET.label}
                   param={defaultValues?.mainSite.address?.street}
                 />
                 <ViewFormField
                   sm={6}
-                  heading="Suburb"
+                  heading={formLABELS.SUBURB.label}
                   param={defaultValues?.mainSite.address?.suburb}
                 />
                 <ViewFormField
                   sm={6}
-                  heading="City"
+                  heading={formLABELS.CITY.label}
                   param={defaultValues?.mainSite.address?.city}
                 />
                 <ViewFormField
                   sm={6}
-                  heading="Post Code"
+                  heading={formLABELS.POSTCODE.label}
                   param={defaultValues?.mainSite.address?.postcode}
                 />
                 <ViewFormField
                   sm={6}
-                  heading="Region"
+                  heading={formLABELS.REGION.label}
                   param={defaultValues?.mainSite.address?.region}
                 />
                 <ViewFormField
                   sm={6}
-                  heading="Country"
+                  heading={formLABELS.COUNTRY.label}
                   param={defaultValues?.mainSite.address?.country}
                 />
               </Grid>
@@ -203,19 +215,19 @@ export default function CustomerViewForm() {
               <FormLabel content={FORMLABELS.HOWICK} />
               <ViewFormField
                 sm={6}
-                heading="Account Manager"
+                heading={formLABELS.CUSTOMER.ACCOUNT}
                 param={defaultValues?.accountManager?.firstName}
                 secondParam={defaultValues?.accountManager?.lastName}
               />
               <ViewFormField
                 sm={6}
-                heading="Project Manager"
+                heading={formLABELS.CUSTOMER.PROJECT}
                 param={defaultValues?.projectManager?.firstName}
                 secondParam={defaultValues?.projectManager?.lastName}
               />
               <ViewFormField
                 sm={6}
-                heading="Suppport Manager"
+                heading={formLABELS.CUSTOMER.SUPPORT}
                 param={defaultValues?.supportManager?.firstName}
                 secondParam={defaultValues?.supportManager?.lastName}
               />
@@ -226,10 +238,6 @@ export default function CustomerViewForm() {
             </Grid>
           </Card>
         </Grid>
-
-        {/* <Grid item md={12}>
-          {shouldShowCustomerEdit && <CustomerEditForm customer={customer} />}
-        </Grid> */}
       </Grid>
     </>
   );
