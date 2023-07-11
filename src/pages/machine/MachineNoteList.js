@@ -201,7 +201,6 @@ const toggleChecked = () =>
       setChecked(value => !value);
       dispatch(setNoteFormVisibility(!formVisibility));
     };
-// console.log("screen Width : ",window.innerWidth)
   const handleDeleteRow = async (id) => {
     try {
       await dispatch(deleteNote(id));
@@ -253,11 +252,15 @@ const toggleChecked = () =>
   return (
     <>
       {!noteEditFormVisibility && (
-        <AddButtonAboveAccordion
-          name="New Note"
-          toggleChecked={toggleChecked}
-          FormVisibility={formVisibility}
-        />
+        <Stack alignItems="flex-end" sx={{ mb: 2, px: 4 }}>
+          <AddButtonAboveAccordion
+            name="New Note"
+            toggleChecked={toggleChecked}
+            FormVisibility={formVisibility}
+            toggleCancel={toggleChecked}
+            sx={{ml:'auto'}}
+          />
+        </Stack>
       )}
       <Card>
         {noteEditFormVisibility && <NoteEditForm />}
@@ -297,7 +300,7 @@ const toggleChecked = () =>
               </Accordion>
             );
           })}
-        <TableNoData isNotFound={isNotFound} />
+        {!formVisibility && !noteEditFormVisibility &&<TableNoData isNotFound={isNotFound} />}
       </Card>
     </>
   );
