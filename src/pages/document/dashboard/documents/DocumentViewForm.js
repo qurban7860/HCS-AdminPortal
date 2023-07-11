@@ -27,10 +27,9 @@ import {
   FORMLABELS,
   Snacks,
 } from '../../../../constants/document-constants';
-import { FORMLABELS as DIALOGLABELS, DIALOGS } from '../../../../constants/default-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
-import DialogCustomer from './Dialogs/DialogCustomer';
-import DialogMachine from './Dialogs/DialogMachine';
+import DialogCustomer from '../../../components/Dialog/Dialogs/DialogCustomer';
+import DialogMachine from '../../../components/Dialog/Dialogs/DialogMachine';
 
 // ----------------------------------------------------------------------
 

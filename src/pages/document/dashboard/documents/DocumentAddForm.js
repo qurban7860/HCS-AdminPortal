@@ -51,7 +51,7 @@ import {
   Snacks,
 } from '../../../../constants/document-constants';
 import { FORMLABELS } from '../../../../constants/default-constants';
-import DialogPreview from './Dialogs/DialogPreview';
+import DialogPreview from '../../../components/Dialog/Dialogs/DialogPreview';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {

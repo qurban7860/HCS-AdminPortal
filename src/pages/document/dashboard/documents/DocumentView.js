@@ -1,11 +1,8 @@
-import { Helmet } from 'react-helmet-async';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { useLayoutEffect } from 'react';
+import { useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_MACHINE } from '../../../../routes/paths';
 // redux
 import { getDocumentCategory } from '../../../../redux/slices/document/documentCategory';
 // components

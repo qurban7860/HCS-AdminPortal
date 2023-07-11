@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Box } from '@mui/material';
-import DialogLabel from '../../../../components/Dialog/DialogLabel';
+import DialogLabel from '../DialogLabel';
 
 DialogPreview.propTypes = {
   open: PropTypes.bool,

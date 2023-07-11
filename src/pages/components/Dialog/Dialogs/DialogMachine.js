@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Grid } from '@mui/material';
-import ViewFormField from '../../../../components/ViewForms/ViewFormField';
-import DialogLabel from '../../../../components/Dialog/DialogLabel';
-import DialogLink from '../../../../components/Dialog/DialogLink';
-import { DIALOGS, FORMLABELS as DIALOGLABELS } from '../../../../../constants/default-constants';
-import { FORMLABELS } from '../../../../../constants/document-constants';
-import FormLabel from '../../../../components/DocumentForms/FormLabel';
+import ViewFormField from '../../ViewForms/ViewFormField';
+import DialogLabel from '../DialogLabel';
+import DialogLink from '../DialogLink';
+import { DIALOGS, FORMLABELS as DIALOGLABELS } from '../../../../constants/default-constants';
+import { FORMLABELS } from '../../../../constants/document-constants';
+import FormLabel from '../../DocumentForms/FormLabel';
 
 DialogMachine.propTypes = {
   open: PropTypes.bool,
@@ -25,7 +25,7 @@ export default function DialogMachine({ open, onClose, machine, onClick }) {
       keepMounted
       aria-describedby="alert-dialog-slide-description"
     >
-      <DialogLabel onClick={onClose} content={DIALOGLABELS._def.MACHINE} />
+      <DialogLabel onClick={onClose} content="TEST" />
 
       <Grid container sx={{ px: 2, pt: 2 }}>
         <ViewFormField sm={6} heading={FORMLABELS.MACHINE.SERIALNO} param={machine?.serialNo} />

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Grid } from '@mui/material';
-import ViewFormField from '../../../../components/ViewForms/ViewFormField';
-import DialogLabel from '../../../../components/Dialog/DialogLabel';
-import DialogLink from '../../../../components/Dialog/DialogLink';
-import { DIALOGS, FORMLABELS as DIALOGLABELS } from '../../../../../constants/default-constants';
-import { FORMLABELS } from '../../../../../constants/document-constants';
-import FormLabel from '../../../../components/DocumentForms/FormLabel';
+import ViewFormField from '../../ViewForms/ViewFormField';
+import DialogLabel from '../DialogLabel';
+import DialogLink from '../DialogLink';
+import { DIALOGS, FORMLABELS as DIALOGLABELS } from '../../../../constants/default-constants';
+import { FORMLABELS } from '../../../../constants/document-constants';
+import FormLabel from '../../DocumentForms/FormLabel';
 
 DialogCustomer.propTypes = {
   open: PropTypes.bool,
