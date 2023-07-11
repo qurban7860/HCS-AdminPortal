@@ -22,10 +22,15 @@ import FormLabel from '../../../components/DocumentForms/FormLabel';
 import DialogLink from '../../../components/Dialog/DialogLink';
 import DialogLabel from '../../../components/Dialog/DialogLabel';
 // constants
-import { document as documentType, FORMLABELS } from '../../../../constants/document-constants';
+import {
+  document as documentType,
+  FORMLABELS,
+  Snacks,
+} from '../../../../constants/document-constants';
 import { FORMLABELS as DIALOGLABELS, DIALOGS } from '../../../../constants/default-constants';
 import DocumentCover from '../../../components/DocumentForms/DocumentCover';
-import DialogsCustomer from './Dialogs/DialogsCustomer';
+import DialogCustomer from './Dialogs/DialogCustomer';
+import DialogMachine from './Dialogs/DialogMachine';
 
 // ----------------------------------------------------------------------
 
@@ -35,9 +40,7 @@ export default function Document() {
   const { id } = useParams();
   const regEx = /^[^2]*/;
   const { enqueueSnackbar } = useSnackbar();
-
   const { document, documentHistory } = useSelector((state) => state.document);
-  // console.log("documentHistory : ", documentHistory)
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   // console.log("document : ",document)
@@ -67,32 +70,6 @@ export default function Document() {
     }
   }, [documentHistory, dispatch]);
 
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteDocument(id));
-      dispatch(getDocuments());
-      navigate(PATH_DOCUMENT.document.list);
-      enqueueSnackbar('Document deleted Successfully!');
-    } catch (err) {
-      enqueueSnackbar('Document delete failed!', { variant: `error` });
-      console.log('Error:', err);
-    }
-  };
-
-  const handleEdit = async () => {
-    navigate(PATH_DOCUMENT.document.edit(id));
-  };
-
-  const handleOpenCustomer = () => setOpenCustomer(true);
-  const handleCloseCustomer = () => setOpenCustomer(false);
-  const handleViewCustomer = (Id) => {
-    navigate(PATH_CUSTOMER.view(Id));
-  };
-  const handleViewMachine = (Id) => {
-    navigate(PATH_MACHINE.machines.view(Id));
-  };
-  const handleOpenMachine = () => setOpenMachine(true);
-  const handleCloseMachine = () => setOpenMachine(false);
   const defaultValues = useMemo(
     () => ({
       displayName: documentHistory?.displayName || '',
@@ -124,6 +101,33 @@ export default function Document() {
     [documentHistory]
   );
 
+  const onDelete = async () => {
+    try {
+      await dispatch(deleteDocument(id));
+      dispatch(getDocuments());
+      navigate(PATH_DOCUMENT.document.list);
+      enqueueSnackbar('Document deleted Successfully!');
+    } catch (err) {
+      enqueueSnackbar('Document delete failed!', { variant: `error` });
+      console.log('Error:', err);
+    }
+  };
+
+  const handleEdit = async () => {
+    navigate(PATH_DOCUMENT.document.edit(id));
+  };
+
+  const handleOpenCustomer = () => setOpenCustomer(true);
+  const handleCloseCustomer = () => setOpenCustomer(false);
+  const handleViewCustomer = (Id) => {
+    navigate(PATH_CUSTOMER.view(Id));
+  };
+  const handleViewMachine = (Id) => {
+    navigate(PATH_MACHINE.machines.view(Id));
+  };
+  const handleOpenMachine = () => setOpenMachine(true);
+  const handleCloseMachine = () => setOpenMachine(false);
+
   const handleDownload = (documentId, versionId, fileId, fileName, fileExtension) => {
     dispatch(getDocumentDownload(documentId, versionId, fileId))
       .then((res) => {
@@ -142,7 +146,7 @@ export default function Document() {
         } else if (err.message) {
           enqueueSnackbar(err.message, { variant: `error` });
         } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
+          enqueueSnackbar(Snacks.UNEXPECTED, { variant: `error` });
         }
       });
   };
@@ -176,7 +180,7 @@ export default function Document() {
         } else if (err.message) {
           enqueueSnackbar(err.message, { variant: `error` });
         } else {
-          enqueueSnackbar('Something went wrong!', { variant: `error` });
+          enqueueSnackbar(Snacks.UNEXPECTED, { variant: `error` });
         }
       });
   };
@@ -282,181 +286,20 @@ export default function Document() {
           </Grid>
         </Grid>
       </Container>
-      {/* <DialogsCustomer
+      {/* customer view dialog */}
+      <DialogCustomer
         open={openCustomer}
         onClose={handleCloseCustomer}
         customer={customer}
         onClick={() => handleViewCustomer(customer._id)}
-      /> */}
-      {/* dialog for customer */}
-      <Dialog
-        open={openCustomer}
-        onClose={handleCloseCustomer}
-        keepMounted
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogLabel onClick={handleCloseCustomer} content={DIALOGLABELS._def.CUSTOMER} />
-        <Grid item container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={12} heading={FORMLABELS.CUSTOMER.NAME} param={customer?.name} />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.TRADING_NAME}
-            param={customer?.tradingName}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.PHONE}
-            param={customer?.mainSite?.phone}
-          />
-          <ViewFormField sm={6} heading={FORMLABELS.CUSTOMER.FAX} param={customer?.mainSite?.fax} />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.EMAIL}
-            param={customer?.mainSite?.email}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.SITE_NAME}
-            param={customer?.mainSite?.name}
-          />
-          <FormLabel content={DIALOGLABELS.ADDRESS} />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.ADDRESS.STREET}
-            param={customer?.mainSite?.address?.street}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.ADDRESS.SUBURB}
-            param={customer?.mainSite?.address?.suburb}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.ADDRESS.CITY}
-            param={customer?.mainSite?.address?.city}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.ADDRESS.REGION}
-            param={customer?.mainSite?.address?.region}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.ADDRESS.POSTCODE}
-            param={customer?.mainSite?.address?.postcode}
-          />
-          <ViewFormField
-            sm={12}
-            heading={FORMLABELS.CUSTOMER.ADDRESS.COUNTRY}
-            param={customer?.mainSite?.address?.country}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.BILLING}
-            param={
-              customer?.primaryBillingContact &&
-              `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-            }
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.TECHNICAL}
-            param={
-              customer?.primaryTechnicalContact &&
-              `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-            }
-          />
-        </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
-          <FormLabel content={DIALOGLABELS.HOWICK} />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.ACCOUNT}
-            param={customer?.accountManager?.firstName}
-            secondParam={customer?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.PROJECT}
-            param={customer?.projectManager?.firstName}
-            secondParam={customer?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading={FORMLABELS.CUSTOMER.SUPPORT}
-            param={customer?.supportManager?.firstName}
-            secondParam={customer?.supportManager?.lastName}
-          />
-        </Grid>
-        <DialogLink onClick={() => handleViewCustomer(customer._id)} content={DIALOGS.CUSTOMER} />
-      </Dialog>
-
-      {/* dialog for machine */}
-      <Dialog
-        disableEnforceFocus
-        maxWidth="md"
+      />
+      {/* machine view dialog */}
+      <DialogMachine
         open={openMachine}
         onClose={handleCloseMachine}
-        keepMounted
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogLabel onClick={() => handleCloseMachine()} content="Machine" />
-        <DialogContent dividers>
-          <Grid container sx={{ px: 2, pt: 2 }}>
-            <ViewFormField sm={6} heading="Serial No" param={machine?.serialNo} />
-            <ViewFormField sm={6} heading="Name" param={machine?.name} />
-            <ViewFormField
-              sm={6}
-              heading="Previous Machine Serial No"
-              param={machine?.parentSerialNo}
-            />
-            <ViewFormField sm={6} heading="Previous Machine" param={machine?.parentMachine?.name} />
-            <ViewFormField sm={6} heading="Supplier" param={machine?.supplier?.name} />
-            <ViewFormField sm={6} heading="Machine Model" param={machine?.machineModel?.name} />
-            {/* <ViewFormField sm={6} heading="Status"                      param={machine?.status?.name} /> */}
-            {/* <ViewFormField sm={6} heading="Work Order / Perchase Order" param={machine?.workOrderRef} /> */}
-            {/* <ViewFormField sm={12} heading="Customer"                   param={machine?.customer?.name }/> */}
-            <ViewFormField
-              sm={6}
-              heading="Installation Site"
-              param={machine?.instalationSite?.name}
-            />
-            <ViewFormField sm={6} heading="Billing Site" param={machine?.billingSite?.name} />
-            <ViewFormField sm={12} heading="Nearby Milestone" param={machine?.siteMilestone} />
-            {/* <Grid item xs={12} sm={12} sx={{ px:2,py:1, overflowWrap: "break-word", }}>
-            <Typography  variant="overline" sx={{ color: 'text.disabled' }}> Description </Typography>
-            {machine?.description && <Typography variant="body1" component="p" >
-                {descriptionExpanded ? machine?.description : `${machine?.description.slice(0, 90)}...`}{machine?.description?.length > 90 && (
-                <Button onClick={handleDescriptionExpandedToggle} color="primary">
-                  {descriptionExpanded ? 'See Less' : 'See More'}
-                </Button>)}
-            </Typography>}
-          </Grid> */}
-          </Grid>
-          <Grid item sx={{ px: 2, pb: 3 }}>
-            <FormLabel content="Howick Resources" />
-            <ViewFormField
-              sm={6}
-              heading="Account Manager"
-              param={machine?.accountManager?.firstName}
-              secondParam={machine?.accountManager?.lastName}
-            />
-            <ViewFormField
-              sm={6}
-              heading="Project Manager"
-              param={machine?.projectManager?.firstName}
-              secondParam={machine?.projectManager?.lastName}
-            />
-            <ViewFormField
-              sm={6}
-              heading="Suppport Manager"
-              param={machine?.supportManager?.firstName}
-              secondParam={machine?.supportManager?.lastName}
-            />
-          </Grid>
-        </DialogContent>
-        <DialogLink onClick={() => handleViewMachine(machine._id)} content="Go to machine" />
-      </Dialog>
+        machine={machine}
+        onClick={() => handleViewMachine(machine._id)}
+      />
     </>
   );
 }

@@ -7,7 +7,7 @@ export const document = {
     xlsx: 'mdi:file-excel',
     ppt: 'mdi:file-powerpoint',
     pptx: 'mdi:file-powerpoint',
-    img:  'mdi:file-image'
+    img: 'mdi:file-image',
   },
   color: {
     pdf: '#f44336',
@@ -166,6 +166,10 @@ export const Snacks = {
   fileRequired: 'File is required',
   fileMaxSize: 'File size should be less than 10MB',
   fileMaxCount: 'Maximum 10 files can be uploaded at a time.',
+
+  // @root - DocumentViewForm - documents dashboard
+  // preview
+  UNEXPECTED: 'Unexpected error occurred',
 };
 
 // @root - DocumentViewForm - documents dashboard
@@ -177,7 +181,9 @@ export const FORMLABELS = {
   DOCUMENT_CUSTOMER: 'Customer',
   DOCUMENT_MACHINE: 'Machine',
   DOCUMENT_DESC: 'Description',
-
+  ACCOUNT: 'Account Manager',
+  PROJECT: 'Project Manager',
+  SUPPORT: 'Support Manager',
   // dialog customer
   CUSTOMER: {
     NAME: 'Name',
@@ -197,8 +203,18 @@ export const FORMLABELS = {
     },
     BILLING: 'Primary Billing Contact',
     TECHNICAL: 'Primary Technical Contact',
-    ACCOUNT: 'Account Manager',
-    PRORJECT: 'Project Manager',
-    SUPPORT: 'Support Manager',
+  },
+
+  // dialog machine
+  MACHINE: {
+    SERIALNO: 'Serial No',
+    NAME: 'Name',
+    PREVIOUS_SN: 'Previous Machine Serial No',
+    PREVIOUS_MACHINE: 'Previous Machine',
+    SUPPLIER: 'Supplier',
+    MACHINE_MODEL: 'Machine Model',
+    INSTALLATION_SITE: 'Installation Site',
+    BILLING_SITE: 'Billing Site',
+    NEARBY_MILESTONE: 'Nearby Milestone',
   },
 };

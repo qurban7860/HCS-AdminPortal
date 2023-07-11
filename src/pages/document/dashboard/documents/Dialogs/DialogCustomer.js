@@ -8,14 +8,14 @@ import { DIALOGS, FORMLABELS as DIALOGLABELS } from '../../../../../constants/de
 import { FORMLABELS } from '../../../../../constants/document-constants';
 import FormLabel from '../../../../components/DocumentForms/FormLabel';
 
-DialogsCustomer.propTypes = {
+DialogCustomer.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   customer: PropTypes.object,
   onClick: PropTypes.func,
 };
 
-export default function DialogsCustomer({ customer, open, onClose, onClick }) {
+export default function DialogCustomer({ customer, open, onClose, onClick }) {
   return (
     <Dialog
       open={open}
@@ -99,19 +99,19 @@ export default function DialogsCustomer({ customer, open, onClose, onClick }) {
         <FormLabel content={DIALOGLABELS.HOWICK} />
         <ViewFormField
           sm={6}
-          heading={FORMLABELS.CUSTOMER.ACCOUNT}
+          heading={FORMLABELS.ACCOUNT}
           param={customer?.accountManager?.firstName}
           secondParam={customer?.accountManager?.lastName}
         />
         <ViewFormField
           sm={6}
-          heading={FORMLABELS.CUSTOMER.PROJECT}
+          heading={FORMLABELS.PROJECT}
           param={customer?.projectManager?.firstName}
           secondParam={customer?.projectManager?.lastName}
         />
         <ViewFormField
           sm={6}
-          heading={FORMLABELS.CUSTOMER.SUPPORT}
+          heading={FORMLABELS.SUPPORT}
           param={customer?.supportManager?.firstName}
           secondParam={customer?.supportManager?.lastName}
         />

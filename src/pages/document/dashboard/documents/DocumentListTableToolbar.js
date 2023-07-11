@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
+import { Stack } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // components
 import SearchBarCombo from '../../../components/ListTableTools/SearchBarCombo';
-import Iconify from '../../../../components/iconify';
 import { PATH_DOCUMENT } from '../../../../routes/paths';
 import { BUTTONS } from '../../../../constants/default-constants';
 import { options } from '../../../../theme/styles/default-styles';
