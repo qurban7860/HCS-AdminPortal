@@ -290,7 +290,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
-                  <RHFTextField name="serialNo" label="Serial No." />
+                  <RHFTextField name="serialNo" label="Serial No." required />
                   <RHFTextField name="name" label="Name" />
                  
                 </Box>

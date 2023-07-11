@@ -144,7 +144,7 @@ export default function Machine() {
                   <ListItemIcon>
                     <Iconify icon="mdi:table-cog" />
                   </ListItemIcon>
-                  <ListItemText primary="Setting Categories" />
+                  <ListItemText primary="Technical Parameter Categories" />
                 </ListItemButton>
 
                 <ListItemButton onClick={linkTechParam} sx={{ color: 'text.disabled' }}>

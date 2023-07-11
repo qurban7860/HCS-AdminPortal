@@ -115,7 +115,7 @@ export default function ParameterAddForm() {
                 />
               </Box>
               <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)', }} >
-                <RHFTextField name="name" label="Name"  />
+                <RHFTextField name="name" label="Name" required />
                 <RHFTextField name="code" label="Code"  />
               </Box>
               <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >

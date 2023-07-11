@@ -142,7 +142,7 @@ export default function DocumentTypeAddForm({currentDocument}) {
                         ChipProps={{ size: 'small' }}
                       />
                     {/* </Grid> */}
-              <RHFTextField name="name" label="Type Name" />
+              <RHFTextField name="name" label="Type Name" required/>
               <RHFTextField name="description" label="Description" minRows={8} multiline />
               <Grid display="flex">
               <RHFSwitch name="customerAccess" labelPlacement="start" label={
