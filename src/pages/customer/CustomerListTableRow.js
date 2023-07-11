@@ -40,9 +40,7 @@ export default function CustomerListTableRow({
     address.push(mainSite?.address?.country);
   }
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const [openPopover, setOpenPopover] = useState(null);
-
   const userId = localStorage.getItem('userId');
 
   const handleOpenConfirm = () => {

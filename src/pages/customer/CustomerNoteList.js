@@ -23,6 +23,7 @@ import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import ConfirmDialog from '../../components/confirm-dialog';
@@ -33,7 +34,7 @@ import NoteAddForm from './note/NoteAddForm';
 import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
 import { getSites } from '../../redux/slices/customer/site';
 import { getActiveContacts } from '../../redux/slices/customer/contact';
-import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
+import { BUTTONS, BREADCRUMBS, DIALOGS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -58,7 +59,6 @@ export default function CustomerNoteList() {
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
-
   const dispatch = useDispatch();
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -72,18 +72,15 @@ export default function CustomerNoteList() {
   const { customer } = useSelector((state) => state.customer);
   const [checked, setChecked] = useState(false);
 
-  const handleAccordianClick = (accordianIndex) => {
-    if (accordianIndex === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(accordianIndex);
-    }
-  };
+  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const isNotFound = !notes.length && !noteEditFormVisibility && !formVisibility;
 
-  const handleChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-    // console.log("Expended : ",expanded)
-  };
+  const dataFiltered = applyFilter({
+    inputData: tableData,
+    comparator: getComparator(order, orderBy),
+    filterName,
+    filterStatus,
+  });
 
   const {
     notes,
@@ -95,7 +92,7 @@ export default function CustomerNoteList() {
     formVisibility,
   } = useSelector((state) => state.note);
 
-  // console.log("noteEditFormVisibility: " , noteEditFormVisibility)
+  // -----------------------------hooks-------------------------------
 
   useLayoutEffect(() => {
     if (!formVisibility && !noteEditFormVisibility) {
@@ -111,17 +108,20 @@ export default function CustomerNoteList() {
     }
   }, [notes, error, checked, customer, responseMessage, enqueueSnackbar, initial]);
 
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-  });
+  // -----------------------------handle functions---------------------------------
 
-  //  -----------------------------------------------------------------------
+  const handleAccordianClick = (accordianIndex) => {
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
+  };
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const isNotFound = !notes.length && !noteEditFormVisibility && !formVisibility;
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+    // console.log("Expended : ",expanded)
+  };
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
@@ -138,12 +138,6 @@ export default function CustomerNoteList() {
       setExpanded(false);
       dispatch(getNotes());
       setSelected([]);
-
-      // if (page > 0) {
-      //   if (dataInPage.length < 2) {
-      //     setPage(page - 1);
-      //   }
-      // }
     } catch (err) {
       console.log(err.message);
     }
@@ -158,15 +152,11 @@ export default function CustomerNoteList() {
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink to={PATH_CUSTOMER.notes} name="Notes" />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
         <AddButtonAboveAccordion
           name={BUTTONS.NEWNOTE}
@@ -226,15 +216,12 @@ export default function CustomerNoteList() {
       <Grid item lg={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
+
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"
@@ -244,7 +231,7 @@ export default function CustomerNoteList() {
               handleCloseConfirm();
             }}
           >
-            Delete
+            {BUTTONS.DELETE}
           </Button>
         }
       />

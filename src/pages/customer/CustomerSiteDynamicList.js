@@ -31,6 +31,7 @@ import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
 import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
 import { getActiveContacts } from '../../redux/slices/customer/contact';
+import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
 import DetailsSection from '../components/Sections/DetailsSection';
@@ -39,7 +40,7 @@ import SiteViewForm from './site/SiteViewForm';
 import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
-import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
+import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -316,29 +317,18 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 {!isMobile && (
                   <Grid container direction="row" gap={4}>
                     <Grid item md={12}>
-                      {
-                        site?.lat && site?.long ? (
-                          <Card>
-                            <CardActionArea>
-                              <GoogleMaps
-                                lat={site?.lat ? site.lat : 0}
-                                lng={site?.long ? site.long : 0}
-                              />
-                            </CardActionArea>
-                          </Card>
-                        ) : (
-                          <Typography
-                            variant="overline"
-                            sx={{ color: 'text.disabled', fontStyle: 'italic', m: 1 }}
-                          >
-                            Fill GPS COORDINATES TO VIEW LOCATIONS ON MAP
-                          </Typography>
-                        )
-                        // <ViewFormField
-                        //   sm={12}
-                        //   heading="Fill GPS(LAT LONG) COORDINATES TO SEE VIEW LOCATION ON MAPS"
-                        // />
-                      }
+                      {site?.lat && site?.long ? (
+                        <Card>
+                          <CardActionArea>
+                            <GoogleMaps
+                              lat={site?.lat ? site.lat : 0}
+                              lng={site?.long ? site.long : 0}
+                            />
+                          </CardActionArea>
+                        </Card>
+                      ) : (
+                        <NothingProvided content={TITLES.NO_SITELOC} />
+                      )}
                     </Grid>
 
                     <Grid item md={12}>

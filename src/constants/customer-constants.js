@@ -17,6 +17,8 @@ export const Snacks = {
 };
 
 export const FORMLABELS = {
+  SAME_AS: 'Same as billing contact',
+
   // @root - CustomerEditForm
   CUSTOMER: {
     NAME: {
@@ -40,6 +42,7 @@ export const FORMLABELS = {
     PROJECT: 'Project Manager',
     SUPPORT: 'Support Manager',
   },
+
   // @root - ContactAddForm
   FIRSTNAME: {
     label: 'First Name',
@@ -52,6 +55,12 @@ export const FORMLABELS = {
   TITLE: {
     label: 'Title',
     name: 'title',
+  },
+  FAX: {
+    label: 'Fax',
+    name: 'fax',
+    flagSize: 'medium',
+    defaultCountry: 'NZ',
   },
   PHONE: {
     label: 'Phone',
@@ -72,6 +81,11 @@ export const FORMLABELS = {
     label: 'Email',
     name: 'email',
   },
+  WEBSITE: {
+    label: 'Website',
+    name: 'website',
+  },
+
   // @root - ContactAddForm - Address
   STREET: {
     label: 'Street',
@@ -98,6 +112,56 @@ export const FORMLABELS = {
     name: 'country',
     id: 'country-select-demo',
     select: 'Select Country',
+  },
+
+  BILLING_CONTACT: {
+    FIRSTNAME: {
+      label: 'First Name',
+      name: 'billingFirstName',
+    },
+    LASTNAME: {
+      label: 'Last Name',
+      name: 'billingLastName',
+    },
+    TITLE: {
+      label: 'Title',
+      name: 'billingTitle',
+    },
+    PHONE: {
+      label: 'Contact Phone',
+      name: 'billingContactPhone',
+      flagSize: 'medium',
+      defaultCountry: 'NZ',
+    },
+    EMAIL: {
+      label: 'Contact Email',
+      name: 'billingContactEmail',
+    },
+  },
+
+  TECHNICAL_CONTACT: {
+    FIRSTNAME: {
+      label: 'First Name',
+      name: 'technicalFirstName',
+    },
+    LASTNAME: {
+      label: 'Last Name',
+      name: 'technicalFirstName',
+    },
+    TITLE: {
+      label: 'Title',
+      name: 'technicalTitle',
+    },
+    PHONE: {
+      label: 'Contact Phone',
+      name: 'technicalContactPhone',
+      flagSize: 'medium',
+      defaultCountry: 'NZ',
+    },
+    EMAIL: {
+      label: 'Contact Email',
+      name: 'technicalContactEmail',
+    },
   },
   isACTIVE: {
     label: 'Active',

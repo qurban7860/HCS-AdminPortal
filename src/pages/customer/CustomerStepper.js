@@ -97,8 +97,8 @@ export default function CustomerStepper() {
           >
             {
               {
-                '0': <CustomerAddForm />,
-                '1': <SiteAddForm />
+                0: <CustomerAddForm />,
+                1: <SiteAddForm />,
               }[activeStep]
             }
             {/* <Typography sx={{ my: 1 }}> Step {activeStep + 1}</Typography> */}
