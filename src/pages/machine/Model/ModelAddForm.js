@@ -121,7 +121,7 @@ export default function ModelAddForm() {
                 <Card sx={{ p: 3}}>
                   <Stack spacing={3}>
                   <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-                    <RHFTextField name="name" label="Model Name*"  />
+                    <RHFTextField name="name" label="Name" required />
                     <Autocomplete
                       value={modelVal || null}
                       options={activeCategories}
