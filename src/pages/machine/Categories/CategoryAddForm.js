@@ -115,6 +115,19 @@ export default function CategoryAddForm() {
             >
 
               <RHFTextField name="name" label="Category Name" />
+              {/* <RHFTextField name="description" label="Description" minRows={7} multiline /> */}
+            </Box>
+            <Box
+              rowGap={2}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
+
+              {/* <RHFTextField name="name" label="Category Name" /> */}
               <RHFTextField name="description" label="Description" minRows={7} multiline />
             </Box>
             <Grid display="flex" alignItems="end">
