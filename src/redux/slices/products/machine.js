@@ -390,8 +390,6 @@ export function updateMachine(params) {
       
         serialNo: params.serialNo,
         name: params.name,
-        parentSerialNo: params.parentSerialNo,
-        parentMachine: params.parentMachine,
         status: params.status,
         supplier: params.supplier,
         machineModel: params.machineModel,
@@ -409,6 +407,8 @@ export function updateMachine(params) {
         machineConnections: params.machineConnections,
         customerTags: params.customerTags,
         isActive: params.isActive,
+        // parentSerialNo: params.parentSerialNo,
+        // parentMachine: params.parentMachine,
       };
       if(params?.alias){
         data.alias =  params.alias
