@@ -81,8 +81,8 @@ export default function CategoryViewForm({ currentCategory = null }) {
             <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
         <Grid container>
           <ViewFormField sm={12}   isActive={defaultValues.isActive}/>
-          <ViewFormField sm={6}   heading='Category Name'          param={defaultValues?.name} />
-          <ViewFormField sm={6}   heading='Description'   param={defaultValues?.description}/>
+          <ViewFormField sm={12}   heading='Category Name'          param={defaultValues?.name} />
+          <ViewFormField sm={12}   heading='Description'   param={defaultValues?.description}/>
           <Grid item xs={12} sm={12} >
             <ViewFormSwitch isActive={defaultValues.isActive}/>
           </Grid>
