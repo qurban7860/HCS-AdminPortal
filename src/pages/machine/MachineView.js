@@ -26,8 +26,10 @@ import {
   getMachine,
   setMachineEditFormVisibility,
 } from '../../redux/slices/products/machine';
-// import { getSites } from '../../redux/slices/customer/site';
-// import { getContacts } from '../../redux/slices/customer/contact';
+import { 
+  setDocumentViewFormVisibility, 
+  setDocumentHistoryViewFormVisibility 
+} from '../../redux/slices/document/document';
 
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -36,24 +38,15 @@ import Iconify from '../../components/iconify';
 import UnderDevelopment from '../components/UnderDevelopment';
 // sections
 import { Cover } from '../components/Cover';
-
-// import CustomerAddForm from './CustomerAddForm'
-// import SiteAddForm from './site/SiteAddForm';
-// import SiteList from './site/SiteList';
-// import ContactAddForm from './contact/ContactAddForm';
-// import CustomerStepper from './CustomerStepper';
-import DocumentList from '../document/machine/DocumentList';
+import DocumentTagPage from '../document/documents/DocumentTagPage';
 
 /* eslint-disable */
-
 import MachineViewForm from './MachineViewForm';
 /* eslint-enable */
-
 import MachineEditForm from './MachineEditForm';
 import MachineNoteList from './MachineNoteList';
 import MachineSettingList from './MachineSettingList';
 import MachineLicenseList from './MachineLicenseList';
-
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
@@ -93,6 +86,8 @@ export default function MachineView({ editPage }) {
   const [machineFlag, setMachineFlag] = useState(true);
 
   useEffect(() => {
+    dispatch(setDocumentViewFormVisibility(false))
+    dispatch(setDocumentHistoryViewFormVisibility(false))
     if (id !== 'null') {
       dispatch(getMachine(id));
       //   dispatch(getSites(id));
@@ -145,7 +140,7 @@ export default function MachineView({ editPage }) {
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
-      component: <DocumentList />,
+      component: <DocumentTagPage customerPage={false} machinePage />,
     },
     ...(showDevTabs
       ? [
@@ -184,6 +179,7 @@ export default function MachineView({ editPage }) {
         <Cover
           // photoURL={machine.name}
           name={machine?.name}
+          handleBackLinks={()=> {dispatch(setDocumentViewFormVisibility(false)); dispatch(setDocumentHistoryViewFormVisibility(false))}}
           serialNo={machine ? machine.serialNo : 'Serial Number'}
           icon="et:gears"
           setting="enable"

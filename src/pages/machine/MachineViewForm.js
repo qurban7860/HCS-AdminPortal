@@ -338,7 +338,7 @@ export default function MachineViewForm() {
         <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
         <Grid item container sx={{ px: 2, pt: 2 }}>
           <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
+          <ViewFormField sm={6} heading="Trading Name" chips={customer?.tradingName} />
           <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />

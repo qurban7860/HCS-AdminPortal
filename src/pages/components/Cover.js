@@ -26,6 +26,7 @@ Cover.propTypes = {
   icon: PropTypes.string,
   serialNo: PropTypes.string,
   backLink: PropTypes.string,
+  handleBackLinks: PropTypes.func,
   model: PropTypes.string,
   customer: PropTypes.string,
   generalSettings: PropTypes.string,
@@ -40,6 +41,7 @@ export function Cover({
   photoURL,
   icon,
   backLink,
+  handleBackLinks,
   model,
   customer,
   generalSettings,
@@ -47,7 +49,11 @@ export function Cover({
   const navigate = useNavigate();
   const handleNavigate = () => {navigate(PATH_MACHINE.machines.settings.app);};
   const handleSettingsNavigate = () => { navigate(PATH_SETTING.app)};
-  const handleBacklink = () => {navigate(backLink)};
+  const handleBacklink = () => {
+    if(typeof backLink === 'string' ){
+      navigate(backLink);
+    }
+  };
 
   const isMobile = useResponsive('down', 'sm');
   const nameNumMaxLength = name?.split(' ')[0];
@@ -84,6 +90,7 @@ export function Cover({
           handleNavigate={handleNavigate}
           backLink={backLink}
           handleBacklink={handleBacklink}
+          handleBackLinks={handleBackLinks}
           handleSettingsNavigate={handleSettingsNavigate}
           generalSettings={generalSettings}
         />

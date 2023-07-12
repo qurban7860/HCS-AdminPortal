@@ -8,8 +8,10 @@ const regEx = /^[^2]*/
 const initialState = {
   machineDocumentFormVisibility: false,
   machineDocumentEditFormVisibility: false,
+  machineDocumentViewFormVisibility: false,
+  machineDocumentHistoryViewFormVisibility: false,
   machineDocumentEdit: false,
-  intial: false,
+  machineDocumentIntial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -42,6 +44,15 @@ const slice = createSlice({
     setMachineDocumentEditFormVisibility(state, action){
       state.machineDocumentEditFormVisibility = action.payload;
     },
+     // SET TOGGLE
+     setMachineDocumentViewFormVisibility(state, action){
+      state.machineDocumentViewFormVisibility = action.payload;
+    },
+     // SET TOGGLE
+     setMachineDocumentHistoryViewFormVisibility(state, action){
+      state.machineDocumentHistoeryViewFormVisibility = action.payload;
+    },
+
     setMachineDocumentEdit(state, action){
       state.machineDocumentEdit = action.payload;
     },
@@ -119,6 +130,8 @@ export default slice.reducer;
 export const {
   setMachineDocumentFormVisibility,
   setMachineDocumentEditFormVisibility,
+  setMachineDocumentViewFormVisibility,
+  setMachineDocumentHistoryViewFormVisibility,
   setMachineDocumentEdit,
   resetMachineDocument,
   resetMachineDocuments,

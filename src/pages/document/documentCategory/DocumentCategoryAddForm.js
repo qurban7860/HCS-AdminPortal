@@ -99,7 +99,7 @@ export default function DocumentCategoryAddForm({currentDocument}) {
             // mt: '24px',
           }}
         >
-          <Cover name="New Document Category" generalSettings backLink={PATH_SETTING.documentCategory.list}/> 
+          <Cover name="New Document Category" /> 
         </Card>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>

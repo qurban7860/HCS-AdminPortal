@@ -8,8 +8,10 @@ const regEx = /^[^2]*/
 const initialState = {
   documentFormVisibility: false,
   documentEditFormVisibility: false,
+  documentViewFormVisibility: false,
+  documentHistoryViewFormVisibility: false,
   documentEdit: false,
-  intial: false,
+  documentIntial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -37,10 +39,19 @@ const slice = createSlice({
     setDocumentFormVisibility(state, action){
       state.documentFormVisibility = action.payload;
     },
-
+    
+    // SET TOGGLE
+    setDocumentViewFormVisibility(state, action){
+      state.documentViewFormVisibility = action.payload;
+    },    
+    
     // SET TOGGLE
     setDocumentEditFormVisibility(state, action){
       state.documentEditFormVisibility = action.payload;
+    },
+    // SET TOGGLE
+    setDocumentHistoryViewFormVisibility(state, action){
+      state.documentHistoryViewFormVisibility = action.payload;
     },
     setDocumentEdit(state, action){
       state.documentEdit = action.payload;
@@ -132,6 +143,8 @@ export default slice.reducer;
 export const {
   setDocumentFormVisibility,
   setDocumentEditFormVisibility,
+  setDocumentViewFormVisibility,
+  setDocumentHistoryViewFormVisibility,
   setDocumentEdit,
   resetDocument,
   resetDocuments,
@@ -205,7 +218,7 @@ export function addDocument(customerId , machineId , params) {
 
 // ---------------------------------Update Document-------------------------------------
 
-export function updateDocument(documentId , params) {
+export function updateDocument(documentId , params, customerId, machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
@@ -239,10 +252,11 @@ export function updateDocument(documentId , params) {
 
       const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}`, formData);
 
-      dispatch(getDocuments())
+      dispatch(getDocuments(customerId, machineId))
       dispatch(slice.actions.setResponseMessage(' Document updated successfully'));
       dispatch(setDocumentFormVisibility(false));
       dispatch(setDocumentEditFormVisibility (false));
+      dispatch(setDocumentViewFormVisibility (true));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -253,16 +267,23 @@ export function updateDocument(documentId , params) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments() {
+export function getDocuments(customerId,machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    const params = {
+      isArchived: false,
+      basic: true,
+    }
+    if (customerId) {
+      params.customer = customerId
+    }
+    if(machineId){
+      params.machine = machineId
+    }
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
-      {
-        params: {
-          isArchived: false,
-          basic: true,
-        }
+      { 
+        params
       }
       );
       dispatch(slice.actions.getDocumentsSuccess(response.data));

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import Iconify from '../../components/iconify/Iconify';
@@ -8,9 +9,12 @@ function CoverSettingsIcons({
   handleNavigate,
   backLink,
   handleBacklink,
+  handleBackLinks,
   generalSettings,
   handleSettingsNavigate,
 }) {
+  const { documentViewFormVisibility, documentHistoryViewFormVisibility } = useSelector((state) => state.document);
+
   return (
     <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
       {backLink && (
@@ -26,6 +30,23 @@ function CoverSettingsIcons({
           component="button"
           variant="body2"
           onClick={handleBacklink}
+        >
+          <Iconify icon="material-symbols:arrow-back-rounded" />
+        </Link>
+      )}
+      {handleBackLinks && ( documentHistoryViewFormVisibility || documentViewFormVisibility ) && (
+        <Link
+          title="Go Back"
+          sx={{
+            ml: 'auto',
+            mr: 1,
+            mt: 'auto',
+            mb: 1,
+            color: 'common.white',
+          }}
+          component="button"
+          variant="body2"
+          onClick={handleBackLinks}
         >
           <Iconify icon="material-symbols:arrow-back-rounded" />
         </Link>
@@ -73,6 +94,7 @@ CoverSettingsIcons.propTypes = {
   handleNavigate: PropTypes.func,
   backLink: PropTypes.bool,
   handleBacklink: PropTypes.func,
+  handleBackLinks: PropTypes.func,
   generalSettings: PropTypes.bool,
   handleSettingsNavigate: PropTypes.func,
 };

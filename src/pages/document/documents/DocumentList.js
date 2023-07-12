@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 // @mui
 import {
   Switch,
@@ -17,12 +18,12 @@ import {
   Stack,
 } from '@mui/material';
 // redux
-import { useDispatch, useSelector } from '../../../../redux/store';
+import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../../components/snackbar';
-import { useSettingsContext } from '../../../../components/settings';
+import { useSnackbar } from '../../../components/snackbar';
+import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -31,23 +32,21 @@ import {
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
-} from '../../../../components/table';
-import Iconify from '../../../../components/iconify';
-import Scrollbar from '../../../../components/scrollbar';
-import ConfirmDialog from '../../../../components/confirm-dialog';
+} from '../../../components/table';
+import Iconify from '../../../components/iconify';
+import Scrollbar from '../../../components/scrollbar';
+import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
-import { getDocuments, deleteDocument } from '../../../../redux/slices/document/document';
-import { Cover } from '../../../components/Cover';
-import { fDate } from '../../../../utils/formatTime';
+import { getDocument ,getDocuments, deleteDocument, resetDocuments, setDocumentViewFormVisibility} from '../../../redux/slices/document/document';
+import { Cover } from '../../components/Cover';
+import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'customer', label: 'Customer', align: 'left' },
-  { id: 'machine', label: 'Machine', align: 'left' },
   { id: 'doctype', label: 'Type', align: 'left' },
   { id: 'doccategory', label: 'Category', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
@@ -56,8 +55,12 @@ const TABLE_HEAD = [
 ];
 
 // ----------------------------------------------------------------------
+DocumentList.propTypes = {
+  customerPage: PropTypes.bool,
+  machinePage: PropTypes.bool,
+};
 
-export default function DocumentList() {
+export default function DocumentList({customerPage, machinePage}) {
   const {
     page,
     order,
@@ -85,19 +88,32 @@ export default function DocumentList() {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { documents, isLoading, error, initial, responseMessage } = useSelector(
-    (state) => state.document
-  );
-  // console.log("documents : ",documents)
-  useLayoutEffect(() => {
-    dispatch(getDocuments());
-  }, [dispatch]);
+  const { customer } = useSelector((state) => state.customer);
+  const { machine } = useSelector((state) => state.machine);
+  const { documents, isLoading, error, documentInitial, responseMessage } = useSelector( (state) => state.document);
+  const { customerDocuments, customerDocumentInitial } = useSelector((state) => state.customerDocument);
+  const { machineDocuments, machineDocumentInitial } = useSelector((state) => state.machineDocument);
 
   useEffect(() => {
-    if (initial) {
-      setTableData(documents);
-    }
-  }, [documents, initial]);
+    const fetchData = async () => {
+      dispatch(resetDocuments());
+      console.log("customerPage || machinePage : ",customerPage , machinePage)
+      if(customerPage || machinePage){
+        if(customer?._id || machine?._id ){
+          await dispatch(getDocuments(customerPage ? customer?._id : null , machinePage ? machine?._id : null));
+        }
+      }else{
+        await dispatch(getDocuments());
+      }
+    };
+
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, customerPage, machinePage]);
+
+  useEffect(() => {
+        setTableData(documents);
+    }, [documents ]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -105,7 +121,6 @@ export default function DocumentList() {
     filterName,
     filterStatus,
   });
-
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
@@ -124,38 +139,38 @@ export default function DocumentList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      await dispatch(deleteDocument(id));
-      dispatch(deleteDocument());
-      setSelected([]);
+  // const handleDeleteRow = async (id) => {
+  //   try {
+  //     await dispatch(deleteDocument(id));
+  //     dispatch(deleteDocument());
+  //     setSelected([]);
 
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
+  //     if (page > 0) {
+  //       if (dataInPage.length < 2) {
+  //         setPage(page - 1);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err.message);
+  //   }
+  // };
 
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
+  // const handleDeleteRows = (selectedRows) => {
+  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+  //   setSelected([]);
+  //   setTableData(deleteRows);
 
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
+  //   if (page > 0) {
+  //     if (selectedRows.length === dataInPage.length) {
+  //       setPage(page - 1);
+  //     } else if (selectedRows.length === dataFiltered.length) {
+  //       setPage(0);
+  //     } else if (selectedRows.length > dataInPage.length) {
+  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
+  //       setPage(newPage);
+  //     }
+  //   }
+  // };
 
   const handleEditRow = (id) => {
     // console.log(id);
@@ -163,7 +178,12 @@ export default function DocumentList() {
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_DOCUMENT.document.view(id));
+    if(customerPage || machinePage){
+      dispatch(getDocument(id));
+      dispatch(setDocumentViewFormVisibility(true));
+    }else{
+      navigate(PATH_DOCUMENT.document.view(id));
+    }
   };
 
   const handleResetFilter = () => {
@@ -173,17 +193,6 @@ export default function DocumentList() {
 
   return (
     <>
-      <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
-          <Cover name="Documents List" icon="ph:users-light"  generalSettings  />
-        </Card>
-
         <Card sx={{ mt: 3 }}>
           <DocumentListTableToolbar
             filterName={filterName}
@@ -192,6 +201,8 @@ export default function DocumentList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            customerDocList
+            machineDocList
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -240,7 +251,7 @@ export default function DocumentList() {
                           row={row}
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
+                          // onDeleteRow={() => handleDeleteRow(row._id)}
                           // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
@@ -255,7 +266,7 @@ export default function DocumentList() {
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   /> */}
 
-                  <TableNoData isNotFound={isNotFound} />
+                  <TableNoData isNotFound={isNotFound} sx={{mx:'auto'}}/>
                 </TableBody>
               </Table>
             </Scrollbar>
@@ -269,7 +280,6 @@ export default function DocumentList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         </Card>
-      </Container>
 
       <ConfirmDialog
         open={openConfirm}
@@ -285,7 +295,7 @@ export default function DocumentList() {
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              // handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >
@@ -300,7 +310,7 @@ export default function DocumentList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
