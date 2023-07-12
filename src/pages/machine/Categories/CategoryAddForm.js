@@ -114,7 +114,7 @@ export default function CategoryAddForm() {
               }}
             >
 
-              <RHFTextField name="name" label="Name" />
+              <RHFTextField name="name" label="Category Name" />
               <RHFTextField name="description" label="Description" minRows={7} multiline />
             </Box>
             <Grid display="flex" alignItems="end">
