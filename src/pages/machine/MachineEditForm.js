@@ -227,8 +227,10 @@ export default function MachineEditForm() {
     if (chips && chips.length > 0) {
       data.alias = chips;
     }
-    data.parentMachine = parMachineVal?._id || null;
-    data.parentSerialNo = parMachSerVal?.serialNo || null;
+    // data.parentMachine = parMachineVal?._id || null;
+    // data.parentSerialNo = parMachSerVal?.serialNo || null;
+    // data.customerTags = chipData
+
     data.supplier = supplierVal?._id || null;
     data.machineModel = modelVal?._id || null;
     data.status = statusVal?._id || null;
@@ -242,12 +244,11 @@ export default function MachineEditForm() {
     data.shippingDate = shippingDate;
     const idsOnly = machineConnectionVal.map((obj) => obj._id);
     data.machineConnections = idsOnly;
-    // data.customerTags = chipData
     try {
       await dispatch(updateMachine(data));
       enqueueSnackbar('Update success!');
-      setParMachineVal('');
-      setParMachSerVal('');
+      // setParMachineVal('');
+      // setParMachSerVal('');
       setSupplierVal('');
       setModelVal('');
       setStatusVal('');
@@ -316,7 +317,7 @@ export default function MachineEditForm() {
                 <RHFTextField name="name" label="Name" />
               </Box>
                 <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
-              <Box
+              {/* <Box
                 rowGap={3}
                 columnGap={2}
                 display="grid"
@@ -391,7 +392,7 @@ export default function MachineEditForm() {
                   )}
                   ChipProps={{ size: 'small' }}
                 />
-              </Box>
+              </Box> */}
               <Box
                 rowGap={3}
                 columnGap={2}
