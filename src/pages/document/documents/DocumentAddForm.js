@@ -306,9 +306,10 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
       if (descriptionVal) {
         data.description = descriptionVal;
       }
-      console.log('Data : ',data);
+      // console.log('Data : ',data);
       if (selectedValue === 'new') {
-        await dispatch(addDocument(customerVal?._id, machineVal._id, data));
+        console.log("new ")
+        await dispatch(addDocument( data, customerPage ? customer?._id : null, machinePage ? machine?._id : null) );
         enqueueSnackbar(Snacks.addedDoc);
           if(!customerPage && !machinePage){
             navigate(PATH_DOCUMENT.document.list);
@@ -316,6 +317,7 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
             handleFormVisibility()
           }
       } else if (selectedVersionValue === 'newVersion') {
+        console.log("newVersion ")
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
           if(!customerPage && !machinePage){
@@ -325,6 +327,7 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
           }
       } else {
         await dispatch(
+
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
         enqueueSnackbar(Snacks.updatedDoc);
@@ -335,6 +338,7 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
           }
       }
       if(!customerPage && !machinePage){
+        console.log("all documents : ")
         dispatch(getDocuments());
       }
       setDocumentCategoryVal('');
@@ -438,13 +442,11 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       const files = values.multiUpload || [];
-      console.log("files: ", files);
       const newFiles = acceptedFiles.map((file) =>
         Object.assign(file, {
           preview: URL.createObjectURL(file),
         })
       );
-      console.log("newFiles: ", newFiles);
       setValue('multiUpload', [...files, ...newFiles], { shouldValidate: true });
     },
     [setValue, values.multiUpload]

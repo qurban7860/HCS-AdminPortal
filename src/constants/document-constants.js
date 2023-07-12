@@ -149,11 +149,11 @@ export const DocRadioLabel = {
 
 // Snackbars constants
 export const Snacks = {
-  addedDoc: 'Document UPLOAD Successful', // Upload Success message
-  updatedDoc: 'Document UPDATE Successful', // Update Success message
-  deletedDoc: 'Document DELETE Successful', // Delete Success message
+  addedDoc: 'Document uploaded successfully!', // Upload Success message
+  updatedDoc: 'Document updated successfully!', // Update Success message
+  deletedDoc: 'Document deleted successfully!', // Delete Success message
 
-  failedDoc: 'Failed to UPLOAD Document', // Update Failed message
-  failedUpdateDoc: 'Failed to UPDATE Document', // Update Failed message
-  failedDeleteDoc: 'Failed to DELETE Document', // Delete Failed message
+  failedDoc: 'Failed to upload document!', // Update Failed message
+  failedUpdateDoc: 'Failed to update document!', // Update Failed message
+  failedDeleteDoc: 'Failed to delete document!', // Delete Failed message
 };

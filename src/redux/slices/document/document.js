@@ -155,16 +155,16 @@ export const {
 
 // ----------------------------Add Document------------------------------------------
 
-export function addDocument(customerId , machineId , params) {
+export function addDocument( params, customerId , machineId ) {
     return async (dispatch) => { 
         dispatch(slice.actions.startLoading());
         try {
           const formData = new FormData();
           if(customerId){
-            formData.append('customer', customerId);
+            formData.append('customer', params.customer);
           }
             if(machineId){
-              formData.append('machine', machineId);
+              formData.append('machine', params.machine);
             }
             formData.append('customerAccess', params.customerAccess);
             formData.append('isActive', params.isActive);
@@ -205,7 +205,7 @@ export function addDocument(customerId , machineId , params) {
           // console.log("formData", formData);
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
-      dispatch(getDocuments());
+      dispatch(getDocuments( customerId, machineId ));
       dispatch(setDocumentFormVisibility(false));
       dispatch(setDocumentEditFormVisibility (false));
     } catch (error) {

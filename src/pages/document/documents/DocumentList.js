@@ -97,12 +97,14 @@ export default function DocumentList({customerPage, machinePage}) {
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
-      console.log("customerPage || machinePage : ",customerPage , machinePage)
       if(customerPage || machinePage){
+        // console.log("customerPage || machinePage : ",customerPage , machinePage)
         if(customer?._id || machine?._id ){
+          // console.log("customer?._id || machine?._id : ", customer?._id || machine?._id)
           await dispatch(getDocuments(customerPage ? customer?._id : null , machinePage ? machine?._id : null));
         }
       }else{
+        // console.log("all documents")
         await dispatch(getDocuments());
       }
     };
