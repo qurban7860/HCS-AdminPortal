@@ -26,7 +26,6 @@ import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import _mock from '../../_mock';
-import EmptyContent from '../../components/empty-content';
 
 // ----------------------------------------------------------------------
 

@@ -44,7 +44,6 @@ import { Cover } from '../components/Defaults/Cover';
 import { FORMLABELS } from '../../constants/default-constants';
 import { FORMLABELS as formLABELS } from '../../constants/customer-constants';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
-
 // ----------------------------------------------------------------------
 
 CustomerAddForm.propTypes = {

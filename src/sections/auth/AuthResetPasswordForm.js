@@ -12,14 +12,14 @@ import { PATH_AUTH } from '../../routes/paths';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import axios from '../../utils/axios';
 import { CONFIG } from '../../config-global';
+import { TITLES } from '../../constants/default-constants';
 import { useSnackbar } from '../../components/snackbar';
 
 // ----------------------------------------------------------------------
 
 export default function AuthResetPasswordForm() {
   const { enqueueSnackbar } = useSnackbar();
-  const regEx = /^[4][0-9][0-9]$/
-
+  const regEx = /^[4][0-9][0-9]$/;
 
   const navigate = useNavigate();
 
@@ -29,7 +29,7 @@ export default function AuthResetPasswordForm() {
 
   const methods = useForm({
     resolver: yupResolver(ResetPasswordSchema),
-    defaultValues: { login: '' },
+    defaultValues: { email: '' },
   });
 
   const {
@@ -49,32 +49,30 @@ export default function AuthResetPasswordForm() {
       // navigate(PATH_AUTH.newPassword);
     } catch (error) {
       console.error(error);
-      if(regEx.test(error.MessageCode)){
+      if (regEx.test(error.MessageCode)) {
         reset();
         setError('afterSubmit', {
           ...error,
           message: error.Message,
         });
-    }else{
-      setError('afterSubmit', {
-        ...error,
-        message: "Something went wrong",
-      });
-    }
+      } else {
+        setError('afterSubmit', {
+          ...error,
+          message: 'Something went wrong',
+        });
+      }
     }
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-
-      {!!errors.afterSubmit && <Alert 
-        severity="error" 
-        sx={{ mb: 3 }}
-        >
+      {!!errors.afterSubmit && (
+        <Alert severity="error" sx={{ mb: 3 }}>
           {errors.afterSubmit.message}
-      </Alert>}
-      
-      <RHFTextField name="login" label="Email/Login " />
+        </Alert>
+      )}
+
+      <RHFTextField name="email" label="Email" />
 
       <LoadingButton
         fullWidth
@@ -84,7 +82,7 @@ export default function AuthResetPasswordForm() {
         loading={isSubmitting}
         sx={{ mt: 3 }}
       >
-        Send Request
+        {TITLES.FORGOT_REQUEST}
       </LoadingButton>
     </FormProvider>
   );
