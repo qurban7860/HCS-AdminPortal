@@ -4,7 +4,7 @@ import { Grid, TextField, InputAdornment, Button, Stack } from '@mui/material';
 import { BUTTONS } from '../../../constants/default-constants';
 import Iconify from '../../../components/iconify';
 
-function SearchBarCombo({ isFiltered, value, onChange, onClick, SubOnClick, addButton, ...other }) {
+function SearchBarCombo({ isFiltered, value, onChange, onClick, SubOnClick, addButton, buttonIcon, ...other }) {
   return (
     <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
       <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
@@ -40,7 +40,7 @@ function SearchBarCombo({ isFiltered, value, onChange, onClick, SubOnClick, addB
             sx={{ p: 1, width: '100%' }}
             onClick={SubOnClick}
             variant="contained"
-            startIcon={<Iconify icon="eva:plus-fill" />}
+            startIcon={<Iconify icon= {buttonIcon || "eva:plus-fill"} />}
           >
             {addButton}
           </Button>
@@ -57,6 +57,7 @@ SearchBarCombo.propTypes = {
   value: PropTypes.string,
   SubOnClick: PropTypes.func,
   addButton: PropTypes.string,
+  buttonIcon: PropTypes.string
 };
 
 export default SearchBarCombo;
