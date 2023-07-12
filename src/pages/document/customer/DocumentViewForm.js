@@ -32,7 +32,6 @@ const Loadable = (Component) => (props) =>
       <Component {...props} />
     </Suspense>
   );
-const DownloadComponent = Loadable(lazy(() => import('../DownloadDocument')));
 
 // ----------------------------------------------------------------------
 

@@ -8,7 +8,9 @@ import { Tab, Card, Tabs, Container, Box, tabsClasses } from '@mui/material';
 import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getCustomer } from '../../redux/slices/customer/customer';
+import { setDocumentViewFormVisibility, setDocumentHistoryViewFormVisibility } from '../../redux/slices/document/document';
+
 import { getSites } from '../../redux/slices/customer/site';
 import { getContacts, getActiveContacts } from '../../redux/slices/customer/contact';
 // components
@@ -26,7 +28,7 @@ import CustomerSiteDynamicList from './CustomerSiteDynamicList';
 // import CustomerContactList from './CustomerContactList';
 import CustomerContactDynamicList from './CustomerContactDynamicList';
 import CustomerMachineList from './CustomerMachineList';
-import DocumentList from '../document/customer/DocumentList';
+import DocumentTagPage from '../document/documents/DocumentTagPage';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 
@@ -49,6 +51,8 @@ export default function CustomerView({ editPage }) {
   const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
+    dispatch(setDocumentViewFormVisibility(false))
+    dispatch(setDocumentHistoryViewFormVisibility(false))
     if (id !== 'null') {
       dispatch(getCustomer(id));
       dispatch(getSites(id));
@@ -103,7 +107,7 @@ export default function CustomerView({ editPage }) {
       value: 'documents',
       label: 'Documents',
       icon: <Iconify icon="mdi:folder-open" />,
-      component: <DocumentList />,
+      component: <DocumentTagPage customerPage />,
     },
     {
       disabled:
@@ -128,13 +132,14 @@ export default function CustomerView({ editPage }) {
         }}
       >
         <Cover
+          handleBackLinks={()=> {dispatch(setDocumentViewFormVisibility(false)); dispatch(setDocumentHistoryViewFormVisibility(false))}}
           name={customer ? customer.name : 'New Customer'}
           photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
           icon="ph:users-light"
         />
         <Tabs
           value={currentTab}
-          onChange={(event, newValue) => setCurrentTab(newValue)}
+          onChange={(event, newValue) => {setCurrentTab(newValue);  }}
           variant="scrollable"
           aria-label="visible arrows tabs example"
           sx={{
