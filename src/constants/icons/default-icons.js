@@ -96,9 +96,9 @@ export const ICONS = {
     heading: 'Machine Status',
   },
   // technical settings
-  SETTING_CATEGORIES: {
+  TECH_CATEGORIES: {
     icon: 'mdi:table-cog',
-    heading: 'Setting Categories',
+    heading: 'Technical Parameter Categories',
   },
   PARAMETERS: {
     icon: 'mdi:abacus',

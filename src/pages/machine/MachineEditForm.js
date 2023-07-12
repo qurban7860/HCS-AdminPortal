@@ -15,13 +15,16 @@ import useResponsive from '../../hooks/useResponsive';
 import { PATH_MACHINE } from '../../routes/paths';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
-import { getCustomers } from '../../redux/slices/customer/customer';
-import { getSites } from '../../redux/slices/customer/site';
-import { getMachinestatuses } from '../../redux/slices/products/statuses';
-import { getMachineModels } from '../../redux/slices/products/model';
-import { getSuppliers } from '../../redux/slices/products/supplier';
+import { getCustomers, getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getSites, getActiveSites } from '../../redux/slices/customer/site';
+import { getMachinestatuses, getActiveMachineStatuses } from '../../redux/slices/products/statuses';
+import { getMachineModels, getActiveMachineModels } from '../../redux/slices/products/model';
+import { getSuppliers, getActiveSuppliers } from '../../redux/slices/products/supplier';
+// global
+import { CONFIG } from '../../config-global';
+// slice
 import {
-  getMachines,
+  getActiveMachines,
   updateMachine,
   setMachineEditFormVisibility,
   setTransferMachineFlag,
@@ -35,28 +38,29 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
+import ToggleButtons from '../components/DocumentForms/ToggleButtons';
 // styles
 import { ListItem } from '../../theme/styles/default-styles';
 // schema
 import { EditMachineSchema } from '../schemas/machine';
 // constants
-import { BREADCRUMBS } from '../../constants/default-constants';
+import { BREADCRUMBS, FORMLABELS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
 export default function MachineEditForm() {
-  const { machine } = useSelector((state) => state.machine);
   const { users } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+
+  const { activeMachines, machine } = useSelector((state) => state.machine);
+  const { activeSuppliers } = useSelector((state) => state.supplier);
+  const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  const { activeCustomers } = useSelector((state) => state.customer);
+  const { activeSites } = useSelector((state) => state.site);
+  const { activeMachineStatuses } = useSelector((state) => state.machinestatus);
   const { spContacts } = useSelector((state) => state.contact);
-  const { machines } = useSelector((state) => state.machine);
-  const { suppliers } = useSelector((state) => state.supplier);
-  const { machineModels } = useSelector((state) => state.machinemodel);
-  const { machinestatuses } = useSelector((state) => state.machinestatus);
-  const { customers } = useSelector((state) => state.customer);
-  const { sites } = useSelector((state) => state.site);
   const { machineConnections } = useSelector((state) => state.machineConnections);
   const [parMachineVal, setParMachineVal] = useState('');
   const [parMachSerVal, setParMachSerVal] = useState('');
@@ -120,11 +124,11 @@ export default function MachineEditForm() {
   );
 
   useLayoutEffect(() => {
-    dispatch(getCustomers());
-    dispatch(getMachines());
-    dispatch(getMachinestatuses());
-    dispatch(getMachineModels());
-    dispatch(getSuppliers());
+    dispatch(getActiveCustomers());
+    dispatch(getActiveMachines());
+    dispatch(getActiveMachineModels());
+    dispatch(getActiveSuppliers());
+    dispatch(getActiveMachineStatuses());
     dispatch(getSPContacts());
     dispatch(getMachineConnections());
     setChips(machine?.alias);
@@ -142,17 +146,17 @@ export default function MachineEditForm() {
     setSuppManVal(machine?.supportManager);
     setMachineConnectionVal(machine?.machineConnections);
     setConnections(machine?.machineConnections);
-    if (machine?.instalationSite) {
-      setInstallationDateToggle(false);
-      setShippingDateToggle(false);
-    }
+    // if(machine?.instalationSite){
+    //   setInstallationDateToggle(false);
+    //   setShippingDateToggle(false);
+    // }
     setInstallationDate(machine?.installationDate);
     setShippingDate(machine?.shippingDate);
   }, [dispatch, machine]);
 
   useLayoutEffect(() => {
     if (customerVal !== null && customerVal?.id !== '') {
-      dispatch(getSites(customerVal?._id));
+      dispatch(getActiveSites(customerVal?._id));
     }
     //   setInstallVal(null);
     //   setBillingVal(null);
@@ -281,7 +285,9 @@ export default function MachineEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={parMachSerVal || null}
-                    options={machines.filter((option) => option.serialNo !== machine.serialNo)}
+                    options={activeMachines.filter(
+                      (option) => option.serialNo !== machine.serialNo
+                    )}
                     getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
                     isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                     onChange={(event, newValue) => {
@@ -315,7 +321,7 @@ export default function MachineEditForm() {
                     disablePortal
                     id="combo-box-demo"
                     value={parMachineVal || null}
-                    options={machines}
+                    options={activeMachines}
                     isOptionEqualToValue={(option, value) => option?.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
@@ -356,7 +362,7 @@ export default function MachineEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={supplierVal || null}
-                    options={suppliers}
+                    options={activeSuppliers}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
@@ -378,7 +384,7 @@ export default function MachineEditForm() {
                     // freeSolo
                     disabled={!!machine.machineModel}
                     value={modelVal || null}
-                    options={machineModels}
+                    options={activeMachineModels}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
@@ -423,7 +429,7 @@ export default function MachineEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={statusVal || null}
-                    options={machinestatuses}
+                    options={activeMachineStatuses}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     getOptionDisabled={(option) =>
@@ -453,7 +459,7 @@ export default function MachineEditForm() {
                 >
                   <Autocomplete
                     value={customerVal || null}
-                    options={customers}
+                    options={activeCustomers}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
@@ -481,18 +487,18 @@ export default function MachineEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={installVal || null}
-                    options={sites}
+                    options={activeSites}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
                       if (newValue) {
                         setInstallVal(newValue);
-                        setInstallationDateToggle(false);
-                        setShippingDateToggle(false);
+                        // setInstallationDateToggle(false);
+                        // setShippingDateToggle(false);
                       } else {
                         setInstallVal('');
-                        setInstallationDateToggle(true);
-                        setShippingDateToggle(true);
+                        // setInstallationDateToggle(true);
+                        // setShippingDateToggle(true);
                       }
                     }}
                     renderOption={(props, option) => (
@@ -505,7 +511,7 @@ export default function MachineEditForm() {
                   <Autocomplete
                     // freeSolo
                     value={billingVal || null}
-                    options={sites}
+                    options={activeSites}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
@@ -533,14 +539,14 @@ export default function MachineEditForm() {
                   <DatePicker
                     label="Installation Date"
                     value={installationDate || new Date()}
-                    disabled={disableInstallationDate}
+                    // disabled={disableInstallationDate}
                     onChange={(newValue) => setInstallationDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
                   <DatePicker
                     label="Shipping Date"
                     value={shippingDate || new Date()}
-                    disabled={disableShippingDate}
+                    // disabled={disableShippingDate}
                     onChange={(newValue) => setShippingDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
@@ -647,43 +653,7 @@ export default function MachineEditForm() {
                 >
                   <RHFTextField name="description" label="Description" minRows={8} multiline />
                 </Box>
-                {/* -------------------------start add chips------------------------- */}
-
-                {/* <Card
-                      sx={{ display: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
-                      {chipData.map((data,index) =>
-                          <ListItem key={index}>
-                            <Chip
-                              label={data}
-                              onDelete={()=>handleDelete(data,index)}
-                            />
-                          </ListItem>
-                       )}
-                       <TextField name="tag" sx={{p:1}}   variant="standard"
-                        InputProps={{disableUnderline: true,}}
-                        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
-                    </Card> */}
-
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Active
-                    </Typography>
-                  }
-                />
-                {/* -------------------------end add chips------------------------- */}
+                <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

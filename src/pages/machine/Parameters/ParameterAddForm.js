@@ -130,7 +130,7 @@ export default function ParameterAddForm() {
                     display="grid"
                     gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                   >
-                    <RHFTextField name="name" label="Name" />
+                    <RHFTextField name="name" label="Name" required />
                     <RHFTextField name="code" label="Code" />
                   </Box>
                   <Box

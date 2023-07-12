@@ -16,6 +16,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
@@ -136,19 +137,7 @@ export default function StatusEditForm() {
                 />
               </Box>
             </Stack>
-            <Box
-              rowGap={5}
-              columnGap={4}
-              display="grid"
-              gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(5, 1fr)' }}
-            >
-              <LoadingButton type="submit" variant="contained" size="large" loading={isSubmitting}>
-                Save Changes
-              </LoadingButton>
-              <Button onClick={toggleCancel} variant="outlined" size="large">
-                Cancel
-              </Button>
-            </Box>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>

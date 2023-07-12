@@ -86,7 +86,11 @@ export default function CategoryAddForm() {
   return (
     <Container maxWidth={false}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-        <Cover name="New Category" url={PATH_MACHINE.machines.settings.categories.list} />
+        <Cover
+          name="New Machine Category"
+          icon="material-symbols:category-outline"
+          url={PATH_MACHINE.machines.settings.categories.list}
+        />
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>

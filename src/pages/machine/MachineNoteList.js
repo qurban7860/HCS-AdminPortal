@@ -22,6 +22,7 @@ import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
 // components
 import { useTable, getComparator, TableNoData } from '../../components/table';
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import Iconify from '../../components/iconify';
 // sections
@@ -157,11 +158,7 @@ export default function MachineNoteList() {
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
             <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
             <BreadcrumbsLink
@@ -177,7 +174,7 @@ export default function MachineNoteList() {
                 </Stack>
               }
             />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
         <AddButtonAboveAccordion
           name={BUTTONS.NEWNOTE}

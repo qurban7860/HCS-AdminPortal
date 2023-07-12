@@ -24,7 +24,7 @@ export default function AuthResetPasswordForm() {
   const navigate = useNavigate();
 
   const ResetPasswordSchema = Yup.object().shape({
-    login: Yup.string().required('Email is required').email('Email must be a valid email address'),
+    email: Yup.string().required('Email is required').email('Email must be a valid email address'),
   });
 
   const methods = useForm({

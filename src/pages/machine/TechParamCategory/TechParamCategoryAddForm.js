@@ -17,6 +17,9 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-
 // util
 import { Cover } from '../../components/Defaults/Cover';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+// constants
+import { FORMLABELS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function TechParamCategoryAddForm() {
@@ -88,27 +91,9 @@ export default function TechParamCategoryAddForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField name="name" label="Name" />
+                  <RHFTextField name="name" label="Name" required />
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        {' '}
-                        Active{' '}
-                      </Typography>
-                    }
-                  />
+                  <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
                 </Box>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

@@ -84,57 +84,55 @@ export default function StatusAddForm() {
   };
 
   return (
-    <>
-      <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover name="New Status" icon="material-symbols:diversity-1-rounded" />
-        </Card>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container>
-            <Grid item xs={18} md={12} sx={{ mt: 3 }}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
-                  <Box
-                    rowGap={2}
-                    columnGap={2}
-                    display="grid"
-                    gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                  >
-                    <RHFTextField name="name" label="Name" />
-                    <RHFTextField name="description" label="Description" minRows={7} multiline />
-                    <RHFTextField name="displayOrderNo" label="Display Order No." />
-                    <RHFTextField name="slug" label="Slug" />
+    <Container maxWidth={false}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover name="New Status" icon="material-symbols:diversity-1-rounded" />
+      </Card>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container>
+          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                >
+                  <RHFTextField name="name" label="Name" required />
+                  <RHFTextField name="description" label="Description" minRows={7} multiline />
+                  <RHFTextField name="displayOrderNo" label="Display Order No." />
+                  <RHFTextField name="slug" label="Slug" />
 
-                    {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
+                  {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                       <option value="" defaultValue/>
                 </RHFSelect> */}
-                    <RHFSwitch
-                      name="isActive"
-                      labelPlacement="start"
-                      label={
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          {' '}
-                          Active{' '}
-                        </Typography>
-                      }
-                    />
-                  </Box>
-                </Stack>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-              </Card>
-            </Grid>
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        {' '}
+                        Active{' '}
+                      </Typography>
+                    }
+                  />
+                </Box>
+              </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            </Card>
           </Grid>
-        </FormProvider>
-      </Container>
-    </>
+        </Grid>
+      </FormProvider>
+    </Container>
   );
 }

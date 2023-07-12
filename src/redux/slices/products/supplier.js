@@ -13,6 +13,7 @@ const initialState = {
   isLoading: false,
   error: null,
   suppliers: [],
+  activeSuppliers: [],
   supplier: {},
 };
 
@@ -42,6 +43,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.suppliers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Supplier
+    getActiveSuppliersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeSuppliers = action.payload;
       state.initial = true;
     },
 
@@ -112,6 +121,30 @@ export function getSuppliers (){
     }
   }
 }
+
+//------------------------------------------------------------------------------
+
+export function getActiveSuppliers (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/suppliers`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      dispatch(slice.actions.getActiveSuppliersSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Suppliers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
 // ----------------------------------------------------------------------
 
 export function getSupplier(id) {

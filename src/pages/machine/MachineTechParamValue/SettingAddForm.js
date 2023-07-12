@@ -8,13 +8,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // slice
 import { addSetting } from '../../../redux/slices/products/machineTechParamValue';
-import { getTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
+import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import {
   getTechparamsByCategory,
   resetTechParamByCategory,
 } from '../../../redux/slices/products/machineTechParam';
-// schema
-import { AddSettingSchema } from './schemas/AddSettingSchema';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
@@ -23,13 +21,16 @@ import SingleButton from '../../components/DocumentForms/SingleButton';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
 import { BUTTONS } from '../../../constants/default-constants';
+// schema
+import { AddSettingSchema } from './schemas/AddSettingSchema';
 
 // ----------------------------------------------------------------------
 
 export default function SettingAddForm() {
-  const { settings } = useSelector((state) => state.machineSetting);
+  const { initial, error, responseMessage, settings, settingEditFormVisibility, formVisibility } =
+    useSelector((state) => state.machineSetting);
   const { techparamsByCategory, techparams } = useSelector((state) => state.techparam);
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
+  const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState('');
   const [paramData, setparamData] = useState([]);
@@ -38,7 +39,7 @@ export default function SettingAddForm() {
   const { enqueueSnackbar } = useSnackbar();
 
   useLayoutEffect(() => {
-    dispatch(getTechparamcategories());
+    dispatch(getActiveTechparamcategories());
     dispatch(resetTechParamByCategory());
   }, [dispatch]);
 
@@ -112,7 +113,7 @@ export default function SettingAddForm() {
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <Grid item md={12} xs={18} display="flex">
-                <Grid item md={9} xs={12} m={1}>
+                <Grid item md={9} xs={12}>
                   <Box
                     rowGap={2}
                     columnGap={2}
@@ -122,13 +123,11 @@ export default function SettingAddForm() {
                       sm: 'repeat(2, 1fr)',
                     }}
                   >
-                    {/* will be cleaning this.. */}
-                    {/* tech param name */}
                     <Autocomplete
                       // freeSolo
                       required
                       value={category || null}
-                      options={techparamcategories}
+                      options={activeTechParamCategories}
                       isOptionEqualToValue={(option, value) => option.name === value.name}
                       getOptionLabel={(option) => option.name}
                       id="controllable-states-demo"
@@ -145,12 +144,10 @@ export default function SettingAddForm() {
                           {option.name}
                         </Box>
                       )}
-                      renderInput={(params) => <TextField {...params} label="category" required />}
+                      renderInput={(params) => <TextField {...params} label="Category" required />}
                       ChipProps={{ size: 'small' }}
                     />
 
-                    {/* will be cleaning this.. */}
-                    {/* tech param value */}
                     <Autocomplete
                       // freeSolo
                       required

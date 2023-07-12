@@ -276,7 +276,7 @@ export default function MachineViewForm() {
               heading="Connected Machines"
             />
             <ViewFormField
-              sm={6}
+              sm={12}
               heading="Work Order / Purchase Order"
               param={defaultValues?.workOrderRef}
             />
@@ -312,7 +312,6 @@ export default function MachineViewForm() {
               heading="Shipping Date"
               param={fDate(defaultValues?.shippingDate)}
             />
-
             <ViewFormField
               sm={12}
               heading="Nearby Milestone"

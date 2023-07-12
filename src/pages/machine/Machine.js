@@ -85,8 +85,8 @@ export default function Machine() {
               >
                 <ListItem
                   onClick={linktpCategory}
-                  icon={ICONS.SETTING_CATEGORIES.icon}
-                  content={ICONS.SETTING_CATEGORIES.heading}
+                  icon={ICONS.TECHPARAM_CATEGORIES.icon}
+                  content={ICONS.TECHPARAM_CATEGORIES.heading}
                 />
                 <ListItem
                   onClick={linkTechParam}

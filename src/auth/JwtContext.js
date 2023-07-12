@@ -15,7 +15,7 @@ const initialState = {
   isInitialized: false,
   isAuthenticated: false,
   user: null,
-  resetTokenTime: null,
+  // resetTokenTime: null,
 };
 
 const reducer = (state, action) => {
@@ -26,7 +26,7 @@ const reducer = (state, action) => {
         isInitialized: true,
         isAuthenticated: action.payload.isAuthenticated,
         user: action.payload.user,
-        resetTokenTime: action.payload.resetTokenTime, // keeps track to avoid repeating the request
+        // resetTokenTime: action.payload.resetTokenTime, // keeps track to avoid repeating the request
       };
     }
     case 'LOGIN': {
@@ -51,7 +51,7 @@ const reducer = (state, action) => {
         ...state,
         isAuthenticated: false,
         user: null,
-        resetTokenTime: null, // reset the timeout ID when logging out
+        // resetTokenTime: null, // reset the timeout ID when logging out
       };
     }
     default: {
@@ -88,21 +88,21 @@ export function AuthProvider({ children }) {
         const userId = localStorage.getItem('userId');
 
         const tokenExpTime = jwtDecode(accessToken).exp * 1000;
-        const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
-        const resetTokenTime = setTimeout(async () => {
-          try {
-            const response = await axios.post(`${CONFIG.SERVER_URL}security/refreshToken`, {
-              userID: userId,
-            });
-            const newAccessToken = response.data.accessToken;
+        // const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
+        // const resetTokenTime = setTimeout(async () => {
+        //   try {
+        //     const response = await axios.post(`${CONFIG.SERVER_URL}security/refreshToken`, {
+        //       userID: userId,
+        //     });
+        //     const newAccessToken = response.data.accessToken;
 
-            localStorage.setItem('accessToken', newAccessToken);
+        //     localStorage.setItem('accessToken', newAccessToken);
 
-            initialize();
-          } catch (error) {
-            console.error(error);
-          }
-        }, tokenRefreshTime - Date.now() + 30 * 1000);
+        //     initialize();
+        //   } catch (error) {
+        //     console.error(error);
+        //   }
+        // }, tokenRefreshTime - Date.now() + 30 * 1000);
 
         dispatch({
           type: 'INITIAL',
@@ -110,7 +110,7 @@ export function AuthProvider({ children }) {
             isAuthenticated: true,
             user,
             userId,
-            resetTokenTime, // added the timeout ID to the payload
+            // resetTokenTime, // added the timeout ID to the payload
            },
         });
       } else {
@@ -119,7 +119,7 @@ export function AuthProvider({ children }) {
           payload: {
             isAuthenticated: false,
             user: null,
-            resetTokenTime: null, // reset the timeout ID when not authenticated
+            // resetTokenTime: null, // reset the timeout ID when not authenticated
           },
         });
       }
@@ -130,7 +130,7 @@ export function AuthProvider({ children }) {
         payload: {
           isAuthenticated: false,
           user: null,
-          resetTokenTime: null,
+          // resetTokenTime: null,
         },
       });
     }

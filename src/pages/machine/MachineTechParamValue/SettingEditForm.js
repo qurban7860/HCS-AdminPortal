@@ -57,7 +57,7 @@ export default function SettingEditForm() {
     (state) => state.machineSetting
   );
   const { techparamsByCategory, techparams } = useSelector((state) => state.techparam);
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
+  const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParam, setTechParam] = useState('');
   const [paramData, setparamData] = useState([]);
@@ -163,7 +163,7 @@ export default function SettingEditForm() {
                   // freeSolo
                   disabled
                   value={category || null}
-                  options={techparamcategories}
+                  options={activeTechParamCategories}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => option.name}
                   id="controllable-states-demo"
@@ -184,7 +184,7 @@ export default function SettingEditForm() {
                   renderInput={(params) => (
                     <TextField
                       {...params}
-                      label="category"
+                      label="Category"
                       sx={{
                         '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#000000' },
                       }}
@@ -192,6 +192,40 @@ export default function SettingEditForm() {
                   )}
                   ChipProps={{ size: 'small' }}
                 />
+
+                <Autocomplete
+                  // freeSolo
+                  disabled
+                  value={techParam || null}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  options={techparamsByCategory}
+                  getOptionLabel={(option) => option.name}
+                  id="controllable-states-demo"
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setTechParam(newValue);
+                    } else {
+                      setTechParam('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props} key={option.id}>
+                      {option.name}
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Technical Parameters"
+                      sx={{
+                        '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#000000' },
+                      }}
+                    />
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
+
+                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
 
                 <Autocomplete
                   // freeSolo
