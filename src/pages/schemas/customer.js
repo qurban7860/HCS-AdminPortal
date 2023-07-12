@@ -23,6 +23,7 @@ export const EditCustomerSchema = Yup.object().shape({
   // primaryTechnicalContact: Yup.string().nullable(),
 });
 
+// @root - EditContactSchema
 export const EditContactSchema = Yup.object().shape({
   // customer: Yup.string(),
   firstName: Yup.string().max(40).required(),
@@ -42,3 +43,4 @@ export const EditContactSchema = Yup.object().shape({
   // country: Yup.string().nullable()
   // isPrimary: Yup.boolean(),
 });
+

@@ -96,7 +96,7 @@ export const ICONS = {
     heading: 'Machine Status',
   },
   // technical settings
-  TECH_CATEGORIES: {
+  TECHPARAM_CATEGORIES: {
     icon: 'mdi:table-cog',
     heading: 'Technical Parameter Categories',
   },

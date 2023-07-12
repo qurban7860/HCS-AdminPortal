@@ -7,9 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Switch, Box, Card, Grid, Stack, Autocomplete, TextField, Dialog } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog } from '@mui/material';
 // slice
 import {
   addCustomerDocument,
@@ -30,7 +28,6 @@ import {
   addDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
 // components
-import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
@@ -40,6 +37,7 @@ import RadioButtons from '../../components/DocumentForms/RadioButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import DialogLabel from '../../components/Dialog/DialogLabel';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import {
   fileTypesArray,
   allowedExtensions,
@@ -48,7 +46,6 @@ import {
   DocRadioValue,
   Snacks,
 } from '../../../constants/document-constants';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +66,6 @@ export default function DocumentAddForm({ currentDocument }) {
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const [documentVal, setDocumentVal] = useState('');
-  // console.log("documentVal : ",documentVal)
   const [selectedValue, setSelectedValue] = useState('new');
   const [selectedVersionValue, setSelectedVersionValue] = useState('newVersion');
   const [descriptionVal, setDescriptionVal] = useState('');
@@ -80,15 +76,9 @@ export default function DocumentAddForm({ currentDocument }) {
   const [displayNameVal, setDisplayNameVal] = useState('');
   const [previewVal, setPreviewVal] = useState('');
   const [preview, setPreview] = useState(false);
-
   const [files, setFiles] = useState([]);
-  const [machineVal, setMachineVal] = useState('');
-  const [customerVal, setCustomerVal] = useState('');
-  const [siteVal, setSiteVal] = useState('');
-  const [contactVal, setContactVal] = useState('');
-
+  // hooks init
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -223,18 +213,6 @@ export default function DocumentAddForm({ currentDocument }) {
   const toggleCancel = () => {
     dispatch(setCustomerDocumentFormVisibility(false));
   };
-  // const handleDrop = useCallback(
-  //   (acceptedFiles) => {
-  //     const newFiles = acceptedFiles.map((file) =>
-  //       Object.assign(file, {
-  //         preview: URL.createObjectURL(file),
-  //       })
-  //     );
-
-  //     setFiles([...files, ...newFiles]);
-  //   },
-  //   [files]
-  // );
 
   const handleClosePreview = () => {
     setPreview(false);

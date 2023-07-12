@@ -25,48 +25,11 @@ import { getContacts, setContactFormVisibility } from '../../redux/slices/custom
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
-import _mock from '../../_mock';
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Site', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'website', label: 'Website', align: 'left' },
-  { id: 'isverified', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
-];
-
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+  const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: '-createdAt',
   });
   const [controlled, setControlled] = useState(false);

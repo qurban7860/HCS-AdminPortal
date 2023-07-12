@@ -6,17 +6,12 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { LoadingButton } from '@mui/lab';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
 import {
   Switch,
   Radio,
   RadioGroup,
   FormControlLabel,
-  FormLabel,
   Box,
-  Button,
   Card,
   Grid,
   Stack,
@@ -24,18 +19,12 @@ import {
   Autocomplete,
   TextField,
   Link,
-  InputLabel,
-  MenuItem,
   FormControl,
   Dialog,
 } from '@mui/material';
-
-// PATH
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
   addMachineDocument,
-  updateMachineDocument,
   setMachineDocumentFormVisibility,
   getMachineDocuments,
 } from '../../../redux/slices/document/machineDocument';
@@ -45,7 +34,6 @@ import {
 } from '../../../redux/slices/document/documentCategory';
 import {
   setDocumentTypeFormVisibility,
-  getActiveDocumentTypes,
   resetActiveDocumentTypes,
   getActiveDocumentTypesWithCategory,
 } from '../../../redux/slices/document/documentType';
@@ -53,25 +41,16 @@ import {
   addDocumentVersion,
   updateDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
-import { getMachines } from '../../../redux/slices/products/machine';
-import { getCustomers } from '../../../redux/slices/customer/customer';
-import { getContacts } from '../../../redux/slices/customer/contact';
-import { getSites } from '../../../redux/slices/customer/site';
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFMultiSelect,
-  RHFTextField,
-  RHFSwitch,
-  RHFUpload,
-} from '../../../components/hook-form';
-// assets
-import { countries } from '../../../assets/data';
+import FormProvider, { RHFTextField, RHFUpload } from '../../../components/hook-form';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
+// assets
+import { countries } from '../../../assets/data';
+import { Snacks, allowedExtensions, fileTypesMessage } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -82,12 +61,6 @@ export default function DocumentAddForm({ currentDocument }) {
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { machine } = useSelector((state) => state.machine);
   const { machineDocuments } = useSelector((state) => state.machineDocument);
-
-  // console.log("machine : " , machine)
-  const { customers } = useSelector((state) => state.customer);
-  const { contacts } = useSelector((state) => state.contact);
-  const { sites } = useSelector((state) => state.site);
-
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const [documentVal, setDocumentVal] = useState('');
@@ -133,85 +106,14 @@ export default function DocumentAddForm({ currentDocument }) {
     displayName: Yup.string().max(50),
     description: Yup.string().max(10000),
     images: Yup.mixed()
-      .required('File is required!')
-      .test(
-        'fileType',
-        'Only the following formats are accepted: .png, .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx,  .xls, .xlsx, .ppt, .pptx',
-        (value) => {
-          if (value && value?.name) {
-            const allowedExtensions = [
-              'png',
-              'jpeg',
-              'jpg',
-              'gif',
-              'bmp',
-              'webp',
-              'djvu',
-              'heic',
-              'heif',
-              'ico',
-              'jfif',
-              'jp2',
-              'jpe',
-              'jpeg',
-              'jpg',
-              'jps',
-              'mng',
-              'nef',
-              'nrw',
-              'orf',
-              'pam',
-              'pbm',
-              'pcd',
-              'pcx',
-              'pef',
-              'pes',
-              'pfm',
-              'pgm',
-              'picon',
-              'pict',
-              'png',
-              'pnm',
-              'ppm',
-              'psd',
-              'raf',
-              'ras',
-              'rw2',
-              'sfw',
-              'sgi',
-              'svg',
-              'tga',
-              'tiff',
-              'psd',
-              'jxr',
-              'wbmp',
-              'x3f',
-              'xbm',
-              'xcf',
-              'xpm',
-              'xwd',
-              'pdf',
-              'doc',
-              'docx',
-              'xls',
-              'xlsx',
-              'ppt',
-              'pptx',
-              'csv',
-              'txt',
-              'odp',
-              'ods',
-              'odt',
-              'ott',
-              'rtf',
-              'txt',
-            ];
-            const fileExtension = value?.name?.split('.').pop().toLowerCase();
-            return allowedExtensions.includes(fileExtension);
-          }
-          return false;
+      .required(Snacks.DOC_REQUIRED)
+      .test('fileType', fileTypesMessage, (value) => {
+        if (value && value?.name) {
+          const fileExtension = value?.name?.split('.').pop().toLowerCase();
+          return allowedExtensions.includes(fileExtension);
         }
-      )
+        return false;
+      })
       .nullable(true),
     isActive: Yup.boolean(),
   });
@@ -246,12 +148,6 @@ export default function DocumentAddForm({ currentDocument }) {
 
   const onSubmit = async (data) => {
     try {
-      // if(machine?.customer?._id){
-      //   data.customer = machine?.customer?._id
-      // }
-
-      // if(nameVal){
-      // }
       data.name = nameVal;
       data.displayName = displayNameVal;
       data.isActive = isActive;
@@ -309,6 +205,7 @@ export default function DocumentAddForm({ currentDocument }) {
   const toggleCancel = () => {
     dispatch(setMachineDocumentFormVisibility(false));
   };
+
   const togleCategoryPage = () => {
     dispatch(setDocumentCategoryFormVisibility(true));
     dispatch(setMachineDocumentFormVisibility(false));
@@ -322,23 +219,7 @@ export default function DocumentAddForm({ currentDocument }) {
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       const fileName = file.name.split('.');
-      if (
-        [
-          'png',
-          'jpeg',
-          'jpg',
-          'gif',
-          'bmp',
-          'webp',
-          'pdf',
-          'doc',
-          'docx',
-          'xls',
-          'xlsx',
-          'ppt',
-          'pptx',
-        ].includes(fileName[fileName.length - 1])
-      ) {
+      if (fileTypesMessage.includes(fileName[fileName.length - 1])) {
         setNameVal(fileName[0]);
       }
       const newFile = Object.assign(file, {
@@ -623,38 +504,12 @@ export default function DocumentAddForm({ currentDocument }) {
                   </Grid>
                 )}
                 {selectedValue === 'new' && (
-                  <Grid container lg={12} display="flex">
-                    <Grid display="flex">
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          pl: 2,
-                          pt: 1,
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          alignItems: 'center',
-                        }}
-                      >
-                        Customer Access
-                      </Typography>
-                      <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-                    </Grid>
-                    <Grid display="flex">
-                      <Typography
-                        variant="body1"
-                        sx={{
-                          pl: 2,
-                          pt: 1,
-                          display: 'flex',
-                          justifyContent: 'flex-end',
-                          alignItems: 'center',
-                        }}
-                      >
-                        isActive
-                      </Typography>
-                      <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
-                    </Grid>
-                  </Grid>
+                  <ToggleButtons
+                    customerAccessVal={customerAccessVal}
+                    handleChange={handleChange}
+                    isActive={isActive}
+                    handleIsActiveChange={handleIsActiveChange}
+                  />
                 )}
 
                 {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />
@@ -690,9 +545,8 @@ export default function DocumentAddForm({ currentDocument }) {
         >
           <Typography variant="h4" sx={{ px: 2 }}>
             {nameVal}
-          </Typography>{' '}
+          </Typography>
           <Link onClick={() => handleClosePreview()} href="#" underline="none" sx={{ ml: 'auto' }}>
-            {' '}
             <Iconify sx={{ color: 'white' }} icon="mdi:close-box-outline" />
           </Link>
         </Grid>

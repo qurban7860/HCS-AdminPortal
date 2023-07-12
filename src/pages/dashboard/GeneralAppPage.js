@@ -61,57 +61,6 @@ export default function GeneralAppPage() {
     });
   }
 
-  const ModelData = {
-    options: {
-      chart: {
-        id: 'basic-bar',
-      },
-      xaxis: {
-        categories: modelWiseMachineModel,
-      },
-    },
-    series: [
-      {
-        name: 'Machine Models',
-        data: modelWiseMachineNumber,
-      },
-    ],
-  };
-
-  const CustomerData = {
-    options: {
-      chart: {
-        id: 'basic-bar',
-      },
-      xaxis: {
-        categories: countryWiseMachineCountCountries,
-      },
-    },
-    series: [
-      {
-        name: 'Customers',
-        data: countryWiseMachineCountNumber,
-      },
-    ],
-  };
-
-  const SiteData = {
-    options: {
-      chart: {
-        id: 'basic-bar',
-      },
-      xaxis: {
-        categories: countryWiseSiteCountCountries,
-      },
-    },
-    series: [
-      {
-        name: 'Sites',
-        data: countryWiseSiteCountNumber,
-      },
-    ],
-  };
-
   useLayoutEffect(() => {
     dispatch(getCount());
   }, [dispatch]);

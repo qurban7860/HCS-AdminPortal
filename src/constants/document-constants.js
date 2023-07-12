@@ -1,3 +1,5 @@
+export const allowedImageExtensions = ['png', 'jpeg', 'jpg', 'gif', 'bmp', 'webp'];
+export const allowedDocumentExtension = ['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'];
 export const document = {
   icon: {
     pdf: 'bxs:file-pdf',
@@ -170,6 +172,7 @@ export const Snacks = {
   // @root - DocumentViewForm - documents dashboard
   // preview
   UNEXPECTED: 'Unexpected error occurred',
+  DOC_REQUIRED: 'File is required',
 };
 
 // @root - DocumentViewForm - documents dashboard
