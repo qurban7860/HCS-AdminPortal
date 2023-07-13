@@ -2,51 +2,19 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import { LoadingButton } from '@mui/lab';
-import {
-  Switch,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
-  Autocomplete,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-} from '@mui/material';
-// global
-import { CONFIG } from '../../../config-global';
-// routes
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { Switch, Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+// schema
+import { EditMachineDocumentSchema } from '../../schemas/document';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-  RHFAutocomplete,
-  RHFSwitch,
-  RHFUpload,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
-
 // slice
 import {
   setMachineDocumentEdit,
@@ -62,10 +30,6 @@ import {
   getActiveDocumentTypes,
   getActiveDocumentTypesWithCategory,
 } from '../../../redux/slices/document/documentType';
-import { getMachines } from '../../../redux/slices/products/machine';
-import { getCustomers } from '../../../redux/slices/customer/customer';
-import { getContacts } from '../../../redux/slices/customer/contact';
-import { getSites } from '../../../redux/slices/customer/site';
 
 // ----------------------------------------------------------------------
 
@@ -74,20 +38,11 @@ export default function DocumentEditForm() {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { machine, machines } = useSelector((state) => state.machine);
-  // console.log("machine : " , machine)
-  const { customers } = useSelector((state) => state.customer);
-  const { contacts } = useSelector((state) => state.contact);
-  const { sites } = useSelector((state) => state.site);
 
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
-  const [machineVal, setMachineVal] = useState('');
-  const [customerVal, setCustomerVal] = useState('');
-  const [siteVal, setSiteVal] = useState('');
-  const [contactVal, setContactVal] = useState('');
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
-
   const [nameVal, setNameVal] = useState('');
 
   const navigate = useNavigate();
@@ -105,13 +60,6 @@ export default function DocumentEditForm() {
     // dispatch(getActiveDocumentTypes())
     // dispatch(getActiveDocumentCategories())
   }, [dispatch, machineDocument]);
-
-  const EditMachineDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(50),
-    description: Yup.string().max(10000),
-    // image: Yup.mixed().required("Image Field is required!"),
-    isActive: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
