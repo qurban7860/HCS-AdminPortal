@@ -1,9 +1,13 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
+
 // @mui
+
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid } from '@mui/material';
+
 // _mock_
+
 import { _appInvoices, _appManagers } from '../../_mock/arrays';
 // components
 import { useSettingsContext } from '../../components/settings';

@@ -25,8 +25,8 @@ import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
-import DetailsSection from '../components/Sections/DetailsSection';
-import AvatarSection from '../components/Sections/AvatarSection';
+import DetailsSection from '../components/sections/DetailsSection';
+import AvatarSection from '../components/sections/AvatarSection';
 import SiteViewForm from './site/SiteViewForm';
 import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
@@ -36,7 +36,7 @@ import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants'
 // ----------------------------------------------------------------------
 
 export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
-  const { order, orderBy } = useTable({ defaultOrderBy: 'name' });
+  const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const [checked, setChecked] = useState(false);
   const [openSite, setOpenSite] = useState(false);
   const { site } = useSelector((state) => state.site);

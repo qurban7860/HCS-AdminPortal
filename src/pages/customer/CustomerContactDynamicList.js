@@ -27,8 +27,8 @@ import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import DetailsSection from '../components/Sections/DetailsSection';
-import AvatarSection from '../components/Sections/AvatarSection';
+import DetailsSection from '../components/sections/DetailsSection';
+import AvatarSection from '../components/sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
 import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
@@ -38,7 +38,7 @@ import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList(currentContact = null) {
-  const { order, orderBy } = useTable({ defaultOrderBy: 'name' });
+  const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const { customer } = useSelector((state) => state.customer);
   const [openContact, setOpenContact] = useState(false);
   const dispatch = useDispatch();
