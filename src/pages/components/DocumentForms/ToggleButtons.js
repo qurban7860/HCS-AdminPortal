@@ -5,6 +5,18 @@ import { StyledToggleButtonLabel } from '../../../theme/styles/document-styles';
 import RHFSwitch from '../../../components/hook-form/RHFSwitch';
 import { TOGGLE } from '../../../constants/default-constants';
 
+ToggleButtons.propTypes = {
+  handleChange: PropTypes.func,
+  handleIsActiveChange: PropTypes.func,
+  customerAccessVal: PropTypes.bool,
+  isActive: PropTypes.bool,
+  isDocument: PropTypes.bool,
+  isMachine: PropTypes.bool,
+  isRHF: PropTypes.bool,
+  name: PropTypes.object,
+  RHFName: PropTypes.string,
+};
+
 export default function ToggleButtons({
   customerAccessVal,
   handleChange,
@@ -13,6 +25,8 @@ export default function ToggleButtons({
   isDocument,
   isMachine,
   name,
+  isRHF,
+  RHFName,
 }) {
   return (
     <Grid item lg={12} display="flex">
@@ -40,16 +54,14 @@ export default function ToggleButtons({
           <RHFSwitch name={name} />
         </Grid>
       )}
+      {isRHF && (
+        <Grid display="flex" alignItems="center" mt={1}>
+          <StyledToggleButtonLabel variant="body2" p={1}>
+            {TOGGLE.CUSTOMER_ACCESS}
+          </StyledToggleButtonLabel>
+          <RHFSwitch name={RHFName} />
+        </Grid>
+      )}
     </Grid>
   );
 }
-
-ToggleButtons.propTypes = {
-  handleChange: PropTypes.func,
-  handleIsActiveChange: PropTypes.func,
-  customerAccessVal: PropTypes.bool,
-  isActive: PropTypes.bool,
-  isDocument: PropTypes.bool,
-  isMachine: PropTypes.bool,
-  name: PropTypes.object,
-};

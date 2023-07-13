@@ -77,8 +77,9 @@ export default function DocumentList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
+  // necessary. dont remove
+  // const { themeStretch } = useSettingsContext();
+  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
@@ -87,7 +88,6 @@ export default function DocumentList() {
   const { documents, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.document
   );
-  // console.log("documents : ",documents)
   useLayoutEffect(() => {
     dispatch(getDocuments());
   }, [dispatch]);

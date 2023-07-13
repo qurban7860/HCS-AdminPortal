@@ -19,8 +19,6 @@ import { getCustomer, resetCustomer } from '../../../../redux/slices/customer/cu
 import { getMachine, resetMachine } from '../../../../redux/slices/products/machine';
 import { Thumbnail } from '../../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../../components/DocumentForms/FormLabel';
-import DialogLink from '../../../components/Dialog/DialogLink';
-import DialogLabel from '../../../components/Dialog/DialogLabel';
 // constants
 import {
   document as documentType,

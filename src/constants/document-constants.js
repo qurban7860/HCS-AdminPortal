@@ -166,20 +166,20 @@ export const DocRadioExistingDocument = {
 
 // Snackbars constants
 export const Snacks = {
-  docSaved: 'Document UPLOADED',
-  docUpdated: 'Document UPDATED',
-  docVersionUpdated: 'Document Version UPDATED',
+  docSaved: 'Document UPLOAD Successful',
+  docUpdated: 'Document UPDATE Successful',
+  docVersionUpdated: 'Document Version UPDATE Successful',
   failedSaveDoc: 'FAILED to Save the Document',
 
   // @root - DocumentAddForm - machine documents
-  addedMachineDoc: 'Machine Document UPLOADED', // Upload Success message
-  updatedMachineDoc: 'Machine Document UPDATED', // Update Success message
-  updatedVersionMachineDoc: 'Machine Document Version UPDATED', // Update Success message
+  addedMachineDoc: 'Machine Document UPLOAD Successful', // Upload Success message
+  updatedMachineDoc: 'Machine Document UPDATE Successful', // Update Success message
+  updatedVersionMachineDoc: 'Machine Document Version UPDATE Successful', // Update Success message
   deletedMachineDoc: 'Machine Document DELETE Successful', // Delete Success message
 
-  addedDoc: 'Customer Document UPLOADED', // Upload Success message
-  updatedDoc: 'Customer Document UPDATED', // Update Success message
-  deletedDoc: 'Customer Document DELETED', // Delete Success message
+  addedDoc: 'Customer Document UPLOAD Successful', // Upload Success message
+  updatedDoc: 'Customer Document UPDATE Successful', // Update Success message
+  deletedDoc: 'Customer Document DELETE Successful', // Delete Success message
 
   failedDoc: 'FAILED to UPLOAD Customer Document', // Update Failed message
   failedUpdateDoc: 'FAILED to UPDATE Customer Document', // Update Failed message
@@ -209,6 +209,12 @@ export const FORMLABELS = {
   ACCOUNT: 'Account Manager',
   PROJECT: 'Project Manager',
   SUPPORT: 'Support Manager',
+
+  // @root - DocumentCategoryAddForm - documents dashboard
+  CATEGORY: {
+    name: 'name',
+    label: 'Category Name',
+  },
 
   // dialog customer
   CUSTOMER: {

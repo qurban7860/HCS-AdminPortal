@@ -159,7 +159,6 @@ export default function DocumentEditForm() {
         column={12}
         rowGap={3}
         columnGap={2}
-        // display="grid"
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
       >
         <Grid container xs={12} md={12} lg={12}>
