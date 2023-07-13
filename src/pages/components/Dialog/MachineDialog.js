@@ -15,15 +15,15 @@ function MachineDialog({ openMachine, handleCloseMachine, handleConnectedMachine
   const { machine, connectedMachine } = useSelector((state) => state.machine);
   const [currentMachine, setCurrentMachine] = useState(machine);
   
-  // eslint-disable
-  useEffect(() => {
+/* eslint-disable */
+useEffect(() => {
     if(connectedMachine && handleConnectedMachine){
       setCurrentMachine(connectedMachine);
     }else{
       setCurrentMachine(machine);
     }
   }, [handleConnectedMachine, connectedMachine]);
-  // eslint-enable
+/* eslint-enable */
 
   return (
     <Dialog
