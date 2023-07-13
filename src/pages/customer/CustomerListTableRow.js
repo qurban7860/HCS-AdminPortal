@@ -12,6 +12,7 @@ import {
   TableCell,
   IconButton,
   Link,
+  Chip,
 } from '@mui/material';
 // utils
 import { borderRadius, styled } from '@mui/system';
@@ -100,9 +101,7 @@ export default function CustomerListTableRow({
           )}
         </TableCell>
         <LinkTableCellWithIcon align="left" onClick={onViewRow} param={name} isVerified={verifications?.length > 0}/>
-        <TableCell>{tradingName.map((value) => (typeof value === 'string' ? value.trim() : ''))
-            .filter((value) => value !== '')
-            .join(', ')}</TableCell>
+        <TableCell>{tradingName.map((value) => (typeof value === 'string' ? (value.trim() !== '') && <Chip label={value} sx={{mx:0.3}} /> : ''))}</TableCell>
         <TableCell>
           {Object.values(address ?? {})
             .map((value) => (typeof value === 'string' ? value.trim() : ''))
