@@ -11,7 +11,6 @@ import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog } from '@mui/ma
 // slice
 import {
   addCustomerDocument,
-  updateCustomerDocument,
   getCustomerDocuments,
   setCustomerDocumentFormVisibility,
 } from '../../../redux/slices/document/customerDocument';
@@ -27,6 +26,8 @@ import {
   updateDocumentVersion,
   addDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
+// schema
+import { AddCustomerDocumentSchema } from '../../schemas/document';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -104,22 +105,6 @@ export default function DocumentAddForm({ currentDocument }) {
     }
   }, [documentCategoryVal, dispatch]);
 
-  const AddCustomerDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(40),
-    description: Yup.string().max(10000),
-    images: Yup.mixed()
-      .required('File is required!')
-      .test('fileType', fileTypesMessage, (value) => {
-        if (value && value?.name) {
-          const fileExtension = value?.name?.split('.').pop().toLowerCase();
-          return allowedExtensions.includes(fileExtension);
-        }
-        return false;
-      })
-      .nullable(true),
-    isActive: Yup.boolean(),
-  });
-
   const defaultValues = useMemo(
     () => ({
       displayName: displayNameVal,
@@ -130,12 +115,6 @@ export default function DocumentAddForm({ currentDocument }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentDocument]
   );
-  // const updatedDefaultValues = useMemo(() => {
-  //   return {
-  //     ...defaultValues, // Spread the existing properties
-  //     description: description, // Assign the new value
-  //   };
-  // }, [description, defaultValues]);
 
   const methods = useForm({
     resolver: yupResolver(AddCustomerDocumentSchema),

@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import { Snacks } from '../../constants/machine-constants';
+import { allowedExtensions, fileTypesMessage } from '../../constants/document-constants';
 
 export const EditMachineSchema = Yup.object().shape({
   serialNo: Yup.string().required(Snacks.serialNoRequired).max(6),
@@ -19,5 +20,21 @@ export const EditMachineSchema = Yup.object().shape({
   siteMilestone: Yup.string().max(1500),
   description: Yup.string().max(1500),
   customerTags: Yup.array(),
+  isActive: Yup.boolean(),
+});
+
+export const AddMachineDocumentSchema = Yup.object().shape({
+  displayName: Yup.string().max(50),
+  description: Yup.string().max(10000),
+  images: Yup.mixed()
+    .required(Snacks.DOC_REQUIRED)
+    .test('fileType', fileTypesMessage, (value) => {
+      if (value && value?.name) {
+        const fileExtension = value?.name?.split('.').pop().toLowerCase();
+        return allowedExtensions.includes(fileExtension);
+      }
+      return false;
+    })
+    .nullable(true),
   isActive: Yup.boolean(),
 });

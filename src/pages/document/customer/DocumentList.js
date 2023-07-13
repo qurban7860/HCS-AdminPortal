@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-
 // @mui
 import {
   Stack,
@@ -20,6 +19,7 @@ import useResponsive from '../../../hooks/useResponsive';
 import { useTable, getComparator, TableNoData } from '../../../components/table';
 // components
 import Iconify from '../../../components/iconify';
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import SearchInput from '../../components/Defaults/SearchInput';
 // sections
@@ -155,11 +155,7 @@ export default function DocumentList() {
         alignItems="center"
       >
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view(customer._id)} name={customer.name} />
             <BreadcrumbsLink
@@ -179,7 +175,7 @@ export default function DocumentList() {
                 </Stack>
               }
             />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
 
         {/* conditional reactive */}

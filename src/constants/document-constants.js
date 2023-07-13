@@ -136,7 +136,6 @@ export const DocRadioValue = {
   customer: 'customer',
   machine: 'machine',
 };
-
 // Labels for the radio buttons
 export const DocRadioLabel = {
   new: 'New Document',
@@ -148,26 +147,49 @@ export const DocRadioLabel = {
   customer: 'Customer',
   machine: 'Machine',
 };
+// Radio button options - 'DocRadioLabel & DocRadioValue are confusing, so I have separted them'
+export const DocRadioNewVersion = {
+  value: 'newVersion',
+  label: 'New Version',
+};
+
+export const DocRadioNewDocument = {
+  value: 'new',
+  label: 'New Document',
+};
+
+export const DocRadioExistingDocument = {
+  value: 'existingVersion',
+  label: 'Upload New File Against Existing Document',
+  currLabel: 'Current Version',
+};
 
 // Snackbars constants
 export const Snacks = {
-  docSaved: 'Document Saved Successfully',
-  docUpdated: 'Document Updated Successfully',
-  docVersionUpdated: 'Document Version Updated Successfully',
-  failedSaveDoc: 'Failed to Save the Document',
+  docSaved: 'Document UPLOADED',
+  docUpdated: 'Document UPDATED',
+  docVersionUpdated: 'Document Version UPDATED',
+  failedSaveDoc: 'FAILED to Save the Document',
 
-  addedDoc: 'Customer Document UPLOAD Successful', // Upload Success message
-  updatedDoc: 'Customer Document UPDATE Successful', // Update Success message
-  deletedDoc: 'Customer Document DELETE Successful', // Delete Success message
+  // @root - DocumentAddForm - machine documents
+  addedMachineDoc: 'Machine Document UPLOADED', // Upload Success message
+  updatedMachineDoc: 'Machine Document UPDATED', // Update Success message
+  updatedVersionMachineDoc: 'Machine Document Version UPDATED', // Update Success message
+  deletedMachineDoc: 'Machine Document DELETE Successful', // Delete Success message
 
-  failedDoc: 'Failed to UPLOAD Customer Document', // Update Failed message
-  failedUpdateDoc: 'Failed to UPDATE Customer Document', // Update Failed message
-  failedDeleteDoc: 'Failed to DELETE Customer Document', // Delete Failed message
+  addedDoc: 'Customer Document UPLOADED', // Upload Success message
+  updatedDoc: 'Customer Document UPDATED', // Update Success message
+  deletedDoc: 'Customer Document DELETED', // Delete Success message
+
+  failedDoc: 'FAILED to UPLOAD Customer Document', // Update Failed message
+  failedUpdateDoc: 'FAILED to UPDATE Customer Document', // Update Failed message
+  failedDeleteDoc: 'FAILED to DELETE Customer Document', // Delete Failed message
 
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',
   fileMaxSize: 'File size should be less than 10MB',
   fileMaxCount: 'Maximum 10 files can be uploaded at a time.',
+  docMaxSize: 'Document Name must not exceed 40 characters',
 
   // @root - DocumentViewForm - documents dashboard
   // preview

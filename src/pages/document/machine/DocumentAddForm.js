@@ -7,10 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
-  Switch,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
   Box,
   Card,
   Grid,
@@ -19,7 +15,6 @@ import {
   Autocomplete,
   TextField,
   Link,
-  FormControl,
   Dialog,
 } from '@mui/material';
 // slice
@@ -41,6 +36,8 @@ import {
   addDocumentVersion,
   updateDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
+// schema
+import { AddMachineDocumentSchema } from '../../schemas/machine';
 // components
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
@@ -48,9 +45,18 @@ import FormProvider, { RHFTextField, RHFUpload } from '../../../components/hook-
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import RadioButtons from '../../components/DocumentForms/RadioButtons';
 // assets
 import { countries } from '../../../assets/data';
-import { Snacks, allowedExtensions, fileTypesMessage } from '../../../constants/document-constants';
+// constants
+import {
+  Snacks,
+  FORMLABELS,
+  fileTypesMessage,
+  DocRadioNewVersion,
+  DocRadioNewDocument,
+  DocRadioExistingDocument,
+} from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -72,11 +78,10 @@ export default function DocumentAddForm({ currentDocument }) {
   const [isActive, setIsActive] = useState(true);
   const [nameVal, setNameVal] = useState('');
   const [displayNameVal, setDisplayNameVal] = useState('');
-
   const [previewVal, setPreviewVal] = useState('');
   const [preview, setPreview] = useState(false);
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -102,21 +107,6 @@ export default function DocumentAddForm({ currentDocument }) {
     }
   }, [documentCategoryVal, dispatch]);
 
-  const AddMachineDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(50),
-    description: Yup.string().max(10000),
-    images: Yup.mixed()
-      .required(Snacks.DOC_REQUIRED)
-      .test('fileType', fileTypesMessage, (value) => {
-        if (value && value?.name) {
-          const fileExtension = value?.name?.split('.').pop().toLowerCase();
-          return allowedExtensions.includes(fileExtension);
-        }
-        return false;
-      })
-      .nullable(true),
-    isActive: Yup.boolean(),
-  });
   const defaultValues = useMemo(
     () => ({
       displayName: nameVal,
@@ -166,19 +156,17 @@ export default function DocumentAddForm({ currentDocument }) {
       if (descriptionVal) {
         data.description = descriptionVal;
       }
-      // console.log("data : ", data)
-
       if (selectedValue === 'new') {
         await dispatch(addMachineDocument(machine?.customer?._id, machine._id, data));
-        enqueueSnackbar('Machine document save successfully!');
-      } else if (selectedVersionValue === 'newVersion') {
+        enqueueSnackbar(Snacks.addedMachineDoc);
+      } else if (selectedVersionValue === DocRadioNewVersion.value) {
         await dispatch(addDocumentVersion(documentVal._id, data));
-        enqueueSnackbar('Machine document version updated successfully!');
+        enqueueSnackbar(Snacks.updatedVersionMachineDoc);
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
-        enqueueSnackbar('Machine document updated successfully!');
+        enqueueSnackbar(Snacks.updatedMachineDoc);
       }
       dispatch(getMachineDocuments(machine._id));
       dispatch(setMachineDocumentFormVisibility(false));
@@ -197,7 +185,7 @@ export default function DocumentAddForm({ currentDocument }) {
       setDescriptionVal('');
       reset();
     } catch (error) {
-      enqueueSnackbar('Machine Document Save failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedSaveDoc, { variant: `error` });
       console.error(error);
     }
   };
@@ -293,36 +281,16 @@ export default function DocumentAddForm({ currentDocument }) {
                 <Grid container lg={12}>
                   <FormHeading heading="New Document" />
                 </Grid>
-                <FormControl>
-                  <RadioGroup
-                    row
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
-                    value={selectedValue}
-                    onChange={handleRadioChange}
-                  >
-                    <Grid item xs={12} sm={6}>
-                      <FormControlLabel
-                        item
-                        sm={6}
-                        value="new"
-                        control={<Radio />}
-                        label="New Document"
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <FormControlLabel
-                        item
-                        sm={6}
-                        value="newVersion"
-                        control={<Radio />}
-                        label="Upload new file against existing Document"
-                      />
-                    </Grid>
-                  </RadioGroup>
-                </FormControl>
+                <RadioButtons
+                  value={selectedValue}
+                  handleRadioChange={handleRadioChange}
+                  newValue={DocRadioNewDocument.value}
+                  newLabel={DocRadioNewDocument.label}
+                  secondValue={DocRadioNewVersion.value}
+                  secondLabel={DocRadioNewVersion.label}
+                />
 
-                {selectedValue === 'newVersion' && (
+                {selectedValue === DocRadioNewVersion.value && (
                   <Grid container lg={12}>
                     <Grid container spacing={2}>
                       <Grid item xs={12} lg={6}>
@@ -371,7 +339,7 @@ export default function DocumentAddForm({ currentDocument }) {
                   </Grid>
                 )}
 
-                {(selectedValue === 'new' || documentVal) && (
+                {(selectedValue === DocRadioNewDocument.value || documentVal) && (
                   <Grid container lg={12}>
                     <Grid container spacing={2}>
                       <Grid item lg={6}>
@@ -433,30 +401,14 @@ export default function DocumentAddForm({ currentDocument }) {
                 )}
 
                 {documentVal && (
-                  <FormControl>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-controlled-radio-buttons-group"
-                      name="controlled-radio-buttons-group"
-                      value={selectedVersionValue}
-                      onChange={handleVersionRadioChange}
-                    >
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          value="newVersion"
-                          control={<Radio />}
-                          label="New Version"
-                        />
-                      </Grid>
-                      <Grid item xs={12} sm={6}>
-                        <FormControlLabel
-                          value="existingVersion"
-                          control={<Radio />}
-                          label="Current Version"
-                        />
-                      </Grid>
-                    </RadioGroup>
-                  </FormControl>
+                  <RadioButtons
+                    value={selectedVersionValue}
+                    handleRadioChange={handleVersionRadioChange}
+                    newValue={DocRadioNewVersion.value}
+                    newLabel={DocRadioNewVersion.label}
+                    secondValue={DocRadioExistingDocument.value}
+                    secondLabel={DocRadioExistingDocument.currLabel}
+                  />
                 )}
 
                 {selectedValue === 'new' && (

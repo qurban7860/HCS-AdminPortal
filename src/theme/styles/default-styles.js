@@ -1,11 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
 import { Popover, Stack, Card, Container, TableRow } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { m } from 'framer-motion';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
-import Image from '../../components/image';
-import { MotionContainer, varFade } from '../../components/animate';
-import Typography from '../overrides/Typography';
 
 /**
  * @cover :components ____________________________________________________________________________________________

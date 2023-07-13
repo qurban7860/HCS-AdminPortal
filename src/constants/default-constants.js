@@ -48,6 +48,7 @@ export const FORMLABELS = {
   SELECT_MACHINE: 'Select Machine',
   SELECT_MODEL: 'Select Model',
   SELECT_DOCUMENT: 'Select Document',
+  SELECT_DOCUMENT_CATEGORY: 'Select Document Category',
   SELECT_DOCUMENT_TYPE: 'Select Document Type',
   SELECT_CATEGORY: 'Select Category',
 

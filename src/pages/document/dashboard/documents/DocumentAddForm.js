@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container } from '@mui/material';
 import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
 // PATH
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
+import { PATH_DOCUMENT } from '../../../../routes/paths';
 // slice
 import {
   addDocument,
@@ -34,22 +34,19 @@ import {
 import { getActiveMachineModels } from '../../../../redux/slices/products/model';
 import { getActiveCustomers } from '../../../../redux/slices/customer/customer';
 import { getActiveSites, resetActiveSites } from '../../../../redux/slices/customer/site';
+// schema
+import { AddDocumentSchema } from '../../../schemas/document';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFName, RHFUpload } from '../../../../components/hook-form';
 // assets
-import DialogLabel from '../../../components/Dialog/DialogLabel';
 import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
 import RadioButtons from '../../../components/DocumentForms/RadioButtons';
 import DocumentMachineAddForm from './DocumentAddForms/DocumentMachineAddForm';
+import DocumentNewAddForm from './DocumentAddForms/DocumentNewAddForm';
+import DocumentNewVersionAddForm from './DocumentAddForms/DocumentNewVersionAddForm';
 // constants
-import {
-  allowedExtensions,
-  DocRadioValue,
-  DocRadioLabel,
-  fileTypesMessage,
-  Snacks,
-} from '../../../../constants/document-constants';
+import { DocRadioValue, DocRadioLabel, Snacks } from '../../../../constants/document-constants';
 import { FORMLABELS } from '../../../../constants/default-constants';
 import DialogPreview from '../../../components/Dialog/Dialogs/DialogPreview';
 
@@ -194,48 +191,6 @@ export default function DocumentAddForm({
     }
   }, [dispatch, machineVal, machineModelVal, selectedValue]);
 
-  const validateFileType = (value, options) => {
-    const { path, createError } = options;
-    if (value && Array.isArray(value)) {
-      if (value.length > 10) {
-        return createError({
-          message: Snacks.fileMaxCount,
-          path,
-          value,
-        });
-      }
-      const invalidFiles = value.filter((file) => {
-        const fileExtension = file?.name?.split('.').pop().toLowerCase();
-        return !allowedExtensions.includes(fileExtension);
-      });
-      if (invalidFiles.length > 0) {
-        const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
-        return createError({
-          message: `Invalid file(s) detected: ${invalidFileNames}`,
-          path,
-          value,
-        });
-      }
-      return true;
-    }
-    return createError({
-      message: Snacks.fileRequired,
-      path,
-      value,
-    });
-  };
-
-  const AddDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(40, 'Document Name must not exceed 40 characters'),
-    // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
-    description: Yup.string().max(10000),
-    multiUpload: Yup.mixed()
-      .required('File is required!')
-      .test('fileType', fileTypesMessage, validateFileType)
-      .nullable(true),
-    isActive: Yup.boolean(),
-  });
-
   const defaultValues = useMemo(
     () => ({
       displayName: nameVal,
@@ -246,7 +201,6 @@ export default function DocumentAddForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentDocument]
   );
-
   const methods = useForm({
     resolver: yupResolver(AddDocumentSchema),
     defaultValues,
@@ -298,17 +252,29 @@ export default function DocumentAddForm({
       if (selectedValue === 'new') {
         await dispatch(addDocument(customerVal?._id, machineVal._id, data));
         enqueueSnackbar(Snacks.docSaved);
-        navigate(PATH_DASHBOARD.document.dashboard);
+        if (!customerPage && !machinePage) {
+          navigate(PATH_DOCUMENT.document.list);
+        } else {
+          handleFormVisibility();
+        }
       } else if (selectedVersionValue === 'newVersion') {
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar(Snacks.docVersionUpdated);
-        navigate(PATH_DASHBOARD.document.dashboard);
+        if (!customerPage && !machinePage) {
+          navigate(PATH_DOCUMENT.document.list);
+        } else {
+          handleFormVisibility();
+        }
       } else {
         await dispatch(
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
         enqueueSnackbar(Snacks.docUpdated);
-        navigate(PATH_DASHBOARD.document.dashboard);
+        if (!customerPage && !machinePage) {
+          navigate(PATH_DOCUMENT.document.list);
+        } else {
+          handleFormVisibility();
+        }
       }
       setDocumentCategoryVal('');
       setDocumentTypeVal('');
@@ -428,7 +394,6 @@ export default function DocumentAddForm({
         column={12}
         rowGap={3}
         columnGap={2}
-        // display="grid"
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
         mt={3}
       >
@@ -574,118 +539,64 @@ export default function DocumentAddForm({
 
                 {/* New Version */}
                 {selectedValue === 'newVersion' && (
-                  <Grid container lg={12}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12} lg={6}>
-                        <Autocomplete
-                          // freeSolo
-                          // disabled={documentAvailable}
-                          value={documentVal || null}
-                          options={activeDocuments}
-                          // isOptionEqualToValue={(option, value) => option.name === value.name}
-                          getOptionLabel={(option) =>
-                            `${option.displayName ? option.displayName : ''}`
-                          }
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              const { _id, displayName } = newValue;
-                              setDocumentVal(newValue);
-                              setDisplayNameVal(newValue.displayName);
-                              setDocumentTypeVal(newValue.docType);
-                              setDocumentCategoryVal(newValue.docCategory);
-                              setCustomerAccessVal(newValue.customerAccess);
-                              // setDescriptionVal(newValue.description);
-                              setReadOnlyVal(true);
-                            } else {
-                              setDocumentVal('');
-                              setDisplayNameVal('');
-                              setDocumentTypeVal('');
-                              setDocumentCategoryVal('');
-                              setDescriptionVal('');
-                              setCustomerAccessVal(false);
-                              setReadOnlyVal(false);
-                            }
-                          }}
-                          renderOption={(props, option) => (
-                            <li {...props} key={option._id}>{`${
-                              option.displayName ? option.displayName : ''
-                            }`}</li>
-                          )}
-                          id="controllable-states-demo"
-                          renderInput={(params) => (
-                            <TextField {...params} required label={FORMLABELS.SELECT_DOCUMENT} />
-                          )}
-                          ChipProps={{ size: 'small' }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  <DocumentNewVersionAddForm
+                    disabled={readOnlyVal}
+                    Value={documentVal || null}
+                    options={activeDocuments}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        const { _id, displayName } = newValue;
+                        setDocumentVal(newValue);
+                        setDisplayNameVal(newValue.displayName);
+                        setDocumentTypeVal(newValue.docType);
+                        setDocumentCategoryVal(newValue.docCategory);
+                        setCustomerAccessVal(newValue.customerAccess);
+                        // setDescriptionVal(newValue.description);
+                        setReadOnlyVal(true);
+                      } else {
+                        setDocumentVal('');
+                        setDisplayNameVal('');
+                        setDocumentTypeVal('');
+                        setDocumentCategoryVal('');
+                        setDescriptionVal('');
+                        setCustomerAccessVal(false);
+                        setReadOnlyVal(false);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} required label={FORMLABELS.SELECT_DOCUMENT} />
+                    )}
+                  />
                 )}
 
                 {/*  New Document */}
                 {(selectedValue === 'new' || documentVal) && (
-                  <Grid container lg={12}>
-                    <Grid container spacing={2}>
-                      <Grid item lg={6}>
-                        <Autocomplete
-                          // freeSolo
-                          disabled={readOnlyVal}
-                          // readOnly={readOnlyVal}
-                          value={documentCategoryVal || null}
-                          options={activeDocumentCategories}
-                          isOptionEqualToValue={(option, value) => option.name === value.name}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              setDocumentCategoryVal(newValue);
-                            } else {
-                              setDocumentCategoryVal('');
-                              dispatch(resetActiveDocumentTypes());
-                              setDocumentTypeVal('');
-                            }
-                          }}
-                          renderOption={(props, option) => (
-                            <li {...props} key={option._id}>
-                              {option.name}
-                            </li>
-                          )}
-                          id="controllable-states-demo"
-                          renderInput={(params) => (
-                            <TextField {...params} required label={FORMLABELS.SELECT_MACHINE} />
-                          )}
-                          ChipProps={{ size: 'small' }}
-                        />
-                      </Grid>
-                      <Grid item lg={6}>
-                        <Autocomplete
-                          // freeSolo
-                          disabled={readOnlyVal}
-                          // readOnly={readOnlyVal}
-                          value={documentTypeVal || null}
-                          options={activeDocumentTypes}
-                          // isOptionEqualToValue={(option, value) => option.name === value.name}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              setDocumentTypeVal(newValue);
-                            } else {
-                              setDocumentTypeVal('');
-                            }
-                          }}
-                          // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                          id="controllable-states-demo"
-                          renderInput={(params) => (
-                            <TextField
-                              {...params}
-                              required
-                              label={FORMLABELS.SELECT_DOCUMENT_TYPE}
-                            />
-                          )}
-                          ChipProps={{ size: 'small' }}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                  <DocumentNewAddForm
+                    disabled={readOnlyVal}
+                    Value={documentCategoryVal || null}
+                    options={activeDocumentCategories}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setDocumentCategoryVal(newValue);
+                      } else {
+                        setDocumentCategoryVal('');
+                        dispatch(resetActiveDocumentTypes());
+                        setDocumentTypeVal('');
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} required label={FORMLABELS.SELECT_DOCUMENT_CATEGORY} />
+                    )}
+                    SubValue={documentTypeVal || null}
+                    SubOptions={activeDocumentTypes}
+                    SubOnChange={(event, newValue) => {
+                      if (newValue) {
+                        setDocumentTypeVal(newValue);
+                      } else {
+                        setDocumentTypeVal('');
+                      }
+                    }}
+                  />
                 )}
 
                 {documentVal && (
@@ -745,7 +656,6 @@ export default function DocumentAddForm({
                   </Grid>
                 )}
 
-                {/* cleanup */}
                 {selectedValue === 'new' && (
                   <ToggleButtons
                     customerAccessVal={customerAccessVal}

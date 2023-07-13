@@ -71,9 +71,6 @@ export default function CustomerNoteList() {
   const { customer } = useSelector((state) => state.customer);
   const [checked, setChecked] = useState(false);
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const isNotFound = !notes.length && !noteEditFormVisibility && !formVisibility;
-
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -90,6 +87,9 @@ export default function CustomerNoteList() {
     noteEditFormVisibility,
     formVisibility,
   } = useSelector((state) => state.note);
+
+  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  const isNotFound = !notes.length && !noteEditFormVisibility && !formVisibility;
 
   // -----------------------------hooks-------------------------------
 

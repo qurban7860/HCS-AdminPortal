@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box, Divider, Grid, Typography } from '@mui/material';
 import MenuPopover from '../menu-popover/MenuPopover';
-import { allowedExtensions } from '../../constants/document-constants';
 import FormatsChip from '../../pages/components/Defaults/FormatsChip';
 
 export default function AllowedExtensionsMenuePopover({ open, onClose }) {
@@ -13,9 +12,6 @@ export default function AllowedExtensionsMenuePopover({ open, onClose }) {
           <Typography variant="subtitle1">Allowed Formats: </Typography>
           <Divider sx={{ borderStyle: 'solid' }} />
           <FormatsChip />
-          {/* <Typography variant="body2" sx={{ color: 'text.secondary', mr: 3 }}>
-            {allowedExtensions?.join(', ')}
-          </Typography> */}
         </Box>
       </Box>
     </MenuPopover>
