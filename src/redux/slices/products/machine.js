@@ -18,6 +18,7 @@ const initialState = {
   error: null,
   machine: {},
   machines: [],
+  connectedMachine: {},
   activeMachines: [],
   customerMachines:[],
   transferDialogBoxVisibility: false
@@ -72,6 +73,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeMachines = action.payload;
+      state.initial = true;
+    },
+
+     // GET Connected Machine
+     getConnectedMachineSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.connectedMachine = action.payload;
       state.initial = true;
     },
 
@@ -196,6 +205,22 @@ export function getActiveMachines() {
     }
   };
 }
+
+// ----------------------------get Connected Machines------------------------------------------
+
+export function getConnntedMachine(id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}`);
+      dispatch(slice.actions.getConnectedMachineSuccess(response.data));
+    } catch (error) {
+      console.error(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+};
 
 // -------------------------Machine Verification---------------------------------------
 
