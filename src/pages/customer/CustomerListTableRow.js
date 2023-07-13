@@ -25,7 +25,6 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import Label from '../../components/label';
 import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
 import { useSelector } from '../../redux/store';
-import { StyledTableRow } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
@@ -39,14 +38,14 @@ CustomerListTableRow.propTypes = {
   onDeleteRow: PropTypes.func,
 };
 
-// const StyledTableRow = styled(TableRow)(({ theme }) => ({
-//   '&:nth-of-type(odd)': {
-//     backgroundColor: 'white',
-//   },
-//   '&:nth-of-type(even)': {
-//     backgroundColor: '#f4f6f866',
-//   },
-// }));
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: 'white',
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: '#f4f6f866',
+  },
+}));
 
 export default function CustomerListTableRow({
   row,
