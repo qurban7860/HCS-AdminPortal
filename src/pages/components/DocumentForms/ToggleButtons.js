@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography, Switch } from '@mui/material';
+import { Grid, Switch } from '@mui/material';
 import { StyledToggleButtonLabel } from '../../../theme/styles/document-styles';
 import RHFSwitch from '../../../components/hook-form/RHFSwitch';
 import { TOGGLE } from '../../../constants/default-constants';
@@ -15,6 +15,8 @@ ToggleButtons.propTypes = {
   isRHF: PropTypes.bool,
   name: PropTypes.object,
   RHFName: PropTypes.string,
+  isCONNECTABLE: PropTypes.bool,
+  CONNECTName: PropTypes.string,
 };
 
 export default function ToggleButtons({
@@ -27,6 +29,8 @@ export default function ToggleButtons({
   name,
   isRHF,
   RHFName,
+  isCONNECTABLE,
+  CONNECTName,
 }) {
   return (
     <Grid item lg={12} display="flex">
@@ -60,6 +64,14 @@ export default function ToggleButtons({
             {TOGGLE.CUSTOMER_ACCESS}
           </StyledToggleButtonLabel>
           <RHFSwitch name={RHFName} />
+        </Grid>
+      )}
+      {isCONNECTABLE && (
+        <Grid display="flex" alignItems="center" mt={1}>
+          <StyledToggleButtonLabel variant="body2" p={1}>
+            {TOGGLE.CONNECTABLE}
+          </StyledToggleButtonLabel>
+          <RHFSwitch name={CONNECTName} />
         </Grid>
       )}
     </Grid>

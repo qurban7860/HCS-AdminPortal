@@ -106,6 +106,10 @@ export default function SignInLogList() {
     }
   }, [signInLogs, initial]);
 
+  const reloadList = () => {
+    dispatch(getSignInLogs(userId));
+  };
+
   const dataFiltered = applyFilter({
     inputData: tableData,
     comparator: getComparator(order, orderBy),
@@ -170,6 +174,7 @@ export default function SignInLogList() {
             onFilterStatus={handleFilterStatus}
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
+            buttonAction={reloadList}
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -292,6 +297,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (logs) =>
         logs?.user?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        logs?.user?.login?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         logs?.loginIP?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(logs?.loginTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         fDate(logs?.logoutTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0

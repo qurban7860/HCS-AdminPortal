@@ -54,10 +54,10 @@ export function Thumbnail({
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
       getCallAfterDelete();
-      enqueueSnackbar('File deleted successfully!');
+      enqueueSnackbar('File DELETED successful');
     } catch (err) {
       console.log(err);
-      enqueueSnackbar('File delete failed!', { variant: `error` });
+      enqueueSnackbar('File DELETE failed!', { variant: `error` });
     }
   };
 

@@ -10,6 +10,8 @@ import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { addCategory } from '../../../redux/slices/products/category';
+// schema
+import { AddMachineSchema } from '../../schemas/document';
 // routes
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
 import { useSettingsContext } from '../../../components/settings';
@@ -22,23 +24,18 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import { Cover } from '../../components/Defaults/Cover';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+// constants
+import { FORMLABELS } from '../../../constants/default-constants';
+import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
 export default function CategoryAddForm() {
-  const dispatch = useDispatch();
-
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-
-  const AddMachineSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required'),
-    description: Yup.string().max(2000),
-    isActive: Yup.boolean(),
-    connections: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -81,8 +78,6 @@ export default function CategoryAddForm() {
       console.error(error);
     }
   };
-
-  const { themeStretch } = useSettingsContext();
   return (
     <Container maxWidth={false}>
       <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
@@ -109,44 +104,14 @@ export default function CategoryAddForm() {
                   <RHFTextField name="name" label="Name" />
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                 </Box>
-                <Grid display="flex" alignItems="end">
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        Active
-                      </Typography>
-                    }
-                  />
-                  <RHFSwitch
-                    name="connections"
-                    labelPlacement="start"
-                    label={
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mx: 0,
-                          width: 1,
-                          justifyContent: 'space-between',
-                          mb: 0.5,
-                          color: 'text.secondary',
-                        }}
-                      >
-                        Connect as a child
-                      </Typography>
-                    }
-                  />
-                </Grid>
+
+                <ToggleButtons
+                  isMachine
+                  isCONNECTABLE
+                  name={FORMLABELS.isACTIVE.name}
+                  CONNECTName={FORMLABELS.isCONNECTABLE.name}
+                />
+
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

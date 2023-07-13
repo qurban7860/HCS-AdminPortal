@@ -15,11 +15,19 @@ export const FORMLABELS = {
     label: 'Customer Access',
     name: 'customerAccess',
   },
-
+  isCONNECTABLE: {
+    label: 'Connect as a child',
+    name: 'connections',
+  },
+  DESC: {
+    label: 'Description',
+    name: 'description',
+  },
   COVER: {
     NEW_CUSTOMER: 'New Customer',
     NEW_DOCUMENT: 'New Document',
     NEW_DOCUMENT_CATEGORY: 'New Document Category',
+    EDIT_DOCUMENT_TYPE: 'Edit Document Type',
     EDIT_MODEL: 'Edit Model',
     EDIT_DOCUMENT_CATEGORY: 'Edit Document Category',
     MACHINE_PLACEHOLDER: 'Machine',
@@ -229,4 +237,5 @@ export const TOGGLE = {
   // @root - TOGGLE BUTTONS
   CUSTOMER_ACCESS: 'Customer Access',
   ACTIVE: 'Active',
+  CONNECTABLE: 'Connect as a child',
 };

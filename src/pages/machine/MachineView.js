@@ -7,7 +7,18 @@ import { StyledCardContainer } from '../../theme/styles/default-styles';
 import TabContainer from '../components/Tabs/TabContainer';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getMachine } from '../../redux/slices/products/machine';
+import {
+  getMachines,
+  getMachine,
+  setMachineEditFormVisibility,
+} from '../../redux/slices/products/machine';
+import {
+  setDocumentViewFormVisibility,
+  setDocumentHistoryViewFormVisibility,
+} from '../../redux/slices/document/document';
+
+// auth
+import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 // sections
@@ -15,8 +26,6 @@ import { Cover } from '../components/Defaults/Cover';
 import MachineViewForm from './MachineViewForm';
 import MachineEditForm from './MachineEditForm';
 import { TABS as TABSFunc } from './util/Tabs';
-import { FORMLABELS } from '../../constants/default-constants';
-
 import { CONFIG } from '../../config-global';
 
 // ----------------------------------------------------------------------
@@ -42,6 +51,8 @@ export default function MachineView({ editPage }) {
   const TABS = TABSFunc(currentComponent);
 
   useEffect(() => {
+    dispatch(setDocumentViewFormVisibility(false));
+    dispatch(setDocumentHistoryViewFormVisibility(false));
     if (id !== 'null') {
       dispatch(getMachine(id));
       //   dispatch(getSites(id));
@@ -65,8 +76,13 @@ export default function MachineView({ editPage }) {
       <StyledCardContainer>
         <Cover
           name={machine?.name}
-          serialNo={machine ? machine.serialNo : FORMLABELS.MACHINE_PLACEHOLDER}
-          setting
+          handleBackLinks={() => {
+            dispatch(setDocumentViewFormVisibility(false));
+            dispatch(setDocumentHistoryViewFormVisibility(false));
+          }}
+          serialNo={machine ? machine.serialNo : 'Serial Number'}
+          icon="et:gears"
+          setting="enable"
         />
         <TabContainer
           tabsClasses={tabsClasses.scrollButtons}

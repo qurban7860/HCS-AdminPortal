@@ -131,7 +131,7 @@ export default function ModelAddForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField name="name" label="Name*" />
+                  <RHFTextField name="name" label="Name" required />
                   <Autocomplete
                     value={modelVal || null}
                     options={activeCategories}

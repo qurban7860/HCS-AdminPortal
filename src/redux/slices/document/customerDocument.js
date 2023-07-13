@@ -9,8 +9,10 @@ const regEx = /^[^2]*/
 const initialState = {
   customerDocumentFormVisibility: false,
   customerDocumentEditFormVisibility: false,
+  customerDocumentViewFormVisibility: false,
+  customerDocumentHistoryViewFormVisibility: false,
   customerDocumentEdit: false,
-  intial: false,
+  customerDocumentIntial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
@@ -43,6 +45,14 @@ const slice = createSlice({
     // SET TOGGLE
     setCustomerDocumentEditFormVisibility(state, action){
       state.customerDocumentEditFormVisibility = action.payload;
+    },
+    // SET TOGGLE
+    setCustomerDocumentViewFormVisibility(state, action){
+      state.customerDocumentViewFormVisibility = action.payload;
+    },    
+    // SET TOGGLE
+    setCustomerDocumentHistoryViewFormVisibility(state, action){
+      state.customerDocumentHistoryViewFormVisibility = action.payload;
     },
     setCustomerDocumentEdit(state, action){
       state.customerDocumentEdit = action.payload;
@@ -119,6 +129,8 @@ export default slice.reducer;
 export const {
   setCustomerDocumentFormVisibility,
   setCustomerDocumentEditFormVisibility,
+  setCustomerDocumentViewFormVisibility,
+  setCustomerDocumentHistoryViewFormVisibility,
   setCustomerDocumentEdit,
   resetCustomerDocument,
   resetCustomerDocuments,

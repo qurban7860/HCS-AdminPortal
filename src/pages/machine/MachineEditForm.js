@@ -180,8 +180,10 @@ export default function MachineEditForm() {
     if (chips && chips.length > 0) {
       data.alias = chips;
     }
-    data.parentMachine = parMachineVal?._id || null;
-    data.parentSerialNo = parMachSerVal?.serialNo || null;
+    // data.parentMachine = parMachineVal?._id || null;
+    // data.parentSerialNo = parMachSerVal?.serialNo || null;
+    // data.customerTags = chipData
+
     data.supplier = supplierVal?._id || null;
     data.machineModel = modelVal?._id || null;
     data.status = statusVal?._id || null;
@@ -195,12 +197,11 @@ export default function MachineEditForm() {
     data.shippingDate = shippingDate;
     const idsOnly = machineConnectionVal.map((obj) => obj._id);
     data.machineConnections = idsOnly;
-    // data.customerTags = chipData
     try {
       await dispatch(updateMachine(data));
       enqueueSnackbar('Update success!');
-      setParMachineVal('');
-      setParMachSerVal('');
+      // setParMachineVal('');
+      // setParMachSerVal('');
       setSupplierVal('');
       setModelVal('');
       setStatusVal('');
@@ -276,83 +277,82 @@ export default function MachineEditForm() {
                   <RHFTextField name="name" label="Name" />
                 </Box>
                 <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
-                  <Autocomplete
-                    // freeSolo
-                    value={parMachSerVal || null}
-                    options={activeMachines.filter(
-                      (option) => option.serialNo !== machine.serialNo
-                    )}
-                    getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
-                    isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setParMachineVal(newValue);
-                        setParMachSerVal(newValue);
-                        // setSupplierVal(newValue.supplier);
-                        // setModelVal(newValue.machineModel);
-                      } else {
-                        setParMachineVal('');
-                        setParMachSerVal('');
-                        // setSupplierVal("");
-                        // setModelVal("");
-                      }
-                    }}
-                    id="controllable-states-demo"
-                    renderOption={(props, option) => (
-                      <Box component="li" {...props} key={option._id}>{`${
-                        option.serialNo ? option.serialNo : ''
-                      }`}</Box>
-                    )}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Previous Machine Serial No." />
-                    )}
-                    ChipProps={{ size: 'small' }}
-                  />
+                {/* <Box
+                rowGap={3}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
 
-                  <Autocomplete
-                    // freeSolo
-                    disabled
-                    disablePortal
-                    id="combo-box-demo"
-                    value={parMachineVal || null}
-                    options={activeMachines}
-                    isOptionEqualToValue={(option, value) => option?.name === value.name}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    onChange={(event, newValue) => {
-                      if (newValue !== null) {
-                        // setParMachineVal(newValue);
-                        // setParMachSerVal(newValue);
-                        // setSupplierVal(newValue.supplier);
-                        // setModelVal(newValue.machineModel);
-                      } else {
-                        // setParMachineVal("");
-                        // setParMachSerVal("");
-                        // setSupplierVal("");
-                        // setModelVal("");
-                      }
-                    }}
-                    // id="controllable-states-demo"
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        label="Previous Machine"
-                        sx={{
-                          '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#000000' },
-                        }}
-                      />
-                    )}
-                    ChipProps={{ size: 'small' }}
-                  />
-                </Box>
+                <Autocomplete
+                  // freeSolo
+                  value={parMachSerVal || null}
+                  options={activeMachines.filter(option => option.serialNo !== machine.serialNo)}
+                  getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
+                  isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setParMachineVal(newValue);
+                      setParMachSerVal(newValue);
+                      // setSupplierVal(newValue.supplier);
+                      // setModelVal(newValue.machineModel);
+                    } else {
+                      setParMachineVal('');
+                      setParMachSerVal('');
+                      // setSupplierVal("");
+                      // setModelVal("");
+                    }
+                  }}
+                  id="controllable-states-demo"
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props} key={option._id}>{`${
+                      option.serialNo ? option.serialNo : ''
+                    }`}</Box>
+                  )}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Previous Machine Serial No." />
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
+
+                <Autocomplete
+                  // freeSolo
+                  disabled
+                  disablePortal
+                  id="combo-box-demo"
+                  value={parMachineVal || null}
+                  options={activeMachines}
+                  isOptionEqualToValue={(option, value) => option?.name === value.name}
+                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                  onChange={(event, newValue) => {
+                    if (newValue !== null) {
+                      // setParMachineVal(newValue);
+                      // setParMachSerVal(newValue);
+                      // setSupplierVal(newValue.supplier);
+                      // setModelVal(newValue.machineModel);
+                    } else {
+                      // setParMachineVal("");
+                      // setParMachSerVal("");
+                      // setSupplierVal("");
+                      // setModelVal("");
+                    }
+                  }}
+                  // id="controllable-states-demo"
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Previous Machine"
+                      sx={{
+                        '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#000000' },
+                      }}
+                    />
+                  )}
+                  ChipProps={{ size: 'small' }}
+                />
+              </Box> */}
                 <Box
                   rowGap={3}
                   columnGap={2}

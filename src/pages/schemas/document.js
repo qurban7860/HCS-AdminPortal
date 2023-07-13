@@ -51,11 +51,24 @@ export const EditDocumentNameSchema = Yup.object().shape({
   customerAccess: Yup.boolean(),
 });
 
+export const AddDocumentTypeSchema = Yup.object().shape({
+  // category: Yup.string().min(2).required("Category is required!"),
+  name: Yup.string().min(2).max(40).required('Name is required!'),
+  description: Yup.string().max(10000),
+  isActive: Yup.boolean(),
+  customerAccess: Yup.boolean(),
+});
 // -------------------Machine Documents---------------------
-
 export const EditMachineDocumentSchema = Yup.object().shape({
   displayName: Yup.string().max(50),
   description: Yup.string().max(10000),
   // image: Yup.mixed().required("Image Field is required!"),
   isActive: Yup.boolean(),
+});
+
+export const AddMachineSchema = Yup.object().shape({
+  name: Yup.string().min(2).max(50).required('Name is required'),
+  description: Yup.string().max(2000),
+  isActive: Yup.boolean(),
+  connections: Yup.boolean(),
 });

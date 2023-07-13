@@ -225,6 +225,10 @@ export const FORMLABELS = {
     name: 'description',
     label: 'Description',
   },
+  TYPE: {
+    name: 'name',
+    label: 'Type Name',
+  },
 
   // dialog customer
   CUSTOMER: {

@@ -1,13 +1,9 @@
 import PropTypes from 'prop-types';
-import { sentenceCase } from 'change-case';
 // @mui
-import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-// components
-import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
-// routes
+import { Stack } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import { PATH_DASHBOARD } from '../../../routes/paths';
-// styles
+import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { options } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
@@ -20,6 +16,7 @@ SignInLogListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
+  buttonAction: PropTypes.func,
 };
 
 export default function SignInLogListTableToolbar({
@@ -30,6 +27,7 @@ export default function SignInLogListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
+  buttonAction,
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
@@ -42,8 +40,9 @@ export default function SignInLogListTableToolbar({
         value={filterName}
         onChange={onFilterName}
         onClick={onResetFilter}
-        SubOnClick={toggleAdd}
-        isDisabled
+        SubOnClick={buttonAction}
+        addButton="Refresh Report"
+        buttonIcon="mdi:reload"
       />
     </Stack>
   );

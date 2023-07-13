@@ -73,7 +73,7 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
-        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
+        <ViewFormField sm={12} heading="Param Category Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         <ViewFormField />
         <Grid container>

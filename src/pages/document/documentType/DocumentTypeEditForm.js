@@ -25,25 +25,22 @@ import {
   TextField,
   Container,
 } from '@mui/material';
-// global
-import { CONFIG } from '../../../config-global';
-// slice
+// schema
+import { EditDocumentNameSchema } from '../../schemas/document';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-  RHFAutocomplete,
-  RHFSwitch,
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { getDocumentTypes, updateDocumentType } from '../../../redux/slices/document/documentType';
 import { getActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import FormHeading from '../../components/DocumentForms/FormHeading';
 import { Cover } from '../../components/Defaults/Cover';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { FORMLABELS } from '../../../constants/default-constants';
+import { FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
@@ -73,12 +70,6 @@ export default function DocumentTypeEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditDocumentNameSchema = Yup.object().shape({
-    name: Yup.string().max(40),
-    description: Yup.string().max(1500),
-    isActive: Yup.boolean(),
-    customerAccess: Yup.boolean(),
-  });
 
   const methods = useForm({
     resolver: yupResolver(EditDocumentNameSchema),
@@ -94,12 +85,6 @@ export default function DocumentTypeEditForm() {
   } = methods;
 
   const values = watch();
-
-  // useEffect(() => {
-  //   if (site) {
-  //     reset(defaultValues);
-  //   }
-  // }, [site, reset, defaultValues]);
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.documentType.view(documentType._id));
@@ -123,26 +108,15 @@ export default function DocumentTypeEditForm() {
 
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-          // mt: '24px',
-        }}
-      >
-        <Cover
-          name={documentType?.name}
-          generalSettings
-          backLink={PATH_SETTING.documentType.view(documentType?._id)}
-        />
-      </Card>
+      <StyledCardContainer>
+        <Cover name={documentType?.name} />
+      </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={4}>
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <FormHeading heading="Edit Document Type" />
+                <FormHeading heading={FORMLABELS.COVER.EDIT_DOCUMENT_TYPE} />
                 <Autocomplete
                   // freeSolo
                   value={documentCategoryVal || null}
@@ -163,54 +137,23 @@ export default function DocumentTypeEditForm() {
                   )}
                   id="controllable-states-demo"
                   renderInput={(params) => (
-                    <TextField {...params} required label="Document Category" />
+                    <TextField {...params} required label={formLABELS.DOCUMENT_CATEGORY} />
                   )}
                   ChipProps={{ size: 'small' }}
                 />
-                <RHFTextField name="name" label="Type Name" />
-                <RHFTextField name="description" label="Description" minRows={8} multiline />
-                <Grid display="flex">
-                  <RHFSwitch
-                    name="customerAccess"
-                    labelPlacement="start"
-                    label={
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          Customer Access
-                        </Typography>
-                      </>
-                    }
-                  />
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <>
-                        <Typography
-                          variant="subtitle2"
-                          sx={{
-                            mx: 0,
-                            width: 1,
-                            justifyContent: 'space-between',
-                            mb: 0.5,
-                            color: 'text.secondary',
-                          }}
-                        >
-                          Active
-                        </Typography>
-                      </>
-                    }
-                  />
-                </Grid>
+                <RHFTextField name={formLABELS.TYPE.name} label={formLABELS.TYPE.label} />
+                <RHFTextField
+                  name={FORMLABELS.DESC.name}
+                  label={FORMLABELS.DESC.label}
+                  minRows={8}
+                  multiline
+                />
+                <ToggleButtons
+                  isMachine
+                  isRHF
+                  name={FORMLABELS.isACTIVE.name}
+                  RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
+                />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

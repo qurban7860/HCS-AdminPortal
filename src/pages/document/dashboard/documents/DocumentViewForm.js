@@ -189,10 +189,11 @@ export default function Document() {
   return (
     <>
       <Container maxWidth={false}>
-        <DocumentCover content={defaultValues?.displayName} />
+        <DocumentCover content={defaultValues?.displayName} backLink generalSettings />
         <Grid container>
           <Grid item md={12} mt={2}>
             <Card sx={{ p: 3 }}>
+              {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
               <Grid display="inline-flex">
                 <ViewFormField isActive={defaultValues.isActive} />
                 <ViewFormField customerAccess={defaultValues?.customerAccess} />
