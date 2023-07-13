@@ -84,17 +84,6 @@ export default function MachineEditForm() {
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
 
-  const {
-    reset,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = methods;
-
-  const methods = useForm({
-    resolver: yupResolver(EditMachineSchema),
-    defaultValues,
-  });
-
   const defaultValues = useMemo(
     () => ({
       id: machine?._id || '',
@@ -122,6 +111,17 @@ export default function MachineEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+
+  const methods = useForm({
+    resolver: yupResolver(EditMachineSchema),
+    defaultValues,
+  });
+  
+  const {
+    reset,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
 
   useLayoutEffect(() => {
     dispatch(getActiveCustomers());
