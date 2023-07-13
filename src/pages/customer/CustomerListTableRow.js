@@ -58,7 +58,6 @@ export default function CustomerListTableRow({
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
-
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="right">
