@@ -14,6 +14,8 @@ function MachineDialog({ openMachine, handleCloseMachine, handleConnectedMachine
   const navigate = useNavigate();
   const { machine, connectedMachine } = useSelector((state) => state.machine);
   const [currentMachine, setCurrentMachine] = useState(machine);
+  
+  // eslint-disable
   useEffect(() => {
     if(connectedMachine && handleConnectedMachine){
       setCurrentMachine(connectedMachine);
@@ -21,6 +23,7 @@ function MachineDialog({ openMachine, handleCloseMachine, handleConnectedMachine
       setCurrentMachine(machine);
     }
   }, [handleConnectedMachine, connectedMachine]);
+  // eslint-enable
 
   return (
     <Dialog
