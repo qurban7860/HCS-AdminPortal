@@ -241,7 +241,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   )}
                 />
               </Box>
-              <ToggleButtons isMachine name={formLABELS.isACTIVE} />
+              <ToggleButtons isMachine name={formLABELS.isACTIVE.name} />
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

@@ -263,6 +263,8 @@ export default function DocumentAddForm({
       )
       .nullable(true),
     isActive: Yup.boolean(),
+    // customerAccess: Yup.boolean(),
+
   });
 
   const defaultValues = useMemo(
@@ -271,6 +273,7 @@ export default function DocumentAddForm({
       description: '',
       imultiUpload: null,
       isActive: true,
+      // customerAccess:false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentDocument]
@@ -787,10 +790,12 @@ export default function DocumentAddForm({
                 {/* cleanup */}
                 {selectedValue === 'new' && (
                   <ToggleButtons
+                    isDocument
                     customerAccessVal={customerAccessVal}
                     handleChange={handleChange}
                     isActive={isActive}
                     handleIsActiveChange={handleIsActiveChange}
+
                   />
                 )}
 

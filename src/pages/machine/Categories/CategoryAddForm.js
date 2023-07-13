@@ -101,7 +101,7 @@ export default function CategoryAddForm() {
                     sm: 'repeat(1, 1fr)',
                   }}
                 >
-                  <RHFTextField name="name" label="Name" />
+                  <RHFTextField name="name" label="Name*" />
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                 </Box>
 

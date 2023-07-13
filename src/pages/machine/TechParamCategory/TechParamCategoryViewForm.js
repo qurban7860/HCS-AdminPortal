@@ -58,27 +58,18 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
       enqueueSnackbar('Deleted Successfully!');
       navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list);
     } catch (err) {
-      // if(err.Message){
-      //   enqueueSnackbar(err.Message,{ variant: `error` })
-      // }else if(err.message){
-      //   enqueueSnackbar(err.message,{ variant: `error` })
-      // }else{
-      //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
-      // }
+
       enqueueSnackbar('Techparam category delete failed!', { variant: `error` });
       console.log('Error:', err);
     }
   };
   return (
-    <Card sx={{ p: 3 }}>
+    <Card sx={{ p: 2 }}>
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField sm={12} heading="Param Category Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormField />
-        <Grid container>
           <ViewFormAudit defaultValues={defaultValues} />
-        </Grid>
       </Grid>
     </Card>
   );

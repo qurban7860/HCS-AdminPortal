@@ -108,7 +108,7 @@ export default function CategoryEditForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField name="name" label="Name" />
+                  <RHFTextField name="name" label="Name*" />
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                   <Grid display="flex" alignItems="end">
                     <RHFSwitch

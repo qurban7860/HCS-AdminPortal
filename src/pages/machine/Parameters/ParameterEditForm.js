@@ -161,8 +161,8 @@ export default function ParameterEditForm() {
                   renderInput={(params) => <TextField {...params} label="Parameter Category" />}
                   ChipProps={{ size: 'small' }}
                 />
-                <RHFTextField name="name" label="Name" required />
-                <RHFTextField name="code" label="Code" required />
+                <RHFTextField name="name" label="Name*" />
+                <RHFTextField name="code" label="Code" />
               </Box>
               <Box
                 rowGap={2}
