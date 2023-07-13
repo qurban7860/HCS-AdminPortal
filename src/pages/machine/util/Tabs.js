@@ -6,7 +6,7 @@ import MachineSettingList from '../MachineSettingList';
 import DocumentTagPage from '../../document/documents/DocumentTagPage';
 import MachineToolsInstalledList from '../MachineToolsInstalledList';
 
-export const TABS = (currentComponent, disableTab, showDevTabs) => [
+export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
     //   disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
     value: 'Machine-info',
