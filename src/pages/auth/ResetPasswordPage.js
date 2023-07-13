@@ -10,7 +10,7 @@ import Iconify from '../../components/iconify';
 import AuthResetPasswordForm from '../../sections/auth/AuthResetPasswordForm';
 // assets
 import { PasswordIcon } from '../../assets/icons';
-import { CONFIG } from '../../config-global';
+import { TITLES } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -20,18 +20,12 @@ export default function ResetPasswordPage() {
       {/* <Helmet>
         <title> Reset Password Login | {CONFIG.APP_TITLE} </title>
       </Helmet> */}
-
       <PasswordIcon sx={{ mb: 5, height: 96 }} />
-
       <Typography variant="h3" paragraph>
-        Forgot your password?
+        {TITLES.FORGOT_PASSWORD}
       </Typography>
 
-      <Typography sx={{ color: 'text.secondary', mb: 5 }}>
-        Please enter the email address associated with your account and we will email you a link to
-        reset your password.
-      </Typography>
-
+      <Typography sx={{ color: 'text.secondary', mb: 5 }}>{TITLES.FORGOT_DESC}</Typography>
       <AuthResetPasswordForm />
 
       <Link
@@ -47,7 +41,7 @@ export default function ResetPasswordPage() {
         }}
       >
         <Iconify icon="eva:chevron-left-fill" width={16} />
-        Return to sign in
+        {TITLES.FORGOT_RETURN}
       </Link>
     </>
   );

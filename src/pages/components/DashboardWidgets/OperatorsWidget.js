@@ -3,13 +3,10 @@ import orderBy from 'lodash/orderBy';
 import { useSelector } from 'react-redux';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Stack, Card, Avatar, Divider, Typography } from '@mui/material';
-// utils
-import { fShortenNumber } from '../../../utils/formatNumber';
+import { Box, Stack, Card, Divider, Typography } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 // import Logo from '../../../components/logo-avatar/LogoAvatar';
-import CoverCustomAvatar from '../CoverCustomAvatar';
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
 import { CustomAvatar } from '../../../components/custom-avatar';
 
@@ -35,7 +32,7 @@ export default function HowickOperators({ title, subheader, list, ...other }) {
       <Divider />
       <Stack spacing={3} sx={{ p: 3 }}>
         {spContacts.map((operator, index) => (
-            <OperatorItem key={operator._id || index} operator={operator} index={index} />
+          <OperatorItem key={operator._id || index} operator={operator} index={index} />
         ))}
       </Stack>
     </Card>

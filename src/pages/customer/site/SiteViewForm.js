@@ -20,9 +20,9 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
 import ConfirmDialog from '../../../components/confirm-dialog';
 import GoogleMaps from '../../../assets/GoogleMaps';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 
@@ -59,11 +59,11 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       enqueueSnackbar('Site deleted Successfully!');
       setIsExpanded(false);
     } catch (err) {
-      if(err.Message){
-        enqueueSnackbar(err.Message,{ variant: `error` })
-      }else if(err.message){
-        enqueueSnackbar(err.message,{ variant: `error` })
-      }else{
+      if (err.Message) {
+        enqueueSnackbar(err.Message, { variant: `error` });
+      } else if (err.message) {
+        enqueueSnackbar(err.message, { variant: `error` });
+      } else {
         enqueueSnackbar('Site delete failed!', { variant: `error` });
       }
       console.log(err);

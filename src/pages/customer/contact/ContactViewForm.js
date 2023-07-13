@@ -24,10 +24,10 @@ import {
 // Iconify
 import Iconify from '../../../components/iconify';
 import { fDate, fDateTime } from '../../../utils/formatTime';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormSwitch from '../../components/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
 
@@ -37,7 +37,11 @@ ContactViewForm.propTypes = {
   setIsExpanded: PropTypes.func,
 };
 
-export default function ContactViewForm({ currentContact = null, setIsExpanded, setCurrentContactData }) {
+export default function ContactViewForm({
+  currentContact = null,
+  setIsExpanded,
+  setCurrentContactData,
+}) {
   const { contact } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
@@ -67,7 +71,7 @@ export default function ContactViewForm({ currentContact = null, setIsExpanded, 
     try {
       await dispatch(deleteContact(customer._id, contact._id));
       setIsExpanded(false);
-      enqueueSnackbar("Contact deleted Successfully!");
+      enqueueSnackbar('Contact deleted Successfully!');
       dispatch(getContacts(customer._id));
       // setCurrentContactData({})
     } catch (err) {
@@ -78,32 +82,32 @@ export default function ContactViewForm({ currentContact = null, setIsExpanded, 
       // }else{
       //   enqueueSnackbar("Something went wrong!",{ variant: `error` })
       // }
-      enqueueSnackbar("Contact delete failed!",{ variant: `error` })
-      console.log("Error:", err);
+      enqueueSnackbar('Contact delete failed!', { variant: `error` });
+      console.log('Error:', err);
     }
   };
 
   const defaultValues = useMemo(
     () => ({
-      firstName:          contact?.firstName  || '',
-      lastName:           contact?.lastName  || '',
-      title:              contact?.title  || '',
-      contactTypes:       contact?.contactTypes  || [],
-      phone:              contact?.phone || '',
-      email:              contact?.email || '',
-      street:             contact?.address?.street || '',
-      suburb:             contact?.address?.suburb || '',
-      city:               contact?.address?.city || '',
-      postcode:           contact?.address?.postcode || '',
-      region:             contact?.address?.region || '',
-      country:            contact?.address?.country || '',
-      isActive:           contact?.isActive,
-      createdAt:          contact?.createdAt || '',
-      createdByFullName:  contact?.createdBy?.name || '',
-      createdIP:          contact?.createdIP || '',
-      updatedAt:          contact?.updatedAt || '',
-      updatedByFullName:  contact?.updatedBy?.name || '',
-      updatedIP:          contact?.updatedIP || '',
+      firstName: contact?.firstName || '',
+      lastName: contact?.lastName || '',
+      title: contact?.title || '',
+      contactTypes: contact?.contactTypes || [],
+      phone: contact?.phone || '',
+      email: contact?.email || '',
+      street: contact?.address?.street || '',
+      suburb: contact?.address?.suburb || '',
+      city: contact?.address?.city || '',
+      postcode: contact?.address?.postcode || '',
+      region: contact?.address?.region || '',
+      country: contact?.address?.country || '',
+      isActive: contact?.isActive,
+      createdAt: contact?.createdAt || '',
+      createdByFullName: contact?.createdBy?.name || '',
+      createdIP: contact?.createdIP || '',
+      updatedAt: contact?.updatedAt || '',
+      updatedByFullName: contact?.updatedBy?.name || '',
+      updatedIP: contact?.updatedIP || '',
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [contact]

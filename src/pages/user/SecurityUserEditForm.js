@@ -3,125 +3,122 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'reac
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input'
-import { Box, Card, Grid, Stack, Typography, Autocomplete,TextField } from '@mui/material';
+import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // routes
 import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSwitch,
-  RHFTextField,
-  RHFMultiSelect
-} from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 // slice
-import { updateSecurityUser, setSecurityUserEditFormVisibility } from '../../redux/slices/securityUser/securityUser';
+import {
+  updateSecurityUser,
+  setSecurityUserEditFormVisibility,
+} from '../../redux/slices/securityUser/securityUser';
 import { getCustomers } from '../../redux/slices/customer/customer';
-import { getContacts, getActiveContacts, resetContacts} from '../../redux/slices/customer/contact';
+import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
-import AddFormButtons from '../components/AddFormButtons';
-import ViewFormSWitch from '../components/ViewFormSwitch';
-
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import ViewFormSWitch from '../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
-
-
 
 export default function SecurityUserEditForm() {
   const userRolesString = localStorage.getItem('userRoles');
   // const userRoles = JSON.parse(userRolesString);
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
-  const regEx = /^[2][0-9][0-9]$/
+  const regEx = /^[2][0-9][0-9]$/;
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
   const ROLES = [];
   const securityUserRoles = [];
-  roles.map((role)=>(ROLES.push({value: role?._id, label: role.name})))
-  if(securityUser?.roles){
-    securityUser?.roles.map((role)=>(securityUserRoles.push(role?._id,role.name)))
+  roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
+  if (securityUser?.roles) {
+    securityUser?.roles.map((role) => securityUserRoles.push(role?._id, role.name));
   }
-  const [ name, setName ] = useState("");
-  const [ email, setEmail ] = useState("");
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const { customers } = useSelector((state) => state.customer);
-  const [ customerVal, setCustomerVal ] = useState('');
+  const [customerVal, setCustomerVal] = useState('');
   const { contacts, activeContacts } = useSelector((state) => state.contact);
-  const [ contactVal, setContactVal ] = useState('');
-  const [ valid, setValid ] = useState(true);
+  const [contactVal, setContactVal] = useState('');
+  const [valid, setValid] = useState(true);
   const [phone, setPhone] = useState('');
-  const [sortedRoles, setSortedRoles] = useState([]); 
+  const [sortedRoles, setSortedRoles] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [ roleTypesDisabled, setDisableRoleTypes] = useState(false);
+  const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
 
+  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' } };
 
-  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' }};
-  
-useEffect(() => {
+  useEffect(() => {
     dispatch(getCustomers());
     dispatch(getRoles());
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-}, [dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
-useEffect(() => {
-  if(customerVal){
-    dispatch(getActiveContacts(customerVal._id));
-  }
-  if(userRoles){
-    if (userRoles.some(role => role?.roleType === 'SuperAdmin')) {
-      setDisableRoleTypes(false);
-    } else {
-      setDisableRoleTypes(true);
+  useEffect(() => {
+    if (customerVal) {
+      dispatch(getActiveContacts(customerVal._id));
     }
-  }
-// eslint-disable-next-line react-hooks/exhaustive-deps
-}, [dispatch, customerVal, 
-  // userRoles
-]);
+    if (userRoles) {
+      if (userRoles.some((role) => role?.roleType === 'SuperAdmin')) {
+        setDisableRoleTypes(false);
+      } else {
+        setDisableRoleTypes(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    dispatch,
+    customerVal,
+    // userRoles
+  ]);
 
-useEffect(() => {
-  const mappedRoles = roles.map((role) => ({
-    value: role?._id,
-    label: role.name,
-  }));
+  useEffect(() => {
+    const mappedRoles = roles.map((role) => ({
+      value: role?._id,
+      label: role.name,
+    }));
 
-  const sortedRolesTemp = [...mappedRoles].sort((a, b) => {
-    const nameA = a.label.toUpperCase();
-    const nameB = b.label.toUpperCase();
-    return nameA.localeCompare(nameB);
-  });
+    const sortedRolesTemp = [...mappedRoles].sort((a, b) => {
+      const nameA = a.label.toUpperCase();
+      const nameB = b.label.toUpperCase();
+      return nameA.localeCompare(nameB);
+    });
 
-  setSortedRoles(sortedRolesTemp);
-}, [roles]);
+    setSortedRoles(sortedRolesTemp);
+  }, [roles]);
 
   /* eslint-disable */
-  useLayoutEffect(()=>{
-    if(securityUser.customer !== undefined && securityUser.customer !== null){
+  useLayoutEffect(() => {
+    if (securityUser.customer !== undefined && securityUser.customer !== null) {
       setCustomerVal(securityUser?.customer);
     }
-    if(securityUser.contact !== undefined && securityUser.contact !== null){
+    if (securityUser.contact !== undefined && securityUser.contact !== null) {
       setContactVal(securityUser?.contact);
     }
-    if(securityUser.phone !== undefined && securityUser.phone !== null){
+    if (securityUser.phone !== undefined && securityUser.phone !== null) {
       setPhone(securityUser?.phone);
     }
-    if(securityUser.name !== undefined && securityUser.name !== null){
+    if (securityUser.name !== undefined && securityUser.name !== null) {
       handleNameChange(securityUser?.name);
     }
-    if(securityUser.email !== undefined && securityUser.email !== null){
+    if (securityUser.email !== undefined && securityUser.email !== null) {
       setEmail(securityUser?.email);
     }
-  },[securityUser])
+  }, [securityUser]);
   /* eslint-enable */
-    
+
   const NewUserSchema = Yup.object().shape({
-    name: Yup.string().required("Name is required!").max(40, "Name must not exceed 40 characters!"),
+    name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     // email: Yup.string().required('Email is required').email('Email must be a valid email address').trim(),
     password: Yup.string().min(6),
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
@@ -130,7 +127,7 @@ useEffect(() => {
   });
 
   const userLogin = Yup.object({
-    email: Yup.string().email("Enter valid Email").required("This field is Required")
+    email: Yup.string().email('Enter valid Email').required('This field is Required'),
   });
 
   const defaultValues = useMemo(
@@ -157,7 +154,7 @@ useEffect(() => {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
-    trigger
+    trigger,
   } = methods;
 
   useEffect(() => {
@@ -168,62 +165,62 @@ useEffect(() => {
   }, [securityUser]);
 
   const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue)
-    if(newValue.length < 20){
-      setPhone(newValue)
+    matchIsValidTel(newValue);
+    if (newValue.length < 20) {
+      setPhone(newValue);
     }
-  }
+  };
 
-  const handleNameChange = (event) => {
-    setName(event);
-    setValue("name", event || "");
-    trigger("name");
+  const handleNameChange = (e) => {
+    setName(e);
+    setValue('name', e || '');
+    trigger('name');
   };
 
   const onSubmit = async (data) => {
-    data.customer = customerVal?._id || null
-    data.contact = contactVal?._id || null
-    if(phone && phone.length > 4){
-      data.phone = phone
-    }else{
-      data.phone = ""
+    data.customer = customerVal?._id || null;
+    data.contact = contactVal?._id || null;
+    if (phone && phone.length > 4) {
+      data.phone = phone;
+    } else {
+      data.phone = '';
     }
-    if(name){
-      data.name = name ;
+    if (name) {
+      data.name = name;
     }
-    if(email){
-      data.email = email ;
+    if (email) {
+      data.email = email;
     }
     // submitSecurityUserRoles.push(role?._id,role.name)
     const submitSecurityUserRoles = data.roles.filter((role) =>
-    ROLES.some((Role) => Role.value === role)
-    )
+      ROLES.some((Role) => Role.value === role)
+    );
     data.roles = submitSecurityUserRoles;
 
-    try {  
-      await dispatch(updateSecurityUser(data,securityUser._id));
+    try {
+      await dispatch(updateSecurityUser(data, securityUser._id));
       navigate(PATH_SECURITY.users.view(securityUser._id));
     } catch (error) {
-      if(error.Message){
-        enqueueSnackbar(error.Message,{ variant: `error` })
-      }else if(error.message){
-        enqueueSnackbar(error.message,{ variant: `error` })
-      }else{
-        enqueueSnackbar("Something went wrong!",{ variant: `error` })
+      if (error.Message) {
+        enqueueSnackbar(error.Message, { variant: `error` });
+      } else if (error.message) {
+        enqueueSnackbar(error.message, { variant: `error` });
+      } else {
+        enqueueSnackbar('Something went wrong!', { variant: `error` });
       }
-      console.log("Error:", error);
+      console.log('Error:', error);
     }
   };
 
-  const toggleCancel = ()=>{
-      navigate(PATH_SECURITY.users.view(securityUser._id));
-  }
+  const toggleCancel = () => {
+    navigate(PATH_SECURITY.users.view(securityUser._id));
+  };
   const handleInputEmail = (e) => {
-    const emailRegEx =/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-      const trimmedEmail = e.target.value.trim();
-      // trimmedEmail.match(emailRegEx) ? setValid(true) : setValid(false);
+    const emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const trimmedEmail = e.target.value.trim();
+    // trimmedEmail.match(emailRegEx) ? setValid(true) : setValid(false);
     setEmail(trimmedEmail);
-  }
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -319,8 +316,7 @@ useEffect(() => {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-
-            <Autocomplete
+              <Autocomplete
                 // freeSolo
                 required
                 disabled
@@ -329,18 +325,17 @@ useEffect(() => {
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
-                  if(newValue){
-                  setCustomerVal(newValue);
-                  setContactVal("");
-                  dispatch(resetContacts());
-                  }
-                  else{
-                  setCustomerVal("");
-                  setContactVal("");
-                  handleNameChange("");
-                  setPhone("")
-                  setEmail("");
-                  dispatch(resetContacts());
+                  if (newValue) {
+                    setCustomerVal(newValue);
+                    setContactVal('');
+                    dispatch(resetContacts());
+                  } else {
+                    setCustomerVal('');
+                    setContactVal('');
+                    handleNameChange('');
+                    setPhone('');
+                    setEmail('');
+                    dispatch(resetContacts());
                   }
                 }}
                 id="controllable-states-demo"
@@ -356,38 +351,50 @@ useEffect(() => {
               </Autocomplete>
               <Autocomplete
                 // freeSolo
-                value={ contactVal || null}
+                value={contactVal || null}
                 options={activeContacts}
-                getOptionLabel={(option) => `${option?.firstName || ""} ${option?.lastName || ""}`}
+                getOptionLabel={(option) => `${option?.firstName || ''} ${option?.lastName || ''}`}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
-                  if(newValue){
-                  setContactVal(newValue);
-                  handleNameChange(`${newValue.firstName} ${newValue.lastName}`);
-                  setPhone(newValue.phone)
-                  setEmail(newValue.email);
-                  }
-                  else{
-                  setContactVal("");
-                  handleNameChange("");
-                  setPhone("")
-                  setEmail("");
+                  if (newValue) {
+                    setContactVal(newValue);
+                    handleNameChange(`${newValue.firstName} ${newValue.lastName}`);
+                    setPhone(newValue.phone);
+                    setEmail(newValue.email);
+                  } else {
+                    setContactVal('');
+                    handleNameChange('');
+                    setPhone('');
+                    setEmail('');
                   }
                 }}
                 id="controllable-states-demo"
                 // renderOption={(props, option) => (<li  {...props} key={option.id}>{option.firstName} {option.lastName}</li>)}
-                renderInput={(params) => <TextField {...params} label="Contact"/>}
+                renderInput={(params) => <TextField {...params} label="Contact" />}
                 ChipProps={{ size: 'small' }}
               />
-                {/* {(option) => (
+              {/* {(option) => (
                   <div key={option._id}>
                     <span>{`${option.firstName} ${option.lastName}`}</span>
                   </div>
                 )}
               </Autocomplete> */}
-              <RHFTextField name="name" label="Full Name*" onChange={(e) => handleNameChange(e.target.value)} value={name}/>
-              <MuiTelInput value={phone} name='phone' label="Phone Number" flagSize="medium" defaultCountry="NZ" onChange={handlePhoneChange} forceCallingCode/>
-              </Box>
+              <RHFTextField
+                name="name"
+                label="Full Name*"
+                onChange={(e) => handleNameChange(e.target.value)}
+                value={name}
+              />
+              <MuiTelInput
+                value={phone}
+                name="phone"
+                label="Phone Number"
+                flagSize="medium"
+                defaultCountry="NZ"
+                onChange={handlePhoneChange}
+                forceCallingCode
+              />
+            </Box>
             <Box
               rowGap={3}
               columnGap={2}
@@ -397,9 +404,17 @@ useEffect(() => {
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="email" type="email" label="Email Address"  sx={{my:3 }} onChange={handleInputEmail} value={email} required/>
+              <RHFTextField
+                name="email"
+                type="email"
+                label="Email Address"
+                sx={{ my: 3 }}
+                onChange={handleInputEmail}
+                value={email}
+                required
+              />
             </Box>
-              <Box
+            <Box
               rowGap={3}
               columnGap={2}
               display="grid"
@@ -408,8 +423,8 @@ useEffect(() => {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name="loginEmail" label="Login Email"  disabled/>
-            <RHFMultiSelect
+              <RHFTextField name="loginEmail" label="Login Email" disabled />
+              <RHFMultiSelect
                 disabled={roleTypesDisabled}
                 chip
                 checkbox
@@ -422,8 +437,8 @@ useEffect(() => {
               {/* <ViewFormSWitch heading="Active" isActive={securityUser?.isActive} /> */}
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
             </Grid>
-            <Stack  sx={{ mt: 3 }}>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+            <Stack sx={{ mt: 3 }}>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
           </Card>
         </Grid>

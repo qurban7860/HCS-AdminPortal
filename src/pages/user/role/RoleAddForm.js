@@ -8,7 +8,17 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField, Container } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Autocomplete,
+  TextField,
+  Container,
+} from '@mui/material';
 // ROUTES
 import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
 // slice
@@ -19,9 +29,9 @@ import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import FormHeading from '../../components/FormHeading';
-import AddFormButtons from '../../components/AddFormButtons';
-import { Cover } from '../../components/Cover';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 RoleAddForm.propTypes = {
@@ -30,23 +40,23 @@ RoleAddForm.propTypes = {
 
 export default function RoleAddForm({ currentRole }) {
   const { userRoleTypes } = useSelector((state) => state.role);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  const [ roleType, setRoleType ] = useState('');
+  const [roleType, setRoleType] = useState('');
   const mappedUserRoleTypes = Object.keys(userRoleTypes).map((key) => ({
     key,
     name: userRoleTypes[key],
   }));
-  
+
   // a note can be archived.
   const AddRoleSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required("Name Field is required!"),
+    name: Yup.string().min(2).max(50).required('Name Field is required!'),
     description: Yup.string().max(10000),
     /* eslint-disable */
     roleTypes: Yup.string().when('roleType', {
-      is: (roleType) => roleType !== '',      
-      then: Yup.string().required("Role type is required!"),
+      is: (roleType) => roleType !== '',
+      then: Yup.string().required('Role type is required!'),
       otherwise: Yup.string().notRequired(),
     }),
     /* eslint-enable */
@@ -79,7 +89,7 @@ export default function RoleAddForm({ currentRole }) {
     setValue,
     handleSubmit,
     formState: { isSubmitting },
-    trigger
+    trigger,
   } = methods;
 
   useEffect(() => {
@@ -89,13 +99,13 @@ export default function RoleAddForm({ currentRole }) {
 
   const handleRoleTypeChange = (event, newValue) => {
     setRoleType(newValue);
-    setValue("roleTypes", newValue?.name || "");
-    trigger("roleTypes");
+    setValue('roleTypes', newValue?.name || '');
+    trigger('roleTypes');
   };
 
   const onSubmit = async (data) => {
     try {
-      if(roleType){
+      if (roleType) {
         data.roleType = roleType.key;
       }
       await dispatch(addRole(data));
@@ -127,10 +137,10 @@ export default function RoleAddForm({ currentRole }) {
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
-            <Card sx={{ p: 3 }} >
+            <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <RHFTextField name="name" label="Name" />
-                <Autocomplete 
+                <Autocomplete
                   // freeSolo
                   required
                   value={roleType || null}
@@ -145,7 +155,7 @@ export default function RoleAddForm({ currentRole }) {
                     </li>
                   )}
                   renderInput={(params) => (
-                    <RHFTextField {...params} name='roleTypes' label="Role Types"/>
+                    <RHFTextField {...params} name="roleTypes" label="Role Types" />
                   )}
                   ChipProps={{ size: 'small' }}
                 >
@@ -157,30 +167,44 @@ export default function RoleAddForm({ currentRole }) {
                 </Autocomplete>
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex" alignItems="end">
-                  <RHFSwitch name="isActive" labelPlacement="start" label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary'
-                      }}> Active
-                    </Typography>
-                  } />
-                  <RHFSwitch name="disableDelete" labelPlacement="start" label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary'
-                      }}> Disable Delete
-                    </Typography>
-                  } />
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        {' '}
+                        Active
+                      </Typography>
+                    }
+                  />
+                  <RHFSwitch
+                    name="disableDelete"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        {' '}
+                        Disable Delete
+                      </Typography>
+                    }
+                  />
                 </Grid>
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

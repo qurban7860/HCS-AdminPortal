@@ -40,10 +40,13 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentTypeListTableRow from './DocumentTypeListTableRow';
 import DocumentTypeListTableToolbar from './DocumentTypeListTableToolbar';
-import documentName, { getDocumentType, deleteDocumentType, getDocumentTypes  } from '../../../redux/slices/document/documentType';
-import { Cover } from '../../components/Cover';
+import documentName, {
+  getDocumentType,
+  deleteDocumentType,
+  getDocumentTypes,
+} from '../../../redux/slices/document/documentType';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
-
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +56,6 @@ const TABLE_HEAD = [
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
-
 ];
 
 // ----------------------------------------------------------------------
@@ -79,23 +81,17 @@ export default function DocumentTypeList() {
   });
 
   const dispatch = useDispatch();
-
   const { themeStretch } = useSettingsContext();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const [filterName, setFilterName] = useState('');
-
   const [tableData, setTableData] = useState([]);
-
   const [filterStatus, setFilterStatus] = useState([]);
-
   const [openConfirm, setOpenConfirm] = useState(false);
-
   const { customer } = useSelector((state) => state.customer);
-  const { documentTypes, isLoading, error, initial, responseMessage } = useSelector((state) => state.documentType);
+  const { documentTypes, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.documentType
+  );
 
   // console.log("documentTypes : ", documentTypes )
 
@@ -115,13 +111,9 @@ export default function DocumentTypeList() {
     filterName,
     filterStatus,
   });
-
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-
   const denseHeight = 60;
-
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -176,7 +168,6 @@ export default function DocumentTypeList() {
     }
   };
 
-
   const handleViewRow = (id) => {
     navigate(PATH_SETTING.documentType.view(id));
   };
@@ -194,14 +185,9 @@ export default function DocumentTypeList() {
             mb: 3,
             height: 160,
             position: 'relative',
-            // mt: '24px',
           }}
         >
-          <Cover
-            name="Document Types"
-            icon="ph:users-light"
-            generalSettings
-          />
+          <Cover name="Document Types" icon="ph:users-light" generalSettings />
         </Card>
 
         <Card sx={{ mt: 3 }}>
@@ -331,10 +317,13 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
 
   if (filterName) {
-    inputData = inputData.filter( (docType) => docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    docType?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    // (docType?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(docType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (docType) =>
+        docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        docType?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (docType?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(docType?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
 
   if (filterStatus.length) {

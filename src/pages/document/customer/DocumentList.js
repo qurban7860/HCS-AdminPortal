@@ -1,7 +1,4 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Stack,
@@ -16,54 +13,45 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../../routes/paths';
+import { PATH_CUSTOMER } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
 import useResponsive from '../../../hooks/useResponsive';
-import { useSettingsContext } from '../../../components/settings';
 import { useTable, getComparator, TableNoData } from '../../../components/table';
 // components
 import Iconify from '../../../components/iconify';
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
-import SearchInput from '../../components/SearchInput';
+import SearchInput from '../../components/Defaults/SearchInput';
 // sections
 import {
   setCustomerDocumentFormVisibility,
   setCustomerDocumentEditFormVisibility,
   getCustomerDocuments,
 } from '../../../redux/slices/document/customerDocument';
-import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
-import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
-import { getMachines } from '../../../redux/slices/products/machine';
-import { getCustomers } from '../../../redux/slices/customer/customer';
-import DocumentAddForm from '../dashboard/documents/DocumentAddForm';
+import DocumentAddForm from './DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
-import _mock from '../../../_mock';
-import SearchInputAndAddButton from '../../components/SearchInputAndAddButton';
-import AddButtonAboveAccordion from '../../components/AddButtonAboveAcoordion';
-import ListSwitch from '../../components/ListSwitch';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
+import ListSwitch from '../../components/Defaults/ListSwitch';
 import { fDate } from '../../../utils/formatTime';
-import { BUTTONS, FORMLABELS, BREADCRUMBS } from '../../../constants/default-constants';
+import { BUTTONS, BREADCRUMBS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
+// const _accordions = [...Array(8)].map((_, index) => ({
+//   id: _mock.id(index),
+//   value: `panel${index + 1}`,
+//   heading: `Site ${index + 1}`,
+//   subHeading: _mock.text.title(index),
+//   detail: _mock.text.description(index),
+// }));
 
 // ----------------------------------------------------------------------
 
 export default function DocumentList() {
-  const { dense, page, order, orderBy, rowsPerPage } = useTable({
-    defaultOrderBy: '-createdAt',
-  });
+  const { order, orderBy } = useTable({ defaultOrderBy: '-createdAt' });
   const isMobile = useResponsive('down', 'sm');
   const dispatch = useDispatch();
 
@@ -75,23 +63,50 @@ export default function DocumentList() {
     customerDocumentFormVisibility,
   } = useSelector((state) => state.customerDocument);
 
-  const { fileCategories, fileCategory, documentCategoryFormVisibility } = useSelector(
-    (state) => state.documentCategory
-  );
-  const { documentName, documentNames, documentTypeFormVisibility } = useSelector(
-    (state) => state.documentType
-  );
+  const { documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
+  const { documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { customer } = useSelector((state) => state.customer);
   // console.log("customerDocuments : ",customerDocuments)
-  const toggleChecked = async () => {
-    dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
-  };
+
   const [checked, setChecked] = useState(false);
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (
+      customer &&
+      customer?._id &&
+      !customerDocumentFormVisibility &&
+      !customerDocumentEditFormVisibility
+    ) {
+      dispatch(getCustomerDocuments(customer?._id));
+    }
+    if (!customerDocumentEditFormVisibility) {
+      dispatch(setCustomerDocumentEditFormVisibility(false));
+    }
+    if (!customerDocumentFormVisibility) {
+      dispatch(setCustomerDocumentFormVisibility(false));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, customer._id, customerDocumentFormVisibility, customerDocumentEditFormVisibility]);
+
+  useEffect(() => {
+    setTableData(customerDocuments);
+    dispatch(setCustomerDocumentFormVisibility(false));
+    dispatch(setCustomerDocumentEditFormVisibility(false));
+  }, [customerDocuments, dispatch]);
+
+  const toggleChecked = async () => {
+    dispatch(setCustomerDocumentFormVisibility(!customerDocumentFormVisibility));
+  };
+
+  const toggleCancel = () => {
+    dispatch(setCustomerDocumentFormVisibility(false));
+    setChecked(false);
+  };
 
   const handleAccordianClick = (accordianIndex) => {
     if (accordianIndex === activeIndex) {
@@ -100,29 +115,9 @@ export default function DocumentList() {
       setActiveIndex(accordianIndex);
     }
   };
-
-  useEffect(() => {
-    if (customer && customer?._id && !customerDocumentFormVisibility && !customerDocumentEditFormVisibility) {
-      dispatch(getCustomerDocuments(customer?._id));
-    }
-    if(!customerDocumentEditFormVisibility){
-      dispatch(setCustomerDocumentEditFormVisibility(false));
-    }
-    if(!customerDocumentFormVisibility){
-      dispatch(setCustomerDocumentFormVisibility(false));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customer._id, customerDocumentFormVisibility, customerDocumentEditFormVisibility]);
-
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
-  useEffect(() => {
-    setTableData(customerDocuments);
-    dispatch(setCustomerDocumentFormVisibility(false));
-    dispatch(setCustomerDocumentEditFormVisibility(false));
-  }, [customerDocuments,dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -130,17 +125,6 @@ export default function DocumentList() {
     filterName,
     filterStatus,
   });
-
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
-
-  const isNotFound =
-    !customerDocuments.length &&
-    !customerDocumentFormVisibility &&
-    !customerDocumentEditFormVisibility &&
-    !documentTypeFormVisibility &&
-    !documentCategoryFormVisibility;
 
   const handleFilterName = (e) => {
     setFilterName(e.target.value);
@@ -150,12 +134,16 @@ export default function DocumentList() {
     setFilterName('');
     setFilterStatus([]);
   };
-const handleFormVisibility = () => {
-  dispatch(setCustomerDocumentFormVisibility(false))
-}
-  const toggleCancel = () => {
+
+  const isFiltered = filterName !== '' || !!filterStatus.length;
+  const isNotFound =
+    !customerDocuments.length &&
+    !customerDocumentFormVisibility &&
+    !customerDocumentEditFormVisibility &&
+    !documentTypeFormVisibility &&
+    !documentCategoryFormVisibility;
+  const handleFormVisibility = () => {
     dispatch(setCustomerDocumentFormVisibility(false));
-    setChecked(false);
   };
 
   return (
@@ -167,13 +155,9 @@ const handleFormVisibility = () => {
         alignItems="center"
       >
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
+            <BreadcrumbsLink to={PATH_CUSTOMER.view(customer._id)} name={customer.name} />
             <BreadcrumbsLink
               to={PATH_CUSTOMER.document}
               name={
@@ -181,22 +165,27 @@ const handleFormVisibility = () => {
                   {!expanded &&
                     !customerDocumentEditFormVisibility &&
                     customerDocumentFormVisibility &&
-                    'New Document'}
+                    BREADCRUMBS.NEWDOCUMENT}
                   {!customerDocumentFormVisibility &&
                     !customerDocumentEditFormVisibility &&
-                    'Documents'}
-                  {customerDocumentEditFormVisibility && 'Edit Document'}
-                  {documentTypeFormVisibility && 'New Document Type'}
-                  {documentCategoryFormVisibility && 'New Document Category'}
+                    BREADCRUMBS.DOCUMENTS}
+                  {customerDocumentEditFormVisibility && BREADCRUMBS.EDITDOCUMENT}
+                  {documentTypeFormVisibility && BREADCRUMBS.NEWDOCUMENT_TYPE}
+                  {documentCategoryFormVisibility && BREADCRUMBS.NEWDOCUMENT_CATEGORY}
                 </Stack>
               }
             />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
 
         {/* conditional reactive */}
         <Grid item xs={12} md={6}>
-          <Grid container direction={{ sm: 'column', lg: 'row' }} justifyContent="flex-end">
+          <Grid
+            container
+            direction={{ sm: 'column', lg: 'row' }}
+            justifyContent="flex-end"
+            alignItems="center"
+          >
             {isMobile && (
               <Grid item xs={12} md={3}>
                 <Grid container justifyContent="flex-end">
@@ -210,7 +199,8 @@ const handleFormVisibility = () => {
                 </Grid>
               </Grid>
             )}
-            <Grid item xs={12} md={9}>
+
+            <Grid item xs={12} md={9} mt={1}>
               <SearchInput
                 // searchFormVisibility={formVisibility || contactEditFormVisibility}
                 filterName={filterName}
@@ -220,9 +210,14 @@ const handleFormVisibility = () => {
                 toggleChecked={toggleChecked}
                 toggleCancel={toggleCancel}
                 FormVisibility={customerDocumentFormVisibility}
-                disabled={customerDocumentEditFormVisibility || customerDocumentFormVisibility}
+                disabled={
+                  customerDocumentEditFormVisibility ||
+                  customerDocumentFormVisibility ||
+                  customerDocuments.length === 0
+                }
                 size="small"
                 isSearchBar
+                display={customerDocuments.length === 0 ? 'none' : 'inline-flex'}
               />
             </Grid>
             {!isMobile && (
@@ -239,20 +234,6 @@ const handleFormVisibility = () => {
               </Grid>
             )}
           </Grid>
-
-          {/* <SearchInputAndAddButton
-            searchFormVisibility={
-              customerDocumentFormVisibility || customerDocumentEditFormVisibility
-            }
-            filterName={filterName}
-            handleFilterName={handleFilterName}
-            addButtonName={BUTTONS.DOCUMENT}
-            isFiltered={isFiltered}
-            handleResetFilter={handleResetFilter}
-            toggleChecked={toggleChecked}
-            toggleCancel={toggleCancel}
-            FormVisibility={customerDocumentFormVisibility}
-          /> */}
         </Grid>
       </Grid>
 
@@ -264,7 +245,7 @@ const handleFormVisibility = () => {
         !documentCategoryFormVisibility &&
         customerDocumentFormVisibility && (
           <Grid item md={12}>
-            <DocumentAddForm customerPage handleFormVisibility={handleFormVisibility}/>
+            <DocumentAddForm customerPage handleFormVisibility={handleFormVisibility} />
           </Grid>
         )}
       {!customerDocumentEditFormVisibility &&

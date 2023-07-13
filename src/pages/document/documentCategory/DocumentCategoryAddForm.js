@@ -1,49 +1,41 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-// form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField , Container} from '@mui/material';
-// ROUTES
-import { PATH_MACHINE , PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
-// slice
-import { addDocumentCategory, setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
-import { setMachineDocumentFormVisibility, setMachineDocumentEditFormVisibility  } from '../../../redux/slices/document/machineDocument';
-import { setCustomerDocumentFormVisibility, setCustomerDocumentEditFormVisibility } from '../../../redux/slices/document/customerDocument';
-
-// components
+import { Card, Grid, Stack, Typography, Container } from '@mui/material';
+// hooks
+import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
+// routes
+import { PATH_SETTING } from '../../../routes/paths';
+// schema
+import { AddDocumentCategorySchema } from '../../schemas/document';
+// slice
+import { addDocumentCategory } from '../../../redux/slices/document/documentCategory';
+// components
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { Cover } from '../../components/Defaults/Cover';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // assets
 import { countries } from '../../../assets/data';
-import FormProvider, {RHFTextField,RHFSwitch} from '../../../components/hook-form';
-import FormHeading from '../../components/FormHeading';
-import AddFormButtons from '../../components/AddFormButtons';
-import { Cover } from '../../components/Cover';
+// styles
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+// constants
+import { FORMLABELS } from '../../../constants/default-constants';
+import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 DocumentCategoryAddForm.propTypes = {
   currentDocument: PropTypes.object,
 };
-export default function DocumentCategoryAddForm({currentDocument}) {
-  const { documentCategory, documentCategories } = useSelector((state) => state.documentCategory);
-  const { customerDocumentEdit } = useSelector((state) => state.customerDocument);
-  const { machineDocumentEdit } = useSelector((state) => state.machineDocument);
-
-  const navigate = useNavigate()
+export default function DocumentCategoryAddForm({ currentDocument }) {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
- // a note can be archived.
-  const AddDocumentCategorySchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required("Name Field is required!"),
-    description: Yup.string().max(10000),
-    isActive : Yup.boolean(),
-    customerAccess: Yup.boolean(),
-  });
   const defaultValues = useMemo(
     () => ({
       name: '',
@@ -69,79 +61,58 @@ export default function DocumentCategoryAddForm({currentDocument}) {
   } = methods;
 
   useEffect(() => {
-      reset(defaultValues);
+    reset(defaultValues);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[]);
+  }, []);
 
   const onSubmit = async (data) => {
-      try{
-        const response = await dispatch(addDocumentCategory(data));
-        reset();
-        enqueueSnackbar('Document Save Successfully!');
-        navigate(PATH_SETTING.documentCategory.list)
-      } catch(error){
-        enqueueSnackbar('Document Save failed!', { variant: `error` });
-        console.error(error);
-      }
+    try {
+      await dispatch(addDocumentCategory(data));
+      reset();
+      enqueueSnackbar(Snacks.docSaved);
+      navigate(PATH_SETTING.documentCategory.list);
+    } catch (error) {
+      enqueueSnackbar(Snacks.failedSaveDoc, { variant: `error` });
+      console.error(error);
+    }
   };
 
-  const toggleCancel = () =>
-  {
+  const toggleCancel = () => {
     navigate(PATH_SETTING.documentCategory.list);
   };
   return (
-    <Container maxWidth={false }>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name="New Document Category" /> 
-        </Card>
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={18} md={12}>
-          <Card sx={{ p: 3 }} >
-            <Stack spacing={2}>
-              <RHFTextField name="name" label="Category Name" />
-              <RHFTextField name="description" label="Description" minRows={8} multiline />
-              <Grid display="flex">
-              <RHFSwitch name="customerAccess" labelPlacement="start" label={
-                <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                          mx: 0,
-                                          width: 1,
-                                          justifyContent: 'space-between',
-                                          mb: 0.5,
-                                          color: 'text.secondary'
-                                        }}> Customer Access
-                                        </Typography>
-                                        } />
-
-              <RHFSwitch name="isActive" labelPlacement="start" label={
-                              <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                          mx: 0,
-                                          width: 1,
-                                          justifyContent: 'space-between',
-                                          mb: 0.5,
-                                          color: 'text.secondary'
-                                        }}> Active
-                                        </Typography>
-                                        } />
-              
-              </Grid>
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover
+          name={FORMLABELS.COVER.NEW_DOCUMENT_CATEGORY} // New Document Category
+          generalSettings
+          backLink={PATH_SETTING.documentCategory.list}
+        />
+      </StyledCardContainer>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={3}>
+          <Grid item xs={18} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={2}>
+                <RHFTextField name={formLABELS.CATEGORY.name} label={formLABELS.CATEGORY.label} />
+                <RHFTextField
+                  name={formLABELS.CATEGORY_DESC.name}
+                  label={formLABELS.CATEGORY_DESC.label}
+                  minRows={8}
+                  multiline
+                />
+                <ToggleButtons
+                  isMachine
+                  isRHF
+                  name={FORMLABELS.isACTIVE.name}
+                  RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
+                />
               </Stack>
-              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-          </Card>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            </Card>
+          </Grid>
         </Grid>
-      </Grid>
-    </FormProvider>
+      </FormProvider>
     </Container>
   );
 }

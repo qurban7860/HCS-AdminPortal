@@ -22,7 +22,7 @@ import Iconify from '../../../components/iconify';
 import MenuPopover from '../../../components/menu-popover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
-import LinkTableCell from '../../components/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -39,10 +39,10 @@ RoleListTableRow.propTypes = {
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   '&:nth-of-type(even)': {
-    backgroundColor: "#f4f6f866",
+    backgroundColor: '#f4f6f866',
   },
 }));
 
@@ -56,7 +56,7 @@ export default function RoleListTableRow({
   onViewRow,
 }) {
   const { name, description, roleType, isActive, createdAt } = row;
-  
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -85,15 +85,18 @@ export default function RoleListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell align="left" > {roleType} </TableCell> 
-        <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
-        <TableCell align="right" >{fDate(createdAt)}</TableCell>
+        <TableCell align="left"> {roleType} </TableCell>
+        <TableCell align="center">
+          {' '}
+          <Switch checked={isActive} disabled size="small" />{' '}
+        </TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </StyledTableRow> 
+      </StyledTableRow>
 
       {/* <MenuPopover
         open={openPopover}

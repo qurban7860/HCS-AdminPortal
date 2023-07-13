@@ -1,27 +1,27 @@
-import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
-import { useEffect, useLayoutEffect, useState } from 'react';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Card, Tabs, Container, Box, tabsClasses } from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../routes/paths';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCustomer } from '../../redux/slices/customer/customer';
-import { setDocumentViewFormVisibility, setDocumentHistoryViewFormVisibility } from '../../redux/slices/document/document';
+import {
+  setDocumentViewFormVisibility,
+  setDocumentHistoryViewFormVisibility,
+} from '../../redux/slices/document/document';
 
 import { getSites } from '../../redux/slices/customer/site';
-import { getContacts, getActiveContacts } from '../../redux/slices/customer/contact';
+import { getActiveContacts } from '../../redux/slices/customer/contact';
 // components
 import Iconify from '../../components/iconify';
 // sections
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 
 import CustomerNoteList from './CustomerNoteList';
 import CustomerViewForm from './CustomerViewForm';
 import useResponsive from '../../hooks/useResponsive';
-import UnderDevelopment from '../components/UnderDevelopment';
+import UnderDevelopment from '../boundaries/UnderDevelopment';
 import CustomerEditForm from './CustomerEditForm';
 // import CustomerSiteList from './CustomerSiteList';
 import CustomerSiteDynamicList from './CustomerSiteDynamicList';
@@ -51,8 +51,8 @@ export default function CustomerView({ editPage }) {
   const isMobile = useResponsive('down', 'sm');
 
   useEffect(() => {
-    dispatch(setDocumentViewFormVisibility(false))
-    dispatch(setDocumentHistoryViewFormVisibility(false))
+    dispatch(setDocumentViewFormVisibility(false));
+    dispatch(setDocumentHistoryViewFormVisibility(false));
     if (id !== 'null') {
       dispatch(getCustomer(id));
       dispatch(getSites(id));
@@ -132,14 +132,19 @@ export default function CustomerView({ editPage }) {
         }}
       >
         <Cover
-          handleBackLinks={()=> {dispatch(setDocumentViewFormVisibility(false)); dispatch(setDocumentHistoryViewFormVisibility(false))}}
+          handleBackLinks={() => {
+            dispatch(setDocumentViewFormVisibility(false));
+            dispatch(setDocumentHistoryViewFormVisibility(false));
+          }}
           name={customer ? customer.name : 'New Customer'}
           photoURL={customer.name === 'HOWICK LTD.' ? <LogoAvatar /> : <CustomAvatar />}
           icon="ph:users-light"
         />
         <Tabs
           value={currentTab}
-          onChange={(event, newValue) => {setCurrentTab(newValue);  }}
+          onChange={(event, newValue) => {
+            setCurrentTab(newValue);
+          }}
           variant="scrollable"
           aria-label="visible arrows tabs example"
           sx={{

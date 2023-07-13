@@ -1,6 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Grid, TextField, Autocomplete } from '@mui/material';
+import { FORMLABELS } from '../../../../../constants/document-constants';
+
+DocumentMachineAddForm.propTypes = {
+  disabled: PropTypes.bool,
+  Value: PropTypes.string,
+  SubValue: PropTypes.object,
+  options: PropTypes.array,
+  SubOptions: PropTypes.array,
+  onChange: PropTypes.func,
+  SubOnChange: PropTypes.func,
+  renderInput: PropTypes.func,
+  SubRenderInput: PropTypes.func,
+};
 
 function DocumentMachineAddForm({
   disabled,
@@ -40,14 +53,15 @@ function DocumentMachineAddForm({
         <Grid item lg={6}>
           <Autocomplete
             // freeSolo
+            disabled={disabled}
             value={SubValue}
             options={SubOptions}
             // isOptionEqualToValue={(option, value) => option.name === value.name}
-            getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
+            getOptionLabel={(option) => `${option.serialNo && option.serialNo}`}
             onChange={SubOnChange}
             // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
             id="controllable-states-demo"
-            renderInput={(params) => <TextField {...params} label="Select Machine" />}
+            renderInput={(params) => <TextField {...params} label={FORMLABELS.SELECT_MACHINE} />}
             ChipProps={{ size: 'small' }}
           />
         </Grid>
@@ -55,17 +69,5 @@ function DocumentMachineAddForm({
     </Grid>
   );
 }
-
-DocumentMachineAddForm.propTypes = {
-  disabled: PropTypes.bool,
-  Value: PropTypes.string,
-  SubValue: PropTypes.string,
-  options: PropTypes.array,
-  SubOptions: PropTypes.array,
-  onChange: PropTypes.func,
-  SubOnChange: PropTypes.func,
-  renderInput: PropTypes.func,
-  SubRenderInput: PropTypes.func,
-};
 
 export default DocumentMachineAddForm;

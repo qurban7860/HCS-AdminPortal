@@ -1,9 +1,6 @@
-import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-
 // @mui
-import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs, Typography } from '@mui/material';
+import { Stack, Card, CardMedia, Grid, CardActionArea, Link, Breadcrumbs } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
@@ -14,26 +11,27 @@ import SiteCarousel from './site/util/SiteCarousel';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData, getComparator, useTable } from '../../components/table';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
 import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
 import { getActiveContacts } from '../../redux/slices/customer/contact';
+import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
 import SiteEditForm from './site/SiteEditForm';
-import DetailsSection from '../components/sections/DetailsSection';
-import AvatarSection from '../components/sections/AvatarSection';
+import DetailsSection from '../components/Sections/DetailsSection';
+import AvatarSection from '../components/Sections/AvatarSection';
 import SiteViewForm from './site/SiteViewForm';
-import SearchInput from '../components/SearchInput';
+import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
-import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
-import ViewFormField from '../components/ViewFormField';
+import { BUTTONS, BREADCRUMBS, TITLES } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +77,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const handleFilterName = (e) => {
     setFilterName(e.target.value);
   };
-
+  console.log('filterName', filterName);
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
@@ -132,11 +130,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       {/* <Stack alignItems="flex-end" sx={{ mt: 4, padding: 2 }}></Stack> */}
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
             <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
@@ -149,7 +143,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 </Stack>
               }
             />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
         <AddButtonAboveAccordion
           name={BUTTONS.NEWSITE}
@@ -310,25 +304,18 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                 {!isMobile && (
                   <Grid container direction="row" gap={4}>
                     <Grid item md={12}>
-                        {site?.lat && site?.long ? (
-                          <Card>
-                            <CardActionArea>
-                              <GoogleMaps
-                                lat={site?.lat ? site.lat : 0}
-                                lng={site?.long ? site.long : 0}
-                              />
-                            </CardActionArea>
-                          </Card>
-                        ) : 
-                        
-                        <Typography variant="overline" sx={{ color: 'text.disabled', fontStyle: 'italic', m: 1 }}>
-                          Fill GPS COORDINATES TO VIEW LOCATIONS ON MAP
-                         </Typography>
-                          // <ViewFormField
-                          //   sm={12}
-                          //   heading="Fill GPS(LAT LONG) COORDINATES TO SEE VIEW LOCATION ON MAPS"
-                          // />
-                        }                     
+                      {site?.lat && site?.long ? (
+                        <Card>
+                          <CardActionArea>
+                            <GoogleMaps
+                              lat={site?.lat ? site.lat : 0}
+                              lng={site?.long ? site.long : 0}
+                            />
+                          </CardActionArea>
+                        </Card>
+                      ) : (
+                        <NothingProvided content={TITLES.NO_SITELOC} />
+                      )}
                     </Grid>
 
                     <Grid item md={12}>

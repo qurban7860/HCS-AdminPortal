@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Switch, Stack, Button, TableRow, MenuItem, TableCell, Link, } from '@mui/material';
+import { Switch, Stack, Button, TableRow, MenuItem, TableCell, Link } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate } from '../../../utils/formatTime';
-import LinkTableCell from '../../components/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export default function TechParamListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt} = row;
+  const { name, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -52,7 +52,6 @@ export default function TechParamListTableRow({
     setOpenPopover(null);
   };
 
-
   return (
     <>
       <TableRow hover selected={selected}>
@@ -60,7 +59,7 @@ export default function TechParamListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
 
-        <LinkTableCell align='left' onClick={onViewRow} param={name} />
+        <LinkTableCell align="left" onClick={onViewRow} param={name} />
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}

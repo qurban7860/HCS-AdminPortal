@@ -1,8 +1,19 @@
 import PropTypes from 'prop-types';
-import { Typography, Dialog, DialogActions, Grid, Link, IconButton, Box ,CardContent, CardMedia, Button } from '@mui/material';
+import {
+  Typography,
+  Dialog,
+  DialogActions,
+  Grid,
+  Link,
+  IconButton,
+  Box,
+  CardContent,
+  CardMedia,
+  Button,
+} from '@mui/material';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
-import { CloseButton } from '../CloseButton';
+import { CloseButton } from '../Defaults/CloseButton';
 // import Image from '../../../components/image';
 
 export default function ImagePreviewDialog({
@@ -43,43 +54,43 @@ export default function ImagePreviewDialog({
         >
           {`${imageName}.${imageExtension}`}
         </Typography>{' '}
-          <DialogActions>
-        <Button
-          onClick={handleClosePreview}
-          sx={{
-            top: 15,
-            right: 0,
-            zIndex: 9,
-            height: '60',
-            position: 'absolute',
-          }}
-        >
-          <CloseButton onClick={handleClosePreview} />
-        </Button>
+        <DialogActions>
+          <Button
+            onClick={handleClosePreview}
+            sx={{
+              top: 15,
+              right: 0,
+              zIndex: 9,
+              height: '60',
+              position: 'absolute',
+            }}
+          >
+            <CloseButton onClick={handleClosePreview} />
+          </Button>
         </DialogActions>
       </Grid>
-        <IconButton
-          size="small"
-          onClick={() => handleDownloadImage(imageName, imageExtension)}
-          sx={{
-            top: 70,
-            right: 15,
-            zIndex: 9,
-            height: '60',
-            position: 'absolute',
-            color: alpha(theme.palette.common.white, 0.8),
-            bgcolor: alpha(theme.palette.grey[900], 0.72),
-            '&:hover': {
-              bgcolor: alpha(theme.palette.grey[900], 0.48),
-            },
-          }}
-        >
-          <Iconify icon="line-md:download-loop" width={18} />
-        </IconButton>
+      <IconButton
+        size="small"
+        onClick={() => handleDownloadImage(imageName, imageExtension)}
+        sx={{
+          top: 70,
+          right: 15,
+          zIndex: 9,
+          height: '60',
+          position: 'absolute',
+          color: alpha(theme.palette.common.white, 0.8),
+          bgcolor: alpha(theme.palette.grey[900], 0.72),
+          '&:hover': {
+            bgcolor: alpha(theme.palette.grey[900], 0.48),
+          },
+        }}
+      >
+        <Iconify icon="line-md:download-loop" width={18} />
+      </IconButton>
       <CardContent>
         <CardMedia
           component="img"
-          sx={{ minWidth: '350px', minHeight: '350px', }}
+          sx={{ minWidth: '350px', minHeight: '350px' }}
           alt={file?.name}
           image={`data:image/png;base64, ${imageData}`}
         />

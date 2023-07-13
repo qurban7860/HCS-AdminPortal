@@ -42,7 +42,7 @@ import {
   deleteDocumentCategory,
   getDocumentCategories,
 } from '../../../redux/slices/document/documentCategory';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -175,8 +175,6 @@ export default function DocumentCategoryList() {
       }
     }
   };
-
-
 
   const handleViewRow = (id) => {
     navigate(PATH_SETTING.documentCategory.view(id));

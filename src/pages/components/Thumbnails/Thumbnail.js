@@ -5,9 +5,7 @@ import download from 'downloadjs';
 import { useTheme } from '@mui/material/styles';
 import { Stack, Tooltip, Typography } from '@mui/material';
 import { getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
-import {
-  getDocumentHistory,
-} from '../../../redux/slices/document/document';
+import { getDocumentHistory } from '../../../redux/slices/document/document';
 import {
   ThumbnailCard,
   ThumbnailCardContent,
@@ -25,7 +23,15 @@ import {
 } from '../../../redux/slices/document/documentFile';
 import { document } from '../../../constants/document-constants';
 
-export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument, customer, getCallAfterDelete, hideDelete = false}) {
+export function Thumbnail({
+  deleteOnClick,
+  file,
+  previewOnClick,
+  currentDocument,
+  customer,
+  getCallAfterDelete,
+  hideDelete = false,
+}) {
   const [onPreview, setOnPreview] = useState(false);
   const [imageName, setImageName] = useState('');
   const [imageData, setImageData] = useState('');
@@ -47,8 +53,8 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
   const handleDelete = async (documentId, versionId, fileId) => {
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
-      getCallAfterDelete()
-      enqueueSnackbar('File DELETED successfull!');
+      getCallAfterDelete();
+      enqueueSnackbar('File DELETED successful');
     } catch (err) {
       console.log(err);
       enqueueSnackbar('File DELETE failed!', { variant: `error` });
@@ -110,12 +116,18 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
     <ThumbnailCard>
       <ThumbnailGrid item justifyContent="center">
         <ThumbnailCardContent component={Stack} display="block" height="110px">
-          {!hideDelete && <DeleteIconButton
-            left={document.icon[file.extension] ? 76 : 44}
-            onClick={() =>
-              handleDelete(currentDocument._id, currentDocument?.documentVersions[0]._id, file._id)
-            }
-          />}
+          {!hideDelete && (
+            <DeleteIconButton
+              left={document.icon[file.extension] ? 76 : 44}
+              onClick={() =>
+                handleDelete(
+                  currentDocument._id,
+                  currentDocument?.documentVersions[0]._id,
+                  file._id
+                )
+              }
+            />
+          )}
           {file?.fileType.startsWith('image') && (
             <ThumbnailIconButtonDefault
               icon="icon-park-outline:preview-open"
@@ -167,10 +179,7 @@ export function Thumbnail({ deleteOnClick, file, previewOnClick, currentDocument
             />
           )}
           {file?.fileType.startsWith('image') && !file.thumbnail && (
-            <ThumbnailIconify
-              icon={document.icon.img}
-              color={document.color.img}
-            />
+            <ThumbnailIconify icon={document.icon.img} color={document.color.img} />
           )}
           {document.icon[file.extension] && document.color[file.extension] && (
             <ThumbnailIconify

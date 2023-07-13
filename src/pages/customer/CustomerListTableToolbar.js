@@ -1,14 +1,12 @@
 import PropTypes from 'prop-types';
-import { sentenceCase } from 'change-case';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Button, TextField, InputAdornment, Grid } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Stack } from '@mui/material';
 // components
 import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
-import Iconify from '../../components/iconify';
-import useResponsive from '../../hooks/useResponsive';
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
-import { BUTTONS, DIALOGS } from '../../constants/default-constants';
+import { PATH_CUSTOMER } from '../../routes/paths';
+import { BUTTONS } from '../../constants/default-constants';
+import { options } from '../../theme/styles/default-styles';
 // ----------------------------------------------------------------------
 
 CustomerListTableToolbar.propTypes = {
@@ -34,13 +32,9 @@ export default function CustomerListTableToolbar({
   const toggleAdd = () => {
     navigate(PATH_CUSTOMER.new);
   };
+
   return (
-    <Stack
-      spacing={2}
-      alignItems="center"
-      direction={{ xs: 'column', md: 'row' }}
-      sx={{ px: 2.5, py: 3 }}
-    >
+    <Stack {...options}>
       <SearchBarCombo
         isFiltered={isFiltered}
         value={filterName}

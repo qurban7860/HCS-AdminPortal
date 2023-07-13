@@ -1,12 +1,14 @@
-import { styled, alpha, useTheme } from '@mui/material/styles';
-import PropTypes from 'prop-types';
-import { CardContent, CardMedia, Card, Grid, IconButton, Typography } from '@mui/material';
-import { m } from 'framer-motion';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import {
+  CardContent,
+  CardMedia,
+  Card,
+  Grid,
+  IconButton,
+  Typography,
+  TableRow,
+} from '@mui/material';
 import Iconify from '../../components/iconify';
-import { bgBlur, bgGradient } from '../../utils/cssStyles';
-import Image from '../../components/image';
-import { MotionContainer, varFade } from '../../components/animate';
 
 export const ThumbnailCard = styled(Card)(({ theme }) => ({
   height: '140px',
@@ -54,6 +56,15 @@ export const ThumbnailNameGrid = styled(Grid)(({ theme }) => ({
   mt: 1,
 }));
 
+// @root - DocumentListTableRow - src/pages/document/dashboard/documents/DocumentListTableRow.js
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: 'white',
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: '#f4f6f866',
+  },
+}));
 export const ThumbnailIconify = styled(Iconify)(({ theme }) => ({
   height: '90px',
   opacity: '0.6',

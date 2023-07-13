@@ -6,7 +6,17 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog, Container, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Autocomplete,
+  TextField,
+  Dialog,
+  Container,
+  Typography,
+} from '@mui/material';
 // PATH
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // slice
@@ -53,10 +63,8 @@ import FormProvider, {
   RHFUpload,
 } from '../../../components/hook-form';
 // assets
-import FormLabel from '../../components/FormLabel';
 import DialogLabel from '../../components/Dialog/DialogLabel';
-import DialogLink from '../../components/Dialog/DialogLink';
-import AddFormButtons from '../../components/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import RadioButtons from '../../components/DocumentForms/RadioButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import {
@@ -78,7 +86,12 @@ DocumentAddForm.propTypes = {
   handleFormVisibility: PropTypes.func,
 };
 
-export default function DocumentAddForm({ currentDocument, customerPage, machinePage, handleFormVisibility }) {
+export default function DocumentAddForm({
+  currentDocument,
+  customerPage,
+  machinePage,
+  handleFormVisibility,
+}) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { activeMachines, machine } = useSelector((state) => state.machine);
@@ -143,11 +156,11 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
     // dispatch(getActiveCustomers());
     // dispatch(getActiveMachines());
     // dispatch(getActiveMachineModels());
-    if(customerPage){
-      setCustomerVal(customer)
+    if (customerPage) {
+      setCustomerVal(customer);
     }
-    if(machinePage){
-      setMachineVal(machine)
+    if (machinePage) {
+      setMachineVal(machine);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -221,7 +234,7 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
         return !allowedExtensions.includes(fileExtension);
       });
       if (invalidFiles.length > 0) {
-        const invalidFileNames = invalidFiles.map(file => file.name).join(', ');
+        const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
         return createError({
           message: `Invalid file(s) detected: ${invalidFileNames}`,
           path,
@@ -242,9 +255,13 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
     // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
-    .required('File is required!')
-  .test('fileType', 'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx', validateFileType)
-  .nullable(true),
+      .required('File is required!')
+      .test(
+        'fileType',
+        'Only the following formats are accepted: .jpeg, .jpg, gif, .bmp, .webp, .pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx',
+        validateFileType
+      )
+      .nullable(true),
     isActive: Yup.boolean(),
   });
 
@@ -308,37 +325,38 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
       }
       // console.log('Data : ',data);
       if (selectedValue === 'new') {
-        console.log("new ")
-        await dispatch(addDocument( data, customerPage ? customer?._id : null, machinePage ? machine?._id : null) );
+        console.log('new ');
+        await dispatch(
+          addDocument(data, customerPage ? customer?._id : null, machinePage ? machine?._id : null)
+        );
         enqueueSnackbar(Snacks.addedDoc);
-          if(!customerPage && !machinePage){
-            navigate(PATH_DOCUMENT.document.list);
-          }else{
-            handleFormVisibility()
-          }
+        if (!customerPage && !machinePage) {
+          navigate(PATH_DOCUMENT.document.list);
+        } else {
+          handleFormVisibility();
+        }
       } else if (selectedVersionValue === 'newVersion') {
-        console.log("newVersion ")
+        console.log('newVersion ');
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
-          if(!customerPage && !machinePage){
-            navigate(PATH_DOCUMENT.document.list);
-          }else{
-            handleFormVisibility()
-          }
+        if (!customerPage && !machinePage) {
+          navigate(PATH_DOCUMENT.document.list);
+        } else {
+          handleFormVisibility();
+        }
       } else {
         await dispatch(
-
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
         enqueueSnackbar(Snacks.updatedDoc);
-          if(!customerPage && !machinePage){
-            navigate(PATH_DOCUMENT.document.list);
-          }else{
-            handleFormVisibility()
-          }
+        if (!customerPage && !machinePage) {
+          navigate(PATH_DOCUMENT.document.list);
+        } else {
+          handleFormVisibility();
+        }
       }
-      if(!customerPage && !machinePage){
-        console.log("all documents : ")
+      if (!customerPage && !machinePage) {
+        console.log('all documents : ');
         dispatch(getDocuments());
       }
       setDocumentCategoryVal('');
@@ -366,10 +384,10 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
   };
 
   const toggleCancel = () => {
-    if(!customerPage && !machinePage){
+    if (!customerPage && !machinePage) {
       navigate(PATH_DOCUMENT.document.list);
-    }else{
-      handleFormVisibility()
+    } else {
+      handleFormVisibility();
     }
   };
 
@@ -438,7 +456,6 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
     setIsActive(!isActive);
   };
 
-
   const handleDropMultiFile = useCallback(
     (acceptedFiles) => {
       const files = values.multiUpload || [];
@@ -453,301 +470,303 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
   );
 
   return (
-      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Box
-          column={12}
-          rowGap={3}
-          columnGap={2}
-          // display="grid"
-          gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-          mt={3}
-        >
-          <Grid container item xs={12} md={12} lg={12}>
-            <Grid item xs={12} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
-                  {!(customerPage || machinePage) && <RadioButtons
+    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      <Box
+        column={12}
+        rowGap={3}
+        columnGap={2}
+        // display="grid"
+        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
+        mt={3}
+      >
+        <Grid container item xs={12} md={12} lg={12}>
+          <Grid item xs={12} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                {!(customerPage || machinePage) && (
+                  <RadioButtons
                     value={documentDependency}
                     radioOnChange={handleDependencyChange}
                     newLabel={DocRadioLabel.customer}
                     newValue={DocRadioValue.customer}
                     secondLabel={DocRadioLabel.machine}
                     secondValue={DocRadioValue.machine}
-                  />}
-
-                  {documentDependency === 'customer' && !(customerPage || machinePage) && (
-                    <Grid container item lg={12}>
-                      <Grid container spacing={2}>
-                        <Grid item lg={6}>
-                          <Autocomplete
-                            // freeSolo
-                            value={customerVal || null}
-                            options={activeCustomers}
-                            // isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                setCustomerVal(newValue);
-                                setContactDisabled(false);
-                                setSiteDisabled(false);
-                                setCustomerSiteVal('');
-                                setMachineVal('');
-                                setMachineModelVal('');
-                                dispatch(resetActiveSites());
-                                setDocumentVal('');
-                                dispatch(resetActiveDocuments());
-                              } else {
-                                setCustomerVal('');
-                                setContactDisabled(false);
-                                setSiteDisabled(false);
-                                setCustomerSiteVal('');
-                                dispatch(resetActiveSites());
-                                setDocumentVal('');
-                                dispatch(resetActiveDocuments());
-                              }
-                            }}
-                            // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                            id="controllable-states-demo"
-                            renderInput={(params) => (
-                              <TextField {...params} required label="Select Customer" />
-                            )}
-                            ChipProps={{ size: 'small' }}
-                          />
-                        </Grid>
-                        <Grid item lg={6}>
-                          <Autocomplete
-                            // freeSolo
-                            disabled={siteDisabled}
-                            value={customerSiteVal || null}
-                            options={activeSites}
-                            isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                setCustomerSiteVal(newValue);
-                                // setContactDisabled(true);
-                              } else {
-                                setCustomerSiteVal('');
-                                // setContactDisabled(false);
-                              }
-                            }}
-                            renderOption={(props, option) => (
-                              <li {...props} key={option._id}>
-                                {option.name}
-                              </li>
-                            )}
-                            id="controllable-states-demo"
-                            renderInput={(params) => <TextField {...params} label="Select Site" />}
-                            ChipProps={{ size: 'small' }}
-                          />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  )}
-
-                  {/* Machine */}
-                  {/* will write a better way */}
-                  {documentDependency === 'machine' && !(customerPage || machinePage) && (
-                    <DocumentMachineAddForm
-                      disabled={readOnlyVal}
-                      value={machineModelVal || null}
-                      options={activeMachineModels}
-                      onChange={(event, newValue) => {
-                        if (newValue) {
-                          setMachineModelVal(newValue);
-                          setMachineVal('');
-                          setCustomerVal('');
-                          setCustomerSiteVal('');
-                          dispatch(resetActiveMachines());
-                          setDocumentVal('');
-                          dispatch(resetActiveDocuments());
-                        } else {
-                          setMachineModelVal('');
-                          setMachineVal('');
-                          dispatch(resetActiveMachines());
-                          setDocumentVal('');
-                          dispatch(resetActiveDocuments());
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} required label="Select Model" />
-                      )}
-                      SubValue={machineVal || null}
-                      SubOptions={activeMachines}
-                      SubOnChange={(event, newValue) => {
-                        if (newValue) {
-                          setMachineVal(newValue);
-                        } else {
-                          setMachineVal('');
-                          setDocumentVal('');
-                          dispatch(resetActiveDocuments());
-                        }
-                      }}
-                      SubRenderInput={(params) => <TextField {...params} label="Select Machine" />}
-                    />
-                  )}
-
-                  <RadioButtons
-                    value={selectedValue}
-                    radioOnChange={handleRadioChange}
-                    newValue={DocRadioValue.new}
-                    newLabel={DocRadioLabel.new}
-                    secondValue={DocRadioValue.newVersion}
-                    secondLabel={DocRadioLabel.existing}
                   />
+                )}
 
-                  {/* New Version */}
-                  {selectedValue === 'newVersion' && (
-                    <Grid container item lg={12}>
-                      <Grid container spacing={2}>
-                        <Grid item xs={12} lg={6}>
-                          <Autocomplete
-                            // freeSolo
-                            // disabled={documentAvailable}
-                            value={documentVal || null}
-                            options={activeDocuments}
-                            // isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) =>
-                              `${option.displayName ? option.displayName : ''}`
+                {documentDependency === 'customer' && !(customerPage || machinePage) && (
+                  <Grid container item lg={12}>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6}>
+                        <Autocomplete
+                          // freeSolo
+                          value={customerVal || null}
+                          options={activeCustomers}
+                          // isOptionEqualToValue={(option, value) => option.name === value.name}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              setCustomerVal(newValue);
+                              setContactDisabled(false);
+                              setSiteDisabled(false);
+                              setCustomerSiteVal('');
+                              setMachineVal('');
+                              setMachineModelVal('');
+                              dispatch(resetActiveSites());
+                              setDocumentVal('');
+                              dispatch(resetActiveDocuments());
+                            } else {
+                              setCustomerVal('');
+                              setContactDisabled(false);
+                              setSiteDisabled(false);
+                              setCustomerSiteVal('');
+                              dispatch(resetActiveSites());
+                              setDocumentVal('');
+                              dispatch(resetActiveDocuments());
                             }
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                const { _id, displayName } = newValue;
-                                setDocumentVal(newValue);
-                                setDisplayNameVal(newValue.displayName);
-                                setDocumentTypeVal(newValue.docType);
-                                setDocumentCategoryVal(newValue.docCategory);
-                                setCustomerAccessVal(newValue.customerAccess);
-                                // setDescriptionVal(newValue.description);
-                                setReadOnlyVal(true);
-                              } else {
-                                setDocumentVal('');
-                                setDisplayNameVal('');
-                                setDocumentTypeVal('');
-                                setDocumentCategoryVal('');
-                                setDescriptionVal('');
-                                setCustomerAccessVal(false);
-                                setReadOnlyVal(false);
-                              }
-                            }}
-                            renderOption={(props, option) => (
-                              <li {...props} key={option._id}>{`${
-                                option.displayName ? option.displayName : ''
-                              }`}</li>
-                            )}
-                            id="controllable-states-demo"
-                            renderInput={(params) => (
-                              <TextField {...params} required label="Select  Document" />
-                            )}
-                            ChipProps={{ size: 'small' }}
-                          />
-                        </Grid>
+                          }}
+                          // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                          id="controllable-states-demo"
+                          renderInput={(params) => (
+                            <TextField {...params} required label="Select Customer" />
+                          )}
+                          ChipProps={{ size: 'small' }}
+                        />
+                      </Grid>
+                      <Grid item lg={6}>
+                        <Autocomplete
+                          // freeSolo
+                          disabled={siteDisabled}
+                          value={customerSiteVal || null}
+                          options={activeSites}
+                          isOptionEqualToValue={(option, value) => option.name === value.name}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              setCustomerSiteVal(newValue);
+                              // setContactDisabled(true);
+                            } else {
+                              setCustomerSiteVal('');
+                              // setContactDisabled(false);
+                            }
+                          }}
+                          renderOption={(props, option) => (
+                            <li {...props} key={option._id}>
+                              {option.name}
+                            </li>
+                          )}
+                          id="controllable-states-demo"
+                          renderInput={(params) => <TextField {...params} label="Select Site" />}
+                          ChipProps={{ size: 'small' }}
+                        />
                       </Grid>
                     </Grid>
-                  )}
+                  </Grid>
+                )}
 
-                  {/*  New Document */}
-                  {(selectedValue === 'new' || documentVal) && (
-                    <Grid container item lg={12}>
-                      <Grid container spacing={2}>
-                        <Grid item lg={6}>
-                          <Autocomplete
-                            // freeSolo
-                            disabled={readOnlyVal}
-                            // readOnly={readOnlyVal}
-                            value={documentCategoryVal || null}
-                            options={activeDocumentCategories}
-                            isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                setDocumentCategoryVal(newValue);
-                              } else {
-                                setDocumentCategoryVal('');
-                                dispatch(resetActiveDocumentTypes());
-                                setDocumentTypeVal('');
-                              }
-                            }}
-                            renderOption={(props, option) => (
-                              <li {...props} key={option._id}>
-                                {option.name}
-                              </li>
-                            )}
-                            id="controllable-states-demo"
-                            renderInput={(params) => (
-                              <TextField {...params} required label="Document Category" />
-                            )}
-                            ChipProps={{ size: 'small' }}
-                          />
-                        </Grid>
-                        <Grid item lg={6}>
-                          <Autocomplete
-                            // freeSolo
-                            disabled={readOnlyVal}
-                            // readOnly={readOnlyVal}
-                            value={documentTypeVal || null}
-                            options={activeDocumentTypes}
-                            // isOptionEqualToValue={(option, value) => option.name === value.name}
-                            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                            onChange={(event, newValue) => {
-                              if (newValue) {
-                                setDocumentTypeVal(newValue);
-                              } else {
-                                setDocumentTypeVal('');
-                              }
-                            }}
-                            // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                            id="controllable-states-demo"
-                            renderInput={(params) => (
-                              <TextField {...params} required label="Document Type" />
-                            )}
-                            ChipProps={{ size: 'small' }}
-                          />
-                        </Grid>
+                {/* Machine */}
+                {/* will write a better way */}
+                {documentDependency === 'machine' && !(customerPage || machinePage) && (
+                  <DocumentMachineAddForm
+                    disabled={readOnlyVal}
+                    value={machineModelVal || null}
+                    options={activeMachineModels}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setMachineModelVal(newValue);
+                        setMachineVal('');
+                        setCustomerVal('');
+                        setCustomerSiteVal('');
+                        dispatch(resetActiveMachines());
+                        setDocumentVal('');
+                        dispatch(resetActiveDocuments());
+                      } else {
+                        setMachineModelVal('');
+                        setMachineVal('');
+                        dispatch(resetActiveMachines());
+                        setDocumentVal('');
+                        dispatch(resetActiveDocuments());
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField {...params} required label="Select Model" />
+                    )}
+                    SubValue={machineVal || null}
+                    SubOptions={activeMachines}
+                    SubOnChange={(event, newValue) => {
+                      if (newValue) {
+                        setMachineVal(newValue);
+                      } else {
+                        setMachineVal('');
+                        setDocumentVal('');
+                        dispatch(resetActiveDocuments());
+                      }
+                    }}
+                    SubRenderInput={(params) => <TextField {...params} label="Select Machine" />}
+                  />
+                )}
+
+                <RadioButtons
+                  value={selectedValue}
+                  radioOnChange={handleRadioChange}
+                  newValue={DocRadioValue.new}
+                  newLabel={DocRadioLabel.new}
+                  secondValue={DocRadioValue.newVersion}
+                  secondLabel={DocRadioLabel.existing}
+                />
+
+                {/* New Version */}
+                {selectedValue === 'newVersion' && (
+                  <Grid container item lg={12}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12} lg={6}>
+                        <Autocomplete
+                          // freeSolo
+                          // disabled={documentAvailable}
+                          value={documentVal || null}
+                          options={activeDocuments}
+                          // isOptionEqualToValue={(option, value) => option.name === value.name}
+                          getOptionLabel={(option) =>
+                            `${option.displayName ? option.displayName : ''}`
+                          }
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              const { _id, displayName } = newValue;
+                              setDocumentVal(newValue);
+                              setDisplayNameVal(newValue.displayName);
+                              setDocumentTypeVal(newValue.docType);
+                              setDocumentCategoryVal(newValue.docCategory);
+                              setCustomerAccessVal(newValue.customerAccess);
+                              // setDescriptionVal(newValue.description);
+                              setReadOnlyVal(true);
+                            } else {
+                              setDocumentVal('');
+                              setDisplayNameVal('');
+                              setDocumentTypeVal('');
+                              setDocumentCategoryVal('');
+                              setDescriptionVal('');
+                              setCustomerAccessVal(false);
+                              setReadOnlyVal(false);
+                            }
+                          }}
+                          renderOption={(props, option) => (
+                            <li {...props} key={option._id}>{`${
+                              option.displayName ? option.displayName : ''
+                            }`}</li>
+                          )}
+                          id="controllable-states-demo"
+                          renderInput={(params) => (
+                            <TextField {...params} required label="Select  Document" />
+                          )}
+                          ChipProps={{ size: 'small' }}
+                        />
                       </Grid>
                     </Grid>
-                  )}
+                  </Grid>
+                )}
 
-                  {documentVal && (
-                    <RadioButtons
-                      value={selectedVersionValue}
-                      radioOnChange={handleVersionRadioChange}
-                      newValue={DocRadioValue.newVersion}
-                      newLabel={DocRadioLabel.newVersion}
-                      secondValue={DocRadioValue.existing}
-                      secondLabel={DocRadioLabel.currentVersion}
-                    />
-                  )}
+                {/*  New Document */}
+                {(selectedValue === 'new' || documentVal) && (
+                  <Grid container item lg={12}>
+                    <Grid container spacing={2}>
+                      <Grid item lg={6}>
+                        <Autocomplete
+                          // freeSolo
+                          disabled={readOnlyVal}
+                          // readOnly={readOnlyVal}
+                          value={documentCategoryVal || null}
+                          options={activeDocumentCategories}
+                          isOptionEqualToValue={(option, value) => option.name === value.name}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              setDocumentCategoryVal(newValue);
+                            } else {
+                              setDocumentCategoryVal('');
+                              dispatch(resetActiveDocumentTypes());
+                              setDocumentTypeVal('');
+                            }
+                          }}
+                          renderOption={(props, option) => (
+                            <li {...props} key={option._id}>
+                              {option.name}
+                            </li>
+                          )}
+                          id="controllable-states-demo"
+                          renderInput={(params) => (
+                            <TextField {...params} required label="Document Category" />
+                          )}
+                          ChipProps={{ size: 'small' }}
+                        />
+                      </Grid>
+                      <Grid item lg={6}>
+                        <Autocomplete
+                          // freeSolo
+                          disabled={readOnlyVal}
+                          // readOnly={readOnlyVal}
+                          value={documentTypeVal || null}
+                          options={activeDocumentTypes}
+                          // isOptionEqualToValue={(option, value) => option.name === value.name}
+                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                          onChange={(event, newValue) => {
+                            if (newValue) {
+                              setDocumentTypeVal(newValue);
+                            } else {
+                              setDocumentTypeVal('');
+                            }
+                          }}
+                          // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
+                          id="controllable-states-demo"
+                          renderInput={(params) => (
+                            <TextField {...params} required label="Document Type" />
+                          )}
+                          ChipProps={{ size: 'small' }}
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                )}
 
-                  {selectedValue === 'new' && (
-                    <RHFName
-                      required
-                      disabled={readOnlyVal}
-                      name="displayName"
-                      value={displayNameVal}
-                      label="Document Name"
-                      onChange={(e) => {
-                        setDisplayNameVal(e.target.value);
-                      }}
-                    />
-                  )}
+                {documentVal && (
+                  <RadioButtons
+                    value={selectedVersionValue}
+                    radioOnChange={handleVersionRadioChange}
+                    newValue={DocRadioValue.newVersion}
+                    newLabel={DocRadioLabel.newVersion}
+                    secondValue={DocRadioValue.existing}
+                    secondLabel={DocRadioLabel.currentVersion}
+                  />
+                )}
 
-                  {(selectedValue === 'new' ||
-                    (documentVal && selectedVersionValue !== 'existingVersion')) && (
-                    <RHFTextField
-                      value={descriptionVal}
-                      name="description"
-                      onChange={handleChangeDescription}
-                      label="Description"
-                      minRows={3}
-                      multiline
-                    />
-                  )}
+                {selectedValue === 'new' && (
+                  <RHFName
+                    required
+                    disabled={readOnlyVal}
+                    name="displayName"
+                    value={displayNameVal}
+                    label="Document Name"
+                    onChange={(e) => {
+                      setDisplayNameVal(e.target.value);
+                    }}
+                  />
+                )}
 
-                  {(selectedValue === 'new' || documentVal) && (
-                    <Grid item xs={12} md={6} lg={12}>
-                    <RHFUpload 
-                      multiple  
+                {(selectedValue === 'new' ||
+                  (documentVal && selectedVersionValue !== 'existingVersion')) && (
+                  <RHFTextField
+                    value={descriptionVal}
+                    name="description"
+                    onChange={handleChangeDescription}
+                    label="Description"
+                    minRows={3}
+                    multiline
+                  />
+                )}
+
+                {(selectedValue === 'new' || documentVal) && (
+                  <Grid item xs={12} md={6} lg={12}>
+                    <RHFUpload
+                      multiple
                       thumbnail
                       name="multiUpload"
                       // maxSize={3145728}
@@ -762,49 +781,48 @@ export default function DocumentAddForm({ currentDocument, customerPage, machine
                       }
                       onRemoveAll={() => setValue('multiUpload', '', { shouldValidate: true })}
                     />
-                    
-                    </Grid>
-                  )}
+                  </Grid>
+                )}
 
-                  {/* cleanup */}
-                  {selectedValue === 'new' && (
-                    <ToggleButtons
-                      customerAccessVal={customerAccessVal}
-                      handleChange={handleChange}
-                      isActive={isActive}
-                      handleIsActiveChange={handleIsActiveChange}
-                    />
-                  )}
+                {/* cleanup */}
+                {selectedValue === 'new' && (
+                  <ToggleButtons
+                    customerAccessVal={customerAccessVal}
+                    handleChange={handleChange}
+                    isActive={isActive}
+                    handleIsActiveChange={handleIsActiveChange}
+                  />
+                )}
 
-                  {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />
+                {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />
                 {!!files.length && (
           <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
             Remove all
           </Button>
         )} */}
-                  <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-                </Stack>
-              </Card>
-            </Grid>
+                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+              </Stack>
+            </Card>
           </Grid>
-        </Box>
+        </Grid>
+      </Box>
 
-        {/* dialog preview */}
-        <Dialog
-          maxWidth="md"
-          open={preview}
-          onClose={handleClosePreview}
-          aria-labelledby="keep-mounted-modal-title"
-          aria-describedby="keep-mounted-modal-description"
-        >
-          <DialogLabel content={nameVal} onClick={() => handleClosePreview()} />
-          <Box
-            component="img"
-            sx={{ minWidth: '400px', minHeight: '400px' }}
-            alt={defaultValues?.name}
-            src={previewVal}
-          />
-        </Dialog>
-      </FormProvider>
+      {/* dialog preview */}
+      <Dialog
+        maxWidth="md"
+        open={preview}
+        onClose={handleClosePreview}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+      >
+        <DialogLabel content={nameVal} onClick={() => handleClosePreview()} />
+        <Box
+          component="img"
+          sx={{ minWidth: '400px', minHeight: '400px' }}
+          alt={defaultValues?.name}
+          src={previewVal}
+        />
+      </Dialog>
+    </FormProvider>
   );
 }

@@ -1,134 +1,64 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Stack,
   Card,
   Grid,
-  Table,
   Button,
-  Tooltip,
-  TableBody,
-  Container,
-  IconButton,
-  TableContainer,
-  DialogTitle,
-  Dialog,
   Typography,
-  Accordion, AccordionSummary, AccordionDetails
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Breadcrumbs,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD } from '../../routes/paths';
-// components
+import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+// hooks
+import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
 import { useSettingsContext } from '../../components/settings';
-import {
-  useTable,
-  getComparator,
-  emptyRows,
-  TableNoData,
-  TableSkeleton,
-  TableEmptyRows,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../components/table';
+// components
+import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
+import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
-import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-
-import { setLicenseEditFormVisibility, setLicenseFormVisibility , updateLicense , getLicenses , getLicense, deleteLicense } from '../../redux/slices/products/license';
-import LicenseAddForm from './License/LicenseAddForm'
+import { setLicenseFormVisibility } from '../../redux/slices/products/license';
+import LicenseAddForm from './License/LicenseAddForm';
 import LicenseEditForm from './License/LicenseEditForm';
 import LicenseViewForm from './License/LicenseViewForm';
-
-import _mock from '../../_mock';
-import EmptyContent from '../../components/empty-content';
-import { fDate,fDateTime } from '../../utils/formatTime';
-
-
+import { fDate } from '../../utils/formatTime';
+// constants
+import { BREADCRUMBS, BUTTONS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
-// const TABLE_HEAD = [
-//   { id: 'name', label: 'Site', align: 'left' },
-//   { id: 'email', label: 'Email', align: 'left' },
-//   { id: 'website', label: 'Website', align: 'left' },
-//   { id: 'isverified', label: 'Disabled', align: 'left' },
-//   { id: 'created_at', label: 'Created At', align: 'left' },
-//   { id: 'action', label: 'Actions', align: 'left' },
-
-// ];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_sites', label: 'All Sites' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
-
-const _accordions = [...Array(8)].map((_, index) => ({
-  id: _mock.id(index),
-  value: `panel${index + 1}`,
-  heading: `Site ${index + 1}`,
-  subHeading: _mock.text.title(index),
-  detail: _mock.text.description(index),
-}));
+// const _accordions = [...Array(8)].map((_, index) => ({
+//   id: _mock.id(index),
+//   value: `panel${index + 1}`,
+//   heading: `Site ${index + 1}`,
+//   subHeading: _mock.text.title(index),
+//   detail: _mock.text.description(index),
+// }));
 
 // ----------------------------------------------------------------------
 
 export default function MachineLicenseList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+  const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: 'createdAt',
   });
-
-
+  const isMobile = useResponsive('down', 'sm');
   const [controlled, setControlled] = useState(false);
-
   const handleChangeControlled = (panel) => (event, isExpanded) => {
     setControlled(isExpanded ? panel : false);
   };
   const dispatch = useDispatch();
 
-  const { initial,error, responseMessage , licenseEditFormVisibility ,licenses, formVisibility } = useSelector((state) => state.license);
+  const { initial, error, responseMessage, licenseEditFormVisibility, licenses, formVisibility } =
+    useSelector((state) => state.license);
   const { machine } = useSelector((state) => state.machine);
-  const toggleChecked = async () =>
-    {
-      dispatch(setLicenseFormVisibility (!formVisibility));
-    };
 
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
@@ -138,12 +68,20 @@ export default function MachineLicenseList() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
 
+  const toggleChecked = async () => {
+    dispatch(setLicenseFormVisibility(!formVisibility));
+  };
+
+  const toggleCancel = () => {
+    dispatch(setLicenseFormVisibility(false));
+  };
+
   const handleAccordianClick = (accordianIndex) => {
-   if(accordianIndex === activeIndex ){
-    setActiveIndex(null)
-   }else{
-    setActiveIndex(accordianIndex)
-   }
+    if (accordianIndex === activeIndex) {
+      setActiveIndex(null);
+    } else {
+      setActiveIndex(accordianIndex);
+    }
   };
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -152,11 +90,6 @@ export default function MachineLicenseList() {
 
   useEffect(() => {
     if (initial) {
-      // if (licenses && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // } else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(licenses);
     }
   }, [licenses, error, responseMessage, enqueueSnackbar, initial]);
@@ -175,24 +108,39 @@ export default function MachineLicenseList() {
 
   return (
     <>
-      {!licenseEditFormVisibility && (
-        <Stack alignItems="flex-end" sx={{ mb: 3, px: 4 }}>
-          {!machine.transferredMachine && 
-            <Button
-              // alignItems
-              onClick={toggleChecked}
-              variant="contained"
-              startIcon={
-                !formVisibility ? <Iconify icon="eva:plus-fill" /> : <Iconify icon="eva:minus-fill" />
+      <Grid container direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={12} md={6}>
+          <Breadcrumbs
+            aria-label="breadcrumb"
+            separator="›"
+            sx={{ fontSize: '12px', color: 'text.disabled' }}
+          >
+            <BreadcrumbsLink to={PATH_MACHINE.machines.list} name={BREADCRUMBS.MACHINES} />
+            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
+            <BreadcrumbsLink
+              to={PATH_MACHINE.machines.settings}
+              name={
+                <Stack>
+                  {!expanded &&
+                    !licenseEditFormVisibility &&
+                    formVisibility &&
+                    BREADCRUMBS.NEWLICENSE}
+                  {!formVisibility && !licenseEditFormVisibility && BREADCRUMBS.LICENSE}
+                  {licenseEditFormVisibility && BREADCRUMBS.EDITLICENSE}
+                </Stack>
               }
-            >
-              New License
-            </Button>
-          }
-        </Stack>
-      )}
-
-      <Card sx={{ mt: 3 }}>
+            />
+          </Breadcrumbs>
+        </Grid>
+        <AddButtonAboveAccordion
+          name={BUTTONS.NEWLICENSE}
+          toggleChecked={toggleChecked}
+          FormVisibility={formVisibility}
+          toggleCancel={toggleCancel}
+          disabled={licenseEditFormVisibility}
+        />
+      </Grid>
+      <Card>
         {formVisibility && !licenseEditFormVisibility && <LicenseAddForm />}
         {licenseEditFormVisibility && <LicenseEditForm />}
         {!formVisibility &&
@@ -215,7 +163,6 @@ export default function MachineLicenseList() {
                       {/* <Grid item xs={12} sm={3} md={2}>
                     {license?.license?.name || "" }
                   </Grid> */}
-
                       <Grid item xs={12} sm={6} md={8}>
                         {license?.licenseDetail?.length > 100
                           ? license?.licenseDetail.substring(0, 100)
@@ -235,31 +182,10 @@ export default function MachineLicenseList() {
               </Accordion>
             );
           })}
-        <TableNoData isNotFound={isNotFound} />
       </Card>
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      /> */}
+      <Grid md={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
     </>
   );
 }

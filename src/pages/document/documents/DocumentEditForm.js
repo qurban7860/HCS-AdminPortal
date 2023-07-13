@@ -6,17 +6,12 @@ import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
-// routes
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
-import AddFormButtons from '../../components/AddFormButtons';
-import FormHeading from '../../components/FormHeading';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // slice
@@ -41,7 +36,7 @@ DocumentEditForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
 };
-export default function DocumentEditForm({customerPage, machinePage}) {
+export default function DocumentEditForm({ customerPage, machinePage }) {
   const { document } = useSelector((state) => state.document);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
@@ -118,10 +113,16 @@ export default function DocumentEditForm({customerPage, machinePage}) {
       }
       data.customerAccess = customerAccessVal;
       data.isActive = isActive;
-      await dispatch(updateDocument(document?._id, data, customerPage ? customer?._id : null, machinePage ? machine?._id : null));
+      await dispatch(
+        updateDocument(
+          document?._id,
+          data,
+          customerPage ? customer?._id : null,
+          machinePage ? machine?._id : null
+        )
+      );
       await dispatch(getDocument(document?._id));
       enqueueSnackbar(Snacks.updatedDoc, { variant: `success` });
-
 
       setDescriptionVal('');
       setNameVal('');

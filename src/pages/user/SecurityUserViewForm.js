@@ -16,10 +16,10 @@ import {
 } from '../../redux/slices/securityUser/securityUser';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { getContact } from '../../redux/slices/customer/contact';
-import ViewFormField from '../components/ViewFormField';
-import ViewFormAudit from '../components/ViewFormAudit';
-import ViewFormEditDeleteButtons from '../components/ViewFormEditDeleteButtons';
-import { Cover } from '../components/Cover';
+import ViewFormField from '../components/ViewForms/ViewFormField';
+import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
+import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
+import { Cover } from '../components/Defaults/Cover';
 import { useAuthContext } from '../../auth/useAuthContext';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 import { useSnackbar } from '../../components/snackbar';
@@ -28,7 +28,7 @@ import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
-import FormLabel from '../components/FormLabel';
+import FormLabel from '../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 

@@ -1,12 +1,11 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { Card, Grid, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
 import {
   useTable,
   getComparator,
@@ -49,9 +48,9 @@ import {
 import { resetCustomerMachines } from '../../redux/slices/products/machine';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 import { fDate } from '../../utils/formatTime';
-import { DIALOGS, BUTTONS } from '../../constants/default-constants';
+import { DIALOGS, BUTTONS, FORMLABELS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -76,7 +75,6 @@ export default function CustomerList() {
     selected,
     setSelected,
     onSelectRow,
-    onSelectAllRows,
     //
     onSort,
     onChangePage,
@@ -86,14 +84,15 @@ export default function CustomerList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
+  // necessary. don't delete.
+  // const { themeStretch } = useSettingsContext();
+  // const { enqueueSnackbar } = useSnackbar();
+  // const { isMobile } = useResponsive('down', 'sm');
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { isMobile } = useResponsive('down', 'sm');
 
   const { customers, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.customer
@@ -205,15 +204,9 @@ export default function CustomerList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
-          <Cover name="Customers" icon="ph:users-light" />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={FORMLABELS.COVER.CUSTOMERS} />
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <CustomerListTableToolbar
@@ -226,23 +219,7 @@ export default function CustomerList() {
           />
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={selected.length}
-              // rowCount={tableData.length}
-              // onSelectAllRows={(checked) =>
-              //   onSelectAllRows(
-              //     checked,
-              //     tableData.map((row) => row._id)
-              //   )
-              // }
-              // action={
-              //   <Tooltip title="Delete">
-              //     <IconButton color="primary" onClick={handleOpenConfirm}>
-              //       <Iconify icon="eva:trash-2-outline" />
-              //     </IconButton>
-              //   </Tooltip>
-              // }
-            />
+            <TableSelectedAction numSelected={selected.length} />
 
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
@@ -280,15 +257,9 @@ export default function CustomerList() {
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                       )
                     )}
-
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
                 </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom
@@ -299,13 +270,16 @@ export default function CustomerList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         </Card>
+        <Grid md={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
       </Container>
 
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title={DIALOGS.DELETE_TITLE}
-        content={DIALOGS.DELETE}
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"

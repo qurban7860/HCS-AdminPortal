@@ -8,8 +8,9 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Button, Typography, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, TextField } from '@mui/material';
+// schema
+import { AddContactSchema } from './schemas/AddContactSchema';
 // slice
 import { addContact, setContactFormVisibility } from '../../../redux/slices/customer/contact';
 // components
@@ -19,11 +20,14 @@ import FormProvider, {
   RHFMultiSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch,
 } from '../../../components/hook-form';
 // assets
 import { countries } from '../../../assets/data';
-import AddFormButtons from '../../components/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import { FORMLABELS as FORM_LABELS } from '../../../constants/default-constants';
+import { Snacks, FORMLABELS } from '../../../constants/customer-constants';
+import { AddFormLabel } from '../../components/DocumentForms/FormLabel';
 
 // ----------------------------------------------------------------------
 
@@ -33,47 +37,16 @@ ContactAddForm.propTypes = {
   currentContact: PropTypes.object,
 };
 
-const CONTACT_TYPES = [
-  { value: 'technical', label: 'Technical' },
-  { value: 'financial', label: 'Financial' },
-  { value: 'support', label: 'Support' },
-];
-
 export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   const { formVisibility } = useSelector((state) => state.contact);
-
   const { customer } = useSelector((state) => state.customer);
-
   const { userId, user } = useAuthContext();
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const numberRegExp = /^[0-9]+$/;
-
   const [phone, setPhone] = useState('');
   const [country, setCountryVal] = useState('');
-
-  const AddContactSchema = Yup.object().shape({
-    firstName: Yup.string().max(40).required(),
-    lastName: Yup.string().max(40),
-    title: Yup.string(),
-    contactTypes: Yup.array(),
-    // phone: Yup.string(),
-    email: Yup.string()
-      .trim('The email name cannot include leading and trailing spaces')
-      .email('Email must be a valid email address'),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    city: Yup.string(),
-    region: Yup.string(),
-    postcode: Yup.string(),
-    isActive: Yup.boolean(),
-    // country: Yup.string().nullable()
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -125,7 +98,6 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
   };
 
   const onSubmit = async (data) => {
-    // console.log(data);
     try {
       if (phone && phone.length > 7) {
         data.phone = phone;
@@ -136,7 +108,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
       await dispatch(addContact(data));
       reset();
     } catch (error) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.SAVE_FAILED, { variant: `error` });
       console.error(error);
     }
   };
@@ -147,132 +119,101 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container>
-        <Grid item sm={12} lg={12}>
-          <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFTextField name="firstName" label="First Name" />
+      <Grid>
+        <Card sx={{ p: 3, mb: 3 }}>
+          <Stack spacing={3}>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+              mb={2}
+            >
+              <RHFTextField name={FORMLABELS.FIRSTNAME.name} label={FORMLABELS.FIRSTNAME.label} />
+              <RHFTextField name={FORMLABELS.LASTNAME.name} label={FORMLABELS.LASTNAME.label} />
+              <RHFTextField name={FORMLABELS.TITLE.name} label={FORMLABELS.TITLE.label} />
 
-                <RHFTextField name="lastName" label="Last Name" />
-
-                <RHFTextField name="title" label="Title" />
-
-                <RHFMultiSelect
-                  chip
-                  checkbox
-                  name="contactTypes"
-                  label="Contact Types"
-                  options={CONTACT_TYPES}
-                />
-
-                {/* <RHFTextField name="phone" label="Phone" /> */}
-                <MuiTelInput
-                  value={phone}
-                  name="phone"
-                  label="Phone Number"
-                  flagSize="medium"
-                  onChange={handlePhoneChange}
-                  forceCallingCode
-                  defaultCountry="NZ"
-                />
-
-                <RHFTextField name="email" label="Email" />
-              </Box>
-              <Typography variant="subtitle2" sx={{ color: 'text.secondary' }}>
-                Address Details
-              </Typography>
-
-              <Box
-                rowGap={3}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
-                }}
-              >
-                <RHFTextField name="street" label="Street" />
-
-                <RHFTextField name="suburb" label="Suburb" />
-
-                <RHFTextField name="city" label="City" />
-
-                <RHFTextField name="region" label="Region" />
-
-                <RHFTextField name="postcode" label="Post Code" />
-
-                {/* <RHFAutocomplete
-                  name="country"
-                  label="Country"
-                  freeSolo
-                  options={countries.map((country) => country.label)}
-                  // getOptionLabel={(option) => option.title}
-
-                  ChipProps={{ size: 'small' }}
-                /> */}
-                <RHFAutocomplete
-                  id="country-select-demo"
-                  options={countries}
-                  value={country || null}
-                  name="country"
-                  label="Country"
-                  autoHighlight
-                  isOptionEqualToValue={(option, value) => option.lable === value.lable}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCountryVal(newValue);
-                    } else {
-                      setCountryVal('');
-                    }
-                  }}
-                  getOptionLabel={(option) => `${option.label} (${option.code}) `}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img
-                        loading="lazy"
-                        width="20"
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                        alt=""
-                      />
-                      {option.label} ({option.code}) +{option.phone}
-                    </Box>
-                  )}
-                  renderInput={(params) => <TextField {...params} label="Choose a country" />}
-                />
-              </Box>
-              <RHFSwitch
-                name="isActive"
-                labelPlacement="start"
-                label={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{
-                      mx: 0,
-                      width: 1,
-                      justifyContent: 'space-between',
-                      mb: 0.5,
-                      color: 'text.secondary',
-                    }}
-                  >
-                    {' '}
-                    Active
-                  </Typography>
-                }
+              <RHFMultiSelect
+                chip
+                checkbox
+                name={FORMLABELS.CONTACT_TYPES.name}
+                label={FORMLABELS.CONTACT_TYPES.label}
+                options={FORMLABELS.CONTACT_TYPES.options}
               />
-            </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
-          </Card>
-        </Grid>
+
+              {/* <RHFTextField name="phone" label="Phone" /> */}
+              <MuiTelInput
+                value={phone}
+                name={FORMLABELS.PHONE.name}
+                label={FORMLABELS.PHONE.label}
+                flagSize={FORMLABELS.PHONE.flagSize}
+                onChange={handlePhoneChange}
+                forceCallingCode
+                defaultCountry={FORMLABELS.PHONE.defaultCountry}
+              />
+
+              <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />
+            </Box>
+          </Stack>
+        </Card>
+        <Card sx={{ p: 3, mb: 3 }}>
+          <Stack spacing={3}>
+            <AddFormLabel content={FORM_LABELS.ADDRESS} />
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(2, 1fr)',
+              }}
+            >
+              <RHFTextField name={FORMLABELS.STREET.name} label={FORMLABELS.STREET.label} />
+              <RHFTextField name={FORMLABELS.SUBURB.name} label={FORMLABELS.SUBURB.label} />
+              <RHFTextField name={FORMLABELS.CITY.name} label={FORMLABELS.CITY.label} />
+              <RHFTextField name={FORMLABELS.REGION.name} label={FORMLABELS.REGION.label} />
+              <RHFTextField name={FORMLABELS.POSTCODE.name} label={FORMLABELS.POSTCODE.label} />
+
+              <RHFAutocomplete
+                id={FORMLABELS.COUNTRY.id}
+                options={countries}
+                value={country || null}
+                name={FORMLABELS.COUNTRY.name}
+                label={FORMLABELS.COUNTRY.label}
+                autoHighlight
+                isOptionEqualToValue={(option, value) => option.lable === value.lable}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    setCountryVal(newValue);
+                  } else {
+                    setCountryVal('');
+                  }
+                }}
+                getOptionLabel={(option) => `${option.label} (${option.code}) `}
+                renderOption={(props, option) => (
+                  <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                    <img
+                      loading="lazy"
+                      width="20"
+                      src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                      srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                      alt=""
+                    />
+                    {option.label} ({option.code}) +{option.phone}
+                  </Box>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} label={FORMLABELS.COUNTRY.select} />
+                )}
+              />
+            </Box>
+            <ToggleButtons checked={FORMLABELS.isACTIVE.name} />
+          </Stack>
+          <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+        </Card>
       </Grid>
     </FormProvider>
   );

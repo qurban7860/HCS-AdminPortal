@@ -38,8 +38,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import SiteListTableRow from './ToolsInstalledListTableRow';
 import SiteListTableToolbar from './ToolsInstalledListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
-import Cover from '../../components/Cover';
-
+import Cover from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +49,6 @@ const TABLE_HEAD = [
   { id: 'isverified', label: 'Disabled', align: 'left' },
   { id: 'created_at', label: 'Created At', align: 'left' },
   { id: 'action', label: 'Actions', align: 'left' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -201,10 +199,10 @@ export default function ToolsInstalledList() {
 
   return (
     <>
-      <Container maxWidth={ false }>
+      <Container maxWidth={false}>
         <Grid container spacing={3}>
-          <Cover name="Setting List" icon='material-symbols:list-alt-outline' setting="enable" />
-          </Grid>
+          <Cover name="Setting List" icon="material-symbols:list-alt-outline" setting="enable" />
+        </Grid>
         <Card>
           <SiteListTableToolbar
             filterName={filterName}
@@ -218,7 +216,7 @@ export default function ToolsInstalledList() {
 
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
-              
+
               numSelected={selected.length}
               rowCount={tableData.length}
               onSelectAllRows={(checked) =>
@@ -237,7 +235,7 @@ export default function ToolsInstalledList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -283,7 +281,6 @@ export default function ToolsInstalledList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            
           />
         </Card>
       </Container>

@@ -42,7 +42,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import SupplierListTableRow from './SupplierListTableRow';
 import SupplierListTableToolbar from './SupplierListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -54,7 +54,6 @@ const TABLE_HEAD = [
   { id: 'country', label: 'Country', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-
 ];
 
 const STATUS_OPTIONS = [
@@ -65,9 +64,6 @@ const STATUS_OPTIONS = [
   // { id: '5', value: 'Deployed' },
   // { id: '6', value: 'Archived' },
 ];
-
-
-
 
 export default function SupplierList() {
   const [tableData, setTableData] = useState([]);
@@ -102,17 +98,17 @@ export default function SupplierList() {
 
   const [filterName, setFilterName] = useState('');
 
-
   const [filterStatus, setFilterStatus] = useState([]);
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { suppliers, isLoading, error, initial, responseMessage } = useSelector((state) => state.supplier);
+  const { suppliers, isLoading, error, initial, responseMessage } = useSelector(
+    (state) => state.supplier
+  );
 
-
-  useLayoutEffect( () => {
+  useLayoutEffect(() => {
     // console.log('Testing done')
-      dispatch(getSuppliers());
+    dispatch(getSuppliers());
   }, [dispatch]);
   useEffect(() => {
     if (initial) {
@@ -128,12 +124,15 @@ export default function SupplierList() {
     }
   }, [suppliers, error, responseMessage, enqueueSnackbar, initial]);
 
-  const dataFiltered = applyFilter({
-    inputData: tableData,
-    comparator: getComparator(order, orderBy),
-    filterName,
-    filterStatus,
-  },[suppliers]);
+  const dataFiltered = applyFilter(
+    {
+      inputData: tableData,
+      comparator: getComparator(order, orderBy),
+      filterName,
+      filterStatus,
+    },
+    [suppliers]
+  );
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
@@ -179,7 +178,7 @@ export default function SupplierList() {
     }
   };
 
-  const handleDeleteRows = async (selectedRows,handleClose) => {
+  const handleDeleteRows = async (selectedRows, handleClose) => {
     // console.log(selectedRows)
     const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
     setSelected([]);
@@ -199,7 +198,7 @@ export default function SupplierList() {
     // dispatch delete supplier
     // await dispatch(deleteSuppliers(selectedRows));
     // await dispatch(getSuppliers())
-    handleClose()
+    handleClose();
   };
 
   const handleEditRow = (id) => {
@@ -220,7 +219,7 @@ export default function SupplierList() {
   return (
     <>
       <Container maxWidth={false}>
-      <Card
+        <Card
           sx={{
             mb: 3,
             height: 160,
@@ -228,7 +227,7 @@ export default function SupplierList() {
             // mt: '24px',
           }}
         >
-          <Cover name='Suppliers' icon='material-symbols:list-alt-outline' setting="enable" />
+          <Cover name="Suppliers" icon="material-symbols:list-alt-outline" setting="enable" />
         </Card>
 
         <Card sx={{ mt: 3 }}>
@@ -263,7 +262,7 @@ export default function SupplierList() {
             /> */}
 
             <Scrollbar>
-              <Table size='small' sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -309,10 +308,8 @@ export default function SupplierList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
           />
         </Card>
-
       </Container>
 
       <ConfirmDialog
@@ -344,7 +341,7 @@ export default function SupplierList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-    const stabilizedThis = inputData?.map((el, index) => [el, index]);
+  const stabilizedThis = inputData?.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -355,14 +352,16 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter( (filterSupplier) => filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-    filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  ||
-    filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
-    // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-    fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0  );
+    inputData = inputData.filter(
+      (filterSupplier) =>
+        filterSupplier?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterSupplier?.contactName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterSupplier?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        filterSupplier?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (product?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(filterSupplier?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+    );
   }
-
 
   return inputData;
 }

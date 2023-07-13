@@ -21,7 +21,7 @@ import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
-import { Cover } from '../components/Cover';
+import { Cover } from '../components/Defaults/Cover';
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
 import {

@@ -22,3 +22,7 @@ VersionsLink.propTypes = {
   onClick: PropTypes.func,
   content: PropTypes.string,
 };
+
+VersionsLink.defaultProps = {
+  content: 'View other versions',
+};

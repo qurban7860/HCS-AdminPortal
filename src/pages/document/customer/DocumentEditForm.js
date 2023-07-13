@@ -6,31 +6,20 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
-// routes
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+// schema
+import { EditCustomerDocumentSchema } from '../../schemas/document';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
-import AddFormButtons from '../../components/AddFormButtons';
-import FormHeading from '../../components/FormHeading';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
-
 // slice
 import {
-  setCustomerDocumentFormVisibility,
-  setCustomerDocumentEdit,
   setCustomerDocumentEditFormVisibility,
   updateCustomerDocument,
 } from '../../../redux/slices/document/customerDocument';
-
-import {
-  setDocumentCategoryFormVisibility,
-  getActiveDocumentCategories,
-} from '../../../redux/slices/document/documentCategory';
-import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
@@ -40,10 +29,7 @@ export default function DocumentEditForm() {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { customer } = useSelector((state) => state.customer);
-  const { contacts } = useSelector((state) => state.contact);
-  const { sites } = useSelector((state) => state.site);
   const { enqueueSnackbar } = useSnackbar();
-
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const [descriptionVal, setDescriptionVal] = useState('');
@@ -64,13 +50,6 @@ export default function DocumentEditForm() {
     // dispatch(getActiveDocumentCategories())
     // dispatch(getActiveDocumentTypes())
   }, [dispatch, customerDocument]);
-
-  const EditCustomerDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(40),
-    description: Yup.string().max(10000),
-    // image: Yup.mixed().required("Image Field is required!"),
-    isActive: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -132,7 +111,7 @@ export default function DocumentEditForm() {
     dispatch(setCustomerDocumentEditFormVisibility(false));
   };
 
-  // if not used, remove the unused vars
+  // if not used, remove.
   // const togleCategoryPage = () => {
   //   dispatch(setCustomerDocumentEdit(true));
   //   dispatch(setDocumentCategoryFormVisibility(true));
@@ -180,7 +159,6 @@ export default function DocumentEditForm() {
         column={12}
         rowGap={3}
         columnGap={2}
-        // display="grid"
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
       >
         <Grid container xs={12} md={12} lg={12}>
@@ -274,15 +252,9 @@ export default function DocumentEditForm() {
                   customerAccessVal={customerAccessVal}
                   isActive={isActive}
                   handleIsActiveChange={handleIsActiveChange}
+                  isDocument
                 />
 
-                {/* <RHFUpload
-                  name="image"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleDrop}
-               /> */}
-                {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

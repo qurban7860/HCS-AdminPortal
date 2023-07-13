@@ -1,51 +1,34 @@
-import { Helmet } from 'react-helmet-async';
-import { useState, useMemo, useEffect, useLayoutEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Container, Grid, Card, Tooltip, Dialog, Link } from '@mui/material';
-import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
-import FormLabel from '../../components/FormLabel';
-import DialogLink from '../../components/Dialog/DialogLink';
-import DialogLabel from '../../components/Dialog/DialogLabel';
+import { Container, Grid, Card, Link } from '@mui/material';
+// slices
+import { getMachineDocumentHistory } from '../../../redux/slices/document/machineDocument';
+// route
 import { PATH_DASHBOARD, PATH_MACHINE } from '../../../routes/paths';
-import { Cover } from '../../components/Cover';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import { getMachineDocumentHistory } from '../../../redux/slices/document/machineDocument'
+// components
+import DialogCustomer from '../../components/Dialog/Dialogs/DialogCustomer';
+import DialogMachine from '../../components/Dialog/Dialogs/DialogMachine';
+import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
+import FormLabel from '../../components/DocumentForms/FormLabel';
+import { Cover } from '../../components/Defaults/Cover';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+// constants
+import { FORMLABELS } from '../../../constants/document-constants';
+import { FORMLABELS as formLABEL } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
 export default function Document() {
   const navigate = useNavigate();
-  const { machineDocument, machineDocumentHistory } = useSelector((state) => state.machineDocument);
+  const { machineDocumentHistory } = useSelector((state) => state.machineDocument);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openMachine, setOpenMachine] = useState(false);
   const dispatch = useDispatch();
-
-  // If not needed, remove this block:
-  //   useEffect(() =>{
-  //     dispatch(resetMachineDocument())
-  //     console.log("getMachineDocument")
-  //     dispatch(getMachineDocument(id))
-  //     dispatch(resetCustomer())
-  //     dispatch(resetMachine())
-  //   },[id,dispatch])
-
-  //   useEffect(() =>{
-  //     console.log("getMachine")
-  //     if(machineDocument?.machine){
-  //       dispatch(getMachine(machineDocument.machine._id))
-  //     }
-  //   },[machineDocument,dispatch])
-
-  //   useEffect(() =>{
-  //     console.log("getCustomer")
-  // if(machineDocument?.customer){
-  //   dispatch(getCustomer(machineDocument.customer._id))
-  // }
-  //   },[machineDocument,dispatch])
 
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
@@ -84,41 +67,44 @@ export default function Document() {
   );
   const callAfterDelete = () => {
     dispatch(getMachineDocumentHistory(machineDocumentHistory._id));
-  }
+  };
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-        }}
-      >
-        <Cover name={defaultValues.displayName} icon="material-symbols:list-alt-outline" />
-      </Card>
+      <StyledCardContainer>
+        <Cover name={defaultValues.displayName} />
+      </StyledCardContainer>
       <Grid container>
         <Card sx={{ p: 3 }}>
+          {/* necessary. don't delete */}
           {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
           <Grid display="inline-flex">
-            <Tooltip>
-              <ViewFormField isActive={defaultValues.isActive} />
-            </Tooltip>
-            <Tooltip>
-              <ViewFormField customerAccess={defaultValues?.customerAccess} />
-            </Tooltip>
+            <ViewFormField isActive={defaultValues.isActive} />
+            <ViewFormField customerAccess={defaultValues?.customerAccess} />
           </Grid>
           <Grid container>
-            <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
             <ViewFormField
               sm={6}
-              heading="Active Version"
+              heading={FORMLABELS.MACHINE.NAME}
+              param={defaultValues?.displayName}
+            />
+            <ViewFormField
+              sm={6}
+              heading={FORMLABELS.ACTIVE_VERSION}
               numberParam={defaultValues?.documentVersion}
             />
-            <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-            <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
             <ViewFormField
               sm={6}
-              heading="Customer"
+              heading={FORMLABELS.DOCUMENT_TYPE}
+              param={defaultValues?.docType}
+            />
+            <ViewFormField
+              sm={6}
+              heading={FORMLABELS.DOCUMENT_CATEGORY}
+              param={defaultValues?.docCategory}
+            />
+            <ViewFormField
+              sm={6}
+              heading={formLABEL._def.CUSTOMER}
               objectParam={
                 defaultValues.customer && (
                   <Link onClick={handleOpenCustomer} href="#" underline="none">
@@ -129,7 +115,7 @@ export default function Document() {
             />
             <ViewFormField
               sm={6}
-              heading="Machine"
+              heading={formLABEL._def.MACHINE}
               objectParam={
                 defaultValues.machine && (
                   <Link onClick={handleOpenMachine} href="#" underline="none">
@@ -138,7 +124,11 @@ export default function Document() {
                 )
               }
             />
-            <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+            <ViewFormField
+              sm={12}
+              heading={FORMLABELS.DOCUMENT_DESC}
+              param={defaultValues?.description}
+            />
             <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
               <ViewFormAudit defaultValues={defaultValues} />
             </Grid>
@@ -148,10 +138,16 @@ export default function Document() {
                   <Grid container sx={{ pt: '2rem' }}>
                     <FormLabel content={`Version No. ${files?.versionNo}`} />
 
-                    {defaultValues.description !== files?.description && <ViewFormField sm={12} heading="Description" param={files?.description} />}
+                    {defaultValues.description !== files?.description && (
+                      <ViewFormField
+                        sm={12}
+                        heading={FORMLABELS.DOCUMENT_DESC}
+                        param={files?.description}
+                      />
+                    )}
                   </Grid>
                   {files?.files?.map((file) => (
-                    <Grid item sx={{ display: 'flex-inline', m:0.5 }}>
+                    <Grid item sx={{ display: 'flex-inline', m: 0.5 }}>
                       <Grid container justifyContent="flex-start" gap={1}>
                         <Thumbnail
                           key={file._id}
@@ -168,119 +164,22 @@ export default function Document() {
           </Grid>
         </Card>
       </Grid>
-      <Dialog
+
+      {/* dialog for customer */}
+      <DialogCustomer
         open={openCustomer}
         onClose={handleCloseCustomer}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel onClick={() => handleCloseCustomer()} content="Customer" />
-        <Grid item container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" param={customer?.tradingName} />
-          <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
-          <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
-          <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />
-          <ViewFormField sm={6} heading="Site Name" param={customer?.mainSite?.name} />
-          <FormLabel content="Address Information" />
-          <ViewFormField sm={6} heading="Street" param={customer?.mainSite?.address?.street} />
-          <ViewFormField sm={6} heading="Suburb" param={customer?.mainSite?.address?.suburb} />
-          <ViewFormField sm={6} heading="City" param={customer?.mainSite?.address?.city} />
-          <ViewFormField sm={6} heading="Region" param={customer?.mainSite?.address?.region} />
-          <ViewFormField sm={6} heading="Post Code" param={customer?.mainSite?.address?.postcode} />
-          <ViewFormField sm={12} heading="Country" param={customer?.mainSite?.address?.country} />
-          <ViewFormField
-            sm={6}
-            heading="Primary Biling Contact"
-            param={
-              customer?.primaryBillingContact &&
-              `${customer?.primaryBillingContact?.firstName} ${customer?.primaryBillingContact?.lastName}`
-            }
-          />
-          <ViewFormField
-            sm={6}
-            heading="Primary Technical Contact"
-            param={
-              customer?.primaryTechnicalContact &&
-              `${customer?.primaryTechnicalContact?.firstName} ${customer?.primaryTechnicalContact?.lastName}`
-            }
-          />
-        </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
-          <FormLabel content="Howick Resources" />
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={customer?.accountManager?.firstName}
-            secondParam={customer?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={customer?.projectManager?.firstName}
-            secondParam={customer?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={customer?.supportManager?.firstName}
-            secondParam={customer?.supportManager?.lastName}
-          />
-        </Grid>
-        <DialogLink onClick={() => handleViewCustomer(customer._id)} content="Go to customer" />
-      </Dialog>
+        customer={customer}
+        onClick={() => handleViewCustomer(customer._id)}
+      />
 
       {/* dialog for machine */}
-      <Dialog
-        maxWidth="md"
+      <DialogMachine
         open={openMachine}
         onClose={handleCloseMachine}
-        aria-labelledby="keep-mounted-modal-title"
-        aria-describedby="keep-mounted-modal-description"
-      >
-        <DialogLabel onClick={() => handleCloseMachine()} content="Machine" />
-        <Grid container sx={{ px: 2, pt: 2 }}>
-          <ViewFormField sm={6} heading="Serial No" param={machine?.serialNo} />
-          <ViewFormField sm={6} heading="Name" param={machine?.name} />
-          <ViewFormField
-            sm={6}
-            heading="Previous Machine Serial No"
-            param={machine?.parentSerialNo}
-          />
-          <ViewFormField sm={6} heading="Previous Machine" param={machine?.parentMachine?.name} />
-          <ViewFormField sm={6} heading="Supplier" param={machine?.supplier?.name} />
-          <ViewFormField sm={6} heading="Machine Model" param={machine?.machineModel?.name} />
-          <ViewFormField
-            sm={6}
-            heading="Installation Site"
-            param={machine?.instalationSite?.name}
-          />
-          <ViewFormField sm={6} heading="Billing Site" param={machine?.billingSite?.name} />
-          <ViewFormField sm={12} heading="Nearby Milestone" param={machine?.siteMilestone} />
-        </Grid>
-        <Grid item container sx={{ px: 2, pb: 3 }}>
-          <FormLabel content="Howick Resources" />
-          <ViewFormField
-            sm={6}
-            heading="Account Manager"
-            param={machine?.accountManager?.firstName}
-            secondParam={machine?.accountManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Project Manager"
-            param={machine?.projectManager?.firstName}
-            secondParam={machine?.projectManager?.lastName}
-          />
-          <ViewFormField
-            sm={6}
-            heading="Suppport Manager"
-            param={machine?.supportManager?.firstName}
-            secondParam={machine?.supportManager?.lastName}
-          />
-        </Grid>
-        <DialogLink onClick={() => handleViewMachine(machine._id)} content="Go to Machine" />
-      </Dialog>
+        machine={machine}
+        onClick={() => handleViewMachine(machine._id)}
+      />
     </Container>
   );
 }

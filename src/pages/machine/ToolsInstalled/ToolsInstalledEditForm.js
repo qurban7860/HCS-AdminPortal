@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo , useState, useLayoutEffect} from 'react';
+import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -10,11 +10,28 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Switch ,Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField} from '@mui/material';
+import {
+  Switch,
+  Box,
+  Card,
+  Grid,
+  Stack,
+  Typography,
+  Button,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
+  Link,
+  Autocomplete,
+  TextField,
+} from '@mui/material';
 // global
 import { CONFIG } from '../../../config-global';
 // slice
-import { setToolInstalledEditFormVisibility , updateToolInstalled } from '../../../redux/slices/products/toolInstalled';
+import {
+  setToolInstalledEditFormVisibility,
+  updateToolInstalled,
+} from '../../../redux/slices/products/toolInstalled';
 import { getTools } from '../../../redux/slices/products/tools';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
@@ -25,16 +42,23 @@ import FormProvider, {
   RHFSelect,
   RHFTextField,
   RHFAutocomplete,
-  RHFSwitch
+  RHFSwitch,
 } from '../../../components/hook-form';
-import AddFormButtons from '../../components/AddFormButtons';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
 export default function ToolsInstalledEditForm() {
-
   const { tools } = useSelector((state) => state.tool);
-  const { initial,error, responseMessage , toolInstalledEditFormVisibility , toolsInstalled, toolInstalled, formVisibility } = useSelector((state) => state.toolInstalled);
+  const {
+    initial,
+    error,
+    responseMessage,
+    toolInstalledEditFormVisibility,
+    toolsInstalled,
+    toolInstalled,
+    formVisibility,
+  } = useSelector((state) => state.toolInstalled);
   const [toolVal, setToolVal] = useState('');
   const { machine } = useSelector((state) => state.machine);
 
@@ -44,21 +68,20 @@ export default function ToolsInstalledEditForm() {
 
   useLayoutEffect(() => {
     setToolVal(toolInstalled.tool);
-    dispatch(getTools())
-  }, [dispatch , toolInstalled]);
-// console.log("toolInstalled : ",toolInstalled)
+    dispatch(getTools());
+  }, [dispatch, toolInstalled]);
+  // console.log("toolInstalled : ",toolInstalled)
 
   const EditSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),
-    isActive : Yup.boolean(),
+    isActive: Yup.boolean(),
   });
-
 
   const defaultValues = useMemo(
     () => ({
       // tool: toolInstalled?.tool || '',
       note: toolInstalled?.note || '',
-      isActive : toolInstalled.isActive,
+      isActive: toolInstalled.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -85,24 +108,22 @@ export default function ToolsInstalledEditForm() {
   //   }
   // }, [site, reset, defaultValues]);
 
-  const toggleCancel = () => 
-  {
+  const toggleCancel = () => {
     dispatch(setToolInstalledEditFormVisibility(false));
   };
 
   const onSubmit = async (data) => {
     try {
-      data.tool = toolVal._id || null
+      data.tool = toolVal._id || null;
       // console.log("Setting update Data : ",machine._id,toolInstalled._id,data);
-      await dispatch(updateToolInstalled(machine._id,toolInstalled._id,data));
+      await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
       reset();
-      setToolVal("");
+      setToolVal('');
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
     }
   };
-
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -110,9 +131,9 @@ export default function ToolsInstalledEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-            <Stack spacing={1}>
+              <Stack spacing={1}>
                 <Typography variant="h3" sx={{ color: 'text.secondary' }}>
-                Edit Tool 
+                  Edit Tool
                 </Typography>
               </Stack>
               <Box
@@ -125,30 +146,51 @@ export default function ToolsInstalledEditForm() {
                 }}
               >
                 <Autocomplete
-                // freeSolo
-                disabled
-                value={ toolVal|| null}
-                options={tools}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                getOptionLabel={(option) => option.name}
-                id="controllable-states-demo"
-                onChange={(event, newValue) => {
-                  if(newValue){
-                  setToolVal(newValue);
-                  }
-                  else{ 
-                  setToolVal("");
-                  }
-                }}
-                renderOption={(props, option) => (<Box component="li" {...props} key={option.id}>{option.name}</Box>)}
-                renderInput={(params) => <TextField {...params}  label="Tool" />}
-                ChipProps={{ size: 'small' }}
-              />
+                  // freeSolo
+                  disabled
+                  value={toolVal || null}
+                  options={tools}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  getOptionLabel={(option) => option.name}
+                  id="controllable-states-demo"
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setToolVal(newValue);
+                    } else {
+                      setToolVal('');
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <Box component="li" {...props} key={option.id}>
+                      {option.name}
+                    </Box>
+                  )}
+                  renderInput={(params) => <TextField {...params} label="Tool" />}
+                  ChipProps={{ size: 'small' }}
+                />
                 <RHFTextField name="note" label="Note*" minRows={8} multiline />
-                <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography>} />
+                <RHFSwitch
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Active
+                    </Typography>
+                  }
+                />
               </Box>
             </Stack>
-          <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>

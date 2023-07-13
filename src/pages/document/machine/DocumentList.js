@@ -7,22 +7,26 @@ import {
   Stack,
   Card,
   Grid,
-  Button,
-  TextField,
   Typography,
-  InputAdornment,
   Accordion,
   AccordionSummary,
   AccordionDetails,
   Divider,
+  Breadcrumbs,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
+// hooks
 import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
+import useResponsive from '../../../hooks/useResponsive';
+// routes
+import { PATH_DOCUMENT, PATH_MACHINE } from '../../../routes/paths';
+// components
+import BreadcrumbsProvider from '../../components/Breadcrumbs/BreadcrumbsProvider';
+import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
+import AddButtonAboveAccordion from '../../components/Defaults/AddButtonAboveAcoordion';
+import SearchInput from '../../components/Defaults/SearchInput';
 import { useTable, getComparator, TableNoData } from '../../../components/table';
 import Iconify from '../../../components/iconify';
 // sections
@@ -33,17 +37,16 @@ import {
 } from '../../../redux/slices/document/machineDocument';
 import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { setDocumentCategoryFormVisibility } from '../../../redux/slices/document/documentCategory';
-
 import DocumentAddForm from '../dashboard/documents/DocumentAddForm';
 import DocumentEditForm from './DocumentEditForm';
 import DocumentViewForm from './DocumentViewForm';
 import DocumentNameAddForm from '../documentType/DocumentTypeAddForm';
 import DocumentCategoryAddForm from '../documentCategory/DocumentCategoryAddForm';
-import ListSwitch from '../../components/ListSwitch';
-import { BUTTONS } from '../../../constants/default-constants';
+import ListSwitch from '../../components/Defaults/ListSwitch';
 import _mock from '../../../_mock';
 import { fDate } from '../../../utils/formatTime';
-
+// constants
+import { BUTTONS, BREADCRUMBS } from '../../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 const _accordions = [...Array(8)].map((_, index) => ({
@@ -57,34 +60,13 @@ const _accordions = [...Array(8)].map((_, index) => ({
 // ----------------------------------------------------------------------
 
 export default function DocumentList() {
-  const {
-    dense,
-    page,
-    order,
-    orderBy,
-    rowsPerPage,
-    setPage,
-    //
-    selected,
-    setSelected,
-    onSelectRow,
-    onSelectAllRows,
-    //
-    onSort,
-    onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
-  } = useTable({
+  const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: '-createdAt',
   });
 
   const [controlled, setControlled] = useState(false);
 
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
   const dispatch = useDispatch();
-
   const {
     initial,
     error,
@@ -97,16 +79,54 @@ export default function DocumentList() {
   const { documentCategoryFormVisibility } = useSelector((state) => state.documentCategory);
   const { documentTypeFormVisibility } = useSelector((state) => state.documentType);
   const { machine } = useSelector((state) => state.machine);
-  const toggleChecked = async () => {
-    dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility));
-  };
   const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
+  const isMobile = useResponsive('down', 'sm');
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    if (
+      machine &&
+      machine?._id &&
+      !machineDocumentFormVisibility &&
+      !machineDocumentEditFormVisibility
+    ) {
+      // console.log("machineDocumentFormVisibility : ",machineDocumentFormVisibility)
+      dispatch(getMachineDocuments(machine?._id));
+    }
+    if (!machineDocumentEditFormVisibility) {
+      dispatch(setMachineDocumentEditFormVisibility(false));
+    }
+    if (!machineDocumentFormVisibility) {
+      dispatch(setMachineDocumentFormVisibility(false));
+    }
+    dispatch(setDocumentCategoryFormVisibility(false));
+    dispatch(setDocumentTypeFormVisibility(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, machine._id, machineDocumentFormVisibility, machineDocumentEditFormVisibility]);
+
+  useEffect(() => {
+    dispatch(setMachineDocumentFormVisibility(false));
+    dispatch(setMachineDocumentEditFormVisibility(false));
+    setTableData(machineDocuments);
+  }, [machineDocuments, dispatch]);
+
+  const toggleChecked = async () => {
+    dispatch(setMachineDocumentFormVisibility(!machineDocumentFormVisibility));
+  };
+
+  const toggleCancel = () => {
+    dispatch(setMachineDocumentFormVisibility(false));
+    // setChecked(false);
+  };
+
+  const handleChangeControlled = (panel) => (event, isExpanded) => {
+    setControlled(isExpanded ? panel : false);
+  };
 
   const handleAccordianClick = (accordianIndex) => {
     if (accordianIndex === activeIndex) {
@@ -116,31 +136,9 @@ export default function DocumentList() {
     }
   };
 
-  useEffect(() => {
-    if (machine && machine?._id && !machineDocumentFormVisibility && ! machineDocumentEditFormVisibility) {
-      // console.log("machineDocumentFormVisibility : ",machineDocumentFormVisibility)
-      dispatch(getMachineDocuments(machine?._id));
-    }
-    if(!machineDocumentEditFormVisibility){
-      dispatch(setMachineDocumentEditFormVisibility(false));
-    }
-    if(!machineDocumentFormVisibility){
-      dispatch(setMachineDocumentFormVisibility(false))
-    }
-    dispatch(setDocumentCategoryFormVisibility(false));
-    dispatch(setDocumentTypeFormVisibility(false));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, machine._id, machineDocumentFormVisibility, machineDocumentEditFormVisibility]);
-
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
   };
-
-  useEffect(() => {
-    dispatch(setMachineDocumentFormVisibility(false))
-    dispatch(setMachineDocumentEditFormVisibility(false));
-    setTableData(machineDocuments);
-  }, [machineDocuments, dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -170,75 +168,103 @@ export default function DocumentList() {
 
   const handleFormVisibility = () => {
     dispatch(setMachineDocumentFormVisibility(false));
-  }
+  };
   return (
     <>
-      {!machineDocumentEditFormVisibility &&
-        !documentTypeFormVisibility &&
-        !documentCategoryFormVisibility && (
-          <Stack
-            spacing={2}
-            alignItems="center"
-            direction={{ xs: 'column', md: 'row' }}
-            sx={{ py: 2 }}
-          >
-            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              <Grid item xs={12} sm={9} sx={{ display: 'inline-flex' }}>
-                <Grid item xs={12} sm={8}>
-                  {!machineDocumentFormVisibility && (
-                    <TextField
-                      fullWidth
-                      value={filterName}
-                      onChange={handleFilterName}
-                      placeholder="Search..."
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled' }} />
-                          </InputAdornment>
-                        ),
-                      }}
-                    />
-                  )}
-                </Grid>
-                {isFiltered && (
-                  <Button
-                    color="error"
-                    sx={{ flexShrink: 0, ml: 1 }}
-                    onClick={handleResetFilter}
-                    startIcon={<Iconify icon="eva:trash-2-outline" />}
-                  >
-                    {BUTTONS.CLEAR}
-                  </Button>
-                )}
-              </Grid>
-              <Grid item xs={8} sm={3}>
-                <Stack alignItems="flex-end" sx={{ my: 'auto' }}>
-                {!machine.transferredMachine && <Button
-                    sx={{ p: 1 }}
-                    onClick={toggleChecked}
-                    variant="contained"
-                    startIcon={
-                      !machineDocumentFormVisibility ? (
-                        <Iconify icon="eva:plus-fill" />
-                      ) : (
-                        <Iconify icon="eva:minus-fill" />
-                      )
-                    }
-                  >
-                    {BUTTONS.DOCUMENT}
-                  </Button>
-                }
+      <Grid
+        container
+        direction={{ sm: 'column', lg: 'row' }}
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        <Grid item xs={12} md={6}>
+          <BreadcrumbsProvider>
+            <BreadcrumbsLink to={PATH_MACHINE.list} name={BREADCRUMBS.MACHINES} />
+            <BreadcrumbsLink to={PATH_MACHINE.machines.view(machine._id)} name={machine.serialNo} />
+            <BreadcrumbsLink
+              to={PATH_DOCUMENT.document.machine}
+              name={
+                <Stack>
+                  {!expanded &&
+                    !machineDocumentEditFormVisibility &&
+                    machineDocumentFormVisibility &&
+                    'New Document'}
+                  {!machineDocumentFormVisibility &&
+                    !machineDocumentEditFormVisibility &&
+                    'Documents'}
+                  {machineDocumentEditFormVisibility && 'Edit Document'}
+                  {documentTypeFormVisibility && 'New Document Type'}
+                  {documentCategoryFormVisibility && 'New Document Category'}
                 </Stack>
+              }
+            />
+          </BreadcrumbsProvider>
+        </Grid>
+
+        {/* conditional reactive */}
+        <Grid item xs={12} md={6}>
+          <Grid
+            container
+            direction={{ sm: 'column', lg: 'row' }}
+            justifyContent="flex-end"
+            alignItems="center"
+          >
+            {isMobile && (
+              <Grid item xs={12} md={3}>
+                <Grid container justifyContent="flex-end">
+                  <AddButtonAboveAccordion
+                    name={BUTTONS.NEWDOCUMENT}
+                    toggleChecked={toggleChecked}
+                    FormVisibility={machineDocumentFormVisibility}
+                    toggleCancel={toggleCancel}
+                    disabled={machineDocumentEditFormVisibility}
+                  />
+                </Grid>
               </Grid>
+            )}
+            <Grid item xs={12} md={9} mt={1}>
+              <SearchInput
+                // searchFormVisibility={formVisibility || contactEditFormVisibility}
+                filterName={filterName}
+                handleFilterName={handleFilterName}
+                isFiltered={isFiltered}
+                handleResetFilter={handleResetFilter}
+                toggleChecked={toggleChecked}
+                toggleCancel={toggleCancel}
+                FormVisibility={machineDocumentFormVisibility}
+                disabled={
+                  machineDocumentEditFormVisibility ||
+                  machineDocumentFormVisibility ||
+                  machineDocuments.length === 0
+                }
+                size="small"
+                isSearchBar
+                display={machineDocuments.length === 0 ? 'none' : 'inline-flex'}
+              />
             </Grid>
-          </Stack>
-        )}
+            {!isMobile && (
+              <Grid item xs={12} md={3}>
+                <Grid container justifyContent="flex-end">
+                  <AddButtonAboveAccordion
+                    name={BUTTONS.NEWDOCUMENT}
+                    toggleChecked={toggleChecked}
+                    FormVisibility={machineDocumentFormVisibility}
+                    toggleCancel={toggleCancel}
+                    disabled={machineDocumentEditFormVisibility}
+                  />
+                </Grid>
+              </Grid>
+            )}
+          </Grid>
+        </Grid>
+      </Grid>
 
       {!machineDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         !documentCategoryFormVisibility &&
-        machineDocumentFormVisibility && <DocumentAddForm machinePage handleFormVisibility={handleFormVisibility}/>}
+        machineDocumentFormVisibility && (
+          <DocumentAddForm machinePage handleFormVisibility={handleFormVisibility} />
+        )}
       {!machineDocumentEditFormVisibility &&
         !documentTypeFormVisibility &&
         documentCategoryFormVisibility &&
@@ -253,7 +279,7 @@ export default function DocumentList() {
         !machineDocumentFormVisibility && <DocumentEditForm />}
 
       {/* {machineDocumentEditFormVisibility  && <DocumentEditForm/>} */}
-      <Card sx={{ mt: 2 }}>
+      <Card>
         {!machineDocumentEditFormVisibility &&
           !machineDocumentFormVisibility &&
           !documentCategoryFormVisibility &&
@@ -282,16 +308,7 @@ export default function DocumentList() {
                       <Grid item xs={12} sm={4} md={2.4}>
                         {document?.docCategory?.name || ''}
                       </Grid>
-                      {/* <Grid
-                        item
-                        xs={12}
-                        display={{ xs: 'none', sm: 'none', md: 'block', lg: 'block' }}
-                        md={2.4}
-                      >
-                        {document?.customerAccess !== true
-                          ? 'customer Access : No'
-                          : 'customer Access : Yes'}
-                      </Grid> */}
+
                       <Grid
                         item
                         xs={12}
@@ -318,31 +335,10 @@ export default function DocumentList() {
               </Accordion>
             );
           })}
-        <TableNoData isNotFound={isNotFound} />
       </Card>
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRows(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      /> */}
+      <Grid md={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
     </>
   );
 }

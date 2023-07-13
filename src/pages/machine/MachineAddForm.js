@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
@@ -17,19 +16,13 @@ import {
   Stack,
   TextField,
   Autocomplete,
-  Select,
-  Chip,
   Typography,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
 } from '@mui/material';
 // import { LocalizationProvider, DatePicker } from '@mui/lab';
-
 import { DatePicker } from '@mui/x-date-pickers';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { MuiChipsInput } from 'mui-chips-input'
+import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
@@ -39,28 +32,18 @@ import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveMachineModels } from '../../redux/slices/products/model';
 import { getSuppliers, getActiveSuppliers } from '../../redux/slices/products/supplier';
 import { getMachineConnections } from '../../redux/slices/products/machineConnections';
-
-import { Cover } from '../components/Cover';
-
+import { Cover } from '../components/Defaults/Cover';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, {
-  RHFSelect,
-  RHFAutocomplete,
-  RHFTextField,
-  RHFMultiSelect,
-  RHFEditor,
-  RHFUpload,
-  RHFSwitch,
-} from '../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../components/hook-form';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
-import MachineDashboardNavbar from './util/MachineDashboardNavbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
-import AddFormButtons from '../components/AddFormButtons';
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../components/DocumentForms/ToggleButtons';
+import { FORMLABELS } from '../../constants/default-constants';
 
 MachineAddForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -104,8 +87,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const [machineConnectionVal, setMachineConnectionVal] = useState([]);
 
   const [chipData, setChipData] = useState([]);
-  const [chips, setChips] = useState([])
-
+  const [chips, setChips] = useState([]);
 
   useLayoutEffect(() => {
     dispatch(getActiveCustomers());
@@ -124,11 +106,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     setInstallVal(null);
     setBillingVal(null);
   }, [dispatch, customerVal]);
-
-  // useEffect(()=>{
-  //   setMachSerVal()
-  //   setMachSerVal(machSerVal?.serialNo);
-  // },[machineVal])
 
   const AddMachineSchema = Yup.object().shape({
     // keep the serial no. at 6 characters, all machines, decoilers, and custom all have 5 characters,
@@ -270,8 +247,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     navigate(PATH_MACHINE.machines.list);
   };
   const handleChipChange = (newChips) => {
-    setChips(newChips)
-  }
+    setChips(newChips);
+  };
   const { themeStretch } = useSettingsContext();
 
   return (
@@ -292,9 +269,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                 >
                   <RHFTextField name="serialNo" label="Serial No." required />
                   <RHFTextField name="name" label="Name" />
-                 
                 </Box>
-                  <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
+                <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
                 <Box
                   rowGap={3}
                   columnGap={2}
@@ -305,7 +281,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     // freeSolo
                     value={parMachSerVal || null}
                     options={activeMachines}
-                    isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo && option.isActive === true }
+                    isOptionEqualToValue={(option, value) =>
+                      option.serialNo === value.serialNo && option.isActive === true
+                    }
                     getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''}`}
                     id="controllable-states-demo"
                     onChange={(event, newValue) => {
@@ -392,7 +370,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     // freeSolo
                     value={modelVal || null}
                     options={activeMachineModels}
-                    isOptionEqualToValue={(option, value) => option.name === value.name && option.isActive !== false }
+                    isOptionEqualToValue={(option, value) =>
+                      option.name === value.name && option.isActive !== false
+                    }
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
                       if (newValue) {
@@ -433,34 +413,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     )}
                   />
 
-                  {/* <Autocomplete
-                  // freeSolo
-                  value={ machineConnectionVal || null}
-                  options={machineConnections}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
-                  getOptionLabel={(option) => option.name}
-                  onChange={(event, newValue) => {
-                    if(newValue){
-                    setMachineConnectionVal(newValue);
-                    }
-                    else{
-                    setMachineConnectionVal("");
-                    }
-                  }}
-                  renderTags={(tagValue, getTagProps) =>
-                    tagValue.map((option, index) => (
-                      <Chip
-                        label={option.title}
-                        {...getTagProps({ index })}
-                      />
-                    ))
-                  }
-                  renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                  id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params}  label="Machine Connections" />}
-                  ChipProps={{ size: 'small' }}
-                  /> */}
-
                   <Autocomplete
                     // freeSolo
                     value={statusVal || null}
@@ -486,27 +438,27 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
                 </Box>
-                  <Autocomplete
-                    sx={{ my: -3 }}
-                    value={customerVal || null}
-                    options={activeCustomers}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setCustomerVal(newValue);
-                      } else {
-                        setCustomerVal('');
-                        dispatch(resetSites());
-                      }
-                    }}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField {...params} label="Customer" />}
-                    ChipProps={{ size: 'small' }}
-                  />
+                <Autocomplete
+                  sx={{ my: -3 }}
+                  value={customerVal || null}
+                  options={activeCustomers}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      setCustomerVal(newValue);
+                    } else {
+                      setCustomerVal('');
+                      dispatch(resetSites());
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                  )}
+                  id="controllable-states-demo"
+                  renderInput={(params) => <TextField {...params} label="Customer" />}
+                  ChipProps={{ size: 'small' }}
+                />
 
                 <Box
                   rowGap={3}
@@ -589,13 +541,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   columnGap={2}
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                  
                 >
-                  <RHFTextField
-                    name="siteMilestone"
-                    label="Nearby Milestone"
-                    multiline
-                  />
+                  <RHFTextField name="siteMilestone" label="Nearby Milestone" multiline />
                 </Box>
                 <Box
                   rowGap={3}
@@ -688,62 +635,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField
-                    name="description"
-                    label="Description"
-                    minRows={8}
-                    multiline
-                  />
+                  <RHFTextField name="description" label="Description" minRows={8} multiline />
                 </Box>
-                {/* -------------------------start add chips------------------------- */}
-                {/* <RHFTextField name="tags" sx={{mb:-3}} label="Tags"  value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/> */}
-
-                {/* <Card
-                      sx={{ di  splay: 'flex', borderColor:'light gray', borderWidth:'1px', boxShadow:'none', borderRadius:'7px', flexWrap: 'wrap', listStyle: 'none', p: 0.7, m: 0, mt:-3, }} component="ul" variant='outlined' >
-                      {chipDat  a.map((data,index) =>
-                          <Lis  tItem key={index}>
-                            <C  hip
-                                label={data}
-                                onDelete={()=>handleDelete(data,index)}
-                            />
-                          </Li  stItem>
-                       )}
-                       <TextFi  eld name="tag" sx={{p:1}}   variant="standard"
-                        InputP  rops={{disableUnderline: true,}}
-                        placeholder='Tags...'   value={currTag} onChange={handleChange} onKeyDown={handleKeyPress}/>
-                    </Card>
-                <RHFSwitch
-                sx={{mt:-3}}
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <>
-                      <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                        Active
-                      </Typography>
-                    </>
-                  }
-                /> */}
-                {/* -------------------------end add chips------------------------- */}
-                <RHFSwitch
-                  sx={{ my: -3 }}
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      Active
-                    </Typography>
-                  }
-                />
+                <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

@@ -4,13 +4,11 @@ import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-// routes
-import { PATH_MACHINE } from '../../../../routes/paths';
 // redux
-import { getDocumentCategory } from '../../../../redux/slices/document/documentCategory';
+import { getDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // components
 import DocumentViewForm from './DocumentHistoryViewForm';
-import DocumentCover from '../../../components/DocumentForms/DocumentCover';
+import DocumentCover from '../../components/DocumentForms/DocumentCover';
 /* eslint-disable */
 
 // ----------------------------------------------------------------------

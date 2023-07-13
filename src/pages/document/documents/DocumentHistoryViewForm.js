@@ -4,11 +4,20 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import download from 'downloadjs';
-import { Container, Grid, Card, Tooltip, Typography, Dialog, Link, DialogContent } from '@mui/material';
+import {
+  Container,
+  Grid,
+  Card,
+  Tooltip,
+  Typography,
+  Dialog,
+  Link,
+  DialogContent,
+} from '@mui/material';
 import { PATH_CUSTOMER, PATH_MACHINE, PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
 import { getDocumentDownload } from '../../../redux/slices/document/documentFile';
 import {
   getDocumentHistory,
@@ -19,15 +28,13 @@ import {
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
-import FormLabel from '../../components/FormLabel';
+import FormLabel from '../../components/DocumentForms/FormLabel';
 import DialogLink from '../../components/Dialog/DialogLink';
 import DialogLabel from '../../components/Dialog/DialogLabel';
-import { document as documentType, Snacks} from '../../../constants/document-constants';
+import { document as documentType, Snacks } from '../../../constants/document-constants';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
-
-
 
 // ----------------------------------------------------------------------
 DocumentHistoryViewForm.propTypes = {
@@ -55,7 +62,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
     dispatch(resetMachine());
     dispatch(resetCustomer());
     // dispatch(getDocumentHistory(id));
-  }, [ dispatch]);
+  }, [dispatch]);
 
   useEffect(() => {
     if (documentHistory?.machine) {
@@ -189,7 +196,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
   };
   const callAfterDelete = () => {
     dispatch(getDocumentHistory(documentHistory._id));
-  }
+  };
 
   return (
     <>
@@ -224,28 +231,32 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
                 param={defaultValues?.docCategory}
               />
               <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-              {!customerPage && <ViewFormField
-                sm={6}
-                heading="Customer"
-                objectParam={
-                  defaultValues.customer && (
-                    <Link onClick={handleOpenCustomer} href="#" underline="none">
-                      {defaultValues.customer}
-                    </Link>
-                  )
-                }
-              />}
-              {!machinePage && <ViewFormField
-                sm={6}
-                heading="Machine"
-                objectParam={
-                  defaultValues.machine && (
-                    <Link onClick={handleOpenMachine} href="#" underline="none">
-                      {defaultValues.machine}
-                    </Link>
-                  )
-                }
-              />}
+              {!customerPage && (
+                <ViewFormField
+                  sm={6}
+                  heading="Customer"
+                  objectParam={
+                    defaultValues.customer && (
+                      <Link onClick={handleOpenCustomer} href="#" underline="none">
+                        {defaultValues.customer}
+                      </Link>
+                    )
+                  }
+                />
+              )}
+              {!machinePage && (
+                <ViewFormField
+                  sm={6}
+                  heading="Machine"
+                  objectParam={
+                    defaultValues.machine && (
+                      <Link onClick={handleOpenMachine} href="#" underline="none">
+                        {defaultValues.machine}
+                      </Link>
+                    )
+                  }
+                />
+              )}
               <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />
@@ -255,10 +266,12 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
                   <Grid container>
                     <Grid container sx={{ pt: '2rem' }} mb={1}>
                       <FormLabel content={`Version No. ${files?.versionNo}`} />
-                      {defaultValues.description !== files?.description && <ViewFormField sm={12} heading="Description" param={files?.description} />}
+                      {defaultValues.description !== files?.description && (
+                        <ViewFormField sm={12} heading="Description" param={files?.description} />
+                      )}
                     </Grid>
                     {files?.files?.map((file) => (
-                      <Grid  sx={{ display: 'flex-inline', m:0.5 }}>
+                      <Grid sx={{ display: 'flex-inline', m: 0.5 }}>
                         <Grid container justifyContent="flex-start" gap={1}>
                           <Thumbnail
                             // sx={{m:2}}
@@ -277,8 +290,8 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
           </Card>
         </Grid>
       </Grid>
-    <CustomerDialog openCustomer={openCustomer} handleCloseCustomer={handleCloseCustomer} />
-    <MachineDialog   openMachine={openMachine} handleCloseMachine={handleCloseMachine}/>
+      <CustomerDialog openCustomer={openCustomer} handleCloseCustomer={handleCloseCustomer} />
+      <MachineDialog openMachine={openMachine} handleCloseMachine={handleCloseMachine} />
     </>
   );
 }

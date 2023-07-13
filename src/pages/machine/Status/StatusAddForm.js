@@ -8,41 +8,43 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { Box, Card, Grid, Stack, Typography, Container, } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Container } from '@mui/material';
 // slice
 import { addMachineStatus } from '../../../redux/slices/products/statuses';
 // routes
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import FormProvider, { RHFTextField, RHFSwitch} from '../../../components/hook-form';
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 
 // util
-import {Cover} from '../../components/Cover';
-import AddFormButtons from '../../components/AddFormButtons';
+import { Cover } from '../../components/Defaults/Cover';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
 export default function StatusAddForm() {
-
   const dispatch = useDispatch();
-  
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const AddStatusSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(50).required('Name is required') ,
+    name: Yup.string().min(2).max(50).required('Name is required'),
     description: Yup.string().max(2000),
-    isActive : Yup.boolean(),
-    displayOrderNo: Yup.number().typeError("Display Order No. must be a number").nullable().transform((_, val) => (val !== "" ? Number(val) : null)),
+    isActive: Yup.boolean(),
+    displayOrderNo: Yup.number()
+      .typeError('Display Order No. must be a number')
+      .nullable()
+      .transform((_, val) => (val !== '' ? Number(val) : null)),
     slug: Yup.string().min(0).max(50),
   });
 
   const defaultValues = useMemo(
     () => ({
-      name: ''  ,
-      description:'',
+      name: '',
+      description: '',
       isActive: true,
       createdAt: '',
       displayOrderNo: '',
@@ -65,49 +67,72 @@ export default function StatusAddForm() {
   } = methods;
 
   const onSubmit = async (data) => {
-    console.log("Data : ", data);
-      try{ 
-        await dispatch(addMachineStatus(data));
-        reset();
-        enqueueSnackbar('Create success!');
-        navigate(PATH_MACHINE.machines.settings.machineStatus.list); 
-      } catch(error){
-        enqueueSnackbar(error?.message, { variant: `error` })
-        console.error(error);
-      }
+    console.log('Data : ', data);
+    try {
+      await dispatch(addMachineStatus(data));
+      reset();
+      enqueueSnackbar('Create success!');
+      navigate(PATH_MACHINE.machines.settings.machineStatus.list);
+    } catch (error) {
+      enqueueSnackbar(error?.message, { variant: `error` });
+      console.error(error);
+    }
   };
 
-  const toggleCancel = () => { navigate(PATH_MACHINE.machines.settings.machineStatus.list) };
+  const toggleCancel = () => {
+    navigate(PATH_MACHINE.machines.settings.machineStatus.list);
+  };
 
   return (
-    <>
-    <Container maxWidth={ false }>
-      <Card sx={{ mb: 3, height: 160, position: 'relative', }} >
-        <Cover name='New Status' icon='material-symbols:diversity-1-rounded' />
+    <Container maxWidth={false}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Cover name="New Status" icon="material-symbols:diversity-1-rounded" />
       </Card>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Grid container>
-        <Grid item xs={18} md={12} sx={{mt: 3}}>
-          <Card sx={{ p: 3}}>
-            <Stack spacing={3}>
-              <Box rowGap={2} columnGap={2} display="grid" gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)', }} >
-                <RHFTextField name="name" label="Name" required />
-                <RHFTextField name="description" label="Description" minRows={7} multiline />
-                <RHFTextField name="displayOrderNo" label="Display Order No."  />
-                <RHFTextField name="slug" label="Slug"  />
+        <Grid container>
+          <Grid item xs={18} md={12} sx={{ mt: 3 }}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
+                >
+                  <RHFTextField name="name" label="Name" required />
+                  <RHFTextField name="description" label="Description" minRows={7} multiline />
+                  <RHFTextField name="displayOrderNo" label="Display Order No." />
+                  <RHFTextField name="slug" label="Slug" />
 
-                {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
+                  {/* <RHFSelect native name="displayOrderNo" label="Display Order No" type='number'>
                       <option value="" defaultValue/>
                 </RHFSelect> */}
-                <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active </Typography>  } />
-              </Box>
-            </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
+                  <RHFSwitch
+                    name="isActive"
+                    labelPlacement="start"
+                    label={
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mx: 0,
+                          width: 1,
+                          justifyContent: 'space-between',
+                          mb: 0.5,
+                          color: 'text.secondary',
+                        }}
+                      >
+                        {' '}
+                        Active{' '}
+                      </Typography>
+                    }
+                  />
+                </Box>
+              </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>
           </Grid>
-          </Grid>
-    </FormProvider>
+        </Grid>
+      </FormProvider>
     </Container>
-    </>
   );
 }

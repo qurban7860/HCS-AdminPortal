@@ -1,36 +1,36 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, Grid, Link, CardActionArea, Breadcrumbs } from '@mui/material';
+import { Stack, Grid, Link, CardActionArea } from '@mui/material';
 import {
   CardBase,
   GridBaseViewForm,
   StyledScrollbar,
   StyledCardWrapper,
 } from '../../theme/styles/customer-styles';
-import AddButtonAboveAccordion from '../components/AddButtonAboveAcoordion';
+import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_CUSTOMER } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import { TableNoData, useTable, getComparator } from '../../components/table';
 // sections
 import {
   getContacts,
-  setContactEditFormVisibility,
   setContactFormVisibility,
   getContact,
 } from '../../redux/slices/customer/contact';
 import ContactAddForm from './contact/ContactAddForm';
 import ContactEditForm from './contact/ContactEditForm';
 import ContactViewForm from './contact/ContactViewForm';
+import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import DetailsSection from '../components/sections/DetailsSection';
-import AvatarSection from '../components/sections/AvatarSection';
+import DetailsSection from '../components/Sections/DetailsSection';
+import AvatarSection from '../components/Sections/AvatarSection';
 import useResponsive from '../../hooks/useResponsive';
-import SearchInput from '../components/SearchInput';
+import SearchInput from '../components/Defaults/SearchInput';
 import { fDate } from '../../utils/formatTime';
 import { Snacks } from '../../constants/customer-constants';
 import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
@@ -68,7 +68,7 @@ export default function CustomerContactList(currentContact = null) {
     setChecked((value) => !value);
     if (checked || contactEditFormVisibility) {
       dispatch(setContactFormVisibility(false));
-      enqueueSnackbar('Please close the form before opening a new one', {
+      enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {
         variant: 'warning',
       });
       setIsExpanded(false);
@@ -136,13 +136,9 @@ export default function CustomerContactList(currentContact = null) {
     <>
       <Grid container direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={12} md={6}>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator="›"
-            sx={{ fontSize: '12px', color: 'text.disabled' }}
-          >
+          <BreadcrumbsProvider>
             <BreadcrumbsLink to={PATH_CUSTOMER.list} name={BREADCRUMBS.CUSTOMERS} />
-            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} /> 
+            <BreadcrumbsLink to={PATH_CUSTOMER.view} name={customer.name} />
             <BreadcrumbsLink
               to={PATH_CUSTOMER.contacts}
               name={
@@ -155,7 +151,7 @@ export default function CustomerContactList(currentContact = null) {
                 </Stack>
               }
             />
-          </Breadcrumbs>
+          </BreadcrumbsProvider>
         </Grid>
         <AddButtonAboveAccordion
           name={BUTTONS.NEWCONTACT}

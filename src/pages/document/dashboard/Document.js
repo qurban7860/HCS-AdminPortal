@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate,useParams, Link } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles';
 import { Container, Grid, Card } from '@mui/material';
 import List from '@mui/material/List';
@@ -17,7 +17,7 @@ import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE, PATH_DOCUMENT } from '../../../routes/paths';
 import { useDispatch } from '../../../redux/store';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
@@ -27,10 +27,13 @@ export default function Document() {
   const theme = useTheme();
   const navigate = useNavigate();
 
-
-   // Functions to navigate to different pages
-   const linkDocumentName = () => {  navigate(PATH_DOCUMENT.documentType.list); };
-   const linkFileCategory = () => { navigate(PATH_DOCUMENT.documentCategory.list); };
+  // Functions to navigate to different pages
+  const linkDocumentName = () => {
+    navigate(PATH_DOCUMENT.documentType.list);
+  };
+  const linkFileCategory = () => {
+    navigate(PATH_DOCUMENT.documentCategory.list);
+  };
 
   return (
     <Container maxWidth={false}>
@@ -52,7 +55,7 @@ export default function Document() {
                 aria-labelledby="nested-list-subheader"
                 subheader={
                   <ListSubheader component="div" id="nested-list-subheader">
-                    Document View  (under Constrctuion)
+                    Document View (under Constrctuion)
                   </ListSubheader>
                 }
               >

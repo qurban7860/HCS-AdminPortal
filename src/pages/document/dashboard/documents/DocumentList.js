@@ -4,8 +4,6 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Switch,
-  Grid,
   Card,
   Table,
   Button,
@@ -14,12 +12,11 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
+import { PATH_DOCUMENT } from '../../../../routes/paths';
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import { useSettingsContext } from '../../../../components/settings';
@@ -39,8 +36,10 @@ import ConfirmDialog from '../../../../components/confirm-dialog';
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
 import { getDocuments, deleteDocument } from '../../../../redux/slices/document/document';
-import { Cover } from '../../../components/Cover';
+import { Cover } from '../../../components/Defaults/Cover';
 import { fDate } from '../../../../utils/formatTime';
+import { StyledCardContainer } from '../../../../theme/styles/default-styles';
+import { FORMLABELS, DIALOGS, BUTTONS } from '../../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -78,8 +77,9 @@ export default function DocumentList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
+  // necessary. dont remove
+  // const { themeStretch } = useSettingsContext();
+  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
@@ -88,7 +88,6 @@ export default function DocumentList() {
   const { documents, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.document
   );
-  // console.log("documents : ",documents)
   useLayoutEffect(() => {
     dispatch(getDocuments());
   }, [dispatch]);
@@ -174,15 +173,9 @@ export default function DocumentList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-          }}
-        >
-          <Cover name="Documents List" icon="ph:users-light"  generalSettings  />
-        </Card>
+        <StyledCardContainer>
+          <Cover name={FORMLABELS.COVER.DOCUMENTS} />
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <DocumentListTableToolbar
@@ -250,11 +243,6 @@ export default function DocumentList() {
                       )
                     )}
 
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>
               </Table>
@@ -274,12 +262,8 @@ export default function DocumentList() {
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
+        title={DIALOGS.DELETE.title}
+        content={DIALOGS.DELETE.content}
         action={
           <Button
             variant="contained"
@@ -289,7 +273,7 @@ export default function DocumentList() {
               handleCloseConfirm();
             }}
           >
-            Delete
+            {BUTTONS.DELETE}
           </Button>
         }
       />

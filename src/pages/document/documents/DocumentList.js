@@ -39,8 +39,14 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
-import { getDocument ,getDocuments, deleteDocument, resetDocuments, setDocumentViewFormVisibility} from '../../../redux/slices/document/document';
-import { Cover } from '../../components/Cover';
+import {
+  getDocument,
+  getDocuments,
+  deleteDocument,
+  resetDocuments,
+  setDocumentViewFormVisibility,
+} from '../../../redux/slices/document/document';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -60,7 +66,7 @@ DocumentList.propTypes = {
   machinePage: PropTypes.bool,
 };
 
-export default function DocumentList({customerPage, machinePage}) {
+export default function DocumentList({ customerPage, machinePage }) {
   const {
     page,
     order,
@@ -90,20 +96,28 @@ export default function DocumentList({customerPage, machinePage}) {
   const [openConfirm, setOpenConfirm] = useState(false);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  const { documents, isLoading, error, documentInitial, responseMessage } = useSelector( (state) => state.document);
-  const { customerDocuments, customerDocumentInitial } = useSelector((state) => state.customerDocument);
-  const { machineDocuments, machineDocumentInitial } = useSelector((state) => state.machineDocument);
+  const { documents, isLoading, error, documentInitial, responseMessage } = useSelector(
+    (state) => state.document
+  );
+  const { customerDocuments, customerDocumentInitial } = useSelector(
+    (state) => state.customerDocument
+  );
+  const { machineDocuments, machineDocumentInitial } = useSelector(
+    (state) => state.machineDocument
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       dispatch(resetDocuments());
-      if(customerPage || machinePage){
+      if (customerPage || machinePage) {
         // console.log("customerPage || machinePage : ",customerPage , machinePage)
-        if(customer?._id || machine?._id ){
+        if (customer?._id || machine?._id) {
           // console.log("customer?._id || machine?._id : ", customer?._id || machine?._id)
-          await dispatch(getDocuments(customerPage ? customer?._id : null , machinePage ? machine?._id : null));
+          await dispatch(
+            getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null)
+          );
         }
-      }else{
+      } else {
         // console.log("all documents")
         await dispatch(getDocuments());
       }
@@ -114,8 +128,8 @@ export default function DocumentList({customerPage, machinePage}) {
   }, [dispatch, customerPage, machinePage]);
 
   useEffect(() => {
-        setTableData(documents);
-    }, [documents ]);
+    setTableData(documents);
+  }, [documents]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -180,10 +194,10 @@ export default function DocumentList({customerPage, machinePage}) {
   };
 
   const handleViewRow = (id) => {
-    if(customerPage || machinePage){
+    if (customerPage || machinePage) {
       dispatch(getDocument(id));
       dispatch(setDocumentViewFormVisibility(true));
-    }else{
+    } else {
       navigate(PATH_DOCUMENT.document.view(id));
     }
   };
@@ -195,93 +209,93 @@ export default function DocumentList({customerPage, machinePage}) {
 
   return (
     <>
-        <Card sx={{ mt: 3 }}>
-          <DocumentListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
-            customerDocList
-            machineDocList
+      <Card sx={{ mt: 3 }}>
+        <DocumentListTableToolbar
+          filterName={filterName}
+          filterStatus={filterStatus}
+          onFilterName={handleFilterName}
+          onFilterStatus={handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+          customerDocList
+          machineDocList
+        />
+
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableSelectedAction
+            numSelected={selected.length}
+            rowCount={tableData.length}
+            onSelectAllRows={(checked) =>
+              onSelectAllRows(
+                checked,
+                tableData.map((row) => row._id)
+              )
+            }
+            action={
+              <Tooltip title="Delete">
+                <IconButton color="primary" onClick={handleOpenConfirm}>
+                  <Iconify icon="eva:trash-2-outline" />
+                </IconButton>
+              </Tooltip>
+            }
           />
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction
-              numSelected={selected.length}
-              rowCount={tableData.length}
-              onSelectAllRows={(checked) =>
-                onSelectAllRows(
-                  checked,
-                  tableData.map((row) => row._id)
-                )
-              }
-              action={
-                <Tooltip title="Delete">
-                  <IconButton color="primary" onClick={handleOpenConfirm}>
-                    <Iconify icon="eva:trash-2-outline" />
-                  </IconButton>
-                </Tooltip>
-              }
-            />
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                // rowCount={tableData.length}
+                // numSelected={selected.length}
+                onSort={onSort}
+                // onSelectAllRows={(checked) =>
+                //   onSelectAllRows(
+                //     checked,
+                //     tableData.map((row) => row._id)
+                //   )
+                // }
+              />
 
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
-                  onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
-                />
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
+                      <DocumentListTableRow
+                        key={row._id}
+                        row={row}
+                        selected={selected.includes(row._id)}
+                        onSelectRow={() => onSelectRow(row._id)}
+                        // onDeleteRow={() => handleDeleteRow(row._id)}
+                        // onEditRow={() => handleEditRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
 
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <DocumentListTableRow
-                          key={row._id}
-                          row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          // onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-
-                  {/* <TableEmptyRows
+                {/* <TableEmptyRows
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   /> */}
 
-                  <TableNoData isNotFound={isNotFound} sx={{mx:'auto'}}/>
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+                <TableNoData isNotFound={isNotFound} sx={{ mx: 'auto' }} />
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        </Card>
+        <TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />
+      </Card>
 
       <ConfirmDialog
         open={openConfirm}

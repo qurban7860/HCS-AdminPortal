@@ -1,11 +1,7 @@
 import { styled, alpha } from '@mui/material/styles';
-import { Popover, Stack } from '@mui/material';
-import { m } from 'framer-motion';
+import { Popover, Stack, Card, Container, TableRow } from '@mui/material';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { bgBlur, bgGradient } from '../../utils/cssStyles';
-import Image from '../../components/image';
-import { MotionContainer, varFade } from '../../components/animate';
-import Typography from '../overrides/Typography';
 
 /**
  * @cover :components ____________________________________________________________________________________________
@@ -113,6 +109,51 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
 }));
 
 /**
+ * @table :components ____________________________________________________________________________________________
+ */
+
+// @root - StyledTableRow -
+export const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: 'white',
+  },
+  '&:nth-of-type(even)': {
+    backgroundColor: '#f4f6f866',
+  },
+}));
+
+// --------------------------------------------------------------------------------------------
+
+// @root - GeneralAppPage - dashboard
+
+export const StyledContainer = styled(Container)(({ theme }) => ({
+  backgroundImage: `url(../../assets/illustrations/illustration_howick_icon.svg)`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'top right',
+  backgroundSize: 'auto 90%',
+  backgroundOpacity: 0.1,
+  backgroundAttachment: 'fixed',
+  display: 'flex',
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  padding: 0,
+  alignContent: 'center',
+  color: 'text.primary',
+}));
+
+export const StyledGlobalCard = styled(Card)(({ theme }) => ({
+  paddingRight: theme.spacing(3),
+  paddingLeft: theme.spacing(3),
+  marginBottom: theme.spacing(3),
+  backgroundImage: ` url(../../assets/illustrations/world.svg)`,
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'top right',
+  backgroundSize: 'auto 90%',
+}));
+
+// --------------------------------------------------------------------------------------------
+/**
  * @styled components from minimal layout
  */
 
@@ -130,3 +171,25 @@ export const StyledBg = styled('div')(({ theme }) => ({
   }),
 }));
 
+export const StyledCardContainer = styled(Card)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  height: 160,
+  position: 'relative',
+}));
+
+// @root - MachineEditForm - spacing
+export const ListItem = styled('li')(({ theme }) => ({
+  margin: theme.spacing(0.5),
+}));
+
+/**
+ * @options components props --------------------------------------------------------------------------------------------
+ */
+
+// @root CustomerListTableToolbar
+export const options = {
+  spacing: 2,
+  alignItems: 'center',
+  direction: { xs: 'column', md: 'row' },
+  sx: { px: 2.5, py: 3 },
+};

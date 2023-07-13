@@ -7,25 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
-import {
-  Switch,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Autocomplete,
-  TextField,
-  Dialog,
-} from '@mui/material';
-// routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Dialog } from '@mui/material';
 // slice
 import {
   addCustomerDocument,
-  updateCustomerDocument,
   getCustomerDocuments,
   setCustomerDocumentFormVisibility,
 } from '../../../redux/slices/document/customerDocument';
@@ -41,17 +26,19 @@ import {
   updateDocumentVersion,
   addDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
+// schema
+import { AddCustomerDocumentSchema } from '../../schemas/document';
 // components
-import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import FormProvider, { RHFTextField, RHFUpload } from '../../../components/hook-form';
 import BreadcrumbsLink from '../../components/Breadcrumbs/BreadcrumbsLink';
 import RadioButtons from '../../components/DocumentForms/RadioButtons';
-import FormHeading from '../../components/FormHeading';
-import AddFormButtons from '../../components/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import DialogLabel from '../../components/Dialog/DialogLabel';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import {
   fileTypesArray,
   allowedExtensions,
@@ -60,7 +47,6 @@ import {
   DocRadioValue,
   Snacks,
 } from '../../../constants/document-constants';
-import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 
@@ -81,7 +67,6 @@ export default function DocumentAddForm({ currentDocument }) {
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
   const [documentVal, setDocumentVal] = useState('');
-  // console.log("documentVal : ",documentVal)
   const [selectedValue, setSelectedValue] = useState('new');
   const [selectedVersionValue, setSelectedVersionValue] = useState('newVersion');
   const [descriptionVal, setDescriptionVal] = useState('');
@@ -92,15 +77,9 @@ export default function DocumentAddForm({ currentDocument }) {
   const [displayNameVal, setDisplayNameVal] = useState('');
   const [previewVal, setPreviewVal] = useState('');
   const [preview, setPreview] = useState(false);
-
   const [files, setFiles] = useState([]);
-  const [machineVal, setMachineVal] = useState('');
-  const [customerVal, setCustomerVal] = useState('');
-  const [siteVal, setSiteVal] = useState('');
-  const [contactVal, setContactVal] = useState('');
-
+  // hooks init
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -126,22 +105,6 @@ export default function DocumentAddForm({ currentDocument }) {
     }
   }, [documentCategoryVal, dispatch]);
 
-  const AddCustomerDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(40),
-    description: Yup.string().max(10000),
-    images: Yup.mixed()
-      .required('File is required!')
-      .test('fileType', fileTypesMessage, (value) => {
-        if (value && value?.name) {
-          const fileExtension = value?.name?.split('.').pop().toLowerCase();
-          return allowedExtensions.includes(fileExtension);
-        }
-        return false;
-      })
-      .nullable(true),
-    isActive: Yup.boolean(),
-  });
-
   const defaultValues = useMemo(
     () => ({
       displayName: displayNameVal,
@@ -152,12 +115,6 @@ export default function DocumentAddForm({ currentDocument }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentDocument]
   );
-  // const updatedDefaultValues = useMemo(() => {
-  //   return {
-  //     ...defaultValues, // Spread the existing properties
-  //     description: description, // Assign the new value
-  //   };
-  // }, [description, defaultValues]);
 
   const methods = useForm({
     resolver: yupResolver(AddCustomerDocumentSchema),
@@ -235,18 +192,6 @@ export default function DocumentAddForm({ currentDocument }) {
   const toggleCancel = () => {
     dispatch(setCustomerDocumentFormVisibility(false));
   };
-  // const handleDrop = useCallback(
-  //   (acceptedFiles) => {
-  //     const newFiles = acceptedFiles.map((file) =>
-  //       Object.assign(file, {
-  //         preview: URL.createObjectURL(file),
-  //       })
-  //     );
-
-  //     setFiles([...files, ...newFiles]);
-  //   },
-  //   [files]
-  // );
 
   const handleClosePreview = () => {
     setPreview(false);
@@ -521,6 +466,7 @@ export default function DocumentAddForm({ currentDocument }) {
                     customerAccessVal={customerAccessVal}
                     isActive={isActive}
                     handleIsActiveChange={handleIsActiveChange}
+                    isDocument
                   />
                 )}
                 {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />

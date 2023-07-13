@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,34 +7,25 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import {
-  Switch,
-  Box,
-  Card,
-  Grid,
-  Stack,
-  Typography,
-  Autocomplete,
-  TextField,
-  Container,
-} from '@mui/material';
+import { Box, Card, Grid, Stack, Autocomplete, TextField, Container } from '@mui/material';
 // global
-import { CONFIG } from '../../../../config-global';
-// routes
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../../routes/paths';
-// components
-import { useSnackbar } from '../../../../components/snackbar';
-import Iconify from '../../../../components/iconify';
-import FormProvider, { RHFSelect, RHFTextField } from '../../../../components/hook-form';
-import AddFormButtons from '../../../components/AddFormButtons';
-import FormHeading from '../../../components/FormHeading';
-import ViewFormSWitch from '../../../components/ViewFormSwitch';
-import { Cover } from '../../../components/Cover';
-import DocumentCover from '../../../components/DocumentForms/DocumentCover';
-
-// slice
+// redux
 import { updateDocument } from '../../../../redux/slices/document/document';
+// hooks
+import { useSnackbar } from '../../../../components/snackbar';
+// routes
+import { PATH_DASHBOARD } from '../../../../routes/paths';
+// components
+import FormProvider, { RHFTextField } from '../../../../components/hook-form';
+import AddFormButtons from '../../../components/DocumentForms/AddFormButtons';
+import ToggleButtons from '../../../components/DocumentForms/ToggleButtons';
+import FormHeading from '../../../components/DocumentForms/FormHeading';
+import DocumentCover from '../../../components/DocumentForms/DocumentCover';
+// schema
+import { EditCustomerDocumentSchema } from '../../../schemas/customer';
+// constants
+import { Snacks } from '../../../../constants/document-constants';
+import { FORMLABELS } from '../../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
@@ -52,13 +42,10 @@ export default function DocumentEditForm() {
   const [descriptionVal, setDescriptionVal] = useState('');
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
-
   const [nameVal, setNameVal] = useState('');
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
@@ -68,16 +55,7 @@ export default function DocumentEditForm() {
     setDocumentCategoryVal(documentHistory?.docCategory);
     setDocumentTypeVal(documentHistory?.docType);
     setDescriptionVal(documentHistory?.description);
-    // dispatch(getActiveDocumentCategories())
-    // dispatch(getActiveDocumentTypes())
   }, [dispatch, documentHistory]);
-
-  const EditCustomerDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(50),
-    description: Yup.string().max(10000),
-    // image: Yup.mixed().required("Image Field is required!"),
-    isActive: Yup.boolean(),
-  });
 
   const defaultValues = useMemo(
     () => ({
@@ -102,8 +80,6 @@ export default function DocumentEditForm() {
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const values = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -131,7 +107,7 @@ export default function DocumentEditForm() {
       setDocumentTypeVal('');
       reset();
     } catch (err) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedSaveDoc, { variant: `error` });
       console.error(err.message);
     }
   };
@@ -178,7 +154,7 @@ export default function DocumentEditForm() {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <FormHeading heading="Edit Document" />
+                <FormHeading heading={FORMLABELS.EDIT_DOCUMENT} />
                 <Box
                   rowGap={3}
                   columnGap={2}
@@ -259,45 +235,13 @@ export default function DocumentEditForm() {
                   minRows={3}
                   multiline
                 />
-                <Grid container lg={12}>
-                  <Grid display="flex" justifyContent="flex-end">
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        pt: 1,
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                      }}
-                    >
-                      Customer Access
-                    </Typography>
-                    <Switch sx={{ mt: 1 }} checked={customerAccessVal} onChange={handleChange} />
-                  </Grid>
-
-                  <Grid display="flex" justifyContent="flex-end">
-                    <Typography
-                      variant="body1"
-                      sx={{
-                        pt: 1,
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        alignItems: 'center',
-                      }}
-                    >
-                      isActive
-                    </Typography>
-                    <Switch sx={{ mt: 1 }} checked={isActive} onChange={handleIsActiveChange} />
-                  </Grid>
-                </Grid>
-
-                {/* <RHFUpload
-                  name="image"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleDrop}
-               /> */}
-                {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
+                <ToggleButtons
+                  isDocument
+                  handleChange={handleChange}
+                  customerAccessVal={customerAccessVal}
+                  checked={isActive}
+                  handleIsActiveChange={handleIsActiveChange}
+                />
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

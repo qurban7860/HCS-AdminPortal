@@ -1,64 +1,48 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo , useState, useLayoutEffect} from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
-// form
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, Container} from '@mui/material';
-// global
-import { CONFIG } from '../../../config-global';
-// slice
-// routes
-import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
-// components
+import { Card, Grid, Stack, Typography, Container } from '@mui/material';
+// hooks
+import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-  RHFAutocomplete,
-  RHFSwitch
-} from '../../../components/hook-form';
-import { getDocumentCategory,  updateDocumentCategory } from '../../../redux/slices/document/documentCategory';
-import AddFormButtons from '../../components/AddFormButtons';
-import FormHeading from '../../components/FormHeading';
-import { Cover } from '../../components/Cover';
-
+// schema
+import { EditDocumentNameSchema } from '../../schemas/document';
+// routes
+import { PATH_SETTING } from '../../../routes/paths';
+// components
+import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import {
+  getDocumentCategory,
+  updateDocumentCategory,
+} from '../../../redux/slices/document/documentCategory';
+import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import FormHeading from '../../components/DocumentForms/FormHeading';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
+import { Cover } from '../../components/Defaults/Cover';
+// styles
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { FORMLABELS } from '../../../constants/default-constants';
+import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
 
 export default function DocumentCategoryeEditForm() {
-
   const { documentCategory } = useSelector((state) => state.documentCategory);
-
   const dispatch = useDispatch();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const navigate = useNavigate();
-
   const defaultValues = useMemo(
     () => ({
       name: documentCategory?.name || '',
       description: documentCategory?.description || '',
-      isActive : documentCategory?.isActive ,
+      isActive: documentCategory?.isActive,
       customerAccess: documentCategory?.customerAccess,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditDocumentNameSchema = Yup.object().shape({
-    name: Yup.string().max(40),
-    description: Yup.string().max(1500),
-    isActive : Yup.boolean(),
-    customerAccess: Yup.boolean(),
-  });
 
   const methods = useForm({
     resolver: yupResolver(EditDocumentNameSchema),
@@ -75,84 +59,57 @@ export default function DocumentCategoryeEditForm() {
 
   const values = watch();
 
-  // useEffect(() => {
-  //   if (site) {
-  //     reset(defaultValues);
-  //   }
-  // }, [site, reset, defaultValues]);
-
-  const toggleCancel = () => 
-  {
-    navigate(PATH_SETTING.documentCategory.view(documentCategory._id))
-
+  const toggleCancel = () => {
+    navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
   };
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateDocumentCategory(documentCategory._id,data));
+      await dispatch(updateDocumentCategory(documentCategory._id, data));
       dispatch(getDocumentCategory(documentCategory._id));
-      navigate(PATH_SETTING.documentCategory.view(documentCategory._id))
-      enqueueSnackbar('Document Category updated Successfully!');
+      navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
+      enqueueSnackbar(Snacks.addedDocCategory, { variant: `success` });
       reset();
     } catch (err) {
-      enqueueSnackbar('Document Category Update failed!', { variant: `error` });
+      enqueueSnackbar(Snacks.failedSaveDocCategory, { variant: `error` });
       console.error(err.message);
     }
   };
 
-
   return (
-    <Container maxWidth={false }>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name={documentCategory?.name} /> 
-        </Card>
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={4}>
-            <Grid item xs={18} md={12}>
-              <Card sx={{ p: 3 }}>
-                <Stack spacing={3}>
-                  <FormHeading heading='Edit Document Category'/>
-                  <RHFTextField name="name" label="Category Name" />
-                  <RHFTextField name="description" label="Description" minRows={8} multiline />
-                  <Grid display="flex">
-                  <RHFSwitch
-                    name="customerAccess"
-                    labelPlacement="start"
-                    label={
-                      <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                          Customer Access
-                        </Typography>
-                      </>
-                    } 
-                  />
-                  <RHFSwitch
-                    name="isActive"
-                    labelPlacement="start"
-                    label={
-                      <>
-                        <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}>
-                          Active
-                        </Typography>
-                      </>
-                    } 
-                  />
-                  
-                  </Grid>
-                </Stack>
-                <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel}/>
-              </Card>
-                  
-            </Grid>
+    <Container maxWidth={false}>
+      <StyledCardContainer>
+        <Cover
+          name={documentCategory?.name}
+          generalSettings
+          backLink={PATH_SETTING.documentCategory.view(documentCategory?._id)}
+        />
+      </StyledCardContainer>
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={4}>
+          <Grid item xs={18} md={12}>
+            <Card sx={{ p: 3 }}>
+              <Stack spacing={3}>
+                <FormHeading heading={FORMLABELS.COVER.EDIT_DOCUMENT_CATEGORY} />
+                <RHFTextField name={formLABELS.CATEGORY.name} label={formLABELS.CATEGORY.label} />
+                <RHFTextField
+                  name={formLABELS.CATEGORY_DESC.name}
+                  label={formLABELS.CATEGORY_DESC.label}
+                  minRows={8}
+                  multiline
+                />
+                <ToggleButtons
+                  isMachine
+                  isRHF
+                  name={FORMLABELS.isACTIVE.name}
+                  RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
+                />
+              </Stack>
+              <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            </Card>
           </Grid>
-        </FormProvider>
+        </Grid>
+      </FormProvider>
     </Container>
   );
 }

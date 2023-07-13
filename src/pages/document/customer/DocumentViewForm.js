@@ -15,16 +15,17 @@ import {
   getCustomerDocumentHistory,
 } from '../../../redux/slices/document/customerDocument';
 // paths
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 // components
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import { useSnackbar } from '../../../components/snackbar';
-import { Snacks } from '../../../constants/document-constants';
 import LoadingScreen from '../../../components/loading-screen';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import VersionsLink from '../../components/DocumentForms/VersionsLink';
+// constants
+import { Snacks, FORMLABELS } from '../../../constants/document-constants';
 
 const Loadable = (Component) => (props) =>
   (
@@ -32,14 +33,12 @@ const Loadable = (Component) => (props) =>
       <Component {...props} />
     </Suspense>
   );
-
 // ----------------------------------------------------------------------
 
 export default function DocumentViewForm({ currentCustomerDocument = null }) {
   const { customerDocument, isLoading } = useSelector((state) => state.customerDocument);
   const { customer, customers } = useSelector((state) => state.customer);
   const { enqueueSnackbar } = useSnackbar();
-  const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const onDelete = async () => {
@@ -91,20 +90,20 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
   );
   const callAfterDelete = () => {
     dispatch(getCustomerDocuments(customer._id));
-  }
+  };
   return (
     <Grid>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
       <Grid display="inline-flex">
-        <Tooltip>
-          <ViewFormField isActive={defaultValues.isActive} />
-        </Tooltip>
-        <Tooltip>
-          <ViewFormField customerAccess={defaultValues?.customerAccess} />
-        </Tooltip>
+        <ViewFormField isActive={defaultValues.isActive} />
+        <ViewFormField customerAccess={defaultValues?.customerAccess} />
       </Grid>
       <Grid container>
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+        <ViewFormField
+          sm={6}
+          heading={FORMLABELS.DOCUMENT_NAME}
+          param={defaultValues?.displayName}
+        />
         <ViewFormField
           sm={6}
           heading="Version"
@@ -114,20 +113,25 @@ export default function DocumentViewForm({ currentCustomerDocument = null }) {
                 {defaultValues.versionPrefix} {defaultValues.documentVersion}
                 {currentCustomerDocument?.documentVersions &&
                   currentCustomerDocument?.documentVersions?.length > 1 && (
-                    <VersionsLink
-                      onClick={linkCustomerDocumentView}
-                      content="View other versions"
-                    />
+                    <VersionsLink onClick={linkCustomerDocumentView} />
                   )}
               </Typography>
             )
           }
         />
 
-        <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+        <ViewFormField
+          sm={6}
+          heading={FORMLABELS.DOCUMENT_CATEGORY}
+          param={defaultValues?.docCategory}
+        />
+        <ViewFormField sm={6} heading={FORMLABELS.DOCUMENT_TYPE} param={defaultValues?.docType} />
         {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
-        <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormField
+          sm={12}
+          heading={FORMLABELS.DOCUMENT_DESC}
+          param={defaultValues?.description}
+        />
         <Grid item sx={{ display: 'flex-inline' }}>
           <Grid container justifyContent="flex-start" gap={1}>
             {currentCustomerDocument?.documentVersions[0]?.files?.map((file) => (

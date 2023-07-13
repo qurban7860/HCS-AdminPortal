@@ -1,32 +1,24 @@
-import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useLayoutEffect } from 'react';
 // @mui
-import { useTheme, styled, alpha } from '@mui/material/styles';
-import { Typography, Container, Grid, Stack, Card, Divider } from '@mui/material';
-import { m } from 'framer-motion';
-import Image from '../../components/image';
-import { bgGradient } from '../../utils/cssStyles';
-import { MotionContainer, varFade } from '../../components/animate';
-import ChartBar from '../components/Charts/ChartBar';
-import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
-import { StyledBg } from '../../theme/styles/default-styles';
-// auth
-import { useAuthContext } from '../../auth/useAuthContext';
-// dummy datas
-import { _appAuthors } from '../../_mock/arrays';
-import ContainerView from '../../sections/_examples/extra/animate/background/ContainerView';
-import AlertDialog from '../../sections/_examples/mui/dialog/AlertDialog';
-import CarouselCenterMode from '../../sections/_examples/extra/carousel/CarouselCenterMode';
-import ComponentHero from '../../sections/_examples/ComponentHero';
+import { Typography, Grid, Stack, Card, Divider } from '@mui/material';
+import { StyledBg, StyledContainer, StyledGlobalCard } from '../../theme/styles/default-styles';
 // sections
 import HowickWelcome from '../components/DashboardWidgets/HowickWelcome';
 import HowickWidgets from '../components/DashboardWidgets/HowickWidgets';
-import ProductionLog from '../components/Charts/ProductionLog';
-import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
-
-// assets
+// assets & hooks
 import { useDispatch, useSelector } from '../../redux/store';
 import { getCount } from '../../redux/slices/dashboard/count';
+// components
+import ChartBar from '../components/Charts/ChartBar';
+import ProductionLog from '../components/Charts/ProductionLog';
+import HowickOperators from '../components/DashboardWidgets/OperatorsWidget';
+import ChartColumnNegative from '../components/Charts/ChartColumnNegative';
+// constants
+import { TITLES } from '../../constants/default-constants';
+// dummy data
+import { _appAuthors } from '../../_mock/arrays/_app';
+// styles
+import { varFade } from '../../components/animate';
 
 // config-global
 import { CONFIG } from '../../config-global';
@@ -35,8 +27,6 @@ import { CONFIG } from '../../config-global';
 
 export default function GeneralAppPage() {
   const dispatch = useDispatch();
-  const { user } = useAuthContext();
-  const theme = useTheme();
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
   const enviroment = CONFIG.ENV.toLowerCase();
 
@@ -46,7 +36,7 @@ export default function GeneralAppPage() {
   const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
-  
+
   if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {
       modelWiseMachineNumber.push(model.count);
@@ -55,7 +45,6 @@ export default function GeneralAppPage() {
     });
   }
 
-  
   if (count && count.countryWiseMachineCount) {
     count.countryWiseMachineCount.map((customer) => {
       countryWiseMachineCountNumber.push(customer.count);
@@ -64,7 +53,6 @@ export default function GeneralAppPage() {
     });
   }
 
-  
   if (count && count.countryWiseSiteCount) {
     count.countryWiseSiteCount.map((site) => {
       countryWiseSiteCountNumber.push(site.count);
@@ -73,84 +61,12 @@ export default function GeneralAppPage() {
     });
   }
 
-  const ModelData = {
-    options: {
-      chart: {
-        id: 'basic-bar',
-      },
-      xaxis: {
-        categories: modelWiseMachineModel,
-      },
-    },
-    series: [
-      {
-        name: 'Machine Models',
-        data: modelWiseMachineNumber,
-      },
-    ],
-  };
-
-  const CustomerData = {
-    options: {
-      chart: {
-        id: 'basic-bar',
-      },
-      xaxis: {
-        categories: countryWiseMachineCountCountries,
-      },
-    },
-    series: [
-      {
-        name: 'Customers',
-        data: countryWiseMachineCountNumber,
-      },
-    ],
-  };
-
-  const SiteData = {
-    options: {
-      chart: {
-        id: 'basic-bar',
-      },
-      xaxis: {
-        categories: countryWiseSiteCountCountries,
-      },
-    },
-    series: [
-      {
-        name: 'Sites',
-        data: countryWiseSiteCountNumber,
-      },
-    ],
-  };
-
   useLayoutEffect(() => {
     dispatch(getCount());
   }, [dispatch]);
-  console.log('ModelData.options : ', ModelData.options);
-  console.log('ModelData.series : ', ModelData.series);
-  console.log('CustomerData.options : ', CustomerData.options);
 
   return (
-    <Container
-      maxWidth={false}
-      p={0}
-      sx={{
-        backgroundImage: `url(../../assets/illustrations/illustration_howick_icon.svg)`,
-        backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'top right',
-        backgroundSize: 'auto 90%',
-        backgroundOpacity: 0.1,
-        backgroundAttachment: 'fixed',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        padding: 0,
-        alignContent: 'center',
-        color: 'text.primary',
-      }}
-    >
+    <StyledContainer maxWidth={false} p={0}>
       <Grid container item sx={{ justifyContent: 'center' }}>
         <Grid container item xs={12} md={20} lg={20} spacing={3}>
           <Grid
@@ -163,10 +79,7 @@ export default function GeneralAppPage() {
               position: 'relative',
             }}
           >
-            <HowickWelcome
-              title={`CUSTOMER \n SERVICE & SUPPORT`}
-              description="Providing seamless and hassle-free experience that exceeds your expectations and helps you to achieve your business goals."
-            />
+            <HowickWelcome title={TITLES.WELCOME} description={TITLES.WELCOME_DESC} />
           </Grid>
         </Grid>
 
@@ -224,17 +137,7 @@ export default function GeneralAppPage() {
           {/* Global widget */}
           <Grid container item xs={12} md={16} spacing={3} mt={2}>
             <Grid item xs={12} md={6} lg={6}>
-              <Card
-                variants={varFade().inDown}
-                sx={{
-                  px: 3,
-                  mb: 3,
-                  backgroundImage: ` url(../../assets/illustrations/world.svg)`,
-                  backgroundRepeat: 'no-repeat',
-                  backgroundPosition: 'top right',
-                  backgroundSize: 'auto 90%',
-                }}
-              >
+              <StyledGlobalCard variants={varFade().inDown}>
                 <Stack sx={{ pt: 2 }}>
                   <Typography variant="h6">Machine by Countries</Typography>
                 </Stack>
@@ -247,7 +150,7 @@ export default function GeneralAppPage() {
                   width="100%"
                   color="warning"
                 />
-              </Card>
+              </StyledGlobalCard>
             </Grid>
 
             {/* Machine Performance */}
@@ -270,58 +173,55 @@ export default function GeneralAppPage() {
               <StyledBg />
             </Grid>
 
-            {enviroment !== 'live' && (
-              <>
-              {/* Production Log */}
-              <Grid item xs={12} md={6} lg={8}>
-                <ProductionLog
-                  title="Production Log"
-                  chart={{
-                    categories: [
-                      '2:00:00PM',
-                      '2:30:00PM',
-                      '2:45:00PM',
-                      '4:00:00PM',
-                      '7:00:00AM',
-                      '10:05:00AM',
-                    ],
-                    series: [
-                      {
-                        day: '28-June-2023',
-                        data: [
-                          { name: 'Operator 1', data: [5000, 0, 3000, 0, 2000, 0] },
-                          { name: 'Operator 2', data: [5000, 0, 4000, 0, 3000, 0] },
-                          { name: 'Operator 3', data: [5500, 0, 2500, 0, 1500, 0] },
-                        ],
-                      },
-                    ],
-                  }}
-                  sx={{ bg: 'transparent' }}
-                />
-                <StyledBg />
-              </Grid>
+            {/* Production Log */}
+            {/* hide this in the live, but show in development and test  */}
+            {/* don't delete, will be activated once integrated with the HLC */}
+            <Grid item xs={12} md={6} lg={8}>
+              <ProductionLog
+                title="Production Log"
+                chart={{
+                  categories: [
+                    '2:00:00PM',
+                    '2:30:00PM',
+                    '2:45:00PM',
+                    '4:00:00PM',
+                    '7:00:00AM',
+                    '10:05:00AM',
+                  ],
+                  series: [
+                    {
+                      day: '28-June-2023',
+                      data: [
+                        { name: 'Operator 1', data: [5000, 0, 3000, 0, 2000, 0] },
+                        { name: 'Operator 2', data: [5000, 0, 4000, 0, 3000, 0] },
+                        { name: 'Operator 3', data: [5500, 0, 2500, 0, 1500, 0] },
+                      ],
+                    },
+                  ],
+                }}
+                sx={{ bg: 'transparent' }}
+              />
+              <StyledBg />
+            </Grid>
 
-              {/* Operators */}
-              <Grid item xs={12} lg={4}>
-                <Grid item>
-                  <HowickOperators title="Operators" list={_appAuthors} />
-                </Grid>
+            {/* Operators */}
+            {/* hide this in the live, but show in development and test  */}
+            {/* don't delete, will be activated once integrated with the HLC */}
+            <Grid item xs={12} lg={4}>
+              <Grid item>
+                <HowickOperators title="Operators" list={_appAuthors} />
               </Grid>
-
-              {/* extra */}
-              <Grid item xs={12} md={6} lg={12}>
-                <ChartColumnNegative optionsData={modelWiseMachineModel} />
-                <StyledBg />
-              </Grid>
-              </>
-            )}    
-
+            </Grid>
           </Grid>
         </Grid>
 
+        {/* hide this in the live, but show in development and test for now  */}
+        <Grid item xs={12} md={6} lg={12}>
+          <ChartColumnNegative optionsData={modelWiseMachineModel} />
+          <StyledBg />
+        </Grid>
 
         {/* TESTs DONT REMOVE */}
-
         {/* <ContainerView selectVariant="panLeft">
           <Grid container spacing={3}>
               <VerticalLinearStepper/>
@@ -336,6 +236,6 @@ export default function GeneralAppPage() {
           <AppTopInstalledCountries title="Top Installed Countries" list={_appInstalled} />
         </Grid> */}
       </Grid>
-    </Container>
+    </StyledContainer>
   );
 }

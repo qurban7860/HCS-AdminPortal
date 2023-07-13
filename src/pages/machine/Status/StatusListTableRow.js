@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
-import { Switch, Stack, Button, TableRow,  MenuItem, TableCell, Link, } from '@mui/material';
+import { Switch, Stack, Button, TableRow, MenuItem, TableCell, Link } from '@mui/material';
 // components
 import Iconify from '../../../components/iconify/Iconify';
 import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate } from '../../../utils/formatTime';
-import LinkTableCell from '../../components/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ export default function StatusListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt} = row;
+  const { name, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -53,7 +53,7 @@ export default function StatusListTableRow({
   return (
     <>
       <TableRow hover selected={selected}>
-        <LinkTableCell onClick={onViewRow}  align='left' param={name}/>
+        <LinkTableCell onClick={onViewRow} align="left" param={name} />
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>

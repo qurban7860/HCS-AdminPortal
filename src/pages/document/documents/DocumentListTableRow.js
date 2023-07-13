@@ -15,7 +15,7 @@ import {
   Link,
 } from '@mui/material';
 // utils
-import { styled, alpha ,useTheme } from '@mui/material/styles';
+import { styled, alpha, useTheme } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 import { fCurrency } from '../../../utils/formatNumber';
 // components
@@ -23,7 +23,7 @@ import Iconify from '../../../components/iconify';
 import MenuPopover from '../../../components/menu-popover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
-import LinkTableCell from '../../components/LinkTableCell';
+import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { setCustomerDocumentViewFormVisibility } from '../../../redux/slices/document/customerDocument';
 import { setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
 
@@ -41,10 +41,10 @@ DocumentListTableRow.propTypes = {
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
-    backgroundColor: "white",
+    backgroundColor: 'white',
   },
   '&:nth-of-type(even)': {
-    backgroundColor: "#f4f6f866",
+    backgroundColor: '#f4f6f866',
   },
 }));
 
@@ -57,7 +57,16 @@ export default function DocumentListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { displayName, docType , machine, customer, docCategory , customerAccess, isActive, createdAt } = row;
+  const {
+    displayName,
+    docType,
+    machine,
+    customer,
+    docCategory,
+    customerAccess,
+    isActive,
+    createdAt,
+  } = row;
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -79,9 +88,12 @@ export default function DocumentListTableRow({
     setOpenPopover(null);
   };
 
-  const handleViewCustomerFormVisibility = () => {dispatch(setCustomerDocumentViewFormVisibility(false))}
-  const handleViewMachineFormVisibility = () => {dispatch(setCustomerDocumentViewFormVisibility(false))}
-
+  const handleViewCustomerFormVisibility = () => {
+    dispatch(setCustomerDocumentViewFormVisibility(false));
+  };
+  const handleViewMachineFormVisibility = () => {
+    dispatch(setCustomerDocumentViewFormVisibility(false));
+  };
 
   return (
     <>
@@ -89,18 +101,24 @@ export default function DocumentListTableRow({
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
-        <LinkTableCell align='left' param={displayName} onClick={onViewRow}/>
-        <TableCell align="left" >{docType?.name}</TableCell>
-        <TableCell align="left" >{docCategory?.name}</TableCell>
-        <TableCell align="center" > <Switch checked = { customerAccess } disabled size="small" /> </TableCell>  
-        <TableCell align="center" > <Switch checked = { isActive } disabled size="small" /> </TableCell>  
-        <TableCell align="right" >{fDate(createdAt)}</TableCell>
+        <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
+        <TableCell align="left">{docType?.name}</TableCell>
+        <TableCell align="left">{docCategory?.name}</TableCell>
+        <TableCell align="center">
+          {' '}
+          <Switch checked={customerAccess} disabled size="small" />{' '}
+        </TableCell>
+        <TableCell align="center">
+          {' '}
+          <Switch checked={isActive} disabled size="small" />{' '}
+        </TableCell>
+        <TableCell align="right">{fDate(createdAt)}</TableCell>
         {/* <TableCell align="center">
           <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
             <Iconify icon="eva:more-vertical-fill" />
           </IconButton>
         </TableCell>   */}
-      </StyledTableRow> 
+      </StyledTableRow>
 
       {/* <MenuPopover
         open={openPopover}

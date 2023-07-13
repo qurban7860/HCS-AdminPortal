@@ -23,7 +23,7 @@ import Iconify from '../../components/iconify';
 import MenuPopover from '../../components/menu-popover';
 import ConfirmDialog from '../../components/confirm-dialog';
 import Label from '../../components/label';
-import LinkTableCellWithIcon from '../components/LinkTableCellWithIcon';
+import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
 import { useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
@@ -56,7 +56,7 @@ export default function CustomerListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, tradingName, mainSite, isActive, type, createdAt , verifications } = row;
+  const { name, tradingName, mainSite, isActive, type, createdAt, verifications } = row;
   const address = [];
   if (mainSite?.address?.city) {
     address.push(mainSite?.address?.city);
@@ -87,78 +87,38 @@ export default function CustomerListTableRow({
   };
 
   return (
-    <>
-      <StyledTableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
-        {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
-        <TableCell align="right">
-          {type === 'SP' ? (
-            <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled', mr: -2 }} width="15px" />
-          ) : (
-            ''
-          )}
-        </TableCell>
-        <LinkTableCellWithIcon align="left" onClick={onViewRow} param={name} isVerified={verifications?.length > 0}/>
-        <TableCell>{tradingName.map((value) => (typeof value === 'string' ? (value.trim() !== '') && <Chip label={value} sx={{mx:0.3}} /> : ''))}</TableCell>
-        <TableCell>
-          {Object.values(address ?? {})
-            .map((value) => (typeof value === 'string' ? value.trim() : ''))
-            .filter((value) => value !== '')
-            .join(', ')}
-        </TableCell>
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell>{fDate(createdAt)}</TableCell>
-        {/* <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>   */}
-      </StyledTableRow>
-
-      {/* <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover> */}
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      /> */}
-    </>
+    <StyledTableRow hover selected={selected}>
+      <TableCell align="right">
+        {type === 'SP' ? (
+          <Iconify icon="octicon:star-24" sx={{ color: 'text.disabled', mr: -2 }} width="15px" />
+        ) : (
+          ''
+        )}
+      </TableCell>
+      <LinkTableCellWithIcon
+        align="left"
+        onClick={onViewRow}
+        param={name}
+        isVerified={verifications?.length > 0}
+      />
+      <TableCell>
+        {tradingName.map((value) =>
+          typeof value === 'string'
+            ? value.trim() !== '' && <Chip label={value} sx={{ mx: 0.3 }} />
+            : ''
+        )}
+      </TableCell>
+      <TableCell>
+        {Object.values(address ?? {})
+          .map((value) => (typeof value === 'string' ? value.trim() : ''))
+          .filter((value) => value !== '')
+          .join(', ')}
+      </TableCell>
+      <TableCell align="center">
+        {' '}
+        <Switch checked={isActive} disabled size="small" />{' '}
+      </TableCell>
+      <TableCell>{fDate(createdAt)}</TableCell>
+    </StyledTableRow>
   );
 }

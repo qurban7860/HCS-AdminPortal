@@ -3,6 +3,8 @@ export const ICONS = {
   size: '30px',
   variant: 'overline',
   badge: 'body2',
+  // default icons
+  warning: 'mdi:alert-circle-outline',
 
   // ------------------------------------------------------------
 
@@ -72,5 +74,59 @@ export const ICONS = {
     icon: 'mdi:google-maps',
     color: 'red',
     heading: 'Open Map',
+  },
+  // ------------------------------------------------------------
+
+  // @root - Machine - settings
+  // common settings
+  MACHINE_CATEGORIES: {
+    icon: 'mdi:shape-plus',
+    heading: 'Machine Categories',
+  },
+  MACHINE_MODELS: {
+    icon: 'mdi:cube-outline',
+    heading: 'Machine Models',
+  },
+  MACHINE_SUPPLIERS: {
+    icon: 'mdi:circle-opacity',
+    heading: 'Machine Suppliers',
+  },
+  MACHINE_STATUS: {
+    icon: 'mdi:list-status',
+    heading: 'Machine Status',
+  },
+  // technical settings
+  TECHPARAM_CATEGORIES: {
+    icon: 'mdi:table-cog',
+    heading: 'Technical Parameter Categories',
+  },
+  PARAMETERS: {
+    icon: 'mdi:abacus',
+    heading: 'Parameters',
+  },
+  // tools information
+  TOOLS: {
+    icon: 'mdi:tools',
+    heading: 'Tools',
+  },
+
+  // @root - Settings - settings
+  // document settings
+  DOCUMENT_TYPE: {
+    icon: 'mdi:rename',
+    heading: 'Document Type',
+  },
+  DOCUMENT_CATEGORY: {
+    icon: 'ic:round-category',
+    heading: 'Document Category',
+  },
+  // security settings
+  SECURITY_ROLES: {
+    icon: 'carbon:user-role',
+    heading: 'User Roles',
+  },
+  SIGNIN_LOGS: {
+    icon: 'mdi:clipboard-text',
+    heading: 'User Sign In Logs',
   },
 };

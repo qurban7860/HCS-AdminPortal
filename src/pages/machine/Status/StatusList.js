@@ -44,7 +44,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 // sections
 import StatusListTableRow from './StatusListTableRow';
 import StatusListTableToolbar from './StatusListTableToolbar';
-import { Cover } from '../../components/Cover';
+import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------

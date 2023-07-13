@@ -35,10 +35,10 @@ import {
 } from '../../../redux/slices/customer/note';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import Iconify from '../../../components/iconify';
-import ViewFormAudit from '../../components/ViewFormAudit';
-import ViewFormField from '../../components/ViewFormField';
-import ViewFormSwitch from '../../components/ViewFormSwitch';
-import ViewFormEditDeleteButtons from '../../components/ViewFormEditDeleteButtons';
+import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
+import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
+import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { useSnackbar } from '../../../components/snackbar';
 
 NoteViewForm.propTypes = {
