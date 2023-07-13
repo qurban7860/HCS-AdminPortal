@@ -3,66 +3,79 @@ import * as Yup from 'yup';
 import { m } from 'framer-motion';
 import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { LoadingButton } from '@mui/lab';
 import {
   Box,
   Card,
   Grid,
   Stack,
+  Typography,
   Checkbox,
+  Container,
   FormControlLabel,
   Autocomplete,
+  DialogTitle,
+  Dialog,
+  InputAdornment,
   TextField,
 } from '@mui/material';
-import { MuiChipsInput } from 'mui-chips-input';
-// hooks
-import { useSnackbar } from '../../components/snackbar';
+import { MuiChipsInput } from 'mui-chips-input'
+
 // slice
 import { addCustomer } from '../../redux/slices/customer/customer';
 import { getSPContacts } from '../../redux/slices/customer/contact';
-// schema
-import { AddCustomerSchema } from './schemas/AddCustomerSchema';
 // routes
-import { PATH_CUSTOMER } from '../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD } from '../../routes/paths';
 // components
-import FormProvider, { RHFAutocomplete, RHFTextField } from '../../components/hook-form';
+import { useSnackbar } from '../../components/snackbar';
+import FormProvider, {
+  RHFSwitch,
+  RHFSelect,
+  RHFAutocomplete,
+  RHFTextField,
+} from '../../components/hook-form';
 import { MotionContainer, varBounce } from '../../components/animate';
-import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import ToggleButtons from '../components/DocumentForms/ToggleButtons';
-import { AddFormLabel } from '../components/DocumentForms/FormLabel';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // asset
 import { countries } from '../../assets/data';
 // util
 import { Cover } from '../components/Defaults/Cover';
-import { FORMLABELS } from '../../constants/default-constants';
-import { FORMLABELS as formLABELS } from '../../constants/customer-constants';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+
 // ----------------------------------------------------------------------
 
 CustomerAddForm.propTypes = {
   isEdit: PropTypes.bool,
   readOnly: PropTypes.bool,
-  currentCustomer: PropTypes.object,
-};
+  currentCustomer: PropTypes.object
+}
 
 export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
+
   const { spContacts } = useSelector((state) => state.contact);
-  const filteredContacts = spContacts.filter((contact) => contact.isActive === true);
+
   const [contactFlag, setCheckboxFlag] = useState(false);
-  const [chips, setChips] = useState([]);
+  const [chips, setChips] = useState([])
 
   const toggleCheckboxFlag = () => setCheckboxFlag((value) => !value);
+
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const { enqueueSnackbar } = useSnackbar();
+
+  const numberRegExp = /^[0-9]+$/;
+
   const [phone, setPhone] = useState('');
   const [fax, setFaxVal] = useState('');
   const [country, setCountryVal] = useState('');
@@ -71,6 +84,52 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   const [accountManVal, setAccountManVal] = useState('');
   const [supportManVal, setSupportManVal] = useState('');
   const [projectManVal, setProjectManVal] = useState('');
+
+  const AddCustomerSchema = Yup.object().shape({
+    name: Yup.string().trim('Leading and trailing spaces are not allowed')
+    .min(2, 'Name must be at least 2 characters long')
+    .max(40, 'Name must not exceed 40 characters')
+    .required('Name is required'),
+    
+    // tradingName: Yup.string(),
+    mainSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    sites: Yup.array(),
+    contacts: Yup.array(),
+    accountManager: Yup.string().nullable(),
+    projectManager: Yup.string().nullable(),
+    supportManager: Yup.string().nullable(),
+    // site details
+    billingSite: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    // phone: Yup.string(),
+    email: Yup.string()
+      .trim('The contact name cannot include leading and trailing spaces')
+      .email('Email must be a valid email address'),
+    // fax: Yup.string(),
+    website: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    street: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    suburb: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    city: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    postcode: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    region: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    // country: Yup.string().nullable(true),
+
+    // billing contact details
+    billingFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    billingLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    billingTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    billingContactTypes: Yup.array(),
+    // billingContactPhone: Yup.string(),
+    billingContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
+
+    // technical contact details
+    technicalFirstName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    technicalLastName: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    technicalTitle: Yup.string().trim('Leading and trailing spaces are not allowed'),
+    technicalContactTypes: Yup.array(),
+    // technicalContactPhone: Yup.string(),
+    technicalContactEmail: Yup.string().email('Email must be a valid email address').trim('Leading and trailing spaces are not allowed'),
+    isActive: Yup.boolean(),
+  });
 
   const defaultValues = useMemo(
     () => ({
@@ -92,6 +151,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     [AddCustomerSchema]
   );
 
+  // console.log('samecheckboxflag', defaultValues.contactFlag);
+
   const methods = useForm({
     resolver: yupResolver(AddCustomerSchema),
     defaultValues,
@@ -110,11 +171,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   useLayoutEffect(() => {
     dispatch(getSPContacts());
   }, [dispatch]);
-
-  // --------------------------------handle functions--------------------------------
-  const toggleCancel = () => {
-    navigate(PATH_CUSTOMER.list);
-  };
 
   const handlePhoneChange = (newValue) => {
     matchIsValidTel(newValue);
@@ -142,6 +198,9 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
     if (newValue.length < 20) {
       setTechnicalContactPhone(newValue);
     }
+  };
+  const toggleCancel = () => {
+    navigate(PATH_CUSTOMER.list);
   };
 
   const onSubmit = async (data) => {
@@ -174,10 +233,11 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
         data.supportManager = supportManVal._id;
       }
       // console.log('customer : ', data);
-      dispatch(addCustomer(data));
+      const response = await dispatch(addCustomer(data));
+      
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_CUSTOMER.view(null));
+      navigate(PATH_CUSTOMER.view(response.data.Customer._id));
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
@@ -185,17 +245,29 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   const handleChipChange = (newChips) => {
-    console.log('newChips : ', newChips);
-    setChips(newChips);
-  };
+    console.log("newChips : ",newChips)
+    setChips(newChips)
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <StyledCardContainer>
-        <Cover name={FORMLABELS.COVER.NEW_CUSTOMER} />
-      </StyledCardContainer>
+      {/* <Grid container spacing={3}>
+        <CustomerDashboardNavbar/>
+      </Grid> */}
+      {/* <CustomBreadcrumbs
+            heading=" New Customer "
+            sx={{ mb: -2, mt: 3 }}
+          /> */}
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+        }}
+      >
+        <Cover name="New Customer" icon="mdi:user" />
+      </Card>
       <Grid sx={{ mt: 3 }}>
-        {/* basic information */}
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
             <Box
@@ -207,20 +279,12 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField
-                name={formLABELS.CUSTOMER.NAME.name}
-                label={formLABELS.CUSTOMER.NAME.label}
-              />
+              <RHFTextField name="name" label="Customer Name" />
 
               {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
-              <MuiChipsInput
-                name={formLABELS.CUSTOMER.TRADING_NAME.name}
-                label={formLABELS.CUSTOMER.TRADING_NAME.label}
-                value={chips}
-                onChange={handleChipChange}
-              />
-            </Box>
-            <Box
+              <MuiChipsInput name="tradingName" label="Trading Name"  value={chips} onChange={handleChipChange} />
+              </Box>
+              <Box
               rowGap={3}
               columnGap={2}
               display="grid"
@@ -232,36 +296,37 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
               {/* <RHFTextField name="phone" label="Phone" /> */}
               <MuiTelInput
                 value={phone}
-                name={formLABELS.PHONE.name}
-                label={formLABELS.PHONE.label}
-                flagSize={formLABELS.PHONE.flagSize}
+                name="phone"
+                label="Phone Number"
+                flagSize="medium"
                 onChange={handlePhoneChange}
                 forceCallingCode
-                defaultCountry={formLABELS.PHONE.defaultCountry}
+                defaultCountry="NZ"
               />
 
               {/* <RHFTextField name="fax" label="Fax" /> */}
               <MuiTelInput
                 value={fax}
-                name={formLABELS.FAX.name}
-                label={formLABELS.FAX.label}
-                flagSize={formLABELS.FAX.flagSize}
+                name="fax"
+                label="Fax"
+                flagSize="medium"
                 onChange={handleFaxChange}
                 forceCallingCode
-                defaultCountry={formLABELS.FAX.defaultCountry}
+                defaultCountry="NZ"
               />
 
-              <RHFTextField name={formLABELS.EMAIL.name} label={formLABELS.EMAIL.label} />
+              <RHFTextField name="email" label="Email" />
 
-              <RHFTextField name={formLABELS.WEBSITE.name} label={formLABELS.WEBSITE.label} />
+              <RHFTextField name="website" label="Website" />
             </Box>
           </Stack>
         </Card>
 
-        {/* address information */}
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
-            <AddFormLabel content={FORMLABELS.ADDRESS} />
+            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+              Address Information
+            </Typography>
             <Box
               rowGap={3}
               columnGap={2}
@@ -271,18 +336,32 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField name={formLABELS.STREET.name} label={formLABELS.STREET.label} />
-              <RHFTextField name={formLABELS.SUBURB.name} label={formLABELS.SUBURB.label} />
-              <RHFTextField name={formLABELS.CITY.name} label={formLABELS.CITY.label} />
-              <RHFTextField name={formLABELS.POSTCODE.name} label={formLABELS.POSTCODE.label} />
-              <RHFTextField name={formLABELS.REGION.name} label={formLABELS.REGION.label} />
+              <RHFTextField name="street" label="Street" />
+
+              <RHFTextField name="suburb" label="Suburb" />
+
+              <RHFTextField name="city" label="City" />
+
+              <RHFTextField name="postcode" label="Post Code" />
+
+              <RHFTextField name="region" label="Region" />
+
+              {/* <RHFAutocomplete
+                  name="country"
+                  label="Country"
+                  freeSolo
+                  options={countries.map((country) => country.label)}
+                  // getOptionLabel={(option) => option.title}
+
+                  ChipProps={{ size: 'small' }}
+                />  */}
 
               <RHFAutocomplete
-                id={formLABELS.COUNTRY.id}
+                id="country-select-demo"
                 options={countries}
                 value={country || null}
-                name={formLABELS.COUNTRY.name}
-                label={formLABELS.COUNTRY.label}
+                name="country"
+                label="Country"
                 autoHighlight
                 isOptionEqualToValue={(option, value) => option.lable === value.lable}
                 onChange={(event, newValue) => {
@@ -305,18 +384,18 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     {option.label} ({option.code}) +{option.phone}
                   </Box>
                 )}
-                renderInput={(params) => (
-                  <TextField {...params} label={formLABELS.COUNTRY.select} />
-                )}
+                renderInput={(params) => <TextField {...params} label="Choose a country" />}
               />
             </Box>
           </Stack>
         </Card>
 
-        {/* billing contact information */}
         <Card sx={{ p: 3, mb: 3 }}>
           <Stack spacing={3}>
-            <AddFormLabel content={FORMLABELS.BILLING_CONTACT} />
+            <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+              Billing Contact Information
+            </Typography>
+
             <Box
               rowGap={3}
               columnGap={2}
@@ -326,49 +405,38 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 sm: 'repeat(2, 1fr)',
               }}
             >
-              <RHFTextField
-                name={formLABELS.BILLING_CONTACT.FIRSTNAME.name}
-                label={formLABELS.BILLING_CONTACT.FIRSTNAME.label}
-              />
+              <RHFTextField name="billingFirstName" label="First Name" />
 
-              <RHFTextField
-                name={formLABELS.BILLING_CONTACT.LASTNAME.name}
-                label={formLABELS.BILLING_CONTACT.LASTNAME.label}
-              />
+              <RHFTextField name="billingLastName" label="Last Name" />
 
-              <RHFTextField
-                name={formLABELS.BILLING_CONTACT.TITLE.name}
-                label={formLABELS.BILLING_CONTACT.TITLE.label}
-              />
+              <RHFTextField name="billingTitle" label="Title" />
 
               {/* <RHFTextField name="billingContactPhone" label="Contact Phone" /> */}
               <MuiTelInput
                 value={billingContactPhone}
-                name={formLABELS.BILLING_CONTACT.PHONE.name}
-                label={formLABELS.BILLING_CONTACT.PHONE.label}
-                flagSize={formLABELS.BILLING_CONTACT.PHONE.flagSize}
+                name="billingContactPhone"
+                label="Contact Phone"
+                flagSize="medium"
                 onChange={handleBillingContactPhoneChange}
                 forceCallingCode
-                defaultCountry={formLABELS.BILLING_CONTACT.PHONE.defaultCountry}
+                defaultCountry="NZ"
               />
 
-              <RHFTextField
-                name={formLABELS.BILLING_CONTACT.EMAIL.name}
-                label={formLABELS.BILLING_CONTACT.EMAIL.label}
-              />
+              <RHFTextField name="billingContactEmail" label="Contact Email" />
             </Box>
           </Stack>
         </Card>
 
-        {/* technical contact information */}
         <Card component={MotionContainer} sx={{ p: 3, mb: 3 }}>
           <m.div variants={varBounce().in}>
             <Stack spacing={3}>
               <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={3}>
-                <AddFormLabel content={FORMLABELS.TECHNICAL_CONTACT} />
+                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+                  Technical Contact Information
+                </Typography>
 
                 <FormControlLabel
-                  label={formLABELS.SAME_AS}
+                  label="Same as billing contact"
                   control={<Checkbox checked={contactFlag} onClick={toggleCheckboxFlag} />}
                   sx={{ mb: -10 }}
                 />
@@ -384,48 +452,36 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     sm: 'repeat(2, 1fr)',
                   }}
                 >
-                  <RHFTextField
-                    name={formLABELS.TECHNICAL_CONTACT.FIRSTNAME.name}
-                    label={formLABELS.TECHNICAL_CONTACT.FIRSTNAME.label}
-                  />
+                  <RHFTextField name="technicalFirstName" label="First Name" />
 
-                  <RHFTextField
-                    name={formLABELS.TECHNICAL_CONTACT.LASTNAME.name}
-                    label={formLABELS.TECHNICAL_CONTACT.LASTNAME.label}
-                  />
+                  <RHFTextField name="technicalLastName" label="Last Name" />
 
-                  <RHFTextField
-                    name={formLABELS.TECHNICAL_CONTACT.TITLE.name}
-                    label={formLABELS.TECHNICAL_CONTACT.TITLE.label}
-                  />
+                  <RHFTextField name="technicalTitle" label="Title" />
 
                   {/* <RHFTextField name="technicalContactPhone" label="Contact Phone" /> */}
                   <MuiTelInput
                     value={technicalContactPhone}
-                    name={formLABELS.TECHNICAL_CONTACT.PHONE.name}
-                    label={formLABELS.TECHNICAL_CONTACT.PHONE.label}
-                    flagSize={formLABELS.TECHNICAL_CONTACT.PHONE.flagSize}
+                    name="technicalContactPhone"
+                    label="Contact Phone"
+                    flagSize="medium"
                     onChange={handleTechnicalContactPhoneChange}
                     forceCallingCode
-                    defaultCountry={formLABELS.TECHNICAL_CONTACT.PHONE.defaultCountry}
+                    defaultCountry="NZ"
                   />
 
-                  <RHFTextField
-                    name={formLABELS.TECHNICAL_CONTACT.EMAIL.name}
-                    label={formLABELS.TECHNICAL_CONTACT.EMAIL.label}
-                  />
+                  <RHFTextField name="technicalContactEmail" label="Contact Email" />
                 </Box>
               )}
             </Stack>
           </m.div>
         </Card>
-
-        {/* howick resources */}
         <Grid container spacing={3}>
           <Grid item xs={18} md={12}>
-            <Card sx={{ p: 3, mb: 3 }}>
+            <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                <AddFormLabel content={FORMLABELS.HOWICK} />
+                <Typography variant="overline" fontSize="1rem" sx={{ color: 'text.secondary' }}>
+                  Howick Resources
+                </Typography>
 
                 <Box
                   rowGap={3}
@@ -435,16 +491,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     xs: 'repeat(1, 1fr)',
                     sm: 'repeat(2, 1fr)',
                   }}
-                  mb={2}
                 >
                   <Autocomplete
                     // freeSolo
                     value={accountManVal || null}
-                    options={filteredContacts}
+                    options={spContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
-                      `${option.firstName && option.firstName} ${
-                        option.lastName && option.lastName
+                      `${option.firstName ? option.firstName : ''} ${
+                        option.lastName ? option.lastName : ''
                       }`
                     }
                     onChange={(event, newValue) => {
@@ -456,19 +511,18 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     }}
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>
-                        {option.firstName && option.firstName} {option.lastName && option.lastName}
+                        {option.firstName ? option.firstName : ''}{' '}
+                        {option.lastName ? option.lastName : ''}
                       </li>
                     )}
                     id="controllable-states-demo"
-                    renderInput={(params) => (
-                      <TextField {...params} label={formLABELS.CUSTOMER.ACCOUNT} />
-                    )}
+                    renderInput={(params) => <TextField {...params} label="Account Manager" />}
                     ChipProps={{ size: 'small' }}
                   />
                   <Autocomplete
                     // freeSolo
                     value={projectManVal || null}
-                    options={filteredContacts}
+                    options={spContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
                       `${option.firstName ? option.firstName : ''} ${
@@ -484,24 +538,22 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     }}
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>
-                        {option.firstName && option.firstName}
-                        {option.lastName && option.lastName}
+                        {option.firstName ? option.firstName : ''}{' '}
+                        {option.lastName ? option.lastName : ''}
                       </li>
                     )}
                     id="controllable-states-demo"
-                    renderInput={(params) => (
-                      <TextField {...params} label={formLABELS.CUSTOMER.PROJECT} />
-                    )}
+                    renderInput={(params) => <TextField {...params} label="Project Manager" />}
                     ChipProps={{ size: 'small' }}
                   />
                   <Autocomplete
                     // freeSolo
                     value={supportManVal || null}
-                    options={filteredContacts}
+                    options={spContacts}
                     isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
                     getOptionLabel={(option) =>
-                      `${option.firstName && option.firstName} ${
-                        option.lastName && option.lastName
+                      `${option.firstName ? option.firstName : ''} ${
+                        option.lastName ? option.lastName : ''
                       }`
                     }
                     onChange={(event, newValue) => {
@@ -513,18 +565,34 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                     }}
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>
-                        {option.firstName && option.firstName}
-                        {option.lastName && option.lastName}
+                        {option.firstName ? option.firstName : ''}{' '}
+                        {option.lastName ? option.lastName : ''}
                       </li>
                     )}
                     id="controllable-states-demo"
-                    renderInput={(params) => (
-                      <TextField {...params} label={formLABELS.CUSTOMER.SUPPORT} />
-                    )}
+                    renderInput={(params) => <TextField {...params} label="Support Manager" />}
                     ChipProps={{ size: 'small' }}
                   />
                 </Box>
-                <ToggleButtons name={FORMLABELS.isACTIVE.name} />
+                <RHFSwitch
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Active
+                    </Typography>
+                  }
+                />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Card>

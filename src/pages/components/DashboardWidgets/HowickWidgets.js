@@ -16,12 +16,20 @@ HowickWidgets.propTypes = {
   color: PropTypes.string,
   title: PropTypes.string,
   total: PropTypes.number,
+  notVerifiedTitle: PropTypes.string,
+  notVerifiedCount: PropTypes.number,
+  connectableTitle: PropTypes.number,
+  connectableCount: PropTypes.number,
   icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
 };
 
 export default function HowickWidgets({
   title,
   total,
+  notVerifiedTitle,
+  notVerifiedCount,
+  connectableTitle,
+  connectableCount,
   icon,
   color = 'primary',
   chart,
@@ -61,6 +69,7 @@ export default function HowickWidgets({
       alignItems="center"
       sx={{
         p: 3,
+        height:'100%',
         borderRadius: 2,
         overflow: 'hidden',
         position: 'relative',
@@ -78,6 +87,8 @@ export default function HowickWidgets({
         <Typography variant="body1" sx={{ opacity: 0.72 }}>
           {title}
         </Typography>
+        {notVerifiedTitle && notVerifiedCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{notVerifiedTitle} : {notVerifiedCount}</Typography>}
+        {connectableTitle && connectableCount && <Typography variant="body2" sx={{ opacity: 0.72 }}>{connectableTitle} : {connectableCount}</Typography>}
       </Box>
 
       <Iconify

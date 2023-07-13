@@ -90,6 +90,8 @@ export default function GeneralAppPage() {
               <HowickWidgets
                 title="Customers"
                 total={count?.customerCount || 0}
+                notVerifiedTitle="Not Verified"
+                notVerifiedCount={count?.nonVerifiedCustomerCount}
                 icon="mdi:account-group"
                 color="warning"
                 chart={{
@@ -114,6 +116,10 @@ export default function GeneralAppPage() {
               <HowickWidgets
                 title="Machines"
                 total={count?.machineCount || 0}
+                notVerifiedTitle="Not Verified"
+                notVerifiedCount={count?.nonVerifiedMachineCount}
+                connectableTitle="Connectables" 
+                connectableCount={count?.connectAbleMachinesCount}
                 icon="mdi:window-shutter-settings"
                 color="info"
                 chart={{
