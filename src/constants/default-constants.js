@@ -11,7 +11,7 @@ export const FORMLABELS = {
     name: 'isActive',
     required: true,
   },
-  isCUSOMER_ACCESS: {
+  isCUSTOMER_ACCESS: {
     label: 'Customer Access',
     name: 'customerAccess',
   },
@@ -21,6 +21,7 @@ export const FORMLABELS = {
     NEW_DOCUMENT: 'New Document',
     NEW_DOCUMENT_CATEGORY: 'New Document Category',
     EDIT_MODEL: 'Edit Model',
+    EDIT_DOCUMENT_CATEGORY: 'Edit Document Category',
     MACHINE_PLACEHOLDER: 'Machine',
     TOOLS: 'Tools',
     SETTINGS: 'Settings',

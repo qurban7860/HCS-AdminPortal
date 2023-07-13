@@ -11,6 +11,8 @@ import { useForm } from 'react-hook-form';
 import { useSnackbar } from '../../../components/snackbar';
 // routes
 import { PATH_SETTING } from '../../../routes/paths';
+// schema
+import { AddDocumentCategorySchema } from '../../schemas/document';
 // slice
 import { addDocumentCategory } from '../../../redux/slices/document/documentCategory';
 // components
@@ -34,13 +36,6 @@ export default function DocumentCategoryAddForm({ currentDocument }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
-  // a note can be archived.
-  const AddDocumentCategorySchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required('Name Field is required!'),
-    description: Yup.string().max(10000),
-    isActive: Yup.boolean(),
-    customerAccess: Yup.boolean(),
-  });
   const defaultValues = useMemo(
     () => ({
       name: '',

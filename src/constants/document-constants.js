@@ -171,6 +171,12 @@ export const Snacks = {
   docVersionUpdated: 'Document Version UPDATE Successful',
   failedSaveDoc: 'FAILED to Save the Document',
 
+  // @root - DocumentCategoryAddForm - documents dashboard
+  addedDocCategory: 'Document Category ADD Successful', // Add Success message
+  updatedDocCategory: 'Document Category UPDATE Successful', // Update Success message
+  deletedDocCategory: 'Document Category DELETE Successful', // Delete Success message
+  failedSaveDocCategory: 'FAILED to Save Document Category', // Add Failed message
+
   // @root - DocumentAddForm - machine documents
   addedMachineDoc: 'Machine Document UPLOAD Successful', // Upload Success message
   updatedMachineDoc: 'Machine Document UPDATE Successful', // Update Success message
@@ -214,6 +220,10 @@ export const FORMLABELS = {
   CATEGORY: {
     name: 'name',
     label: 'Category Name',
+  },
+  CATEGORY_DESC: {
+    name: 'description',
+    label: 'Description',
   },
 
   // dialog customer

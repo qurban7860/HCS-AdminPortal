@@ -35,3 +35,20 @@ export const EditCustomerDocumentSchema = Yup.object().shape({
   // image: Yup.mixed().required("Image Field is required!"),
   isActive: Yup.boolean(),
 });
+
+// ----------------- Document Category -----------------
+export const AddDocumentCategorySchema = Yup.object().shape({
+  name: Yup.string().min(2).max(40).required('Name Field is required!'),
+  description: Yup.string().max(10000),
+  isActive: Yup.boolean(),
+  customerAccess: Yup.boolean(),
+});
+
+export const EditDocumentNameSchema = Yup.object().shape({
+  name: Yup.string().max(40),
+  description: Yup.string().max(1500),
+  isActive: Yup.boolean(),
+  customerAccess: Yup.boolean(),
+});
+
+// --------------------------------------------------
