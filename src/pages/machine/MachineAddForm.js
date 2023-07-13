@@ -522,14 +522,14 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                 >
                   <DatePicker
                     label="Installation Date"
-                    value={installationDate || new Date()}
+                    value={installationDate}
                     // disabled={disableInstallationDate}
                     onChange={(newValue) => setInstallationDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
                   <DatePicker
                     label="Shipping Date"
-                    value={shippingDate || new Date()}
+                    value={shippingDate}
                     // disabled={disableShippingDate}
                     onChange={(newValue) => setShippingDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}

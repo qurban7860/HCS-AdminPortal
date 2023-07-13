@@ -2,11 +2,12 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs } from '@mui/material';
+import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs, Chip } from '@mui/material';
 // routes
 import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
 // slices
 import {
+  getConnntedMachine,
   getMachines,
   getMachine,
   deleteMachine,
@@ -36,6 +37,8 @@ import { DIALOGS, BREADCRUMBS, TITLES, FORMLABELS } from '../../constants/defaul
 import { Snacks } from '../../constants/machine-constants';
 // utils
 import { fDate } from '../../utils/formatTime';
+// dialog
+import MachineDialog from '../components/Dialog/MachineDialog'
 
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
@@ -78,6 +81,11 @@ export default function MachineViewForm() {
   );
 
   useEffect(() => {
+    setOpenCustomer(false);
+    setOpenInstallationSite(false);
+    setOpenBilingSite(false);
+    setOpenMachineConnection(false);
+
     const isValid = hasValidArray(latLongValues);
     setHasValidLatLong(isValid);
   }, [machine, latLongValues, setHasValidLatLong]);
@@ -151,6 +159,8 @@ export default function MachineViewForm() {
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openInstallationSite, setOpenInstallationSite] = useState(false);
   const [openBilingSite, setOpenBilingSite] = useState(false);
+  const [openMachineConnection, setOpenMachineConnection] = useState(false);
+
 
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
@@ -158,6 +168,19 @@ export default function MachineViewForm() {
   const handleCloseInstallationSite = () => setOpenInstallationSite(false);
   const handleOpenBillingSite = () => setOpenBilingSite(true);
   const handleCloseBillingSite = () => setOpenBilingSite(false);
+  const handleOpenMachineConnection = async (id) => {
+    try {
+      await dispatch(getConnntedMachine(id));
+      setOpenMachineConnection(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleCloseMachineConnection = () => setOpenMachineConnection(false);
+
+  const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
+    <Chip onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.name} />
+  ));
 
   const defaultValues = useMemo(
     () => ({
@@ -270,11 +293,12 @@ export default function MachineViewForm() {
             <ViewFormField sm={6} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
             <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-            <CommaJoinField
-              sm={6}
-              arrayParam={machine.machineConnections}
-              heading="Connected Machines"
+            <CommaJoinField 
+              sm={6} 
+              basicArrayParam={linkedMachines} 
+              heading='Connected Machines'
             />
+
             <ViewFormField
               sm={12}
               heading="Work Order / Purchase Order"
@@ -358,6 +382,13 @@ export default function MachineViewForm() {
           </Grid>
         </Card>
       </Grid>
+
+      {/* connected machine dialog */}      
+      <MachineDialog 
+        openMachine={openMachineConnection}
+        handleCloseMachine={handleCloseMachineConnection}
+        handleConnectedMachine={openMachineConnection}
+      />
 
       {/* // primary billing dialog */}
       <Dialog
