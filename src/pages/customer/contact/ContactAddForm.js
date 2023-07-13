@@ -210,7 +210,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
                 )}
               />
             </Box>
-            <ToggleButtons checked={FORMLABELS.isACTIVE.name} />
+            <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
           </Stack>
           <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
         </Card>

@@ -34,14 +34,6 @@ export default function ToggleButtons({
 }) {
   return (
     <Grid item lg={12} display="flex">
-      {isDocument && (
-        <Grid display="flex" alignItems="center" mt={1}>
-          <StyledToggleButtonLabel variant="body2" p={1}>
-            {TOGGLE.CUSTOMER_ACCESS}
-          </StyledToggleButtonLabel>
-          <Switch checked={customerAccessVal} onChange={handleChange} />
-        </Grid>
-      )}
       {!isMachine && (
         <Grid display="flex" alignItems="center" mt={1}>
           <StyledToggleButtonLabel variant="body2" p={1}>
@@ -56,6 +48,14 @@ export default function ToggleButtons({
             {TOGGLE.ACTIVE}
           </StyledToggleButtonLabel>
           <RHFSwitch name={name} />
+        </Grid>
+      )}
+      {isDocument && (
+        <Grid display="flex" alignItems="center" mt={1}>
+          <StyledToggleButtonLabel variant="body2" p={1}>
+            {TOGGLE.CUSTOMER_ACCESS}
+          </StyledToggleButtonLabel>
+          <Switch checked={customerAccessVal} onChange={handleChange} />
         </Grid>
       )}
       {isRHF && (

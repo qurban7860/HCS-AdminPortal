@@ -335,7 +335,8 @@ export function addCustomer(params) {
         }
 
         const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers`, data);
-        dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
+        return response
+        // dispatch(slice.actions.getCustomerSuccess(response.data.Customer));
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));

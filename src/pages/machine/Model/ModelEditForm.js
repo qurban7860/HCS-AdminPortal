@@ -123,7 +123,6 @@ export default function ModelEditForm() {
                   sm: 'repeat(1, 1fr)',
                 }}
               >
-                <RHFTextField name="name" label="Name*" />
                 <Autocomplete
                   value={category || null}
                   options={activeCategories}
@@ -137,9 +136,10 @@ export default function ModelEditForm() {
                     }
                   }}
                   id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Category" />}
+                  renderInput={(params) => <TextField {...params} label="Category*" />}
                   ChipProps={{ size: 'small' }}
                 />
+                <RHFTextField name="name" label="Name*" />
 
                 <RHFTextField name="description" label="Description" minRows={7} multiline />
 

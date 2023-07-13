@@ -89,14 +89,10 @@ export default function ParameterViewForm() {
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Category Name" param={defaultValues?.category} />
+        <ViewFormField sm={12} heading="Category Name" param={defaultValues?.category} />
         <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Code" param={defaultValues?.code} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        {/* <ViewFormSWitch  isActive={defaultValues.isActive} /> */}
-      </Grid>
-
-      <Grid item container>
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

@@ -233,9 +233,7 @@ export default function CustomerViewForm() {
               />
               <ViewFormField />
             </Grid>
-            <Grid container sx={{ pb: '1rem' }}>
               <ViewFormAudit defaultValues={defaultValues} />
-            </Grid>
           </Card>
         </Grid>
       </Grid>

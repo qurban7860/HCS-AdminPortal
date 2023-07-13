@@ -189,9 +189,8 @@ export default function CustomerNoteList() {
                       {index !== activeIndex ? (
                         <Grid container spacing={1}>
                           <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: 'break-word' }}>
-                            <Typography>
-                              {note.note.length > 100 ? note?.note?.substring(0, 150) : note.note}{' '}
-                              {note.note.length > 100 ? '...' : null}{' '}
+                            <Typography sx={{ textOverflow: 'ellipsis'}}>
+                              {note.note}
                             </Typography>
                             {/* <Typography  display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
                             {/* <Typography  display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}

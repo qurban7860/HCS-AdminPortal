@@ -16,7 +16,7 @@ export default function ViewFormAudit({ defaultValues }) {
   const updatedDate = fDateTime(updatedAt);
 
   return (
-    <Grid container item md={12} sx={{ overflowWrap: 'break-word', display: 'flex' }}>
+    <Grid container item md={12} sx={{ overflowWrap: 'break-word', display: 'flex', mt:1  }}>
       <Grid item xs={12} sm={6}>
         <Typography paragraph variant="body2" sx={{ px: 2, color: 'text.disabled' }}>
           created by: {createdByFullName ? `${createdByFullName} / ` : ''}{' '}
