@@ -115,22 +115,23 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
 
   return (
     <Grid>
-      <ViewFormEditDeleteButtons
-        disableDeleteButton={disableDeleteButton}
-        disableEditButton={disableEditButton}
-        handleEdit={handleEdit}
-        onDelete={onDelete}
-      />
+      <Grid container justifyContent="flex-end" sx={{ pr: '2rem' }}>
+        <ViewFormEditDeleteButtons
+          disableDeleteButton={disableDeleteButton}
+          disableEditButton={disableEditButton}
+          handleEdit={handleEdit}
+          onDelete={onDelete}
+        />
+      </Grid>
       <Grid container>
+        <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField
           sm={12}
           heading="Tool"
           param={defaultValues?.toolName}
-          isActive={defaultValues.isActive}
         />
         <ViewFormField sm={12} heading="Note" param={defaultValues?.toolNote} />
 
-        <ViewFormSwitch isActive={defaultValues.isActive} />
 
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

@@ -191,6 +191,7 @@ export default function MachineSettingList() {
       <Grid mb={5}>
         <Card>
           {!settingEditFormVisibility &&
+            !formVisibility &&
             dataFiltered.map((setting, index) => {
               const borderTopVal = index !== 0 ? '1px solid lightGray' : '';
               return (
