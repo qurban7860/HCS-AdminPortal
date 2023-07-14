@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Box, Card, Grid, Stack, Autocomplete, TextField } from '@mui/material';
 // slice
-import { addSetting } from '../../../redux/slices/products/machineTechParamValue';
+import { addSetting, setSettingFormVisibility } from '../../../redux/slices/products/machineTechParamValue';
 import { getActiveTechparamcategories } from '../../../redux/slices/products/machineTechParamCategory';
 import {
   getTechparamsByCategory,
@@ -97,6 +97,7 @@ export default function SettingAddForm() {
         data.techParam = techParamVal;
       }
       await dispatch(addSetting(machine._id, data));
+      dispatch(setSettingFormVisibility(false));
       reset();
       setTechParamVal('');
       enqueueSnackbar(Snacks.settingAdded);
