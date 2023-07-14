@@ -112,15 +112,7 @@ export default function SupplierList() {
   }, [dispatch]);
   useEffect(() => {
     if (initial) {
-      // if (suppliers && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // }
-      // else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
-      if (suppliers && !error) {
         setTableData(suppliers);
-      }
     }
   }, [suppliers, error, responseMessage, enqueueSnackbar, initial]);
 

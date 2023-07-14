@@ -99,12 +99,6 @@ export default function TechParamList() {
 
   useEffect(() => {
     if (initial) {
-      // if (techparamcategories && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // }
-      // else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(techparamcategories);
     }
   }, [techparamcategories, error, responseMessage, enqueueSnackbar, initial]);

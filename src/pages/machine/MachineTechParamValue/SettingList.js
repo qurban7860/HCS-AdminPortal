@@ -88,11 +88,6 @@ export default function SettingList() {
 
   useEffect(() => {
     if (initial) {
-      if (sites && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(sites);
     }
   }, [enqueueSnackbar]);
