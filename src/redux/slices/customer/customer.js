@@ -124,7 +124,8 @@ export function getCustomers() {
         orderBy: "createdAt: -1",
         isArchived: false,
       }
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers?${data}` );
+      const queryString = new URLSearchParams(data).toString();
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers?${queryString}` );
       dispatch(slice.actions.getCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
