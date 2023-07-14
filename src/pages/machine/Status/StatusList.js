@@ -115,11 +115,6 @@ export default function StatusList() {
 
   useEffect(() => {
     if (initial) {
-      if (machinestatuses && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(machinestatuses);
     }
   }, [machinestatuses, error, responseMessage, enqueueSnackbar, initial]);

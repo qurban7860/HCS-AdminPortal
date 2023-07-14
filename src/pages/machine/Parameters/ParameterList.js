@@ -97,12 +97,6 @@ export default function StatusList() {
 
   useEffect(() => {
     if (initial) {
-      if (techparams && !error) {
-        enqueueSnackbar(responseMessage);
-      }
-      //  else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(techparams);
     }
   }, [techparams, error, responseMessage, enqueueSnackbar, initial]);

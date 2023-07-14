@@ -86,11 +86,6 @@ export default function ToolList() {
 
   useEffect(() => {
     if (initial) {
-      if (tools && !error) {
-        enqueueSnackbar(responseMessage);
-      } else {
-        enqueueSnackbar(error, { variant: `error` });
-      }
       setTableData(tools);
     }
   }, [tools, error, responseMessage, enqueueSnackbar, initial]);
