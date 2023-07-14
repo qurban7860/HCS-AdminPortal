@@ -178,7 +178,7 @@ export default function SecurityUserProfile() {
             <ViewFormField
               sm={6}
               heading="Roles"
-              param={defaultValues?.roles?.map((obj) => obj?.name).join(', ')}
+              userRolesChips={defaultValues?.roles}
             />
           </Grid>
           <ViewFormField />

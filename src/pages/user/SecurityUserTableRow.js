@@ -44,7 +44,6 @@ export default function SecurityUserTableRow({
 }) {
   const { email, name, roles, phone, status, image, createdAt, isActive } = row;
 
-  console.log(roles)
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);

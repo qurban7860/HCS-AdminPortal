@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Typography, Link, Dialog, Button } from '@mui/material';
+import { Card, Grid, Typography, Link, Dialog, Button, Chip } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
 import { PATH_MACHINE, PATH_DASHBOARD, PATH_CUSTOMER, PATH_SECURITY } from '../../routes/paths';
@@ -151,7 +151,7 @@ export default function SecurityUserViewForm() {
     }),
     [securityUser]
   );
-
+console.log("defaultValues?.roles :",defaultValues?.roles)
   return (
     <>
       <Grid sx={{ p: 3, mt: -3 }}>
@@ -215,7 +215,7 @@ export default function SecurityUserViewForm() {
             <ViewFormField
               sm={6}
               heading="Roles"
-              param={defaultValues?.roles?.map((obj) => obj.name).join(', ')}
+              userRolesChips={defaultValues?.roles}
             />
           </Grid>
           <ViewFormField />
