@@ -13,6 +13,7 @@ import {
   TableCell,
   IconButton,
   Typography,
+  Chip
 } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
@@ -42,7 +43,7 @@ export default function SecurityUserTableRow({
   onDeleteRow,
 }) {
   const { email, name, roles, phone, status, image, createdAt, isActive } = row;
-  const names = roles.map((a) => a.name);
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -86,7 +87,7 @@ export default function SecurityUserTableRow({
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {roles.map((obj) => obj.name).join(', ')}
+        {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{mx:0.3}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
           {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
         </TableCell>
         <TableCell align="center">

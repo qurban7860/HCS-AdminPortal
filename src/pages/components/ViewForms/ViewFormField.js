@@ -24,6 +24,7 @@ export default function ViewFormField({
   customerAccess,
   documentIsActive,
   chips,
+  userRolesChips,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -80,15 +81,6 @@ export default function ViewFormField({
         {documentIsActive !== undefined && <IconPopover documentIsActive={documentIsActive} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
         {param && typeof param === 'string' && param.trim().length > 0 && param}
-        {chips && typeof chips === 'object' ? (
-          <Stack direction="row" spacing={1}>
-            {chips.map(
-              (chip) => typeof chip === 'string' && chip.trim().length > 0 && <Chip label={chip} />
-            )}
-          </Stack>
-        ) : (
-          chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} />
-        )}
         {param &&
           typeof param === 'string' &&
           param.trim().length > 0 &&
@@ -102,7 +94,31 @@ export default function ViewFormField({
           secondParam}
         {objectParam || ''}
         {secondObjectParam || ''}
-        {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
+        {numberParam || ''}
+        &nbsp;
+
+      </Typography>
+
+      {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
+          <Stack direction="row" spacing={1} sx={{ my: 2 }}>
+          <Typography
+            variant="body1"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+            }}
+          >
+            {arrayParam.map(
+              (data) =>
+                data?.name &&
+                typeof data?.name === 'string' &&
+                data?.name.trim().length > 0 && <Chip label={data?.name} />
+            )}
+            </Typography>
+          </Stack>
+        )}        {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
           <Stack direction="row" spacing={1} sx={{ my: 2 }}>
             {arrayParam.map(
               (data) =>
@@ -112,9 +128,24 @@ export default function ViewFormField({
             )}
           </Stack>
         )}
-        {numberParam || ''}
-        &nbsp;
-      </Typography>
+
+      {chips && typeof chips === 'object' ? (
+          <Stack direction="row" spacing={1}>
+            {chips.map(
+              (chip) => typeof chip === 'string' && chip.trim().length > 0 && <Chip label={chip} />
+            )}
+          </Stack>
+        ) : (
+          chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} />
+        )}
+
+        {userRolesChips && typeof userRolesChips === 'object' ? (
+          <Stack direction="row" spacing={1}>
+            {userRolesChips.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{mx:0.3}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
+          </Stack>
+        ) : (
+          userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} />
+        )}
 
       {/* popover for verification list */}
       <ViewFormMenuPopover
@@ -146,4 +177,5 @@ ViewFormField.propTypes = {
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
   chips: PropTypes.array,
+  userRolesChips: PropTypes.array,
 };
