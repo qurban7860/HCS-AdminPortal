@@ -160,7 +160,8 @@ export function getMachines() {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy: "createdAt: -1"
         }
       });
       dispatch(slice.actions.getMachinesSuccess(response.data));
