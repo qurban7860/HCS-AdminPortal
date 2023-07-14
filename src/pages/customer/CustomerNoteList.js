@@ -188,13 +188,20 @@ export default function CustomerNoteList() {
                     >
                       {index !== activeIndex ? (
                         <Grid container spacing={1}>
-                          <Grid item xs={12} sm={9} md={10} sx={{ overflowWrap: 'break-word' }}>
-                            <Typography sx={{ textOverflow: 'ellipsis'}}>
+                          <Grid item xs={12} sm={9} md={10} >
+                            <Typography 
+                            sx={{
+                              textOverflow: 'ellipsis',
+                              overflow: 'hidden',
+                              whiteSpace: 'nowrap',
+                              width: '100%',
+                              '@media (min-width: 300px)': { 
+                                width: '300px', 
+                              },
+                            }}
+                            >
                               {note.note}
                             </Typography>
-                            {/* <Typography  display={{ xs:"none", sm:"none", md:"block", }} > {note.note.length > 70 ? note.note.substring(0, 70) :note.note} {note.note.length > 70 ? "..." :null} </Typography> */}
-                            {/* <Typography  display={{ xs:"none", sm:"block",}} > {note.note.length > 50 ? note.note.substring(0, 50) :note.note} {note.note.length > 50 ? "..." :null} </Typography> */}
-                            {/* <Typography  display={{ xs:"block" }} > {note.note.length > 20 ? note.note.substring(0, 20) :note.note} {note.note.length > 20 ? "..." :null} </Typography> */}
                           </Grid>
                           <Grid item xs={12} sm={3} md={2} sx={{ overflowWrap: 'break-word' }}>
                             <Typography> {fDateTime(note.createdAt)} </Typography>{' '}

@@ -315,7 +315,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     inputData = inputData.filter(
       (customer) =>
         customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        customer?.tradingName?.some((tName) => tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
+        // customer?.tradingName?.some((tName) => tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
+        customer?.tradingName?.tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0  ||
         customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >=
           0 ||
