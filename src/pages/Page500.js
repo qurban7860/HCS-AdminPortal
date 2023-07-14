@@ -2,7 +2,7 @@ import { m } from 'framer-motion';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
-import { Button, Typography } from '@mui/material';
+import { Button, Typography , Grid } from '@mui/material';
 // components
 import { MotionContainer, varBounce } from '../components/animate';
 // assets
@@ -18,7 +18,9 @@ export default function Page500() {
         <title> 500 Internal Server Error | {CONFIG.APP_TITLE} </title>
       </Helmet> */}
 
-      <MotionContainer>
+      <MotionContainer >
+        <Grid sx={{display:'flex', flexDirection:'column', justifyContent:'center',alignItems:'center',mt:5}}>
+
         <m.div variants={varBounce().in}>
           <Typography variant="h3" paragraph>
             500 Internal Server Error
@@ -35,9 +37,10 @@ export default function Page500() {
           <SeverErrorIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
         </m.div>
 
-        <Button component={RouterLink} to="/" size="large" variant="contained">
+        <Button onClick={()=> window.open('/','_self')} size="large" variant="contained">
           Go to Home
         </Button>
+        </Grid>
       </MotionContainer>
     </>
   );
