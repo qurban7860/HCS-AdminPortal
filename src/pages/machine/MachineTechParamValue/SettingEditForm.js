@@ -50,6 +50,8 @@ import {
   getTechparamsByCategory,
 } from '../../../redux/slices/products/machineTechParam';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
+import { AddSettingSchema } from './schemas/AddSettingSchema';
+
 // ----------------------------------------------------------------------
 
 export default function SettingEditForm() {
@@ -96,13 +98,13 @@ export default function SettingEditForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  const EditSettingSchema = Yup.object().shape({
-    techParamValue: Yup.string().max(50),
-    isActive: Yup.boolean(),
-  });
+  // const EditSettingSchema = Yup.object().shape({
+  //   techParamValue: Yup.string().max(50),
+  //   isActive: Yup.boolean(),
+  // });
 
   const methods = useForm({
-    resolver: yupResolver(EditSettingSchema),
+    resolver: yupResolver(AddSettingSchema),
     defaultValues,
   });
 
@@ -192,40 +194,6 @@ export default function SettingEditForm() {
                   )}
                   ChipProps={{ size: 'small' }}
                 />
-
-                <Autocomplete
-                  // freeSolo
-                  disabled
-                  value={techParam || null}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
-                  options={techparamsByCategory}
-                  getOptionLabel={(option) => option.name}
-                  id="controllable-states-demo"
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setTechParam(newValue);
-                    } else {
-                      setTechParam('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <Box component="li" {...props} key={option.id}>
-                      {option.name}
-                    </Box>
-                  )}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Technical Parameters"
-                      sx={{
-                        '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#000000' },
-                      }}
-                    />
-                  )}
-                  ChipProps={{ size: 'small' }}
-                />
-
-                <RHFTextField name="techParamValue" label="Technical Parameter Value" />
 
                 <Autocomplete
                   // freeSolo
