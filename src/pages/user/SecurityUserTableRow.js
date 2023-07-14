@@ -87,7 +87,7 @@ export default function SecurityUserTableRow({
         </TableCell>
 
         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-        {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{mx:0.3}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
+        {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
           {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
         </TableCell>
         <TableCell align="center">
