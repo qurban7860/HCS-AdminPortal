@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   customers: [],
   activeCustomers: [],
+  spCustomers: [],
   customer: {},
 };
 
@@ -59,6 +60,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeCustomers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customers
+    getActiveSPCustomersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.spCustomers = action.payload;
       state.initial = true;
     },
 
@@ -150,6 +159,30 @@ export function getActiveCustomers() {
         }
       });
       dispatch(slice.actions.getActiveCustomersSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------- get Active SP Customers------------------------------------------
+
+export function getActiveSPCustomers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          type: 'SP'
+        }
+      });
+      dispatch(slice.actions.getActiveSPCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
       console.log(error);

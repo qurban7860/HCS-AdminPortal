@@ -31,7 +31,7 @@ import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 // slice
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
-import { getCustomers } from '../../redux/slices/customer/customer';
+import { getActiveSPCustomers } from '../../redux/slices/customer/customer';
 import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
@@ -54,7 +54,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const { customers } = useSelector((state) => state.customer);
+  const { spCustomers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
   const { contacts, activeContacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState('');
@@ -87,7 +87,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    dispatch(getCustomers());
+    dispatch(getActiveSPCustomers());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -246,7 +246,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 // freeSolo
                 required
                 value={customerVal || null}
-                options={customers}
+                options={spCustomers}
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
