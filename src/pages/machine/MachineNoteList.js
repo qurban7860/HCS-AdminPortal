@@ -83,7 +83,6 @@ export default function MachineNoteList() {
   const [expanded, setExpanded] = useState(false);
   const { machine } = useSelector((state) => state.machine);
   const [checked, setChecked] = useState(false);
-
   const {
     notes,
     isLoading,
@@ -152,7 +151,7 @@ export default function MachineNoteList() {
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+  const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length) && !formVisibility && !noteEditFormVisibility;
 
   return (
     <>
@@ -184,12 +183,10 @@ export default function MachineNoteList() {
           disabled={noteEditFormVisibility}
         />
       </Grid>
-      <Grid md={12}>
-        <TableNoData isNotFound={isNotFound} />
-      </Grid>
+      
       <Card>
         {noteEditFormVisibility && <NoteEditForm />}
-        {formVisibility && !noteEditFormVisibility && <NoteAddForm />}
+        {formVisibility && !noteEditFormVisibility && <NoteAddForm/>}
         {!formVisibility &&
           !noteEditFormVisibility &&
           notes.map((note, index) => {
@@ -226,6 +223,9 @@ export default function MachineNoteList() {
             );
           })}
       </Card>
+      <Grid md={12}>
+        <TableNoData isNotFound={isNotFound} />
+      </Grid>
     </>
   );
 }

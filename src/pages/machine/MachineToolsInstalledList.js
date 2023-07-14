@@ -150,7 +150,7 @@ export default function MachineToolsInstalledList() {
           </Breadcrumbs>
         </Grid>
         <AddButtonAboveAccordion
-          name={BUTTONS.NEWNOTE}
+          name={BUTTONS.NEWTOOL}
           toggleChecked={toggleChecked}
           FormVisibility={formVisibility}
           toggleCancel={toggleCancel}
