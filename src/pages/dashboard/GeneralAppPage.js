@@ -31,16 +31,27 @@ export default function GeneralAppPage() {
   const enviroment = CONFIG.ENV.toLowerCase();
 
   const modelWiseMachineNumber = [];
+  const yearWiseMachinesYear = [];
   const modelWiseMachineModel = [];
+  const yearWiseMachinesNumber = [];
   const countryWiseMachineCountNumber = [];
   const countryWiseMachineCountCountries = [];
   const countryWiseSiteCountNumber = [];
   const countryWiseSiteCountCountries = [];
+  const yearWiseMachines = [];
 
   if (count && count?.modelWiseMachineCount) {
     count.modelWiseMachineCount.map((model) => {
       modelWiseMachineNumber.push(model.count);
       modelWiseMachineModel.push(model._id);
+      return null;
+    });
+  }
+
+  if (count && count?.yearWiseMachines) {
+    count.yearWiseMachines.map((model) => {
+      yearWiseMachinesYear.push(model._id.year);
+      yearWiseMachinesNumber.push(model.yearWiseMachines);
       return null;
     });
   }
@@ -179,6 +190,24 @@ export default function GeneralAppPage() {
               <StyledBg />
             </Grid>
 
+            <Grid item xs={12} md={6} lg={6}>
+              <Card
+                sx={{ px: 3, mb: 3, backgroundColor: 'transparent' }}
+                variants={varFade().inDown}
+              >
+                <Stack sx={{ pt: 2 }}>
+                  <Typography variant="h6">Machine by Years</Typography>
+                </Stack>
+                <Divider />
+                <ChartBar
+                  optionsData={yearWiseMachinesYear}
+                  seriesData={yearWiseMachinesNumber}
+                  type="bar"
+                  sx={{ backgroundColor: 'transparent' }}
+                />
+              </Card>
+              <StyledBg />
+            </Grid>
             {/* Production Log */}
             {/* hide this in the live, but show in development and test  */}
             {/* don't delete, will be activated once integrated with the HLC */}
