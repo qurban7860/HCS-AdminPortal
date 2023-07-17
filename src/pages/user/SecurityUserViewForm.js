@@ -37,7 +37,11 @@ export default function SecurityUserViewForm() {
   const userId = localStorage.getItem('userId');
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(false);
-  const [isSuperAdmin, setSuperAdmin] = useState(false);
+  // const [isSuperAdmin, setSuperAdmin] = useState(false);
+
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
   const { securityUser, loggedInUser, initial } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
@@ -61,12 +65,6 @@ export default function SecurityUserViewForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  useLayoutEffect(() => {
-    if (userId) {
-      dispatch(getLoggedInSecurityUser(userId));
-    }
-  }, [dispatch, userId]);
-
   useEffect(() => {
     if (id) {
       dispatch(getSecurityUser(id));
@@ -75,16 +73,14 @@ export default function SecurityUserViewForm() {
 
   useEffect(() => {
     if (loggedInUser) {
-      const superAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
-      setSuperAdmin(superAdmin);
       // disable edit button
-      if (superAdmin || loggedInUser._id === id) {
+      if (isSuperAdmin || loggedInUser._id === id) {
         setDisableEditButton(false);
       } else {
         setDisableEditButton(true);
       }
     }
-  }, [id, loggedInUser]);
+  }, [id, loggedInUser, isSuperAdmin]);
   // disableDeleteButton, setDisableDeleteButton
   useEffect(() => {
     batch(() => {
