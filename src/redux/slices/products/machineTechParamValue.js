@@ -149,7 +149,10 @@ export function getSettings(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/${id}/techparamvalues` , 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       }
       );

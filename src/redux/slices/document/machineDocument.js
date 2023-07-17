@@ -255,6 +255,9 @@ export function getMachineDocuments(machineId) {
         params: {
           isArchived: false,
           machine: machineId,
+          orderBy : {
+            createdAt:-1
+          }
           // basic: true
         }
       }

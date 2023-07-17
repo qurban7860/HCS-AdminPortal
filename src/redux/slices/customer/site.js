@@ -263,7 +263,10 @@ export function getSites(customerID) {
         response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/sites` , 
         {
           params: {
-            isArchived: false
+            isArchived: false,
+            orderBy : {
+              createdAt:-1
+            }
           }
         }
         );

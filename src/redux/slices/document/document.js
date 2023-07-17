@@ -309,6 +309,9 @@ export function getCustomerDocuments(customerId) {
           isArchived: false,
           customer:customerId,
           machine: null,
+          orderBy : {
+            createdAt:-1
+          }
         }
       }
       );
@@ -392,7 +395,10 @@ export function getMachineDocuments(machineId, machineModelId) {
           isActive: true,
           isArchived: false,
           machine: machineId,
-          machineModel: machineModelId
+          machineModel: machineModelId,
+          orderBy : {
+            createdAt:-1
+          }
         }
       }
       );
