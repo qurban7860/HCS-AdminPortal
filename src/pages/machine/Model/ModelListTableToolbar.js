@@ -33,7 +33,7 @@ export default function CustomerListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.machineModel.new);
+    navigate(PATH_MACHINE.machines.settings.model.new);
   };
   return (
     <Stack {...options}>
