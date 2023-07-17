@@ -47,8 +47,7 @@ export default function MachineView({ editPage }) {
   const [currentTab, setCurrentTab] = useState('Machine-info');
   const [currentComponent, setCurrentComponent] = useState(<MachineViewForm />);
   const [machineFlag, setMachineFlag] = useState(true);
-
-  const TABS = TABSFunc(currentComponent, showDevTabs);
+  const TABS = TABSFunc(currentComponent, showDevTabs, machineEditFormFlag );
 
   useEffect(() => {
     dispatch(setDocumentViewFormVisibility(false));

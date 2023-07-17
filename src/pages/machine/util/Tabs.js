@@ -6,37 +6,37 @@ import MachineSettingList from '../MachineSettingList';
 import DocumentTagPage from '../../document/documents/DocumentTagPage';
 import MachineToolsInstalledList from '../MachineToolsInstalledList';
 
+
 export const TABS = (currentComponent, showDevTabs, disableTab) => [
   {
-    //   disabled: siteEditFormVisibility || contactEditFormVisibility || noteEditFormVisibility,
     value: 'Machine-info',
     label: 'Machine Info',
     icon: <Iconify icon="mdi:window-open-variant" />,
     component: currentComponent,
   },
   {
-    // disabled: setMachineEditFormVisibility,
+    disabled: disableTab,
     value: 'settings',
     label: 'Settings',
     icon: <Iconify icon="mdi:cogs" />,
     component: <MachineSettingList />,
   },
   {
-    // disabled: setMachineEditFormVisibility,
+    disabled: disableTab,
     value: 'toolsInstalled',
     label: 'Tools Installed',
     icon: <Iconify icon="mdi:folder-wrench" />,
     component: <MachineToolsInstalledList />,
   },
   {
-    // disabled: setMachineEditFormVisibility,
+    disabled: disableTab,
     value: 'notes',
     label: 'Notes',
     icon: <Iconify icon="mdi:note-multiple" />,
     component: <MachineNoteList />,
   },
   {
-    // disabled: setMachineEditFormVisibility,
+    disabled: disableTab,
     value: 'documents',
     label: 'Documents',
     icon: <Iconify icon="mdi:folder-open" />,
@@ -45,20 +45,20 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
   ...(showDevTabs
     ? [
         {
-          // disabled: setMachineEditFormVisibility,
+          disabled: disableTab,
           value: 'license',
           label: 'License',
           icon: <Iconify icon="mdi:book-cog-outline" />,
           // component: <MachineLicenseList />,
         },
         {
-          // disabled: setMachineEditFormVisibility,
+          disabled: disableTab,
           value: 'repairHistory',
           label: 'Repair History',
           icon: <Iconify icon="ic:round-manage-history" />,
         },
         {
-          // disabled: setMachineEditFormVisibility,
+          disabled: disableTab,
           value: 'serviceHistory',
           label: 'Service History',
           icon: <Iconify icon="mdi:clipboard-text-clock" />,

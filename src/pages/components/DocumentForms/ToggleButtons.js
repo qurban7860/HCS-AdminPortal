@@ -13,7 +13,7 @@ ToggleButtons.propTypes = {
   isDocument: PropTypes.bool,
   isMachine: PropTypes.bool,
   isRHF: PropTypes.bool,
-  name: PropTypes.object,
+  name: PropTypes.string,
   RHFName: PropTypes.string,
   isCONNECTABLE: PropTypes.bool,
   CONNECTName: PropTypes.string,
