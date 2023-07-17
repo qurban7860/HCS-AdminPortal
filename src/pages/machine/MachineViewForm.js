@@ -43,6 +43,10 @@ import MachineDialog from '../components/Dialog/MachineDialog'
 // ----------------------------------------------------------------------
 export default function MachineViewForm() {
   const userId = localStorage.getItem('userId');
+  const userRolesString = localStorage.getItem('userRoles');
+  const userRoles = JSON.parse(userRolesString);
+  const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -55,7 +59,6 @@ export default function MachineViewForm() {
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
-  const isSuperAdmin = loggedInUser?.roles?.some((role) => role.roleType === 'SuperAdmin');
   const isMobile = useResponsive('down', 'sm');
 
   // function to check whether the lat long params exist or not
@@ -101,9 +104,6 @@ export default function MachineViewForm() {
       setDisableEditButton(true);
     } else {
       setDisableEditButton(false);
-    }
-    if (userId) {
-      dispatch(getLoggedInSecurityUser(userId));
     }
     if (machine?.customer) {
       dispatch(getCustomer(machine?.customer?._id));
