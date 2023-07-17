@@ -78,7 +78,7 @@ export default function StatusEditForm() {
   }, [machinestatus]);
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.machineStatus.view(id));
+    navigate(PATH_MACHINE.machines.settings.status.view(id));
   };
 
   const onSubmit = async (data) => {
@@ -86,7 +86,7 @@ export default function StatusEditForm() {
       await dispatch(updateMachinestatus(data, id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.settings.machineStatus.view(id));
+      navigate(PATH_MACHINE.machines.settings.status.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
