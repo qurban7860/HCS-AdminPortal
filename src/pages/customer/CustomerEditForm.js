@@ -50,7 +50,6 @@ export default function CustomerEditForm() {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('sm', 'down');
-
   const defaultValues = useMemo(
     () => ({
       id: customer?._id || '',
@@ -83,6 +82,7 @@ export default function CustomerEditForm() {
   const values = watch();
 
   useLayoutEffect(() => {
+    window.history.pushState({}, null, `/customers/${customer._id}/edit`);
     dispatch(getActiveContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
@@ -103,6 +103,10 @@ export default function CustomerEditForm() {
 
   const toggleCancel = () => {
     dispatch(setCustomerEditFormVisibility(false));
+    // navigate(PATH_CUSTOMER.list);
+    navigate(PATH_CUSTOMER.view(customer._id));
+
+    // window.history.pushState({}, null, `/customers/${customer._id}/view`);
   };
 
   const onSubmit = async (data) => {

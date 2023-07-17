@@ -83,7 +83,6 @@ export default function MachineEditForm() {
   const [connections, setConnections] = useState([]);
   const [chips, setChips] = useState([]);
   const isMobile = useResponsive('sm', 'down');
-
   const defaultValues = useMemo(
     () => ({
       id: machine?._id || '',
@@ -124,13 +123,13 @@ export default function MachineEditForm() {
   } = methods;
 
   useLayoutEffect(() => {
+    window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
     dispatch(getActiveMachineModels());
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
     dispatch(getSPContacts());
-    dispatch(getMachineConnections());
     setChips(machine?.alias);
     setParMachineVal(machine?.parentMachine);
     setParMachSerVal(machine?.parentMachine);
@@ -157,13 +156,14 @@ export default function MachineEditForm() {
   useLayoutEffect(() => {
     if (customerVal !== null && customerVal?.id !== '') {
       dispatch(getActiveSites(customerVal?._id));
+    dispatch(getMachineConnections(customerVal?._id));
     }
     //   setInstallVal(null);
     //   setBillingVal(null);
   }, [dispatch, customerVal]);
 
   useEffect(() => {
-    if (machine) {
+    if(machine) {
       reset(defaultValues);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -171,6 +171,7 @@ export default function MachineEditForm() {
 
   const toggleCancel = () => {
     dispatch(setMachineEditFormVisibility(false));
+    navigate(PATH_MACHINE.machines.view(machine._id));
     dispatch(setTransferMachineFlag(false));
   };
 
@@ -217,6 +218,7 @@ export default function MachineEditForm() {
       setShippingDate(null);
       setInstallationDate(null);
       reset();
+      navigate(PATH_MACHINE.machines.view(machine._id));
     } catch (error) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(error);
