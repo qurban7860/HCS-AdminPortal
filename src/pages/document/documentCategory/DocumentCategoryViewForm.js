@@ -78,7 +78,6 @@ export default function DocumentCategoryViewForm() {
             heading="Document Types"
             arrayParam={defaultValues.documentTypes}
           />
-          {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

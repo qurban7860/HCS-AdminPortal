@@ -114,23 +114,11 @@ export default function ViewFormField({
               (data) =>
                 data?.name &&
                 typeof data?.name === 'string' &&
-                data?.name.trim().length > 0 && <Chip label={data?.name} />
+                data?.name.trim().length > 0 && <Chip label={data?.name} sx={{m:0.2}} />
             )}
             </Typography>
           </Stack>
-        )}        
-        {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
-          <Grid item sx={{display: 'flex-inline'}} >
-            <Grid container justifyContent="flex-start" spacing={1}>
-              {arrayParam.map(
-              (data) =>
-                data?.name &&
-                typeof data?.name === 'string' &&
-                data?.name.trim().length > 0 && <Chip label={data?.name} sx={{m:0.2}} />
-            )}
-            </Grid>
-          </Grid>
-        )}
+        )}       
 
       {chips && typeof chips === 'object' ? (
         <Grid item sx={{display: 'flex-inline'}} >

@@ -45,6 +45,14 @@ const slice = createSlice({
         state.machineConnections = action.payload;
         state.initial = true;
       },
+
+        // RESET MACHINE
+        resetMachineConnections(state){
+          state.machineConnections = [];
+          state.responseMessage = null;
+          state.success = false;
+          state.isLoading = false;
+        },
   },
 });
 
@@ -54,16 +62,22 @@ export default slice.reducer;
 // Actions
 export const {
   setResponseMessage,
+  resetMachineConnections
 } = slice.actions;
 
 
 // -----------------------------------Get Machine Connections-----------------------------------  
 
-export function getMachineConnections() {
+export function getMachineConnections(customerId) {
   return async (dispatch) => {
     try {
     dispatch(slice.actions.startLoading());
-      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/getDecoilerProducts/`);
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/getDecoilerProducts/`,
+      {
+        params: {
+          customer: customerId
+        }
+      });
       if(regEx.test(response.status)){
         dispatch(slice.actions.getMachineConnectionsSuccess(response.data));
       }
