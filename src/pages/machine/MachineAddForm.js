@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -31,7 +31,7 @@ import machine, { addMachine, getActiveMachines } from '../../redux/slices/produ
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveMachineModels } from '../../redux/slices/products/model';
 import { getSuppliers, getActiveSuppliers } from '../../redux/slices/products/supplier';
-import { getMachineConnections } from '../../redux/slices/products/machineConnections';
+import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
 import { Cover } from '../components/Defaults/Cover';
 // routes
 import { PATH_MACHINE } from '../../routes/paths';
@@ -55,7 +55,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
   const { userId, user } = useAuthContext();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+console.log("machine add form")
   const { activeMachines } = useSelector((state) => state.machine);
   const { activeSuppliers } = useSelector((state) => state.supplier);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
@@ -96,12 +96,13 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     dispatch(getActiveSuppliers());
     dispatch(getActiveMachineStatuses());
     dispatch(getSPContacts());
-    dispatch(getMachineConnections());
+    
   }, [dispatch]);
 
   useLayoutEffect(() => {
     if (customerVal !== null && customerVal._id !== undefined) {
       dispatch(getActiveSites(customerVal._id));
+  dispatch(getMachineConnections(customerVal._id));
     }
     setInstallVal(null);
     setBillingVal(null);
@@ -270,7 +271,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   <RHFTextField name="serialNo" label="Serial No." required />
                   <RHFTextField name="name" label="Name" />
                 </Box>
-                <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
+                  <MuiChipsInput label="Alias" value={chips} onChange={handleChipChange} />
                 <Box
                   rowGap={3}
                   columnGap={2}
@@ -338,13 +339,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     renderInput={(params) => <TextField {...params} label="Previous Machine" />}
                     ChipProps={{ size: 'small' }}
                   />
-                </Box>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
                   <Autocomplete
                     // freeSolo
                     value={supplierVal || null}
@@ -388,14 +382,35 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     renderInput={(params) => <TextField {...params} label="Model" />}
                     ChipProps={{ size: 'small' }}
                   />
-
+                  <Autocomplete
+                    value={customerVal || null}
+                    options={activeCustomers}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setCustomerVal(newValue);
+                      } else {
+                        setCustomerVal('');
+                        setMachineConnectionVal([]);
+                        dispatch(resetMachineConnections())
+                        dispatch(resetSites());
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Customer" required/>}
+                    ChipProps={{ size: 'small' }}
+                  />
                   <Autocomplete
                     multiple
                     name="connection"
                     id="tags-outlined"
                     value={machineConnectionVal || null}
                     options={machineConnections}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    getOptionLabel={(option) => `${option.serialNo ? option.serialNo : ''} - ${option.name ? option.name : ''}`}
                     filterSelectedOptions
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     onChange={(event, newValue) => {
@@ -406,7 +421,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       }
                     }}
                     renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                      <li {...props} key={option._id}>{`${option.serialNo ? option.serialNo : ''} - ${option.name ? option.name : ''}`}</li>
                     )}
                     renderInput={(params) => (
                       <TextField {...params} label="Connected Machines" placeholder="Search" />
@@ -437,35 +452,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
-                </Box>
-                <Autocomplete
-                  sx={{ my: -3 }}
-                  value={customerVal || null}
-                  options={activeCustomers}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
-                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCustomerVal(newValue);
-                    } else {
-                      setCustomerVal('');
-                      dispatch(resetSites());
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                  )}
-                  id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Customer" />}
-                  ChipProps={{ size: 'small' }}
-                />
 
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
                   <Autocomplete
                     // freeSolo
                     value={installVal || null}
@@ -512,14 +499,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     renderInput={(params) => <TextField {...params} label="Billing Site" />}
                     ChipProps={{ size: 'small' }}
                   />
-                </Box>
-
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
                   <DatePicker
                     label="Installation Date"
                     value={installationDate}
@@ -536,14 +515,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   />
                 </Box>
 
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                >
                   <RHFTextField name="siteMilestone" label="Nearby Milestone" multiline />
-                </Box>
+
                 <Box
                   rowGap={3}
                   columnGap={2}
@@ -629,14 +602,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     ChipProps={{ size: 'small' }}
                   />
                 </Box>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                >
                   <RHFTextField name="description" label="Description" minRows={8} multiline />
-                </Box>
                 <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

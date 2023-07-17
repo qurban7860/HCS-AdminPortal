@@ -95,7 +95,6 @@ export default function SignInLogList() {
   const userId = localStorage.getItem('userId');
 
   const { signInLogs, isLoading, initial, responseMessage } = useSelector((state) => state.user);
-
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
   }, [dispatch, userId]);

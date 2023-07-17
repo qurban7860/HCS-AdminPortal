@@ -112,16 +112,14 @@ export default function SettingAddForm() {
       <Grid container spacing={4} mb={2}>
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
-            <Stack spacing={3}>
-              <Grid item md={12} xs={18} display="flex">
-                <Grid item md={9} xs={12}>
+              <Grid item md={12} >
                   <Box
                     rowGap={2}
                     columnGap={2}
                     display="grid"
                     gridTemplateColumns={{
-                      xs: 'repeat(1, 1fr)',
-                      sm: 'repeat(2, 1fr)',
+                      sm: 'repeat(1, 1fr)',
+                      md: 'repeat(2, 1fr)',
                     }}
                   >
                     <Autocomplete
@@ -189,14 +187,16 @@ export default function SettingAddForm() {
                     <RHFTextField name="techParamValue" label="Technical Parameter Value" />
                     <ToggleButtons isMachine name="isActive" />
                   </Box>
-                </Grid>
-                <SingleButton
-                  loading={isSubmitting}
-                  disabled={!techParamVal}
-                  name={BUTTONS.ADDSETTING}
-                />
+                
               </Grid>
-            </Stack>
+              <Grid display="flex" justifyContent="end">
+                <SingleButton
+                    sx={{mt:"auto"}}
+                    loading={isSubmitting}
+                    disabled={!techParamVal}
+                    name={BUTTONS.ADDSETTING}
+                  />
+              </Grid>
           </Card>
         </Grid>
       </Grid>
