@@ -190,7 +190,10 @@ export function getNotes(id) {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${id}/notes` , 
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       }
       );

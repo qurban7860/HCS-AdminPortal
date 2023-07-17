@@ -283,7 +283,10 @@ export function getContacts(customerID ) {
        const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/${customerID}/contacts` , 
         {
           params: {
-            isArchived: false
+            isArchived: false,
+            orderBy : {
+              createdAt:-1
+            }
           }
         }
         );

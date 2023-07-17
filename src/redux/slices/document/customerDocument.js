@@ -245,6 +245,9 @@ export function getCustomerDocuments(customerId) {
           isArchived: false,
           customer:customerId,
           machine: null,
+          orderBy : {
+            createdAt:-1
+          }
           // basic: true
         }
       }
