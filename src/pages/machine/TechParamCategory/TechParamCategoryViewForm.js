@@ -27,7 +27,7 @@ TechParamCategoryViewForm.propTypes = {
 
 export default function TechParamCategoryViewForm({ currentTechparamcategory = null }) {
   const toggleEdit = () => {
-    navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.edit(id));
+    navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.edit(id));
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -56,7 +56,7 @@ export default function TechParamCategoryViewForm({ currentTechparamcategory = n
     try {
       await dispatch(deleteTechparamcategory(techparamcategory._id));
       enqueueSnackbar('Deleted Successfully!');
-      navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list);
+      navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.list);
     } catch (err) {
 
       enqueueSnackbar('Techparam category delete failed!', { variant: `error` });

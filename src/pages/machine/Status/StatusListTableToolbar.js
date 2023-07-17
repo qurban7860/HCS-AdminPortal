@@ -33,7 +33,7 @@ export default function StatusListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.machineStatus.new);
+    navigate(PATH_MACHINE.machines.settings.status.new);
   };
 
   return (

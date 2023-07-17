@@ -299,7 +299,7 @@ export default function Router() {
                     ]
                   },
                   {
-                    path: 'machineModel',
+                    path: 'model',
                     children:[
                       {path: 'new', element: <ModelAddForm/>},
                       {path: 'list', element: <ModelList/>},
@@ -321,7 +321,7 @@ export default function Router() {
                     ]
                   },
                   {
-                    path: 'machineStatus',
+                    path: 'status',
                     children:[
                       {path: 'new', element: <StatusAddForm/>},
                       {path: 'list', element: <StatusList/>},
@@ -332,7 +332,7 @@ export default function Router() {
                     ]
                   },
                   {
-                    path: 'machineTechnicalParameterCategories',
+                    path: 'technicalParameterCategories',
                     children:[
                       {path: 'new', element: <TechParamCategoryAddForm/>},
                       {path: 'list', element: <TechParamList/>},
@@ -343,7 +343,7 @@ export default function Router() {
                     ]
                   },
                   {
-                    path: 'machineParameters',
+                    path: 'parameters',
                     children:[
                       {path: 'new', element: <ParameterAddForm/>},
                       {path: 'list', element: <ParameterList/>},

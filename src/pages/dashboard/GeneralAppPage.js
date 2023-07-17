@@ -86,7 +86,7 @@ export default function GeneralAppPage() {
         {/* dashboard customers, sites, machines, active users */}
         <Grid container item xs={12} md={16} m={3} sx={{ justifyContent: 'center' }}>
           <Grid container item xs={12} md={16} spacing={3}>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={5} lg={4} >
               <HowickWidgets
                 title="Customers"
                 total={count?.customerCount || 0}
@@ -99,7 +99,7 @@ export default function GeneralAppPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={3}>
+            <Grid item xs={12} sm={6} md={5} lg={4}>
               <HowickWidgets
                 title="Sites"
                 total={count?.siteCount || 0}
@@ -112,7 +112,7 @@ export default function GeneralAppPage() {
             </Grid>
           </Grid>
           <Grid container item xs={12} md={16} spacing={3}>
-            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+            <Grid item xs={12} sm={6} md={5} lg={4} sx={{ mt: '24px' }}>
               <HowickWidgets
                 title="Machines"
                 total={count?.machineCount || 0}
@@ -127,7 +127,7 @@ export default function GeneralAppPage() {
                 }}
               />
             </Grid>
-            <Grid item xs={12} sm={6} md={3} sx={{ mt: '24px' }}>
+            <Grid item xs={12} sm={6} md={5} lg={4} sx={{ mt: '24px' }}>
               <HowickWidgets
                 title="Active Users"
                 total={count?.userCount || 0}

@@ -120,12 +120,12 @@ export function getCustomers() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const data = {
-        orderBy: "createdAt: -1",
-        isArchived: false,
-      }
-      const queryString = new URLSearchParams(data).toString();
-      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers?${queryString}` );
+      // const queryString = new URLSearchParams(data).toString();
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers/`,{
+        params:{
+          isArchived: false,
+          orderBy: "createdAt: -1",
+        }});
       dispatch(slice.actions.getCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {

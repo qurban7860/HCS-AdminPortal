@@ -42,7 +42,7 @@ export default function ParameterViewForm() {
   const navigate = useNavigate();
 
   const toggleEdit = () => {
-    navigate(PATH_MACHINE.machines.settings.machineParameters.edit(techparam._id));
+    navigate(PATH_MACHINE.machines.settings.parameters.edit(techparam._id));
   };
 
   useLayoutEffect(() => {
@@ -70,7 +70,7 @@ export default function ParameterViewForm() {
   const onDelete = () => {
     try {
       dispatch(deleteTechparams(id));
-      navigate(PATH_MACHINE.machines.settings.machineParameters.list);
+      navigate(PATH_MACHINE.machines.settings.parameters.list);
     } catch (err) {
       // if(err.Message){
       //   enqueueSnackbar(err.Message,{ variant: `error` })
