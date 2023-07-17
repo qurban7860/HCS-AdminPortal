@@ -172,12 +172,12 @@ export default function TechParamList() {
 
   const handleEditRow = async (id) => {
     await dispatch(getTechparamcategory(id));
-    navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.edit(id));
+    navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.edit(id));
   };
 
   const handleViewRow = async (id) => {
     await dispatch(getTechparamcategory(id));
-    navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.view(id));
+    navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.view(id));
   };
 
   const handleResetFilter = () => {

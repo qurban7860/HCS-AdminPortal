@@ -74,7 +74,7 @@ export default function TechParamCategoryEditForm() {
   }, [techparamcategory]);
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.view(id));
+    navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.view(id));
   };
 
   const onSubmit = async (data) => {
@@ -83,7 +83,7 @@ export default function TechParamCategoryEditForm() {
       await dispatch(updateTechparamcategory(data, id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.view(id));
+      navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.view(id));
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);

@@ -34,7 +34,7 @@ export default function TechParamListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.new);
+    navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.new);
   };
   return (
     <Stack {...options}>

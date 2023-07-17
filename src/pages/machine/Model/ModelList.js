@@ -194,13 +194,13 @@ export default function ModelList() {
     // console.log(id);
 
     await dispatch(getMachineModel(id));
-    navigate(PATH_MACHINE.machines.settings.machineModel.edit(id));
+    navigate(PATH_MACHINE.machines.settings.model.edit(id));
   };
 
   const handleViewRow = async (id) => {
     try {
       await dispatch(getMachineModel(id));
-      navigate(PATH_MACHINE.machines.settings.machineModel.view(id));
+      navigate(PATH_MACHINE.machines.settings.model.view(id));
     } catch (e) {
       enqueueSnackbar("Couldn't find machine model!", { variant: 'error' });
     }
