@@ -53,7 +53,7 @@ export default function StatusView({ editPage }) {
         <Cover
           name={machinestatus?.name}
           setting="enable"
-          backLink={PATH_MACHINE.machines.settings.machineStatus.list}
+          backLink={PATH_MACHINE.machines.settings.status.list}
         />
       </Card>
       <StatusViewForm />

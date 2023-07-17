@@ -34,7 +34,7 @@ export default function ParameterListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_MACHINE.machines.settings.machineParameters.new);
+    navigate(PATH_MACHINE.machines.settings.parameters.new);
   };
   return (
     <Stack {...options}>

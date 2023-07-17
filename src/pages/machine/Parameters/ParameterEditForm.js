@@ -114,7 +114,7 @@ export default function ParameterEditForm() {
   }, [techparam]);
 
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.machineParameters.view(id));
+    navigate(PATH_MACHINE.machines.settings.parameters.view(id));
   };
 
   const onSubmit = async (data) => {
@@ -126,7 +126,7 @@ export default function ParameterEditForm() {
       await dispatch(updateTechparam(data, techparam._id));
       reset();
       enqueueSnackbar('Update success!');
-      navigate(PATH_MACHINE.machines.settings.machineParameters.view(id));
+      navigate(PATH_MACHINE.machines.settings.parameters.view(id));
     } catch (err) {
       console.log(err);
       enqueueSnackbar('Saving failed!', { variant: `error` });

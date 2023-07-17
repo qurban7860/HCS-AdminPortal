@@ -24,7 +24,7 @@ export default function TechParamCategoryView() {
         <Cover
           name={techparamcategory?.name}
           setting="enable"
-          backLink={PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list}
+          backLink={PATH_MACHINE.machines.settings.technicalParameterCategories.list}
         />
       </Card>
       <TechParamCategoryViewForm />

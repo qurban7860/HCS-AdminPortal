@@ -54,7 +54,7 @@ export default function ParameterViewPage({ editPage }) {
         <Cover
           name={techparam?.name}
           setting="enable"
-          backLink={PATH_MACHINE.machines.settings.machineParameters.list}
+          backLink={PATH_MACHINE.machines.settings.parameters.list}
         />
       </Card>
       <ParameterViewForm />

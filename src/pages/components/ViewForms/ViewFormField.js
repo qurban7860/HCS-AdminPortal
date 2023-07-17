@@ -118,22 +118,25 @@ export default function ViewFormField({
             )}
             </Typography>
           </Stack>
-        )}        {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
-          <Stack direction="row" spacing={1} sx={{ my: 2 }}>
-            {arrayParam.map(
+        )}        
+        {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
+          <Grid item sx={{display: 'flex-inline'}} >
+            <Grid container justifyContent="flex-start" spacing={1}>
+              {arrayParam.map(
               (data) =>
                 data?.name &&
                 typeof data?.name === 'string' &&
-                data?.name.trim().length > 0 && <Chip label={data?.name} />
+                data?.name.trim().length > 0 && <Chip label={data?.name} sx={{m:0.2}} />
             )}
-          </Stack>
+            </Grid>
+          </Grid>
         )}
 
       {chips && typeof chips === 'object' ? (
         <Grid item sx={{display: 'flex-inline'}} >
           <Grid container justifyContent="flex-start" spacing={1}>
             {chips.map(
-              (chip) => typeof chip === 'string' && chip.trim().length > 0 && <Chip label={chip} sx={{m:0.3}}/>
+              (chip) => typeof chip === 'string' && chip.trim().length > 0 && <Chip label={chip} sx={{m:0.2}}/>
             )}
           </Grid>
         </Grid>
@@ -144,7 +147,7 @@ export default function ViewFormField({
         {userRolesChips && typeof userRolesChips === 'object' ? (
           <Grid item sx={{display: 'flex-inline'}} >
           <Grid container justifyContent="flex-start" spacing={1}>
-            {userRolesChips.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{mx:0.3}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
+            {userRolesChips.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{mx:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
           </Grid>
           </Grid>
         ) : (

@@ -22,19 +22,19 @@ export default function Machine() {
     navigate(PATH_MACHINE.machines.settings.categories.list);
   };
   const linkModel = () => {
-    navigate(PATH_MACHINE.machines.settings.machineModel.list);
+    navigate(PATH_MACHINE.machines.settings.model.list);
   };
   const linkStatus = () => {
-    navigate(PATH_MACHINE.machines.settings.machineStatus.list);
+    navigate(PATH_MACHINE.machines.settings.status.list);
   };
   const linkSupplier = () => {
     navigate(PATH_MACHINE.machines.settings.supplier.list);
   };
   const linkTechParam = () => {
-    navigate(PATH_MACHINE.machines.settings.machineParameters.list);
+    navigate(PATH_MACHINE.machines.settings.parameters.list);
   };
   const linktpCategory = () => {
-    navigate(PATH_MACHINE.machines.settings.machineTechnicalParameterCategories.list);
+    navigate(PATH_MACHINE.machines.settings.technicalParameterCategories.list);
   };
   const linkTool = () => {
     navigate(PATH_MACHINE.machines.settings.tool.list);

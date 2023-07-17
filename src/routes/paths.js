@@ -118,13 +118,13 @@ export const PATH_MACHINE = {
         categoryedit: (id) => path(ROOTS_MACHINE, `/machines/settings/categories/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/categories/${id}/edit`),
       },
-      machineModel: {
+      model: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
-        new: (ROOTS_MACHINE, '/products/machines/settings/machineModel/new'),
-        list: (ROOTS_MACHINE, '/products/machines/settings/machineModel/list'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/settings/machineModel/${id}/view`),
-        modeledit: (id) => path(ROOTS_MACHINE, `/machines/settings/machineModel/${id}/edit`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/machineModel/${id}/edit`),
+        new: (ROOTS_MACHINE, '/products/machines/settings/model/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/model/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/model/${id}/view`),
+        modeledit: (id) => path(ROOTS_MACHINE, `/machines/settings/model/${id}/edit`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/model/${id}/edit`),
       },
       supplier: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
@@ -134,34 +134,34 @@ export const PATH_MACHINE = {
         supplieredit: (id) => path(ROOTS_MACHINE, `/machines/settings/supplier/${id}/edit`),
         edit: (id) => path(ROOTS_MACHINE, `/machines/settings/supplier/${id}/edit`),
       },
-      machineStatus: {
+      status: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
-        new: (ROOTS_MACHINE, '/products/machines/settings/machineStatus/new'),
-        list: (ROOTS_MACHINE, '/products/machines/settings/machineStatus/list'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/settings/machineStatus/${id}/view`),
-        statusedit: (id) => path(ROOTS_MACHINE, `/machines/settings/machineStatus/${id}/edit`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/machineStatus/${id}/edit`),
+        new: (ROOTS_MACHINE, '/products/machines/settings/status/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/status/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/status/${id}/view`),
+        statusedit: (id) => path(ROOTS_MACHINE, `/machines/settings/status/${id}/edit`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/status/${id}/edit`),
       },
-      machineTechnicalParameterCategories: {
+      technicalParameterCategories: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
-        new: (ROOTS_MACHINE, '/products/machines/settings/machineTechnicalParameterCategories/new'),
+        new: (ROOTS_MACHINE, '/products/machines/settings/technicalParameterCategories/new'),
         list:
-          (ROOTS_MACHINE, '/products/machines/settings/machineTechnicalParameterCategories/list'),
+          (ROOTS_MACHINE, '/products/machines/settings/technicalParameterCategories/list'),
         view: (id) =>
-          path(ROOTS_MACHINE, `/machines/settings/machineTechnicalParameterCategories/${id}/view`),
+          path(ROOTS_MACHINE, `/machines/settings/technicalParameterCategories/${id}/view`),
         techparamcategoryedit: (id) =>
-          path(ROOTS_MACHINE, `/machines/settings/machineTechnicalParameterCategories/${id}/edit`),
+          path(ROOTS_MACHINE, `/machines/settings/technicalParameterCategories/${id}/edit`),
         edit: (id) =>
-          path(ROOTS_MACHINE, `/machines/settings/machineTechnicalParameterCategories/${id}/edit`),
+          path(ROOTS_MACHINE, `/machines/settings/technicalParameterCategories/${id}/edit`),
       },
-      machineParameters: {
+      parameters: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),
-        new: (ROOTS_MACHINE, '/products/machines/settings/machineParameters/new'),
-        list: (ROOTS_MACHINE, '/products/machines/settings/machineParameters/list'),
-        view: (id) => path(ROOTS_MACHINE, `/machines/settings/machineParameters/${id}/view`),
+        new: (ROOTS_MACHINE, '/products/machines/settings/parameters/new'),
+        list: (ROOTS_MACHINE, '/products/machines/settings/parameters/list'),
+        view: (id) => path(ROOTS_MACHINE, `/machines/settings/parameters/${id}/view`),
         parameteredit: (id) =>
-          path(ROOTS_MACHINE, `/machines/settings/machineParameters/${id}/edit`),
-        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/machineParameters/${id}/edit`),
+          path(ROOTS_MACHINE, `/machines/settings/parameters/${id}/edit`),
+        edit: (id) => path(ROOTS_MACHINE, `/machines/settings/parameters/${id}/edit`),
       },
       tool: {
         root: path(ROOTS_MACHINE, '/products/machines/settings'),

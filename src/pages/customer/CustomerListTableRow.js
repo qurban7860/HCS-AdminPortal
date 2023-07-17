@@ -104,7 +104,7 @@ export default function CustomerListTableRow({
       <TableCell>
         {tradingName.map((value) =>
           typeof value === 'string'
-            ? value.trim() !== '' && <Chip label={value} sx={{ mx: 0.3 }} />
+            ? value.trim() !== '' && <Chip label={value} sx={{ m: 0.2 }} />
             : ''
         )}
       </TableCell>

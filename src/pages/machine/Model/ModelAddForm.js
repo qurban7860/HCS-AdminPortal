@@ -98,7 +98,7 @@ export default function ModelAddForm() {
       await dispatch(addMachineModel(data));
       reset();
       enqueueSnackbar('Create success!');
-      navigate(PATH_MACHINE.machines.settings.machineModel.list);
+      navigate(PATH_MACHINE.machines.settings.model.list);
     } catch (error) {
       if (error.Message) {
         enqueueSnackbar(error.Message, { variant: `error` });
@@ -111,7 +111,7 @@ export default function ModelAddForm() {
     }
   };
   const toggleCancel = () => {
-    navigate(PATH_MACHINE.machines.settings.machineModel.list);
+    navigate(PATH_MACHINE.machines.settings.model.list);
   };
 
   const { themeStretch } = useSettingsContext();
