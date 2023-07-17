@@ -132,7 +132,10 @@ export function getCustomers() {
       const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
       {
         params: {
-          isArchived: false
+          isArchived: false,
+          orderBy : {
+            createdAt:-1
+          }
         }
       });
       dispatch(slice.actions.getCustomersSuccess(response.data));
