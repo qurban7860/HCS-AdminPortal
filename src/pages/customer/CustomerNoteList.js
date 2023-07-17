@@ -31,7 +31,7 @@ import NotesViewForm from './note/NotesViewForm';
 import NoteEditForm from './note/NoteEditForm';
 import NoteAddForm from './note/NoteAddForm';
 import { getNotes, deleteNote, setNoteFormVisibility } from '../../redux/slices/customer/note';
-import { getSites } from '../../redux/slices/customer/site';
+import { getActiveSites } from '../../redux/slices/customer/site';
 import { getActiveContacts } from '../../redux/slices/customer/contact';
 import { BUTTONS, BREADCRUMBS, DIALOGS } from '../../constants/default-constants';
 
@@ -97,7 +97,7 @@ export default function CustomerNoteList() {
     if (!formVisibility && !noteEditFormVisibility) {
       dispatch(getNotes(customer._id));
       dispatch(getActiveContacts(customer._id));
-      dispatch(getSites(customer._id));
+      dispatch(getActiveSites(customer._id));
     }
   }, [dispatch, customer._id, noteEditFormVisibility, formVisibility]);
   // console.log(customer._id)
