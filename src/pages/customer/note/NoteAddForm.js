@@ -26,7 +26,7 @@ NoteAddForm.propTypes = {
 export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
   // const { users } = useSelector((state) => state.user);
 
-  const { sites } = useSelector((state) => state.site);
+  const { activeSites } = useSelector((state) => state.site);
   const { activeContacts } = useSelector((state) => state.contact);
   const { customer } = useSelector((state) => state.customer);
   const [siteVal, setSiteVal] = useState('');
@@ -128,7 +128,7 @@ export default function NoteAddForm({ isEdit, readOnly, currentNote }) {
                 <Autocomplete
                   // freeSolo
                   value={siteVal || null}
-                  options={sites}
+                  options={activeSites}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
