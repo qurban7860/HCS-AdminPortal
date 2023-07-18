@@ -38,7 +38,7 @@ export default function StatusEditForm() {
       .typeError('Display Order No. must be a number')
       .nullable()
       .transform((_, val) => (val !== '' ? Number(val) : null)),
-    slug: Yup.string().min(0).max(50),
+      slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
   });
 
   const defaultValues = useMemo(

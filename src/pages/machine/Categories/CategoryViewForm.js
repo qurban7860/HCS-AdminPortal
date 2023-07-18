@@ -55,7 +55,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       name: category?.name || '',
       description: category?.description || '',
       isActive: category.isActive,
-      connection: category.connection || false,
+      connection: category.connections || false,
       createdByFullName: category?.createdBy?.name || '',
       createdAt: category?.createdAt || '',
       createdIP: category?.createdIP || '',
