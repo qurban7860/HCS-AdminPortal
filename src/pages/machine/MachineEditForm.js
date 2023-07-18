@@ -149,8 +149,12 @@ export default function MachineEditForm() {
     //   setInstallationDateToggle(false);
     //   setShippingDateToggle(false);
     // }
-    setInstallationDate(machine?.installationDate);
-    setShippingDate(machine?.shippingDate);
+    if(machine?.installationDate){
+      setInstallationDate(machine?.installationDate);
+    }
+    if(machine?.shippingDate){
+      setShippingDate(machine?.shippingDate);
+    }
   }, [dispatch, machine]);
 
   useLayoutEffect(() => {
@@ -527,14 +531,14 @@ export default function MachineEditForm() {
                 >
                   <DatePicker
                     label="Installation Date"
-                    value={installationDate}
+                    value={installationDate || null}
                     // disabled={disableInstallationDate}
                     onChange={(newValue) => setInstallationDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
                   <DatePicker
                     label="Shipping Date"
-                    value={shippingDate}
+                    value={shippingDate  || null}
                     // disabled={disableShippingDate}
                     onChange={(newValue) => setShippingDate(newValue)}
                     renderInput={(params) => <TextField {...params} />}
