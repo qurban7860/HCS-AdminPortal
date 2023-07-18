@@ -39,18 +39,18 @@ export default function StatusAddForm() {
   const AddMachineSchema = Yup.object().shape({
     name: Yup.string().max(50).required('Name is required'),
     isActive: Yup.boolean(),
-    contactName: Yup.string(),
-    contactTitle: Yup.string(),
+    contactName: Yup.string().max(50),
+    contactTitle: Yup.string().max(50),
     // phone: Yup.string().nullable(),
     // fax: Yup.string().nullable(),
     email: Yup.string().email(),
     website: Yup.string(),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    region: Yup.string(),
+    street: Yup.string().max(50),
+    suburb: Yup.string().max(50),
+    region: Yup.string().max(50),
     // country: Yup.string(),
-    city: Yup.string(),
-    postcode: Yup.string(),
+    city: Yup.string().max(50),
+    postcode: Yup.string().max(20),
   });
 
   const defaultValues = useMemo(
@@ -123,7 +123,7 @@ export default function StatusAddForm() {
       navigate(PATH_MACHINE.machines.settings.supplier.list);
     } catch (error) {
       // enqueueSnackbar('Saving failed!');
-      enqueueSnackbar(error?.message, { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };

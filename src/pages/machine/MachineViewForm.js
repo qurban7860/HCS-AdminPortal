@@ -53,6 +53,7 @@ export default function MachineViewForm() {
   const { machine, machineEditFormFlag, transferMachineFlag } = useSelector(
     (state) => state.machine
   );
+  console.log("machine : ",machine)
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);
@@ -179,8 +180,9 @@ export default function MachineViewForm() {
   const handleCloseMachineConnection = () => setOpenMachineConnection(false);
 
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.name} />
+    <Chip onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
   ));
+  console.log("linkedMachines : ", linkedMachines)
 
   const defaultValues = useMemo(
     () => ({
@@ -289,15 +291,11 @@ export default function MachineViewForm() {
             </Grid>
 
             <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-            <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentMachine} />
-            <ViewFormField sm={6} heading="Alias" chips={defaultValues?.alias} />
+            <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} />
+            <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
             <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-            <CommaJoinField 
-              sm={6} 
-              basicArrayParam={linkedMachines} 
-              heading='Connected Machines'
-            />
+            <ViewFormField sm={6} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
 
             <ViewFormField
               sm={12}
@@ -400,7 +398,7 @@ export default function MachineViewForm() {
         <DialogLabel content="Customer" onClick={() => handleCloseCustomer()} />
         <Grid item container sx={{ px: 2, pt: 2 }}>
           <ViewFormField sm={12} heading="Name" param={customer?.name} />
-          <ViewFormField sm={6} heading="Trading Name" chips={customer?.tradingName} />
+          <ViewFormField sm={12} heading="Trading Name" chips={customer?.tradingName} />
           <ViewFormField sm={6} heading="Phone" param={customer?.mainSite?.phone} />
           <ViewFormField sm={6} heading="Fax" param={customer?.mainSite?.fax} />
           <ViewFormField sm={6} heading="Email" param={customer?.mainSite?.email} />

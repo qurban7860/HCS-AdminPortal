@@ -72,7 +72,7 @@ export default function ParameterEditForm() {
     name: Yup.string().max(50).required('Name is required'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
-    code: Yup.string(),
+    code: Yup.string().max(20).required('Code is required'),
   });
 
   const defaultValues = useMemo(
@@ -144,12 +144,7 @@ export default function ParameterEditForm() {
         <Grid item xs={18} md={12} sx={{ mt: 3 }}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-              >
+              
                 <Autocomplete
                   value={paramVal || null}
                   options={techparamcategories}
@@ -158,11 +153,17 @@ export default function ParameterEditForm() {
                     setParamVal(newValue);
                   }}
                   id="controllable-states-demo"
-                  renderInput={(params) => <TextField {...params} label="Parameter Category" />}
+                  renderInput={(params) => <TextField {...params} label="Parameter Category" required />}
                   ChipProps={{ size: 'small' }}
                 />
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
+              >
                 <RHFTextField name="name" label="Name*" />
-                <RHFTextField name="code" label="Code" />
+                <RHFTextField name="code" label="Code*" />
               </Box>
               <Box
                 rowGap={2}

@@ -109,12 +109,12 @@ export default function SupplierViewForm({ currentSupplier = null }) {
       <ViewFormEditDeleteButtons handleEdit={toggleEdit} onDelete={onDelete} />
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
+        <ViewFormField sm={12} heading="Name" param={defaultValues?.name} />
         <ViewFormField sm={6} heading="Contact Name" param={defaultValues?.contactName} />
         <ViewFormField sm={6} heading="Contact Title" param={defaultValues?.contactTitle} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
-        <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
         <ViewFormField sm={6} heading="Fax" param={defaultValues?.fax} />
+        <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
         <ViewFormField sm={6} heading="Website" param={defaultValues?.website} />
         <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />
         <ViewFormField sm={6} heading="Suburb" param={defaultValues?.suburb} />

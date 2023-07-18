@@ -116,7 +116,7 @@ export default function SettingViewForm({ currentSetting = null }) {
         <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues?.techParamName} />
         <ViewFormField
           sm={6}
-          heading="Technical Perameter Code"
+          heading="Technical Perameter Name"
           param={defaultValues?.techParamCode}
         />
         <ViewFormField

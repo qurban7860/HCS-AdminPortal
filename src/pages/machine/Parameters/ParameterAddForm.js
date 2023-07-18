@@ -47,7 +47,7 @@ export default function ParameterAddForm() {
     name: Yup.string().max(50).required('Name is required'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
-    code: Yup.string().required('Code is required'),
+    code: Yup.string().max(20).required('Code is required'),
   });
 
   const defaultValues = useMemo(
@@ -120,7 +120,7 @@ export default function ParameterAddForm() {
                         setParamCategoryVal(newValue);
                       }}
                       id="controllable-states-demo"
-                      renderInput={(params) => <TextField {...params} label="Parameter Category" />}
+                      renderInput={(params) => <TextField {...params} label="Parameter Category" required />}
                       ChipProps={{ size: 'small' }}
                     />
                   </Box>
@@ -131,7 +131,7 @@ export default function ParameterAddForm() {
                     gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
                   >
                     <RHFTextField name="name" label="Name*" />
-                    <RHFTextField name="code" label="Code" />
+                    <RHFTextField name="code" label="Code*" />
                   </Box>
                   <Box
                     rowGap={2}

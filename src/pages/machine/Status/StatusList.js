@@ -51,6 +51,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'slug', label: 'Slug', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -107,7 +108,7 @@ export default function StatusList() {
   const { machinestatuses, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.machinestatus
   );
-
+// console.log("machinestatuses : ", machinestatuses)
   useLayoutEffect(() => {
     // console.log('Testing done')
     dispatch(getMachinestatuses());

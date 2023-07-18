@@ -38,7 +38,7 @@ export default function StatusAddForm() {
       .typeError('Display Order No. must be a number')
       .nullable()
       .transform((_, val) => (val !== '' ? Number(val) : null)),
-    slug: Yup.string().min(0).max(50),
+    slug: Yup.string().min(0).max(50).matches(/^(?!.*\s)[\S\s]{0,50}$/, 'Slug field cannot contain blankspaces'),
   });
 
   const defaultValues = useMemo(
@@ -99,7 +99,7 @@ export default function StatusAddForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField name="name" label="Name" required />
+                  <RHFTextField name="name" label="Name*"/>
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                   <RHFTextField name="displayOrderNo" label="Display Order No." />
                   <RHFTextField name="slug" label="Slug" />

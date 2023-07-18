@@ -2,8 +2,10 @@ import PropTypes from 'prop-types';
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+
 // @mui
 import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
+import { RHFSwitch } from '../../../components/hook-form';
 // redux
 import {
   getCategory,
@@ -20,6 +22,7 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
+import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // ----------------------------------------------------------------------
 
@@ -38,6 +41,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
 
   const navigate = useNavigate();
   const { category, editFormVisibility } = useSelector((state) => state.category);
+  console.log("category : ", category)
   const { id } = useParams();
 
   const dispatch = useDispatch();
@@ -51,6 +55,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
       name: category?.name || '',
       description: category?.description || '',
       isActive: category.isActive,
+      connection: category.connection || false,
       createdByFullName: category?.createdBy?.name || '',
       createdAt: category?.createdAt || '',
       createdIP: category?.createdIP || '',
@@ -86,6 +91,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField sm={12} heading="Category Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
+        <ViewFormSwitch heading='Connect as a child' isActive={defaultValues.connection} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

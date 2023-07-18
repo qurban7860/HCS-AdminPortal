@@ -28,7 +28,7 @@ export default function StatusListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, isActive, createdAt } = row;
+  const { name, slug, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -54,6 +54,9 @@ export default function StatusListTableRow({
     <>
       <TableRow hover selected={selected}>
         <LinkTableCell onClick={onViewRow} align="left" param={name} />
+        <TableCell align="left" >
+          {slug}
+        </TableCell>
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>
