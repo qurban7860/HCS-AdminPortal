@@ -9,6 +9,7 @@ import { Card, Grid, Stack, Typography, Button, Switch } from '@mui/material';
 import {
   setMachinemodelsEditFormVisibility,
   deleteMachineModel,
+  getMachineModel 
 } from '../../../redux/slices/products/model';
 // paths
 import { PATH_MACHINE } from '../../../routes/paths';
@@ -18,7 +19,6 @@ import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
-
 // ----------------------------------------------------------------------
 
 ModelViewForm.propTypes = {
@@ -44,7 +44,9 @@ export default function ModelViewForm({ currentMachinemodel = null }) {
   const { id } = useParams();
 
   const dispatch = useDispatch();
-
+useEffect(()=>{
+ dispatch(getMachineModel(id));
+},[dispatch, id])
   const defaultValues = useMemo(
     () => ({
       name: machineModel?.name || '',
