@@ -77,7 +77,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   const handleFilterName = (e) => {
     setFilterName(e.target.value);
   };
-  console.log('filterName', filterName);
+
   const handleResetFilter = () => {
     setFilterName('');
     setFilterStatus([]);
@@ -95,6 +95,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
   }, [sites, error, responseMessage]);
 
   // ------------------------------------------------------------
+
   const toggleCancel = () => {
     dispatch(setSiteFormVisibility(false));
     setChecked(false);
@@ -116,7 +117,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
       dispatch(getSites(customer._id));
       dispatch(getActiveContacts(customer._id));
     }
-  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); // checked is also included
+  }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); 
 
   const isNotFound = !sites.length && !siteAddFormVisibility && !siteEditFormVisibility;
 

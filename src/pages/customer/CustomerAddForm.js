@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
+import { MuiTelInput } from 'mui-tel-input';
 import { LoadingButton } from '@mui/lab';
 import {
   Box,
@@ -173,31 +173,19 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   }, [dispatch]);
 
   const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
       setPhone(newValue);
-    }
   };
 
   const handleFaxChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
       setFaxVal(newValue);
-    }
   };
 
   const handleBillingContactPhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
       setBillingContactPhone(newValue);
-    }
   };
 
   const handleTechnicalContactPhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
       setTechnicalContactPhone(newValue);
-    }
   };
   const toggleCancel = () => {
     navigate(PATH_CUSTOMER.list);

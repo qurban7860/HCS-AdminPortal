@@ -144,17 +144,11 @@ export default function SiteAddForm() {
   };
 
   const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
       setPhone(newValue);
-    }
   };
 
   const handleFaxChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
       setFaxVal(newValue);
-    }
   };
 
   const onSubmit = async (data) => {

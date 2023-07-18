@@ -275,13 +275,13 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
                   minRows={3}
                   multiline
                 />
-
-                <ToggleButtons
-                  handleChange={handleChange}
-                  customerAccessVal={customerAccessVal}
-                  isActive={isActive}
-                  handleIsActiveChange={handleIsActiveChange}
-                />
+                  <ToggleButtons
+                    isDocument
+                    customerAccessVal={customerAccessVal}
+                    handleChange={handleChange}
+                    isActive={isActive}
+                    handleIsActiveChange={handleIsActiveChange}
+                  />
 
                 {/* <RHFUpload
                   name="image"
