@@ -115,10 +115,7 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   };
 
   const handlePhoneChange = (newValue) => {
-    matchIsValidTel(newValue);
-    if (newValue.length < 20) {
       setPhone(newValue);
-    }
   };
 
   const onSubmit = async (data) => {

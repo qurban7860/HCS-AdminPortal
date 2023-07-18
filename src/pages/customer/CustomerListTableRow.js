@@ -101,7 +101,7 @@ export default function CustomerListTableRow({
         param={name}
         isVerified={verifications?.length > 0}
       />
-      <TableCell>
+      <TableCell sx={{maxWidth:"400px"}}>
         {tradingName.map((value) =>
           typeof value === 'string'
             ? value.trim() !== '' && <Chip label={value} sx={{ m: 0.2 }} />

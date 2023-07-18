@@ -156,7 +156,7 @@ export default function MachineEditForm() {
   useLayoutEffect(() => {
     if (customerVal !== null && customerVal?.id !== '') {
       dispatch(getActiveSites(customerVal?._id));
-    dispatch(getMachineConnections(customerVal?._id));
+      dispatch(getMachineConnections(customerVal?._id));
     }
     //   setInstallVal(null);
     //   setBillingVal(null);
@@ -403,7 +403,27 @@ export default function MachineEditForm() {
                     renderInput={(params) => <TextField {...params} label="Model" />}
                     ChipProps={{ size: 'small' }}
                   />
-
+                  <Autocomplete
+                    value={customerVal || null}
+                    options={activeCustomers}
+                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        setCustomerVal(newValue);
+                        setStatusVal('');
+                      } else {
+                        setCustomerVal('');
+                        setMachineConnectionVal([]);
+                      }
+                    }}
+                    renderOption={(props, option) => (
+                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                    )}
+                    id="controllable-states-demo"
+                    renderInput={(params) => <TextField {...params} label="Customer" required/>}
+                    ChipProps={{ size: 'small' }}
+                  />
                   <Autocomplete
                     multiple
                     name="connection"
@@ -452,40 +472,7 @@ export default function MachineEditForm() {
                     ChipProps={{ size: 'small' }}
                   />
                   <RHFTextField name="workOrderRef" label="Work Order/ Purchase Order" />
-                </Box>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
-                >
-                  <Autocomplete
-                    value={customerVal || null}
-                    options={activeCustomers}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
-                    getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setCustomerVal(newValue);
-                        setStatusVal('');
-                      } else {
-                        setCustomerVal('');
-                      }
-                    }}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
-                    )}
-                    id="controllable-states-demo"
-                    renderInput={(params) => <TextField {...params} label="Customer" />}
-                    ChipProps={{ size: 'small' }}
-                  />
-                </Box>
-                <Box
-                  rowGap={3}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{ xs: 'repeat(2, 1fr)', sm: 'repeat(2, 1fr)' }}
-                >
+                
                   <Autocomplete
                     // freeSolo
                     value={installVal || null}

@@ -95,7 +95,7 @@ export default function MachineNoteList() {
 
   useLayoutEffect(() => {
     if (!formVisibility && !noteEditFormVisibility) {
-      dispatch(getNotes(machine._id));
+      dispatch(getNotes(machine?._id));
     }
   }, [dispatch, machine._id, noteEditFormVisibility, formVisibility]);
 
