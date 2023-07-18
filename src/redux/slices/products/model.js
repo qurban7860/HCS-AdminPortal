@@ -210,9 +210,7 @@ export function addMachineModel(params) {
             data.category = null
           }
         const response = await axios.post(`${CONFIG.SERVER_URL}products/models`, data);
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getMachineModelsSuccess(response.data.Machinemodel));
-      }
+          return response
     } catch (error) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
