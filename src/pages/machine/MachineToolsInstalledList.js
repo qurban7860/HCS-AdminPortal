@@ -182,7 +182,7 @@ export default function MachineToolsInstalledList() {
                         {tool?.tool?.name || ''}
                       </Grid>
 
-                      <Grid item xs={12} sm={6} md={8}>
+                      <Grid item xs={12} sm={6} md={8} sx={{overflowWrap: 'break-word'}} >
                         {tool?.note.length > 100 ? tool?.note.substring(0, 100) : tool?.note}
                         {tool?.note.length > 100 ? '...' : null}
                       </Grid>

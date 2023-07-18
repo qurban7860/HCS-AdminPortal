@@ -41,7 +41,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function SupplierEditForm() {
-  const { error, supplier } = useSelector((state) => state.supplier);
+  const { supplier } = useSelector((state) => state.supplier);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
@@ -53,17 +53,17 @@ export default function SupplierEditForm() {
   const EditCategorySchema = Yup.object().shape({
     name: Yup.string().min(2).max(50).required('Name is required'),
     isActive: Yup.boolean(),
-    contactName: Yup.string(),
-    contactTitle: Yup.string(),
+    contactName: Yup.string().max(50),
+    contactTitle: Yup.string().max(50),
     // phone: Yup.string().nullable(),
     // fax: Yup.string().nullable(),
     email: Yup.string().email(),
     website: Yup.string(),
-    street: Yup.string(),
-    suburb: Yup.string(),
-    region: Yup.string(),
-    city: Yup.string(),
-    postcode: Yup.string(),
+    street: Yup.string().max(50),
+    suburb: Yup.string().max(50),
+    region: Yup.string().max(50),
+    city: Yup.string().max(50),
+    postcode: Yup.string().max(20),
     // country: Yup.string().nullable(),
   });
 
@@ -149,7 +149,7 @@ export default function SupplierEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      console.log(typeof phone);
+      // console.log(typeof phone);
       if (phone && phone.length > 4) {
         data.phone = phone;
       } else {
@@ -170,9 +170,9 @@ export default function SupplierEditForm() {
       reset();
       enqueueSnackbar('Update success!');
       navigate(PATH_MACHINE.machines.settings.supplier.view(id));
-    } catch (err) {
-      enqueueSnackbar('Saving failed!', { variant: `error` });
-      console.error(err.message);
+    } catch (error) {
+      enqueueSnackbar(error, { variant: `error` });
+      console.error(error);
     }
   };
 

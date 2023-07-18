@@ -108,6 +108,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 {/* <Grid item lg={6}> */}
+                
                 <Autocomplete
                   // freeSolo
                   value={documentCategoryVal || null}
@@ -128,7 +129,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
                   )}
                   id="controllable-states-demo"
                   renderInput={(params) => (
-                    <TextField {...params} required label={FORMLABELS.DOCUMENT_CATEGORY} />
+                    <TextField {...params} required label={formLABELS.DOCUMENT_CATEGORY} />
                   )}
                   ChipProps={{ size: 'small' }}
                 />

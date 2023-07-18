@@ -42,7 +42,7 @@ import RoleListTableRow from './SignInLogListTableRow';
 import RoleListTableToolbar from './SignInLogListTableToolbar';
 import { getSignInLogs } from '../../../redux/slices/securityUser/securityUser';
 import { Cover } from '../../components/Defaults/Cover';
-import { fDate } from '../../../utils/formatTime';
+import { fDate, fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -295,11 +295,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   if (filterName) {
     inputData = inputData.filter(
       (logs) =>
-        logs?.user?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        logs?.user?.login?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        logs?.loginIP?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(logs?.loginTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(logs?.logoutTime)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        logs?.user?.name?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
+        logs?.user?.login?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
+        logs?.loginIP?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
+        fDateTime(logs?.loginTime)?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0 ||
+        fDateTime(logs?.logoutTime)?.toLowerCase().indexOf(filterName.trim().toLowerCase()) >= 0
     );
   }
 

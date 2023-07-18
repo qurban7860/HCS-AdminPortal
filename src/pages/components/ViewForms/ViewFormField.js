@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
 import { Typography, Grid, Stack, Chip, Alert } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
 import useResponsive from '../../../hooks/useResponsive';
@@ -19,6 +19,7 @@ export default function ViewFormField({
   customerVerificationCount,
   machineVerificationCount,
   verified,
+  chipDialogArrayParam,
   customerVerifiedBy,
   machineVerifiedBy,
   customerAccess,
@@ -118,7 +119,14 @@ export default function ViewFormField({
             )}
             </Typography>
           </Stack>
-        )}       
+        )}    
+
+      {chipDialogArrayParam && chipDialogArrayParam.map((item, index) => (
+        <React.Fragment key={index}>
+          {item}
+          {index !== chipDialogArrayParam.length - 1}
+        </React.Fragment>
+      ))}
 
       {chips && typeof chips === 'object' ? (
         <Grid item sx={{display: 'flex-inline'}} >
@@ -171,6 +179,7 @@ ViewFormField.propTypes = {
   customerVerifiedBy: PropTypes.array,
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
+  chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.array,
   userRolesChips: PropTypes.array,
 };
