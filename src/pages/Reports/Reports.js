@@ -17,6 +17,7 @@ import ClassIcon from '@mui/icons-material/Class';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import { PATH_MACHINE, PATH_DOCUMENT } from '../../routes/paths';
 import { searchSites } from '../../redux/slices/customer/site';
+import { getMachineLatLongData } from '../../redux/slices/products/machine';
 import { useDispatch, useSelector } from '../../redux/store';
 import { Cover } from '../components/Defaults/Cover';
 import Iconify from '../../components/iconify';
@@ -30,15 +31,10 @@ export default function Reports() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(searchSites());
+    dispatch(getMachineLatLongData());
   }, [dispatch]);
 
-  const { sites } = useSelector((state) => state.site);
-
-  const latLongValues = sites
-    .filter(({ lat, long }) => lat && long)
-    .map(({ lat, long }) => ({ lat, long }));
-
+  const { machineLatLongCoordinates } = useSelector((state) => state.machine);
   // Functions to navigate to different pages
   const linkDocumentName = () => {
     navigate(PATH_DOCUMENT.documentName.list);
@@ -71,7 +67,10 @@ export default function Reports() {
               }
             />
             {/* </List> */}
-            <GoogleMaps latlongArr={latLongValues} />
+            <GoogleMaps 
+              machinesSites={machineLatLongCoordinates} 
+              mapHeight={800}
+            />
             {/* <ListItemButton onClick={} sx={{ color: 'text.disabled' }}>
                   <ListItemIcon>
                     <Iconify icon="" />

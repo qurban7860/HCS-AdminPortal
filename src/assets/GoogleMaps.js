@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
+import { Box, Grid, Link, Stack, Divider, Container, Typography, IconButton } from '@mui/material';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';
+import ViewFormField from '../pages/components/ViewForms/ViewFormField';
 
 const defaultCenter = {
   lat: -36.902893343776185,
@@ -19,7 +21,7 @@ GoogleMaps.propTypes = {
   lat: PropTypes.string,
   lng: PropTypes.string,
   edit: PropTypes.bool,
-  machineView: PropTypes.bool
+  machineView: PropTypes.bool,
   // latlongArr: PropTypes.arrayOf(PropTypes.shape({
   //   lat: PropTypes.string.isRequired,
   //   lng: PropTypes.string.isRequired,
@@ -36,6 +38,7 @@ export default function GoogleMaps({
   mapHeight = '',
   center = '',
   zoom = '',
+  machinesSites = [],
 }) {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -50,6 +53,8 @@ export default function GoogleMaps({
   const [map, setMap] = useState(null);
   const [markerPositions, setMarkerPositions] = useState([]);
   const markerRefs = useRef([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [infoWindowData, setInfoWindowData] = useState(null);
 
   useEffect(() => {
     if (map && lat && lng && !isNaN(lat) && !isNaN(lng)) {
@@ -92,15 +97,51 @@ export default function GoogleMaps({
     }
   };
 
+  const handleMarkerClick = (index, lat, lng, name, customerName, address) => {
+    let stringAddress = Object.values(address)?.join(", ");
+
+    setInfoWindowData({index,lat,lng,name,customerName, stringAddress});    
+    if(infoWindowData){
+      setIsOpen(true);
+    }
+  };
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={latlongArr.length > 0 ? (machineView ? markerPositions[0] : reportDefaultCenter) : markerPositions[0]}
-      zoom={zoom ? zoom : (latlongArr.length > 0 && !machineView ? 2 : 15)}
+      center={(latlongArr.length > 0 || machinesSites.length > 0) ? (machineView ? markerPositions[0] : reportDefaultCenter) : markerPositions[0]}
+      zoom={zoom ? zoom : ((latlongArr.length > 0 || machinesSites.length > 0) && !machineView ? 2 : 15)}
       onLoad={onLoad}
       onUnmount={onUnmount}
-      onClick={onMapClick}
+      onClick={machinesSites.length > 0 ? () => setIsOpen(false) : onMapClick}
+
     >
+      
+      {machinesSites.length > 0 && machinesSites.map(({lat, lng, name, customerName, address}, index) => (
+        <Marker
+          key={index}
+          position={{lat: parseFloat(lat), lng: parseFloat(lng)}}
+          draggable={edit}
+          ref={(ref) => (markerRefs.current[index] = ref)}
+          onClick={() => {
+            handleMarkerClick(index, lat, lng, name, customerName, address);
+          }}
+        >
+          {isOpen && infoWindowData && infoWindowData?.index === index && (
+            <InfoWindow
+              onCloseClick={() => {
+                setIsOpen(false);
+              }}
+            >
+              <Grid container justify="center" spacing={2}>
+                <ViewFormField heading="Machine Name" param={infoWindowData?.name}/>
+                <ViewFormField heading="Customer Name" param={infoWindowData?.customerName}/>
+                <ViewFormField heading="Address" param={infoWindowData?.stringAddress}/>
+              </Grid>
+            </InfoWindow>
+          )}
+        </Marker>
+      ))}
       {markerPositions.map((position, index) => (
         <Marker
           key={index}
