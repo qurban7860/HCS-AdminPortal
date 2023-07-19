@@ -31,6 +31,7 @@ import CustomerMachineList from './CustomerMachineList';
 import DocumentTagPage from '../document/documents/DocumentTagPage';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 CustomerView.propTypes = {
   editPage: PropTypes.bool,

@@ -387,7 +387,7 @@ export default function DocumentAddForm({
     },
     [setValue, values.multiUpload]
   );
-
+console.log("activeDocuments : ",activeDocuments)
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Box

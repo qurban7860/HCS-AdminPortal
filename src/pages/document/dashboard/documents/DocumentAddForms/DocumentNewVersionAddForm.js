@@ -38,11 +38,10 @@ export default function DocumentNewVersionAddForm({
             // freeSolo
             value={Value}
             options={options}
-            // isOptionEqualToValue={(option, value) => option.name === value.name}
-            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+            // isOptionEqualToValue={(option, value) => option.displayName === value.displayName}
+            getOptionLabel={(option) => `${option?.displayName ? option?.displayName : ''}`}
             onChange={onChange}
-            renderOption={renderOption}
-            id="controllable-states-demo"
+            // renderOption={(props,option) => (<span {...props} key={option._id}>{option?.displayName}</span>)}
             renderInput={(params) => (
               <TextField {...params} required label={FORMLABELS.SELECT_DOCUMENT} />
             )}

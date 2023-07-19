@@ -238,7 +238,7 @@ export default function SiteEditForm() {
         <Grid item xs={18} md={12}>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
-              <RHFTextField name="name" label="Name" />
+              <RHFTextField name="name" label="Name*" />
               <Box
                 rowGap={3}
                 columnGap={2}

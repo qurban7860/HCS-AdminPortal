@@ -53,7 +53,7 @@ export default function MachineViewForm() {
   const { machine, machineEditFormFlag, transferMachineFlag } = useSelector(
     (state) => state.machine
   );
-  console.log("machine : ",machine)
+  // console.log("machine : ",machine)
   const { customer } = useSelector((state) => state.customer);
   const { site } = useSelector((state) => state.site);
   const { loggedInUser } = useSelector((state) => state.user);

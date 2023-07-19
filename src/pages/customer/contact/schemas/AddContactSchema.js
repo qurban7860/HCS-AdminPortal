@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { Snacks } from '../../../../constants/customer-constants';
 
 export const AddContactSchema = Yup.object().shape({
-  firstName: Yup.string().max(40).required(),
+  firstName: Yup.string().max(40).required("First Name is required!"),
   lastName: Yup.string().max(40),
   title: Yup.string(),
   contactTypes: Yup.array(),
