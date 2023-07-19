@@ -133,7 +133,7 @@ export default function GoogleMaps({
               }}
             >
               <Grid container justify="center" spacing={0} sx={{margin: 0}}>
-                <p>{`${infoWindowData?.serialNo}(${infoWindowData?.customerName})`}<br/>
+                <p>{`${infoWindowData?.serialNo} (${infoWindowData?.customerName})`}<br/>
                     {infoWindowData?.stringAddress}
                 </p>
               </Grid>
