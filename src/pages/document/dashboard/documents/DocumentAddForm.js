@@ -248,7 +248,7 @@ export default function DocumentAddForm({
       if (descriptionVal) {
         data.description = descriptionVal;
       }
-      console.log('Data : ', data);
+      // console.log('Data : ', data);
       if (selectedValue === 'new') {
         await dispatch(addDocument(customerVal?._id, machineVal._id, data));
         enqueueSnackbar(Snacks.docSaved);
