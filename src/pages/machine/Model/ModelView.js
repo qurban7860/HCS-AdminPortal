@@ -26,6 +26,7 @@ import { useSettingsContext } from '../../../components/settings';
 import ModelList from './ModelList';
 import ModelViewForm from './ModelViewForm';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ModelEditForm from './ModelEditForm';
 
 import LogoAvatar from '../../../components/logo-avatar/LogoAvatar';
@@ -70,21 +71,14 @@ export default function ModelViewPage({ editPage }) {
 
   return (
     <Container maxWidth={false}>
-      <Card
-        sx={{
-          mb: 3,
-          height: 160,
-          position: 'relative',
-          // mt: '24px',
-        }}
-      >
+      <StyledCardContainer>
         <Cover
           model={machineModel?.name}
           name={machineModel?.name}
           setting="enable"
           backLink={PATH_MACHINE.machines.settings.model.list}
         />
-      </Card>
+      </StyledCardContainer>
       <ModelViewForm />
     </Container>
   );

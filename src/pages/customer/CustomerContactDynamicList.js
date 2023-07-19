@@ -51,6 +51,7 @@ export default function CustomerContactList(currentContact = null) {
     contactEditFormVisibility,
     formVisibility,
   } = useSelector((state) => state.contact);
+  console.log("contacts : ",contacts)
   const [checked, setChecked] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   const [activeIndex, setActiveIndex] = useState(null);

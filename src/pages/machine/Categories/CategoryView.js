@@ -12,6 +12,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import CategoryList from './CategoryList';
 import CategoryViewForm from './CategoryViewForm';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 /* eslint-disable */
 
 CategoryView.propTypes = {
@@ -25,13 +26,13 @@ export default function CategoryView({ editPage }) {
 
   return (
     <Container maxWidth={false}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover
           name={category?.name}
           setting="setting"
           backLink={PATH_MACHINE.machines.settings.categories.list}
         />
-      </Card>
+      </StyledCardContainer>
       <CategoryViewForm />
     </Container>
   );

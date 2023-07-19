@@ -13,6 +13,7 @@ import { useSettingsContext } from '../../../components/settings';
 // sections
 import StatusViewForm from './StatusViewForm';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import StatusEditForm from './StatusEditForm';
 
 StatusView.propTypes = {
@@ -49,13 +50,13 @@ export default function StatusView({ editPage }) {
 
   return (
     <Container maxWidth={false}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover
           name={machinestatus?.name}
           setting="enable"
           backLink={PATH_MACHINE.machines.settings.status.list}
         />
-      </Card>
+      </StyledCardContainer>
       <StatusViewForm />
     </Container>
   );

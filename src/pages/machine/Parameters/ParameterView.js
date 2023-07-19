@@ -14,6 +14,7 @@ import { setTechparamEditFormVisibility } from '../../../redux/slices/products/m
 import ParameterList from './ParameterList';
 import ParameterViewForm from './ParameterViewForm';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ParameterEditForm from './ParameterEditForm';
 
 ParameterViewPage.propTypes = {
@@ -50,13 +51,13 @@ export default function ParameterViewPage({ editPage }) {
 
   return (
     <Container maxWidth={false}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover
           name={techparam?.name}
           setting="enable"
           backLink={PATH_MACHINE.machines.settings.parameters.list}
         />
-      </Card>
+      </StyledCardContainer>
       <ParameterViewForm />
     </Container>
   );

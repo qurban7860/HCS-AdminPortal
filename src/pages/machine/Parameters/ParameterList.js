@@ -30,6 +30,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import ParameterListTableRow from './ParameterListTableRow';
 import ParameterListTableToolbar from './ParameterListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -186,13 +187,13 @@ export default function StatusList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <StyledCardContainer>
           <Cover
             name="Technical Parameters"
             icon="material-symbols:list-alt-outline"
             setting="enable"
           />
-        </Card>
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <ParameterListTableToolbar

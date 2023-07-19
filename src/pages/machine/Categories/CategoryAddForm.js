@@ -24,6 +24,7 @@ import { useAuthContext } from '../../../auth/useAuthContext';
 import { countries } from '../../../assets/data';
 // util
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 // constants
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -80,13 +81,13 @@ export default function CategoryAddForm() {
   };
   return (
     <Container maxWidth={false}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover
           name="New Machine Category"
           icon="material-symbols:category-outline"
           url={PATH_MACHINE.machines.settings.categories.list}
         />
-      </Card>
+      </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} sx={{ mt: 3 }}>

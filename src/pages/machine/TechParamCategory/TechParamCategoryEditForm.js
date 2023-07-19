@@ -20,6 +20,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
@@ -94,9 +95,9 @@ export default function TechParamCategoryEditForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={4}>
         <Grid item xs={18} md={12}>
-          <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <StyledCardContainer>
             <Cover name="Edit Parameter Category" icon="ic:round-class" />
-          </Card>
+          </StyledCardContainer>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <Box

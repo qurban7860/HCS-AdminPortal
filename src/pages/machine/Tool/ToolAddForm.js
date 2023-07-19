@@ -35,6 +35,7 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-
 import { useAuthContext } from '../../../auth/useAuthContext';
 // util
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
@@ -106,16 +107,9 @@ export default function ToolAddForm() {
     <>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Container maxWidth={false}>
-          <Card
-            sx={{
-              mb: 3,
-              height: 160,
-              position: 'relative',
-              // mt: '24px',
-            }}
-          >
+          <StyledCardContainer>
             <Cover name="New Tool" icon="fa-solid:tools" />
-          </Card>
+          </StyledCardContainer>
           <Grid container>
             <Grid item xs={18} md={12} sx={{ mt: 3 }}>
               <Card sx={{ p: 3 }}>

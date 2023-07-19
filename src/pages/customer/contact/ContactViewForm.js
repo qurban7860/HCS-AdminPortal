@@ -121,11 +121,7 @@ export default function ContactViewForm({
         <ViewFormField sm={6} heading="First Name" param={defaultValues?.firstName} />
         <ViewFormField sm={6} heading="Last Name" param={defaultValues?.lastName} />
         <ViewFormField sm={6} heading="Title" param={defaultValues?.title} />
-        <ViewFormField
-          sm={6}
-          heading="Contact Types"
-          chips={defaultValues?.contactTypes}
-        />
+        <ViewFormField sm={6} heading="Contact Types" chips={defaultValues?.contactTypes} />
         <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
         <ViewFormField sm={6} heading="Email" param={defaultValues?.email} />
         <ViewFormField sm={6} heading="Street" param={defaultValues?.street} />

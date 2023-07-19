@@ -37,6 +37,7 @@ import { PATH_MACHINE, PATH_DASHBOARD } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import { countries } from '../../../assets/data';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
@@ -180,9 +181,9 @@ export default function SupplierEditForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
-          <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <StyledCardContainer>
             <Cover name="Edit Supplier" icon="material-symbols:inventory-2-rounded" />
-          </Card>
+          </StyledCardContainer>
           <Card sx={{ p: 3, mb: 3 }}>
             <Stack spacing={3}>
               <Box

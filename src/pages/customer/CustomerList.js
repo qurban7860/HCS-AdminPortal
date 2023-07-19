@@ -1,13 +1,29 @@
+import { Helmet } from 'react-helmet-async';
+import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Card, Grid, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
-import { useDispatch, useSelector } from '../../redux/store';
-
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 // @mui
-import { StyledCardContainer } from '../../theme/styles/default-styles';
+import {
+  Switch,
+  Grid,
+  Card,
+  Table,
+  Button,
+  Tooltip,
+  TableBody,
+  Container,
+  IconButton,
+  TableContainer,
+  Stack,
+} from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
+import { useSnackbar } from '../../components/snackbar';
+import { useSettingsContext } from '../../components/settings';
 import {
   useTable,
   getComparator,
@@ -17,41 +33,19 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
+import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
 import ConfirmDialog from '../../components/confirm-dialog';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+import { DIALOGS, BUTTONS, FORMLABELS } from '../../constants/default-constants';
+
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-// redux
 import { getCustomers, deleteCustomer, resetCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
-import {
-  resetSite,
-  resetSites,
-  setSiteEditFormVisibility,
-  setSiteFormVisibility,
-} from '../../redux/slices/customer/site';
-import {
-  resetContact,
-  resetContacts,
-  setContactEditFormVisibility,
-  setContactFormVisibility,
-} from '../../redux/slices/customer/contact';
-import {
-  resetNote,
-  resetNotes,
-  setNoteEditFormVisibility,
-  setNoteFormVisibility,
-} from '../../redux/slices/customer/note';
-import {
-  resetCustomerDocument,
-  resetCustomerDocuments,
-} from '../../redux/slices/document/customerDocument';
-import { resetCustomerMachines } from '../../redux/slices/products/machine';
-// hooks
-import useResponsive from '../../hooks/useResponsive';
 import { Cover } from '../components/Defaults/Cover';
 import { fDate } from '../../utils/formatTime';
-import { DIALOGS, BUTTONS, FORMLABELS } from '../../constants/default-constants';
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -76,6 +70,7 @@ export default function CustomerList() {
     selected,
     setSelected,
     onSelectRow,
+    onSelectAllRows,
     //
     onSort,
     onChangePage,
@@ -85,45 +80,37 @@ export default function CustomerList() {
   });
 
   const dispatch = useDispatch();
-  // necessary. don't delete.
-  // const { themeStretch } = useSettingsContext();
-  // const { enqueueSnackbar } = useSnackbar();
-  // const { isMobile } = useResponsive('down', 'sm');
+  const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-
+  const { customer } = useSelector((state) => state.customer);
+  const { machine } = useSelector((state) => state.machine);
   const { customers, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.customer
   );
-  useLayoutEffect(() => {
-    dispatch(getCustomers());
-    dispatch(resetCustomer());
-    dispatch(resetSite());
-    dispatch(resetSites());
-    dispatch(resetContact());
-    dispatch(resetContacts());
-    dispatch(resetNote());
-    dispatch(resetNotes());
-    dispatch(resetCustomerDocument());
-    dispatch(resetCustomerDocuments());
-    dispatch(resetCustomerMachines());
-    dispatch(setSiteFormVisibility(false));
-    dispatch(setSiteEditFormVisibility(false));
-    dispatch(setContactFormVisibility(false));
-    dispatch(setContactEditFormVisibility(false));
-    dispatch(setNoteFormVisibility(false));
-    dispatch(setNoteEditFormVisibility(false));
-    dispatch(setCustomerEditFormVisibility(false));
+
+  const { customerDocuments, customerDocumentInitial } = useSelector(
+    (state) => state.customerDocument
+  );
+  const { machineDocuments, machineDocumentInitial } = useSelector(
+    (state) => state.machineDocument
+  );
+
+  useEffect(() => {
+    // const fetchData = async () => {s
+      dispatch(getCustomers());
+    // };
+    // fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {
-    if (initial) {
-      setTableData(customers);
-    }
-  }, [customers, initial]);
+    setTableData(customers);
+  }, [customers]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -131,19 +118,13 @@ export default function CustomerList() {
     filterName,
     filterStatus,
   });
-
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
+  const handleOpenConfirm = () => setOpenConfirm(true);
+  const handleCloseConfirm = () => setOpenConfirm(false);
 
   const handleFilterName = (event) => {
     setPage(0);
@@ -155,42 +136,7 @@ export default function CustomerList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      // console.log(id);
-      await dispatch(deleteCustomer(id));
-      dispatch(getCustomers());
-      setSelected([]);
-
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
-
   const handleEditRow = (id) => {
-    // console.log(id);
     navigate(PATH_CUSTOMER.edit(id));
   };
 
@@ -205,93 +151,118 @@ export default function CustomerList() {
 
   return (
     <>
-      <Container maxWidth={false}>
         <StyledCardContainer>
           <Cover name={FORMLABELS.COVER.CUSTOMERS} />
         </StyledCardContainer>
+      <Card sx={{ mt: 3 }}>
+        <CustomerListTableToolbar
+          filterName={filterName}
+          filterStatus={filterStatus}
+          onFilterName={handleFilterName}
+          onFilterStatus={handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+          customerDocList
+          machineDocList
+        />
 
-        <Card sx={{ mt: 3 }}>
-          <CustomerListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
+        <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
+          <TableSelectedAction
+            numSelected={selected.length}
+            rowCount={tableData.length}
+            onSelectAllRows={(checked) =>
+              onSelectAllRows(
+                checked,
+                tableData.map((row) => row._id)
+              )
+            }
+            action={
+              <Tooltip title="Delete">
+                <IconButton color="primary" onClick={handleOpenConfirm}>
+                  <Iconify icon="eva:trash-2-outline" />
+                </IconButton>
+              </Tooltip>
+            }
           />
 
-          <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            <TableSelectedAction numSelected={selected.length} />
+          <Scrollbar>
+            <Table size="small" sx={{ minWidth: 960 }}>
+              <TableHeadCustom
+                order={order}
+                orderBy={orderBy}
+                headLabel={TABLE_HEAD}
+                // rowCount={tableData.length}
+                // numSelected={selected.length}
+                onSort={onSort}
+                // onSelectAllRows={(checked) =>
+                //   onSelectAllRows(
+                //     checked,
+                //     tableData.map((row) => row._id)
+                //   )
+                // }
+              />
 
-            <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
-                <TableHeadCustom
-                  order={order}
-                  orderBy={orderBy}
-                  headLabel={TABLE_HEAD}
-                  // rowCount={tableData.length}
-                  // numSelected={selected.length}
-                  onSort={onSort}
-                  // onSelectAllRows={(checked) =>
-                  //   onSelectAllRows(
-                  //     checked,
-                  //     tableData.map((row) => row._id)
-                  //   )
-                  // }
-                />
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
+                      <CustomerListTableRow
+                        key={row._id}
+                        row={row}
+                        selected={selected.includes(row._id)}
+                        onSelectRow={() => onSelectRow(row._id)}
+                        // onDeleteRow={() => handleDeleteRow(row._id)}
+                        // onEditRow={() => handleEditRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
 
-                <TableBody>
-                  {dataFiltered
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <CustomerListTableRow
-                          key={row._id}
-                          row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                          style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
-                </TableBody>
-              </Table>
-            </Scrollbar>
-          </TableContainer>
+                {/* <TableEmptyRows
+                    height={denseHeight}
+                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
+                  /> */}
 
-          <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />
-        </Card>
+              </TableBody>
+            </Table>
+          </Scrollbar>
+        </TableContainer>
+
+        <TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
-      </Container>
+      </Card>
 
       <ConfirmDialog
         open={openConfirm}
         onClose={handleCloseConfirm}
-        title={DIALOGS.DELETE.title}
-        content={DIALOGS.DELETE.content}
+        title="Delete"
+        content={
+          <>
+            Are you sure want to delete <strong> {selected.length} </strong> items?
+          </>
+        }
         action={
           <Button
             variant="contained"
             color="error"
             onClick={() => {
-              handleDeleteRows(selected);
+              // handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >
-            {BUTTONS.DELETE}
+            Delete
           </Button>
         }
       />
@@ -302,8 +273,7 @@ export default function CustomerList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData.map((el, index) => [el, index]);
-
+  const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -311,23 +281,21 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
-  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
-
   if (filterName) {
     inputData = inputData.filter(
-      (customer) =>
-        customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        customer?.tradingName?.some((tName) => tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
-        customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >=
-          0 ||
-        // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (document) =>
+        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
+    inputData = inputData.filter((document) => filterStatus.includes(document.status));
   }
 
   return inputData;

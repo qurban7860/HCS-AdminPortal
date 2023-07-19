@@ -7,6 +7,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 // sections
 import TechParamCategoryViewForm from './TechParamCategoryViewForm';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 /* eslint-disable */
 
 TechParamCategoryView.propTypes = {
@@ -20,13 +21,13 @@ export default function TechParamCategoryView() {
 
   return (
     <Container maxWidth={false}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover
           name={techparamcategory?.name}
           setting="enable"
           backLink={PATH_MACHINE.machines.settings.technicalParameterCategories.list}
         />
-      </Card>
+      </StyledCardContainer>
       <TechParamCategoryViewForm />
     </Container>
   );

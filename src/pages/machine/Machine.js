@@ -4,8 +4,8 @@ import { Container, Grid, List } from '@mui/material';
 import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { StyledSettingsCardContainer } from '../../theme/styles/machine-styles';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
 import { Cover } from '../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 import ListItem from '../components/ListTableTools/ListItem';
 import ListItemsHeader from '../components/ListTableTools/ListItemsHeader';
 // constants
@@ -41,7 +41,7 @@ export default function Machine() {
   };
 
   return (
-    <Container maxWidth={false}>
+    < >
       <StyledCardContainer>
         <Cover name={FORMLABELS.COVER.SETTINGS} />
       </StyledCardContainer>
@@ -110,6 +110,6 @@ export default function Machine() {
           </Grid>
         </Grid>
       </Grid>
-    </Container>
+    </>
   );
 }

@@ -33,6 +33,7 @@ import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-
 import { useAuthContext } from '../../../auth/useAuthContext';
 // util
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
@@ -117,9 +118,9 @@ export default function ModelAddForm() {
   const { themeStretch } = useSettingsContext();
   return (
     <Container maxWidth={false}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover name="New Model" icon="material-symbols:model-training-outline-rounded" />
-      </Card>
+      </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12} sx={{ mt: 3 }}>

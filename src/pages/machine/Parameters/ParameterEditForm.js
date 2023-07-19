@@ -50,6 +50,7 @@ import FormProvider, {
   RHFUpload,
 } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
@@ -137,9 +138,9 @@ export default function ParameterEditForm() {
   return (
     // <Container maxWidth={false }>
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover name="Edit Parameter" icon="ic:round-flare" />
-      </Card>
+      </StyledCardContainer>
       <Grid container>
         <Grid item xs={18} md={12} sx={{ mt: 3 }}>
           <Card sx={{ p: 3 }}>

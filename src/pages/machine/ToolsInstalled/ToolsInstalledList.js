@@ -39,6 +39,7 @@ import SiteListTableRow from './ToolsInstalledListTableRow';
 import SiteListTableToolbar from './ToolsInstalledListTableToolbar';
 import { getSites, deleteSite } from '../../../redux/slices/customer/site';
 import Cover from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 

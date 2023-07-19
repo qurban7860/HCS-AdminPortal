@@ -205,7 +205,7 @@ export default function CustomerEditForm() {
                     )}
                     id="controllable-states-demo"
                     renderInput={(params) => (
-                      <TextField {...params} label={FORMLABELS.CUSTOMER.MAINSITE.name} />
+                      <TextField {...params} label={FORMLABELS.CUSTOMER.MAINSITE.label} />
                     )}
                     ChipProps={{ size: 'small' }}
                   />
