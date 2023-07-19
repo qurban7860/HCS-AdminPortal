@@ -112,7 +112,7 @@ export default function SiteEditForm() {
         const trimmedValue = value.trim();
         const parsedValue = parseFloat(trimmedValue);
         return (
-          trimmedValue === parsedValue.toString() &&
+          trimmedValue === parsedValue.toFixed(trimmedValue.length - trimmedValue.indexOf('.') - 1) &&
           !isNaN(parsedValue) &&
           parsedValue >= -90 &&
           parsedValue <= 90
@@ -125,7 +125,7 @@ export default function SiteEditForm() {
         const trimmedValue = value.trim();
         const parsedValue = parseFloat(trimmedValue);
         return (
-          trimmedValue === parsedValue.toString() &&
+          trimmedValue === parsedValue.toFixed(trimmedValue.length - trimmedValue.indexOf('.') - 1) &&
           !isNaN(parsedValue) &&
           parsedValue >= -180 &&
           parsedValue <= 180
