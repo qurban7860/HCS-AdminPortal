@@ -33,7 +33,7 @@ export const FORMLABELS = {
     },
     MAINSITE: {
       label: 'Main Site',
-      name: 'mainSite',
+      name: 'main Site',
     },
     FAX: 'Fax',
     PHONE: 'Phone',
@@ -47,7 +47,7 @@ export const FORMLABELS = {
 
   // @root - ContactAddForm
   FIRSTNAME: {
-    label: 'First Name',
+    label: 'First Name*',
     name: 'firstName',
   },
   LASTNAME: {

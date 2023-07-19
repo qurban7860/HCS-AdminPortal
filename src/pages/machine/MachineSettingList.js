@@ -45,6 +45,7 @@ export default function MachineSettingList() {
   const dispatch = useDispatch();
   const { error, responseMessage, settings, settingEditFormVisibility, formVisibility } =
     useSelector((state) => state.machineSetting);
+    console.log("settings : ",settings)
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');

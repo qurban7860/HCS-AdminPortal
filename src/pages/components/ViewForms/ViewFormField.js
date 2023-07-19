@@ -101,7 +101,7 @@ export default function ViewFormField({
       </Typography>
 
       {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
-            <Grid  sx={{my:-2,
+            <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -117,7 +117,7 @@ export default function ViewFormField({
         )}    
         
       {chipDialogArrayParam && 
-        <Grid  sx={{my:-2,
+        <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -133,7 +133,7 @@ export default function ViewFormField({
       }
 
       {chips && typeof chips === 'object' ? (
-          <Grid  sx={{my:-2,
+          <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
@@ -148,7 +148,7 @@ export default function ViewFormField({
         )}
 
         {userRolesChips && typeof userRolesChips === 'object' ? (
-          <Grid  sx={{my:-2,
+          <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
