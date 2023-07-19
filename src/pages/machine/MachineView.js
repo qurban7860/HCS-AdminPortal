@@ -3,7 +3,6 @@ import { useEffect, useLayoutEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Tab, Container, Box, tabsClasses } from '@mui/material';
-import { StyledCardContainer } from '../../theme/styles/default-styles';
 import TabContainer from '../components/Tabs/TabContainer';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
@@ -23,6 +22,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 import UnderDevelopment from '../boundaries/UnderDevelopment';
 // sections
 import { Cover } from '../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 import MachineViewForm from './MachineViewForm';
 import MachineEditForm from './MachineEditForm';
 import { TABS as TABSFunc } from './util/Tabs';
@@ -71,7 +71,7 @@ export default function MachineView({ editPage }) {
   }, [dispatch, machineEditFormFlag, machine]);
 
   return (
-    <Container maxWidth={false}>
+    <>
       <StyledCardContainer>
         <Cover
           name={machine?.name}
@@ -79,7 +79,7 @@ export default function MachineView({ editPage }) {
             dispatch(setDocumentViewFormVisibility(false));
             dispatch(setDocumentHistoryViewFormVisibility(false));
           }}
-          serialNo={machine ? machine.serialNo : 'Serial Number'}
+          serialNo={machine?.serialNo ? machine?.serialNo : 'Serial Number'}
           icon="et:gears"
           setting="enable"
         />
@@ -105,6 +105,6 @@ export default function MachineView({ editPage }) {
             <Box key={tab.value}> {tab.component ? tab.component : <UnderDevelopment />} </Box>
           )
       )}
-    </Container>
+    </>
   );
 }

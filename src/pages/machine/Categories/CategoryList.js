@@ -26,6 +26,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import CategoryListTableRow from './CategoryListTableRow';
 import CategoryListTableToolbar from './CategoryListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -186,16 +187,9 @@ export default function CategoryList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <StyledCardContainer>
           <Cover name="Categories" icon="material-symbols:list-alt-outline" setting="enable" />
-        </Card>
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <CategoryListTableToolbar

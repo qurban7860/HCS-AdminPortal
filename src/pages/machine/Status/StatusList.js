@@ -45,6 +45,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import StatusListTableRow from './StatusListTableRow';
 import StatusListTableToolbar from './StatusListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -206,9 +207,9 @@ export default function StatusList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <StyledCardContainer>
           <Cover name="Status" icon="material-symbols:list-alt-outline" setting="enable" />
-        </Card>
+        </StyledCardContainer>
         <Card sx={{ mt: 3 }}>
           <StatusListTableToolbar
             filterName={filterName}

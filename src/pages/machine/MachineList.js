@@ -8,20 +8,25 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Container, Table, Button, TableBody, TableContainer } from '@mui/material';
+import { Card, Grid, Container, Table, Button, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
 import {
   useTable,
   getComparator,
   TableNoData,
   TableSkeleton,
   TableHeadCustom,
+  TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
+import Iconify from '../../components/iconify';
 import ConfirmDialog from '../../components/confirm-dialog';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
+
 import { Cover } from '../components/Defaults/Cover';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
+
 // slice
 // import { getSPContacts } from '../../redux/slices/contact';
 import {
@@ -51,6 +56,7 @@ import MachineDashboardNavbar from './util/MachineDashboardNavbar';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 
 import { useSettingsContext } from '../../components/settings';
+
 import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -96,9 +102,7 @@ export default function MachineList() {
   const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const { machines, isLoading, error, initial, responseMessage } = useSelector(
-    (state) => state.machine
-  );
+  const { machines, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -124,12 +128,6 @@ export default function MachineList() {
 
   useEffect(() => {
     if (initial) {
-      // if (machines && !error) {
-      //   enqueueSnackbar(responseMessage);
-      // }
-      // else {
-      //   enqueueSnackbar(error, { variant: `error` });
-      // }
       setTableData(machines);
     }
   }, [machines, error, responseMessage, enqueueSnackbar, initial]);
@@ -143,10 +141,9 @@ export default function MachineList() {
 
   const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
-  const denseHeight = dense ? 60 : 80;
+  const denseHeight = 80 ;
 
   const isFiltered = filterName !== '' || !!filterStatus.length;
-
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => {
@@ -213,20 +210,10 @@ export default function MachineList() {
 
   return (
     <>
-      <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          {/* <MachineDashboardNavbar /> */}
-        </Grid>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            mt: '24px',
-          }}
-        >
+       
+        <StyledCardContainer>
           <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting="enable" />
-        </Card>
+        </StyledCardContainer>
         <Card sx={{ mt: 3 }}>
           <MachineListTableToolbar
             filterName={filterName}
@@ -238,7 +225,7 @@ export default function MachineList() {
             onResetFilter={handleResetFilter}
           />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-            {/* {selected.length > 1 ? "" :
+            {selected.length > 1 ? "" :
 
             <TableSelectedAction
 
@@ -258,7 +245,7 @@ export default function MachineList() {
                 </Tooltip>
               }
             />
-          } */}
+          }
             <Scrollbar>
               <Table size="small" sx={{ minWidth: 960 }}>
                 <TableHeadCustom
@@ -276,33 +263,34 @@ export default function MachineList() {
                   // }
                 />
 
-                <TableBody>
-                  {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) =>
-                      row ? (
-                        <MachineListTableRow
-                          key={row._id}
-                          row={row}
-                          // selected={selected.includes(row._id)}
-                          // onSelectRow={() => onSelectRow(row._id)}
-                          // onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
-                          onViewRow={() => handleViewRow(row._id)}
-                        />
-                      ) : (
-                        !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                      )
-                    )}
+              <TableBody>
+                {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) =>
+                    row ? (
+                      <MachineListTableRow
+                        key={row._id}
+                        row={row}
+                        selected={selected.includes(row._id)}
+                        onSelectRow={() => onSelectRow(row._id)}
+                        // onDeleteRow={() => handleDeleteRow(row._id)}
+                        // onEditRow={() => handleEditRow(row._id)}
+                        onViewRow={() => handleViewRow(row._id)}
+                        style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                      />
+                    ) : (
+                      !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                    )
+                  )}
 
-                  {/* <TableEmptyRows
+                {/* <TableEmptyRows
                     height={denseHeight}
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   /> */}
-                </TableBody>
+
+              </TableBody>
               </Table>
             </Scrollbar>
-            <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
           <TablePaginationCustom
@@ -314,30 +302,9 @@ export default function MachineList() {
             //
           />
         </Card>
-      </Container>
-
-      <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content={
-          <>
-            Are you sure want to delete <strong> {selected.length} </strong> items?
-          </>
-        }
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleDeleteRow(selected);
-              handleCloseConfirm();
-            }}
-          >
-            Delete
-          </Button>
-        }
-      />
+        <Grid md={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
     </>
   );
 }

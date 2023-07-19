@@ -47,6 +47,7 @@ import FormProvider, {
   RHFUpload,
 } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
@@ -131,9 +132,9 @@ export default function ToolEditForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
-          <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <StyledCardContainer>
             <Cover name="Edit Tool" icon="fa-solid:tools" />
-          </Card>
+          </StyledCardContainer>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               <Box

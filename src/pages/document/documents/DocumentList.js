@@ -99,6 +99,8 @@ export default function DocumentList({ customerPage, machinePage }) {
   const { documents, isLoading, error, documentInitial, responseMessage } = useSelector(
     (state) => state.document
   );
+  console.log("isLoading  : ",isLoading);
+
   const { customerDocuments, customerDocumentInitial } = useSelector(
     (state) => state.customerDocument
   );
@@ -282,7 +284,6 @@ export default function DocumentList({ customerPage, machinePage }) {
                     emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
                   /> */}
 
-                <TableNoData isNotFound={isNotFound} sx={{ mx: 'auto' }} />
               </TableBody>
             </Table>
           </Scrollbar>
@@ -295,6 +296,9 @@ export default function DocumentList({ customerPage, machinePage }) {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
+        <Grid md={12}>
+          <TableNoData isNotFound={isNotFound} />
+        </Grid>
       </Card>
 
       <ConfirmDialog

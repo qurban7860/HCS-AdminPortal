@@ -16,7 +16,7 @@ import { useSettingsContext } from '../../../components/settings';
 import {
   SettingCover
 } from './util';
-
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import SettingViewForm from './ToolsInstalledViewForm'
 // ----------------------------------------------------------------------
 

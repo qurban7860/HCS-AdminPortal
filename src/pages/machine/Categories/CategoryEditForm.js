@@ -18,6 +18,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
@@ -90,13 +91,13 @@ export default function CategoryEditForm() {
   };
   return (
     <>
-      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+      <StyledCardContainer>
         <Cover
           name="Edit Category"
           icon="material-symbols:category-outline"
           url={PATH_MACHINE.machines.settings.categories.list}
         />
-      </Card>
+      </StyledCardContainer>
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Grid container>
           <Grid item xs={18} md={12}>

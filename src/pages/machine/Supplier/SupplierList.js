@@ -43,6 +43,7 @@ import SupplierListTableRow from './SupplierListTableRow';
 import SupplierListTableToolbar from './SupplierListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -211,16 +212,9 @@ export default function SupplierList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <StyledCardContainer>
           <Cover name="Suppliers" icon="material-symbols:list-alt-outline" setting="enable" />
-        </Card>
+        </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>
           <SupplierListTableToolbar

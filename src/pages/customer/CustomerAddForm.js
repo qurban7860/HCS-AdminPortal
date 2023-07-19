@@ -49,6 +49,7 @@ import { countries } from '../../assets/data';
 // util
 import { Cover } from '../components/Defaults/Cover';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
+import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 

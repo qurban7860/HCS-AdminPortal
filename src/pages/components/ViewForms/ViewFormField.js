@@ -101,50 +101,60 @@ export default function ViewFormField({
       </Typography>
 
       {arrayParam && typeof arrayParam === 'object' && arrayParam?.length > 0 && (
-          <Stack direction="row" spacing={1} sx={{ my: 2 }}>
-          <Typography
-            variant="body1"
-            style={{
+            <Grid  sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
               wordBreak: 'break-word',
-            }}
-          >
+              }} >
             {arrayParam.map(
               (data) =>
                 data?.name &&
                 typeof data?.name === 'string' &&
                 data?.name.trim().length > 0 && <Chip label={data?.name} sx={{m:0.2}} />
             )}
-            </Typography>
-          </Stack>
+            </Grid>
         )}    
-
-      {chipDialogArrayParam && chipDialogArrayParam.map((item, index) => (
+        
+      {chipDialogArrayParam && 
+        <Grid  sx={{my:-2,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
+      {chipDialogArrayParam.map((item, index) => (
         <React.Fragment key={index}>
           {item}
           {index !== chipDialogArrayParam.length - 1}
         </React.Fragment>
       ))}
+        </Grid>
+      }
 
       {chips && typeof chips === 'object' ? (
-        <Grid item sx={{display: 'flex-inline'}} >
-          <Grid container justifyContent="flex-start" spacing={1}>
+          <Grid  sx={{my:-2,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
             {chips.map(
               (chip) => typeof chip === 'string' && chip.trim().length > 0 && <Chip label={chip} sx={{m:0.2}}/>
             )}
           </Grid>
-        </Grid>
         ) : (
           chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} />
         )}
 
         {userRolesChips && typeof userRolesChips === 'object' ? (
-          <Grid item sx={{display: 'flex-inline'}} >
-          <Grid container justifyContent="flex-start" spacing={1}>
+          <Grid  sx={{my:-2,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
             {userRolesChips.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{mx:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
-          </Grid>
           </Grid>
         ) : (
           userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} />

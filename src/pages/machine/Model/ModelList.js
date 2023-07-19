@@ -48,6 +48,7 @@ import ModelListTableRow from './ModelListTableRow';
 import ModelListTableToolbar from './ModelListTableToolbar';
 import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -209,16 +210,9 @@ export default function ModelList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <StyledCardContainer>
           <Cover name="Models" icon="material-symbols:list-alt-outline" setting="enable" />
-        </Card>
+        </StyledCardContainer>
         <Card sx={{ mt: 3 }}>
           <ModelListTableToolbar
             filterName={filterName}

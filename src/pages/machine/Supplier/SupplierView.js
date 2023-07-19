@@ -27,6 +27,7 @@ import SupplierViewForm from './SupplierViewForm';
 /* eslint-disable */
 import SupplierEditForm from './SupplierEditForm';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
 SupplierView.propTypes = {
   editPage: PropTypes.bool,
@@ -69,20 +70,13 @@ export default function SupplierView({ editPage }) {
   return (
     <>
       <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
+        <StyledCardContainer>
           <Cover
             name={supplier?.name}
             setting="enable"
             backLink={PATH_MACHINE.machines.settings.supplier.list}
           />
-        </Card>
+        </StyledCardContainer>
 
         <SupplierViewForm />
       </Container>

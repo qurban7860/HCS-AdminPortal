@@ -30,6 +30,7 @@ import ConfirmDialog from '../../../components/confirm-dialog/ConfirmDialog';
 import TechParamListTableRow from './TechParamListTableRow';
 import TechParamListTableToolbar from './TechParamListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
@@ -188,13 +189,13 @@ export default function TechParamList() {
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <StyledCardContainer>
           <Cover
             name="Technical Parameter Categories"
             icon="material-symbols:list-alt-outline"
             setting="enable"
           />
-        </Card>
+        </StyledCardContainer>
         <Card sx={{ mt: 3 }}>
           <TechParamListTableToolbar
             filterName={filterName}

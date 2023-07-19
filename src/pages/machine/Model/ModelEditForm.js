@@ -19,6 +19,7 @@ import { PATH_MACHINE } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // constants
@@ -104,9 +105,9 @@ export default function ModelEditForm() {
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
         <Grid item xs={18} md={12}>
-          <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+          <StyledCardContainer>
             <Cover name={FORMLABELS.COVER.EDIT_MODEL} />
-          </Card>
+          </StyledCardContainer>
           <Card sx={{ p: 3 }}>
             <Stack spacing={3}>
               {/* <Stack spacing={1}>

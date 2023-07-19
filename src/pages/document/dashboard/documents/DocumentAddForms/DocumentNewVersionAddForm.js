@@ -39,7 +39,7 @@ export default function DocumentNewVersionAddForm({
             value={Value}
             options={options}
             // isOptionEqualToValue={(option, value) => option.name === value.name}
-            getOptionLabel={getOptionLabel}
+            getOptionLabel={(option) => `${option.name ? option.name : ''}`}
             onChange={onChange}
             renderOption={renderOption}
             id="controllable-states-demo"

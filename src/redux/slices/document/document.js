@@ -155,7 +155,7 @@ export const {
 
 // ----------------------------Add Document------------------------------------------
 
-export function addDocument( params, customerId , machineId ) {
+export function addDocument(customerId , machineId ,  params) {
     return async (dispatch) => { 
         dispatch(slice.actions.startLoading());
         try {
