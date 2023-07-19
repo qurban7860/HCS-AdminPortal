@@ -415,7 +415,6 @@ export default function MachineEditForm() {
                     onChange={(event, newValue) => {
                       if (newValue) {
                         setCustomerVal(newValue);
-                        setStatusVal('');
                       } else {
                         setCustomerVal('');
                         setMachineConnectionVal([]);
