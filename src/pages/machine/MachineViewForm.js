@@ -180,9 +180,8 @@ export default function MachineViewForm() {
   const handleCloseMachineConnection = () => setOpenMachineConnection(false);
 
   const linkedMachines = machine?.machineConnections?.map((machineConnection, index) => (
-    <Chip onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
+    <Chip sx={{m:0.2}} onClick={() => handleOpenMachineConnection(machineConnection.connectedMachine._id)} label={machineConnection.connectedMachine.serialNo ? machineConnection.connectedMachine.serialNo : 'NA'} />
   ));
-  console.log("linkedMachines : ", linkedMachines)
 
   const defaultValues = useMemo(
     () => ({
