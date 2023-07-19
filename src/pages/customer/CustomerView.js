@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import { Tab, Card, Tabs, Container, Box, tabsClasses } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomer } from '../../redux/slices/customer/customer';
+import { getCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import {
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
@@ -53,6 +53,7 @@ export default function CustomerView({ editPage }) {
   useEffect(() => {
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentHistoryViewFormVisibility(false));
+
     if (id !== 'null') {
       dispatch(getCustomer(id));
       dispatch(getSites(id));

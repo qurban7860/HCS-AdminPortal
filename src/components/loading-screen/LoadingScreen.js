@@ -53,7 +53,9 @@ export default function LoadingScreen() {
 
       <StyledRoot
         sx={{
-          ...(isDashboard && {
+          ...(
+            // isDashboard && 
+            {
             width: `calc(100% - ${size}px)`,
             ...(themeLayout === 'horizontal' && {
               width: 1,

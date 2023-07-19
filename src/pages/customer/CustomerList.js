@@ -1,7 +1,9 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// @mui
 import { Card, Grid, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import { useDispatch, useSelector } from '../../redux/store';
+
+// @mui
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
@@ -21,8 +23,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 // redux
-import { useDispatch, useSelector } from '../../redux/store';
-import { getCustomers, deleteCustomer, resetCustomer } from '../../redux/slices/customer/customer';
+import { getCustomers, deleteCustomer, resetCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
 import {
   resetSite,
   resetSites,
@@ -115,6 +116,7 @@ export default function CustomerList() {
     dispatch(setContactEditFormVisibility(false));
     dispatch(setNoteFormVisibility(false));
     dispatch(setNoteEditFormVisibility(false));
+    dispatch(setCustomerEditFormVisibility(false));
   }, [dispatch]);
 
   useEffect(() => {
