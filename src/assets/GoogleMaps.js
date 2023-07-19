@@ -97,9 +97,9 @@ export default function GoogleMaps({
     }
   };
 
-  const handleMarkerClick = (index, lat, lng, serialNo, name, customerName, address, type) => {
+  const handleMarkerClick = (index, lat, lng, serialNo, name, customerName, address) => {
     let stringAddress = Object.values(address)?.join(", ");
-    setInfoWindowData({index, lat, lng, name, customerName, serialNo, stringAddress, type});    
+    setInfoWindowData({index, lat, lng, name, customerName, serialNo, stringAddress});    
     if(infoWindowData){
       setIsOpen(true);
     }
@@ -116,14 +116,14 @@ export default function GoogleMaps({
 
     >
       
-      {machinesSites.length > 0 && machinesSites.map(({lat, lng, name, serialNo, customerName, address, type}, index) => (
+      {machinesSites.length > 0 && machinesSites.map(({lat, lng, name, serialNo, customerName, address}, index) => (
         <Marker
           key={index}
           position={{lat: parseFloat(lat), lng: parseFloat(lng)}}
           draggable={edit}
           ref={(ref) => (markerRefs.current[index] = ref)}
           onMouseOver={() => {
-            handleMarkerClick(index, lat, lng, serialNo, name, customerName, address, type);
+            handleMarkerClick(index, lat, lng, serialNo, name, customerName, address);
           }}
         >
           {isOpen && infoWindowData && infoWindowData?.index === index && (
@@ -132,11 +132,10 @@ export default function GoogleMaps({
                 setIsOpen(false);
               }}
             >
-              <Grid container justify="center" spacing={0}>
-                <ViewFormField heading="Machine Name" param={`${infoWindowData?.serialNo} / ${infoWindowData?.name}`}/>
-                <ViewFormField heading="Customer Name" param={infoWindowData?.customerName}/>
-                <ViewFormField heading="Address" param={infoWindowData?.stringAddress}/>
-                <ViewFormField heading="Type" param={infoWindowData?.type}/>
+              <Grid container justify="center" spacing={0} sx={{margin: 0}}>
+                <p>{`${infoWindowData?.serialNo}(${infoWindowData?.customerName})`}<br/>
+                    {infoWindowData?.stringAddress}
+                </p>
               </Grid>
             </InfoWindow>
           )}
