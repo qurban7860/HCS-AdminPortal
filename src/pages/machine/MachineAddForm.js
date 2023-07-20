@@ -403,7 +403,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       <Autocomplete
                         {...field}
                         id="controllable-states-demo"
-                        options={activeSuppliers}
+                        options={activeMachineModels}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         renderOption={(props, option) => (
