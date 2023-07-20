@@ -29,6 +29,7 @@ export default function GeneralAppPage() {
   const dispatch = useDispatch();
   const { count, isLoading, error, initial, responseMessage } = useSelector((state) => state.count);
   const enviroment = CONFIG.ENV.toLowerCase();
+  const showDevGraphs = enviroment !== 'live';
 
   const modelWiseMachineNumber = [];
   const yearWiseMachinesYear = [];
@@ -211,6 +212,7 @@ export default function GeneralAppPage() {
             {/* Production Log */}
             {/* hide this in the live, but show in development and test  */}
             {/* don't delete, will be activated once integrated with the HLC */}
+            {showDevGraphs ?
             <Grid item xs={12} md={6} lg={8}>
               <ProductionLog
                 title="Production Log"
@@ -237,24 +239,28 @@ export default function GeneralAppPage() {
                 sx={{ bg: 'transparent' }}
               />
               <StyledBg />
-            </Grid>
+            </Grid> : ''}
 
             {/* Operators */}
             {/* hide this in the live, but show in development and test  */}
             {/* don't delete, will be activated once integrated with the HLC */}
+              {showDevGraphs ?
             <Grid item xs={12} lg={4}>
               <Grid item>
                 <HowickOperators title="Operators" list={_appAuthors} />
               </Grid>
             </Grid>
+             :'' }
+
           </Grid>
         </Grid>
 
         {/* hide this in the live, but show in development and test for now  */}
+        {showDevGraphs ?
         <Grid item xs={12} md={6} lg={12}>
           <ChartColumnNegative optionsData={modelWiseMachineModel} />
           <StyledBg />
-        </Grid>
+        </Grid>:'' }
 
         {/* TESTs DONT REMOVE */}
         {/* <ContainerView selectVariant="panLeft">
