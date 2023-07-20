@@ -415,44 +415,104 @@ export function addMachine(params) {
 
 // --------------------------------------------------------------------------
 
-export function updateMachine(params) {
+export function updateMachine(machineId, params) {
+  console.log("machineId : ",machineId);
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
+        // serialNo: params.serialNo,
+        // name: params.name,
+        // parentSerialNo: params.parentSerialNo.serialNo,
+        // parentMachine: params.parentSerialNo.name,
+        // supplier: params.supplier._id,
+        // machineModel: params.model._id,
+        // customer: params.customer._id,
+        // status: params.status._id,
+        // workOrderRef: params.workOrderRef,
+        // instalationSite: params.instalationSite._id,
+        // billingSite: params.billingSite._id,
+        // installationDate: params.installationDate,
+        // shippingDate: params.shippingDate,
+        // siteMilestone: params.siteMilestone,
+        // accountManager: params.accountManager._id,
+        // projectManager: params.projectManager._id,
+        // supportManager: params.supportManager._id,
+        // description: params.description,
+        // customerTags: params.customerTags,
+        // isActive: params.isActive,
 
-      
-        serialNo: params.serialNo,
-        name: params.name,
-        status: params.status,
-        supplier: params.supplier,
-        machineModel: params.machineModel,
-        workOrderRef: params.workOrderRef,
-        customer: params.customer,
-        billingSite: params.billingSite,
-        instalationSite: params.instalationSite,
-        installationDate: params.installationDate,
-        shippingDate: params.shippingDate,
-        siteMilestone: params.siteMilestone,
-        accountManager: params.accountManager,
-        projectManager: params.projectManager,
-        supportManager: params.supportManager,
-        description: params.description,
-        machineConnections: params.machineConnections,
-        customerTags: params.customerTags,
-        isActive: params.isActive,
-        // parentSerialNo: params.parentSerialNo,
-        // parentMachine: params.parentMachine,
       };
+      if(params?.serialNo){
+        data.serialNo = params.serialNo
+      }
+      if(params.name){
+        data.name = params.name 
+      }
+      if(params?.parentSerialNo?.serialNo){
+        data.parentSerialNo =params.parentSerialNo.serialNo
+      }
+      if(params?.parentSerialNo?.name){
+        data.parentMachine =params.parentSerialNo._id
+      }
       if(params?.alias){
         data.alias =  params.alias
       }
+      if(params?.supplier?._id){
+        data.supplier = params.supplier._id
+      }
+      if(params?.model?._id){
+        data.machineModel = params.model._id
+      }
+      if(params?.customer?._id){
+        data.customer = params.customer._id
+      }
+      if(params?.status?._id){
+        data.status = params.status._id
+      }
+      if(params?.workOrderRef){
+        data.workOrderRef = params.workOrderRef
+      }
+      if(params?.instalationSite?._id){
+        data.instalationSite = params.instalationSite._id
+      }
+      if(params?.billingSite?._id){
+        data.billingSite = params.billingSite._id
+      }
+      if(params?.installationDate){
+        data.installationDate = params.installationDate
+      }
+      if(params?.shippingDate){
+        data.shippingDate = params.shippingDate
+      }
+      if(params?.siteMilestone){
+        data.siteMilestone = params.siteMilestone
+      }
+      if(params?.accountManager?._id){
+        data.accountManager = params.accountManager._id
+      }
+      if(params?.projectManager?._id){
+        data.projectManager = params.projectManager._id
+      }
+      if(params?.supportManager?._id){
+        data.supportManager = params.supportManager._id
+      }
+      if(params?.description){
+        data.description = params.description
+      }
+      if(params?.isActive){
+        data.isActive = params.isActive
+      }
+
+      if(params.machineConnectionVal){
+        data.machineConnections = params.machineConnectionVal.map(obj => obj._id);
+      }
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${params.id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`,
         data
       );
 
-      dispatch(getMachine(params.id));
+      dispatch(getMachine(machineId));
       dispatch(slice.actions.setMachineEditFormVisibility(false));
       // this.updateCustomerSuccess(response);
     } catch (error) {
