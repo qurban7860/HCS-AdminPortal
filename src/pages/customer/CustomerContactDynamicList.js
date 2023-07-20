@@ -328,13 +328,22 @@ export function applyFilter({ inputData, comparator, filterName, filterStatus })
   inputData = stabilizedThis.map((el) => el[0]);
 
   if (filterName) {
-    inputData = inputData.filter(
-      (contact) =>
-        contact?.firstName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        contact?.lastName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
-    );
+    if(filterName.includes(" ")){
+      const splittedFilterName = filterName.split(" ");
+      inputData = inputData.filter(
+        (contact) =>
+        contact?.firstName?.toLowerCase().indexOf(splittedFilterName[0].toLowerCase()) >= 0 &&
+        contact?.lastName?.toLowerCase().indexOf(splittedFilterName[1].toLowerCase()) >= 0 
+      );
+    }else{
+      inputData = inputData.filter(
+        (contact) =>
+          contact?.firstName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          contact?.lastName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          contact?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+          fDate(contact?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      );
+    }
   }
 
   return inputData;

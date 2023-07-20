@@ -21,6 +21,7 @@ const initialState = {
   connectedMachine: {},
   activeMachines: [],
   customerMachines:[],
+  machineLatLongCoordinates: [],
   transferDialogBoxVisibility: false
 };
 
@@ -93,6 +94,13 @@ const slice = createSlice({
     },
 
 
+    // GET Machine LatLong Coordinates
+    getMachineLatLongCoordinatesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.machineLatLongCoordinates = action.payload;
+      state.initial = true;
+    },
         
     // GET Machine
     getMachineSuccess(state, action) {
@@ -302,6 +310,23 @@ export function getMachine(id) {
       console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
+    }
+  };
+}
+
+
+// ----------------------------get Active Model Machines------------------------------------------
+
+export function getMachineLatLongData() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/machineCoordinates`);
+      dispatch(slice.actions.getMachineLatLongCoordinatesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
     }
   };
 }

@@ -59,6 +59,7 @@ export default function MachineViewForm() {
   const { loggedInUser } = useSelector((state) => state.user);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
+  const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [hasValidLatLong, setHasValidLatLong] = useState(false);
   const isMobile = useResponsive('down', 'sm');
 
@@ -103,8 +104,10 @@ export default function MachineViewForm() {
     }
     if (machine.transferredMachine) {
       setDisableEditButton(true);
+      setDisableDeleteButton(true);
     } else {
       setDisableEditButton(false);
+      setDisableDeleteButton(false);
     }
     if (machine?.customer) {
       dispatch(getCustomer(machine?.customer?._id));
@@ -244,6 +247,7 @@ export default function MachineViewForm() {
             handleVerification={handleVerification}
             disableTransferButton={disableTransferButton}
             disableEditButton={disableEditButton}
+            disableDeleteButton={disableDeleteButton}
             handleEdit={handleEdit}
             onDelete={onDelete}
             handleTransfer={handleTransfer}
