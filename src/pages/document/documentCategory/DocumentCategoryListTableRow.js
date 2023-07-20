@@ -86,7 +86,7 @@ export default function DocumentCategoryListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell>{`${customer ? 'customer': ''}${customer && machine ? ', ': ''}${machine ? 'machine': ''}${machine && drawing? ', ': ''}${drawing ? 'drawing': ''}`}</TableCell>
+        <TableCell>{`${customer ? 'customer': ''}${customer && machine ? ', ': ''}${machine ? 'machine': ''}${( customer || machine) && drawing? ', ': ''}${drawing ? 'drawing': ''}`}</TableCell>
         <TableCell align="center">
           {' '}
           <Switch checked={customerAccess} disabled size="small" />{' '}

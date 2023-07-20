@@ -116,6 +116,13 @@ export function addDocumentCategory(params) {
               customerAccess:params.customerAccess,
               isActive: params.isActive,
             }
+            if(params.type === 'customer') {
+              data.customer = true;
+            }else if(params.type === 'machine') {
+              data.machine = true;
+            }else if(params.type === 'drawing') {
+              data.drawing = true;
+            }
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/categories/`, data);
       dispatch(slice.actions.setResponseMessage('Document Category saved successfully'));
       dispatch(getDocumentCategories());
@@ -138,6 +145,13 @@ export function updateDocumentCategory(Id,params) {
         description: params.description,
         customerAccess:params.customerAccess,
         isActive: params.isActive,
+      }
+      if(params.type === 'customer') {
+        data.customer = true;
+      }else if(params.type === 'machine') {
+        data.machine = true;
+      }else if(params.type === 'drawing') {
+        data.drawing = true;
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}documents/categories/${Id}`, data );
       dispatch(slice.actions.setResponseMessage('Document Category updated successfully'));
