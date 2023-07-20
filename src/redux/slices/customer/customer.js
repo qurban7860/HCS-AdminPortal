@@ -26,9 +26,7 @@ const slice = createSlice({
   reducers: {
     // START LOADING
     startLoading(state) {
-      console.log('loading working');
       state.isLoading = true;
-      console.log("isLoading : ",state.isLoading)
     },
     // STOP LOADING
     stopLoading(state) {
