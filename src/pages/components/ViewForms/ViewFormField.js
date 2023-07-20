@@ -116,7 +116,7 @@ export default function ViewFormField({
             </Grid>
         )}    
         
-      {chipDialogArrayParam && 
+      {chipDialogArrayParam && typeof chipDialogArrayParam === 'object' && chipDialogArrayParam?.length > 0 &&
         <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
@@ -132,7 +132,7 @@ export default function ViewFormField({
         </Grid>
       }
 
-      {chips && typeof chips === 'object' ? (
+      {chips && typeof chips === 'object' && chips.length > 0 ? (
           <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
@@ -140,14 +140,14 @@ export default function ViewFormField({
               wordBreak: 'break-word',
               }} >
             {chips.map(
-              (chip) => typeof chip === 'string' && chip.trim().length > 0 && <Chip label={chip} sx={{m:0.2}}/>
+              (chip,index) => typeof chip === 'string' && chip.trim().length > 0 && <Chip key={index} label={chip} sx={{m:0.2}}/>
             )}
           </Grid>
         ) : (
           chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} />
         )}
 
-        {userRolesChips && typeof userRolesChips === 'object' ? (
+        {userRolesChips && typeof userRolesChips === 'object' && userRolesChips.length > 0 ? (
           <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',

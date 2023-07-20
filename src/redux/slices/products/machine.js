@@ -360,44 +360,50 @@ export function addMachine(params) {
       try {
         /* eslint-disable */
         let data = {
-          name: params.name,
           isActive: params.isActive,
-          siteMilestone: params.siteMilestone,
-          machineConnections: params.machineConnections
         };
         /* eslint-enable */
+        if(params.name){
+          data.name = params.name
+        }
+        if(params.siteMilestone){
+          data.siteMilestone = params.siteMilestone
+        }
+        if(params.machineConnectionVal){
+          data.machineConnections = params.machineConnectionVal.map(obj => obj._id);
+        }
         if(params.alias){
           data.alias = params.alias;        
         }
         if(params.serialNo){
           data.serialNo = params.serialNo;        
         }
-        if(params.parentMachine){
-          data.parentMachine = params.parentMachine;        
+        if(params.parentSerialNo){
+          data.parentMachine = params.parentSerialNo._id;        
         }
         if(params.parentSerialNo){
-          data.parentSerialNo = params.parentSerialNo;        
+          data.parentSerialNo = params.parentSerialNo.serialNo;        
         }
         if(params.status){
-          data.status = params.status;        
+          data.status = params.status._id;        
         }
         if(params.supplier){
-          data.supplier = params.supplier;        
+          data.supplier = params.supplier._id;        
         }
-        if(params.machineModel){
-            data.machineModel = params.machineModel;        
+        if(params.model){
+            data.machineModel = params.model._id;        
         }
         if(params.workOrderRef){
           data.workOrderRef = params.workOrderRef;        
         }
         if(params.customer){
-          data.customer = params.customer;        
+          data.customer = params.customer._id;        
         }
         if(params.billingSite){
-          data.billingSite = params.billingSite;        
+          data.billingSite = params.billingSite._id;        
         }
         if(params.instalationSite){
-          data.instalationSite = params.instalationSite; 
+          data.instalationSite = params.instalationSite._id; 
         }
         if(params.installationDate){
           data.installationDate = params.installationDate;
@@ -406,13 +412,13 @@ export function addMachine(params) {
           data.shippingDate = params.shippingDate;
         }    
         if(params.accountManager){
-          data.accountManager = params.accountManager;        
+          data.accountManager = params.accountManager._id;        
         }
         if(params.projectManager){
-            data.projectManager = params.projectManager;        
+            data.projectManager = params.projectManager._id;        
         }
         if(params.supportManager){
-            data.supportManager = params.supportManager;        
+            data.supportManager = params.supportManager._id;        
         }
         if(params.description){
           data.description = params.description;        
