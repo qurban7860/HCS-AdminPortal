@@ -41,8 +41,6 @@ export default function DocumentListTableRow({
   return (
     <StyledTableRow hover selected={selected}>
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
-      <TableCell align="left">{customer?.name}</TableCell>
-      <TableCell align="left">{machine?.serialNo}</TableCell>
       <TableCell align="left">{docType?.name}</TableCell>
       <TableCell align="left">{docCategory?.name}</TableCell>
       <TableCell align="center">
