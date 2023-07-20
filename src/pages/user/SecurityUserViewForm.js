@@ -131,7 +131,7 @@ export default function SecurityUserViewForm() {
   const defaultValues = useMemo(
     () => ({
       customer: securityUser?.customer?.name || '',
-      contact: securityUser?.contact?.firstName || '',
+      contact: `${securityUser?.contact?.firstName ? securityUser?.contact?.firstName : ''} ${securityUser?.contact?.lastName ? securityUser?.contact?.lastName : ''}` ,
       name: securityUser?.name || '',
       phone: securityUser?.phone || '',
       email: securityUser?.email || '',
