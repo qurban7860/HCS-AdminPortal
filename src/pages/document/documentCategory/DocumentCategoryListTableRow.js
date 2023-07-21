@@ -56,7 +56,7 @@ export default function DocumentCategoryListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const { name, description, customerAccess, isActive, createdAt } = row;
+  const { name, customer, machine, drawing, description, customerAccess, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -86,7 +86,7 @@ export default function DocumentCategoryListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        {/* <TableCell>{description}</TableCell> */}
+        <TableCell>{`${customer ? 'customer': ''}${customer && machine ? ', ': ''}${machine ? 'machine': ''}${( customer || machine) && drawing? ', ': ''}${drawing ? 'drawing': ''}`}</TableCell>
         <TableCell align="center">
           {' '}
           <Switch checked={customerAccess} disabled size="small" />{' '}

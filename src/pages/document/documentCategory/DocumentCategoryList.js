@@ -49,6 +49,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Category Name', align: 'left' },
+  { id: 'type', label: 'Types', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
