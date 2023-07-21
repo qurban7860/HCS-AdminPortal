@@ -276,6 +276,21 @@ export const MachineDocumentEditForm = Loadable(
 export const MachineDocumentView = Loadable(
   lazy(() => import('../pages/document/dashboard/ViewMachineDocument'))
 );
+
+
+// Regions
+export const RegionAddForm = Loadable(
+  lazy(() => import('../pages/region/RegionAdd'))
+);
+export const RegionList = Loadable(
+  lazy(() => import('../pages/region/RegionList'))
+);
+export const RegionEditForm = Loadable(
+  lazy(() => import('../pages/region/RegionEditForm'))
+);
+export const RegionView = Loadable(
+  lazy(() => import('../pages/region/RegionView'))
+);
 // export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
 // export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));
 

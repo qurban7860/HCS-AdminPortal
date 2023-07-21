@@ -29,6 +29,7 @@ import documentReducer from './slices/document/document';
 import documentFileReducer from './slices/document/documentFile';
 import machineConnectionsReducer from './slices/products/machineConnections';
 import documentVersionReducer from './slices/document/documentVersion';
+import regionReducer from './slices/region/region';
 
 // ----------------------------------------------------------------------
 
@@ -207,6 +208,12 @@ export const documentVersionPersistConfig={
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 }
+export const regionPersistConfig={
+  key: 'region',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+}
 
 const rootReducer = combineReducers({
   user: persistReducer(userPersistConfig, userReducer),
@@ -236,6 +243,7 @@ const rootReducer = combineReducers({
   documentFile: persistReducer(documentFilePersistConfig, documentFileReducer),
   machineConnections: persistReducer(machineConnectionsPersistConfig, machineConnectionsReducer),
   documentVersion: persistReducer(documentVersionPersistConfig, documentVersionReducer),
+  region: persistReducer(regionPersistConfig, regionReducer),
 });
 
 export default rootReducer;
