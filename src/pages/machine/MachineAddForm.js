@@ -26,7 +26,7 @@ import { MuiChipsInput } from 'mui-chips-input';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getActiveSites, resetSites } from '../../redux/slices/customer/site';
+import { getActiveSites, resetSites, resetActiveSites } from '../../redux/slices/customer/site';
 import machine, { addMachine, getActiveMachines } from '../../redux/slices/products/machine';
 import { getActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getActiveMachineModels } from '../../redux/slices/products/model';
@@ -450,6 +450,9 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                           } else {
                             field.onChange(null);
                             setValue('machineConnectionVal', []);
+                            setValue('instalationSite', []);
+                            setValue('billingSite', []);
+                            dispatch(resetActiveSites());
                           }
                         }}
                         renderInput={(params) => (
