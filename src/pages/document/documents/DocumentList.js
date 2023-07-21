@@ -47,18 +47,13 @@ import {
   setDocumentViewFormVisibility,
 } from '../../../redux/slices/document/document';
 import { Cover } from '../../components/Defaults/Cover';
+import { StyledCardContainer } from '../../../theme/styles/default-styles';
+import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', align: 'left' },
-  { id: 'doctype', label: 'Type', align: 'left' },
-  { id: 'doccategory', label: 'Category', align: 'left' },
-  { id: 'customerAccess', label: 'Customer Access', align: 'center' },
-  { id: 'active', label: 'Active', align: 'center' },
-  { id: 'created_at', label: 'Created At', align: 'right' },
-];
+
 
 // ----------------------------------------------------------------------
 DocumentList.propTypes = {
@@ -99,7 +94,6 @@ export default function DocumentList({ customerPage, machinePage }) {
   const { documents, isLoading, error, documentInitial, responseMessage } = useSelector(
     (state) => state.document
   );
-  console.log("isLoading  : ",isLoading);
 
   const { customerDocuments, customerDocumentInitial } = useSelector(
     (state) => state.customerDocument
@@ -107,6 +101,23 @@ export default function DocumentList({ customerPage, machinePage }) {
   const { machineDocuments, machineDocumentInitial } = useSelector(
     (state) => state.machineDocument
   );
+
+  const TABLE_HEAD = [
+    { id: 'name', label: 'Name', align: 'left' },
+    { id: 'doctype', label: 'Type', align: 'left' },
+    { id: 'doccategory', label: 'Category', align: 'left' },
+    { id: 'customerAccess', label: 'Customer Access', align: 'center' },
+    { id: 'active', label: 'Active', align: 'center' },
+    { id: 'created_at', label: 'Created At', align: 'right' },
+  ];
+  
+  if (!customerPage && !machinePage) {
+    const insertIndex = 1; // Index after which you want to insert the new objects
+    TABLE_HEAD.splice(insertIndex, 0, // 0 indicates that we're not removing any elements
+      { id: 'customer', label: 'Customer', align: 'left' },
+      { id: 'machine', label: 'Machine', align: 'left' }
+    );
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -211,6 +222,9 @@ export default function DocumentList({ customerPage, machinePage }) {
 
   return (
     <>
+      {!customerPage && !machinePage && <StyledCardContainer>
+        <Cover name={FORMLABELS.COVER.DOCUMENTS} />
+      </StyledCardContainer>}
       <Card sx={{ mt: 3 }}>
         <DocumentListTableToolbar
           filterName={filterName}
@@ -219,8 +233,8 @@ export default function DocumentList({ customerPage, machinePage }) {
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
-          customerDocList
-          machineDocList
+          customerPage={customerPage}
+          machinePage={machinePage}
         />
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -273,6 +287,8 @@ export default function DocumentList({ customerPage, machinePage }) {
                         // onEditRow={() => handleEditRow(row._id)}
                         onViewRow={() => handleViewRow(row._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                        customerPage={customerPage}
+                        machinePage={machinePage}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

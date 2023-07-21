@@ -12,6 +12,7 @@ import {
   TableCell,
   IconButton,
   Link,
+  Chip
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
@@ -86,7 +87,7 @@ export default function DocumentCategoryListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell>{`${customer ? 'customer': ''}${customer && machine ? ', ': ''}${machine ? 'machine': ''}${( customer || machine) && drawing? ', ': ''}${drawing ? 'drawing': ''}`}</TableCell>
+        <TableCell>{customer ? <Chip label="Customer" sx={{m:0.2}} />: ''}{machine ? <Chip label="Machine" sx={{m:0.2}} />: ''}{drawing ? <Chip label="Drawing" sx={{m:0.2}} />: ''}</TableCell>
         <TableCell align="center">
           {' '}
           <Switch checked={customerAccess} disabled size="small" />{' '}

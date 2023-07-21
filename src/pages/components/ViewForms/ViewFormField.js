@@ -147,14 +147,14 @@ export default function ViewFormField({
           chips && typeof chips === 'string' && chips.trim().length > 0 && <Chip label={chips} />
         )}
 
-        {userRolesChips && typeof userRolesChips === 'object' && userRolesChips.length > 0 ? (
+        {userRolesChips && typeof userRolesChips === 'object' && userRolesChips?.length > 0 ? (
           <Grid container sx={{my:-2,
               display: 'flex',
               alignItems: 'center',
               whiteSpace: 'pre-line',
               wordBreak: 'break-word',
               }} >
-            {userRolesChips.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{mx:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
+            {userRolesChips?.map((obj) => (obj?.roleType === 'SuperAdmin' ? <Chip label={obj?.name} sx={{mx:0.2}} color='secondary' /> : <Chip label={obj?.name} sx={{mx:0.3}} />))}
           </Grid>
         ) : (
           userRolesChips && typeof userRolesChips === 'string' && userRolesChips.trim().length > 0 && <Chip label={userRolesChips} />
