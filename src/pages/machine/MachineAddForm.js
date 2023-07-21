@@ -325,7 +325,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         onChange={(event, newValue) => {
                           if (newValue) {
                             field.onChange(newValue);
-                            setValue('previousMachine', newValue.name);
+                            setValue('previousMachine', `${newValue.serialNo} ${newValue?.name ? '-' : ''} ${newValue?.name ? newValue?.name : ''}`);
                             setValue('supplier', newValue.supplier);
                             setValue('model', newValue.machineModel);
                           } else {
