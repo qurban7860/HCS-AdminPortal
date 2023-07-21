@@ -333,7 +333,7 @@ console.log("data : ", data);
 
                 {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
                   
-                  <Controller
+                  {/* <Controller
                     name="parentSerialNo"
                     control={control}
                     defaultValue={parentSerialNo || null}
@@ -376,11 +376,11 @@ console.log("data : ", data);
                         ChipProps={{ size: 'small' }}
                       />
                     )}
-                  />
+                  /> */}
 
                 {/* ------------------------- Previous Machine Name --------------------------------------- */}
 
-                <RHFTextField name="previousMachine" label="Previous Machine" disabled/>
+                {/* <RHFTextField name="previousMachine" label="Previous Machine" disabled/> */}
 
                 {/* ------------------------- Previous Machine Supplier --------------------------------------- */}
 
@@ -418,13 +418,14 @@ console.log("data : ", data);
 
                     {/* -------------------------------- Machine Model -------------------------------- */}
 
-                    <Controller
+                  <Controller
                     name="model"
                     control={control}
                     defaultValue={supplier || null}
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
+                    disabled={!!machine.machineModel}
                         id="controllable-states-demo"
                         options={activeMachineModels}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -469,7 +470,11 @@ console.log("data : ", data);
                         onChange={(event, newValue) => {
                           if (newValue) {
                             field.onChange(newValue);
+                            if(customer._id !== newValue._id) {
                             setValue('machineConnectionVal', []);
+                            setValue('instalationSite', []);
+                            setValue('billingSite', []);
+                            }
                           } else {
                             field.onChange(null);
                             setValue('machineConnectionVal', []);

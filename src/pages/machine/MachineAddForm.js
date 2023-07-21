@@ -446,7 +446,11 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         onChange={(event, newValue) => {
                           if (newValue) {
                             field.onChange(newValue);
+                            if(customer._id !== newValue._id) {
                             setValue('machineConnectionVal', []);
+                            setValue('instalationSite', []);
+                            setValue('billingSite', []);
+                            }
                           } else {
                             field.onChange(null);
                             setValue('machineConnectionVal', []);
