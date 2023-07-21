@@ -369,7 +369,6 @@ console.log("data : ", data);
                           label="Previous Machine Serial No."  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref}
                           />
                         )}
@@ -407,7 +406,6 @@ console.log("data : ", data);
                           label="Supplier"  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref} 
                           />
                         )}
@@ -425,7 +423,7 @@ console.log("data : ", data);
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
-                    disabled={!!machine.machineModel}
+                        disabled={!!machine.machineModel}
                         id="controllable-states-demo"
                         options={activeMachineModels}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -442,7 +440,6 @@ console.log("data : ", data);
                           label="Model"  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref} 
                           />
                         )}
@@ -491,7 +488,6 @@ console.log("data : ", data);
                           label="Customer*"  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref} 
                           />
                         )}
@@ -526,7 +522,6 @@ console.log("data : ", data);
                         placeholder="Search" 
                         error={!!error}
                         helperText={error?.message} 
-                        type="search"
                         inputRef={ref}
                         />
                     )}
@@ -561,7 +556,6 @@ console.log("data : ", data);
                         label="Status" 
                         error={!!error}
                         helperText={error?.message} 
-                        type="search"
                         inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -598,7 +592,6 @@ console.log("data : ", data);
                         label="Installation Site" 
                         error={!!error}
                         helperText={error?.message} 
-                        type="search"
                         inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -631,7 +624,6 @@ console.log("data : ", data);
                       label="Billing Site" 
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -743,7 +735,6 @@ console.log("data : ", data);
                       id="accountManager"     
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref} 
                     />}
                     ChipProps={{ size: 'small' }}
@@ -782,7 +773,6 @@ console.log("data : ", data);
                       id="projectManager"     
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -821,7 +811,6 @@ console.log("data : ", data);
                       id="supportManager"     
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}

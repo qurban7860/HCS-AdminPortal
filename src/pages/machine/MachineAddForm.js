@@ -312,6 +312,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                   
                   <Controller
                     name="parentSerialNo"
+                    clearOnBlur 
+                    clearOnEscape 
                     control={control}
                     defaultValue={parentSerialNo || null}
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
@@ -346,7 +348,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                           label="Previous Machine Serial No."  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref}
                           />
                         )}
@@ -384,7 +385,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                           label="Supplier"  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref} 
                           />
                         )}
@@ -402,6 +402,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
+                        disabled={!!parentSerialNo?.machineModel}
                         id="controllable-states-demo"
                         options={activeMachineModels}
                         isOptionEqualToValue={(option, value) => option.name === value.name}
@@ -418,7 +419,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                           label="Model"  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref} 
                           />
                         )}
@@ -467,7 +467,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                           label="Customer*"  
                           error={!!error}
                           helperText={error?.message} 
-                          type="search"
                           inputRef={ref} 
                           />
                         )}
@@ -502,7 +501,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         placeholder="Search" 
                         error={!!error}
                         helperText={error?.message} 
-                        type="search"
                         inputRef={ref}
                         />
                     )}
@@ -537,7 +535,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         label="Status" 
                         error={!!error}
                         helperText={error?.message} 
-                        type="search"
                         inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -574,7 +571,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         label="Installation Site" 
                         error={!!error}
                         helperText={error?.message} 
-                        type="search"
                         inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -607,7 +603,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       label="Billing Site" 
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -719,7 +714,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       id="accountManager"     
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref} 
                     />}
                     ChipProps={{ size: 'small' }}
@@ -758,7 +752,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       id="projectManager"     
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
@@ -797,7 +790,6 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                       id="supportManager"     
                       error={!!error}
                       helperText={error?.message} 
-                      type="search"
                       inputRef={ref}
                     />}
                     ChipProps={{ size: 'small' }}
