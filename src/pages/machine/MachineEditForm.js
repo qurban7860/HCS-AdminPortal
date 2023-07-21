@@ -16,7 +16,7 @@ import { PATH_MACHINE } from '../../routes/paths';
 // slice
 import { getSPContacts } from '../../redux/slices/customer/contact';
 import { getCustomers, getActiveCustomers } from '../../redux/slices/customer/customer';
-import { getSites, getActiveSites } from '../../redux/slices/customer/site';
+import { getSites, getActiveSites, resetActiveSites } from '../../redux/slices/customer/site';
 import { getMachinestatuses, getActiveMachineStatuses } from '../../redux/slices/products/statuses';
 import { getMachineModels, getActiveMachineModels } from '../../redux/slices/products/model';
 import { getSuppliers, getActiveSuppliers } from '../../redux/slices/products/supplier';
@@ -473,6 +473,9 @@ console.log("data : ", data);
                           } else {
                             field.onChange(null);
                             setValue('machineConnectionVal', []);
+                            setValue('instalationSite', []);
+                            setValue('billingSite', []);
+                            dispatch(resetActiveSites());
                           }
                         }}
                         renderInput={(params) => (
