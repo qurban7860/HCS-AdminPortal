@@ -330,7 +330,7 @@ export default function DocumentAddForm({
       if (selectedValue === 'new') {
         console.log('new ');
         await dispatch(
-          addDocument(data, customerPage ? customer?._id : null, machinePage ? machine?._id : null)
+          addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null,data)
         );
         enqueueSnackbar(Snacks.addedDoc);
         if (!customerPage && !machinePage) {
