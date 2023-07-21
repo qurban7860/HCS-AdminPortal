@@ -166,6 +166,10 @@ export const BUTTONS = {
   ADDROLE: 'Add Role',
   ADDDOCUMENT_CATEGORY: 'Add Document Category',
   ADDDOCUMENT_TYPE: 'Add Document Type',
+
+  // region
+  ADDREGION: 'Add Region',
+
 };
 
 export const BREADCRUMBS = {
