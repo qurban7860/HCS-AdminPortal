@@ -86,6 +86,7 @@ export default function SettingViewForm({ currentSetting = null }) {
 
   const defaultValues = useMemo(
     () => ({
+      techParamCategory: currentSetting?.techParam?.category?.name || '',
       techParamName: currentSetting?.techParam?.name || '',
       techParamCode: currentSetting?.techParam?.code || '',
       techParamValue: currentSetting?.techParamValue || '',
@@ -113,15 +114,15 @@ export default function SettingViewForm({ currentSetting = null }) {
       </Grid>
       <Grid container>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
-        <ViewFormField sm={6} heading="Technical Perameter" param={defaultValues?.techParamName} />
+        <ViewFormField sm={6} heading="Category Name" param={defaultValues?.techParamCategory} />
         <ViewFormField
           sm={6}
-          heading="Technical Perameter Name"
-          param={defaultValues?.techParamCode}
+          heading="Paramter Name"
+          param={defaultValues?.techParamName}
         />
         <ViewFormField
           sm={12}
-          heading="Technical Perameter Value"
+          heading="Paramter Value"
           param={defaultValues?.techParamValue}
         />
         <ViewFormField />
