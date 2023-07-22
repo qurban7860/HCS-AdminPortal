@@ -41,9 +41,11 @@ import DocumentListTableRow from './DocumentListTableRow';
 import DocumentListTableToolbar from './DocumentListTableToolbar';
 import {
   getDocument,
+  resetDocument,
   getDocuments,
   deleteDocument,
   resetDocuments,
+  resetDocumentHistory,
   setDocumentViewFormVisibility,
 } from '../../../redux/slices/document/document';
 import { Cover } from '../../components/Defaults/Cover';
@@ -207,10 +209,12 @@ export default function DocumentList({ customerPage, machinePage }) {
   };
 
   const handleViewRow = (id) => {
+      dispatch(resetDocument())
     if (customerPage || machinePage) {
       dispatch(getDocument(id));
       dispatch(setDocumentViewFormVisibility(true));
     } else {
+      dispatch(resetDocumentHistory())
       navigate(PATH_DOCUMENT.document.view(id));
     }
   };
@@ -222,7 +226,8 @@ export default function DocumentList({ customerPage, machinePage }) {
 
   return (
     <>
-      {!customerPage && !machinePage && <StyledCardContainer>
+      {!customerPage && !machinePage && 
+      <StyledCardContainer>
         <Cover name={FORMLABELS.COVER.DOCUMENTS} />
       </StyledCardContainer>}
       <Card sx={{ mt: 3 }}>

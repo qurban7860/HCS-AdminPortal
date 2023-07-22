@@ -35,9 +35,6 @@ import { document as documentType, Snacks } from '../../../constants/document-co
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 DocumentHistoryViewForm.propTypes = {
@@ -62,10 +59,17 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
   const [openMachine, setOpenMachine] = useState(false);
 
   useEffect(() => {
-    dispatch(resetActiveDocuments());
-    dispatch(resetMachine());
-    dispatch(resetCustomer());
-    dispatch(getDocumentHistory(id));
+    // dispatch(resetActiveDocuments());
+    if(!machinePage){
+      dispatch(resetMachine());
+    }
+    if(!customerPage){
+      dispatch(resetCustomer());
+    }
+    if(!machinePage && !customerPage && id){
+      dispatch(getDocumentHistory(id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -206,9 +210,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
     <>
       {/* <Grid container> */}
       {!customerPage && !machinePage && 
-      <StyledCardContainer>
-        <Cover name={FORMLABELS.COVER.DOCUMENTS} />
-      </StyledCardContainer>
+        <DocumentCover content={defaultValues?.displayName} backLink generalSettings />
       }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>

@@ -7,6 +7,7 @@ import { Grid, Typography, Link, Tooltip, Card } from '@mui/material';
 import {
   deleteDocument,
   getDocumentHistory,
+  resetDocumentHistory,
   getDocument,
   getDocuments,
   setDocumentEditFormVisibility,
@@ -70,6 +71,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
     dispatch(setDocumentHistoryViewFormVisibility(true));
     // navigate(PATH_DOCUMENT.document.view(document._id));
     // dispatch(resetDocument());
+      dispatch(resetDocumentHistory())
     await dispatch(getDocumentHistory(document?._id));
   };
 
