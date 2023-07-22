@@ -153,6 +153,13 @@ RoleEdit,
 // Reports
   Reports,
   SignInLogList,
+
+  // Regions
+  RegionList,
+  RegionAddForm,
+  RegionView,
+  RegionEditForm,
+
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -442,6 +449,16 @@ export default function Router() {
           path: 'signInLogs',
           children: [
             { path: 'list', element: <SignInLogList /> },
+          ],
+        },
+        {
+          path: 'regions',
+          children: [
+            { path: 'list', element: <RegionList /> },
+            { path: 'new', element: <RegionAddForm /> },
+            { path: ':id/view', element: <RegionView /> },
+            { path: ':id/edit', element: <RegionEditForm /> }
+
           ],
         },
       ],

@@ -298,7 +298,7 @@ export default function MachineViewForm() {
             <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
             <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />
-            <ViewFormField sm={6} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
+            <ViewFormField sm={12} heading="Connected Machiness" chipDialogArrayParam={linkedMachines} />
 
             <ViewFormField
               sm={12}

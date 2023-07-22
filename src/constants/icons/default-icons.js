@@ -129,4 +129,8 @@ export const ICONS = {
     icon: 'mdi:clipboard-text',
     heading: 'User Sign In Logs',
   },
+  REGION: {
+    icon: 'mdi:map-marker-circle',
+    heading: 'Region',
+  },
 };

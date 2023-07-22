@@ -222,6 +222,12 @@ export const PATH_SETTING = {
   signInLogs: {
     list: path(ROOTS_SETTING, '/signInLogs/list'),
   },
+  regions: {
+    list: path(ROOTS_SETTING, '/regions/list'),
+    new: path(ROOTS_SETTING, '/regions/new'),
+    view: (id) => path(ROOTS_SETTING, `/regions/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/regions/${id}/edit`)
+  },
 };
 
 export const PATH_SITEMAP = {

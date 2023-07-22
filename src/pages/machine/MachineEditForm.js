@@ -29,7 +29,7 @@ import {
   setMachineEditFormVisibility,
   setTransferMachineFlag,
 } from '../../redux/slices/products/machine';
-import { getMachineConnections } from '../../redux/slices/products/machineConnections';
+import { getMachineConnections, resetMachineConnections } from '../../redux/slices/products/machineConnections';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
 // components
@@ -474,6 +474,7 @@ console.log("data : ", data);
                             }
                           } else {
                             field.onChange(null);
+                            dispatch(resetMachineConnections());
                             setValue('machineConnectionVal', []);
                             setValue('instalationSite', []);
                             setValue('billingSite', []);

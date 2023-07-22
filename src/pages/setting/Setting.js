@@ -33,6 +33,9 @@ export default function Setting() {
   const linkSignInLogs = () => {
     navigate(PATH_SETTING.signInLogs.list);
   };
+  const linkRegions = () => {
+    navigate(PATH_SETTING.regions.list);
+  };
 
   return (
     <Container maxWidth={false}>
@@ -76,6 +79,11 @@ export default function Setting() {
                 onClick={linkSignInLogs}
                 icon={ICONS.SIGNIN_LOGS.icon}
                 content={ICONS.SIGNIN_LOGS.heading}
+              />
+              <ListItem
+                onClick={linkRegions}
+                icon={ICONS.REGION.icon}
+                content={ICONS.REGION.heading}
               />
             </List>
           </StyledSettingsCardContainer>
