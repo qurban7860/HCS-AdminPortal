@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -30,10 +30,49 @@ import { Snacks, FORMLABELS as formLABELS } from '../../../constants/document-co
 
 export default function DocumentCategoryeEditForm() {
   const { documentCategory } = useSelector((state) => state.documentCategory);
-  const [radioValue, setRadioValue] = useState('customer');
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
+
+  const [state, setState] = useState({
+    customer: false,
+    machine: false,
+    drawing: false,
+    all: false,
+  });
+
+  const handleChangeType = (event) => {
+    if(event.target.name === "all" && state.all === false){
+      setState({
+        customer: true,
+        machine: true,
+        drawing: true,
+        all: true,
+      })
+    }else if(event.target.name === "all" && state.all === true){
+      setState({
+        customer: false,
+        machine: false,
+        drawing: false,
+        all: false,
+      })
+    }else{
+      setState({
+        ...state,
+        [event.target.name]: event.target.checked,
+      });
+    }
+  };
+
+  useEffect(()=>{
+    setState({
+      customer: documentCategory.customer,
+      machine: documentCategory.machine,
+      drawing: documentCategory.drawing,
+      all: false,
+    })
+  },[documentCategory]);
+
   const defaultValues = useMemo(
     () => ({
       name: documentCategory?.name || '',
@@ -66,7 +105,7 @@ export default function DocumentCategoryeEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      data.type = radioValue
+      data.type = state
       await dispatch(updateDocumentCategory(documentCategory._id, data));
       dispatch(getDocumentCategory(documentCategory._id));
       navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
@@ -76,10 +115,6 @@ export default function DocumentCategoryeEditForm() {
       enqueueSnackbar(Snacks.failedSaveDocCategory, { variant: `error` });
       console.error(err.message);
     }
-  };
-
-  const radioOnChange = (event) => {
-    setRadioValue(event.target.value);
   };
 
   return (
@@ -97,25 +132,6 @@ export default function DocumentCategoryeEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
                 <FormHeading heading={FORMLABELS.COVER.EDIT_DOCUMENT_CATEGORY} />
-              <FormControl>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={radioValue}
-                  onChange={radioOnChange}
-                  >
-                  <Grid item xs={12} sm={6} md={4}>
-                    <FormControlLabel item sm={6} value="customer" control={<Radio />} label="Customer" />
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <FormControlLabel item sm={6} value="machine" control={<Radio />} label="Machine"/>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={4}>
-                    <FormControlLabel item sm={6} value="drawing" control={<Radio />} label="Drawings"/>
-                  </Grid>
-                </RadioGroup>
-              </FormControl>
                 <RHFTextField name={formLABELS.CATEGORY.name} label={formLABELS.CATEGORY.label} />
                 <RHFTextField
                   name={formLABELS.CATEGORY_DESC.name}
@@ -128,6 +144,8 @@ export default function DocumentCategoryeEditForm() {
                   isRHF
                   name={FORMLABELS.isACTIVE.name}
                   RHFName={FORMLABELS.isCUSTOMER_ACCESS.name}
+                  isCATEGORY={state}
+                  handleChangeType={handleChangeType}
                 />
               </Stack>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />

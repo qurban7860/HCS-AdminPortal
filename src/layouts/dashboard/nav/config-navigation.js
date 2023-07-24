@@ -52,7 +52,7 @@ const navConfig = [
       { title: 'Dashboard', path: PATH_DASHBOARD.general.app, icon: ICONS.dashboard },
       { title: 'Customers', path: PATH_CUSTOMER.list, icon: ICONS.users },
       { title: 'Machines', path: PATH_MACHINE.machines.list, icon: ICONS.machines },
-      { title: 'Machine Drawings', path: PATH_DOCUMENT.document.list, icon: ICONS.document },
+      { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document },
       { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting },
       { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user },
       { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.reports },

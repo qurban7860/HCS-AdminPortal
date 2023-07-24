@@ -45,6 +45,8 @@ import { FORMLABELS, DIALOGS, BUTTONS } from '../../../../constants/default-cons
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
+  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'machine', label: 'Machine', align: 'left' },
   { id: 'doctype', label: 'Type', align: 'left' },
   { id: 'doccategory', label: 'Category', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
@@ -172,7 +174,7 @@ export default function DocumentList() {
     <>
       <Container maxWidth={false}>
         <StyledCardContainer>
-          <Cover name={FORMLABELS.COVER.MACHINE_DRAWINGS} />
+          <Cover name={FORMLABELS.COVER.DOCUMENTS} />
         </StyledCardContainer>
 
         <Card sx={{ mt: 3 }}>

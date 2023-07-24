@@ -450,7 +450,7 @@ console.log("data : ", data);
 
                     {/* -------------------------------- Customer -------------------------------- */}
 
-                    <Controller
+                  <Controller
                     name="customer"
                     control={control}
                     defaultValue={customer || null}
@@ -467,7 +467,7 @@ console.log("data : ", data);
                         onChange={(event, newValue) => {
                           if (newValue) {
                             field.onChange(newValue);
-                            if(customer._id !== newValue._id) {
+                            if(customer?._id !== newValue._id) {
                             setValue('machineConnectionVal', []);
                             setValue('instalationSite', []);
                             setValue('billingSite', []);

@@ -19,8 +19,8 @@ DocumentListTableToolbar.propTypes = {
   filterStatus: PropTypes.array,
   onFilterStatus: PropTypes.func,
   statusOptions: PropTypes.array,
-  customerDocList: PropTypes.bool,
-  machineDocList: PropTypes.bool,
+  customerPage: PropTypes.bool,
+  machinePage: PropTypes.bool,
 };
 
 export default function DocumentListTableToolbar({
@@ -31,17 +31,13 @@ export default function DocumentListTableToolbar({
   statusOptions,
   onResetFilter,
   onFilterStatus,
-  customerDocList,
-  machineDocList,
+  customerPage,
+  machinePage,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toggleAdd = () => {
-    if (customerDocList || machineDocList) {
       dispatch(setDocumentFormVisibility(true));
-    } else {
-      navigate(PATH_DOCUMENT.document.new);
-    }
   };
   return (
     <Stack
@@ -77,7 +73,7 @@ export default function DocumentListTableToolbar({
             </Button>
           )}
         </Grid>
-        <Grid item xs={8} sm={3}>
+        {(customerPage || machinePage) && <Grid item xs={8} sm={3}>
           <Stack alignItems="flex-end">
             <Button
               sx={{ p: 2 }}
@@ -88,7 +84,7 @@ export default function DocumentListTableToolbar({
               Add Document
             </Button>
           </Stack>
-        </Grid>
+        </Grid>}
       </Grid>
     </Stack>
   );

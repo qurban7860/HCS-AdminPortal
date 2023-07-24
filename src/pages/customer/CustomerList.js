@@ -273,7 +273,8 @@ export default function CustomerList() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  const stabilizedThis = inputData && inputData.map((el, index) => [el, index]);
+  const stabilizedThis = inputData.map((el, index) => [el, index]);
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -281,21 +282,23 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   });
 
   inputData = stabilizedThis.map((el) => el[0]);
+  // (customer) => customer.name.toLowerCase().indexOf(filterName.toLowerCase()) || customer.tradingName.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.city.toLowerCase().indexOf(filterName.toLowerCase()) || customer.mainSite?.address?.country.toLowerCase().indexOf(filterName.toLowerCase()) || customer.createdAt.toLowerCase().indexOf(filterName.toLowerCase()) !== -1
+
   if (filterName) {
     inputData = inputData.filter(
-      (document) =>
-        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (customer) =>
+        customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        customer?.tradingName?.some((tName) => tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
+        customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >=
+          0 ||
+        // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
+        fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((document) => filterStatus.includes(document.status));
+    inputData = inputData.filter((customer) => filterStatus.includes(customer.status));
   }
 
   return inputData;

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Switch } from '@mui/material';
+import { Grid, Switch, FormControlLabel, FormControl, FormLabel, FormGroup, FormHelperText } from '@mui/material';
 import { StyledToggleButtonLabel } from '../../../theme/styles/document-styles';
 import RHFSwitch from '../../../components/hook-form/RHFSwitch';
 import { TOGGLE } from '../../../constants/default-constants';
@@ -17,6 +17,8 @@ ToggleButtons.propTypes = {
   RHFName: PropTypes.string,
   isCONNECTABLE: PropTypes.bool,
   CONNECTName: PropTypes.string,
+  isCATEGORY: PropTypes.object,
+  handleChangeType: PropTypes.func,
 };
 
 export default function ToggleButtons({
@@ -31,6 +33,8 @@ export default function ToggleButtons({
   RHFName,
   isCONNECTABLE,
   CONNECTName,
+  isCATEGORY,
+  handleChangeType
 }) {
   return (
     <Grid item lg={12} display="flex">
@@ -73,6 +77,28 @@ export default function ToggleButtons({
           </StyledToggleButtonLabel>
           <RHFSwitch name={CONNECTName} />
         </Grid>
+      )}
+      {isCATEGORY && (
+        <FormControl >
+          <FormGroup row >
+           <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>Customer</StyledToggleButtonLabel>
+                <Switch checked={isCATEGORY.customer} onChange={handleChangeType} name="customer" />
+            </Grid>
+            <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>Machine</StyledToggleButtonLabel>
+                <Switch checked={isCATEGORY.machine} onChange={handleChangeType} name="machine" />
+            </Grid>     
+            <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>Drawings</StyledToggleButtonLabel>
+                <Switch checked={isCATEGORY.drawing} onChange={handleChangeType} name="drawing" />
+            </Grid>
+            <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>All</StyledToggleButtonLabel>
+                <Switch checked={isCATEGORY.all} onChange={handleChangeType} name="all" />
+            </Grid>
+          </FormGroup>
+        </FormControl>
       )}
     </Grid>
   );

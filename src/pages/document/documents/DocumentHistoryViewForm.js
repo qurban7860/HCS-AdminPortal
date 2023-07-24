@@ -42,10 +42,11 @@ DocumentHistoryViewForm.propTypes = {
   machinePage: PropTypes.bool,
 };
 export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
+  console.log("customerPage , machinePage",customerPage , machinePage)
   const dispatch = useDispatch();
   // const theme = useTheme();
   const navigate = useNavigate();
-  // const { id } = useParams();
+  const { id } = useParams();
   const regEx = /^[^2]*/;
   const { enqueueSnackbar } = useSnackbar();
 
@@ -58,23 +59,30 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
   const [openMachine, setOpenMachine] = useState(false);
 
   useEffect(() => {
-    dispatch(resetActiveDocuments());
-    dispatch(resetMachine());
-    dispatch(resetCustomer());
-    // dispatch(getDocumentHistory(id));
-  }, [dispatch]);
+    // dispatch(resetActiveDocuments());
+    if(!machinePage){
+      dispatch(resetMachine());
+    }
+    if(!customerPage){
+      dispatch(resetCustomer());
+    }
+    if(!machinePage && !customerPage && id){
+      dispatch(getDocumentHistory(id));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, id]);
 
   useEffect(() => {
-    if (documentHistory?.machine) {
+    if (documentHistory?.machine && !machinePage) {
       dispatch(getMachine(documentHistory.machine._id));
     }
-  }, [documentHistory, dispatch]);
+  }, [documentHistory, machinePage, dispatch]);
 
   useEffect(() => {
-    if (documentHistory?.customer) {
+    if (documentHistory?.customer && !customerPage) {
       dispatch(getCustomer(documentHistory.customer._id));
     }
-  }, [documentHistory, dispatch]);
+  }, [documentHistory, customerPage, dispatch]);
 
   const onDelete = async () => {
     try {
@@ -200,7 +208,10 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
 
   return (
     <>
-      <Grid container>
+      {/* <Grid container> */}
+      {!customerPage && !machinePage && 
+        <DocumentCover content={defaultValues?.displayName} backLink generalSettings />
+      }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
             {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
@@ -231,7 +242,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
                 param={defaultValues?.docCategory}
               />
               <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-              {!customerPage && (
+              {!customerPage && defaultValues.customer && (
                 <ViewFormField
                   sm={6}
                   heading="Customer"
@@ -244,7 +255,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
                   }
                 />
               )}
-              {!machinePage && (
+              {!machinePage && defaultValues?.machine && (
                 <ViewFormField
                   sm={6}
                   heading="Machine"
@@ -289,7 +300,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
             </Grid>
           </Card>
         </Grid>
-      </Grid>
+      {/* </Grid> */}
       <CustomerDialog openCustomer={openCustomer} handleCloseCustomer={handleCloseCustomer} />
       <MachineDialog openMachine={openMachine} handleCloseMachine={handleCloseMachine} />
     </>

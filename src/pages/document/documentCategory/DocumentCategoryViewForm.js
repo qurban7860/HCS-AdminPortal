@@ -78,6 +78,17 @@ export default function DocumentCategoryViewForm() {
             heading="Document Types"
             arrayParam={defaultValues.documentTypes}
           />
+          <ViewFormField />
+          <ViewFormSWitch 
+              customerHeading='Customer' 
+              customer={documentCategory?.customer} 
+              machineHeading='Machine' 
+              machine={documentCategory?.machine} 
+              drawingHeading='Drawing' 
+              drawing={documentCategory?.drawing}
+                sx={{mt:2}}
+              />
+
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
