@@ -155,6 +155,7 @@ export function addSecurityUser(param) {
       roles: param.roles,
       login: param.email,
       isActive: param.isActive,
+      regions: param.selectedRegions
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
       if(regEx.test(response.status)){
@@ -183,7 +184,8 @@ export function updateSecurityUser(param,id) {
         phone:  param.phone,
         login: param.loginEmail,
         roles: param.roles,
-        isActive: param.isActive
+        isActive: param.isActive,
+        regions: param.selectedRegions
         }
         if(param.password !== ""){
             data.password = param.password 

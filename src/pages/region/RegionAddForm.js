@@ -116,11 +116,11 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
   } = methods;
 
   const onSubmit = async (data) => {
+    if(selectedCountries.length > 0){
+      const selectedCountriesIDs = selectedCountries.map((country) => country._id);
+      data.selectedCountries = selectedCountriesIDs;
+    }
     try {
-      if(selectedCountries.length > 0){
-        const selectedCountriesIDs = selectedCountries.map((country) => country._id);
-        data.selectedCountries = selectedCountriesIDs;
-      }
       const response = await dispatch(addRegion(data));
       // await dispatch(resetContacts());
       reset();

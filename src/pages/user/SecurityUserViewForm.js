@@ -137,6 +137,7 @@ export default function SecurityUserViewForm() {
       email: securityUser?.email || '',
       login: securityUser?.login || '',
       roles: securityUser?.roles,
+      regions: securityUser?.regions || [],
       isActive: securityUser?.isActive,
       createdByFullName: securityUser?.createdBy?.name,
       createdAt: securityUser?.createdAt,
@@ -212,6 +213,11 @@ console.log("defaultValues?.roles :",defaultValues?.roles)
               sm={6}
               heading="Roles"
               userRolesChips={defaultValues?.roles}
+            />
+            <ViewFormField
+              sm={6}
+              heading="Regions"
+              arrayParam={defaultValues?.regions}
             />
           </Grid>
           <ViewFormField />

@@ -33,6 +33,7 @@ export default function SecurityUserEditForm() {
   // const userRoles = JSON.parse(userRolesString);
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
   const regEx = /^[2][0-9][0-9]$/;
+  const { regions } = useSelector((state) => state.region);
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
   const ROLES = [];
@@ -41,6 +42,7 @@ export default function SecurityUserEditForm() {
   if (securityUser?.roles) {
     securityUser?.roles.map((role) => securityUserRoles.push(role?._id, role.name));
   }
+  const [selectedRegions, setSelectedRegions] = useState([]);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const { spCustomers } = useSelector((state) => state.customer);
@@ -98,6 +100,9 @@ export default function SecurityUserEditForm() {
 
   /* eslint-disable */
   useLayoutEffect(() => {
+    if (securityUser.regions !== undefined && securityUser.regions !== null) {
+      setSelectedRegions(securityUser?.regions);
+    }
     if (securityUser.customer !== undefined && securityUser.customer !== null) {
       setCustomerVal(securityUser?.customer);
     }
@@ -194,6 +199,11 @@ export default function SecurityUserEditForm() {
     const submitSecurityUserRoles = data.roles.filter((role) =>
       ROLES.some((Role) => Role.value === role)
     );
+    if(selectedRegions.length > 0){
+      const selectedRegionsIDs = selectedRegions.map((region) => region._id);
+      data.selectedRegions = selectedRegionsIDs;
+    }
+
     data.roles = submitSecurityUserRoles;
 
     try {
@@ -214,6 +224,11 @@ export default function SecurityUserEditForm() {
   const toggleCancel = () => {
     navigate(PATH_SECURITY.users.view(securityUser._id));
   };
+
+  const handleRegionsChange = (event, selectedOptions) => {
+    setSelectedRegions(selectedOptions);
+  };
+
   const handleInputEmail = (e) => {
     const emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     const trimmedEmail = e.target.value.trim();
@@ -431,6 +446,22 @@ export default function SecurityUserEditForm() {
                 label="Roles"
                 options={sortedRoles}
               />
+              <Autocomplete
+                  multiple
+                  id="regions-autocomplete"
+                  options={regions}
+                  value={selectedRegions}
+                  onChange={handleRegionsChange}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Regions"
+                      placeholder="Select Regions"
+                    />
+                  )}
+                />
             </Box>
             <Grid item md={12}>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />

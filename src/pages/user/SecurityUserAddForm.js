@@ -34,6 +34,7 @@ import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import { getActiveSPCustomers } from '../../redux/slices/customer/customer';
 import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
+import { getRegions } from '../../redux/slices/region/region';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
@@ -51,15 +52,18 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
   const regEx = /^[^2]*$/;
+  const [selectedRegions, setSelectedRegions] = useState([]);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
+  const { roles } = useSelector((state) => state.role);
+  const { regions } = useSelector((state) => state.region);
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const { spCustomers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
-  const { contacts, activeContacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState('');
-  const { roles } = useSelector((state) => state.role);
   const [sortedRoles, setSortedRoles] = useState([]);
+  const [sortedRegions, setSortedRegions] = useState([]);
   const [phone, setPhone] = useState('');
   const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
 
@@ -88,6 +92,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   useEffect(() => {
     dispatch(getActiveSPCustomers());
+    dispatch(getRegions());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -206,6 +211,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       roleVal.map((role) => roleId.push(role?._id));
       data.roles = roleId;
     }
+    if(selectedRegions.length > 0){
+      const selectedRegionsIDs = selectedRegions.map((region) => region._id);
+      data.selectedRegions = selectedRegionsIDs;
+    }
 
     try {
       const response = await dispatch(addSecurityUser(data));
@@ -226,6 +235,10 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   const toggleCancel = () => {
     navigate(PATH_SECURITY.users.list);
+  };
+
+  const handleRegionsChange = (event, selectedOptions) => {
+    setSelectedRegions(selectedOptions);
   };
 
   return (
@@ -398,6 +411,22 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 label="Roles"
                 options={sortedRoles}
               />
+              <Autocomplete
+                  multiple
+                  id="regions-autocomplete"
+                  options={regions}
+                  value={selectedRegions}
+                  onChange={handleRegionsChange}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Regions"
+                      placeholder="Select Regions"
+                    />
+                  )}
+                />
             </Box>
             <Grid item md={12}>
               <RHFSwitch
