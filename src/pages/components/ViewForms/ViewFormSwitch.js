@@ -36,7 +36,7 @@ ViewFormSWitch.propTypes = {
     };
 
     return (
-      <Grid item xs={12} sm={12} sx={{  display: 'flex' }}>
+      <Grid item xs={12} sm={12} sx={{  display: 'flex', mt:-1}}>
        
         {customerAccess && (
         <Grid sx={{  display: 'flex', mx:1 }}>

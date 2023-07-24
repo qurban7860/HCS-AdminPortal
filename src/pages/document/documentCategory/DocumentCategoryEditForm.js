@@ -109,7 +109,7 @@ export default function DocumentCategoryeEditForm() {
       await dispatch(updateDocumentCategory(documentCategory._id, data));
       dispatch(getDocumentCategory(documentCategory._id));
       navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
-      enqueueSnackbar(Snacks.addedDocCategory, { variant: `success` });
+      enqueueSnackbar(Snacks.updatedDocCategory, { variant: `success` });
       reset();
     } catch (err) {
       enqueueSnackbar(Snacks.failedSaveDocCategory, { variant: `error` });
