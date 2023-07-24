@@ -21,6 +21,7 @@ DocumentListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawings: PropTypes.bool,
 };
 
 export default function DocumentListTableToolbar({
@@ -33,11 +34,16 @@ export default function DocumentListTableToolbar({
   onFilterStatus,
   customerPage,
   machinePage,
+  machineDrawings,
 }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toggleAdd = () => {
+    if(customerPage || machinePage){
       dispatch(setDocumentFormVisibility(true));
+    }else if(machineDrawings){
+      navigate(PATH_DOCUMENT.document.newMachineDrawings)
+    }
   };
   return (
     <Stack
@@ -73,7 +79,8 @@ export default function DocumentListTableToolbar({
             </Button>
           )}
         </Grid>
-        {(customerPage || machinePage) && <Grid item xs={8} sm={3}>
+        {(customerPage || machinePage || machineDrawings) && 
+        <Grid item xs={8} sm={3}>
           <Stack alignItems="flex-end">
             <Button
               sx={{ p: 2 }}

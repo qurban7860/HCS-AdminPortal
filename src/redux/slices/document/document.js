@@ -267,18 +267,24 @@ export function updateDocument(documentId , params, customerId, machineId) {
 
 // -----------------------------------Get Documents-----------------------------------
 
-export function getDocuments(customerId,machineId) {
+export function getDocuments(customerId,machineId,drawing) {
+  console.log("drawing : ",drawing)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {
       isArchived: false,
       basic: true,
     }
+    if(drawing) {
+      params.forDrawing = true;
+    }
     if (customerId) {
       params.customer = customerId
+      params.forCustomer = true;
     }
     if(machineId){
       params.machine = machineId
+      params.forMachine = true;
     }
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 

@@ -42,27 +42,43 @@ export default function DocumentCategoryeEditForm() {
   });
 
   const handleChangeType = (event) => {
-    if(event.target.name === "all" && state.all === false){
+    if (event.target.name === "all" && event.target.checked === true) {
+      const allValue = event.target.checked;
       setState({
         customer: true,
         machine: true,
         drawing: true,
         all: true,
+        
       })
-    }else if(event.target.name === "all" && state.all === true){
+    } else if(event.target.name === "all" && event.target.checked === false){
       setState({
         customer: false,
         machine: false,
         drawing: false,
         all: false,
       })
-    }else{
+    } else {
       setState({
         ...state,
-        [event.target.name]: event.target.checked,
+        [event.target.name]: event.target.checked, 
       });
     }
   };
+
+  useEffect(()=>{
+    if((!state.customer || !state.machine || !state.drawing) && state.all){
+      setState({
+        ...state,
+        all: false, 
+      });
+    }else if(state.customer && state.machine && state.drawing){
+      setState({
+        ...state,
+        all: true, 
+      });
+    }
+  },[state]);
 
   useEffect(()=>{
     setState({

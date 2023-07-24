@@ -145,6 +145,8 @@ RoleEdit,
   DocumentViewForm, 
   CustomerDocumentView,
   MachineDocumentView,
+  MachineDrawings,
+  MachineDrawingsAddForm,
 
 // Setting
 
@@ -480,6 +482,8 @@ export default function Router() {
         {path: ':id/view', element: <DocumentViewForm /> },
         {path: ':id/customer',element: <CustomerDocumentView />},
         {path: ':id/machine',element: <MachineDocumentView/>},
+        {path: 'machineDrawings',element: <MachineDrawings/>},
+        {path: 'newMachineDrawings',element: <MachineDrawingsAddForm/>},
       ],
     },
     {

@@ -249,8 +249,11 @@ export const PATH_DOCUMENT = {
     view: (id) => path(ROOTS_DOCUMENT, `/${id}/view`),
     customer: (id) => path(ROOTS_DOCUMENT, `/${id}/customer`),
     machine: (id) => path(ROOTS_DOCUMENT, `/${id}/machine`),
+    machineDrawings: path(ROOTS_DOCUMENT, '/machineDrawings'),
+    newMachineDrawings: path(ROOTS_DOCUMENT, '/newMachineDrawings'),
   },
 };
+
 
 export const PATH_DOCS = {
   root: 'https://www.howickltd.com/why-howick',

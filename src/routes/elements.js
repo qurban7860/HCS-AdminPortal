@@ -200,13 +200,19 @@ export const DocumentList = Loadable(
   lazy(() => import('../pages/document/documents/DocumentList'))
 );
 export const DocumentAddForm = Loadable(
-  lazy(() => import('../pages/document/dashboard/documents/DocumentAdd'))
+  lazy(() => import('../pages/document/documents/DocumentAddForm'))
 );
 export const DocumentEditForm = Loadable(
-  lazy(() => import('../pages/document/dashboard/documents/DocumentEditForm'))
+  lazy(() => import('../pages/document/documents/DocumentEditForm'))
 );
 export const DocumentViewForm = Loadable(
   lazy(() => import('../pages/document/documents/DocumentHistoryViewForm'))
+);
+export const MachineDrawings = Loadable(
+  lazy(() => import('../pages/document/documents/MachineDrawings'))
+);
+export const MachineDrawingsAddForm = Loadable(
+  lazy(() => import('../pages/document/documents/MachineDrawingsAddForm'))
 );
 
 // Document Name
