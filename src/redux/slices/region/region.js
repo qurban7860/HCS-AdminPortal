@@ -117,7 +117,7 @@ export function addRegion(param) {
       const data = {
       name: param.name,
       description: param.description,
-      countries: param.countries,
+      countries: param.selectedCountries,
       isActive: param.isActive,
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}regions/regions`, data);
@@ -142,7 +142,7 @@ export function updateRegion(param,id) {
       const data = {
         name: param.name,
         description: param.description,
-        countries: param.countries,
+        countries: param.selectedCountries,
         isActive: param.isActive,
         }
       const response = await axios.patch(`${CONFIG.SERVER_URL}regions/regions/${id}`, data);
