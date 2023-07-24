@@ -45,12 +45,11 @@ export default function Header({ onOpenNav }) {
     <>
       {isDesktop && isNavHorizontal && <Logo sx={{ mr: 2.5 }} />}
 
-      <Typography
+      {/* <Typography
         variant="h4"
       >
         {CONFIG.ENV}
-        {/* {CONFIG.ENV} {CONFIG.Version} */}
-      </Typography>
+      </Typography> */}
       {!isDesktop && (
         <IconButton onClick={onOpenNav} sx={{ mr: 1, color: 'text.primary' }}>
           <Iconify icon="eva:menu-2-fill" />
@@ -87,7 +86,7 @@ export default function Header({ onOpenNav }) {
         top: 0,
         zIndex: theme.zIndex.appBar + 1,
         ...bgBlur({
-          color: bgcolor,
+          color: "#eceff1",
         }),
         transition: theme.transitions.create(['height'], {
           duration: theme.transitions.duration.shorter,

@@ -25,7 +25,6 @@ import { getContacts, getActiveContacts, resetContacts } from '../../redux/slice
 import { getRoles } from '../../redux/slices/securityUser/role';
 // current user
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import ViewFormSWitch from '../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -434,7 +433,6 @@ export default function SecurityUserEditForm() {
               />
             </Box>
             <Grid item md={12}>
-              {/* <ViewFormSWitch heading="Active" isActive={securityUser?.isActive} /> */}
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
             </Grid>
             <Stack sx={{ mt: 3 }}>

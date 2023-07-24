@@ -24,7 +24,6 @@ import {
 import ConfirmDialog from '../../../components/confirm-dialog';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';

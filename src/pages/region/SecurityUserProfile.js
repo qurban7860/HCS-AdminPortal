@@ -40,7 +40,6 @@ import FormLabel from '../components/DocumentForms/FormLabel';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormSWitch from '../components/ViewForms/ViewFormSwitch';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserProfile() {

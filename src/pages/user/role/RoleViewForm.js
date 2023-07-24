@@ -14,7 +14,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -89,7 +88,6 @@ export default function RoleViewForm() {
           <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
 
-          {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

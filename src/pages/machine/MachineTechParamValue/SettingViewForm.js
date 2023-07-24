@@ -19,7 +19,6 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { useSnackbar } from '../../../components/snackbar';
 
@@ -126,7 +125,6 @@ export default function SettingViewForm({ currentSetting = null }) {
           param={defaultValues?.techParamValue}
         />
         <ViewFormField />
-        {/* <ViewFormSWitch isActive={defaultValues.isActive}/> */}
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Grid>

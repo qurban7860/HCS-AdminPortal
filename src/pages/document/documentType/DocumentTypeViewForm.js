@@ -19,7 +19,6 @@ import { useSnackbar } from '../../../components/snackbar';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -79,7 +78,6 @@ export default function DocumentTypeViewForm() {
           <ViewFormField sm={12} heading="Category" param={defaultValues.category} />
           <ViewFormField sm={6} heading="Type Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-          {/* <ViewFormSWitch heading="isActive" disabled isActive={defaultValues.isActive}/> */}
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>

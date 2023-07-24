@@ -26,7 +26,6 @@ import Iconify from '../../../components/iconify';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 
 // ----------------------------------------------------------------------
@@ -132,7 +131,6 @@ export default function ContactViewForm({
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
         <ViewFormField />
       </Grid>
-      {/* <ViewFormSwitch isActive={defaultValues.isActive}/> */}
       <ViewFormAudit defaultValues={defaultValues} />
     </Grid>
   );

@@ -37,6 +37,27 @@ export default function ToggleButtons({
   handleChangeType
 }) {
   return (
+    <>
+    {isCATEGORY && (
+        <Grid display="flex" >
+           <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>Customer</StyledToggleButtonLabel>
+                <Switch sx={{ml:-1}}  checked={isCATEGORY.customer} onChange={handleChangeType} name="customer" />
+            </Grid>
+            <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>Machine</StyledToggleButtonLabel>
+                <Switch sx={{ml:-1}}  checked={isCATEGORY.machine} onChange={handleChangeType} name="machine" />
+            </Grid>     
+            <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>Drawings</StyledToggleButtonLabel>
+                <Switch sx={{ml:-1}}  checked={isCATEGORY.drawing} onChange={handleChangeType} name="drawing" />
+            </Grid>
+            <Grid display="flex" alignItems="center" mt={1}>
+                <StyledToggleButtonLabel variant="body2" p={1}>All</StyledToggleButtonLabel>
+                <Switch sx={{ml:-1}}  checked={isCATEGORY.all} onChange={handleChangeType} name="all" />
+            </Grid>
+        </Grid>
+      )}
     <Grid item lg={12} display="flex">
       {!isMachine && (
         <Grid display="flex" alignItems="center" mt={1}>
@@ -78,28 +99,8 @@ export default function ToggleButtons({
           <RHFSwitch name={CONNECTName} />
         </Grid>
       )}
-      {isCATEGORY && (
-        <FormControl >
-          <FormGroup row >
-           <Grid display="flex" alignItems="center" mt={1}>
-                <StyledToggleButtonLabel variant="body2" p={1}>Customer</StyledToggleButtonLabel>
-                <Switch checked={isCATEGORY.customer} onChange={handleChangeType} name="customer" />
-            </Grid>
-            <Grid display="flex" alignItems="center" mt={1}>
-                <StyledToggleButtonLabel variant="body2" p={1}>Machine</StyledToggleButtonLabel>
-                <Switch checked={isCATEGORY.machine} onChange={handleChangeType} name="machine" />
-            </Grid>     
-            <Grid display="flex" alignItems="center" mt={1}>
-                <StyledToggleButtonLabel variant="body2" p={1}>Drawings</StyledToggleButtonLabel>
-                <Switch checked={isCATEGORY.drawing} onChange={handleChangeType} name="drawing" />
-            </Grid>
-            <Grid display="flex" alignItems="center" mt={1}>
-                <StyledToggleButtonLabel variant="body2" p={1}>All</StyledToggleButtonLabel>
-                <Switch checked={isCATEGORY.all} onChange={handleChangeType} name="all" />
-            </Grid>
-          </FormGroup>
-        </FormControl>
-      )}
+      
     </Grid>
+  </>
   );
 }

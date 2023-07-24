@@ -25,7 +25,6 @@ import { getContacts, getActiveContacts, resetContacts } from '../../redux/slice
 import { getRegion, updateRegion } from '../../redux/slices/region/region';
 // current user
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import ViewFormSWitch from '../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
