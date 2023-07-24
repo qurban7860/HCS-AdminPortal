@@ -16,7 +16,6 @@ import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 // ----------------------------------------------------------------------
 
 TechParamCategoryViewForm.propTypes = {

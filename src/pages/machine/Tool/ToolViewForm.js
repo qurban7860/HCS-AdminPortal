@@ -26,7 +26,6 @@ import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 

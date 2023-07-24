@@ -69,7 +69,7 @@ export default function DocumentCategoryeEditForm() {
       customer: documentCategory.customer,
       machine: documentCategory.machine,
       drawing: documentCategory.drawing,
-      all: false,
+      all:  documentCategory.customer && documentCategory.machine && documentCategory.drawing,
     })
   },[documentCategory]);
 

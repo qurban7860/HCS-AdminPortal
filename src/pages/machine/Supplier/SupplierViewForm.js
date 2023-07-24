@@ -22,7 +22,6 @@ import Iconify from '../../../components/iconify/Iconify';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
-import ViewFormSWitch from '../../components/ViewForms/ViewFormSwitch';
 
 // ----------------------------------------------------------------------
 
@@ -123,7 +122,6 @@ export default function SupplierViewForm({ currentSupplier = null }) {
         <ViewFormField sm={6} heading="Region" param={defaultValues?.region} />
         <ViewFormField sm={6} heading="Country" param={defaultValues?.country} />
 
-        {/* <ViewFormSWitch isActive={defaultValues.isActive} /> */}
         <Grid container sx={{ mt: 2 }}>
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

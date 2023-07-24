@@ -4,8 +4,9 @@ import { Typography, Grid,Switch} from '@mui/material';
 import { is } from 'date-fns/locale';
 
 ViewFormSWitch.propTypes = {
-  heading: PropTypes.string,
+  isActiveHeading: PropTypes.string,
   isActive: PropTypes.bool,
+  customerAccessHeading: PropTypes.string,
   customerAccess: PropTypes.bool,
   customer: PropTypes.bool,
   customerHeading: PropTypes.string,
@@ -15,7 +16,7 @@ ViewFormSWitch.propTypes = {
   drawingHeading:PropTypes.string,
 };
 
-    export default function ViewFormSWitch({heading, isActive, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
+    export default function ViewFormSWitch({isActiveHeading, isActive, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
     const [isActiveVal, setIsActiveVal] = useState(isActive);
     const [customerAccessVal, setCustomerAccessVal] = useState(customerAccess);
     useEffect(() => {
@@ -43,7 +44,7 @@ ViewFormSWitch.propTypes = {
           variant="subtitle2"
           sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
-          {heading || ''}
+          {customerAccessHeading || ''}
         </Typography>
           <Switch
               sx={{ mb: 1 }}
@@ -53,13 +54,13 @@ ViewFormSWitch.propTypes = {
           </Grid>
         ) }
 
-        { isActive && (
+        { isActiveHeading && (
         <Grid sx={{  display: 'flex', mx:1 }}>
           <Typography
           variant="subtitle2"
           sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
-          {heading || ''}
+          {isActiveHeading || ''}
         </Typography>
           <Switch
           disabled
@@ -69,7 +70,7 @@ ViewFormSWitch.propTypes = {
           </Grid>
         )}
 
-        {customer && 
+        {customerHeading && 
           <Grid sx={{  display: 'flex', mx:1 }}>
         <Typography
           variant="subtitle2"
@@ -85,7 +86,7 @@ ViewFormSWitch.propTypes = {
             </Grid>
               }
 
-        {machine && 
+        {machineHeading && 
           <Grid sx={{  display: 'flex', mx:1 }}>
         <Typography
           variant="subtitle2"
@@ -101,7 +102,7 @@ ViewFormSWitch.propTypes = {
               </Grid>
               }
 
-        {drawing && 
+        {drawingHeading && 
           <Grid sx={{  display: 'flex', mx:1 }}>
         <Typography
           variant="subtitle2"

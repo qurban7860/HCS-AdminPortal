@@ -24,7 +24,6 @@ import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import { useSnackbar } from '../../../components/snackbar';
 
 // ----------------------------------------------------------------------

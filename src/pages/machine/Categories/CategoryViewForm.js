@@ -91,7 +91,7 @@ export default function CategoryViewForm({ currentCategory = null }) {
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField sm={12} heading="Category Name" param={defaultValues?.name} />
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
-        <ViewFormSwitch heading='Connect as a child' isActive={defaultValues.connection} />
+        <ViewFormSwitch isActiveHeading='Connect as a child' isActive={defaultValues.connection} />
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>
     </Card>

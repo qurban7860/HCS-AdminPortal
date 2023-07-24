@@ -46,8 +46,17 @@ export default function LoginLayout({ children, illustration, title }) {
                 alignItems: 'center',
               }}
             >
-              <Typography variant="h2" sx={{ mb: 6, mt: -2 }}>
+              <Typography variant="h2" sx={{ mt: -2 }}>
                 CLOUD SERVICES
+              </Typography>
+            </Stack>
+            <Stack
+              sx={{
+                alignItems: 'end',
+              }}
+            >
+              <Typography variant="body2" sx={{ mb: 6, mt: -2 }}>
+              {CONFIG.Version}
               </Typography>
             </Stack>
           </Grid>
