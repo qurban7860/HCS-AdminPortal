@@ -42,7 +42,6 @@ DocumentHistoryViewForm.propTypes = {
   machinePage: PropTypes.bool,
 };
 export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
-  console.log("customerPage , machinePage",customerPage , machinePage)
   const dispatch = useDispatch();
   // const theme = useTheme();
   const navigate = useNavigate();

@@ -16,6 +16,8 @@ function CustomerDialog({ openCustomer, handleCloseCustomer }) {
 
   return (
     <Dialog
+      disableEnforceFocus
+      maxWidth="lg"
       open={openCustomer}
       onClose={handleCloseCustomer}
       keepMounted
