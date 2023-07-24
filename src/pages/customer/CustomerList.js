@@ -289,9 +289,8 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
       (customer) =>
         customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         customer?.tradingName?.some((tName) => tName.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
-        customer?.mainSite?.address?.city?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >=
-          0 ||
+        `${customer?.mainSite?.address?.city}, ${customer?.mainSite?.address?.country}`.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        // customer?.mainSite?.address?.country?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (customer?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(customer?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
