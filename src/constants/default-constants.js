@@ -35,7 +35,10 @@ export const FORMLABELS = {
     SETTINGS: 'Settings',
     CUSTOMERS: 'Customers',
     DOCUMENTS: 'Documents',
+    ADD_DOCUMENTS: 'Add Documents',
     MACHINE_DRAWINGS: 'Machine Drawings',
+    ADD_MACHINE_DRAWINGSS: 'New Machine Drawing',
+
     EDIT_DOCUMENT: 'Edit Document',
   },
   // @root FormLabels

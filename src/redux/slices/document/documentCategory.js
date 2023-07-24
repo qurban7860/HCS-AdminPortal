@@ -202,18 +202,18 @@ export function getDocumentCategory(Id) {
 
 // -----------------------------------Get Active Document Categories-----------------------------------
 
-export function getActiveDocumentCategories() {
+export function getActiveDocumentCategories(categoryBy) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , 
-      {
+      const query = {
         params: {
           isArchived: false,
           isActive: true,
         }
       }
-      );
+      Object.assign(query.params, categoryBy)
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/categories/` , query );
       dispatch(slice.actions.getActiveDocumentCategoriesSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('File Categories loaded successfully'));
     } catch (error) {

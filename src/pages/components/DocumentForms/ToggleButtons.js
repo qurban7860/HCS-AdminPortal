@@ -53,7 +53,7 @@ export default function ToggleButtons({
                 <Switch sx={{ml:-1}}  checked={isCATEGORY.drawing} onChange={handleChangeType} name="drawing" />
             </Grid>
             <Grid display="flex" alignItems="center" mt={1}>
-                <StyledToggleButtonLabel variant="body2" p={1}>All</StyledToggleButtonLabel>
+                <StyledToggleButtonLabel variant="body2" p={1}>Select All</StyledToggleButtonLabel>
                 <Switch sx={{ml:-1}}  checked={isCATEGORY.all} onChange={handleChangeType} name="all" />
             </Grid>
         </Grid>

@@ -77,12 +77,14 @@ import {
 } from '../../../constants/document-constants';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import DocumentMachineAddForm from '../dashboard/documents/DocumentAddForms/DocumentMachineAddForm';
+import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
   currentDocument: PropTypes.object,
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawings: PropTypes.bool,
   handleFormVisibility: PropTypes.func,
 };
 
@@ -90,6 +92,7 @@ export default function DocumentAddForm({
   currentDocument,
   customerPage,
   machinePage,
+  machineDrawings,
   handleFormVisibility,
 }) {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
@@ -127,10 +130,31 @@ export default function DocumentAddForm({
 
   const [previewVal, setPreviewVal] = useState('');
   const [preview, setPreview] = useState(false);
+  const [categoryBy, setCategoryBy] = useState('');
+
+  console.log("categoryBy : ", categoryBy)
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
+
+
+useEffect(()=>{
+  if(customerPage){
+    setCategoryBy({customer: true});
+  }else if(machinePage){
+    setCategoryBy({machine: true});
+  }
+  else if(machineDrawings){
+    setCategoryBy({drawing: true});
+  }
+},[customerPage, machinePage, machineDrawings ])
+
+  useEffect(() => {
+    if(categoryBy){
+      dispatch(getActiveDocumentCategories(categoryBy));
+    }
+  },[dispatch, categoryBy])
 
   useEffect(() => {
     setDocumentVal('');
@@ -152,7 +176,7 @@ export default function DocumentAddForm({
     dispatch(resetActiveSites);
     dispatch(resetActiveDocumentTypes());
     // dispatch(getActiveDocumentTypes());
-    dispatch(getActiveDocumentCategories());
+
     // dispatch(getActiveCustomers());
     // dispatch(getActiveMachines());
     // dispatch(getActiveMachineModels());
@@ -171,16 +195,16 @@ export default function DocumentAddForm({
     }
   }, [documentCategoryVal, dispatch]);
 
-  useEffect(() => {
-    if (documentDependency === 'machine') {
-      // dispatch(getActiveMachines());
-      dispatch(getActiveMachineModels());
-    }
-    if (documentDependency === 'customer' && !(customerPage || machinePage)) {
-      dispatch(getActiveCustomers());
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, documentDependency]);
+  // useEffect(() => {
+  //   if (documentDependency === 'machine') {
+  //     // dispatch(getActiveMachines());
+  //     dispatch(getActiveMachineModels());
+  //   }
+  //   if (documentDependency === 'customer' && !(customerPage || machinePage)) {
+  //     dispatch(getActiveCustomers());
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [dispatch, documentDependency]);
 
   useEffect(() => {
     if (documentDependency === 'machine' && machineModelVal) {
@@ -334,7 +358,7 @@ export default function DocumentAddForm({
         );
         enqueueSnackbar(Snacks.addedDoc);
         if (!customerPage && !machinePage) {
-          navigate(PATH_DOCUMENT.document.list);
+          navigate(PATH_DOCUMENT.document.machineDrawings);
         } else {
           handleFormVisibility();
         }
@@ -474,6 +498,9 @@ export default function DocumentAddForm({
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+      {!customerPage && !machinePage && 
+        <DocumentCover content={machineDrawings ? FORMLABELS.COVER.ADD_MACHINE_DRAWINGSS :  FORMLABELS.COVER.ADD_DOCUMENTS} backLink generalSettings />
+      }
       <Box
         column={12}
         rowGap={3}
@@ -486,7 +513,7 @@ export default function DocumentAddForm({
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                {!(customerPage || machinePage) && (
+                {/* {!(customerPage || machinePage) && (
                   <RadioButtons
                     value={documentDependency}
                     radioOnChange={handleDependencyChange}
@@ -495,9 +522,9 @@ export default function DocumentAddForm({
                     secondLabel={DocRadioLabel.machine}
                     secondValue={DocRadioValue.machine}
                   />
-                )}
+                )} */}
 
-                {documentDependency === 'customer' && !(customerPage || machinePage) && (
+                {/* {documentDependency === 'customer' && !(customerPage || machinePage) && (
                   <Grid container item lg={12}>
                     <Grid container spacing={2}>
                       <Grid item lg={6}>
@@ -565,11 +592,11 @@ export default function DocumentAddForm({
                       </Grid>
                     </Grid>
                   </Grid>
-                )}
+                )} */}
 
                 {/* Machine */}
                 {/* will write a better way */}
-                {documentDependency === 'machine' && !(customerPage || machinePage) && (
+                {/* {documentDependency === 'machine' && !(customerPage || machinePage) && (
                   <DocumentMachineAddForm
                     disabled={readOnlyVal}
                     value={machineModelVal || null}
@@ -607,7 +634,7 @@ export default function DocumentAddForm({
                     }}
                     SubRenderInput={(params) => <TextField {...params} label="Select Machine" />}
                   />
-                )}
+                )} */}
 
                 <RadioButtons
                   value={selectedValue}

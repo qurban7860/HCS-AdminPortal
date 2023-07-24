@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @mui
@@ -61,9 +61,10 @@ import { fDate } from '../../../utils/formatTime';
 DocumentList.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawings: PropTypes.bool,
 };
 
-export default function DocumentList({ customerPage, machinePage }) {
+export default function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const {
     page,
     order,
@@ -91,6 +92,7 @@ export default function DocumentList({ customerPage, machinePage }) {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
+  const [documentBy, setDocumentBy] = useState({});
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { documents, isLoading, error, documentInitial, responseMessage } = useSelector(
@@ -104,6 +106,7 @@ export default function DocumentList({ customerPage, machinePage }) {
     (state) => state.machineDocument
   );
 
+
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
     { id: 'doctype', label: 'Type', align: 'left' },
@@ -113,7 +116,7 @@ export default function DocumentList({ customerPage, machinePage }) {
     { id: 'created_at', label: 'Created At', align: 'right' },
   ];
   
-  if (!customerPage && !machinePage) {
+  if (!customerPage && !machinePage && !machineDrawings) {
     const insertIndex = 1; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0, // 0 indicates that we're not removing any elements
       { id: 'customer', label: 'Customer', align: 'left' },
@@ -125,15 +128,13 @@ export default function DocumentList({ customerPage, machinePage }) {
     const fetchData = async () => {
       dispatch(resetDocuments());
       if (customerPage || machinePage) {
-        // console.log("customerPage || machinePage : ",customerPage , machinePage)
+        console.log("machineDrawings : ",machineDrawings)
         if (customer?._id || machine?._id) {
-          // console.log("customer?._id || machine?._id : ", customer?._id || machine?._id)
-          await dispatch(
-            getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null)
-          );
+          await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
         }
+      }else if(machineDrawings){
+        await dispatch(getDocuments(null, null,machineDrawings));
       } else {
-        // console.log("all documents")
         await dispatch(getDocuments());
       }
     };
@@ -141,6 +142,24 @@ export default function DocumentList({ customerPage, machinePage }) {
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customerPage, machinePage]);
+  // useEffect(()=>{
+  //   if(customerPage){
+  //     setDocumentBy({customer: true});
+  //   }else if(machinePage){
+  //     setDocumentBy({machine: true});
+  //   }
+  //   else if(machineDrawings){
+  //     setDocumentBy({drawing: true});
+  //   }
+  // },[customerPage, machinePage, machineDrawings ])
+  
+    // useEffect(() => {
+    //   if(documentBy && (customerPage || machinePage || machineDrawings ) ){
+    //     if(customer?._id || machine?._id){
+    //     }
+    //     await dispatch(getDocuments(documentBy));
+    //   }
+    // },[dispatch, documentBy])
 
   useEffect(() => {
     setTableData(documents);
@@ -228,7 +247,7 @@ export default function DocumentList({ customerPage, machinePage }) {
     <>
       {!customerPage && !machinePage && 
       <StyledCardContainer>
-        <Cover name={FORMLABELS.COVER.DOCUMENTS} />
+        <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
       </StyledCardContainer>}
       <Card sx={{ mt: 3 }}>
         <DocumentListTableToolbar
@@ -240,6 +259,7 @@ export default function DocumentList({ customerPage, machinePage }) {
           onResetFilter={handleResetFilter}
           customerPage={customerPage}
           machinePage={machinePage}
+          machineDrawings={machineDrawings}
         />
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -294,6 +314,7 @@ export default function DocumentList({ customerPage, machinePage }) {
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         customerPage={customerPage}
                         machinePage={machinePage}
+                        machineDrawings={machineDrawings}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
