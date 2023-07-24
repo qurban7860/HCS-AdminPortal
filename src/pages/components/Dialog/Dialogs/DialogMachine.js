@@ -19,7 +19,7 @@ export default function DialogMachine({ open, onClose, machine, onClick }) {
   return (
     <Dialog
       disableEnforceFocus
-      maxWidth="md"
+      maxWidth="lg"
       open={open}
       onClose={onClose}
       keepMounted

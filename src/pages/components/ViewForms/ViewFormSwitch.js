@@ -42,7 +42,7 @@ ViewFormSWitch.propTypes = {
         <Grid sx={{  display: 'flex', mx:1 }}>
           <Typography
           variant="subtitle2"
-          sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
+          sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
           {customerAccessHeading || ''}
         </Typography>
@@ -58,7 +58,7 @@ ViewFormSWitch.propTypes = {
         <Grid sx={{  display: 'flex', mx:1 }}>
           <Typography
           variant="subtitle2"
-          sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
+          sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
           {isActiveHeading || ''}
         </Typography>
@@ -74,7 +74,7 @@ ViewFormSWitch.propTypes = {
           <Grid sx={{  display: 'flex', mx:1 }}>
         <Typography
           variant="subtitle2"
-          sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
+          sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
           {customerHeading || ''}
         </Typography>
@@ -90,7 +90,7 @@ ViewFormSWitch.propTypes = {
           <Grid sx={{  display: 'flex', mx:1 }}>
         <Typography
           variant="subtitle2"
-          sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
+          sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
           {machineHeading || ''}
         </Typography>
@@ -106,7 +106,7 @@ ViewFormSWitch.propTypes = {
           <Grid sx={{  display: 'flex', mx:1 }}>
         <Typography
           variant="subtitle2"
-          sx={{ pl: 2, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
+          sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
          >
           {drawingHeading || ''}
         </Typography>

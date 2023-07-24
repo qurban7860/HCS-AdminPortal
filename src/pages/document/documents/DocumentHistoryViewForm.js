@@ -140,6 +140,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
     [documentHistory]
   );
 
+
   const handleDownload = (documentId, versionId, fileId, fileName, fileExtension) => {
     dispatch(getDocumentDownload(documentId, versionId, fileId))
       .then((res) => {
@@ -271,8 +272,19 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />
               </Grid>
+
+
               {documentHistory &&
-                documentHistory?.documentVersions?.map((files) => (
+                documentHistory?.documentVersions?.map((files) => {
+                  const fileValues = {
+                      createdAt: files?.createdAt || '',
+                      createdByFullName: files?.createdBy?.name || '',
+                      createdIP: files?.createdIP || '',
+                      updatedAt: files?.updatedAt || '',
+                      updatedByFullName: files?.updatedBy?.name || '',
+                      updatedIP: files?.updatedIP || '',
+                    }
+                 return (
                   <Grid container>
                     <Grid container sx={{ pt: '2rem' }} mb={1}>
                       <FormLabel content={`Version No. ${files?.versionNo}`} />
@@ -294,8 +306,10 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
                         </Grid>
                       </Grid>
                     ))}
+
+                      <ViewFormAudit defaultValues={fileValues} />
                   </Grid>
-                ))}
+                )})}
             </Grid>
           </Card>
         </Grid>

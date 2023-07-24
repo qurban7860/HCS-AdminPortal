@@ -393,6 +393,7 @@ export default function MachineViewForm() {
 
       {/* // primary billing dialog */}
       <Dialog
+        maxWidth="lg"
         open={openCustomer}
         onClose={handleCloseCustomer}
         aria-labelledby="keep-mounted-modal-title"
