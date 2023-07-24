@@ -44,7 +44,7 @@ function MachineDialog({ openMachine, handleCloseMachine, handleConnectedMachine
             heading="Previous Machine Serial No"
             param={machine?.parentSerialNo}
           />
-          <ViewFormField sm={6} heading="Previous Machine" param={machine?.parentMachine?.name} />
+          <ViewFormField sm={6} heading="Previous Machine" param={`${machine?.parentSerialNo} ${machine?.parentMachine?.name ? '-' : ''} ${machine?.parentMachine?.name ? machine?.parentMachine?.name : ''}`} />
           <ViewFormField sm={6} heading="Supplier" param={machine?.supplier?.name} />
           <ViewFormField sm={6} heading="Machine Model" param={machine?.machineModel?.name} />
           {/* <ViewFormField sm={6} heading="Status"                      param={currentMachine?.status?.name} /> */}
