@@ -74,11 +74,11 @@ export default function RegionEditForm() {
   };
 
   const onSubmit = async (data) => {
+    if(selectedCountries.length > 0){
+      const selectedCountriesIDs = selectedCountries.map((country) => country._id);
+      data.selectedCountries = selectedCountriesIDs;
+    }
     try {
-      if(selectedCountries.length > 0){
-        const selectedCountriesIDs = selectedCountries.map((country) => country._id);
-        data.selectedCountries = selectedCountriesIDs;
-      }
       await dispatch(updateRegion(data, region._id));
       dispatch(getRegion(region._id));
       enqueueSnackbar('Region updated Successfully!');
