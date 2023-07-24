@@ -279,14 +279,14 @@ export const MachineDocumentView = Loadable(
 
 
 // Regions
-export const RegionAddForm = Loadable(
+export const RegionAdd = Loadable(
   lazy(() => import('../pages/region/RegionAdd'))
 );
 export const RegionList = Loadable(
   lazy(() => import('../pages/region/RegionList'))
 );
-export const RegionEditForm = Loadable(
-  lazy(() => import('../pages/region/RegionEditForm'))
+export const RegionEdit = Loadable(
+  lazy(() => import('../pages/region/RegionEdit'))
 );
 export const RegionView = Loadable(
   lazy(() => import('../pages/region/RegionView'))

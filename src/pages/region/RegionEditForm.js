@@ -1,27 +1,18 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-form';
 // slice
-import {
-  updateSecurityUser,
-  setSecurityUserEditFormVisibility,
-} from '../../redux/slices/securityUser/securityUser';
-import { getActiveSPCustomers } from '../../redux/slices/customer/customer';
-import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
 import { getRegion, updateRegion } from '../../redux/slices/region/region';
 // current user
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
@@ -32,16 +23,23 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
 export default function RegionEditForm() {
   const { region, countries } = useSelector((state) => state.region);
+  const [selectedCountries, setSelectedCountries] = useState([]);
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
+  /* eslint-disable */
+  useLayoutEffect(() => {
+    setSelectedCountries(region?.countries);
+  }, [dispatch]);
+  /* eslint-enable */
+
+
   const EditRegionSchema = Yup.object().shape({
     name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     description: Yup.string(),
-    countries: Yup.array(),
     isActive: Yup.boolean(),
   });
 
@@ -49,7 +47,6 @@ export default function RegionEditForm() {
     () => ({
       name: region?.name || '',
       description: region?.description || '',
-      countries: region?.countries || [],
       isActive: region?.isActive || false,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,29 +69,29 @@ export default function RegionEditForm() {
 
   const values = watch();
 
-  // useLayoutEffect(() => {
-  //   const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);
-  //   if (filteredRole) {
-  //     setRoleType(filteredRole);
-  //     setValue('roleTypes', filteredRole?.name);
-  //   }
-  // }, [role, roleTypesArray, setValue]);
-
   const toggleCancel = () => {
-    navigate(PATH_SETTING.region.view(region._id));
+    navigate(PATH_SETTING.regions.view(region._id));
   };
 
   const onSubmit = async (data) => {
     try {
-      await dispatch(updateRegion(region._id, data));
+      if(selectedCountries.length > 0){
+        const selectedCountriesIDs = selectedCountries.map((country) => country._id);
+        data.selectedCountries = selectedCountriesIDs;
+      }
+      await dispatch(updateRegion(data, region._id));
       dispatch(getRegion(region._id));
-      navigate(PATH_SETTING.regions.view(region._id));
       enqueueSnackbar('Region updated Successfully!');
+      navigate(PATH_SETTING.regions.view(region._id));
       reset();
     } catch (err) {
       enqueueSnackbar('Region Updating failed!', { variant: `error` });
       console.error(err.message);
     }
+  };
+
+  const handleCountriesChange = (event, selectedOptions) => {
+    setSelectedCountries(selectedOptions);
   };
 
   return (
@@ -104,7 +101,25 @@ export default function RegionEditForm() {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <RHFTextField name="name" label="Name" />
-                <RHFMultiSelect
+                <Autocomplete
+                  multiple
+                  id="countries-autocomplete"
+                  options={countries}
+                  value={selectedCountries}
+                  onChange={handleCountriesChange}
+                  getOptionLabel={(option) => 
+                    `(${option.country_code}) ${option.country_name}`
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Countries"
+                      placeholder="Select countries"
+                    />
+                  )}
+                />
+                {/* <RHFMultiSelect
                   chip
                   checkbox
                   name="countries"
@@ -113,54 +128,13 @@ export default function RegionEditForm() {
                     value: country._id, // or the appropriate value for each country
                     label: (
                       <>
-                      {/* <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }}> */}
                         <Stack direction="row">
-                        {/* <img
-                          loading="lazy"
-                          width="20"
-                          height="10"
-                          src={`https://flagcdn.com/w20/${country.country_code.toLowerCase()}.png`}
-                          srcSet={`https://flagcdn.com/w40/${country.country_code.toLowerCase()}.png 2x`}
-                          alt=""
-                        /> */}
-                         {country.country_name} ({country.country_code})
+                          {country.country_name} ({country.country_code})
                          </Stack>
-                      {/* </Box> */}
                       </>
                     ),
                   }))}
-                />
-                {/* <RHFAutocomplete
-                  id="country-select-demo"
-                  options={countries}
-                  value={country || null}
-                  name="country"
-                  label="Country"
-                  autoHighlight
-                  isOptionEqualToValue={(option, value) => option.lable === value.lable}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setCountryVal(newValue);
-                    } else {
-                      setCountryVal('');
-                    }
-                  }}
-                  getOptionLabel={(option) => `${option.label} (${option.code}) `}
-                  renderOption={(props, option) => (
-                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                      <img
-                        loading="lazy"
-                        width="20"
-                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                        alt=""
-                      />
-                      {option.label} ({option.code}) +{option.phone}
-                    </Box>
-                  )}
-                  renderInput={(params) => <TextField {...params} label="Choose a country" />}
                 /> */}
-                {/* <RHFTextField name="description" label="Description" /> */}
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex" alignItems="end">
                   <RHFSwitch

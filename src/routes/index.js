@@ -156,9 +156,9 @@ RoleEdit,
 
   // Regions
   RegionList,
-  RegionAddForm,
+  RegionAdd,
   RegionView,
-  RegionEditForm,
+  RegionEdit,
 
 //   
   BlankPage,
@@ -455,9 +455,9 @@ export default function Router() {
           path: 'regions',
           children: [
             { path: 'list', element: <RegionList /> },
-            { path: 'new', element: <RegionAddForm /> },
+            { path: 'new', element: <RegionAdd /> },
             { path: ':id/view', element: <RegionView /> },
-            { path: ':id/edit', element: <RegionEditForm /> }
+            { path: ':id/edit', element: <RegionEdit /> }
 
           ],
         },

@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import {
   Box,
   Card,
@@ -19,13 +18,8 @@ import {
   Autocomplete,
   TextField,
 } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-// component
-import Iconify from '../../components/iconify';
 // routes
-import { PATH_DASHBOARD, PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
-// assets
+import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
@@ -33,7 +27,6 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../com
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { addRegion, getCountries } from '../../redux/slices/region/region';
 // current user
-import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
@@ -47,9 +40,9 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
   // const userRoles = JSON.parse(userRolesString);
 
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
+  const [selectedCountries, setSelectedCountries] = useState([]);
   const { roles } = useSelector((state) => state.role);
   const { countries } = useSelector((state) => state.region);
-  console.log('countries====>', countries);
   const [sortedRoles, setSortedRoles] = useState([]);
   const ROLES = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
@@ -93,7 +86,6 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
   const NewUserSchema = Yup.object().shape({
     name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
     description: Yup.string(),
-    countries: Yup.array(),
     isActive: Yup.boolean(),
   });
 
@@ -125,6 +117,10 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
 
   const onSubmit = async (data) => {
     try {
+      if(selectedCountries.length > 0){
+        const selectedCountriesIDs = selectedCountries.map((country) => country._id);
+        data.selectedCountries = selectedCountriesIDs;
+      }
       const response = await dispatch(addRegion(data));
       // await dispatch(resetContacts());
       reset();
@@ -145,6 +141,10 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
     navigate(PATH_SETTING.regions.list);
   };
 
+  const handleCountriesChange = (event, selectedOptions) => {
+    setSelectedCountries(selectedOptions);
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
        <Grid container spacing={3}>
@@ -152,22 +152,24 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
                 <RHFTextField name="name" label="Name" />
-                  <RHFMultiSelect
-                    chip
-                    checkbox
-                    name="countries"
-                    label="Countries"
-                    options={countries.map((country) => ({
-                      value: country._id, // or the appropriate value for each country
-                      label: (
-                        <>
-                          <Stack direction="row">
-                          {country.country_name} ({country.country_code})
-                          </Stack>
-                        </>
-                      ),
-                    }))}
-                  />
+                <Autocomplete
+                  multiple
+                  id="countries-autocomplete"
+                  options={countries}
+                  value={selectedCountries}
+                  onChange={handleCountriesChange}
+                  getOptionLabel={(option) => 
+                    `(${option.country_code}) ${option.country_name}`
+                  }
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      variant="outlined"
+                      label="Countries"
+                      placeholder="Select countries"
+                    />
+                  )}
+                />
                 <RHFTextField name="description" label="Description" minRows={8} multiline />
                 <Grid display="flex" alignItems="end">
                   <RHFSwitch
