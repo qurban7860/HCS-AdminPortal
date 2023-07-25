@@ -214,6 +214,9 @@ export const MachineDrawings = Loadable(
 export const MachineDrawingsAddForm = Loadable(
   lazy(() => import('../pages/document/documents/MachineDrawingsAddForm'))
 );
+export const MachineDrawingsViewForm = Loadable(
+  lazy(() => import('../pages/document/documents/MachineDrawingsViewForm'))
+);
 
 // Document Name
 export const DocumentNameAddForm = Loadable(

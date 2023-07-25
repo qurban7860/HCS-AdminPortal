@@ -40,22 +40,26 @@ import MachineDialog from '../../components/Dialog/MachineDialog';
 DocumentHistoryViewForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  machineDrawings: PropTypes.bool,
 };
-export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
+export default function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawings }) {
+  console.log("customerPage, machinePage, machineDrawings : ", customerPage, machinePage, machineDrawings)
   const dispatch = useDispatch();
-  // const theme = useTheme();
-  const navigate = useNavigate();
   const { id } = useParams();
-  const regEx = /^[^2]*/;
+  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const regEx = /^[^2]*/;
 
   const { document, documentHistory } = useSelector((state) => state.document);
-  // console.log("documentHistory : ", documentHistory)
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  // console.log("document : ",document)
+
   const [openCustomer, setOpenCustomer] = useState(false);
   const [openMachine, setOpenMachine] = useState(false);
+  const [onPreview, setOnPreview] = useState(false);
+  const [imageData, setImageData] = useState(false);
+  const [imageName, setImageName] = useState('');
+  const [imageExtension, setImageExtension] = useState('');
 
   useEffect(() => {
     // dispatch(resetActiveDocuments());
@@ -71,18 +75,21 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, id]);
 
+// get machine data for machine portal
   useEffect(() => {
     if (documentHistory?.machine && !machinePage) {
       dispatch(getMachine(documentHistory.machine._id));
     }
   }, [documentHistory, machinePage, dispatch]);
 
+// get customer data for customer portal
   useEffect(() => {
     if (documentHistory?.customer && !customerPage) {
       dispatch(getCustomer(documentHistory.customer._id));
     }
   }, [documentHistory, customerPage, dispatch]);
 
+// delete document and navigate to docuements list page
   const onDelete = async () => {
     try {
       await dispatch(deleteDocument(documentHistory._id));
@@ -95,20 +102,16 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
     }
   };
 
-  // const handleEdit = async () => {
-  //   navigate(PATH_DOCUMENT.document.edit(id));
-  // };
-
+  // customer portal control
   const handleOpenCustomer = () => setOpenCustomer(true);
   const handleCloseCustomer = () => setOpenCustomer(false);
-  const handleViewCustomer = (Id) => {
-    navigate(PATH_CUSTOMER.view(Id));
-  };
-  const handleViewMachine = (Id) => {
-    navigate(PATH_MACHINE.machines.view(Id));
-  };
+  const handleViewCustomer = (Id) => {navigate(PATH_CUSTOMER.view(Id))};
+
+  // machine portal control
   const handleOpenMachine = () => setOpenMachine(true);
   const handleCloseMachine = () => setOpenMachine(false);
+  const handleViewMachine = (Id) => {navigate(PATH_MACHINE.machines.view(Id));};
+
   const defaultValues = useMemo(
     () => ({
       displayName: documentHistory?.displayName || '',
@@ -140,14 +143,12 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
     [documentHistory]
   );
 
-
+// download the file 
   const handleDownload = (documentId, versionId, fileId, fileName, fileExtension) => {
     dispatch(getDocumentDownload(documentId, versionId, fileId))
       .then((res) => {
-        // console.log("res : ",res)
         if (regEx.test(res.status)) {
           download(atob(res.data), `${fileName}.${fileExtension}`, { type: fileExtension });
-          // downloadBase64File(res.data, `${fileName}.${fileExtension}`);
           enqueueSnackbar(res.statusText);
         } else {
           enqueueSnackbar(res.statusText, { variant: `error` });
@@ -164,22 +165,12 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
       });
   };
 
-  const [onPreview, setOnPreview] = useState(false);
-  const [imageData, setImageData] = useState(false);
-  const [imageName, setImageName] = useState('');
-  const [imageExtension, setImageExtension] = useState('');
-
-  const handleOpenPreview = () => {
-    setOnPreview(true);
-  };
-  const handleClosePreview = () => {
-    setOnPreview(false);
-  };
-
+  // for download the file
   const handleDownloadImage = (fileName, fileExtension) => {
     download(atob(imageData), `${fileName}.${fileExtension}`, { type: fileExtension });
   };
 
+  // for download and preview the file
   const handleDownloadAndPreview = (documentId, versionId, fileId, fileName, fileExtension) => {
     setImageName(fileName);
     setImageExtension(fileExtension);
@@ -202,19 +193,21 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
         }
       });
   };
-  const callAfterDelete = () => {
-    dispatch(getDocumentHistory(documentHistory._id));
-  };
+
+  // preview portal control
+  const handleOpenPreview = () => { setOnPreview(true)};
+  const handleClosePreview = () => { setOnPreview(false)};
+
+  // refresh the document when file deleted
+  const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
 
   return (
     <>
-      {/* <Grid container> */}
       {!customerPage && !machinePage && 
-        <DocumentCover content={defaultValues?.displayName} backLink generalSettings />
+        <DocumentCover content={defaultValues?.displayName} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings}  generalSettings />
       }
         <Grid item md={12} mt={2}>
           <Card sx={{ p: 3 }}>
-            {/* <ViewFormEditDeleteButtons handleEdit={handleEdit}  onDelete={onDelete}/> */}
             <Grid display="inline-flex">
               <Tooltip>
                 <ViewFormField isActive={defaultValues.isActive} />
@@ -242,7 +235,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
                 param={defaultValues?.docCategory}
               />
               <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-              {!customerPage && defaultValues.customer && (
+              {!customerPage && !machineDrawings && defaultValues.customer && (
                 <ViewFormField
                   sm={6}
                   heading="Customer"
@@ -255,7 +248,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
                   }
                 />
               )}
-              {!machinePage && defaultValues?.machine && (
+              {!machinePage && !machineDrawings &&  defaultValues?.machine && (
                 <ViewFormField
                   sm={6}
                   heading="Machine"
@@ -313,7 +306,6 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage }) {
             </Grid>
           </Card>
         </Grid>
-      {/* </Grid> */}
       <CustomerDialog openCustomer={openCustomer} handleCloseCustomer={handleCloseCustomer} />
       <MachineDialog openMachine={openMachine} handleCloseMachine={handleCloseMachine} />
     </>

@@ -42,7 +42,7 @@ export default function DocumentListTableToolbar({
     if(customerPage || machinePage){
       dispatch(setDocumentFormVisibility(true));
     }else if(machineDrawings){
-      navigate(PATH_DOCUMENT.document.newMachineDrawings)
+      navigate(PATH_DOCUMENT.document.machineDrawings.new)
     }
   };
   return (

@@ -26,6 +26,7 @@ import {
   addDocument,
   getCustomerDocuments,
   getMachineDocuments,
+  getMachineDrawingsDocuments,
   resetActiveDocuments,
   getCustomerSiteDocuments,
 } from '../../../redux/slices/document/document';
@@ -95,15 +96,21 @@ export default function DocumentAddForm({
   machineDrawings,
   handleFormVisibility,
 }) {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
+
+
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { activeMachines, machine } = useSelector((state) => state.machine);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
   const { activeDocuments } = useSelector((state) => state.document);
-  // console.log("activeMachineModels : ",activeMachineModels)
   const { activeCustomers, customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
+
   // ------------------ document values states ------------------------------
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
@@ -114,13 +121,13 @@ export default function DocumentAddForm({
   const [readOnlyVal, setReadOnlyVal] = useState(false);
   const [siteDisabled, setSiteDisabled] = useState(false);
   const [contactDisabled, setContactDisabled] = useState(false);
-
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [documentDependency, setDocumentDependency] = useState('customer');
 
   // ------------------ customer values states ------------------------------
   const [customerVal, setCustomerVal] = useState('');
   const [customerSiteVal, setCustomerSiteVal] = useState('');
+
   // ------------------ machine values states ------------------------------
   const [machineVal, setMachineVal] = useState('');
   const [machineModelVal, setMachineModelVal] = useState('');
@@ -132,23 +139,18 @@ export default function DocumentAddForm({
   const [preview, setPreview] = useState(false);
   const [categoryBy, setCategoryBy] = useState('');
 
-  console.log("categoryBy : ", categoryBy)
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-  const { enqueueSnackbar } = useSnackbar();
 
 
-useEffect(()=>{
-  if(customerPage){
-    setCategoryBy({customer: true});
-  }else if(machinePage){
-    setCategoryBy({machine: true});
-  }
-  else if(machineDrawings){
-    setCategoryBy({drawing: true});
-  }
-},[customerPage, machinePage, machineDrawings ])
+  useEffect(()=>{
+    if(customerPage){
+      setCategoryBy({customer: true});
+    }else if(machinePage){
+      setCategoryBy({machine: true});
+    }
+    else if(machineDrawings){
+      setCategoryBy({drawing: true});
+    }
+  },[customerPage, machinePage, machineDrawings ])
 
   useEffect(() => {
     if(categoryBy){
@@ -176,7 +178,6 @@ useEffect(()=>{
     dispatch(resetActiveSites);
     dispatch(resetActiveDocumentTypes());
     // dispatch(getActiveDocumentTypes());
-
     // dispatch(getActiveCustomers());
     // dispatch(getActiveMachines());
     // dispatch(getActiveMachineModels());
@@ -196,52 +197,67 @@ useEffect(()=>{
   }, [documentCategoryVal, dispatch]);
 
   // useEffect(() => {
-  //   if (documentDependency === 'machine') {
-  //     // dispatch(getActiveMachines());
-  //     dispatch(getActiveMachineModels());
-  //   }
-  //   if (documentDependency === 'customer' && !(customerPage || machinePage)) {
-  //     dispatch(getActiveCustomers());
+  //   if (documentDependency === 'machine' && machineModelVal) {
+  //     dispatch(getActiveModelMachines(machineModelVal._id));
   //   }
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [dispatch, documentDependency]);
+  // }, [dispatch, machineModelVal]);
 
-  useEffect(() => {
-    if (documentDependency === 'machine' && machineModelVal) {
-      dispatch(getActiveModelMachines(machineModelVal._id));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, machineModelVal]);
+  // useEffect(() => {
+  //   if (customerVal?._id) {
+  //     dispatch(getActiveSites(customerVal._id));
+  //   }
+  // }, [dispatch, customerVal]);
 
-  useEffect(() => {
-    if (customerVal?._id) {
-      dispatch(getActiveSites(customerVal._id));
-    }
-  }, [dispatch, customerVal]);
   // ------------------------- customer documents ---------------------------------------
+  // useEffect(() => {
+  //   if (!customerSiteVal && customerVal?._id && selectedValue === 'newVersion') {
+  //     dispatch(getCustomerDocuments(customerVal._id));
+  //   }
+  // }, [dispatch, customerVal, customerSiteVal, selectedValue]);
+
+  // -------------------------get forCustomer documents ---------------------------------------
   useEffect(() => {
-    if (!customerSiteVal && customerVal?._id && selectedValue === 'newVersion') {
-      dispatch(getCustomerDocuments(customerVal._id));
+    if ( customerPage && !machinePage && !machineDrawings ) {
+      if(customerPage && customer?._id && selectedValue === 'newVersion'){
+        dispatch(getCustomerDocuments(customer?._id));
+      }
     }
-  }, [dispatch, customerVal, customerSiteVal, selectedValue]);
+  }, [dispatch, customer, customerPage, machineDrawings, machinePage, selectedValue ]);
 
   // ------------------------- customer Site documents ---------------------------------------
-  useEffect(() => {
-    if (customerSiteVal?._id && selectedValue === 'newVersion') {
-      dispatch(getCustomerSiteDocuments(customerSiteVal._id));
-      console.log('customerSiteVal._id : ', customerSiteVal._id);
-    }
-  }, [dispatch, customerSiteVal, selectedValue]);
+  // useEffect(() => {
+  //   if (customerSiteVal?._id && selectedValue === 'newVersion') {
+  //     dispatch(getCustomerSiteDocuments(customerSiteVal._id));
+  //     console.log('customerSiteVal._id : ', customerSiteVal._id);
+  //   }
+  // }, [dispatch, customerSiteVal, selectedValue]);
 
-  // ------------------------- machine documents ---------------------------------------
+  // ------------------------- get forMachine documents ---------------------------------------
   useEffect(() => {
-    if (machineVal?._id && selectedValue === 'newVersion') {
-      dispatch(getMachineDocuments(machineVal._id, machineModelVal._id));
+    if ( !customerPage && machinePage && !machineDrawings) {
+      if(machinePage && machine?._id && selectedValue === 'newVersion'){
+        dispatch(getMachineDocuments(machine?._id));
+      }
     }
-    if (machineModelVal._id && !machineVal && selectedValue === 'newVersion') {
-      dispatch(getMachineDocuments(null, machineModelVal._id));
-    }
-  }, [dispatch, machineVal, machineModelVal, selectedValue]);
+  }, [dispatch, machine, customerPage, machineDrawings, machinePage, selectedValue]);
+
+    // ------------------------- get forMachineDrawings documents ---------------------------------------
+    useEffect(() => {
+      if ( !customerPage && !machinePage && machineDrawings && selectedValue === 'newVersion') {
+          dispatch(getMachineDrawingsDocuments());
+      }
+    }, [dispatch, customerPage, machineDrawings, machinePage, selectedValue]);
+  
+  // ------------------------- machine documents ---------------------------------------
+  // useEffect(() => {
+  //   if (machineVal?._id && selectedValue === 'newVersion') {
+  //     dispatch(getMachineDocuments(machineVal._id, machineModelVal._id));
+  //   }
+  //   if (machineModelVal._id && !machineVal && selectedValue === 'newVersion') {
+  //     dispatch(getMachineDocuments(null, machineModelVal._id));
+  //   }
+  // }, [dispatch, machineVal, machineModelVal, selectedValue]);
 
   const validateFileType = (value, options) => {
     const { path, createError } = options;
@@ -350,15 +366,13 @@ useEffect(()=>{
       if (descriptionVal) {
         data.description = descriptionVal;
       }
-      // console.log('Data : ',data);
       if (selectedValue === 'new') {
-        console.log('new ');
         await dispatch(
           addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data)
         );
         enqueueSnackbar(Snacks.addedDoc);
-        if (!customerPage && !machinePage) {
-          navigate(PATH_DOCUMENT.document.machineDrawings);
+        if (!customerPage && !machinePage && machineDrawings) {
+          navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else {
           handleFormVisibility();
         }
@@ -366,8 +380,8 @@ useEffect(()=>{
         console.log('newVersion ');
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
-        if (!customerPage && !machinePage) {
-          navigate(PATH_DOCUMENT.document.list);
+        if (!customerPage && !machinePage && machineDrawings ) {
+          navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else {
           handleFormVisibility();
         }
@@ -376,16 +390,15 @@ useEffect(()=>{
           updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
         );
         enqueueSnackbar(Snacks.updatedDoc);
-        if (!customerPage && !machinePage) {
-          navigate(PATH_DOCUMENT.document.list);
+        if (!customerPage && !machinePage && machineDrawings) {
+          navigate(PATH_DOCUMENT.document.machineDrawings.list);
         } else {
           handleFormVisibility();
         }
       }
-      if (!customerPage && !machinePage) {
-        console.log('all documents : ');
-        dispatch(getDocuments());
-      }
+      // if (!customerPage && !machinePage && !) {
+      //   dispatch(getDocuments());
+      // }
       setDocumentCategoryVal('');
       setDocumentTypeVal('');
       setCustomerAccessVal('');

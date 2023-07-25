@@ -314,10 +314,8 @@ export function getCustomerDocuments(customerId) {
           isActive: true,
           isArchived: false,
           customer:customerId,
+          forCustomer: true,
           machine: null,
-          orderBy : {
-            createdAt:-1
-          }
         }
       }
       );
@@ -401,14 +399,37 @@ export function getMachineDocuments(machineId, machineModelId) {
           isActive: true,
           isArchived: false,
           machine: machineId,
-          machineModel: machineModelId,
-          orderBy : {
-            createdAt:-1
-          }
+          forMachine:true,
+          // machineModel: machineModelId,
         }
       }
       );
       console.log(response);
+      dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// -----------------------------------Get Machine Document-----------------------------------
+
+export function getMachineDrawingsDocuments() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          forDrawing:true,
+        }
+      }
+      );
       dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('Machine Document loaded successfully'));
     } catch (error) {
