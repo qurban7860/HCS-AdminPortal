@@ -425,7 +425,7 @@ export default function DocumentAddForm({
 
   const toggleCancel = () => {
     if (!customerPage && !machinePage) {
-      navigate(PATH_DOCUMENT.document.list);
+      navigate(PATH_DOCUMENT.document.machineDrawings.list);
     } else {
       handleFormVisibility();
     }
@@ -512,7 +512,7 @@ export default function DocumentAddForm({
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       {!customerPage && !machinePage && 
-        <DocumentCover content={machineDrawings ? FORMLABELS.COVER.ADD_MACHINE_DRAWINGSS :  FORMLABELS.COVER.ADD_DOCUMENTS} backLink generalSettings />
+        <DocumentCover content={machineDrawings ? FORMLABELS.COVER.ADD_MACHINE_DRAWINGSS :  FORMLABELS.COVER.ADD_DOCUMENTS} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings} generalSettings />
       }
       <Box
         column={12}
