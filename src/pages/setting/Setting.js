@@ -71,6 +71,11 @@ export default function Setting() {
               subheader={<ListItemsHeader header={FORMLABELS.SECURITY_SETTINGS} />}
             >
               <ListItem
+                onClick={linkRegions}
+                icon={ICONS.REGION.icon}
+                content={ICONS.REGION.heading}
+              />
+              <ListItem
                 onClick={linkRole}
                 icon={ICONS.SECURITY_ROLES.icon}
                 content={ICONS.SECURITY_ROLES.heading}
@@ -79,12 +84,7 @@ export default function Setting() {
                 onClick={linkSignInLogs}
                 icon={ICONS.SIGNIN_LOGS.icon}
                 content={ICONS.SIGNIN_LOGS.heading}
-              />
-              <ListItem
-                onClick={linkRegions}
-                icon={ICONS.REGION.icon}
-                content={ICONS.REGION.heading}
-              />
+              />              
             </List>
           </StyledSettingsCardContainer>
         </Grid>
