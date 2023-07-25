@@ -41,7 +41,10 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'countries', label: 'countries', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
+  // { id: 'isVerified', label: 'Verified', align: 'center' },
+  // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
+  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -76,6 +79,7 @@ export default function RegionList() {
     regionEditFormVisibility,
     regionAddFormVisibility,
   } = useSelector((state) => state.region);
+  // console.log("regions", regions);
 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -281,17 +285,15 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
 
   if (filterName) {
     inputData = inputData.filter(
-      (securityUser) =>
-        securityUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        securityUser?.email?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        securityUser?.phone?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        securityUser?.roles
-          ?.map((obj) => obj.name)
+      (region) =>
+        region?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        region?.countries
+          ?.map((obj) => obj.country_name)
           .join(', ')
           .toLowerCase()
           .indexOf(filterName.toLowerCase()) >= 0 ||
         // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(securityUser?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(region?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 

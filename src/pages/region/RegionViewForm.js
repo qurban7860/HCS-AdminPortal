@@ -79,7 +79,7 @@ export default function RegionViewForm() {
         </Grid>
         <Grid container>
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
-          <ViewFormField sm={6} chips heading="Countries" arrayParam={defaultValues.countries} />
+          <ViewFormField sm={12} chips heading="Countries" arrayParam={defaultValues.countries} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
 
           <ViewFormAudit defaultValues={defaultValues} />
