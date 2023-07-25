@@ -147,7 +147,7 @@ RoleEdit,
   MachineDocumentView,
   MachineDrawings,
   MachineDrawingsAddForm,
-
+  MachineDrawingsViewForm,
 // Setting
 
   Setting,
@@ -460,7 +460,6 @@ export default function Router() {
             { path: 'new', element: <RegionAdd /> },
             { path: ':id/view', element: <RegionView /> },
             { path: ':id/edit', element: <RegionEdit /> }
-
           ],
         },
       ],
@@ -482,8 +481,13 @@ export default function Router() {
         {path: ':id/view', element: <DocumentViewForm /> },
         {path: ':id/customer',element: <CustomerDocumentView />},
         {path: ':id/machine',element: <MachineDocumentView/>},
-        {path: 'machineDrawings',element: <MachineDrawings/>},
-        {path: 'newMachineDrawings',element: <MachineDrawingsAddForm/>},
+        {path: 'machineDrawings',
+          children: [
+            { path: 'list', element: <MachineDrawings/> },
+            { path: 'new', element: <MachineDrawingsAddForm/> },
+            { path: ':id/view', element: <MachineDrawingsViewForm /> },
+          ]
+        }
       ],
     },
     {

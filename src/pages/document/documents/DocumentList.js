@@ -232,7 +232,10 @@ export default function DocumentList({ customerPage, machinePage, machineDrawing
     if (customerPage || machinePage) {
       dispatch(getDocument(id));
       dispatch(setDocumentViewFormVisibility(true));
-    } else {
+    } else if(machineDrawings){
+      dispatch(resetDocumentHistory())
+      navigate(PATH_DOCUMENT.document.machineDrawings.view(id));
+    } else{
       dispatch(resetDocumentHistory())
       navigate(PATH_DOCUMENT.document.view(id));
     }

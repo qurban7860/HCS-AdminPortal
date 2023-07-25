@@ -78,6 +78,7 @@ export default function DocumentCategoryViewForm() {
             heading="Document Types"
             arrayParam={defaultValues.documentTypes}
           />
+          <ViewFormField />
           <ViewFormSWitch 
               customerHeading='Customer' 
               customer={documentCategory?.customer} 

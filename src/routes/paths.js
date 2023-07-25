@@ -249,8 +249,12 @@ export const PATH_DOCUMENT = {
     view: (id) => path(ROOTS_DOCUMENT, `/${id}/view`),
     customer: (id) => path(ROOTS_DOCUMENT, `/${id}/customer`),
     machine: (id) => path(ROOTS_DOCUMENT, `/${id}/machine`),
-    machineDrawings: path(ROOTS_DOCUMENT, '/machineDrawings'),
-    newMachineDrawings: path(ROOTS_DOCUMENT, '/newMachineDrawings'),
+    machineDrawings:{
+      list: path(ROOTS_DOCUMENT, '/machineDrawings/list'),
+      new: path(ROOTS_DOCUMENT, '/machineDrawings/new'),
+      view: (id) => path(ROOTS_DOCUMENT, `/machineDrawings/${id}/view`),
+    }
+
   },
 };
 

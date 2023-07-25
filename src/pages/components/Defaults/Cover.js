@@ -27,6 +27,7 @@ Cover.propTypes = {
   serialNo: PropTypes.string,
   backLink: PropTypes.string,
   handleBackLinks: PropTypes.func,
+  machineDrawingsBackLink: PropTypes.string,
   model: PropTypes.string,
   customer: PropTypes.string,
   generalSettings: PropTypes.string,
@@ -42,6 +43,7 @@ export function Cover({
   icon,
   backLink,
   handleBackLinks,
+  machineDrawingsBackLink,
   model,
   customer,
   generalSettings,
@@ -93,6 +95,7 @@ export function Cover({
           setting={setting}
           handleNavigate={handleNavigate}
           backLink={backLink}
+          machineDrawingsBackLink={machineDrawingsBackLink}
           handleBacklink={handleBacklink}
           handleBackLinks={handleBackLinks}
           handleSettingsNavigate={handleSettingsNavigate}

@@ -2,7 +2,9 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
+import { useNavigate } from 'react-router';
 import Iconify from '../../../components/iconify/Iconify';
+import { PATH_DASHBOARD, PATH_DOCUMENT, } from '../../../routes/paths';
 
 function CoverSettingsIcons({
   setting,
@@ -10,11 +12,15 @@ function CoverSettingsIcons({
   backLink,
   handleBacklink,
   handleBackLinks,
+  machineDrawingsBackLink,
   generalSettings,
   handleSettingsNavigate,
 }) {
   const { documentViewFormVisibility, documentHistoryViewFormVisibility } = useSelector((state) => state.document);
-
+  const navigate = useNavigate();
+const navigateTo= (path)=>{
+  navigate(path);
+}
   return (
     <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
       {backLink && (
@@ -30,6 +36,23 @@ function CoverSettingsIcons({
           component="button"
           variant="body2"
           onClick={handleBacklink}
+        >
+          <Iconify icon="material-symbols:arrow-back-rounded" />
+        </Link>
+      )}
+      {machineDrawingsBackLink && (
+        <Link
+          title="Go Back"
+          sx={{
+            ml: 'auto',
+            mr: 1,
+            mt: 'auto',
+            mb: 1,
+            color: 'common.white',
+          }}
+          component="button"
+          variant="body2"
+          onClick={()=> navigateTo(PATH_DOCUMENT.document.machineDrawings.list) }
         >
           <Iconify icon="material-symbols:arrow-back-rounded" />
         </Link>
@@ -97,6 +120,7 @@ CoverSettingsIcons.propTypes = {
   handleBackLinks: PropTypes.func,
   generalSettings: PropTypes.bool,
   handleSettingsNavigate: PropTypes.func,
+  machineDrawingsBackLink: PropTypes.string,
 };
 
 export default CoverSettingsIcons;

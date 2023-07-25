@@ -134,7 +134,7 @@ export function addDocumentVersion(documentId,params) {
 
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/`, formData);
       dispatch(slice.actions.setResponseMessage('Document Version saved successfully'));
-      dispatch(getDocumentVersions());
+      // dispatch(getDocumentVersions(documentId));
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -171,7 +171,7 @@ export function updateDocumentVersion(documentId,versionId,params) {
 
 // -----------------------------------Get Document Versions-----------------------------------
 
-export function getDocumentVersions(Id,documentId) {
+export function getDocumentVersions(documentId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
