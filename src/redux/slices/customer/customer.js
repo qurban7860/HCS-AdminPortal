@@ -170,6 +170,31 @@ export function getActiveCustomers() {
   };
 }
 
+// ---------------------------- get Active Customers------------------------------------------
+
+export function getCustomersAgainstCountries(countries) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/getCustomersAgainstCountries`,
+      {
+        params: {
+          isActive: true,
+          isArchived:false,
+          type: 'SP',
+          countries
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
 // ---------------------------- get Active SP Customers------------------------------------------
 
 export function getActiveSPCustomers() {
@@ -375,7 +400,7 @@ export function addCustomer(params) {
       } catch (error) {
         console.error(error);
         dispatch(slice.actions.hasError(error.Message));
-      throw error;
+        throw error;
       }
     };
 

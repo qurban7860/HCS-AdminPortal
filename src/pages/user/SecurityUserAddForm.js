@@ -31,10 +31,11 @@ import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 // slice
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
-import { getActiveSPCustomers } from '../../redux/slices/customer/customer';
-import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
+import { getActiveSPCustomers, getActiveCustomers, getCustomersAgainstCountries } from '../../redux/slices/customer/customer';
+import { getContacts, resetContacts, getActiveContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { getRegions } from '../../redux/slices/region/region';
+import { getCustomerArrayMachines, getActiveMachines, getMachinesAgainstCountries } from '../../redux/slices/products/machine';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
@@ -51,16 +52,22 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
-  const regEx = /^[^2]*$/;
-  const [selectedRegions, setSelectedRegions] = useState([]);
-  const { contacts, activeContacts } = useSelector((state) => state.contact);
+  const { spCustomers } = useSelector((state) => state.customer);
   const { roles } = useSelector((state) => state.role);
   const { regions } = useSelector((state) => state.region);
+  const { activeContacts } = useSelector((state) => state.contact);
+  const { activeMachines, customerMachines } = useSelector((state) => state.machine);
+
+  const regEx = /^[^2]*$/;
+  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
+  const [filteredMachines, setFilteredMachines] = useState(activeMachines);
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const { spCustomers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
+  const [customersArr, setCustomerArr] = useState([]);
+  const [machinesArr, setMachineArr] = useState([]);
   const [contactVal, setContactVal] = useState('');
   const [sortedRoles, setSortedRoles] = useState([]);
   const [sortedRegions, setSortedRegions] = useState([]);
@@ -92,7 +99,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   useEffect(() => {
     dispatch(getActiveSPCustomers());
+    dispatch(getActiveCustomers());
     dispatch(getRegions());
+    dispatch(getActiveMachines());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -197,6 +206,14 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     if (customerVal) {
       data.customer = customerVal._id;
     }
+    if (customersArr.length > 0) {
+      const selectedCustomerIDs = customersArr.map((customer) => customer._id);
+      data.customers = selectedCustomerIDs;
+    }
+    if(machinesArr.length > 0){
+      const selectedMachineIDs = machinesArr.map((machine) => machine._id);
+      data.machines = selectedMachineIDs;
+    }
     if (contactVal) {
       data.contact = contactVal._id;
     }
@@ -237,8 +254,25 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     navigate(PATH_SECURITY.users.list);
   };
 
-  const handleRegionsChange = (event, selectedOptions) => {
+  const handleRegionsChange = async (event, selectedOptions) => {
     setSelectedRegions(selectedOptions);
+    setCustomerArr([]);
+    setMachineArr([]);
+
+    if(selectedOptions.length > 0){
+      const selectedCountries = selectedOptions?.flatMap((region) =>
+      region.countries?.map((country) => country.country_name));
+
+      const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
+      const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
+      setFilteredMachines(machineResponse);
+      setFilteredCustomers(customerResponse);
+    }else{
+      setCustomerArr([]);
+      setMachineArr([]);
+      setFilteredCustomers(spCustomers);
+      setFilteredMachines(activeMachines);
+    }
   };
 
   return (
@@ -411,6 +445,16 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 label="Roles"
                 options={sortedRoles}
               />
+            </Box>
+            <Box
+            rowGap={2}
+            columnGap={2}
+            display="grid"
+            gridTemplateColumns={{
+              xs: 'repeat(1, 1fr)',
+              sm: 'repeat(3, 1fr)',
+            }}
+            >
               <Autocomplete
                   multiple
                   id="regions-autocomplete"
@@ -427,6 +471,80 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                     />
                   )}
                 />
+
+              <Autocomplete
+                // freeSolo
+                multiple
+                required
+                value={customersArr || null}
+                options={filteredCustomers}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    dispatch(resetContacts());
+                    setCustomerArr(newValue);
+                    setContactVal('');
+                  } else {
+                    setCustomerArr('');
+                    dispatch(resetContacts());
+                    setContactVal('');
+                    handleNameChange('');
+                    setPhone('');
+                    setEmail('');
+                  }
+                }}
+                id="controllable-states-demo"
+                renderOption={(props, option) => (
+                  <li {...props} key={option.id}>
+                    {option.name}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} name="customers" label="Customers"/>
+                )}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option._id}>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </Autocomplete>
+
+              <Autocomplete
+                // freeSolo
+                multiple
+                required
+                value={machinesArr || null}
+                options={filteredMachines}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    setMachineArr(newValue);
+                  } else {
+                    setMachineArr([]);
+                  }
+                }}
+                id="machine"
+                renderOption={(props, option) => (
+                  <li {...props} key={option.id}>
+                    {option.name}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} name="machines" label="Machines" />
+                )}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option._id}>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </Autocomplete>
+
             </Box>
             <Grid item md={12}>
               <RHFSwitch

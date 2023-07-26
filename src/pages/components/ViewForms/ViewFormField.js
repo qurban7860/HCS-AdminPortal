@@ -8,6 +8,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 export default function ViewFormField({
   heading,
   param,
+  chipLabel,
   arrayParam,
   secondParam,
   objectParam,
@@ -30,6 +31,7 @@ export default function ViewFormField({
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
   const { isMobile } = useResponsive();
+  console.log('chiplabel------>', chipLabel);
 
   useEffect(() => {
     if (customerVerifiedBy) {
@@ -107,12 +109,20 @@ export default function ViewFormField({
               whiteSpace: 'pre-line',
               wordBreak: 'break-word',
               }} >
-            {arrayParam.map(
+            {chipLabel ? 
+            arrayParam.map(
+              (data) =>
+                data?.[chipLabel] &&
+                typeof data?.[chipLabel] === 'string' &&
+                data?.[chipLabel].trim().length > 0 && <Chip label={data?.[chipLabel]} sx={{m:0.2}} />
+            ) : 
+            arrayParam.map(
               (data) =>
                 data?.name &&
                 typeof data?.name === 'string' &&
                 data?.name.trim().length > 0 && <Chip label={data?.name} sx={{m:0.2}} />
-            )}
+            )
+            }
             </Grid>
         )}    
         
@@ -175,6 +185,7 @@ ViewFormField.propTypes = {
   heading: PropTypes.string,
   param: PropTypes.string,
   arrayParam: PropTypes.array,
+  chipLabel: PropTypes.string,
   numberParam: PropTypes.number,
   secondParam: PropTypes.string,
   objectParam: PropTypes.object,
