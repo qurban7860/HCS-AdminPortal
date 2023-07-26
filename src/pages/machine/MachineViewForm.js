@@ -294,7 +294,7 @@ export default function MachineViewForm() {
             </Grid>
 
             <ViewFormField sm={6} heading="Name" param={defaultValues?.name} />
-            <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} />
+            { defaultValues?.parentSerialNo ? <ViewFormField sm={6} heading="Previous Machine" param={defaultValues?.parentSerialNo} /> : ''}
             <ViewFormField sm={12} heading="Alias" chips={defaultValues?.alias} />
             <ViewFormField sm={6} heading="Supplier" param={defaultValues?.supplier} />
             <ViewFormField sm={6} heading="Status" param={defaultValues?.status} />

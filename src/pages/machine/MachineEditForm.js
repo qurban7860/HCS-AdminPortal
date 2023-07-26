@@ -333,7 +333,7 @@ console.log("data : ", data);
 
                 {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
                   
-                  {/* <Controller
+                  {parentSerialNo && (<Controller
                     name="parentSerialNo"
                     control={control}
                     defaultValue={parentSerialNo || null}
@@ -375,7 +375,7 @@ console.log("data : ", data);
                         ChipProps={{ size: 'small' }}
                       />
                     )}
-                  /> */}
+                  />)}
 
                 {/* ------------------------- Previous Machine Name --------------------------------------- */}
 
