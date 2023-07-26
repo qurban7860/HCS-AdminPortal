@@ -302,8 +302,9 @@ export default function DocumentAddForm({
         validateFileType
       )
       .nullable(true),
-    isActive: Yup.boolean(),
-    // customerAccess: Yup.boolean(),
+      referenceNumber: Yup.string().max(15),
+      versionNo: Yup.string().max(10),
+      isActive: Yup.boolean(),
 
   });
 
@@ -312,6 +313,8 @@ export default function DocumentAddForm({
       displayName: nameVal,
       description: '',
       imultiUpload: null,
+      referenceNumber: '',
+      versionNo: '',
       isActive: true,
       // customerAccess:false,
     }),

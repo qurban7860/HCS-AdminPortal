@@ -68,6 +68,8 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
     displayName: Yup.string().max(40),
     description: Yup.string().max(10000),
     // image: Yup.mixed().required("Image Field is required!"),
+    referenceNumber: Yup.string().max(15),
+    versionNo: Yup.string().max(10),
     isActive: Yup.boolean(),
   });
 
@@ -76,6 +78,8 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
       displayName: nameVal,
       description: document?.description || '',
       // image: null,
+      referenceNumber: document?.referenceNumber || '',
+      versionNo: document?.versionNo || '',
       isActive: document?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps

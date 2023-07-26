@@ -177,6 +177,12 @@ export function addDocument(customerId , machineId ,  params) {
           if(params.site){
             formData.append('site', params.site);
           }
+          if(params?.referenceNumber){
+            formData.append('referenceNumber', params.referenceNumber);
+          }
+          if(params?.versionNo){
+            formData.append('versionNo', params.versionNo);
+          }
           if(params?.displayName){
             formData.append('displayName', params?.displayName);
             formData.append('name', params?.displayName);
@@ -228,7 +234,12 @@ export function updateDocument(documentId , params, customerId, machineId) {
       // if(params?.customerAccess){
         formData.append('customerAccess', params.customerAccess);
         // }
-
+      if(params?.referenceNumber){
+        formData.append('referenceNumber', params.referenceNumber);
+      }
+      if(params?.versionNo){
+        formData.append('versionNo', params.versionNo);
+      }
       if(params.newVersion){
         formData.append('newVersion', params.newVersion);
       }
