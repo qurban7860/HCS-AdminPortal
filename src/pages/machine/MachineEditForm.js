@@ -340,6 +340,7 @@ console.log("data : ", data);
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
+                     disabled
                         options={activeMachines}
                         isOptionEqualToValue={(option, value) =>
                           option.serialNo === value.serialNo && option.isActive === true

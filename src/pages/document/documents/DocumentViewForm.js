@@ -85,6 +85,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
       documentName: document?.documentName?.name || '',
       docCategory: document?.docCategory?.name || '',
       docType: document?.docType?.name || '',
+      referenceNumber: document?.referenceNumber || '',
       customer: document?.customer?.name || '',
       site: document?.site?.name || '',
       contact: document?.contact?.name || '',
@@ -96,6 +97,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
         document?.documentVersions && document?.documentVersions?.length > 0
           ? document?.documentVersions[0]?.versionNo
           : '',
+      documentVersionLength: document?.documentVersions?.length > 1 ,
       versionPrefix: document?.versionPrefix || '',
       description: document?.description,
       isActive: document?.isActive,
@@ -109,6 +111,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [document]
   );
+  console.log("defaultValues.documentVersionLength : ",defaultValues.documentVersionLength)
   const callAfterDelete = async () => {
     await dispatch(getDocument(document._id));
     // if(customerPage || machinePage){
@@ -139,7 +142,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
             defaultValues.documentVersion && (
               <Typography display="flex">
                 {defaultValues.versionPrefix} {defaultValues.documentVersion}
-                {defaultValues.documentVersion && defaultValues.documentVersion > 1 && (
+                {defaultValues.documentVersion && (
                   <VersionsLink onClick={linkDocumentView} content="View other versions" />
                 )}
               </Typography>
@@ -149,15 +152,17 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
         {!customerPage && !machinePage && (
           <>
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
-            <ViewFormField sm={6} heading="Site" param={defaultValues?.site} />
-            <ViewFormField sm={6} heading="Contact" param={defaultValues?.contact} />
+            {/* <ViewFormField sm={6} heading="Site" param={defaultValues?.site} /> */}
+            {/* <ViewFormField sm={6} heading="Contact" param={defaultValues?.contact} /> */}
             <ViewFormField sm={6} heading="Machine" param={defaultValues?.machine} />
-            <ViewFormField sm={6} heading="Model" param={defaultValues?.model} />
+            {/* <ViewFormField sm={6} heading="Model" param={defaultValues?.model} /> */}
           </>
         )}
 
         <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
         <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+        <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+
         {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         <Grid item sx={{ display: 'flex-inline' }}>

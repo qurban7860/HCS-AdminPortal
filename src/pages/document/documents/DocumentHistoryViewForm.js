@@ -118,6 +118,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
       documentName: documentHistory?.documentName?.name || '',
       docCategory: documentHistory?.docCategory?.name || '',
       docType: documentHistory?.docType?.name || '',
+      referenceNumber: documentHistory?.referenceNumber || '',
       customer: documentHistory?.customer?.name || '',
       site: documentHistory?.site?.name || '',
       contact: documentHistory?.contact?.name || '',
@@ -125,10 +126,8 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
       model: documentHistory?.machineModel?.name || '',
       customerAccess: documentHistory?.customerAccess,
       isActiveVersion: documentHistory?.isActiveVersion,
-      documentVersion:
-        documentHistory?.documentVersions?.length > 0
-          ? documentHistory?.documentVersions[0]?.versionNo
-          : '',
+      documentVersion: documentHistory?.documentVersions?.length > 0
+                        ? documentHistory?.documentVersions[0]?.versionNo : '',
       versionPrefix: documentHistory?.versionPrefix || '',
       description: documentHistory?.description,
       isActive: documentHistory?.isActive,
@@ -261,6 +260,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
                   }
                 />
               )}
+              <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
               <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />
