@@ -309,7 +309,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                 >
 
                 {/* -------------------------- Parent Machines Serial No -------------------------------------- */}
-                  
+{/*                   
                   <Controller
                     name="parentSerialNo"
                     clearOnBlur 
@@ -356,11 +356,10 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                     )}
                   />
 
-                {/* ------------------------- Previous Machine Name --------------------------------------- */}
 
                 <RHFTextField name="previousMachine" label="Previous Machine" disabled/>
+ */}
 
-                {/* ------------------------- Previous Machine Supplier --------------------------------------- */}
 
                   <Controller
                     name="supplier"
