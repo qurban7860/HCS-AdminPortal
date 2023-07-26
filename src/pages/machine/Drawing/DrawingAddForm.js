@@ -47,6 +47,7 @@ export default function DrawingAddForm() {
         document: null,
         documentCategory: null,
         documentType: null,
+        isActive: true,
     },
   });
 
@@ -79,6 +80,7 @@ export default function DrawingAddForm() {
             const response = await dispatch(addDrawing(data));
             reset();
             enqueueSnackbar('Create success!');
+            dispatch(setDrawingFormVisibility(false));
         } catch (error) {
             enqueueSnackbar('Create failed!', {variant: 'error'});
             console.error( error);

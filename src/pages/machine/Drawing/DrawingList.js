@@ -317,19 +317,17 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   inputData = stabilizedThis.map((el) => el[0]);
   if (filterName) {
     inputData = inputData.filter(
-      (document) =>
-        document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.docType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+      (drawingg) =>
+        drawingg?.document?.displayName?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        drawingg?.documentType?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        drawingg?.documentCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+        fDate(drawingg?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
   if (filterStatus.length) {
-    inputData = inputData.filter((document) => filterStatus.includes(document.status));
+    inputData = inputData.filter((drawingg) => filterStatus.includes(drawingg.status));
   }
 
   return inputData;

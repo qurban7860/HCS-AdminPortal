@@ -262,11 +262,19 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
                 <RHFTextField
                   name="displayName"
                   value={nameVal}
-                  label="Name"
+                  label="Document Name*"
                   onChange={(e) => {
                     setNameVal(e.target.value);
                   }}
                 />
+                <Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name='referenceNumber' label='Reference Number' />
+                </Box>
                 <RHFTextField
                   value={descriptionVal}
                   name="description"

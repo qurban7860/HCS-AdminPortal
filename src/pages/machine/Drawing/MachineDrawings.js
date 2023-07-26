@@ -16,9 +16,9 @@ export default function MachineDrawings() {
     const { machine } = useSelector((state) => state.machine);
 
     useEffect(()=>{
-        // dispatch(setDrawingFormVisibility(false))
+        dispatch(setDrawingFormVisibility(false))
         // dispatch(setDrawingEditFormVisibility(false));
-        // dispatch(setDrawingViewFormVisibility(false));
+        dispatch(setDrawingViewFormVisibility(false));
         dispatch(resetDrawings());
         dispatch(getDrawings(machine?._id));
     },[dispatch, machine])

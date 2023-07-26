@@ -328,6 +328,7 @@ export default function DocumentAddForm({
     reset,
     watch,
     setValue,
+    control,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
@@ -710,9 +711,12 @@ export default function DocumentAddForm({
 
                 {/*  New Document */}
                 {(selectedValue === 'new' || documentVal) && (
-                  <Grid container item lg={12}>
-                    <Grid container spacing={2}>
-                      <Grid item lg={6}>
+                      <Box
+                        rowGap={3}
+                        columnGap={2}
+                        display="grid"
+                        gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                      >
                         <Autocomplete
                           // freeSolo
                           disabled={readOnlyVal}
@@ -741,8 +745,6 @@ export default function DocumentAddForm({
                           )}
                           ChipProps={{ size: 'small' }}
                         />
-                      </Grid>
-                      <Grid item lg={6}>
                         <Autocomplete
                           // freeSolo
                           disabled={readOnlyVal}
@@ -765,9 +767,7 @@ export default function DocumentAddForm({
                           )}
                           ChipProps={{ size: 'small' }}
                         />
-                      </Grid>
-                    </Grid>
-                  </Grid>
+                         </Box>
                 )}
 
                 {documentVal && (
@@ -793,6 +793,16 @@ export default function DocumentAddForm({
                     }}
                   />
                 )}
+
+                {selectedValue === 'new' && (<Box
+                  rowGap={3}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
+                >
+                  <RHFTextField name='referenceNumber' label='Reference Number' />
+                  <RHFTextField name='versionNo' label='Version Number' />
+                </Box>)}
 
                 {(selectedValue === 'new' ||
                   (documentVal && selectedVersionValue !== 'existingVersion')) && (
