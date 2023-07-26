@@ -1,9 +1,9 @@
 import React from 'react';
 import Iconify from '../../../components/iconify/Iconify';
-import DocumentList from '../../document/machine/DocumentList';
 import MachineNoteList from '../MachineNoteList';
 import MachineSettingList from '../MachineSettingList';
 import DocumentTagPage from '../../document/documents/DocumentTagPage';
+import MachineDrawings from '../Drawing/MachineDrawings';
 import MachineToolsInstalledList from '../MachineToolsInstalledList';
 
 
@@ -37,11 +37,19 @@ export const TABS = (currentComponent, showDevTabs, disableTab) => [
   },
   {
     disabled: disableTab,
+    value: 'drawings',
+    label: 'Drawings',
+    icon: <Iconify icon="mdi:folder-open" />,
+    component: <MachineDrawings  />,
+  },
+  {
+    disabled: disableTab,
     value: 'documents',
     label: 'Documents',
     icon: <Iconify icon="mdi:folder-open" />,
     component: <DocumentTagPage customerPage={false} machinePage />,
   },
+ 
   ...(showDevTabs
     ? [
         {

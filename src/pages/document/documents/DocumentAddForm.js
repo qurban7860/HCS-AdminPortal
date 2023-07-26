@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useMemo, useState, useCallback } from 'reac
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
@@ -77,7 +77,7 @@ import {
   Snacks,
 } from '../../../constants/document-constants';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
-import DocumentMachineAddForm from '../dashboard/documents/DocumentAddForms/DocumentMachineAddForm';
+import DocumentMachineAddForm from '../archived/documents/DocumentAddForms/DocumentMachineAddForm';
 import { FORMLABELS } from '../../../constants/default-constants';
 
 // ----------------------------------------------------------------------

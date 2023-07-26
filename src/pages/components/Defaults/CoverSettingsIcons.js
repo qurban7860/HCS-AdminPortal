@@ -1,10 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Grid, Link } from '@mui/material';
 import { useNavigate } from 'react-router';
 import Iconify from '../../../components/iconify/Iconify';
 import { PATH_DASHBOARD, PATH_DOCUMENT, } from '../../../routes/paths';
+import { setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 
 function CoverSettingsIcons({
   setting,
@@ -17,10 +18,11 @@ function CoverSettingsIcons({
   handleSettingsNavigate,
 }) {
   const { documentViewFormVisibility, documentHistoryViewFormVisibility } = useSelector((state) => state.document);
+  const { drawingViewFormVisibility } = useSelector((state) => state.drawing );
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-const navigateTo= (path)=>{
-  navigate(path);
-}
+  const navigateTo= (path)=>{ navigate(path) }
+
   return (
     <Grid style={{ flex: 1, display: 'flex', justifyContent: 'end' }}>
       {backLink && (
@@ -70,6 +72,23 @@ const navigateTo= (path)=>{
           component="button"
           variant="body2"
           onClick={handleBackLinks}
+        >
+          <Iconify icon="material-symbols:arrow-back-rounded" />
+        </Link>
+      )}
+      {handleBackLinks && drawingViewFormVisibility && (
+        <Link
+          title="Go Back"
+          sx={{
+            ml: 'auto',
+            mr: 1,
+            mt: 'auto',
+            mb: 1,
+            color: 'common.white',
+          }}
+          component="button"
+          variant="body2"
+          onClick={()=> dispatch(setDrawingViewFormVisibility(false))}
         >
           <Iconify icon="material-symbols:arrow-back-rounded" />
         </Link>

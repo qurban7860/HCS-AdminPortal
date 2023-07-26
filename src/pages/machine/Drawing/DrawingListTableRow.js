@@ -29,7 +29,7 @@ import { setMachineDocumentFormVisibility } from '../../../redux/slices/document
 
 // ----------------------------------------------------------------------
 
-DocumentListTableRow.propTypes = {
+DrawingListTableRow.propTypes = {
   row: PropTypes.object,
   style: PropTypes.object,
   selected: PropTypes.bool,
@@ -37,9 +37,6 @@ DocumentListTableRow.propTypes = {
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
   onDeleteRow: PropTypes.func,
-  customerPage: PropTypes.bool,
-  machinePage: PropTypes.bool,
-  machineDrawings: PropTypes.bool
 };
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
@@ -50,7 +47,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-export default function DocumentListTableRow({
+export default function DrawingListTableRow({
   row,
   style,
   selected,
@@ -58,17 +55,11 @@ export default function DocumentListTableRow({
   onDeleteRow,
   onEditRow,
   onViewRow,
-  customerPage,
-  machinePage,
-  machineDrawings
 }) {
   const {
-    displayName,
-    docType,
-    machine,
-    customer,
-    docCategory,
-    customerAccess,
+    document,
+    documentType,
+    documentCategory,
     isActive,
     createdAt,
   } = row;
@@ -106,17 +97,9 @@ export default function DocumentListTableRow({
         {/* <TableCell padding="checkbox">
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
-        <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
-        { !customerPage && !machinePage && !machineDrawings && (<>
-        <TableCell align="left">{customer?.name}</TableCell>
-        <TableCell align="left">{machine?.serialNo}</TableCell>
-        </>)}
-        <TableCell align="left">{docCategory?.name}</TableCell>
-        <TableCell align="left">{docType?.name}</TableCell>
-        <TableCell align="center">
-          {' '}
-          <Switch checked={customerAccess} disabled size="small" />{' '}
-        </TableCell>
+        <LinkTableCell align="left" param={document?.displayName} onClick={onViewRow} />
+        <TableCell align="left">{documentCategory?.name}</TableCell>
+        <TableCell align="left">{documentType?.name}</TableCell>
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}

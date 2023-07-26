@@ -251,40 +251,40 @@ export const DocumentCategoryEditForm = Loadable(
 // export const fileCategoryEdit = Loadable(lazy(()=>     import('../pages/')));
 
 // Customer Documents
-export const CustomerDocumentAddForm = Loadable(
-  lazy(() => import('../pages/document/customer/DocumentAddForm'))
-);
-export const CustomerDocumentList = Loadable(
-  lazy(() => import('../pages/document/customer/DocumentList'))
-);
-export const CustomerDocumentViewForm = Loadable(
-  lazy(() => import('../pages/document/customer/DocumentViewForm'))
-);
-export const CustomerDocumentEditForm = Loadable(
-  lazy(() => import('../pages/document/customer/DocumentEditForm'))
-);
-export const CustomerDocumentView = Loadable(
-  lazy(() => import('../pages/document/dashboard/ViewCustomerDocument'))
-);
+// export const CustomerDocumentAddForm = Loadable(
+//   lazy(() => import('../pages/document/customer/DocumentAddForm'))
+// );
+// export const CustomerDocumentList = Loadable(
+//   lazy(() => import('../pages/document/customer/DocumentList'))
+// );
+// export const CustomerDocumentViewForm = Loadable(
+//   lazy(() => import('../pages/document/customer/DocumentViewForm'))
+// );
+// export const CustomerDocumentEditForm = Loadable(
+//   lazy(() => import('../pages/document/customer/DocumentEditForm'))
+// );
+// export const CustomerDocumentView = Loadable(
+//   lazy(() => import('../pages/document/archived/ViewCustomerDocument'))
+// );
 // export const customerDocumentView     = Loadable(lazy(()=>      import('../pages/')));
 // export const customerDocumentEdit     = Loadable(lazy(()=>      import('../pages/')));
 
 // Machine Documents
-export const MachineDocumentAddForm = Loadable(
-  lazy(() => import('../pages/document/machine/DocumentAddForm'))
-);
-export const MachineDocumentList = Loadable(
-  lazy(() => import('../pages/document/machine/DocumentList'))
-);
-export const MachineDocumentViewForm = Loadable(
-  lazy(() => import('../pages/document/machine/DocumentViewForm'))
-);
-export const MachineDocumentEditForm = Loadable(
-  lazy(() => import('../pages/document/machine/DocumentEditForm'))
-);
-export const MachineDocumentView = Loadable(
-  lazy(() => import('../pages/document/dashboard/ViewMachineDocument'))
-);
+// export const MachineDocumentAddForm = Loadable(
+//   lazy(() => import('../pages/document/machine/DocumentAddForm'))
+// );
+// export const MachineDocumentList = Loadable(
+//   lazy(() => import('../pages/document/machine/DocumentList'))
+// );
+// export const MachineDocumentViewForm = Loadable(
+//   lazy(() => import('../pages/document/machine/DocumentViewForm'))
+// );
+// export const MachineDocumentEditForm = Loadable(
+//   lazy(() => import('../pages/document/machine/DocumentEditForm'))
+// );
+// export const MachineDocumentView = Loadable(
+//   lazy(() => import('../pages/document/archived/ViewMachineDocument'))
+// );
 
 
 // Regions
