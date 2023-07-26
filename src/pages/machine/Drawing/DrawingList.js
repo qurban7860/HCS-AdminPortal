@@ -37,17 +37,22 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import DocumentListTableRow from './DocumentListTableRow';
-import DocumentListTableToolbar from './DocumentListTableToolbar';
+import DocumentListTableRow from './DrawingListTableRow';
+import DocumentListTableToolbar from './DrawingListTableToolbar';
 import {
-  getDocument,
-  resetDocument,
   getDocuments,
   deleteDocument,
   resetDocuments,
+  getDocumentHistory,
   resetDocumentHistory,
   setDocumentViewFormVisibility,
 } from '../../../redux/slices/document/document';
+import drawing, {
+  getDrawing, 
+  resetDrawing,
+  getDrawings,
+  resetDrawings,
+  setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
@@ -58,13 +63,9 @@ import { fDate } from '../../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
-DocumentList.propTypes = {
-  customerPage: PropTypes.bool,
-  machinePage: PropTypes.bool,
-  machineDrawings: PropTypes.bool,
-};
 
-export default function DocumentList({ customerPage, machinePage, machineDrawings }) {
+
+export default function DrawingList() {
   const {
     page,
     order,
@@ -92,77 +93,28 @@ export default function DocumentList({ customerPage, machinePage, machineDrawing
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [documentBy, setDocumentBy] = useState({});
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  const { documents, isLoading, error, documentInitial, responseMessage } = useSelector(
-    (state) => state.document
-  );
 
-  const { customerDocuments, customerDocumentInitial } = useSelector(
-    (state) => state.customerDocument
-  );
-  const { machineDocuments, machineDocumentInitial } = useSelector(
-    (state) => state.machineDocument
-  );
-
+  const { drawings, isLoading } = useSelector((state) => state.drawing );
 
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
     { id: 'doccategory', label: 'Category', align: 'left' },
     { id: 'doctype', label: 'Type', align: 'left' },
-    { id: 'customerAccess', label: 'Customer Access', align: 'center' },
     { id: 'active', label: 'Active', align: 'center' },
     { id: 'created_at', label: 'Created At', align: 'right' },
   ];
-  
-  if (!customerPage && !machinePage && !machineDrawings) {
-    const insertIndex = 1; // Index after which you want to insert the new objects
-    TABLE_HEAD.splice(insertIndex, 0, // 0 indicates that we're not removing any elements
-      { id: 'customer', label: 'Customer', align: 'left' },
-      { id: 'machine', label: 'Machine', align: 'left' }
-    );
-  }
 
   useEffect(() => {
-    const fetchData = async () => {
-      dispatch(resetDocuments());
-      if (customerPage || machinePage) {
-        if (customer?._id || machine?._id) {
-          await dispatch(getDocuments(customerPage ? customer?._id : null, machinePage ? machine?._id : null));
-        }
-      }else if(machineDrawings){
-        await dispatch(getDocuments(null, null,machineDrawings));
-      } else {
-        await dispatch(getDocuments());
-      }
-    };
-
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, customerPage, machinePage]);
-  // useEffect(()=>{
-  //   if(customerPage){
-  //     setDocumentBy({customer: true});
-  //   }else if(machinePage){
-  //     setDocumentBy({machine: true});
-  //   }
-  //   else if(machineDrawings){
-  //     setDocumentBy({drawing: true});
-  //   }
-  // },[customerPage, machinePage, machineDrawings ])
-  
-    // useEffect(() => {
-    //   if(documentBy && (customerPage || machinePage || machineDrawings ) ){
-    //     if(customer?._id || machine?._id){
-    //     }
-    //     await dispatch(getDocuments(documentBy));
-    //   }
-    // },[dispatch, documentBy])
+    if(machine?._id){
+      dispatch(getDrawings(machine?._id));
+    }
+  }, [dispatch, machine]);
 
   useEffect(() => {
-    setTableData(documents);
-  }, [documents]);
+    setTableData(drawings);
+  }, [drawings]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -222,22 +174,13 @@ export default function DocumentList({ customerPage, machinePage, machineDrawing
   // };
 
   const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_DOCUMENT.document.edit(id));
+    // navigate(PATH_DOCUMENT.document.edit(id));
   };
 
-  const handleViewRow = (id) => {
-      dispatch(resetDocument())
-    if (customerPage || machinePage) {
-      dispatch(getDocument(id));
-      dispatch(setDocumentViewFormVisibility(true));
-    } else if(machineDrawings){
+  const handleViewRow = (documentId) => {
       dispatch(resetDocumentHistory())
-      navigate(PATH_DOCUMENT.document.machineDrawings.view(id));
-    } else{
-      dispatch(resetDocumentHistory())
-      navigate(PATH_DOCUMENT.document.view(id));
-    }
+      dispatch(getDocumentHistory(documentId));
+      dispatch(setDrawingViewFormVisibility(true));
   };
 
   const handleResetFilter = () => {
@@ -247,10 +190,6 @@ export default function DocumentList({ customerPage, machinePage, machineDrawing
 
   return (
     <>
-      {!customerPage && !machinePage && 
-      <StyledCardContainer>
-        <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
-      </StyledCardContainer>}
       <Card sx={{ mt: 3 }}>
         <DocumentListTableToolbar
           filterName={filterName}
@@ -259,9 +198,6 @@ export default function DocumentList({ customerPage, machinePage, machineDrawing
           onFilterStatus={handleFilterStatus}
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
-          customerPage={customerPage}
-          machinePage={machinePage}
-          machineDrawings={machineDrawings}
         />
 
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
@@ -308,15 +244,12 @@ export default function DocumentList({ customerPage, machinePage, machineDrawing
                       <DocumentListTableRow
                         key={row._id}
                         row={row}
-                        selected={selected.includes(row._id)}
-                        onSelectRow={() => onSelectRow(row._id)}
+                        // selected={selected.includes(row._id)}
+                        // onSelectRow={() => onSelectRow(row._id)}
                         // onDeleteRow={() => handleDeleteRow(row._id)}
                         // onEditRow={() => handleEditRow(row._id)}
-                        onViewRow={() => handleViewRow(row._id)}
+                        onViewRow={() => handleViewRow(row?.document?._id)}
                         style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                        customerPage={customerPage}
-                        machinePage={machinePage}
-                        machineDrawings={machineDrawings}
                       />
                     ) : (
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

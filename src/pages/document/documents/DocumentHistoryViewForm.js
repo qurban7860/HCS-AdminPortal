@@ -40,10 +40,10 @@ import MachineDialog from '../../components/Dialog/MachineDialog';
 DocumentHistoryViewForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
+  drawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
-export default function DocumentHistoryViewForm({ customerPage, machinePage, machineDrawings }) {
-  console.log("customerPage, machinePage, machineDrawings : ", customerPage, machinePage, machineDrawings)
+export default function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machineDrawings }) {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -63,13 +63,13 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, mac
 
   useEffect(() => {
     // dispatch(resetActiveDocuments());
-    if(!machinePage){
+    if(!machinePage && !drawingPage){
       dispatch(resetMachine());
     }
-    if(!customerPage){
+    if(!customerPage && !drawingPage){
       dispatch(resetCustomer());
     }
-    if(!machinePage && !customerPage && id){
+    if(!machinePage && !customerPage && !drawingPage && id){
       dispatch(getDocumentHistory(id));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -203,7 +203,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, mac
 
   return (
     <>
-      {!customerPage && !machinePage && 
+      {!customerPage && !machinePage && !drawingPage && 
         <DocumentCover content={defaultValues?.displayName} backLink={!customerPage && !machinePage && !machineDrawings} machineDrawingsBackLink={machineDrawings}  generalSettings />
       }
         <Grid item md={12} mt={2}>
@@ -235,7 +235,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, mac
                 param={defaultValues?.docCategory}
               />
               <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-              {!customerPage && !machineDrawings && defaultValues.customer && (
+              {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField
                   sm={6}
                   heading="Customer"
@@ -248,7 +248,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, mac
                   }
                 />
               )}
-              {!machinePage && !machineDrawings &&  defaultValues?.machine && (
+              {!machinePage && !machineDrawings && !drawingPage &&  defaultValues?.machine && (
                 <ViewFormField
                   sm={6}
                   heading="Machine"

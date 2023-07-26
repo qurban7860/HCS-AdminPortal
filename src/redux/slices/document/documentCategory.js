@@ -82,6 +82,14 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET DOCUMENT ACTIVE CATEGORIES
+    resetActiveDocumentCategories(state){
+      state.activeDocumentCategories = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
+
     // RESET DOCUMENT CATEGORY
     resetFileCategories(state){
       state.documentCategories = [];
@@ -101,6 +109,7 @@ export const {
   setDocumentCategoryEditFormVisibility,
   resetDocumentCategory,
   resetDocumentCategories,
+  resetActiveDocumentCategories,
   setResponseMessage,
 } = slice.actions;
 

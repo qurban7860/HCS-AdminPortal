@@ -268,7 +268,6 @@ export function updateDocument(documentId , params, customerId, machineId) {
 // -----------------------------------Get Documents-----------------------------------
 
 export function getDocuments(customerId,machineId,drawing) {
-  console.log("drawing : ",drawing)
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     const params = {
@@ -277,13 +276,14 @@ export function getDocuments(customerId,machineId,drawing) {
     }
     if(drawing) {
       params.forDrawing = true;
-    }
-    if (customerId) {
+    }else if (customerId) {
       params.customer = customerId
       params.forCustomer = true;
-    }
-    if(machineId){
+    }else if(machineId){
       params.machine = machineId
+      params.forMachine = true;
+    }else{
+      params.forCustomer = true;
       params.forMachine = true;
     }
     try {
@@ -296,6 +296,35 @@ export function getDocuments(customerId,machineId,drawing) {
       dispatch(slice.actions.setResponseMessage('Document loaded successfully'));
     } catch (error) {
       console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ---------------------------- GET Active DOCUMENTS By Type------------------------------------
+
+export function getActiveDocumentsByType(documentCategoryId,documentTypeId) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}documents/document/` , 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          docCategory: documentCategoryId,
+          docType: documentTypeId,
+          machine: null,
+        }
+      }
+      );
+      // console.log("response : ", response);
+      // if(regEx.test(response.status)){
+      dispatch(slice.actions.getActiveDocumentsSuccess(response.data));
+      // }
+    } catch (error) {
+      console.error(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
