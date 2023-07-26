@@ -348,6 +348,32 @@ export function getActiveContacts(customerID ) {
   };
 }
 
+
+// ------------------------------ get Contacts against CustomerArray ----------------------------------------
+
+export function getCustomerArrayActiveContacts(customerArr) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+       const response = await axios.get(`${CONFIG.SERVER_URL}crm/contacts/search` , 
+        {
+          params: {
+            isActive: true,
+            isArchived: false,
+            customerArr
+          }
+        }
+        );
+      dispatch(slice.actions.getActiveContactsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Contacts loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
 // ----------------------------------------------------------------------
 
 export function getContact(customerID, id) {
