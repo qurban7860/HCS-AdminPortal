@@ -17,7 +17,8 @@ const initialState = {
   description: null,
   countries: [],
   region: {},
-  regions: []
+  regions: [],
+  activeRegions: []
 };
 
 const slice = createSlice({
@@ -51,6 +52,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.regions = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active regions
+    getActiveRegionsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeRegions = action.payload;
       state.initial = true;
     },
 
@@ -173,6 +182,32 @@ export function getRegions() {
       );
       if(regEx.test(response.status)){
         dispatch(slice.actions.getRegionsSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getActiveRegions() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+      const response = await axios.get(`${CONFIG.SERVER_URL}regions/regions`,
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      }
+      );
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveRegionsSuccess(response.data));
       }
       return response;
     } catch (error) {

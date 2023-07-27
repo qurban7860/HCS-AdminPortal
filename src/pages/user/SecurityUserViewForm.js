@@ -93,6 +93,10 @@ export default function SecurityUserViewForm() {
     });
   }, [dispatch, securityUser]);
 
+  useEffect(() => {
+    
+  }, [dispatch, securityUser]);
+
   const handleEdit = () => {
     dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(securityUser._id));
@@ -138,6 +142,7 @@ export default function SecurityUserViewForm() {
       login: securityUser?.login || '',
       roles: securityUser?.roles,
       regions: securityUser?.regions || [],
+      countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
@@ -224,7 +229,7 @@ export default function SecurityUserViewForm() {
               sm={12}
               heading="Countries"
               chipLabel='country_name'
-              arrayParam={defaultValues?.regions?.countries}
+              arrayParam={defaultValues?.countries}
             />
             <ViewFormField
               sm={12}

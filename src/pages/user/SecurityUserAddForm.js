@@ -34,7 +34,7 @@ import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import { getActiveSPCustomers, getActiveCustomers, getCustomersAgainstCountries } from '../../redux/slices/customer/customer';
 import { getContacts, resetContacts, getActiveContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
-import { getRegions } from '../../redux/slices/region/region';
+import { getActiveRegions } from '../../redux/slices/region/region';
 import { getCustomerArrayMachines, getActiveMachines, getMachinesAgainstCountries } from '../../redux/slices/products/machine';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -52,9 +52,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
-  const { spCustomers } = useSelector((state) => state.customer);
+  const { spCustomers, activeCustomers } = useSelector((state) => state.customer);
   const { roles } = useSelector((state) => state.role);
-  const { regions } = useSelector((state) => state.region);
+  const { activeRegions } = useSelector((state) => state.region);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeMachines, customerMachines } = useSelector((state) => state.machine);
 
@@ -92,15 +92,13 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   // })
 
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     dispatch(getActiveSPCustomers());
     dispatch(getActiveCustomers());
-    dispatch(getRegions());
+    dispatch(getActiveRegions());
     dispatch(getActiveMachines());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -254,26 +252,27 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     navigate(PATH_SECURITY.users.list);
   };
 
-  const handleRegionsChange = async (event, selectedOptions) => {
-    setSelectedRegions(selectedOptions);
-    setCustomerArr([]);
-    setMachineArr([]);
+  //  -------------------------------DO NOT REMOVE------------------------------------
+  // const handleRegionsChange = async (event, selectedOptions) => {
+  //   setSelectedRegions(selectedOptions);
+    // setCustomerArr([]);
+    // setMachineArr([]);
 
-    if(selectedOptions.length > 0){
-      const selectedCountries = selectedOptions?.flatMap((region) =>
-      region.countries?.map((country) => country.country_name));
+    // if(selectedOptions.length > 0){
+    //   const selectedCountries = selectedOptions?.flatMap((region) =>
+    //   region.countries?.map((country) => country.country_name));
 
-      const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
-      const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
-      setFilteredMachines(machineResponse);
-      setFilteredCustomers(customerResponse);
-    }else{
-      setCustomerArr([]);
-      setMachineArr([]);
-      setFilteredCustomers(spCustomers);
-      setFilteredMachines(activeMachines);
-    }
-  };
+    //   const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
+    //   const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
+    //   setFilteredMachines(machineResponse);
+    //   setFilteredCustomers(customerResponse);
+    // }else{
+    //   setCustomerArr([]);
+    //   setMachineArr([]);
+    //   setFilteredCustomers(spCustomers);
+    //   setFilteredMachines(activeMachines);
+    // }
+  // };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -447,21 +446,27 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               />
             </Box>
             <Box
-            rowGap={2}
-            columnGap={2}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(3, 1fr)',
-            }}
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
             >
               <Autocomplete
+                  sx={{ mt: 3 }}
                   multiple
                   id="regions-autocomplete"
-                  options={regions}
+                  options={activeRegions}
                   value={selectedRegions}
-                  onChange={handleRegionsChange}
-                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    if (newValue) {                    
+                      setSelectedRegions(newValue);
+                    } else {
+                      setSelectedRegions('');
+                    }
+                  }}                  getOptionLabel={(option) => option.name}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -477,24 +482,16 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 multiple
                 required
                 value={customersArr || null}
-                options={filteredCustomers}
+                options={activeCustomers}
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
-                  if (newValue) {
-                    dispatch(resetContacts());
+                  if (newValue) {                    
                     setCustomerArr(newValue);
-                    setContactVal('');
                   } else {
                     setCustomerArr('');
-                    dispatch(resetContacts());
-                    setContactVal('');
-                    handleNameChange('');
-                    setPhone('');
-                    setEmail('');
                   }
-                }}
-                id="controllable-states-demo"
+                }}                id="controllable-states-demo"
                 renderOption={(props, option) => (
                   <li {...props} key={option.id}>
                     {option.name}
@@ -517,7 +514,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 multiple
                 required
                 value={machinesArr || null}
-                options={filteredMachines}
+                options={activeMachines}
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
