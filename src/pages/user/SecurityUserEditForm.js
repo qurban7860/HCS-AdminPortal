@@ -20,10 +20,11 @@ import {
   updateSecurityUser,
   setSecurityUserEditFormVisibility,
 } from '../../redux/slices/securityUser/securityUser';
-import { getActiveSPCustomers, getActiveCustomers, getCustomersAgainstCountries } from '../../redux/slices/customer/customer';
-import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
-import { getCustomerArrayMachines, getActiveMachines, getMachinesAgainstCountries } from '../../redux/slices/products/machine';
+import { getActiveSPCustomers, getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
+import { getActiveMachines } from '../../redux/slices/products/machine';
 import { getRoles } from '../../redux/slices/securityUser/role';
+import { getActiveRegions } from '../../redux/slices/region/region';
 // current user
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
@@ -70,7 +71,10 @@ export default function SecurityUserEditForm() {
   const styles = { notchedOutline: { borderColor: valid ? '' : 'red' } };
 
   useLayoutEffect(() => {
-    // dispatch(getActiveSPCustomers());
+    dispatch(getActiveSPCustomers());
+    dispatch(getActiveCustomers());
+    dispatch(getActiveRegions());
+    dispatch(getActiveMachines());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
