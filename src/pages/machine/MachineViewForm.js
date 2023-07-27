@@ -123,17 +123,17 @@ export default function MachineViewForm() {
       const response = await dispatch(transferMachine(machine));
       const machineId = response.data.Machine._id;
       // window.open(`${baseUrl}/products/machines/${machineId}/view`);
-      navigate(PATH_MACHINE.view(machineId));
+      navigate(PATH_MACHINE.machines.view(machineId));
       enqueueSnackbar(Snacks.machineTransferSuccess);
     } catch (error) {
-      if (error.Message) {
-        enqueueSnackbar(error.Message, { variant: `error` });
-      } else if (error.message) {
-        enqueueSnackbar(error.message, { variant: `error` });
+      if (error?.Message) {
+        enqueueSnackbar(error?.Message, { variant: `error` });
+      } else if (error?.message) {
+        enqueueSnackbar(error?.message, { variant: `error` });
       } else {
         enqueueSnackbar(Snacks.machineFailedTransfer, { variant: `error` });
       }
-      console.log('Error:', error);
+      console.error(error);
     }
   };
 

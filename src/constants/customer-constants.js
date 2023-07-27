@@ -24,7 +24,7 @@ export const FORMLABELS = {
   // @root - CustomerEditForm
   CUSTOMER: {
     NAME: {
-      label: 'Customer Name',
+      label: 'Customer Name*',
       name: 'name',
     },
     TRADING_NAME: {

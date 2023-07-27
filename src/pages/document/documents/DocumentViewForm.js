@@ -111,7 +111,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [document]
   );
-  console.log("defaultValues.documentVersionLength : ",defaultValues.documentVersionLength)
+  // console.log("defaultValues.documentVersionLength : ",defaultValues.documentVersionLength)
   const callAfterDelete = async () => {
     await dispatch(getDocument(document._id));
     // if(customerPage || machinePage){

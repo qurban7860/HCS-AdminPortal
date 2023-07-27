@@ -111,6 +111,7 @@ export default function DocumentList({ customerPage, machinePage, machineDrawing
     { id: 'name', label: 'Name', align: 'left' },
     { id: 'doccategory', label: 'Category', align: 'left' },
     { id: 'doctype', label: 'Type', align: 'left' },
+    { id: 'version', label: 'Version', align: 'center' },
     { id: 'customerAccess', label: 'Customer Access', align: 'center' },
     { id: 'active', label: 'Active', align: 'center' },
     { id: 'created_at', label: 'Created At', align: 'right' },

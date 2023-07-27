@@ -20,7 +20,7 @@ export default function MachineDrawings() {
         // dispatch(setDrawingEditFormVisibility(false));
         dispatch(setDrawingViewFormVisibility(false));
         dispatch(resetDrawings());
-        dispatch(getDrawings(machine?._id));
+        // dispatch(getDrawings(machine?._id));
     },[dispatch, machine])
 
   return (<>

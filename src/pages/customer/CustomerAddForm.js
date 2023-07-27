@@ -268,7 +268,7 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 sm: 'repeat(1, 1fr)',
               }}
             >
-              <RHFTextField name="name" label="Customer Name" />
+              <RHFTextField name="name" label="Customer Name*" />
 
               {/* <RHFTextField name="tradingName" label="Trading Name" /> */}
               <MuiChipsInput name="tradingName" label="Trading Name"  value={chips} onChange={handleChipChange} />
