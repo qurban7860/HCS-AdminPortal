@@ -31,20 +31,23 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
 export default function SecurityUserEditForm() {
   const userRolesString = localStorage.getItem('userRoles');
+  const ROLES = [];
   // const userRoles = JSON.parse(userRolesString);
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
   const regEx = /^[2][0-9][0-9]$/;
-  const { regions } = useSelector((state) => state.region);
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
+  const { activeRegions } = useSelector((state) => state.region);
   const { activeMachines, customerMachines } = useSelector((state) => state.machine)
-  const { spCustomers } = useSelector((state) => state.customer);
-  const ROLES = [];
+  const { spCustomers, activeCustomers } = useSelector((state) => state.customer);
+ 
   const securityUserRoles = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
   if (securityUser?.roles) {
     securityUser?.roles.map((role) => securityUserRoles.push(role?._id, role.name));
   }
+  
+  const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
   const [selectedRegions, setSelectedRegions] = useState([]);
   const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
   const [filteredMachines, setFilteredMachines] = useState(activeMachines);
@@ -58,10 +61,11 @@ export default function SecurityUserEditForm() {
   const [valid, setValid] = useState(true);
   const [phone, setPhone] = useState('');
   const [sortedRoles, setSortedRoles] = useState([]);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
+  
 
   const styles = { notchedOutline: { borderColor: valid ? '' : 'red' } };
 
@@ -261,26 +265,28 @@ export default function SecurityUserEditForm() {
     setEmail(trimmedEmail);
   };
 
-  const handleRegionsChange = async (event, selectedOptions) => {
-    setSelectedRegions(selectedOptions);
-    setCustomerArr([]);
-    setMachineArr([]);
 
-    if(selectedOptions.length > 0){
-      const selectedCountries = selectedOptions?.flatMap((region) =>
-      region.countries?.map((country) => country.country_name));
+  //  -------------------------------DO NOT REMOVE------------------------------------
+  // const handleRegionsChange = async (event, selectedOptions) => {
+  //   setSelectedRegions(selectedOptions);
+  //   setCustomerArr([]);
+  //   setMachineArr([]);
 
-      const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
-      const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
-      setFilteredMachines(machineResponse);
-      setFilteredCustomers(customerResponse);
-    }else{
-      setCustomerArr([]);
-      setMachineArr([]);
-      setFilteredCustomers(spCustomers);
-      setFilteredMachines(activeMachines);
-    }
-  };
+  //   if(selectedOptions.length > 0){
+  //     const selectedCountries = selectedOptions?.flatMap((region) =>
+  //     region.countries?.map((country) => country.country_name));
+
+  //     const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
+  //     const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
+  //     setFilteredMachines(machineResponse);
+  //     setFilteredCustomers(customerResponse);
+  //   }else{
+  //     setCustomerArr([]);
+  //     setMachineArr([]);
+  //     setFilteredCustomers(spCustomers);
+  //     setFilteredMachines(activeMachines);
+  //   }
+  // };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -494,21 +500,27 @@ export default function SecurityUserEditForm() {
               />
             </Box>
             <Box
-            rowGap={2}
-            columnGap={2}
-            display="grid"
-            gridTemplateColumns={{
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(3, 1fr)',
-            }}
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
             >
               <Autocomplete
+                  sx={{ mt: 3 }}
                   multiple
                   id="regions-autocomplete"
-                  options={regions}
+                  options={activeRegions}
                   value={selectedRegions}
-                  onChange={handleRegionsChange}
-                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    if (newValue) {                    
+                      setSelectedRegions(newValue);
+                    } else {
+                      setSelectedRegions('');
+                    }
+                  }}                  getOptionLabel={(option) => option.name}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -524,24 +536,16 @@ export default function SecurityUserEditForm() {
                 multiple
                 required
                 value={customersArr || null}
-                options={filteredCustomers}
+                options={activeCustomers}
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
-                  if (newValue) {
-                    dispatch(resetContacts());
+                  if (newValue) {                    
                     setCustomerArr(newValue);
-                    setContactVal('');
                   } else {
                     setCustomerArr('');
-                    dispatch(resetContacts());
-                    setContactVal('');
-                    handleNameChange('');
-                    setPhone('');
-                    setEmail('');
                   }
-                }}
-                id="controllable-states-demo"
+                }}                id="controllable-states-demo"
                 renderOption={(props, option) => (
                   <li {...props} key={option.id}>
                     {option.name}
@@ -564,7 +568,7 @@ export default function SecurityUserEditForm() {
                 multiple
                 required
                 value={machinesArr || null}
-                options={filteredMachines}
+                options={activeMachines}
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {

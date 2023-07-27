@@ -31,7 +31,6 @@ export default function ViewFormField({
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
   const { isMobile } = useResponsive();
-  console.log('chiplabel------>', chipLabel);
 
   useEffect(() => {
     if (customerVerifiedBy) {
