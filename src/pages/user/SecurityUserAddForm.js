@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -95,7 +95,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     dispatch(getActiveSPCustomers());
     dispatch(getActiveCustomers());
     dispatch(getActiveRegions());
