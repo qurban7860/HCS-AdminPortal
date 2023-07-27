@@ -64,6 +64,7 @@ export default function DocumentListTableRow({
 }) {
   const {
     displayName,
+    documentVersions,
     docType,
     machine,
     customer,
@@ -113,6 +114,8 @@ export default function DocumentListTableRow({
         </>)}
         <TableCell align="left">{docCategory?.name}</TableCell>
         <TableCell align="left">{docType?.name}</TableCell>
+        <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>
+
         <TableCell align="center">
           {' '}
           <Switch checked={customerAccess} disabled size="small" />{' '}

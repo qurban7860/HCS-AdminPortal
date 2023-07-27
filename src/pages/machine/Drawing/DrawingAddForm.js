@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,7 +8,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { LoadingButton } from '@mui/lab';
 import { TextField, Autocomplete, Box, Card, Grid, Stack, Typography } from '@mui/material';
 // slice
-import { addDrawing, setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
+import drawing, { addDrawing, setDrawingFormVisibility } from '../../../redux/slices/products/drawing';
 import { getActiveDocumentCategories, resetActiveDocumentCategories } from '../../../redux/slices/document/documentCategory';
 import { getActiveDocumentTypesWithCategory, resetActiveDocumentTypes } from '../../../redux/slices/document/documentType';
 import { resetActiveDocuments, getActiveDocumentsByType } from '../../../redux/slices/document/document';
@@ -25,6 +25,8 @@ export default function DrawingAddForm() {
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocuments } = useSelector((state) => state.document);
+  const { drawings, isLoading } = useSelector((state) => state.drawing );
+  const [ filteredDocuments, setFilteredDocuments ] = useState([])
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -33,6 +35,12 @@ export default function DrawingAddForm() {
   useEffect(() => {
     dispatch(getActiveDocumentCategories({drawing: true}));
   },[dispatch]);
+
+  useEffect(() => {
+    const filteredArray = activeDocuments.filter(obj1 => drawings.some(obj2 => obj1._id === obj2.document._id));
+    setFilteredDocuments(filteredArray);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[activeDocuments, drawings])
 
   const DrawingAddSchema = Yup.object().shape({
     document: Yup.object().required('Document is required').nullable(),
@@ -82,7 +90,7 @@ export default function DrawingAddForm() {
             enqueueSnackbar('Create success!');
             dispatch(setDrawingFormVisibility(false));
         } catch (error) {
-            enqueueSnackbar('Create failed!', {variant: 'error'});
+            enqueueSnackbar(error, {variant: 'error'});
             console.error( error);
         };
     }
@@ -117,6 +125,7 @@ export default function DrawingAddForm() {
                       if(newValue){
                       setValue("documentCategory", newValue);
                       }else{
+                        setValue("documentCategory", null);
                         setValue("documentType", null);
                         setValue("document", null);
                         dispatch(resetActiveDocumentTypes())
@@ -184,7 +193,7 @@ export default function DrawingAddForm() {
                   render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                   <Autocomplete
                     {...field}
-                    options={activeDocuments}
+                    options={filteredDocuments}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => option.name}
                     onChange={(event, value) => field.onChange(value)}

@@ -188,7 +188,7 @@ export default function MachineEditForm() {
   } = watch();
 
   useLayoutEffect(() => {
-    window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
+    // window.history.pushState({}, null, `/products/machines/${machine._id}/edit`);
     dispatch(getActiveCustomers());
     dispatch(getActiveMachines());
     dispatch(getActiveMachineModels());
@@ -424,7 +424,6 @@ console.log("data : ", data);
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
-                        disabled={!!machine.machineModel}
                         id="controllable-states-demo"
                         options={activeMachineModels}
                         isOptionEqualToValue={(option, value) => option.name === value.name}

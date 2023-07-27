@@ -231,12 +231,11 @@ export function updateDocument(documentId , params, customerId, machineId) {
 
       const formData = new FormData();
       formData.append('isActive', params?.isActive);
-      // if(params?.customerAccess){
-        formData.append('customerAccess', params.customerAccess);
-        // }
-      if(params?.referenceNumber){
-        formData.append('referenceNumber', params.referenceNumber);
-      }
+
+      formData.append('customerAccess', params.customerAccess);
+
+      formData.append('referenceNumber', params.referenceNumber);
+      
       if(params?.versionNo){
         formData.append('versionNo', params.versionNo);
       }
@@ -284,6 +283,9 @@ export function getDocuments(customerId,machineId,drawing) {
     const params = {
       isArchived: false,
       basic: true,
+      orderBy : {
+        createdAt:-1
+      }
     }
     if(drawing) {
       params.forDrawing = true;

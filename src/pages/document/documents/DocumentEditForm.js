@@ -24,7 +24,7 @@ import {
   updateDocument,
 } from '../../../redux/slices/document/document';
 
-import {
+import documentCategory, {
   setDocumentCategoryFormVisibility,
   getActiveDocumentCategories,
 } from '../../../redux/slices/document/documentCategory';
@@ -45,39 +45,33 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
   const { enqueueSnackbar } = useSnackbar();
   const [documentTypeVal, setDocumentTypeVal] = useState('');
   const [documentCategoryVal, setDocumentCategoryVal] = useState('');
-  const [descriptionVal, setDescriptionVal] = useState('');
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [nameVal, setNameVal] = useState('');
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setNameVal(document?.displayName);
-    setCustomerAccessVal(document?.customerAccess);
-    setIsActive(document?.isActive);
     setDocumentCategoryVal(document?.docCategory);
     setDocumentTypeVal(document?.docType);
-    setDescriptionVal(document?.description);
-    // dispatch(getActiveDocumentCategories())
-    // dispatch(getActiveDocumentTypes())
+    setCustomerAccessVal(document?.customerAccess);
+    setIsActive(document?.isActive);
   }, [dispatch, document]);
 
   const EditDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(40),
+    displayName: Yup.string().max(40).required(),
+    // documentCategory: Yup.object().required("Document Category is required!").nullable(),
+    // documentType: Yup.object().required("Document Type is required!").nullable(),
     description: Yup.string().max(10000),
-    // image: Yup.mixed().required("Image Field is required!"),
-    referenceNumber: Yup.string().max(15),
+    referenceNumber: Yup.string().max(20),
     versionNo: Yup.string().max(10),
     isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
-      displayName: nameVal,
+      displayName: document?.displayName || '',
       description: document?.description || '',
-      // image: null,
       referenceNumber: document?.referenceNumber || '',
       versionNo: document?.versionNo || '',
       isActive: document?.isActive,
@@ -99,22 +93,8 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
     formState: { isSubmitting },
   } = methods;
 
-  const values = watch();
-
   const onSubmit = async (data) => {
     try {
-      if (nameVal) {
-        data.displayName = nameVal;
-      }
-      if (documentTypeVal) {
-        data.documentType = documentTypeVal._id;
-      }
-      // if(fileCategoryVal){
-      //   data.category = fileCategoryVal._id
-      // }
-      if (descriptionVal) {
-        data.description = descriptionVal;
-      }
       data.customerAccess = customerAccessVal;
       data.isActive = isActive;
       await dispatch(
@@ -128,8 +108,6 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
       await dispatch(getDocument(document?._id));
       enqueueSnackbar(Snacks.updatedDoc, { variant: `success` });
 
-      setDescriptionVal('');
-      setNameVal('');
       setDocumentCategoryVal('');
       setDocumentTypeVal('');
       reset();
@@ -143,37 +121,6 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
     dispatch(setDocumentEditFormVisibility(false));
   };
 
-  // if not used, remove the unused vars
-  // const togleCategoryPage = () => {
-  //   dispatch(setCustomerDocumentEdit(true));
-  //   dispatch(setDocumentCategoryFormVisibility(true));
-  //   dispatch(setCustomerDocumentEditFormVisibility(false));
-  // };
-  // const togleDocumentNamePage = () => {
-  //   dispatch(setCustomerDocumentEdit(true));
-  //   dispatch(setDocumentTypeFormVisibility(true));
-  //   dispatch(setCustomerDocumentEditFormVisibility(false));
-  // };
-
-  const handleDrop = useCallback(
-    (acceptedFiles) => {
-      const file = acceptedFiles[0];
-
-      const newFile = Object.assign(file, {
-        preview: URL.createObjectURL(file),
-      });
-
-      if (file) {
-        setValue('image', newFile, { shouldValidate: true });
-      }
-    },
-    [setValue]
-  );
-
-  const handleRemoveFile = () => {
-    setValue('cover', null);
-  };
-
   const handleChange = () => {
     setCustomerAccessVal(!customerAccessVal);
   };
@@ -181,19 +128,8 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
     setIsActive(!isActive);
   };
 
-  const handleChangeDescription = (event) => {
-    setDescriptionVal(event.target.value);
-  };
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Box
-        column={12}
-        rowGap={3}
-        columnGap={2}
-        // display="grid"
-        gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
-      >
         <Grid container xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
@@ -205,72 +141,41 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
                 >
+
                   <Autocomplete
                     // freeSolo
                     disabled
+                    name="documentCategory"
                     value={documentCategoryVal || null}
                     options={activeDocumentCategories}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => option.name}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setDocumentCategoryVal(newValue);
-                        // dispatch(getActiveDocumentTypesWithCategory(newValue?._id))
-                        // setDocumentTypeVal("");
-                      } else {
-                        setDocumentCategoryVal('');
-                        // setDocumentTypeVal("");
-                        // dispatch(getActiveDocumentTypes())
-                      }
-                    }}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        {option.name}
-                      </li>
-                    )}
                     id="controllable-states-demo"
                     renderInput={(params) => (
                       <TextField {...params} required label="Document Category" />
                     )}
                     ChipProps={{ size: 'small' }}
                   />
+
                   <Autocomplete
                     // freeSolo
                     disabled
+                    name="documentType"
                     value={documentTypeVal || null}
                     options={activeDocumentTypes}
                     isOptionEqualToValue={(option, value) => option.name === value.name}
                     getOptionLabel={(option) => option.name}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setDocumentTypeVal(newValue);
-                        // if(!documentCategoryVal){
-                        //   setDocumentCategoryVal(newValue?.docCategory);
-                        // }
-                      } else {
-                        setDocumentTypeVal('');
-                      }
-                    }}
-                    renderOption={(props, option) => (
-                      <li {...props} key={option._id}>
-                        {option.name}
-                      </li>
-                    )}
                     id="controllable-states-demo"
                     renderInput={(params) => (
                       <TextField {...params} required label="Document Type" />
                     )}
                     ChipProps={{ size: 'small' }}
                   />
+
                 </Box>
-                <RHFTextField
-                  name="displayName"
-                  value={nameVal}
-                  label="Document Name*"
-                  onChange={(e) => {
-                    setNameVal(e.target.value);
-                  }}
-                />
+
+                <RHFTextField name="displayName" label="Document Name*" />
+
                 <Box
                   rowGap={3}
                   columnGap={2}
@@ -279,14 +184,9 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
                 >
                   <RHFTextField name='referenceNumber' label='Reference Number' />
                 </Box>
-                <RHFTextField
-                  value={descriptionVal}
-                  name="description"
-                  label="Description"
-                  onChange={handleChangeDescription}
-                  minRows={3}
-                  multiline
-                />
+
+                <RHFTextField name="description" label="Description" minRows={3} multiline />
+
                   <ToggleButtons
                     isDocument
                     customerAccessVal={customerAccessVal}
@@ -295,19 +195,11 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
                     handleIsActiveChange={handleIsActiveChange}
                   />
 
-                {/* <RHFUpload
-                  name="image"
-                  maxSize={3145728}
-                  onDrop={handleDrop}
-                  onRemove={handleDrop}
-               /> */}
-                {/* <RHFSwitch name="isActive" labelPlacement="start" label={ <Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } /> */}
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>
           </Grid>
         </Grid>
-      </Box>
     </FormProvider>
   );
 }

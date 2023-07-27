@@ -302,15 +302,26 @@ export default function DocumentAddForm({
         validateFileType
       )
       .nullable(true),
-      referenceNumber: Yup.string().max(15),
-      versionNo: Yup.string().max(10),
+      referenceNumber: Yup.string().max(20)
+      .test('Reference number', 'Reference number can not have spaces', numValue =>!(numValue.includes(' '))),
+
+      versionNo: Yup.number()
+      .typeError('Version number must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      })
+      .positive("Version number must be a positive number!")
+      .integer("Version number can't include a decimal point")
+      .test('no-spaces', 'Version number cannot have spaces', value => !(value && value.toString().includes(' ')))
+      .max(1000, 'Version number must be less than or equal to 1000').nullable(),
       isActive: Yup.boolean(),
 
   });
 
   const defaultValues = useMemo(
     () => ({
-      displayName: nameVal,
+      displayName: '',
       description: '',
       imultiUpload: null,
       referenceNumber: '',
@@ -336,10 +347,8 @@ export default function DocumentAddForm({
     formState: { isSubmitting },
   } = methods;
 
-  useEffect(() => {
-    reset(defaultValues);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // const {  documentType, documentCategory, displayName, referenceNumber, versionNo, description } = watch();
+
   const values = watch();
 
   const onSubmit = async (data) => {

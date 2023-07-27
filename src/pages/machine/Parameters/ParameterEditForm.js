@@ -147,6 +147,7 @@ export default function ParameterEditForm() {
             <Stack spacing={3}>
               
                 <Autocomplete
+                  disabled
                   value={paramVal || null}
                   options={techparamcategories}
                   getOptionLabel={(option) => option.name}

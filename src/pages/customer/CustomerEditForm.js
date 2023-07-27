@@ -82,7 +82,7 @@ export default function CustomerEditForm() {
   const values = watch();
 
   useLayoutEffect(() => {
-    window.history.pushState({}, null, `/customers/${customer._id}/edit`);
+    // window.history.pushState({}, null, `/customers/${customer._id}/edit`);
     dispatch(getActiveContacts(customer._id));
     dispatch(getSites(customer._id));
     dispatch(getSPContacts());
