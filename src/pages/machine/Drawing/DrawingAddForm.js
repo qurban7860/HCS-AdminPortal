@@ -26,6 +26,7 @@ export default function DrawingAddForm() {
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocuments } = useSelector((state) => state.document);
   const { drawings, isLoading } = useSelector((state) => state.drawing );
+  console.log("drawings : ",drawings)
   const [ filteredDocuments, setFilteredDocuments ] = useState([])
 
   const dispatch = useDispatch();
@@ -34,13 +35,16 @@ export default function DrawingAddForm() {
 
   useEffect(() => {
     dispatch(getActiveDocumentCategories({drawing: true}));
+    setFilteredDocuments([]);
   },[dispatch]);
 
   useEffect(() => {
-    const filteredArray = activeDocuments.filter(obj1 => drawings.some(obj2 => obj1._id === obj2.document._id));
-    setFilteredDocuments(filteredArray);
+    if (drawings) {
+      const filteredArray = activeDocuments.filter(obj1 => !drawings.some(obj2 => obj1?._id === obj2?.document?._id));
+      setFilteredDocuments(filteredArray);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[activeDocuments, drawings])
+  }, [activeDocuments, drawings]);
 
   const DrawingAddSchema = Yup.object().shape({
     document: Yup.object().required('Document is required').nullable(),
@@ -123,11 +127,17 @@ export default function DrawingAddForm() {
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
                       if(newValue){
-                      setValue("documentCategory", newValue);
+                        setValue("documentCategory", newValue);
+                        if(newValue._id !== documentCategory._id){
+                        setValue("documentType", null);
+                        setValue("document", null);
+                        setFilteredDocuments([]);
+                        }
                       }else{
                         setValue("documentCategory", null);
                         setValue("documentType", null);
                         setValue("document", null);
+                        setFilteredDocuments([]);
                         dispatch(resetActiveDocumentTypes())
                         dispatch(resetActiveDocuments())
                       }
@@ -163,9 +173,14 @@ export default function DrawingAddForm() {
                     onChange={(event, newValue) => {
                           if (newValue) {
                             field.onChange(newValue);
+                            if(newValue._id !== documentCategory._id){
+                            setValue("document", null);
+                            setFilteredDocuments([]);
+                            }
                           } else {
                             setValue("documentType", null);
                             setValue("document", null);
+                            setFilteredDocuments([]);
                             dispatch(resetActiveDocuments())
                           }
                         }}
