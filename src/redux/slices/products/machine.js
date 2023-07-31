@@ -20,6 +20,7 @@ const initialState = {
   machines: [],
   connectedMachine: {},
   activeMachines: [],
+  allMachines:[],
   customerMachines:[],
   machineLatLongCoordinates: [],
   transferDialogBoxVisibility: false
@@ -69,11 +70,18 @@ const slice = createSlice({
       state.machines = action.payload;
       state.initial = true;
     },
-    // GET Machines
+    // GET Active Machines
     getActiveMachinesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
       state.activeMachines = action.payload;
+      state.initial = true;
+    },
+    // GET All Machines
+    getAllMachinesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.allMachines = action.payload;
       state.initial = true;
     },
 
@@ -208,6 +216,30 @@ export function getActiveMachines() {
         }
       });
       dispatch(slice.actions.getActiveMachinesSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ----------------------------get All Machines------------------------------------------
+
+export function getAllMachines() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          unfiltered: true,
+          isActive: true,
+          isArchived: false
+        }
+      });
+      dispatch(slice.actions.getAllMachinesSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
     } catch (error) {
       console.log(error);

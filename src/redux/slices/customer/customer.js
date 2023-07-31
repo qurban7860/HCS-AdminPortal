@@ -16,6 +16,7 @@ const initialState = {
   error: null,
   customers: [],
   activeCustomers: [],
+  unfilteredCustomers: [],
   spCustomers: [],
   customer: {},
 };
@@ -59,6 +60,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.activeCustomers = action.payload;
+      state.initial = true;
+    },
+
+    // GET Active Customers
+    getAllCustomersSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.unfilteredCustomers = action.payload;
       state.initial = true;
     },
 
@@ -161,6 +170,32 @@ export function getActiveCustomers() {
         }
       });
       dispatch(slice.actions.getActiveCustomersSuccess(response.data));
+      // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ---------------------------- get Active Customers------------------------------------------
+
+export function getAllCustomers() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}crm/customers`,
+      {
+        params: {
+          unfiltered: true,
+          isActive: true,
+          isArchived: false
+        }
+      });
+      console.log('response.data--------->', response.data);
+      dispatch(slice.actions.getAllCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {
       console.log(error);

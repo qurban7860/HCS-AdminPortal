@@ -131,6 +131,6 @@ export const ICONS = {
   },
   REGION: {
     icon: 'mdi:map-marker-circle',
-    heading: 'Region',
+    heading: 'Regions',
   },
 };
