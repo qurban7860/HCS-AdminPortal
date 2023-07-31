@@ -96,6 +96,10 @@ export default function SecurityUserProfile() {
       email: securityUser?.email || '',
       login: securityUser?.login || '',
       roles: securityUser?.roles || [],
+      regions: securityUser?.regions || [],
+      countries: securityUser?.regions ? securityUser.regions.flatMap(region => region.countries) : [],
+      customers: securityUser?.customers || [],
+      machines: securityUser?.machines || [],
       isActive: securityUser?.isActive || false,
       createdByFullName: securityUser?.createdBy?.name || '',
       createdAt: securityUser?.createdAt || '',
@@ -178,6 +182,27 @@ export default function SecurityUserProfile() {
               sm={6}
               heading="Roles"
               userRolesChips={defaultValues?.roles}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Regions"
+              arrayParam={defaultValues?.regions}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Countries"
+              chipLabel='country_name'
+              arrayParam={defaultValues?.countries}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Customers"
+              arrayParam={defaultValues?.customers}
+            />
+            <ViewFormField
+              sm={12}
+              heading="Machines"
+              arrayParam={defaultValues?.machines}
             />
           </Grid>
           <ViewFormField />
