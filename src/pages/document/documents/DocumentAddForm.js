@@ -323,7 +323,7 @@ export default function DocumentAddForm({
     () => ({
       displayName: '',
       description: '',
-      imultiUpload: null,
+      multiUpload: '',
       referenceNumber: '',
       versionNo: '',
       isActive: true,
@@ -390,7 +390,6 @@ export default function DocumentAddForm({
           handleFormVisibility();
         }
       } else if (selectedVersionValue === 'newVersion') {
-        console.log('newVersion ');
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
         if (!customerPage && !machinePage && machineDrawings ) {
@@ -814,11 +813,7 @@ export default function DocumentAddForm({
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField name='referenceNumber' label='Reference Number' />
-                  <TextField name='versionNo' label='Version Number' type='number'
-                  inputProps={{
-                    inputMode: 'numeric',
-                    pattern: '[0-9]*',
-                  }} />
+                  <RHFTextField name='versionNo' label='Version Number'  />
                 </Box>)}
 
                 {(selectedValue === 'new' ||
@@ -841,14 +836,16 @@ export default function DocumentAddForm({
                       name="multiUpload"
                       // maxSize={3145728}
                       onDrop={handleDropMultiFile}
-                      onRemove={(inputFile) =>
-                        setValue(
-                          'multiUpload',
-                          values.multiUpload &&
-                            values.multiUpload?.filter((file) => file !== inputFile),
-                          { shouldValidate: true }
-                        )
-                      }
+                      onRemove={(inputFile) => {
+                        let updatedFiles;
+                        if (values.multiUpload) {
+                          updatedFiles = values.multiUpload.filter((file) => file !== inputFile);
+                        }
+                        if (updatedFiles.length === 0) {
+                          updatedFiles = '';
+                        }
+                        setValue('multiUpload', updatedFiles, { shouldValidate: true });
+                      }}
                       onRemoveAll={() => setValue('multiUpload', '', { shouldValidate: true })}
                     />
                   </Grid>
