@@ -558,7 +558,6 @@ export default function SecurityUserEditForm() {
                 renderInput={(params) => (
                   <TextField {...params} name="customers" label="Customers"/>
                 )}
-                ChipProps={{ size: 'small' }}
               >
                 {(option) => (
                   <div key={option._id}>
@@ -573,8 +572,8 @@ export default function SecurityUserEditForm() {
                 required
                 value={machinesArr || null}
                 options={activeMachines}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
+                isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setMachineArr(newValue);
@@ -585,13 +584,12 @@ export default function SecurityUserEditForm() {
                 id="machine"
                 renderOption={(props, option) => (
                   <li {...props} key={option.id}>
-                    {option.name}
+                    {`${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
                   </li>
                 )}
                 renderInput={(params) => (
                   <TextField {...params} name="machines" label="Machines" />
                 )}
-                ChipProps={{ size: 'small' }}
               >
                 {(option) => (
                   <div key={option._id}>

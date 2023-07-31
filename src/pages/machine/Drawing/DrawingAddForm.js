@@ -128,7 +128,7 @@ export default function DrawingAddForm() {
                     onChange={(event, newValue) => {
                       if(newValue){
                         setValue("documentCategory", newValue);
-                        if(newValue._id !== documentCategory._id){
+                        if(newValue._id !== documentCategory?._id){
                         setValue("documentType", null);
                         setValue("document", null);
                         setFilteredDocuments([]);
@@ -209,8 +209,8 @@ export default function DrawingAddForm() {
                   <Autocomplete
                     {...field}
                     options={filteredDocuments}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
-                    getOptionLabel={(option) => option.name}
+                    isOptionEqualToValue={(option, value) => option.displayName === value.displayName}
+                    getOptionLabel={(option) => option.displayName}
                     onChange={(event, value) => field.onChange(value)}
                     id="controllable-states-demo"
                     renderInput={(params) => <TextField 
@@ -229,7 +229,7 @@ export default function DrawingAddForm() {
 
                 </Box>
 
-                <RHFSwitch
+                    <RHFSwitch
                         name="isActive"
                         labelPlacement="start"
                         label={

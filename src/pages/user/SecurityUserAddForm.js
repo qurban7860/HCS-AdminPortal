@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -31,11 +31,10 @@ import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 // slice
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
-import { getActiveSPCustomers, getActiveCustomers, getCustomersAgainstCountries } from '../../redux/slices/customer/customer';
-import { getContacts, resetContacts, getActiveContacts } from '../../redux/slices/customer/contact';
+import { getActiveSPCustomers } from '../../redux/slices/customer/customer';
+import { getActiveContacts, resetActiveContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
-import { getActiveRegions } from '../../redux/slices/region/region';
-import { getCustomerArrayMachines, getActiveMachines, getMachinesAgainstCountries } from '../../redux/slices/products/machine';
+import { getRegions } from '../../redux/slices/region/region';
 // current user
 import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
@@ -52,22 +51,16 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
-  const { spCustomers, activeCustomers } = useSelector((state) => state.customer);
-  const { roles } = useSelector((state) => state.role);
-  const { activeRegions } = useSelector((state) => state.region);
-  const { activeContacts } = useSelector((state) => state.contact);
-  const { activeMachines, customerMachines } = useSelector((state) => state.machine);
-
   const regEx = /^[^2]*$/;
   const [selectedRegions, setSelectedRegions] = useState([]);
-  const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
-  const [filteredMachines, setFilteredMachines] = useState(activeMachines);
+  const { contacts, activeContacts } = useSelector((state) => state.contact);
+  const { roles } = useSelector((state) => state.role);
+  const { regions } = useSelector((state) => state.region);
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const { spCustomers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
-  const [customersArr, setCustomerArr] = useState([]);
-  const [machinesArr, setMachineArr] = useState([]);
   const [contactVal, setContactVal] = useState('');
   const [sortedRoles, setSortedRoles] = useState([]);
   const [sortedRegions, setSortedRegions] = useState([]);
@@ -92,20 +85,20 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   // })
 
   const dispatch = useDispatch();
+
   const navigate = useNavigate();
+
   const { enqueueSnackbar } = useSnackbar();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     dispatch(getActiveSPCustomers());
-    dispatch(getActiveCustomers());
-    dispatch(getActiveRegions());
-    dispatch(getActiveMachines());
+    dispatch(getRegions());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
   useEffect(() => {
-    if (customerVal) {
+    if (customerVal?._id) {
       dispatch(getActiveContacts(customerVal._id));
     }
     if (userRoles) {
@@ -204,14 +197,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     if (customerVal) {
       data.customer = customerVal._id;
     }
-    if (customersArr.length > 0) {
-      const selectedCustomerIDs = customersArr.map((customer) => customer._id);
-      data.customers = selectedCustomerIDs;
-    }
-    if(machinesArr.length > 0){
-      const selectedMachineIDs = machinesArr.map((machine) => machine._id);
-      data.machines = selectedMachineIDs;
-    }
     if (contactVal) {
       data.contact = contactVal._id;
     }
@@ -233,7 +218,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
     try {
       const response = await dispatch(addSecurityUser(data));
-      await dispatch(resetContacts());
+      await dispatch(resetActiveContacts());
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
     } catch (error) {
@@ -252,27 +237,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     navigate(PATH_SECURITY.users.list);
   };
 
-  //  -------------------------------DO NOT REMOVE------------------------------------
-  // const handleRegionsChange = async (event, selectedOptions) => {
-  //   setSelectedRegions(selectedOptions);
-    // setCustomerArr([]);
-    // setMachineArr([]);
-
-    // if(selectedOptions.length > 0){
-    //   const selectedCountries = selectedOptions?.flatMap((region) =>
-    //   region.countries?.map((country) => country.country_name));
-
-    //   const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
-    //   const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
-    //   setFilteredMachines(machineResponse);
-    //   setFilteredCustomers(customerResponse);
-    // }else{
-    //   setCustomerArr([]);
-    //   setMachineArr([]);
-    //   setFilteredCustomers(spCustomers);
-    //   setFilteredMachines(activeMachines);
-    // }
-  // };
+  const handleRegionsChange = (event, selectedOptions) => {
+    setSelectedRegions(selectedOptions);
+  };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -297,12 +264,12 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
                   if (newValue) {
-                    dispatch(resetContacts());
+                    dispatch(resetActiveContacts());
                     setCustomerVal(newValue);
                     setContactVal('');
                   } else {
                     setCustomerVal('');
-                    dispatch(resetContacts());
+                    dispatch(resetActiveContacts());
                     setContactVal('');
                     handleNameChange('');
                     setPhone('');
@@ -444,29 +411,13 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 label="Roles"
                 options={sortedRoles}
               />
-            </Box>
-            <Box
-              rowGap={3}
-              columnGap={2}
-              display="grid"
-              gridTemplateColumns={{
-                xs: 'repeat(1, 1fr)',
-                sm: 'repeat(1, 1fr)',
-              }}
-            >
               <Autocomplete
-                  sx={{ mt: 3 }}
                   multiple
                   id="regions-autocomplete"
-                  options={activeRegions}
+                  options={regions}
                   value={selectedRegions}
-                  onChange={(event, newValue) => {
-                    if (newValue) {                    
-                      setSelectedRegions(newValue);
-                    } else {
-                      setSelectedRegions('');
-                    }
-                  }}                  getOptionLabel={(option) => option.name}
+                  onChange={handleRegionsChange}
+                  getOptionLabel={(option) => option.name}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -476,72 +427,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                     />
                   )}
                 />
-
-              <Autocomplete
-                // freeSolo
-                multiple
-                required
-                value={customersArr || null}
-                options={activeCustomers}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                onChange={(event, newValue) => {
-                  if (newValue) {                    
-                    setCustomerArr(newValue);
-                  } else {
-                    setCustomerArr('');
-                  }
-                }}                id="controllable-states-demo"
-                renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
-                    {option.name}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} name="customers" label="Customers"/>
-                )}
-                ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
-                  <div key={option._id}>
-                    <span>{option.name}</span>
-                  </div>
-                )}
-              </Autocomplete>
-
-              <Autocomplete
-                // freeSolo
-                multiple
-                required
-                value={machinesArr || null}
-                options={activeMachines}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    setMachineArr(newValue);
-                  } else {
-                    setMachineArr([]);
-                  }
-                }}
-                id="machine"
-                renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
-                    {option.name}
-                  </li>
-                )}
-                renderInput={(params) => (
-                  <TextField {...params} name="machines" label="Machines" />
-                )}
-                ChipProps={{ size: 'small' }}
-              >
-                {(option) => (
-                  <div key={option._id}>
-                    <span>{option.name}</span>
-                  </div>
-                )}
-              </Autocomplete>
-
             </Box>
             <Grid item md={12}>
               <RHFSwitch

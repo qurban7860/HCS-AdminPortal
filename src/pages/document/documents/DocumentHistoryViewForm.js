@@ -77,10 +77,10 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
 
 // get machine data for machine portal
   useEffect(() => {
-    if (documentHistory?.machine && !machinePage) {
+    if (documentHistory?.machine && !machinePage && !drawingPage) {
       dispatch(getMachine(documentHistory.machine._id));
     }
-  }, [documentHistory, machinePage, dispatch]);
+  }, [documentHistory, machinePage, drawingPage, dispatch]);
 
 // get customer data for customer portal
   useEffect(() => {

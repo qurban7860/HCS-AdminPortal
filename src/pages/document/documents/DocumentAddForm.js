@@ -291,7 +291,7 @@ export default function DocumentAddForm({
   };
 
   const AddDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(40, 'Document Name must not exceed 40 characters'),
+    displayName: Yup.string().max(150, 'Document Name must not exceed 140 characters').label('Display Name'),
     // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
@@ -800,6 +800,7 @@ export default function DocumentAddForm({
                     name="displayName"
                     value={displayNameVal}
                     label="Document Name"
+                    multiline
                     onChange={(e) => {
                       setDisplayNameVal(e.target.value);
                     }}
@@ -813,7 +814,11 @@ export default function DocumentAddForm({
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField name='referenceNumber' label='Reference Number' />
-                  <RHFTextField name='versionNo' label='Version Number' />
+                  <TextField name='versionNo' label='Version Number' type='number'
+                  inputProps={{
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                  }} />
                 </Box>)}
 
                 {(selectedValue === 'new' ||
