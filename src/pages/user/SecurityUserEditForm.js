@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -18,11 +18,10 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../com
 // slice
 import {
   updateSecurityUser,
-  setSecurityUserEditFormVisibility,
 } from '../../redux/slices/securityUser/securityUser';
-import { getActiveSPCustomers, getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getAllCustomers } from '../../redux/slices/customer/customer';
 import { getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
-import { getActiveMachines } from '../../redux/slices/products/machine';
+import { getAllMachines } from '../../redux/slices/products/machine';
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { getActiveRegions } from '../../redux/slices/region/region';
 // current user
@@ -39,8 +38,8 @@ export default function SecurityUserEditForm() {
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
   const { activeRegions } = useSelector((state) => state.region);
-  const { activeMachines, customerMachines } = useSelector((state) => state.machine)
-  const { spCustomers, activeCustomers } = useSelector((state) => state.customer);
+  const { allMachines } = useSelector((state) => state.machine)
+  const { spCustomers, allCustomers } = useSelector((state) => state.customer);
  
   const securityUserRoles = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
@@ -50,8 +49,8 @@ export default function SecurityUserEditForm() {
   
   const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
   const [selectedRegions, setSelectedRegions] = useState([]);
-  const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
-  const [filteredMachines, setFilteredMachines] = useState(activeMachines);
+  // const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
+  // const [filteredMachines, setFilteredMachines] = useState(allMachines);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [customerVal, setCustomerVal] = useState('');
@@ -71,10 +70,10 @@ export default function SecurityUserEditForm() {
   const styles = { notchedOutline: { borderColor: valid ? '' : 'red' } };
 
   useLayoutEffect(() => {
-    dispatch(getActiveSPCustomers());
-    dispatch(getActiveCustomers());
+    // dispatch(getActiveSPCustomers());
+    dispatch(getAllCustomers());
+    dispatch(getAllMachines());
     dispatch(getActiveRegions());
-    dispatch(getActiveMachines());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -288,7 +287,7 @@ export default function SecurityUserEditForm() {
   //     setCustomerArr([]);
   //     setMachineArr([]);
   //     setFilteredCustomers(spCustomers);
-  //     setFilteredMachines(activeMachines);
+  //     setFilteredMachines(allMachines);
   //   }
   // };
 
@@ -540,7 +539,7 @@ export default function SecurityUserEditForm() {
                 multiple
                 required
                 value={customersArr || null}
-                options={activeCustomers}
+                options={allCustomers}
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
@@ -558,6 +557,7 @@ export default function SecurityUserEditForm() {
                 renderInput={(params) => (
                   <TextField {...params} name="customers" label="Customers"/>
                 )}
+                ChipProps={{ size: 'small' }}
               >
                 {(option) => (
                   <div key={option._id}>
@@ -571,7 +571,7 @@ export default function SecurityUserEditForm() {
                 multiple
                 required
                 value={machinesArr || null}
-                options={activeMachines}
+                options={allMachines}
                 getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
                 isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                 onChange={(event, newValue) => {
@@ -590,6 +590,7 @@ export default function SecurityUserEditForm() {
                 renderInput={(params) => (
                   <TextField {...params} name="machines" label="Machines" />
                 )}
+                ChipProps={{ size: 'small' }}
               >
                 {(option) => (
                   <div key={option._id}>
