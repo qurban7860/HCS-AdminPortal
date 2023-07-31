@@ -307,7 +307,7 @@ export default function SecurityUserViewForm() {
             secondParam={customer?.supportManager?.lastName}
           />
         </Grid>
-        <DialogLink content=" Go to customer" onClick={() => handleViewCustomer(customer._id)} />
+        {/* <DialogLink content=" Go to customer" onClick={() => handleViewCustomer(customer._id)} /> */}
       </Dialog>
       <Dialog
         open={openContact}
