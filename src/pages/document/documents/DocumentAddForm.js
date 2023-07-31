@@ -814,7 +814,11 @@ export default function DocumentAddForm({
                   gridTemplateColumns={{ sm: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
                 >
                   <RHFTextField name='referenceNumber' label='Reference Number' />
-                  <RHFTextField name='versionNo' label='Version Number' />
+                  <TextField name='versionNo' label='Version Number' type='number'
+                  inputProps={{
+                    inputMode: 'numeric',
+                    pattern: '[0-9]*',
+                  }} />
                 </Box>)}
 
                 {(selectedValue === 'new' ||
