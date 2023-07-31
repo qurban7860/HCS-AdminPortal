@@ -194,7 +194,6 @@ export function getAllCustomers() {
           isArchived: false
         }
       });
-      console.log('response.data--------->', response.data);
       dispatch(slice.actions.getAllCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {

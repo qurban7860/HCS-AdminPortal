@@ -514,8 +514,8 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 required
                 value={machinesArr || null}
                 options={allMachines}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
+                isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setMachineArr(newValue);
@@ -526,7 +526,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 id="machine"
                 renderOption={(props, option) => (
                   <li {...props} key={option.id}>
-                    {option.name}
+                    {`${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
                   </li>
                 )}
                 renderInput={(params) => (
