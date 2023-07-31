@@ -59,12 +59,12 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
   }, [dispatch, document]);
 
   const EditDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(40).required(),
+    displayName: Yup.string().max(150).label('Display Name').required(),
     // documentCategory: Yup.object().required("Document Category is required!").nullable(),
     // documentType: Yup.object().required("Document Type is required!").nullable(),
     description: Yup.string().max(10000),
-    referenceNumber: Yup.string().max(20),
-    versionNo: Yup.string().max(10),
+    referenceNumber: Yup.string().label('Reference Number').max(20),
+    versionNo: Yup.string().label('Version No').max(10),
     isActive: Yup.boolean(),
   });
 

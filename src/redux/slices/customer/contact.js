@@ -67,6 +67,13 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
+    // RESET ACTIVE CONTACTS
+    resetActiveContacts(state){
+      state.activeContacts = [];
+      state.responseMessage = null;
+      state.success = false;
+      state.isLoading = false;
+    },
       
     // GET Contacts
     getContactsSuccess(state, action) {
@@ -134,6 +141,7 @@ export const {
   setContactEditFormVisibility,
   resetContact,
   resetContacts,
+  resetActiveContacts,
   setResponseMessage,
 } = slice.actions;
 

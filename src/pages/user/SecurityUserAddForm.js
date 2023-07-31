@@ -32,7 +32,7 @@ import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../com
 // slice
 import { addSecurityUser } from '../../redux/slices/securityUser/securityUser';
 import { getActiveSPCustomers } from '../../redux/slices/customer/customer';
-import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
+import { getActiveContacts, resetActiveContacts } from '../../redux/slices/customer/contact';
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { getRegions } from '../../redux/slices/region/region';
 // current user
@@ -98,7 +98,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   }, [dispatch]);
 
   useEffect(() => {
-    if (customerVal) {
+    if (customerVal?._id) {
       dispatch(getActiveContacts(customerVal._id));
     }
     if (userRoles) {
@@ -218,7 +218,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
     try {
       const response = await dispatch(addSecurityUser(data));
-      await dispatch(resetContacts());
+      await dispatch(resetActiveContacts());
       reset();
       navigate(PATH_SECURITY.users.view(response.data.user._id));
     } catch (error) {
@@ -264,12 +264,12 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
                   if (newValue) {
-                    dispatch(resetContacts());
+                    dispatch(resetActiveContacts());
                     setCustomerVal(newValue);
                     setContactVal('');
                   } else {
                     setCustomerVal('');
-                    dispatch(resetContacts());
+                    dispatch(resetActiveContacts());
                     setContactVal('');
                     handleNameChange('');
                     setPhone('');
