@@ -289,7 +289,55 @@ export function getCustomerMachines(customerId) {
         }
       });
       dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
+      return response.data;
       // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getCustomerArrayMachines(customerArr) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines`, 
+      {
+        params: {
+          isActive: true,
+          isArchived: false,
+          customerArr
+        }
+      });
+      dispatch(slice.actions.getCustomerMachinesSuccess(response.data));
+      return response.data;
+      // dispatch(slice.actions.setResponseMessage('Machines loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  };
+}
+
+// ------------------------------------------------------------------------------------
+
+export function getMachinesAgainstCountries(countries) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/machines/getMachinesAgainstCountries`,
+      {
+        params: {
+          countries
+        }
+      });
+      return response.data;
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));

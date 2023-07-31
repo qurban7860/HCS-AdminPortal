@@ -147,6 +147,8 @@ export function addSecurityUser(param) {
     try{
       const data = {
       customer: param.customer,
+      customers: param.customers,
+      machines: param.machines,
       contact: param.contact,
       name: param.name,
       email: param.email,
@@ -178,6 +180,8 @@ export function updateSecurityUser(param,id) {
     try{
       const data = {
         customer: param.customer,
+        customers: param.customers,
+        machines: param.machines,
         contact: param.contact,
         name: param.name,
         email: param.email,

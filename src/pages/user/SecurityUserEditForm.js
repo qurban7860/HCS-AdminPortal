@@ -20,9 +20,11 @@ import {
   updateSecurityUser,
   setSecurityUserEditFormVisibility,
 } from '../../redux/slices/securityUser/securityUser';
-import { getActiveSPCustomers } from '../../redux/slices/customer/customer';
-import { getContacts, getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
+import { getActiveSPCustomers, getActiveCustomers } from '../../redux/slices/customer/customer';
+import { getActiveContacts, resetContacts } from '../../redux/slices/customer/contact';
+import { getActiveMachines } from '../../redux/slices/products/machine';
 import { getRoles } from '../../redux/slices/securityUser/role';
+import { getActiveRegions } from '../../redux/slices/region/region';
 // current user
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
@@ -30,37 +32,49 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
 export default function SecurityUserEditForm() {
   const userRolesString = localStorage.getItem('userRoles');
+  const ROLES = [];
   // const userRoles = JSON.parse(userRolesString);
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
   const regEx = /^[2][0-9][0-9]$/;
-  const { regions } = useSelector((state) => state.region);
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
-  const ROLES = [];
+  const { activeRegions } = useSelector((state) => state.region);
+  const { activeMachines, customerMachines } = useSelector((state) => state.machine)
+  const { spCustomers, activeCustomers } = useSelector((state) => state.customer);
+ 
   const securityUserRoles = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
   if (securityUser?.roles) {
     securityUser?.roles.map((role) => securityUserRoles.push(role?._id, role.name));
   }
+  
+  const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
   const [selectedRegions, setSelectedRegions] = useState([]);
+  const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
+  const [filteredMachines, setFilteredMachines] = useState(activeMachines);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const { spCustomers } = useSelector((state) => state.customer);
   const [customerVal, setCustomerVal] = useState('');
+  const [customersArr, setCustomerArr] = useState([]);
+  const [machinesArr, setMachineArr] = useState([]);
   const { contacts, activeContacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState('');
   const [valid, setValid] = useState(true);
   const [phone, setPhone] = useState('');
   const [sortedRoles, setSortedRoles] = useState([]);
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
+  
 
   const styles = { notchedOutline: { borderColor: valid ? '' : 'red' } };
 
-  useEffect(() => {
-    // dispatch(getActiveSPCustomers());
+  useLayoutEffect(() => {
+    dispatch(getActiveSPCustomers());
+    dispatch(getActiveCustomers());
+    dispatch(getActiveRegions());
+    dispatch(getActiveMachines());
     dispatch(getRoles());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
@@ -83,7 +97,7 @@ export default function SecurityUserEditForm() {
     // userRoles
   ]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const mappedRoles = roles.map((role) => ({
       value: role?._id,
       label: role.name,
@@ -117,6 +131,15 @@ export default function SecurityUserEditForm() {
     }
     if (securityUser.email !== undefined && securityUser.email !== null) {
       setEmail(securityUser?.email);
+    }
+    if (securityUser.customers !== undefined && securityUser.customers.length > 0) {
+      setCustomerArr(securityUser?.customers);
+    }
+    if (securityUser.machines !== undefined && securityUser.machines.length > 0) {
+      setMachineArr(securityUser?.machines);
+
+    }if (securityUser.regions !== undefined && securityUser.regions.length > 0) {
+      setSelectedRegions(securityUser?.regions);
     }
   }, [securityUser]);
   /* eslint-enable */
@@ -195,6 +218,18 @@ export default function SecurityUserEditForm() {
     if (email) {
       data.email = email;
     }
+    if (customersArr.length > 0) {
+      const selectedCustomerIDs = customersArr.map((customer) => customer._id);
+      data.customers = selectedCustomerIDs;
+    }else{
+      data.customers = [];
+    }
+    if(machinesArr.length > 0){
+      const selectedMachineIDs = machinesArr.map((machine) => machine._id);
+      data.machines = selectedMachineIDs;
+    }else{
+      data.machines = [];
+    }
     // submitSecurityUserRoles.push(role?._id,role.name)
     const submitSecurityUserRoles = data.roles.filter((role) =>
       ROLES.some((Role) => Role.value === role)
@@ -202,6 +237,8 @@ export default function SecurityUserEditForm() {
     if(selectedRegions.length > 0){
       const selectedRegionsIDs = selectedRegions.map((region) => region._id);
       data.selectedRegions = selectedRegionsIDs;
+    }else{
+      data.selectedRegions = [];
     }
 
     data.roles = submitSecurityUserRoles;
@@ -225,16 +262,35 @@ export default function SecurityUserEditForm() {
     navigate(PATH_SECURITY.users.view(securityUser._id));
   };
 
-  const handleRegionsChange = (event, selectedOptions) => {
-    setSelectedRegions(selectedOptions);
-  };
-
   const handleInputEmail = (e) => {
     const emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     const trimmedEmail = e.target.value.trim();
     // trimmedEmail.match(emailRegEx) ? setValid(true) : setValid(false);
     setEmail(trimmedEmail);
   };
+
+
+  //  -------------------------------DO NOT REMOVE------------------------------------
+  // const handleRegionsChange = async (event, selectedOptions) => {
+  //   setSelectedRegions(selectedOptions);
+  //   setCustomerArr([]);
+  //   setMachineArr([]);
+
+  //   if(selectedOptions.length > 0){
+  //     const selectedCountries = selectedOptions?.flatMap((region) =>
+  //     region.countries?.map((country) => country.country_name));
+
+  //     const customerResponse = await dispatch(getCustomersAgainstCountries(JSON.stringify(selectedCountries)));
+  //     const machineResponse = await dispatch(getMachinesAgainstCountries(JSON.stringify(selectedCountries)));
+  //     setFilteredMachines(machineResponse);
+  //     setFilteredCustomers(customerResponse);
+  //   }else{
+  //     setCustomerArr([]);
+  //     setMachineArr([]);
+  //     setFilteredCustomers(spCustomers);
+  //     setFilteredMachines(activeMachines);
+  //   }
+  // };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -446,13 +502,29 @@ export default function SecurityUserEditForm() {
                 label="Roles"
                 options={sortedRoles}
               />
+            </Box>
+            <Box
+              rowGap={3}
+              columnGap={2}
+              display="grid"
+              gridTemplateColumns={{
+                xs: 'repeat(1, 1fr)',
+                sm: 'repeat(1, 1fr)',
+              }}
+            >
               <Autocomplete
+                  sx={{ mt: 3 }}
                   multiple
                   id="regions-autocomplete"
-                  options={regions}
+                  options={activeRegions}
                   value={selectedRegions}
-                  onChange={handleRegionsChange}
-                  getOptionLabel={(option) => option.name}
+                  onChange={(event, newValue) => {
+                    if (newValue) {                    
+                      setSelectedRegions(newValue);
+                    } else {
+                      setSelectedRegions('');
+                    }
+                  }}                  getOptionLabel={(option) => option.name}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -462,6 +534,72 @@ export default function SecurityUserEditForm() {
                     />
                   )}
                 />
+
+              <Autocomplete
+                // freeSolo
+                multiple
+                required
+                value={customersArr || null}
+                options={activeCustomers}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if (newValue) {                    
+                    setCustomerArr(newValue);
+                  } else {
+                    setCustomerArr('');
+                  }
+                }}                id="controllable-states-demo"
+                renderOption={(props, option) => (
+                  <li {...props} key={option.id}>
+                    {option.name}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} name="customers" label="Customers"/>
+                )}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option._id}>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </Autocomplete>
+
+              <Autocomplete
+                // freeSolo
+                multiple
+                required
+                value={machinesArr || null}
+                options={activeMachines}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    setMachineArr(newValue);
+                  } else {
+                    setMachineArr([]);
+                  }
+                }}
+                id="machine"
+                renderOption={(props, option) => (
+                  <li {...props} key={option.id}>
+                    {option.name}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} name="machines" label="Machines" />
+                )}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option._id}>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </Autocomplete>
+
             </Box>
             <Grid item md={12}>
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
