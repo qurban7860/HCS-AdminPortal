@@ -353,8 +353,6 @@ export default function DocumentAddForm({
 
   const onSubmit = async (data) => {
     try {
-      data.name = nameVal;
-      data.displayName = displayNameVal;
       data.isActive = isActive;
       data.customerAccess = customerAccessVal;
 
