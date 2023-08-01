@@ -1,6 +1,6 @@
 // routes
 import { Button } from '@mui/material';
-import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL } from '../../../routes/paths';
 // components
 import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
@@ -36,6 +36,7 @@ const ICONS = {
   analytics: icon('ic_analytics'),
   dashboard: <Iconify icon="mdi:view-dashboard" />,
   setting: <Iconify icon="ant-design:setting-filled" />,
+  email: <Iconify icon ="eva:email-fill"/>,
   document: <Iconify icon="basil:document-solid" />,
   reports: <Iconify icon="mdi:report-box-outline" />,
   map: <Iconify icon="mdi:map-legend" />,
@@ -55,6 +56,7 @@ const navConfig = [
       { title: 'Documents', path: PATH_DOCUMENT.document.list, icon: ICONS.document },
       { title: 'Machine Drawings', path: PATH_DOCUMENT.document.machineDrawings.list, icon: ICONS.document },
       { title: 'Settings', path: PATH_SETTING.app, icon: ICONS.setting },
+      { title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email },
       { title: 'Security', path: PATH_SECURITY.users.list, icon: ICONS.user },
       { title: 'Sites Map', path: PATH_SITEMAP.app, icon: ICONS.reports },
       // {

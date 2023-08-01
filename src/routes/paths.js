@@ -8,6 +8,7 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_CUSTOMER = '/customers';
 const ROOTS_MACHINE = '/products';
+const ROOTS_EMAIL =   '/email';
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
@@ -174,6 +175,15 @@ export const PATH_MACHINE = {
     },
   },
 };
+
+export const PATH_EMAIL = {
+  root: ROOTS_EMAIL,
+  permissionDenied: path(ROOTS_EMAIL, '/permission-denied'),
+  email : {
+    list:path(ROOTS_EMAIL, '/list'),
+    new: path(ROOTS_EMAIL, '/new'), 
+  },
+}
 
 export const PATH_SECURITY = {
   root: ROOTS_SECURITY,
