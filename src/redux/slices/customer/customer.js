@@ -16,7 +16,7 @@ const initialState = {
   error: null,
   customers: [],
   activeCustomers: [],
-  unfilteredCustomers: [],
+  allCustomers: [],
   spCustomers: [],
   customer: {},
 };
@@ -67,7 +67,7 @@ const slice = createSlice({
     getAllCustomersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.unfilteredCustomers = action.payload;
+      state.allCustomers = action.payload;
       state.initial = true;
     },
 
