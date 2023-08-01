@@ -173,6 +173,9 @@ export const BUTTONS = {
   // region
   ADDREGION: 'Add Region',
 
+  // CONFIG
+  ADDCONFIG: 'Add Config',
+
 };
 
 export const BREADCRUMBS = {

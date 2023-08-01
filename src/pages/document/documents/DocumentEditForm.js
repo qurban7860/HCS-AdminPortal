@@ -59,7 +59,7 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
   }, [dispatch, document]);
 
   const EditDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(150).label('Display Name').required(),
+    displayName: Yup.string().max(500).label('Document Name').required(),
     // documentCategory: Yup.object().required("Document Category is required!").nullable(),
     // documentType: Yup.object().required("Document Type is required!").nullable(),
     description: Yup.string().max(10000),
@@ -174,7 +174,7 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
 
                 </Box>
 
-                <RHFTextField name="displayName" label="Document Name*" />
+                <RHFTextField name="displayName" label="Document Name*" multiline />
 
                 <Box
                   rowGap={3}

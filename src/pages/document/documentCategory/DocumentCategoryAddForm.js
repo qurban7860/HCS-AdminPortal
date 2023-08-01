@@ -120,7 +120,7 @@ console.log("state : ", state);
       enqueueSnackbar(Snacks.docSaved);
       navigate(PATH_SETTING.documentCategory.list);
     } catch (error) {
-      enqueueSnackbar(Snacks.failedSaveDoc, { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };

@@ -266,7 +266,8 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
     navigate(PATH_MACHINE.machines.list);
   };
   const handleChipChange = (newChips) => {
-    setChips(newChips);
+    const array = [...new Set(newChips)]
+    setChips(array);
   };
   const { themeStretch } = useSettingsContext();
 

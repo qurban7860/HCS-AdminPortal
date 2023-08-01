@@ -86,7 +86,7 @@ export default function DocumentTypeAddForm({ currentDocument }) {
       enqueueSnackbar(Snacks.docSaved);
       navigate(PATH_SETTING.documentType.list);
     } catch (error) {
-      enqueueSnackbar(Snacks.failedSaveDoc, { variant: `error` });
+      enqueueSnackbar(error, { variant: `error` });
       console.error(error);
     }
   };

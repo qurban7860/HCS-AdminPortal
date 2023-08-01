@@ -283,7 +283,8 @@ console.log("data : ", data);
   };
 
   const handleChipChange = (newChips) => {
-    setChips(newChips);
+    const array = [...new Set(newChips)]
+    setChips(array);
   };
   // ----------------------end handle functions----------------------
 

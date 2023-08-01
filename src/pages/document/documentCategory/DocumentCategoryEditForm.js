@@ -127,9 +127,9 @@ export default function DocumentCategoryeEditForm() {
       navigate(PATH_SETTING.documentCategory.view(documentCategory._id));
       enqueueSnackbar(Snacks.updatedDocCategory, { variant: `success` });
       reset();
-    } catch (err) {
-      enqueueSnackbar(Snacks.failedSaveDocCategory, { variant: `error` });
-      console.error(err.message);
+    } catch (error) {
+      enqueueSnackbar(error, { variant: `error` });
+      console.error(error);
     }
   };
 

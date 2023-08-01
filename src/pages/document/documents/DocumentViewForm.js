@@ -134,7 +134,10 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
         </Tooltip>
       </Grid>
       <Grid container>
-        <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+        <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
+        <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
+        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+        <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
         <ViewFormField
           sm={6}
           heading="Version"
@@ -158,11 +161,6 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
             {/* <ViewFormField sm={6} heading="Model" param={defaultValues?.model} /> */}
           </>
         )}
-
-        <ViewFormField sm={6} heading="Document Category" param={defaultValues?.docCategory} />
-        <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
-        <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
-
         {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         <Grid item sx={{ display: 'flex-inline' }}>
