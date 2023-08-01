@@ -132,7 +132,8 @@ export default function CustomerEditForm() {
   };
 
   const handleChipChange = (newChips) => {
-    setChips(newChips);
+    const array = [...new Set(newChips)]
+    setChips(array);
   };
 
   return (

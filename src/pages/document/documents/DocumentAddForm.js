@@ -291,7 +291,7 @@ export default function DocumentAddForm({
   };
 
   const AddDocumentSchema = Yup.object().shape({
-    displayName: Yup.string().max(150, 'Document Name must not exceed 140 characters').label('Display Name'),
+    displayName: Yup.string().max(500).label('Document Name'),
     // .test('length', 'Document Name must not exceed 40 characters', (value)=>  console.log("value : ",value)),
     description: Yup.string().max(10000),
     multiUpload: Yup.mixed()
@@ -778,7 +778,7 @@ export default function DocumentAddForm({
                           )}
                           ChipProps={{ size: 'small' }}
                         />
-                         </Box>
+                        </Box>
                 )}
 
                 {documentVal && (
@@ -793,17 +793,7 @@ export default function DocumentAddForm({
                 )}
 
                 {selectedValue === 'new' && (
-                  <RHFName
-                    required
-                    disabled={readOnlyVal}
-                    name="displayName"
-                    value={displayNameVal}
-                    label="Document Name"
-                    multiline
-                    onChange={(e) => {
-                      setDisplayNameVal(e.target.value);
-                    }}
-                  />
+                  <RHFTextField required name="displayName"  label="Document Name" multiline />
                 )}
 
                 {selectedValue === 'new' && (<Box
@@ -851,7 +841,6 @@ export default function DocumentAddForm({
                   </Grid>
                 )}
 
-                {/* cleanup */}
                 {selectedValue === 'new' && (
                   <ToggleButtons
                     isDocument
@@ -863,12 +852,6 @@ export default function DocumentAddForm({
                   />
                 )}
 
-                {/* <Upload multiple files={files} name="image"  onDrop={handleDrop} onDelete={handleRemoveFile} />
-                {!!files.length && (
-          <Button variant="outlined" color="inherit" onClick={handleRemoveAllFiles}>
-            Remove all
-          </Button>
-        )} */}
                 <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
               </Stack>
             </Card>

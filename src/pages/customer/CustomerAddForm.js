@@ -234,8 +234,8 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   };
 
   const handleChipChange = (newChips) => {
-    // console.log("newChips : ",newChips)
-    setChips(newChips)
+    const array = [...new Set(newChips)]
+    setChips(array)
   }
 
   return (

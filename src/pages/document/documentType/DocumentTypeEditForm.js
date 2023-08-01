@@ -100,9 +100,9 @@ export default function DocumentTypeEditForm() {
       navigate(PATH_SETTING.documentType.view(documentType._id));
       enqueueSnackbar('Document Type updated Successfully!');
       reset();
-    } catch (err) {
-      enqueueSnackbar('Document Type Updating failed!', { variant: `error` });
-      console.error(err.message);
+    } catch (error) {
+      enqueueSnackbar(error, { variant: `error` });
+      console.error(error);
     }
   };
 

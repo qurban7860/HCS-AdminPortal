@@ -216,7 +216,14 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
               </Tooltip>
             </Grid>
             <Grid container>
-              <ViewFormField sm={6} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField sm={12} heading="Name" param={defaultValues?.displayName} />
+              <ViewFormField
+                sm={6}
+                heading="Document Category"
+                param={defaultValues?.docCategory}
+              />
+              <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+              <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
               <ViewFormField
                 sm={6}
                 heading="Active Version"
@@ -228,12 +235,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
                   )
                 }
               />
-              <ViewFormField
-                sm={6}
-                heading="Document Category"
-                param={defaultValues?.docCategory}
-              />
-              <ViewFormField sm={6} heading="Document Type" param={defaultValues?.docType} />
+              
               {!customerPage && !machineDrawings && !drawingPage && defaultValues.customer && (
                 <ViewFormField
                   sm={6}
@@ -247,6 +249,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
                   }
                 />
               )}
+              
               {!machinePage && !machineDrawings && !drawingPage &&  defaultValues?.machine && (
                 <ViewFormField
                   sm={6}
@@ -260,7 +263,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
                   }
                 />
               )}
-              <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
+
               <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
               <Grid container sx={{ mt: '1rem', mb: '-1rem' }}>
                 <ViewFormAudit defaultValues={defaultValues} />
