@@ -154,7 +154,7 @@ export const userRolesPersistConfig = {
   key: 'role',
   storage,
   keyPrefix: 'redux-',
-  blacklist: ['error', 'initial', 'responseMessage']
+  blacklist: ['error', 'initial', 'responseMessage', 'userRoleTypes']
 };
 export const countPersistConfig = {
   key: 'count',

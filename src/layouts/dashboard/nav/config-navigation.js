@@ -1,12 +1,16 @@
 // routes
 import { Button } from '@mui/material';
-import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY } from '../../../routes/paths';
+import { PATH_CUSTOMER, PATH_DASHBOARD, PATH_MACHINE, PATH_DOCUMENT, PATH_SETTING, PATH_SITEMAP, PATH_SECURITY, PATH_EMAIL } from '../../../routes/paths';
 // components
 import Label from '../../../components/label';
 import Iconify from '../../../components/iconify';
 import SvgColor from '../../../components/svg-color';
 
 // ----------------------------------------------------------------------
+
+const userRolesString = localStorage.getItem('userRoles');
+const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
+const userEmailRole = userRoles?.some((role) => role.roleType === 'Email');
 
 const icon = (name) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -36,6 +40,7 @@ const ICONS = {
   analytics: icon('ic_analytics'),
   dashboard: <Iconify icon="mdi:view-dashboard" />,
   setting: <Iconify icon="ant-design:setting-filled" />,
+  email: <Iconify icon ="eva:email-fill"/>,
   document: <Iconify icon="basil:document-solid" />,
   reports: <Iconify icon="mdi:report-box-outline" />,
   map: <Iconify icon="mdi:map-legend" />,
@@ -69,7 +74,11 @@ const navConfig = [
       // { title: 'file', path: PATH_DASHBOARD.general.file, icon: ICONS.file },
     ],
   },
+]
 
+if (userEmailRole) {
+  navConfig.map((obj) => obj.items?.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email }));
+} 
   // MANAGEMENT
   // ----------------------------------------------------------------------
   // {
@@ -255,6 +264,6 @@ const navConfig = [
   //     },
   //   ],
   // },
-];
+// ];
 
 export default navConfig;

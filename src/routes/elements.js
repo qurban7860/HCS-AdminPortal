@@ -306,6 +306,10 @@ export const RegionView = Loadable(
 // DASHBOARD: SETTINGS
 export const Setting = Loadable(lazy(() => import('../pages/setting/Setting')));
 
+
+// DASHBOARD: Email
+export const Email = Loadable(lazy(() => import('../pages/email/Email')));
+
 // DASHBOARD: REPORTS
 export const Reports = Loadable(lazy(() => import('../pages/Reports/Reports')));
 
