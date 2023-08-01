@@ -337,7 +337,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               <Autocomplete
                 // freeSolo
                 value={contactVal || null}
-                options={activeContacts}
+                options={customerVal ? activeContacts : []}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
