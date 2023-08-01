@@ -93,13 +93,16 @@ import {
   ModelView,
   ModelEdit,
   ModelEditForm,
-// Role
-
-RoleList,
-RoleAdd,
-RoleView,
-RoleEdit,
-  
+  // Role
+  RoleList,
+  RoleAdd,
+  RoleView,
+  RoleEdit,
+  // CONFIG
+  ConfigList,
+  ConfigAddForm,
+  ConfigEditForm,
+  ConfigViewForm,
   // Site
   SiteList,
   SiteAdd,
@@ -471,6 +474,16 @@ export default function Router() {
             { path: 'new', element: <RegionAdd /> },
             { path: ':id/view', element: <RegionView /> },
             { path: ':id/edit', element: <RegionEdit /> }
+          ],
+        },
+        {
+          path: 'config',
+          children: [
+            { path: 'list', element: <ConfigList /> },
+            { path: 'new', element: <ConfigAddForm /> },
+            { path: ':id/view', element: <ConfigViewForm /> },
+            { path: ':id/edit', element: <ConfigEditForm /> }
+
           ],
         },
       ],

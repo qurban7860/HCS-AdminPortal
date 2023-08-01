@@ -238,6 +238,12 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/regions/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/regions/${id}/edit`)
   },
+  config: {
+    list: path(ROOTS_SETTING, '/config/list'),
+    new: path(ROOTS_SETTING, '/config/new'),
+    view: (id) => path(ROOTS_SETTING, `/config/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/config/${id}/edit`)
+  },
 };
 
 export const PATH_SITEMAP = {

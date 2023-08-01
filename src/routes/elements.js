@@ -26,9 +26,7 @@ export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/Gen
 // --------------------------
 
 // CUSTOMER
-export const CustomerDashboard = Loadable(
-  lazy(() => import('../pages/customer/CustomerDashboardPage'))
-);
+export const CustomerDashboard = Loadable(lazy(() => import('../pages/customer/CustomerDashboardPage')));
 
 export const CustomerList = Loadable(lazy(() => import('../pages/customer/CustomerList')));
 export const CustomerAdd = Loadable(lazy(() => import('../pages/customer/CustomerAdd')));
@@ -102,6 +100,14 @@ export const SForm = Loadable(lazy(() => import('../pages/machine/Supplier/Suppl
 
 // Signin Logs
 export const SignInLogList = Loadable(lazy(() => import('../pages/user/signInLog/SignInLogList')));
+
+// config List
+export const ConfigList = Loadable(lazy(() => import('../pages/user/config/ConfigList')));
+export const ConfigAddForm = Loadable(lazy(() => import('../pages/user/config/ConfigAddForm')));
+export const ConfigEditForm = Loadable(lazy(() => import('../pages/user/config/ConfigEditForm')));
+export const ConfigViewForm = Loadable(lazy(() => import('../pages/user/config/ConfigView')));
+
+
 
 // License
 // export const MachineLicenses = Loadable(lazy(()=> import('../pages/machine/License/MachineLicenses')));
