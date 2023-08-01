@@ -244,7 +244,7 @@ export function updateDocument(documentId , params, customerId, machineId) {
       }
       // if(params?.displayName){
         formData.append('displayName', params?.displayName);
-        formData.append('name', params?.name);
+        formData.append('name', params?.displayName);
       // }
       if(params?.description){
         formData.append('description', params?.description);
