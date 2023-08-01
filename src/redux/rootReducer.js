@@ -20,6 +20,7 @@ import techparamReducer from './slices/products/machineTechParam';
 import machineSettingReducer from './slices/products/machineTechParamValue';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
+import configReducer from './slices/securityUser/config';
 import countReducer from './slices/dashboard/count';
 import documentTypeReducer from './slices/document/documentType';
 import documentCategoryReducer from './slices/document/documentCategory';
@@ -156,6 +157,12 @@ export const userRolesPersistConfig = {
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
+export const configsPersistConfig = {
+  key: 'config',
+  storage,
+  keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage']
+};
 export const countPersistConfig = {
   key: 'count',
   storage,
@@ -243,6 +250,7 @@ const rootReducer = combineReducers({
   machineSetting: persistReducer(machineSettingPersistConfig, machineSettingReducer),
   toolInstalled: persistReducer(machineToolInstalledPersistConfig, toolInstalledReducer),
   role: persistReducer(userRolesPersistConfig, roleReducer),
+  config: persistReducer(configsPersistConfig, configReducer),
   count: persistReducer(countPersistConfig, countReducer),
   documentType: persistReducer(documentTypePersistConfig, documentTypeReducer),
   documentCategory: persistReducer(documentCategoryPersistConfig, documentCategoryReducer),
@@ -254,7 +262,6 @@ const rootReducer = combineReducers({
   documentVersion: persistReducer(documentVersionPersistConfig, documentVersionReducer),
   region: persistReducer(regionPersistConfig, regionReducer),
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
-
 });
 
 export default rootReducer;

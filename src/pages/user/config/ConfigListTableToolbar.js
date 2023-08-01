@@ -13,7 +13,7 @@ import { options } from '../../../theme/styles/default-styles';
 
 // ----------------------------------------------------------------------
 
-RoleListTableToolbar.propTypes = {
+ConfigListTableToolbar.propTypes = {
   isFiltered: PropTypes.bool,
   filterName: PropTypes.string,
   onFilterName: PropTypes.func,
@@ -23,7 +23,7 @@ RoleListTableToolbar.propTypes = {
   statusOptions: PropTypes.array,
 };
 
-export default function RoleListTableToolbar({
+export default function ConfigListTableToolbar({
   isFiltered,
   filterName,
   filterStatus,
@@ -34,7 +34,7 @@ export default function RoleListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_SETTING.role.new);
+    navigate(PATH_SETTING.config.new);
   };
   return (
     <Stack {...options}>
@@ -44,7 +44,7 @@ export default function RoleListTableToolbar({
         onChange={onFilterName}
         onClick={onResetFilter}
         SubOnClick={toggleAdd}
-        addButton={BUTTONS.ADDROLE}
+        addButton={BUTTONS.ADDCONFIG}
       />
     </Stack>
   );

@@ -131,7 +131,7 @@ export const ICONS = {
   },
   CONFIG: {
     icon: 'icon-park-outline:setting-config',
-    heading: 'Config',
+    heading: 'Configurations',
   },
   REGION: {
     icon: 'mdi:map-marker-circle',

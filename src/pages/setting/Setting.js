@@ -36,7 +36,9 @@ export default function Setting() {
   const linkRegions = () => {
     navigate(PATH_SETTING.regions.list);
   };
-
+  const linkConfig = () => {
+    navigate(PATH_SETTING.config.list);
+  }
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -84,7 +86,12 @@ export default function Setting() {
                 onClick={linkSignInLogs}
                 icon={ICONS.SIGNIN_LOGS.icon}
                 content={ICONS.SIGNIN_LOGS.heading}
-              />              
+              /> 
+              <ListItem
+                onClick={linkConfig}
+                icon={ICONS.CONFIG.icon}
+                content={ICONS.CONFIG.heading}
+              />             
             </List>
           </StyledSettingsCardContainer>
         </Grid>
