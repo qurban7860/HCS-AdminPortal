@@ -31,9 +31,8 @@ const slice = createSlice({
     },
     // STOP LOADING
     stopLoading(state) {
-      console.log('loading working');
       state.isLoading = false;
-        },
+    },
 
     // SET TOGGLE
     setCustomerEditFormVisibility(state, action){
