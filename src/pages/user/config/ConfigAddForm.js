@@ -23,8 +23,8 @@ import {
 // ROUTES
 import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
 // slice
-import { getCustomers } from '../../../redux/slices/customer/customer';
-import { getSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
+import { getCustomers, resetCustomers } from '../../../redux/slices/customer/customer';
+import { getSecurityUsers, resetSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 import { addConfig } from '../../../redux/slices/securityUser/config';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -52,6 +52,8 @@ export default function ConfigAddForm({ currentConfig }) {
   const [blackIps , setBlackIps] = useState([])
 
   useEffect(() => {
+    dispatch(resetCustomers());
+    dispatch(resetSecurityUsers());
       dispatch(getCustomers());
       dispatch(getSecurityUsers());
   },[dispatch])

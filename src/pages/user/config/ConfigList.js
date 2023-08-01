@@ -336,10 +336,12 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   if (filterName) {
     inputData = inputData.filter(
-      (role) =>
-        role?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        role?.roleType?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        fDate(role?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (configuration) =>
+        configuration?.blockedUsers?.some((blkUser) => blkUser?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
+        configuration?.blockedCustomers?.some((blkCustomer) => blkCustomer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
+        configuration?.whiteListIPs?.some((Wip) => Wip?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
+        configuration?.blackListIPs?.some((Bip) => Bip?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ) ||
+        fDate(configuration?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
   }
 
