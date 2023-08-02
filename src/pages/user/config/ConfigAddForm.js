@@ -104,7 +104,7 @@ export default function ConfigAddForm({ currentConfig }) {
       await dispatch(addConfig(data));
       enqueueSnackbar('Configuration Save Successfully!');
       reset();
-      navigate(PATH_SETTING.config.list);
+      navigate(PATH_SETTING.userConfig.list);
     } catch (error) {
       enqueueSnackbar('Configuration Save failed!', { variant: `error` });
       console.error(error);
@@ -112,7 +112,7 @@ export default function ConfigAddForm({ currentConfig }) {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.config.list);
+    navigate(PATH_SETTING.userConfig.list);
   };
 
   const isValidIP = (ip) => {

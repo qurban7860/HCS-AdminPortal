@@ -94,7 +94,7 @@ export default function ConfigList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customer } = useSelector((state) => state.customer);
-  const { configs, isLoading, initial, responseMessage } = useSelector((state) => state.config);
+  const { configs, isLoading, initial, responseMessage } = useSelector((state) => state.userConfig);
 
   useLayoutEffect(() => {
     dispatch(getConfigs());
@@ -182,11 +182,11 @@ export default function ConfigList() {
 
   const handleEditRow = (id) => {
     // console.log(id);
-    navigate(PATH_SETTING.config.edit(id));
+    navigate(PATH_SETTING.userConfig.edit(id));
   };
 
   const handleViewRow = (id) => {
-    navigate(PATH_SETTING.config.view(id));
+    navigate(PATH_SETTING.userConfig.view(id));
   };
 
   const handleResetFilter = () => {

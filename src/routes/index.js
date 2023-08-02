@@ -98,11 +98,11 @@ import {
   RoleAdd,
   RoleView,
   RoleEdit,
-  // CONFIG
-  ConfigList,
-  ConfigAddForm,
-  ConfigEditForm,
-  ConfigViewForm,
+  // USER CONFIG
+  UserConfigList,
+  UserConfigAddForm,
+  UserConfigEditForm,
+  UserConfigViewForm,
   // Site
   SiteList,
   SiteAdd,
@@ -165,6 +165,11 @@ import {
   RegionView,
   RegionEdit,
 
+  // Configs
+  ConfigList,
+  ConfigAdd,
+  ConfigView,
+  ConfigEdit,
 //   
   BlankPage,
   PermissionDeniedPage,
@@ -477,12 +482,21 @@ export default function Router() {
           ],
         },
         {
-          path: 'config',
+          path: 'configs',
           children: [
             { path: 'list', element: <ConfigList /> },
-            { path: 'new', element: <ConfigAddForm /> },
-            { path: ':id/view', element: <ConfigViewForm /> },
-            { path: ':id/edit', element: <ConfigEditForm /> }
+            { path: 'new', element: <ConfigAdd /> },
+            { path: ':id/view', element: <ConfigView /> },
+            { path: ':id/edit', element: <ConfigEdit /> }
+          ],
+        },
+        {
+          path: 'userConfig',
+          children: [
+            { path: 'list', element: <UserConfigList /> },
+            { path: 'new', element: <UserConfigAddForm /> },
+            { path: ':id/view', element: <UserConfigViewForm /> },
+            { path: ':id/edit', element: <UserConfigEditForm /> }
 
           ],
         },

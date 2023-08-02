@@ -129,12 +129,16 @@ export const ICONS = {
     icon: 'mdi:clipboard-text',
     heading: 'User Sign In Logs',
   },
-  CONFIG: {
-    icon: 'icon-park-outline:setting-config',
-    heading: 'Configurations',
+  USER_CONFIG: {
+    icon: 'mdi:account-settings-variant',
+    heading: 'User Configurations',
   },
   REGION: {
     icon: 'mdi:map-marker-circle',
     heading: 'Regions',
+  },
+  CONFIG: {
+    icon: 'icon-park-outline:setting-config',
+    heading: 'Config',
   },
 };

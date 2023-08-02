@@ -55,7 +55,7 @@ export default function ConfigEditForm() {
 
   const { customers } = useSelector((state) => state.customer);
   const { securityUsers } = useSelector((state) => state.user);
-  const { config } = useSelector((state) => state.config);
+  const { config } = useSelector((state) => state.userConfig);
 
   const { Id } = useParams();
   const { enqueueSnackbar } = useSnackbar();
@@ -128,7 +128,7 @@ export default function ConfigEditForm() {
 
       await dispatch(updateConfig(config?._id, data));
       // dispatch(getConfig(config?._id));
-      navigate(PATH_SETTING.config.view(config?._id));
+      navigate(PATH_SETTING.userConfig.view(config?._id));
       enqueueSnackbar('Configuration updated Successfully!');
       reset();
     } catch (error) {
@@ -138,7 +138,7 @@ export default function ConfigEditForm() {
   };
 
   const toggleCancel = () => {
-    navigate(PATH_SETTING.config.view(config?._id));
+    navigate(PATH_SETTING.userConfig.view(config?._id));
   };
 
   const isValidIP = (ip) => {
