@@ -36,9 +36,13 @@ export default function Setting() {
   const linkRegions = () => {
     navigate(PATH_SETTING.regions.list);
   };
-  const linkConfig = () => {
-    navigate(PATH_SETTING.config.list);
+  const linkUserConfig = () => {
+    navigate(PATH_SETTING.userConfig.list);
   }
+  const linkConfigs = () => {
+    navigate(PATH_SETTING.configs.list);
+  };
+
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -78,6 +82,11 @@ export default function Setting() {
                 content={ICONS.REGION.heading}
               />
               <ListItem
+                onClick={linkConfigs}
+                icon={ICONS.CONFIG.icon}
+                content={ICONS.CONFIG.heading}
+              />
+              <ListItem
                 onClick={linkRole}
                 icon={ICONS.SECURITY_ROLES.icon}
                 content={ICONS.SECURITY_ROLES.heading}
@@ -88,9 +97,9 @@ export default function Setting() {
                 content={ICONS.SIGNIN_LOGS.heading}
               /> 
               <ListItem
-                onClick={linkConfig}
-                icon={ICONS.CONFIG.icon}
-                content={ICONS.CONFIG.heading}
+                onClick={linkUserConfig}
+                icon={ICONS.USER_CONFIG.icon}
+                content={ICONS.USER_CONFIG.heading}
               />             
             </List>
           </StyledSettingsCardContainer>

@@ -20,13 +20,13 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 // sections
-import RegionTableToolbar from './RegionTableToolbar';
-import RegionTableRow from './RegionTableRow';
+import ConfigListTableToolbar from './ConfigListTableToolbar';
+import ConfigListTableRow from './ConfigListTableRow';
 import {
-  getRegions,
-  deleteRegion,
-  setRegionEditFormVisibility,
-} from '../../redux/slices/region/region';
+  getConfigs,
+  deleteConfig,
+  setConfigEditFormVisibility,
+} from '../../redux/slices/config/config';
 import { fDate } from '../../utils/formatTime';
 // constants
 import { BUTTONS, DIALOGS } from '../../constants/default-constants';
@@ -39,17 +39,14 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'countries', label: 'countries', align: 'left' },
+  { id: 'value', label: 'Value', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  // { id: 'isVerified', label: 'Verified', align: 'center' },
-  // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
 
-export default function RegionList() {
+export default function ConfigList() {
   const {
     dense,
     page,
@@ -72,14 +69,14 @@ export default function RegionList() {
   const dispatch = useDispatch();
 
   const {
-    regions,
+    configs,
     error,
     responseMessage,
     initial,
-    regionEditFormVisibility,
-    regionAddFormVisibility,
-  } = useSelector((state) => state.region);
-  // console.log("regions", regions);
+    configEditFormVisibility,
+    configAddFormVisibility,
+  } = useSelector((state) => state.config);
+  // console.log("configs", configs);
 
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
@@ -90,15 +87,15 @@ export default function RegionList() {
   const [filterStatus, setFilterStatus] = useState('all');
 
   useLayoutEffect(() => {
-    dispatch(getRegions());
+    dispatch(getConfigs());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, regionEditFormVisibility, regionAddFormVisibility]);
+  }, [dispatch, configEditFormVisibility, configAddFormVisibility]);
 
   useEffect(() => {
     if (initial) {
-      setTableData(regions);
+      setTableData(configs);
     }
-  }, [regions, error, enqueueSnackbar, responseMessage, initial]);
+  }, [configs, error, enqueueSnackbar, responseMessage, initial]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -132,8 +129,8 @@ export default function RegionList() {
   const handleDeleteRow = async (id) => {
     try {
       try {
-        dispatch(deleteRegion(id));
-        dispatch(getRegions());
+        dispatch(deleteConfig(id));
+        dispatch(getConfigs());
         setSelected([]);
 
         if (page > 0) {
@@ -169,11 +166,11 @@ export default function RegionList() {
   const handleEditRow = (id) => {
     // console.log('id', id);
     // console.log('edit');
-    dispatch(setRegionEditFormVisibility(true));
+    dispatch(setConfigEditFormVisibility(true));
     navigate(PATH_SECURITY.users.edit(id));
   };
   const handleViewRow = (id) => {
-    navigate(PATH_SETTING.regions.view(id));
+    navigate(PATH_SETTING.configs.view(id));
   };
 
   const handleResetFilter = () => {
@@ -186,10 +183,10 @@ export default function RegionList() {
     <>
       <Container maxWidth={false}>
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
-          <Cover name="Regions" generalSettings="enabled" icon="ph:users-light" />
+          <Cover generalSettings="enabled" name="Configs" icon="ph:users-light" />
         </Card>
         <Card>
-          <RegionTableToolbar
+          <ConfigListTableToolbar
             isFiltered={isFiltered}
             filterName={filterName}
             filterRole={filterRole}
@@ -219,7 +216,7 @@ export default function RegionList() {
                   {dataFiltered
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row) => (
-                      <RegionTableRow
+                      <ConfigListTableRow
                         key={row._id}
                         row={row}
                         selected={selected.includes(row._id)}
@@ -285,24 +282,11 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
 
   if (filterName) {
     inputData = inputData.filter(
-      (region) =>
-        region?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
-        region?.countries
-          ?.map((obj) => obj.country_name)
-          .join(', ')
-          .toLowerCase()
-          .indexOf(filterName.toLowerCase()) >= 0 ||
-        // (securityUser?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
-        fDate(region?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
+      (config) =>
+        config?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        config?.value?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        fDate(config?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );
-  }
-
-  if (filterStatus !== 'all') {
-    inputData = inputData.filter((user) => user.status === filterStatus);
-  }
-
-  if (filterRole !== 'all') {
-    inputData = inputData.filter((user) => user.role === filterRole);
   }
 
   return inputData;

@@ -34,7 +34,7 @@ export default function ConfigListTableToolbar({
 }) {
   const navigate = useNavigate();
   const toggleAdd = () => {
-    navigate(PATH_SETTING.config.new);
+    navigate(PATH_SETTING.userConfig.new);
   };
   return (
     <Stack {...options}>

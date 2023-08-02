@@ -102,10 +102,10 @@ export const SForm = Loadable(lazy(() => import('../pages/machine/Supplier/Suppl
 export const SignInLogList = Loadable(lazy(() => import('../pages/user/signInLog/SignInLogList')));
 
 // config List
-export const ConfigList = Loadable(lazy(() => import('../pages/user/config/ConfigList')));
-export const ConfigAddForm = Loadable(lazy(() => import('../pages/user/config/ConfigAddForm')));
-export const ConfigEditForm = Loadable(lazy(() => import('../pages/user/config/ConfigEditForm')));
-export const ConfigViewForm = Loadable(lazy(() => import('../pages/user/config/ConfigView')));
+export const UserConfigList = Loadable(lazy(() => import('../pages/user/config/ConfigList')));
+export const UserConfigAddForm = Loadable(lazy(() => import('../pages/user/config/ConfigAddForm')));
+export const UserConfigEditForm = Loadable(lazy(() => import('../pages/user/config/ConfigEditForm')));
+export const UserConfigViewForm = Loadable(lazy(() => import('../pages/user/config/ConfigView')));
 
 
 
@@ -293,7 +293,7 @@ export const DocumentCategoryEditForm = Loadable(
 // );
 
 
-// Regions
+// Configs
 export const RegionAdd = Loadable(
   lazy(() => import('../pages/region/RegionAdd'))
 );
@@ -305,6 +305,20 @@ export const RegionEdit = Loadable(
 );
 export const RegionView = Loadable(
   lazy(() => import('../pages/region/RegionView'))
+);
+
+// Configs
+export const ConfigAdd = Loadable(
+  lazy(() => import('../pages/config/ConfigAdd'))
+);
+export const ConfigList = Loadable(
+  lazy(() => import('../pages/config/ConfigList'))
+);
+export const ConfigEdit = Loadable(
+  lazy(() => import('../pages/config/ConfigEdit'))
+);
+export const ConfigView = Loadable(
+  lazy(() => import('../pages/config/ConfigView'))
 );
 // export const machineDocumentView = Loadable(lazy(()=>     import('../pages/')));
 // export const machineDocumentEdit = Loadable(lazy(()=>     import('../pages/')));

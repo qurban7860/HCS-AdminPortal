@@ -6,19 +6,23 @@ import { CONFIG } from '../../../config-global';
 // ----------------------------------------------------------------------
 const regEx = /^[^2]*/
 const initialState = {
-  formVisibility: false,
-  editFormVisibility: false,
-  intial: false,
+  configAddFormVisibility: false,
+  configEditFormVisibility: false,
+  initial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
+  name: null,
+  description: null,
+  countries: [],
+  config: {},
   configs: [],
-  config: null,
+  activeConfigs: []
 };
 
 const slice = createSlice({
-  name: 'userConfig',
+  name: 'config',
   initialState,
   reducers: {
     // START LOADING
@@ -34,16 +38,16 @@ const slice = createSlice({
     },
 
     // SET VISIBILITY
-    setConfigFormVisibility(state, action){
-      state.formVisibility = action.payload;
+    setConfigAddFormVisibility(state, action){
+      state.configAddFormVisibility = action.payload;
     },
 
     // SET VISIBILITY
     setConfigEditFormVisibility(state, action){
-      state.editFormVisibility = action.payload;
+      state.configEditFormVisibility = action.payload;
     },
 
-    // GET  Config
+    // GET configs
     getConfigsSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -51,7 +55,22 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // GET Config
+    // GET Active configs
+    getActiveConfigsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeConfigs = action.payload;
+      state.initial = true;
+    },
+
+    // GET configs
+    getCountriesSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.countries = action.payload;
+      state.initial = true;
+    },
+
     getConfigSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
@@ -67,7 +86,7 @@ const slice = createSlice({
       state.initial = true;
     },
 
-    // RESET Config
+    // RESET SECURITY USER
     resetConfig(state){
       state.config = {};
       state.responseMessage = null;
@@ -75,13 +94,13 @@ const slice = createSlice({
       state.isLoading = false;
     },
 
-    // RESET ConfigS
+    // RESET SECURITY USERS
     resetConfigs(state){
       state.configs = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
-    },
+    }
   },
 });
 
@@ -90,79 +109,109 @@ export default slice.reducer;
 
 // Actions
 export const {
-  setFormVisibility,
-  setEditFormVisibility,
-  resetConfigs,
+  setConfigAddFormVisibility,
+  setConfigEditFormVisibility,
+  getConfigsSuccess,
+  getConfigSuccess,
   resetConfig,
-
+  resetConfigs,
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function addConfig(params) {
+export function addConfig(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const data = {}
-        if(params.BlockedUsers){
-            data.blockedUsers = params.blockedUsers
-        }
-        if(params.BlockedCustomers){
-            data.blockedCustomers = params.blockedCustomers
-        }
-        if(params.whiteListIPs){
-            data.whiteListIPs = params.whiteListIPs
-        }if(params.blackListIPs){
-            data.blackListIPs = params.blackListIPs
-        }
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/configs/`, data);
+    dispatch(resetConfig());
+    try{
+      const data = {
+        name: param.name,
+        value: param.value,
+        isActive: param.isActive,
+      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}configs`, data);
+      if(regEx.test(response.status)){
+        dispatch(setConfigAddFormVisibility(false))
+        dispatch(getConfigs());
+      }
       return response;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
+
 // ----------------------------------------------------------------------
 
-export function updateConfig(id, params) {
+export function updateConfig(param,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
+    try{
       const data = {
-        blockedUsers: params.BlockedUsers,
-        blockedCustomers: params.BlockedCustomers,
-        whiteListIPs: params.whiteListIPs,
-        blackListIPs: params.blackListIPs,
+        name: param.name,
+        value: param.value,
+        isActive: param.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/configs/${id}`, data);
+      const response = await axios.patch(`${CONFIG.SERVER_URL}configs/${id}`, data);
+      dispatch(resetConfig());
+      // if(regEx.test(response.status)){
+      //   dispatch(getSecurityUsers());
+      // }
+      return response;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       throw error;
-      // dispatch(slice.actions.hasError(error.Message));
     }
   };
 }
+
 // ----------------------------------------------------------------------
 
 export function getConfigs() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/configs`,
+    try{ 
+      const response = await axios.get(`${CONFIG.SERVER_URL}configs`,
       {
         params: {
           isArchived: false
         }
       }
       );
-      dispatch(slice.actions.getConfigsSuccess(response.data));
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getConfigsSuccess(response.data));
+      }
+      return response;
     } catch (error) {
-      console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
+      console.error(error);
       throw error;
     }
-  };
+  }
+}
+
+
+// ----------------------------------------------------------------------
+
+export function getActiveConfigs() {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try{ 
+      const response = await axios.get(`${CONFIG.SERVER_URL}configs`,
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getActiveConfigsSuccess(response.data));
+      }
+      return response;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
 }
 
 // ----------------------------------------------------------------------
@@ -170,12 +219,14 @@ export function getConfigs() {
 export function getConfig(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try {
-      const response = await axios.get(`${CONFIG.SERVER_URL}security/configs/${id}`);
-      dispatch(slice.actions.getConfigSuccess(response.data));
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}configs/${id}`);
+      if(regEx.test(response.status)){
+        dispatch(slice.actions.getConfigSuccess(response.data));
+      }
+      return response;
     } catch (error) {
       console.error(error);
-      dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
   };
@@ -187,14 +238,15 @@ export function deleteConfig(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/configs/${id}`,
+      const response = await axios.patch(`${CONFIG.SERVER_URL}configs/${id}`,
       {
         isArchived: true, 
       }
-      )
+      );
+      // state.responseMessage = response.data;
       if(regEx.test(response.status)){
         dispatch(slice.actions.setResponseMessage(response.data));
-        dispatch(resetConfig());
+        dispatch(resetConfig())
       }
       return response;
     } catch (error) {

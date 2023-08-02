@@ -18,7 +18,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 // ----------------------------------------------------------------------
 
 export default function ConfigViewForm() {
-  const { config } = useSelector((state) => state.config);
+  const { config } = useSelector((state) => state.userConfig);
 
   const navigate = useNavigate();
 
@@ -28,7 +28,7 @@ export default function ConfigViewForm() {
   const onDelete = async () => {
     try {
       await dispatch(deleteConfig(config?._id));
-      navigate(PATH_SETTING.config.list);
+      navigate(PATH_SETTING.userConfig.list);
       enqueueSnackbar('Configuration deleted Successfully!');
     } catch (error) {
       if (error.Message) {
@@ -44,7 +44,7 @@ export default function ConfigViewForm() {
   };
 
   const handleEdit = async () => {
-    navigate(PATH_SETTING.config.edit(config._id));
+    navigate(PATH_SETTING.userConfig.edit(config._id));
   };
 
   const defaultValues = useMemo(

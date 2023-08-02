@@ -238,11 +238,17 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/regions/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/regions/${id}/edit`)
   },
-  config: {
-    list: path(ROOTS_SETTING, '/config/list'),
-    new: path(ROOTS_SETTING, '/config/new'),
-    view: (id) => path(ROOTS_SETTING, `/config/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/config/${id}/edit`)
+  configs: {
+    list: path(ROOTS_SETTING, '/configs/list'),
+    new: path(ROOTS_SETTING, '/configs/new'),
+    view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
+  },
+  userConfig: {
+    list: path(ROOTS_SETTING, '/userConfig/list'),
+    new: path(ROOTS_SETTING, '/userConfig/new'),
+    view: (id) => path(ROOTS_SETTING, `/userConfig/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/userConfig/${id}/edit`)
   },
 };
 
