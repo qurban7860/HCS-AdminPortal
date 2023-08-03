@@ -16,7 +16,7 @@ import {
   getToolsInstalled,
   getToolInstalled,
 } from '../../../redux/slices/products/toolInstalled';
-import { getTools } from '../../../redux/slices/products/tools';
+import { getActiveTools } from '../../../redux/slices/products/tools';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
@@ -31,7 +31,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 export default function ToolsInstalledAddForm() {
-  const { tools } = useSelector((state) => state.tool);
+  const { activeTools } = useSelector((state) => state.tool);
   const {
     initial,
     error,
@@ -47,14 +47,14 @@ export default function ToolsInstalledAddForm() {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   useLayoutEffect(() => {
-    dispatch(getTools());
+    dispatch(getActiveTools());
     dispatch(getToolsInstalled);
   }, [dispatch, machine]);
 
   useLayoutEffect(() => {
     const filterTool = [];
     toolsInstalled.map((toolInstalled) => filterTool.push(toolInstalled?.tool?._id));
-    const filteredTool = tools.filter((item) => !filterTool.includes(item._id));
+    const filteredTool = activeTools.filter((item) => !filterTool.includes(item._id));
     filteredTool.sort((a, b) => {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
@@ -68,7 +68,7 @@ export default function ToolsInstalledAddForm() {
     });
     // console.log("filteredTool: ", filteredTool)
     setToolsVal(filteredTool);
-  }, [tools, toolsInstalled, machine]);
+  }, [activeTools, toolsInstalled, machine]);
 
   const AddSettingSchema = Yup.object().shape({
     note: Yup.string().max(1500),

@@ -194,7 +194,6 @@ export function addSite(params) {
 export function updateSite(params,customerId,Id) {
   
   return async (dispatch) => {
-    dispatch(slice.actions.setSiteEditFormVisibility(false));
     dispatch(slice.actions.startLoading());
       try {
         /* eslint-disable */
@@ -242,6 +241,7 @@ export function updateSite(params,customerId,Id) {
         console.log("Site Slice data : ",data)
         const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
          , data);
+        dispatch(slice.actions.setSiteEditFormVisibility(false));
 
       } catch (error) {
         console.error(error);

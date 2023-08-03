@@ -545,7 +545,7 @@ export function updateMachine(machineId, params) {
         // supportManager: params.supportManager._id,
         // description: params.description,
         // customerTags: params.customerTags,
-        // isActive: params.isActive,
+        isActive: params.isActive,
 
       };
       if(params?.serialNo){
@@ -604,9 +604,6 @@ export function updateMachine(machineId, params) {
       }
       if(params?.description){
         data.description = params.description
-      }
-      if(params?.isActive){
-        data.isActive = params.isActive
       }
 
       if(params.machineConnectionVal){

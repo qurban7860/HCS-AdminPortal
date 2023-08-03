@@ -66,7 +66,7 @@ export default function CustomerContactList(currentContact = null) {
 
   const toggleChecked = () => {
     setChecked((value) => !value);
-    if (checked || contactEditFormVisibility) {
+    if (contactEditFormVisibility) {
       dispatch(setContactFormVisibility(false));
       enqueueSnackbar(Snacks.CONTACT_CLOSE_CONFIRM, {
         variant: 'warning',

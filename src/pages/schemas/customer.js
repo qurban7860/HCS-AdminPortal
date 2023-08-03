@@ -10,7 +10,8 @@ export const EditCustomerDocumentSchema = Yup.object().shape({
 
 // @root - EditCustomerSchema
 export const EditCustomerSchema = Yup.object().shape({
-  name: Yup.string().min(2).max(40).required('Name is required'),
+  name: Yup.string().trim('Leading and trailing spaces are not allowed')
+  .min(2, 'Name must be at least 2 characters long').max(40).required('Name is required'),
   tradingName: Yup.string().max(40),
   // mainSite: Yup.string().nullable(),
   // sites: Yup.array().nullable(),

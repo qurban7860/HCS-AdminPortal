@@ -13,6 +13,7 @@ const initialState = {
   isLoading: false,
   error: null,
   tools: [],
+  activeTools: [],
   tool: {},
   toolParams: {
   }
@@ -44,6 +45,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.tools = action.payload;
+      state.initial = true;
+    },
+
+    // GET ACTIVE TOOLS
+    getActiveToolsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeTools = action.payload;
       state.initial = true;
     },
 
@@ -106,6 +115,29 @@ export function getTools (){
         }
       });
       dispatch(slice.actions.getToolsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------
+
+export function getActiveTools (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/tools`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      });
+      dispatch(slice.actions.getActiveToolsSuccess(response.data));
       dispatch(slice.actions.setResponseMessage('tools loaded successfully'));
     } catch (error) {
       console.log(error);
