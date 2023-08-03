@@ -31,7 +31,7 @@ export default function ConfigEditForm() {
   const navigate = useNavigate();
 
   const EditConfigSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required!').max(40, 'Name must not exceed 40 characters!'),
+    name: Yup.string().required('Name is required!').min(2, 'Name must be at least 2 characters long').max(40, 'Name must not exceed 40 characters!'),
     value: Yup.string().required('Value is required!'),
     isActive: Yup.boolean(),
   });
