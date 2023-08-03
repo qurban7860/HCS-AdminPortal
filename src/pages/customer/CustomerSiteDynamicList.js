@@ -20,7 +20,7 @@ import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
 import GoogleMaps from '../../assets/GoogleMaps';
 import useResponsive from '../../hooks/useResponsive';
-import { getSites, getSite, setSiteFormVisibility } from '../../redux/slices/customer/site';
+import { getSites, getSite, setSiteFormVisibility, setSiteEditFormVisibility } from '../../redux/slices/customer/site';
 import { getActiveContacts } from '../../redux/slices/customer/contact';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import SiteAddForm from './site/SiteAddForm';
@@ -58,7 +58,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
 
   const toggleChecked = async () => {
     setChecked((value) => !value);
-    if (checked || siteEditFormVisibility) {
+    if (siteEditFormVisibility) {
       dispatch(setSiteFormVisibility(false));
       enqueueSnackbar(Snacks.SITE_CLOSE_CONFIRM, {
         variant: 'warning',
