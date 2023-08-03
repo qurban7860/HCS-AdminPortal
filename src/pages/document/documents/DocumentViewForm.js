@@ -3,7 +3,7 @@ import React, { useMemo, Suspense, lazy, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { alpha, useTheme } from '@mui/material/styles';
-import { Grid, Typography, Link, Tooltip, Card } from '@mui/material';
+import { Grid, Typography, Link, Tooltip, Card, Button } from '@mui/material';
 import {
   deleteDocument,
   getDocumentHistory,
@@ -36,10 +36,13 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { enqueueSnackbar } = useSnackbar();
+
   // necessary. dont remove
   // const theme = useTheme();
   // const navigate = useNavigate();
+
   const dispatch = useDispatch();
+
   const onDelete = async () => {
     try {
       await dispatch(deleteDocument(document._id));
@@ -69,10 +72,12 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
   const linkDocumentView = async () => {
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentHistoryViewFormVisibility(true));
-    // navigate(PATH_DOCUMENT.document.view(document._id));
-    // dispatch(resetDocument());
-      dispatch(resetDocumentHistory())
+    dispatch(resetDocumentHistory())
     await dispatch(getDocumentHistory(document?._id));
+  };
+
+  const callAfterDelete = async () => {
+    await dispatch(getDocument(document._id));
   };
 
   useEffect(() => {
@@ -111,17 +116,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [document]
   );
-  // console.log("defaultValues.documentVersionLength : ",defaultValues.documentVersionLength)
-  const callAfterDelete = async () => {
-    await dispatch(getDocument(document._id));
-    // if(customerPage || machinePage){
-    //   if(customer?._id || machine?._id ){
-    //     await dispatch(getDocuments(customerPage ? customer?._id : null , machinePage ? machine?._id : null));
-    //   }
-    // }else{
-    //   await dispatch(getDocuments());
-    // }
-  };
+
   return (
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />

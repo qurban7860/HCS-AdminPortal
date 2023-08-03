@@ -112,10 +112,10 @@ export function addDocumentVersion(documentId,params) {
         try {
           const formData = new FormData();
           if(params?.customer){
-            formData.append('customer', params?.customer);
+            formData.append('customer', params?.customer?._id);
           }
           if(params?.machine){
-            formData.append('machine', params?.machine);
+            formData.append('machine', params?.machine?._id);
           }
           if(params?.machineModel){
             formData.append('machineModel', params?.machineModel);
@@ -126,8 +126,8 @@ export function addDocumentVersion(documentId,params) {
           if(params?.description){
             formData.append('description', params?.description);
           }
-          if (params?.multiUpload) {
-            params.multiUpload.forEach((file, index) => {
+          if (params?.files) {
+            params.files.forEach((file, index) => {
               formData.append(`images`, file);
             });
           }
@@ -150,8 +150,8 @@ export function updateDocumentVersion(documentId,versionId,params) {
     dispatch(slice.actions.startLoading());
     try {
       const formData = new FormData();
-      if (params?.multiUpload) {
-          params.multiUpload.forEach((file, index) => {
+      if (params?.files) {
+          params.files.forEach((file, index) => {
           formData.append(`images`, file);
         });
       }

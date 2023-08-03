@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Stack, Chip, Alert } from '@mui/material';
+import { Typography, Grid, Stack, Chip, Alert, Link } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
 import useResponsive from '../../../hooks/useResponsive';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
@@ -27,6 +27,8 @@ export default function ViewFormField({
   documentIsActive,
   chips,
   userRolesChips,
+  NewVersion,
+  handleNewVersion,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -51,7 +53,8 @@ export default function ViewFormField({
     <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>
         {heading || ''}
-      </Typography>
+        </Typography>{NewVersion && <Link href="#" variant="subtitle1" underline='none' onClick={handleNewVersion} sx={{ml:3, fontWeight:"bold" }}> New Version</Link>}
+      
 
       <Typography
         variant={
@@ -202,4 +205,6 @@ ViewFormField.propTypes = {
   chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.array,
   userRolesChips: PropTypes.array,
+  NewVersion: PropTypes.bool,
+  handleNewVersion: PropTypes.func,
 };
