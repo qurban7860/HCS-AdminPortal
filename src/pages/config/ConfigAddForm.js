@@ -34,7 +34,7 @@ export default function ConfigAddForm() {
 
   const NewConfigSchema = Yup.object().shape({
     name: Yup.string().required('Name is required!').min(2, 'Name must be at least 2 characters long').max(40, 'Name must not exceed 40 characters!'),
-    value: Yup.string().required('Value is required!'),
+    value: Yup.string().required('Value is required!').max(70, 'Value must not exceed 70 characters!'),
     isActive: Yup.boolean(),
   });
 
