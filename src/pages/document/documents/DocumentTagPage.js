@@ -8,6 +8,8 @@ import {
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
+  setDocumentNewVersionFormVisibility,
+  setDocumentAddFilesViewFormVisibility,
 } from '../../../redux/slices/document/document';
 // components
 import DocumentList from './DocumentList';
@@ -28,6 +30,8 @@ export default function DocumentTagPage(Page) {
     dispatch(setDocumentEditFormVisibility(false));
     dispatch(setDocumentViewFormVisibility(false));
     dispatch(setDocumentHistoryViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
   }, [Page?.customerPage, Page?.machinePage]);
 
   const {
@@ -40,6 +44,8 @@ export default function DocumentTagPage(Page) {
 
   const handleFormVisibility = () => {
     dispatch(setDocumentFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
   };
   const handleEditFormVisibility = () => {
     dispatch(setDocumentEditFormVisibility(true));

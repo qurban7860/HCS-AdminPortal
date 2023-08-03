@@ -249,6 +249,7 @@ export default function SecurityUserViewForm() {
         </Card>
       </Grid>
       <Dialog
+        maxWidth="lg"
         open={openCustomer}
         onClose={handleCloseCustomer}
         aria-labelledby="keep-mounted-modal-title"
@@ -310,6 +311,7 @@ export default function SecurityUserViewForm() {
         {/* <DialogLink content=" Go to customer" onClick={() => handleViewCustomer(customer._id)} /> */}
       </Dialog>
       <Dialog
+        maxWidth="lg"
         open={openContact}
         onClose={handleCloseContact}
         aria-labelledby="keep-mounted-modal-title"

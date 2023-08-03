@@ -10,6 +10,8 @@ const initialState = {
   documentEditFormVisibility: false,
   documentViewFormVisibility: false,
   documentHistoryViewFormVisibility: false,
+  documentNewVersionFormVisibility: false,
+  documentAddFilesViewFormVisibility: false,
   documentEdit: false,
   documentIntial: false,
   responseMessage: null,
@@ -52,6 +54,14 @@ const slice = createSlice({
     // SET TOGGLE
     setDocumentHistoryViewFormVisibility(state, action){
       state.documentHistoryViewFormVisibility = action.payload;
+    },
+    // SET TOGGLE
+    setDocumentNewVersionFormVisibility(state, action){
+      state.documentNewVersionFormVisibility = action.payload;
+    },
+     // SET TOGGLE
+    setDocumentAddFilesViewFormVisibility(state, action){
+      state.documentAddFilesViewFormVisibility = action.payload;
     },
     setDocumentEdit(state, action){
       state.documentEdit = action.payload;
@@ -145,6 +155,8 @@ export const {
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
+  setDocumentNewVersionFormVisibility,
+  setDocumentAddFilesViewFormVisibility,
   setDocumentEdit,
   resetDocument,
   resetDocuments,
@@ -161,10 +173,10 @@ export function addDocument(customerId , machineId ,  params) {
         try {
           const formData = new FormData();
           if(customerId){
-            formData.append('customer', params.customer);
+            formData.append('customer', customerId);
           }
             if(machineId){
-              formData.append('machine', params.machine);
+              formData.append('machine', machineId);
             }
             formData.append('customerAccess', params.customerAccess);
             formData.append('isActive', params.isActive);
@@ -187,28 +199,21 @@ export function addDocument(customerId , machineId ,  params) {
             formData.append('displayName', params?.displayName);
             formData.append('name', params?.displayName);
           }
-          // if(params?.name){
-          //   formData.append('name', params?.name);
-          // }
           if(params?.description){
             formData.append('description', params?.description);
           }
           if(params?.documentCategory){
-            formData.append('documentCategory', params?.documentCategory);
+            formData.append('documentCategory', params?.documentCategory?._id);
           }
           if(params?.documentType){
-            formData.append('documentType', params?.documentType);
-            formData.append('doctype', params?.documentType);
+            formData.append('documentType', params?.documentType?._id);
+            formData.append('doctype', params?.documentType?._id);
           }
-          // if(params?.multiUpload){
-          //   formData.append('images', params?.multiUpload);
-          // }
-          if (params?.multiUpload) {
-            params.multiUpload.forEach((file, index) => {
+          if (params?.files) {
+            params?.files?.forEach((file, index) => {
               formData.append(`images`, file);
             });
           }
-          // console.log("formData", formData);
       const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getDocuments( customerId, machineId ));
@@ -228,14 +233,10 @@ export function updateDocument(documentId , params, customerId, machineId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-
       const formData = new FormData();
       formData.append('isActive', params?.isActive);
-
       formData.append('customerAccess', params.customerAccess);
-
       formData.append('referenceNumber', params.referenceNumber);
-      
       if(params?.versionNo){
         formData.append('versionNo', params.versionNo);
       }
@@ -253,8 +254,8 @@ export function updateDocument(documentId , params, customerId, machineId) {
         formData.append('documentCategory', params?.documentCategory);
       }
       if(params?.documentType){
-        formData.append('documentType', params?.documentType);
-        formData.append('doctype', params?.documentType);
+        formData.append('documentType', params?.documentType?._id);
+        formData.append('doctype', params?.documentType?._id);
       }
       if(params?.images){
         formData.append('images', params?.images);

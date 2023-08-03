@@ -13,6 +13,7 @@ import {
   Dialog,
   Link,
   DialogContent,
+  Button
 } from '@mui/material';
 import { PATH_CUSTOMER, PATH_MACHINE, PATH_DOCUMENT } from '../../../routes/paths';
 import { useSnackbar } from '../../../components/snackbar';
@@ -24,6 +25,10 @@ import {
   getDocuments,
   deleteDocument,
   resetActiveDocuments,
+  setDocumentFormVisibility,
+  setDocumentHistoryViewFormVisibility,
+  setDocumentAddFilesViewFormVisibility,
+  setDocumentNewVersionFormVisibility,
 } from '../../../redux/slices/document/document';
 import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
 import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
@@ -37,6 +42,7 @@ import CustomerDialog from '../../components/Dialog/CustomerDialog';
 import MachineDialog from '../../components/Dialog/MachineDialog';
 
 // ----------------------------------------------------------------------
+
 DocumentHistoryViewForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
@@ -50,7 +56,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
   const { enqueueSnackbar } = useSnackbar();
   const regEx = /^[^2]*/;
 
-  const { document, documentHistory } = useSelector((state) => state.document);
+  const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
 
@@ -88,29 +94,6 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
       dispatch(getCustomer(documentHistory.customer._id));
     }
   }, [documentHistory, customerPage, dispatch]);
-
-// delete document and navigate to docuements list page
-  const onDelete = async () => {
-    try {
-      await dispatch(deleteDocument(documentHistory._id));
-      dispatch(getDocuments());
-      navigate(PATH_DOCUMENT.document.list);
-      enqueueSnackbar(Snacks.deletedDoc);
-    } catch (err) {
-      enqueueSnackbar(Snacks.failedDeleteDoc, { variant: `error` });
-      console.log('Error:', err);
-    }
-  };
-
-  // customer portal control
-  const handleOpenCustomer = () => setOpenCustomer(true);
-  const handleCloseCustomer = () => setOpenCustomer(false);
-  const handleViewCustomer = (Id) => {navigate(PATH_CUSTOMER.view(Id))};
-
-  // machine portal control
-  const handleOpenMachine = () => setOpenMachine(true);
-  const handleCloseMachine = () => setOpenMachine(false);
-  const handleViewMachine = (Id) => {navigate(PATH_MACHINE.machines.view(Id));};
 
   const defaultValues = useMemo(
     () => ({
@@ -193,12 +176,59 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
       });
   };
 
+  // refresh the document when file deleted
+  const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
+
+
+// delete document and navigate to docuements list page
+const onDelete = async () => {
+  try {
+    await dispatch(deleteDocument(documentHistory._id));
+    dispatch(getDocuments());
+    navigate(PATH_DOCUMENT.document.list);
+    enqueueSnackbar(Snacks.deletedDoc);
+  } catch (err) {
+    enqueueSnackbar(Snacks.failedDeleteDoc, { variant: `error` });
+    console.log('Error:', err);
+  }
+};
+
+const handleNewVersion = async () => {
+  if(customerPage || machinePage){
+  dispatch(setDocumentHistoryViewFormVisibility(false));
+  dispatch(setDocumentFormVisibility(true));
+  dispatch(setDocumentNewVersionFormVisibility(true));
+}else{
+  dispatch(setDocumentNewVersionFormVisibility(true));
+  navigate(PATH_DOCUMENT.document.new);
+}
+}
+
+const handleNewFile = async () => {
+  if(customerPage || machinePage){
+  dispatch(setDocumentHistoryViewFormVisibility(false));
+  dispatch(setDocumentFormVisibility(true));
+  dispatch(setDocumentAddFilesViewFormVisibility(true));
+}else{
+  dispatch(setDocumentAddFilesViewFormVisibility(true));
+  navigate(PATH_DOCUMENT.document.new);
+}
+}
+
+  // customer portal control
+  const handleOpenCustomer = () => setOpenCustomer(true);
+  const handleCloseCustomer = () => setOpenCustomer(false);
+  const handleViewCustomer = (Id) => {navigate(PATH_CUSTOMER.view(Id))};
+
+  // machine portal control
+  const handleOpenMachine = () => setOpenMachine(true);
+  const handleCloseMachine = () => setOpenMachine(false);
+  const handleViewMachine = (Id) => {navigate(PATH_MACHINE.machines.view(Id));};
+
   // preview portal control
   const handleOpenPreview = () => { setOnPreview(true)};
   const handleClosePreview = () => { setOnPreview(false)};
 
-  // refresh the document when file deleted
-  const callAfterDelete = () => {dispatch(getDocumentHistory(documentHistory._id))};
 
   return (
     <>
@@ -226,6 +256,8 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
               <ViewFormField sm={6} heading="Reference Number" param={defaultValues?.referenceNumber} />
               <ViewFormField
                 sm={6}
+                NewVersion
+                handleNewVersion={handleNewVersion}
                 heading="Active Version"
                 objectParam={
                   defaultValues.documentVersion && (
@@ -302,7 +334,7 @@ export default function DocumentHistoryViewForm({ customerPage, machinePage, dra
                         </Grid>
                       </Grid>
                     ))}
-
+                    <Button variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>
                       <ViewFormAudit defaultValues={fileValues} />
                   </Grid>
                 )})}
