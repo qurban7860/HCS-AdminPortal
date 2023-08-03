@@ -57,6 +57,14 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const { activeContacts } = useSelector((state) => state.contact);
   const { allMachines, customerMachines } = useSelector((state) => state.machine);
 
+  console.log('activeRegions------->', activeRegions);
+  console.log('activeContacts===========>', activeContacts);
+  console.log('spCustomers===========>', spCustomers);
+  console.log('allCustomers===========>', allCustomers);
+  console.log('allMachines===========>', allMachines);
+
+
+
   const regEx = /^[^2]*$/;
   const [selectedRegions, setSelectedRegions] = useState([]);
   // const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
@@ -329,7 +337,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               <Autocomplete
                 // freeSolo
                 value={contactVal || null}
-                options={activeContacts}
+                options={customerVal ? activeContacts : []}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
@@ -457,7 +465,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                   sx={{ mt: 3 }}
                   multiple
                   id="regions-autocomplete"
-                  options={activeRegions}
+                  options={activeRegions.length > 0 ? activeRegions : [] }
                   value={selectedRegions}
                   onChange={(event, newValue) => {
                     if (newValue) {                    
@@ -481,7 +489,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 multiple
                 required
                 value={customersArr || null}
-                options={allCustomers}
+                options={allCustomers.length > 0 ? allCustomers : [] }
                 getOptionLabel={(option) => option.name}
                 isOptionEqualToValue={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
@@ -513,9 +521,9 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 multiple
                 required
                 value={machinesArr || null}
-                options={allMachines}
-                getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                options={allMachines.length > 0 ? allMachines : [] }
+                getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
+                isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setMachineArr(newValue);
@@ -526,7 +534,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 id="machine"
                 renderOption={(props, option) => (
                   <li {...props} key={option.id}>
-                    {option.name}
+                    {`${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
                   </li>
                 )}
                 renderInput={(params) => (

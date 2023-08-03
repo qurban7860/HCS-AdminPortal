@@ -16,7 +16,7 @@ const initialState = {
   error: null,
   customers: [],
   activeCustomers: [],
-  unfilteredCustomers: [],
+  allCustomers: [],
   spCustomers: [],
   customer: {},
 };
@@ -31,9 +31,8 @@ const slice = createSlice({
     },
     // STOP LOADING
     stopLoading(state) {
-      console.log('loading working');
       state.isLoading = false;
-        },
+    },
 
     // SET TOGGLE
     setCustomerEditFormVisibility(state, action){
@@ -67,7 +66,7 @@ const slice = createSlice({
     getAllCustomersSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.unfilteredCustomers = action.payload;
+      state.allCustomers = action.payload;
       state.initial = true;
     },
 
@@ -194,7 +193,6 @@ export function getAllCustomers() {
           isArchived: false
         }
       });
-      console.log('response.data--------->', response.data);
       dispatch(slice.actions.getAllCustomersSuccess(response.data));
       // dispatch(slice.actions.setResponseMessage('Customers loaded successfully'));
     } catch (error) {

@@ -8,6 +8,7 @@ const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_CUSTOMER = '/customers';
 const ROOTS_MACHINE = '/products';
+const ROOTS_EMAIL =   '/email';
 const ROOTS_SECURITY = '/security';
 const ROOTS_SETTING = '/settings';
 const ROOTS_DOCUMENT = '/documents';
@@ -175,6 +176,15 @@ export const PATH_MACHINE = {
   },
 };
 
+export const PATH_EMAIL = {
+  root: ROOTS_EMAIL,
+  permissionDenied: path(ROOTS_EMAIL, '/permission-denied'),
+  email : {
+    list:path(ROOTS_EMAIL, '/list'),
+    new: path(ROOTS_EMAIL, '/new'), 
+  },
+}
+
 export const PATH_SECURITY = {
   root: ROOTS_SECURITY,
   permissionDenied: path(ROOTS_SECURITY, '/permission-denied'),
@@ -228,11 +238,17 @@ export const PATH_SETTING = {
     view: (id) => path(ROOTS_SETTING, `/regions/${id}/view`),
     edit: (id) => path(ROOTS_SETTING, `/regions/${id}/edit`)
   },
-  config: {
-    list: path(ROOTS_SETTING, '/config/list'),
-    new: path(ROOTS_SETTING, '/config/new'),
-    view: (id) => path(ROOTS_SETTING, `/config/${id}/view`),
-    edit: (id) => path(ROOTS_SETTING, `/config/${id}/edit`)
+  configs: {
+    list: path(ROOTS_SETTING, '/configs/list'),
+    new: path(ROOTS_SETTING, '/configs/new'),
+    view: (id) => path(ROOTS_SETTING, `/configs/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/configs/${id}/edit`)
+  },
+  userConfig: {
+    list: path(ROOTS_SETTING, '/userConfig/list'),
+    new: path(ROOTS_SETTING, '/userConfig/new'),
+    view: (id) => path(ROOTS_SETTING, `/userConfig/${id}/view`),
+    edit: (id) => path(ROOTS_SETTING, `/userConfig/${id}/edit`)
   },
 };
 

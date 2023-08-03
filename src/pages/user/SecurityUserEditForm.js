@@ -113,9 +113,6 @@ export default function SecurityUserEditForm() {
 
   /* eslint-disable */
   useLayoutEffect(() => {
-    if (securityUser.regions !== undefined && securityUser.regions !== null) {
-      setSelectedRegions(securityUser?.regions);
-    }
     if (securityUser.customer !== undefined && securityUser.customer !== null) {
       setCustomerVal(securityUser?.customer);
     }
@@ -132,13 +129,17 @@ export default function SecurityUserEditForm() {
       setEmail(securityUser?.email);
     }
     if (securityUser.customers !== undefined && securityUser.customers.length > 0) {
-      setCustomerArr(securityUser?.customers);
+      const selectedCustomerIds = securityUser?.customers.map((customer) => customer._id);
+      setCustomerArr(allCustomers.filter((customer) => selectedCustomerIds.includes(customer._id)));
     }
     if (securityUser.machines !== undefined && securityUser.machines.length > 0) {
-      setMachineArr(securityUser?.machines);
+      const selectedMachineIds = securityUser?.machines.map((machine) => machine._id);
+      setMachineArr(allMachines.filter((machine) => selectedMachineIds.includes(machine._id)));
 
-    }if (securityUser.regions !== undefined && securityUser.regions.length > 0) {
-      setSelectedRegions(securityUser?.regions);
+    }
+    if (securityUser.regions !== undefined && securityUser.regions.length > 0) {
+      const selectedRegionIds = securityUser?.regions.map((region) => region._id);
+      setSelectedRegions(activeRegions.filter((region) => selectedRegionIds.includes(region._id)));
     }
   }, [securityUser]);
   /* eslint-enable */
@@ -511,28 +512,40 @@ export default function SecurityUserEditForm() {
                 sm: 'repeat(1, 1fr)',
               }}
             >
+
               <Autocomplete
-                  sx={{ mt: 3 }}
-                  multiple
-                  id="regions-autocomplete"
-                  options={activeRegions}
-                  value={selectedRegions}
-                  onChange={(event, newValue) => {
-                    if (newValue) {                    
-                      setSelectedRegions(newValue);
-                    } else {
-                      setSelectedRegions('');
-                    }
-                  }}                  getOptionLabel={(option) => option.name}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label="Regions"
-                      placeholder="Select Regions"
-                    />
-                  )}
-                />
+                // freeSolo
+                sx={{ mt: 3 }}
+                multiple
+                required
+                value={selectedRegions || null}
+                options={activeRegions}
+                getOptionLabel={(option) => option.name}
+                isOptionEqualToValue={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if (newValue) {                    
+                    setSelectedRegions(newValue);
+                  } else {
+                    setSelectedRegions('');
+                  }
+                }}                
+                id="controllable-states-demo"
+                renderOption={(props, option) => (
+                  <li {...props} key={option._id}>
+                    {option.name}
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <TextField {...params} name="regions" label="Regions"/>
+                )}
+                ChipProps={{ size: 'small' }}
+              >
+                {(option) => (
+                  <div key={option._id}>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </Autocomplete>
 
               <Autocomplete
                 // freeSolo
@@ -548,9 +561,10 @@ export default function SecurityUserEditForm() {
                   } else {
                     setCustomerArr('');
                   }
-                }}                id="controllable-states-demo"
+                }}                
+                id="controllable-states-demo"
                 renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
+                  <li {...props} key={option._id}>
                     {option.name}
                   </li>
                 )}
@@ -583,7 +597,7 @@ export default function SecurityUserEditForm() {
                 }}
                 id="machine"
                 renderOption={(props, option) => (
-                  <li {...props} key={option.id}>
+                  <li {...props} key={option._id}>
                     {`${option.serialNo ? option.serialNo : ''} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
                   </li>
                 )}

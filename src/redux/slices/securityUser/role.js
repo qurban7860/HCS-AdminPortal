@@ -19,6 +19,7 @@ const initialState = {
     SuperAdmin: 'Super Admin',
     Manager: 'Manager',
     Support: 'Support',
+    Email: 'Email',
   }
 };
 

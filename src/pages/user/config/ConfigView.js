@@ -25,7 +25,7 @@ import ConfigViewForm from './ConfigViewForm';
 // ----------------------------------------------------------------------
 
 export default function ConfigView() {
-  const { config } = useSelector((state) => state.config);
+  const { config } = useSelector((state) => state.userConfig);
   
   const dispatch = useDispatch();
 
@@ -44,7 +44,7 @@ export default function ConfigView() {
             position: 'relative',
           }}
         >
-          <Cover name="Configuration" generalSettings="enabled" backLink={PATH_SETTING.config.list} />
+          <Cover name="Configuration" generalSettings="enabled" backLink={PATH_SETTING.userConfig.list} />
         </Card>
         <ConfigViewForm />
       </Container>

@@ -20,7 +20,7 @@ import techparamReducer from './slices/products/machineTechParam';
 import machineSettingReducer from './slices/products/machineTechParamValue';
 import toolInstalledReducer from './slices/products/toolInstalled';
 import roleReducer from './slices/securityUser/role';
-import configReducer from './slices/securityUser/config';
+import userConfigReducer from './slices/securityUser/config';
 import countReducer from './slices/dashboard/count';
 import documentTypeReducer from './slices/document/documentType';
 import documentCategoryReducer from './slices/document/documentCategory';
@@ -32,7 +32,7 @@ import machineConnectionsReducer from './slices/products/machineConnections';
 import documentVersionReducer from './slices/document/documentVersion';
 import regionReducer from './slices/region/region';
 import drawingReducer from './slices/products/drawing';
-
+import configReducer from './slices/config/config';
 
 // ----------------------------------------------------------------------
 
@@ -155,10 +155,16 @@ export const userRolesPersistConfig = {
   key: 'role',
   storage,
   keyPrefix: 'redux-',
+  blacklist: ['error', 'initial', 'responseMessage', 'userRoleTypes']
+};
+export const configPersistConfig = {
+  key: 'config',
+  storage,
+  keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
 };
-export const configsPersistConfig = {
-  key: 'config',
+export const userConfigPersistConfig = {
+  key: 'userConfig',
   storage,
   keyPrefix: 'redux-',
   blacklist: ['error', 'initial', 'responseMessage']
@@ -250,7 +256,6 @@ const rootReducer = combineReducers({
   machineSetting: persistReducer(machineSettingPersistConfig, machineSettingReducer),
   toolInstalled: persistReducer(machineToolInstalledPersistConfig, toolInstalledReducer),
   role: persistReducer(userRolesPersistConfig, roleReducer),
-  config: persistReducer(configsPersistConfig, configReducer),
   count: persistReducer(countPersistConfig, countReducer),
   documentType: persistReducer(documentTypePersistConfig, documentTypeReducer),
   documentCategory: persistReducer(documentCategoryPersistConfig, documentCategoryReducer),
@@ -262,6 +267,10 @@ const rootReducer = combineReducers({
   documentVersion: persistReducer(documentVersionPersistConfig, documentVersionReducer),
   region: persistReducer(regionPersistConfig, regionReducer),
   drawing: persistReducer(drawingPersistConfig, drawingReducer),
+  config: persistReducer(configPersistConfig, configReducer),
+  userConfig: persistReducer(userConfigPersistConfig, userConfigReducer),
+
+
 });
 
 export default rootReducer;
