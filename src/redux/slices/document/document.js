@@ -12,6 +12,8 @@ const initialState = {
   documentHistoryViewFormVisibility: false,
   documentNewVersionFormVisibility: false,
   documentAddFilesViewFormVisibility: false,
+  documentHistoryNewVersionFormVisibility: false,
+  documentHistoryAddFilesViewFormVisibility: false,
   documentEdit: false,
   documentIntial: false,
   responseMessage: null,
@@ -62,6 +64,14 @@ const slice = createSlice({
      // SET TOGGLE
     setDocumentAddFilesViewFormVisibility(state, action){
       state.documentAddFilesViewFormVisibility = action.payload;
+    },
+    // SET TOGGLE
+    setDocumentHistoryNewVersionFormVisibility(state, action){
+      state.documentHistoryNewVersionFormVisibility = action.payload;
+    },
+     // SET TOGGLE
+    setDocumentHistoryAddFilesViewFormVisibility(state, action){
+      state.documentHistoryAddFilesViewFormVisibility = action.payload;
     },
     setDocumentEdit(state, action){
       state.documentEdit = action.payload;
@@ -157,6 +167,8 @@ export const {
   setDocumentHistoryViewFormVisibility,
   setDocumentNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
+  setDocumentHistoryNewVersionFormVisibility,
+  setDocumentHistoryAddFilesViewFormVisibility,
   setDocumentEdit,
   resetDocument,
   resetDocuments,

@@ -25,8 +25,11 @@ import {
   getDocuments,
   deleteDocument,
   resetActiveDocuments,
+  resetDocument,
   setDocumentFormVisibility,
   setDocumentHistoryViewFormVisibility,
+  setDocumentHistoryAddFilesViewFormVisibility,
+  setDocumentHistoryNewVersionFormVisibility,
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
 } from '../../../redux/slices/document/document';
@@ -195,24 +198,56 @@ const onDelete = async () => {
 
 const handleNewVersion = async () => {
   if(customerPage || machinePage){
-  dispatch(setDocumentHistoryViewFormVisibility(false));
-  dispatch(setDocumentFormVisibility(true));
-  dispatch(setDocumentNewVersionFormVisibility(true));
-}else{
-  dispatch(setDocumentNewVersionFormVisibility(true));
-  navigate(PATH_DOCUMENT.document.new);
-}
+    dispatch(setDocumentHistoryViewFormVisibility(false));
+    dispatch(setDocumentFormVisibility(true));
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(resetDocument());
+  }else if(!customerPage && !machinePage && !machineDrawings){
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    navigate(PATH_DOCUMENT.document.new);
+    dispatch(resetDocument());
+  }
+  else if(machineDrawings){
+    dispatch(setDocumentHistoryNewVersionFormVisibility(true));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    navigate(PATH_DOCUMENT.document.machineDrawings.new);
+    dispatch(resetDocument());
+  }
 }
 
 const handleNewFile = async () => {
   if(customerPage || machinePage){
-  dispatch(setDocumentHistoryViewFormVisibility(false));
-  dispatch(setDocumentFormVisibility(true));
-  dispatch(setDocumentAddFilesViewFormVisibility(true));
-}else{
-  dispatch(setDocumentAddFilesViewFormVisibility(true));
-  navigate(PATH_DOCUMENT.document.new);
-}
+    dispatch(setDocumentHistoryViewFormVisibility(false));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
+    dispatch(setDocumentHistoryNewVersionFormVisibility(false));
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(setDocumentFormVisibility(true));
+    dispatch(resetDocument());
+  }else if(!customerPage && !machinePage && !machineDrawings){
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
+    dispatch(setDocumentHistoryNewVersionFormVisibility(false));
+    dispatch(resetDocument());
+    navigate(PATH_DOCUMENT.document.new);
+  }
+  else if(machineDrawings){
+    dispatch(setDocumentAddFilesViewFormVisibility(false));
+    dispatch(setDocumentNewVersionFormVisibility(false));
+    dispatch(setDocumentHistoryAddFilesViewFormVisibility(true));
+    dispatch(setDocumentHistoryNewVersionFormVisibility(false));
+    navigate(PATH_DOCUMENT.document.machineDrawings.new);
+    dispatch(resetDocument());
+  }
 }
 
   // customer portal control
@@ -303,7 +338,7 @@ const handleNewFile = async () => {
 
 
               {documentHistory &&
-                documentHistory?.documentVersions?.map((files) => {
+                documentHistory?.documentVersions?.map((files, index) => {
                   const fileValues = {
                       createdAt: files?.createdAt || '',
                       createdByFullName: files?.createdBy?.name || '',
@@ -334,7 +369,7 @@ const handleNewFile = async () => {
                         </Grid>
                       </Grid>
                     ))}
-                    <Button variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>
+                    {index === 0 && ( <Button title="Add/Upload Files in Current version." variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>)}
                       <ViewFormAudit defaultValues={fileValues} />
                   </Grid>
                 )})}

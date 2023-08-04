@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { alpha, useTheme } from '@mui/material/styles';
 import { Grid, Typography, Link, Tooltip, Card, Button } from '@mui/material';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 import {
   deleteDocument,
   getDocumentHistory,
@@ -14,6 +15,11 @@ import {
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
   resetDocument,
+  setDocumentFormVisibility,
+  setDocumentAddFilesViewFormVisibility,
+  setDocumentNewVersionFormVisibility,
+  setDocumentHistoryAddFilesViewFormVisibility,
+  setDocumentHistoryNewVersionFormVisibility,
 } from '../../../redux/slices/document/document';
 // components
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
@@ -39,7 +45,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
 
   // necessary. dont remove
   // const theme = useTheme();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
@@ -80,9 +86,9 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
     await dispatch(getDocument(document._id));
   };
 
-  useEffect(() => {
-    dispatch(resetDocument());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(resetDocument());
+  // }, [dispatch]);
 
   const defaultValues = useMemo(
     () => ({
@@ -117,6 +123,35 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
     [document]
   );
 
+  const handleNewVersion = async () => {
+    if(customerPage || machinePage){
+      dispatch(setDocumentHistoryNewVersionFormVisibility(false));
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+      dispatch(setDocumentAddFilesViewFormVisibility(false));
+      dispatch(resetDocumentHistory());
+      dispatch(setDocumentViewFormVisibility(false));
+      dispatch(setDocumentFormVisibility(true));
+      dispatch(setDocumentNewVersionFormVisibility(true));
+  }else{
+    dispatch(setDocumentNewVersionFormVisibility(true));
+    navigate(PATH_DOCUMENT.document.new);
+  }
+  }
+
+  const handleNewFile = async () => {
+    if(customerPage || machinePage){
+      dispatch(setDocumentHistoryNewVersionFormVisibility(false));
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false));
+      dispatch(setDocumentNewVersionFormVisibility(false));
+      dispatch(resetDocumentHistory());
+      dispatch(setDocumentViewFormVisibility(false));
+      dispatch(setDocumentFormVisibility(true));
+      dispatch(setDocumentAddFilesViewFormVisibility(true));
+  }else{
+    dispatch(setDocumentAddFilesViewFormVisibility(true));
+    navigate(PATH_DOCUMENT.document.new);
+  }
+  }
   return (
     <Card sx={{ p: 3 }}>
       <ViewFormEditDeleteButtons handleEdit={handleEdit} onDelete={onDelete} />
@@ -136,16 +171,11 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
         <ViewFormField
           sm={6}
           heading="Version"
-          objectParam={
-            defaultValues.documentVersion && (
-              <Typography display="flex">
-                {defaultValues.versionPrefix} {defaultValues.documentVersion}
-                {defaultValues.documentVersion && (
-                  <VersionsLink onClick={linkDocumentView} content="View other versions" />
-                )}
-              </Typography>
-            )
-          }
+          NewVersion
+          handleNewVersion={handleNewVersion}
+          ViewAllVersions
+          handleAllVersion={linkDocumentView}
+          objectParam={`${defaultValues.versionPrefix} ${defaultValues.documentVersion}`}
         />
         {!customerPage && !machinePage && (
           <>
@@ -170,6 +200,7 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
                   getCallAfterDelete={callAfterDelete}
                 />
               ))}
+              <Button title="Add/Upload Files in Current version." variant="contained" color="inherit" onClick={handleNewFile}  sx={{width:'140px', height:'140px', borderRadius:'16px'}} >Add/Upload Files</Button>
           </Grid>
         </Grid>
         <Grid container sx={{ mt: 2 }}>

@@ -2,19 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Link } from '@mui/material';
 import { alpha, useTheme } from '@mui/material/styles';
+import Iconify from '../../../components/iconify';
 
 export default function VersionsLink({ onClick, content }) {
   const theme = useTheme();
   return (
-    <Link onClick={onClick} href="#" underline="none">
-      <Typography
-        variant="overline"
-        sx={{ mt: 0.45, ml: 1 }}
-        color={alpha(theme.palette.primary.main, 0.4)}
-      >
-        {content}
-      </Typography>
-    </Link>
+    <Link title='View all Versions' onClick={onClick} href="#" underline="none"><Iconify icon="carbon:view" sx={{mb:-0.8, ml:1, width:"25px", height:"25px"}}/></Link>
   );
 }
 

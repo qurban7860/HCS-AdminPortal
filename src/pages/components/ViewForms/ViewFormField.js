@@ -4,6 +4,8 @@ import { Typography, Grid, Stack, Chip, Alert, Link } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
 import useResponsive from '../../../hooks/useResponsive';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
+import Iconify from '../../../components/iconify';
+
 
 export default function ViewFormField({
   heading,
@@ -29,6 +31,8 @@ export default function ViewFormField({
   userRolesChips,
   NewVersion,
   handleNewVersion,
+  ViewAllVersions,
+  handleAllVersion,
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
@@ -53,7 +57,8 @@ export default function ViewFormField({
     <Grid item xs={12} sm={sm} sx={{ px: 2, py: 1, overflowWrap: 'break-word' }}>
       <Typography variant="overline" sx={{ color: 'text.disabled' }}>
         {heading || ''}
-        </Typography>{NewVersion && <Link href="#" variant="subtitle1" underline='none' onClick={handleNewVersion} sx={{ml:3, fontWeight:"bold" }}> New Version</Link>}
+        </Typography>{NewVersion && <Link title='New Version' href="#" variant="subtitle1" underline='none' onClick={handleNewVersion} sx={{ fontWeight:"bold" }}> <Iconify heading="New Version" icon="icon-park-outline:add" sx={{mb:-0.8}}/></Link>}
+        {ViewAllVersions && <Link title='View all Versions' onClick={handleAllVersion} href="#" underline="none"><Iconify icon="carbon:view" sx={{mb:-1, ml:1, width:"23px", height:"23px"}}/></Link>}
       
 
       <Typography
@@ -207,4 +212,6 @@ ViewFormField.propTypes = {
   userRolesChips: PropTypes.array,
   NewVersion: PropTypes.bool,
   handleNewVersion: PropTypes.func,
+  ViewAllVersions: PropTypes.bool,
+  handleAllVersion: PropTypes.func,
 };
