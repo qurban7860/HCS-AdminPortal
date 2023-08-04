@@ -22,18 +22,22 @@ import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/pat
 // slice
 import {
   getActiveDocuments,
+  resetActiveDocuments,
   getDocuments,
-  addDocument,
+  getDocument,
+  getDocumentHistory,
   getCustomerDocuments,
   getMachineDocuments,
   getMachineDrawingsDocuments,
-  resetActiveDocuments,
+  addDocument,
   getCustomerSiteDocuments,
-  setDocumentAddFilesViewFormVisibility,
-  setDocumentNewVersionFormVisibility,
+  setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
   setDocumentFormVisibility,
-  getDocumentHistory
+  setDocumentAddFilesViewFormVisibility,
+  setDocumentNewVersionFormVisibility,
+  setDocumentHistoryAddFilesViewFormVisibility,
+  setDocumentHistoryNewVersionFormVisibility,
 } from '../../../redux/slices/document/document';
 import {
   setDocumentCategoryFormVisibility,
@@ -143,7 +147,7 @@ export default function DocumentAddForm({
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { activeMachines, machine } = useSelector((state) => state.machine);
   const { activeMachineModels } = useSelector((state) => state.machinemodel);
-  const { documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility } = useSelector((state) => state.document);
+  const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
   const { activeCustomers, customer } = useSelector((state) => state.customer);
   const { activeContacts } = useSelector((state) => state.contact);
   const { activeSites } = useSelector((state) => state.site);
@@ -152,6 +156,7 @@ export default function DocumentAddForm({
   const [selectedValue, setSelectedValue] = useState('new');
   const [selectedVersionValue, setSelectedVersionValue] = useState('newVersion');
   const [readOnlyVal, setReadOnlyVal] = useState(false);
+  const [readOnlyDocument, setReadOnlyDocument] = useState(false);
   // const [contactDisabled, setContactDisabled] = useState(false);
   const [documentDependency, setDocumentDependency] = useState('customer');
   const [previewVal, setPreviewVal] = useState('');
@@ -205,9 +210,9 @@ export default function DocumentAddForm({
   const methods = useForm({
     resolver: yupResolver(AddDocumentSchema),
     defaultValues:{
-      documentType: (documentHistory?.documentType && documentNewVersionFormVisibility )|| null,
-      documentCategory: ( documentHistory?.documentCategory && documentNewVersionFormVisibility ) || null,
-      displayName: ( documentHistory?.displayName && documentNewVersionFormVisibility ) || '',
+      documentType: null,
+      documentCategory: null,
+      displayName:  '',
       referenceNumber:  '',
       versionNo:  '',
       documentVal:  null ,
@@ -219,7 +224,6 @@ export default function DocumentAddForm({
       machineVal: '',
     },
   });
-  // (documentAddFilesViewFormVisibility ||documentNewVersionFormVisibility) ? document :
   const {
     reset,
     watch,
@@ -249,7 +253,8 @@ export default function DocumentAddForm({
   },[dispatch, categoryBy])
 
   useEffect(()=>{
-    if( documentNewVersionFormVisibility ){
+    if( documentHistoryNewVersionFormVisibility ){
+      setReadOnlyDocument(true);
       setSelectedValue('newVersion');
       setSelectedVersionValue('newVersion');
       setValue('documentVal',documentHistory)
@@ -259,7 +264,8 @@ export default function DocumentAddForm({
       setValue('customerAccess', documentHistory.customerAccess);
       setValue('isActive', documentHistory.isActive);
       setReadOnlyVal(true);
-    }else if( documentAddFilesViewFormVisibility ){
+    }else if( documentHistoryAddFilesViewFormVisibility ){
+      setReadOnlyDocument(true);
       setSelectedVersionValue('existingVersion');
       setSelectedValue('newVersion');
       setValue('documentVal',documentHistory)
@@ -271,12 +277,40 @@ export default function DocumentAddForm({
       setReadOnlyVal(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[ documentNewVersionFormVisibility, documentAddFilesViewFormVisibility, documentHistory ])
+  },[ documentHistoryNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistory ])
+
+  useEffect(()=>{
+    if( documentNewVersionFormVisibility ){
+      setReadOnlyDocument(true);
+      setSelectedValue('newVersion');
+      setSelectedVersionValue('newVersion');
+      setValue('documentVal',document)
+      setValue('displayName', document.displayName);
+      setValue('documentType', document.docType);
+      setValue('documentCategory', document.docCategory);
+      setValue('customerAccess', document.customerAccess);
+      setValue('isActive', document.isActive);
+      setReadOnlyVal(true);
+    }else if( documentAddFilesViewFormVisibility ){
+      setReadOnlyDocument(true);
+      setSelectedVersionValue('existingVersion');
+      setSelectedValue('newVersion');
+      setValue('documentVal',document)
+      setValue('displayName', document.displayName);
+      setValue('documentType', document.docType);
+      setValue('documentCategory', document.docCategory);
+      setValue('customerAccess', document.customerAccess);
+      setValue('isActive', document.isActive);
+      setReadOnlyVal(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ documentNewVersionFormVisibility, documentAddFilesViewFormVisibility, document ])
 
   useEffect(() => {
-    if (!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility) {
+    if (!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       reset();
       setSelectedValue('new');
+      setReadOnlyDocument(false);
     }
     dispatch(resetActiveDocuments());
     dispatch(resetActiveMachines);
@@ -367,49 +401,95 @@ export default function DocumentAddForm({
 
   const onSubmit = async (data) => {
     try {
-      console.log("data : " , data);
       if (selectedValue === 'new') {
-        await dispatch(
-          addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data)
-        );
+        // New Document Part
+        await dispatch(addDocument( customerPage ? customer?._id : null, machinePage ? machine?._id : null, data));
         enqueueSnackbar(Snacks.addedDoc);
         if (!customerPage && !machinePage && machineDrawings) {
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
-        } else {
+        }else if(handleFormVisibility){
           handleFormVisibility();
         }
       } else if (selectedVersionValue === 'newVersion') {
-        console.log('newVersion ');
+        // New versions Part
         await dispatch(addDocumentVersion(documentVal._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
-        if (!customerPage && !machinePage && machineDrawings ) {
+        // page Navigation conditions for new versions
+        if (!customerPage && !machinePage && machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
+        } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility  && machineDrawings ){
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
-        } else if(!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility){
+        }else if(!customerPage && !machinePage && !machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          navigate(PATH_DOCUMENT.document.view(documentHistory._id));
+        }else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility) && (customerPage  || machinePage)){
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          dispatch(setDocumentViewFormVisibility(true))
+          dispatch(setDocumentFormVisibility(false))
+          dispatch(getDocument(documentVal._id))
+        }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage  || machinePage)){
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          dispatch(setDocumentHistoryViewFormVisibility(true))
+          dispatch(setDocumentFormVisibility(false))
+          dispatch(getDocumentHistory(documentVal._id))
+        }else if(handleFormVisibility){
           handleFormVisibility();
-          }else{
-            dispatch(setDocumentAddFilesViewFormVisibility(false))
-            dispatch(setDocumentNewVersionFormVisibility(false))
-            dispatch(setDocumentHistoryViewFormVisibility(true))
-            dispatch(setDocumentFormVisibility(false))
-            dispatch(getDocumentHistory(documentVal._id))
-          }
+        }
       } else {
-        await dispatch(
-          updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data)
-        );
-
+        // Update versions Part
+        await dispatch(updateDocumentVersion(documentVal._id, documentVal?.documentVersions[0]?._id, data));
         enqueueSnackbar(Snacks.updatedDoc);
-        if (!customerPage && !machinePage && machineDrawings) {
+        // Page Navigation conditions for update versions
+        if (!customerPage && !machinePage && machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)) {
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id));
+        } else if(!customerPage && !machinePage && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility  && machineDrawings ){
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
           navigate(PATH_DOCUMENT.document.machineDrawings.list);
-        } else if(!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility){
+        }else if(!customerPage && !machinePage && !machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          navigate(PATH_DOCUMENT.document.view(documentHistory._id));
+        }else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility) && (customerPage  || machinePage)){
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          dispatch(setDocumentViewFormVisibility(true))
+          dispatch(setDocumentFormVisibility(false))
+          dispatch(getDocument(documentVal._id))
+        }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage  || machinePage)){
+          dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+          dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+          dispatch(setDocumentAddFilesViewFormVisibility(false))
+          dispatch(setDocumentNewVersionFormVisibility(false))
+          dispatch(setDocumentHistoryViewFormVisibility(true))
+          dispatch(setDocumentFormVisibility(false))
+          dispatch(getDocumentHistory(documentVal._id))
+        }else if(handleFormVisibility){
           handleFormVisibility();
-          }else{
-            dispatch(setDocumentAddFilesViewFormVisibility(false))
-            dispatch(setDocumentNewVersionFormVisibility(false))
-            dispatch(setDocumentHistoryViewFormVisibility(true))
-            dispatch(setDocumentFormVisibility(false))
-            dispatch(getDocumentHistory(documentVal._id))
-          }
+        }
       }
       setReadOnlyVal(false);
       setPreview(false);
@@ -422,17 +502,42 @@ export default function DocumentAddForm({
   };
 
   const toggleCancel = () => {
-    if (!customerPage && !machinePage) {
+    if (!customerPage && !machinePage && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility) {
       navigate(PATH_DOCUMENT.document.machineDrawings.list);
-    } else if(!documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility){
+    } else if((documentNewVersionFormVisibility || documentAddFilesViewFormVisibility)  && (customerPage || machinePage)){
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+      dispatch(setDocumentAddFilesViewFormVisibility(false))
+      dispatch(setDocumentNewVersionFormVisibility(false))
+      dispatch(setDocumentViewFormVisibility(true))
+      dispatch(setDocumentFormVisibility(false))
+    }else if((documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility) && (customerPage || machinePage) ){
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+      dispatch(setDocumentAddFilesViewFormVisibility(false))
+      dispatch(setDocumentNewVersionFormVisibility(false))
+      dispatch(setDocumentHistoryViewFormVisibility(true))
+      dispatch(setDocumentFormVisibility(false))
+    }else if(machineDrawings && (documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility)){
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+      dispatch(setDocumentAddFilesViewFormVisibility(false))
+      dispatch(setDocumentNewVersionFormVisibility(false))
+      navigate(PATH_DOCUMENT.document.machineDrawings.view(documentHistory._id))
+    }else if(!machineDrawings && !customerPage && !machinePage){
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+      dispatch(setDocumentAddFilesViewFormVisibility(false))
+      dispatch(setDocumentNewVersionFormVisibility(false))
+      navigate(PATH_DOCUMENT.document.view(documentHistory._id))
+    }else if(handleFormVisibility && !documentNewVersionFormVisibility && !documentAddFilesViewFormVisibility && !documentHistoryNewVersionFormVisibility && !documentHistoryAddFilesViewFormVisibility){
+      dispatch(setDocumentHistoryAddFilesViewFormVisibility(false))
+      dispatch(setDocumentHistoryNewVersionFormVisibility(false))
+      dispatch(setDocumentAddFilesViewFormVisibility(false))
+      dispatch(setDocumentNewVersionFormVisibility(false))
       handleFormVisibility();
-      }else{
-        dispatch(setDocumentAddFilesViewFormVisibility(false))
-        dispatch(setDocumentNewVersionFormVisibility(false))
-        dispatch(setDocumentHistoryViewFormVisibility(true))
-        dispatch(setDocumentFormVisibility(false))
-      }
     }
+  }
 
   const previewHandle = () => setPreview(true);
   const handleClosePreview = () => setPreview(false);
@@ -621,6 +726,7 @@ export default function DocumentAddForm({
                 )} */}
 
                 <RadioButtons
+                  radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
                   value={selectedValue}
                   radioOnChange={handleRadioChange}
                   newValue={DocRadioValue.new}
@@ -629,11 +735,11 @@ export default function DocumentAddForm({
                   secondLabel={DocRadioLabel.existing}
                 />
 
-                {/* New Version */}
                 {selectedValue === 'newVersion' && (
                   <Grid container item lg={12}>
                     <Grid container spacing={2}>
                       <Grid item xs={12} lg={12}>
+
                       <Controller
                         name="documentVal"
                         control={control}
@@ -641,6 +747,7 @@ export default function DocumentAddForm({
                         render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                         <Autocomplete
                           {... field}
+                          disabled={readOnlyDocument}
                           options={activeDocuments}
                           isOptionEqualToValue={(option, value) => option?._id === value?._id}
                           getOptionLabel={(option) =>

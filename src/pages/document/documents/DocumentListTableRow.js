@@ -94,12 +94,6 @@ export default function DocumentListTableRow({
     setOpenPopover(null);
   };
 
-  const handleViewCustomerFormVisibility = () => {
-    dispatch(setCustomerDocumentViewFormVisibility(false));
-  };
-  const handleViewMachineFormVisibility = () => {
-    dispatch(setCustomerDocumentViewFormVisibility(false));
-  };
 
   return (
     <>

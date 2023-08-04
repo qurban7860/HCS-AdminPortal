@@ -10,6 +10,7 @@ export default function RadioButtons({
   newValue,
   secondValue,
   secondLabel,
+  radioDisaled,
   ... props
 }) {
   return (
@@ -22,11 +23,19 @@ export default function RadioButtons({
         onChange={radioOnChange}
       >
         <Grid item xs={12} sm={6}>
-          <FormControlLabel item sm={6} value={newValue} control={<Radio />} label={newLabel} />
+          <FormControlLabel 
+            item 
+            disabled={radioDisaled} 
+            sm={6} 
+            value={newValue} 
+            control={<Radio />} 
+            label={newLabel} 
+          />
         </Grid>
         <Grid item xs={12} sm={6}>
           <FormControlLabel
             item
+            disabled={radioDisaled}
             sm={6}
             value={secondValue}
             control={<Radio />}
@@ -45,4 +54,5 @@ RadioButtons.propTypes = {
   newLabel: PropTypes.string,
   secondValue: PropTypes.string,
   secondLabel: PropTypes.string,
+  radioDisaled: PropTypes.bool,
 };
