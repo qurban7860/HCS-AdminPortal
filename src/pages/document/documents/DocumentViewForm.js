@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { useMemo, Suspense, lazy, useEffect } from 'react';
+import React, { useMemo, Suspense, lazy, useEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { alpha, useTheme } from '@mui/material/styles';
@@ -37,7 +37,7 @@ DocumentViewForm.propTypes = {
   DocId: PropTypes.string,
 };
 
-export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
+function DocumentViewForm({ customerPage, machinePage, DocId }) {
   const { document } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
@@ -210,3 +210,5 @@ export default function DocumentViewForm({ customerPage, machinePage, DocId }) {
     </Card>
   );
 }
+
+export default memo(DocumentViewForm)

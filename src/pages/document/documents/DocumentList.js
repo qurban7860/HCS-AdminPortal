@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef, memo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 // @mui
@@ -64,7 +64,7 @@ DocumentList.propTypes = {
   machineDrawings: PropTypes.bool,
 };
 
-export default function DocumentList({ customerPage, machinePage, machineDrawings }) {
+function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const {
     page,
     order,
@@ -402,3 +402,5 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   return inputData;
 }
+
+export default memo(DocumentList)
