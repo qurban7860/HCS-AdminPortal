@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,6 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
+import { useSnackbar } from '../../components/snackbar';
 
 // components
 import Iconify from '../../components/iconify';
@@ -20,13 +21,13 @@ import theme from '../../theme';
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
-  const navigate = useNavigate();
   const { login } = useAuthContext();
   const regEx = /^[4][0-9][0-9]$/
   const [showPassword, setShowPassword] = useState(false);
   const [uemail, setEmail] = useState("");
   const [upassword, setPassword] = useState("");
   const [uremember, setRemember] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
   
   
   useEffect(() => {
@@ -81,6 +82,7 @@ export default function AuthLoginForm() {
       }
     const response =   await login(data.email, data.password);
     } catch (error) {
+        enqueueSnackbar('Unable to Login!', { variant: 'error' });
       console.error("error : ",error);
       if(regEx.test(error.MessageCode)){
         reset();
@@ -95,7 +97,6 @@ export default function AuthLoginForm() {
       });
     }
     }
-    finally {navigate(PATH_AUTH.authenticate);}
   };
 
   return (
@@ -103,43 +104,9 @@ export default function AuthLoginForm() {
       <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           
-        <RHFTextField type="email" name="email" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Login/Email address"  autoComplete="username" required/>
+        <RHFTextField type="number" name="code" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Code" required/>
 
-        <RHFTextField
-          name="password"
-          id="password"
-          value={upassword}
-          onChange={(e) => setPassword(e.target.value)}
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                  <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          autoComplete="current-password"
-          required
-        />
-      </Stack>
-
-      <FormControlLabel
-        control={
-            <Checkbox
-                name="remember"
-                checked={uremember}
-                onChange={() => setRemember(!uremember)}
-                variant="soft"
-            />
-        }
-        label="Remember Me" 
-        />
-
-      {/* <RHFCheckbox name="remember"  label="Remember Me" variant="soft" value={uremember} Checked/> */}
-      <LoadingButton
+        <LoadingButton
         fullWidth
         color="inherit"
         size="large"
@@ -148,19 +115,12 @@ export default function AuthLoginForm() {
         loading={isSubmitSuccessful || isSubmitting}
         sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
       >
-        Login
+        Submit
       </LoadingButton>
-      <Stack alignItems="flex-end" sx={{ my: 2 }}>
-        <Link
-          component={RouterLink}
-          to={PATH_AUTH.resetPassword}
-          variant="body2"
-          color="inherit"
-          underline="always"
-        >
-          Forgot password?
-        </Link>
+
       </Stack>
+      
+      
     </FormProvider>
   );
 

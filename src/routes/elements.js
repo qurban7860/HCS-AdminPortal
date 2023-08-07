@@ -19,6 +19,7 @@ export const RegisterPage = Loadable(lazy(() => import('../pages/auth/RegisterPa
 export const VerifyCodePage = Loadable(lazy(() => import('../pages/auth/VerifyCodePage')));
 export const NewPasswordPage = Loadable(lazy(() => import('../pages/auth/NewPasswordPage')));
 export const ResetPasswordPage = Loadable(lazy(() => import('../pages/auth/ResetPasswordPage')));
+export const Authenticate = Loadable(lazy(() => import('../sections/auth/Authenticate')));
 
 // DASHBOARD: GENERAL
 export const GeneralAppPage = Loadable(lazy(() => import('../pages/dashboard/GeneralAppPage')));

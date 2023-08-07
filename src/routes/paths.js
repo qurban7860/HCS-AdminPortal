@@ -25,7 +25,7 @@ export const PATH_AUTH = {
   verify: path(ROOTS_AUTH, '/verify'),
   resetPassword: path(ROOTS_AUTH, '/reset-password'),
   newpassword: (token, userId) => path(ROOTS_AUTH, `/new-password/${token}/${userId}`),
-
+  authenticate: path(ROOTS_AUTH, '/authenticate'),
   // newPassword: path(ROOTS_AUTH, '/new-password/${id}/asset/${userId}/edit'),
 };
 
