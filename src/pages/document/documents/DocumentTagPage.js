@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, memo } from 'react';
 
 import PropTypes from 'prop-types';
 // @mui
@@ -23,7 +23,7 @@ import DocumentHistoryViewForm from './DocumentHistoryViewForm';
 DocumentTagPage.propTypes = {
   Page: PropTypes.bool,
 };
-export default function DocumentTagPage(Page) {
+function DocumentTagPage(Page) {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(setDocumentFormVisibility(false));
@@ -97,3 +97,5 @@ export default function DocumentTagPage(Page) {
     </>
   );
 }
+
+export default memo(DocumentTagPage)

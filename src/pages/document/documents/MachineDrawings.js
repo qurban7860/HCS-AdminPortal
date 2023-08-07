@@ -1,11 +1,10 @@
-import { useState } from 'react'
+import { memo } from 'react'
 import DocumentList from './DocumentList'
 
-const MachineDrawings = () => {
-  const [machineDrawings, setMachineDrawings] = useState(true);
-  return (
-    <DocumentList machineDrawings={machineDrawings} />
+const MachineDrawings = () => 
+  (
+    <DocumentList machineDrawings />
   )
-}
 
-export default MachineDrawings
+
+export default memo(MachineDrawings)

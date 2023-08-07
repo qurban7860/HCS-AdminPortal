@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState, useLayoutEffect , memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -36,7 +36,7 @@ DocumentEditForm.propTypes = {
   customerPage: PropTypes.bool,
   machinePage: PropTypes.bool,
 };
-export default function DocumentEditForm({ customerPage, machinePage }) {
+function DocumentEditForm({ customerPage, machinePage }) {
   const { document } = useSelector((state) => state.document);
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
@@ -203,3 +203,5 @@ export default function DocumentEditForm({ customerPage, machinePage }) {
     </FormProvider>
   );
 }
+
+export default memo(DocumentEditForm)

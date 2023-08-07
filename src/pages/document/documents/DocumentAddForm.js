@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useState, useCallback , memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -88,7 +88,7 @@ import {
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
 import DocumentMachineAddForm from '../archived/documents/DocumentAddForms/DocumentMachineAddForm';
 import { FORMLABELS } from '../../../constants/default-constants';
-// import { validateFileType } from './Utills/Util'
+import { validateFileType } from './Utills/Util'
 
 // ----------------------------------------------------------------------
 DocumentAddForm.propTypes = {
@@ -99,7 +99,7 @@ DocumentAddForm.propTypes = {
   handleFormVisibility: PropTypes.func,
 };
 
-export default function DocumentAddForm({
+function DocumentAddForm({
   currentDocument,
   customerPage,
   machinePage,
@@ -111,38 +111,6 @@ export default function DocumentAddForm({
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
 
-
-  const validateFileType = (value, options) => {
-    const { path, createError } = options;
-    if (value && Array.isArray(value)) {
-      if (value.length > 10) {
-        return createError({
-          message: 'Maximum 10 files can be uploaded at a time.',
-          path,
-          value,
-        });
-      }
-      const invalidFiles = value.filter((file) => {
-        const fileExtension = file?.name?.split('.').pop().toLowerCase();
-        return !allowedExtensions.includes(fileExtension);
-      });
-      if (invalidFiles.length > 0) {
-        const invalidFileNames = invalidFiles.map((file) => file.name).join(', ');
-        return createError({
-          message: `Invalid file(s) detected: ${invalidFileNames}`,
-          path,
-          value,
-        });
-      }
-      return true;
-    }
-    return createError({
-      message: 'File is required!',
-      path,
-      value,
-    });
-  };
-
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
   const { activeMachines, machine } = useSelector((state) => state.machine);
@@ -153,6 +121,7 @@ export default function DocumentAddForm({
   const { activeSites } = useSelector((state) => state.site);
 
   // ------------------ document values states ------------------------------
+
   const [selectedValue, setSelectedValue] = useState('new');
   const [selectedVersionValue, setSelectedVersionValue] = useState('newVersion');
   const [readOnlyVal, setReadOnlyVal] = useState(false);
@@ -973,3 +942,5 @@ export default function DocumentAddForm({
     </FormProvider>
   );
 }
+
+export default memo(DocumentAddForm)

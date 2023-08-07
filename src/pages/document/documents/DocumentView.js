@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { useEffect, useLayoutEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState , memo } from 'react';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 // @mui
 import { Container } from '@mui/material';
@@ -13,7 +13,7 @@ import DocumentCover from '../../components/DocumentForms/DocumentCover';
 
 // ----------------------------------------------------------------------
 
-export default function DocumentView() {
+function DocumentView() {
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -31,3 +31,5 @@ export default function DocumentView() {
     </>
   );
 }
+
+export default memo(DocumentView)

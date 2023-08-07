@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import PropTypes from 'prop-types';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, memo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import download from 'downloadjs';
@@ -52,7 +52,7 @@ DocumentHistoryViewForm.propTypes = {
   drawingPage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
-export default function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machineDrawings }) {
+function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machineDrawings }) {
   const dispatch = useDispatch();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -381,3 +381,5 @@ const handleNewFile = async () => {
     </>
   );
 }
+
+export default memo(DocumentHistoryViewForm)
