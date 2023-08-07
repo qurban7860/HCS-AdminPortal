@@ -98,6 +98,7 @@ export default function ViewFormField({
           typeof secondParam === 'string' &&
           secondParam.trim().length > 0 &&
           '  '}
+        {param && typeof param !== 'string' && param}
         {secondParam &&
           typeof secondParam === 'string' &&
           secondParam.trim().length > 0 &&

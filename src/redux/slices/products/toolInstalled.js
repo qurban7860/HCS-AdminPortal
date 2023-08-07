@@ -21,6 +21,11 @@ const initialState = {
   error: null,
   toolsInstalled: [],
   toolInstalled: null,
+  toolTypes: [
+    'GENERIC TOOL', 
+    'SINGLE TOOL', 
+    'COMPOSIT TOOL', 
+  ]
 };
 
 const slice = createSlice({
@@ -111,6 +116,16 @@ export function addToolInstalled(machineId,params) {
             const data = {
                 tool: params.tool,
                 note: params.note,
+                offset: params.offset,
+                wasteTriggerDistance: params.wasteTriggerDistance,
+                crimpTriggerDistance: params.crimpTriggerDistance,
+                operations: params.operations,
+                toolType: params.toolType,
+                isApplyWaste: params.isApplyWaste,
+                isApplyCrimp: params.isApplyCrimp,
+                isBackToBackPunch: params.isBackToBackPunch,
+                isManualSelect: params.isManualSelect,
+                isAssign: params.isAssign,
                 isActive: params.isActive,
             }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
@@ -132,6 +147,16 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
       const data = {
         tool: params.tool,
         note: params.note,
+        offset: params.offset,
+        wasteTriggerDistance: params.wasteTriggerDistance,
+        crimpTriggerDistance: params.crimpTriggerDistance,
+        operations: params.operations,
+        toolType: params.toolType,
+        isApplyWaste: params.isApplyWaste,
+        isApplyCrimp: params.isApplyCrimp,
+        isBackToBackPunch: params.isBackToBackPunch,
+        isManualSelect: params.isManualSelect,
+        isAssign: params.isAssign,
         isActive: params.isActive,
       }
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
