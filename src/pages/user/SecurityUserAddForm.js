@@ -151,6 +151,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     roles: Yup.array().required('Roles are required'),
     isActive: Yup.boolean(),
+    multiFactorAuthentication: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
@@ -160,6 +161,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       password: '',
       passwordConfirmation: '',
       isActive: true,
+      multiFactorAuthentication: true,
       roles: currentUser?.roles || [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -237,7 +239,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       const selectedRegionsIDs = selectedRegions.map((region) => region._id);
       data.selectedRegions = selectedRegionsIDs;
     }
-
+// console.log(data)
     try {
       const response = await dispatch(addSecurityUser(data));
       await dispatch(resetContacts());
@@ -550,7 +552,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
               </Autocomplete>
 
             </Box>
-            <Grid item md={12}>
+            <Grid item md={12} display="flex">
               <RHFSwitch
                 name="isActive"
                 labelPlacement="start"
@@ -567,6 +569,25 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                   >
                     {' '}
                     Active
+                  </Typography>
+                }
+              />
+              <RHFSwitch
+                name="multiFactorAuthentication"
+                labelPlacement="start"
+                label={
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      mx: 0,
+                      width: 1,
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                      color: 'text.secondary',
+                    }}
+                  >
+                    {' '}
+                    MultiFactorAuthentication
                   </Typography>
                 }
               />

@@ -25,6 +25,7 @@ export default function ViewFormField({
   machineVerifiedBy,
   customerAccess,
   documentIsActive,
+  multiAuth,
   chips,
   userRolesChips,
   NewVersion,
@@ -84,6 +85,7 @@ export default function ViewFormField({
         )}
         {/* input fields params */}
         {documentIsActive !== undefined && <IconPopover documentIsActive={documentIsActive} />}
+        {multiAuth !== undefined && <IconPopover multiAuth={multiAuth} />}
         {customerAccess !== undefined && <IconPopover customerAccess={customerAccess} />}
         {param && typeof param === 'string' && param.trim().length > 0 && param}
         {param &&
@@ -202,6 +204,7 @@ ViewFormField.propTypes = {
   customerVerifiedBy: PropTypes.array,
   customerAccess: PropTypes.bool,
   documentIsActive: PropTypes.bool,
+  multiAuth: PropTypes.bool,
   chipDialogArrayParam: PropTypes.array,
   chips: PropTypes.array,
   userRolesChips: PropTypes.array,

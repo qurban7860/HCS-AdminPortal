@@ -151,6 +151,7 @@ export default function SecurityUserEditForm() {
     passwordConfirmation: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
     roles: Yup.array().required('Role is required').nullable(),
     isActive: Yup.boolean(),
+    multiFactorAuthentication: Yup.boolean(),
   });
 
   const userLogin = Yup.object({
@@ -165,6 +166,7 @@ export default function SecurityUserEditForm() {
       roles: securityUserRoles || [],
       loginEmail: securityUser?.login,
       isActive: securityUser?.isActive,
+      multiFactorAuthentication: securityUser?.multiFactorAuthentication,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [securityUser]
@@ -242,7 +244,7 @@ export default function SecurityUserEditForm() {
     }
 
     data.roles = submitSecurityUserRoles;
-
+    console.log("Security User data.....", data,)
     try {
       await dispatch(updateSecurityUser(data, securityUser._id));
       navigate(PATH_SECURITY.users.view(securityUser._id));
@@ -614,8 +616,27 @@ export default function SecurityUserEditForm() {
               </Autocomplete>
 
             </Box>
-            <Grid item md={12}>
+            <Grid item md={12} display="flex">
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
+              <RHFSwitch
+                name="multiFactorAuthentication"
+                labelPlacement="start"
+                label={
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      mx: 0,
+                      width: 1,
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                      color: 'text.secondary',
+                    }}
+                  >
+                    {' '}
+                    MultiFactorAuthentication
+                  </Typography>
+                }
+              />
             </Grid>
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
