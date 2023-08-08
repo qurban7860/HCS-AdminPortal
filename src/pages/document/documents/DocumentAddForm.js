@@ -893,12 +893,13 @@ function DocumentAddForm({
                       // maxSize={3145728}
                       onDrop={handleDropMultiFile}
                       onRemove={(inputFile) =>
+                        files.length > 1 ?
                         setValue(
                           'files',
                           files &&
                             files?.filter((file) => file !== inputFile),
                           { shouldValidate: true }
-                        )
+                        ): setValue('files', '', { shouldValidate: true })
                       }
                       onRemoveAll={() => setValue('files', '', { shouldValidate: true })}
                     />

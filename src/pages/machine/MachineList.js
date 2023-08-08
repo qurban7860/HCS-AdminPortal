@@ -224,6 +224,14 @@ export default function MachineList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
+
+<TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {selected.length > 1 ? "" :
 
@@ -299,7 +307,6 @@ export default function MachineList() {
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-            //
           />
         </Card>
         <Grid md={12}>

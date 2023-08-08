@@ -264,7 +264,13 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
           machinePage={machinePage}
           machineDrawings={machineDrawings}
         />
-
+<TablePaginationCustom
+          count={dataFiltered.length}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          onPageChange={onChangePage}
+          onRowsPerPageChange={onChangeRowsPerPage}
+        />
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             numSelected={selected.length}
@@ -391,6 +397,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
         document?.customer?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.machine?.serialNo?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
         document?.docCategory?.name?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0 ||
+        document?.documentVersions[0].versionNo?.toString().indexOf(filterName.toLowerCase()) >= 0 ||
         // (document?.isActive ? "Active" : "Deactive")?.toLowerCase().indexOf(filterName.toLowerCase())  >= 0 ||
         fDate(document?.createdAt)?.toLowerCase().indexOf(filterName.toLowerCase()) >= 0
     );

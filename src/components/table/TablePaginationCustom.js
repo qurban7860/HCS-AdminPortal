@@ -1,6 +1,7 @@
+import { memo } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Switch, TablePagination, FormControlLabel } from '@mui/material';
+import { Box, Stack, Switch, TablePagination, FormControlLabel, Pagination } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +12,7 @@ TablePaginationCustom.propTypes = {
   sx: PropTypes.object,
 };
 
-export default function TablePaginationCustom({
+function TablePaginationCustom({
   dense,
   onChangeDense,
   rowsPerPageOptions = [10, 20,50,100],
@@ -20,8 +21,7 @@ export default function TablePaginationCustom({
 }) {
   return (
     <Box sx={{ position: 'relative', ...sx }}>
-      <TablePagination rowsPerPageOptions={rowsPerPageOptions} component="div" {...other} />
-
+      <TablePagination rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} />
       {onChangeDense && (
         <FormControlLabel
           label="Dense"
@@ -39,3 +39,4 @@ export default function TablePaginationCustom({
     </Box>
   );
 }
+export default memo(TablePaginationCustom)
