@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert, IconButton, InputAdornment, Checkbox, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
@@ -15,7 +16,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
-import theme from '../../theme';
+
 
 // ----------------------------------------------------------------------
 
@@ -80,6 +81,11 @@ export default function AuthLoginForm() {
         localStorage.removeItem("remember");
       }
     const response =   await login(data.email, data.password);
+
+    if(localStorage.getItem("MFA")) {
+      navigate(PATH_AUTH.authenticate);
+      localStorage.removeItem("MFA");
+    }
     } catch (error) {
       console.error("error : ",error);
       if(regEx.test(error.MessageCode)){
@@ -95,7 +101,6 @@ export default function AuthLoginForm() {
       });
     }
     }
-    finally {navigate(PATH_AUTH.authenticate);}
   };
 
   return (

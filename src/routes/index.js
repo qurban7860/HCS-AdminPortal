@@ -205,7 +205,9 @@ export default function Router() {
         {
           path: 'authenticate',
           element: (
+            <GuestGuard>
               <Authenticate />
+            </GuestGuard>
           ),
         },
         {

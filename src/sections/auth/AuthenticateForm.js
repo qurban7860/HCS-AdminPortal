@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import * as Yup from 'yup';
 import { Link as RouterLink } from 'react-router-dom';
 // form
@@ -12,116 +12,91 @@ import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useSnackbar } from '../../components/snackbar';
-
+import axios from '../../utils/axios';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
 import theme from '../../theme';
+import { CONFIG } from '../../config-global';
+
 
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
-  const { login } = useAuthContext();
+  const { muliFactorAuthentication, login } = useAuthContext();
   const regEx = /^[4][0-9][0-9]$/
-  const [showPassword, setShowPassword] = useState(false);
-  const [uemail, setEmail] = useState("");
-  const [upassword, setPassword] = useState("");
-  const [uremember, setRemember] = useState(false);
+  const [code, setCode] = useState("");
   const { enqueueSnackbar } = useSnackbar();
-  
-  
-  useEffect(() => {
-    const storedEmail =       localStorage.getItem("UserEmail");
-    const storedPassword =    localStorage.getItem("UserPassword");
-    const storedRemember =    localStorage.getItem("remember");
-    if (storedEmail && storedPassword && storedRemember) {
-      setEmail(storedEmail);
-      setPassword(storedPassword);
-      setRemember(true);
-    }
-  }, []);
 
-  const LoginSchema = Yup.object().shape({
-    // email: Yup.string().required('Email is required').email('Email must be a valid email address'),
-    // password: Yup.string().required('Password is required'),
-  });
+  const userId = localStorage.getItem('userId');
 
-  const defaultValues = {
-    email: uemail,
-    password: upassword,
-  };
 
-  const methods = useForm({
-    resolver: yupResolver(LoginSchema),
-    defaultValues,
-  });
+  const methods = useForm();
+
+  const initialState = {
+  isInitialized: false,
+  isAuthenticated: false,
+  user: null,
+  // resetTokenTime: null,
+};
 
   const {
-    reset,
     setError,
     handleSubmit,
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
   const onSubmit = async (data) => {
-    if(uemail){
-      data.email = uemail;
-    }
-    if(upassword){
-      data.password = upassword;
+    if (code) {
+      // data.multiFactorAuthenticationCode = code;
     }
     try {
-      if (uremember) {
-        localStorage.setItem("UserEmail", data.email);
-        localStorage.setItem("UserPassword", data.password);
-        localStorage.setItem("remember", uremember);
-      } else {
-        localStorage.removeItem("UserEmail");
-        localStorage.removeItem("UserPassword");
-        localStorage.removeItem("remember");
-      }
-    const response =   await login(data.email, data.password);
+      const response = await muliFactorAuthentication(code, userId);
     } catch (error) {
-        enqueueSnackbar('Unable to Login!', { variant: 'error' });
-      console.error("error : ",error);
-      if(regEx.test(error.MessageCode)){
-        reset();
+      enqueueSnackbar('Unable to Login!', { variant: 'error' });
+      console.error("error: ", error);
+      if (regEx.test(error.MessageCode)) {
         setError('afterSubmit', {
           ...error,
           message: error.Message,
         });
-    }else{
-      setError('afterSubmit', {
-        ...error,
-        message: "Something went wrong",
-      });
-    }
+      } else {
+        setError('afterSubmit', {
+          ...error,
+          message: "Something went wrong",
+        });
+      }
     }
   };
+  
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3} sx={{ mt: 1 }}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
           
-        <RHFTextField type="number" name="code" value={uemail}  onChange={(e) => setEmail(e.target.value)} label="Code" required/>
+        <RHFTextField
+          type="number"
+          name="code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+          label="Code"
+          required
+        />
 
         <LoadingButton
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        loading={isSubmitSuccessful || isSubmitting}
-        sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
-      >
-        Submit
-      </LoadingButton>
-
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          loading={isSubmitSuccessful || isSubmitting}
+          sx={{ bgcolor: '#10079F', color: 'white', '&:hover': { bgcolor: '#FFA200' }}}
+        >
+          Submit
+        </LoadingButton>
       </Stack>
-      
-      
     </FormProvider>
   );
-
 }
+
