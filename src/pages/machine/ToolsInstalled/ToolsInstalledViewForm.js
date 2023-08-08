@@ -25,6 +25,7 @@ import Iconify from '../../../components/iconify';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
+import ViewFormSwitch from '../../components/ViewForms/ViewFormSwitch';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
 import { useSnackbar } from '../../../components/snackbar';
@@ -171,6 +172,28 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
           heading="Operations"
           param={defaultValues?.operations}
         />
+
+        <Box
+          rowGap={0}
+          columnGap={14}
+          display="grid"
+          gridTemplateColumns={{
+            xs: 'repeat(1, 1fr)',
+            sm: 'repeat(3, 1fr)',
+          }}
+          sx={{mt: 2}}
+        >
+          <ViewFormSwitch sm={4} isActiveHeading='Apply Waste' isActive={defaultValues.isApplyWaste} />
+
+          <ViewFormSwitch sm={4} isActiveHeading='Apply Crimp' isActive={defaultValues.isApplyCrimp} />
+
+          <ViewFormSwitch sm={4} isActiveHeading='Back to Back Punch' isActive={defaultValues.isBackToBackPunch} />
+
+          <ViewFormSwitch sm={4} isActiveHeading='Manual Select' isActive={defaultValues.isManualSelect} />
+
+          <ViewFormSwitch sm={4} isActiveHeading='Assign' isActive={defaultValues.isAssign} />
+        </Box>
+        
         <Box
         rowGap={0}
         columnGap={1}
