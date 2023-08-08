@@ -24,6 +24,9 @@ const initialState = {
   documents: [],
   activeDocuments: [],
   documentHistory: [],
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -153,6 +156,19 @@ const slice = createSlice({
       state.documentHistory = [];
       state.responseMessage = null;
     },
+
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
+    },
   },
 });
 
@@ -175,6 +191,9 @@ export const {
   resetActiveDocuments,
   resetDocumentHistory,
   setResponseMessage,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------Add Document------------------------------------------

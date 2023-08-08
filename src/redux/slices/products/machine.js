@@ -23,7 +23,10 @@ const initialState = {
   allMachines:[],
   customerMachines:[],
   machineLatLongCoordinates: [],
-  transferDialogBoxVisibility: false
+  transferDialogBoxVisibility: false,
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -157,6 +160,18 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
+    },
   },
 });
 
@@ -173,7 +188,10 @@ export const {
   resetMachines,
   resetActiveMachines,
   setResponseMessage,
-  setTransferDialogBoxVisibility
+  setTransferDialogBoxVisibility,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

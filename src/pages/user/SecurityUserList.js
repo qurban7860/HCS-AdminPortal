@@ -26,6 +26,8 @@ import {
   getSecurityUsers,
   deleteSecurityUser,
   setSecurityUserEditFormVisibility,
+  ChangeRowsPerPage,
+  ChangePage,
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 // constants
@@ -54,10 +56,10 @@ const TABLE_HEAD = [
 export default function SecurityUserList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -65,8 +67,8 @@ export default function SecurityUserList() {
     onSelectRow,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
@@ -80,9 +82,16 @@ export default function SecurityUserList() {
     initial,
     securityUserEditFormVisibility,
     securityUserFormVisibility,
+    page, rowsPerPage,
   } = useSelector((state) => state.user);
   // console.log("securityUsers", securityUsers);
 
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+  
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [tableData, setTableData] = useState([]);
@@ -207,7 +216,7 @@ export default function SecurityUserList() {
             onResetFilter={handleResetFilter}
           />
 
-<TablePaginationCustom
+          <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}

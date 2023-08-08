@@ -47,6 +47,8 @@ import {
   resetDocuments,
   resetDocumentHistory,
   setDocumentViewFormVisibility,
+  ChangePage,
+  ChangeRowsPerPage,
 } from '../../../redux/slices/document/document';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -65,11 +67,13 @@ DocumentList.propTypes = {
 };
 
 function DocumentList({ customerPage, machinePage, machineDrawings }) {
+  const { documents, page, rowsPerPage, isLoading, error, documentInitial, responseMessage } = useSelector((state) => state.document );
+
   const {
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -78,11 +82,20 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     onSelectAllRows,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
+console.log("Usetable : ",     page,
+order,
+orderBy,
+rowsPerPage)
+const onChangeRowsPerPage = (event) => {
+  dispatch(ChangePage(0));
+  dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+};
+const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
   const { themeStretch } = useSettingsContext();
@@ -95,16 +108,6 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const [documentBy, setDocumentBy] = useState({});
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  const { documents, isLoading, error, documentInitial, responseMessage } = useSelector(
-    (state) => state.document
-  );
-
-  const { customerDocuments, customerDocumentInitial } = useSelector(
-    (state) => state.customerDocument
-  );
-  const { machineDocuments, machineDocumentInitial } = useSelector(
-    (state) => state.machineDocument
-  );
 
 
   const TABLE_HEAD = [
@@ -264,7 +267,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
           machinePage={machinePage}
           machineDrawings={machineDrawings}
         />
-<TablePaginationCustom
+        <TablePaginationCustom
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}

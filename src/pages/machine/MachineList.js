@@ -34,6 +34,8 @@ import {
   deleteMachine,
   resetMachine,
   getMachine,
+  ChangeRowsPerPage,
+  ChangePage
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineTechParamValue';
@@ -85,10 +87,10 @@ const TABLE_HEAD = [
 export default function MachineList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     selected,
     setSelected,
@@ -96,13 +98,21 @@ export default function MachineList() {
     onSelectAllRows,
     onSort,
     onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: '-createdAt' });
+
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
   const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const { machines, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
+  const { machines, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
