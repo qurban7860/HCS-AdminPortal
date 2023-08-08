@@ -119,10 +119,10 @@ export default function ToolsInstalledAddForm() {
   const defaultValues = useMemo(
     () => ({
       tool: '',
-      offset: null,
-      wasteTriggerDistance: null,
-      crimpTriggerDistance: null,
-      operations: null,
+      offset: '',
+      wasteTriggerDistance: '',
+      crimpTriggerDistance: '',
+      operations: '',
       toolType: '',
       isApplyWaste: false,
       isApplyCrimp: false,
@@ -165,7 +165,8 @@ export default function ToolsInstalledAddForm() {
     }
   };
 
-  const handleToolTypeChange = (event, newChange) => {
+  const handleToolTypeChange = (newChange) => {
+    console.log('new value=========>', newChange);
     setToolType(newChange);
   }
 
@@ -219,7 +220,14 @@ export default function ToolsInstalledAddForm() {
                   value={toolType || null}
                   options={toolTypes}
                   // isOptionEqualToValue={(option) => toolTypes.indexOf(option)}
-                  onChange={handleToolTypeChange}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      console.log('newValue----------->', newValue);
+                      handleToolTypeChange(newValue);
+                    } else {
+                      handleToolTypeChange('');
+                    }
+                  }}
                   id="controllable-states-demo"
                   renderOption={(props, option) => (
                     <li {...props} key={option}>

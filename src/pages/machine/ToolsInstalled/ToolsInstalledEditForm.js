@@ -69,30 +69,49 @@ export default function ToolsInstalledEditForm() {
     setToolType(toolInstalled.toolType);
     dispatch(getTools());
   }, [dispatch, toolInstalled]);
-  // console.log("toolInstalled : ",toolInstalled)
 
   const EditSettingSchema = Yup.object().shape({
     tool: Yup.string(),
-    offset: Yup.string().when('$isEmpty', {
-      is: false,
-      then: Yup.string().test('is-number', 'Offset must be a number', value => !Number.isNaN(value)),
-      otherwise: Yup.number().nullable()
-    }),
-    wasteTriggerDistance: Yup.number().when('$isEmpty', {
-      is: false,
-      then: Yup.number().typeError('Waste Trigger Distance must be a number'),
-      otherwise: Yup.number().nullable()
-    }),
-    crimpTriggerDistance: Yup.number().when('$isEmpty', {
-      is: false,
-      then: Yup.number().typeError('Crimp Trigger Distance must be a number'),
-      otherwise: Yup.number().nullable()
-    }),
-    operations: Yup.number().when('$isEmpty', {
-      is: false,
-      then: Yup.number().typeError('Operations must be a number'),
-      otherwise: Yup.number().nullable()
-    }),
+
+    offset: Yup.number()
+    .typeError('Offset must be a number')
+    .transform((value, originalValue) => {
+  
+  
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+
+    wasteTriggerDistance: Yup.number()
+    .typeError('Waste Trigger Distance must be a number')
+    .transform((value, originalValue) => {
+
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Waste Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
+
+    crimpTriggerDistance: Yup.number()
+    .typeError('Crimp Trigger Distance must be a number')
+    .transform((value, originalValue) => {
+  
+
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Crimp Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
+
+    operations: Yup.number()
+    .typeError('Operations must be a number')
+    .transform((value, originalValue) => {
+  
+
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Operations cannot have spaces', value => !(value && value.toString().includes(' '))),
+    
     toolType: Yup.string(),
     isApplyWaste: Yup.boolean(),
     isApplyCrimp: Yup.boolean(),
@@ -106,15 +125,15 @@ export default function ToolsInstalledEditForm() {
     () => ({
       // tool: toolInstalled?.tool || '',
       toolName: toolInstalled?.tool?.name || '',  
-      offset: toolInstalled?.offset || null,
-      wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || null,
-      crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || null,
+      offset: toolInstalled?.offset || '',
+      wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
+      crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
       isApplyWaste: toolInstalled?.isApplyWaste || false,
       isApplyCrimp: toolInstalled?.isApplyCrimp || false,
       isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
       isManualSelect: toolInstalled?.isManualSelect || false,  
       isAssign: toolInstalled?.isAssign || false,
-      operations: toolInstalled?.operations || null,
+      operations: toolInstalled?.operations || '',
       toolType: toolInstalled?.toolType || '',
       isActive: toolInstalled?.isActive,
       note: toolInstalled?.note || '',
@@ -151,6 +170,8 @@ export default function ToolsInstalledEditForm() {
   const onSubmit = async (data) => {
     try {
       data.tool = toolVal._id || null;
+      data.toolType = toolType;
+      
       // console.log("Setting update Data : ",machine._id,toolInstalled._id,data);
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
       reset();
@@ -161,7 +182,9 @@ export default function ToolsInstalledEditForm() {
     }
   };
 
-  const handleToolTypeChange = (event, newChange) => {
+  const handleToolTypeChange = (newChange) => {
+    console.log('newChange------------------->', newChange);
+
     setToolType(newChange);
   }
 
@@ -215,8 +238,14 @@ export default function ToolsInstalledEditForm() {
                   value={toolType || null}
                   options={toolTypes}
                   // isOptionEqualToValue={(option) => toolTypes.indexOf(option)}
-                  onChange={handleToolTypeChange}
-                  id="controllable-states-demo"
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      console.log('value------------------->', newValue);
+                      handleToolTypeChange(newValue);
+                    } else {
+                      handleToolTypeChange('');
+                    }
+                  }}                  id="controllable-states-demo"
                   renderOption={(props, option) => (
                     <li {...props} key={option}>
                       {option}
