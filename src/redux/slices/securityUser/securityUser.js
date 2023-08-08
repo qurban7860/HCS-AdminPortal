@@ -173,6 +173,7 @@ export function addSecurityUser(param) {
       roles: param.roles,
       login: param.email,
       isActive: param.isActive,
+      multiFactorAuthentication: param.multiFactorAuthentication,
       regions: param.selectedRegions
       }
       const response = await axios.post(`${CONFIG.SERVER_URL}security/users`, data);
@@ -205,6 +206,7 @@ export function updateSecurityUser(param,id) {
         login: param.loginEmail,
         roles: param.roles,
         isActive: param.isActive,
+        multiFactorAuthentication: param.multiFactorAuthentication,
         regions: param.selectedRegions
         }
         if(param.password !== ""){

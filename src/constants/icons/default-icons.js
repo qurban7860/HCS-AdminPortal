@@ -53,7 +53,19 @@ export const ICONS = {
   },
   DOCUMENT_INACTIVE: {
     icon: 'basil:document-solid',
+    color: 'red',
+    heading: 'Inactive',
+  },
+  // ------------------------------------------------------------
+  // MultiAuth
+  MULTIAUTH_ACTIVE: {
+    icon: 'carbon:two-factor-authentication',
     color: 'green',
+    heading: 'Active',
+  },
+  MULTIAUTH_INACTIVE: {
+    icon: 'carbon:two-factor-authentication',
+    color: 'red',
     heading: 'Inactive',
   },
   // ------------------------------------------------------------

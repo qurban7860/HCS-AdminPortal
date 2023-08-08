@@ -16,6 +16,7 @@ import {
   VerifyCodePage,
   NewPasswordPage,
   ResetPasswordPage,
+  Authenticate,
   // Dashboard: General
   GeneralAppPage,
   // User
@@ -198,6 +199,14 @@ export default function Router() {
           element: (
             <GuestGuard>
               <LoginPage />
+            </GuestGuard>
+          ),
+        },
+        {
+          path: 'authenticate',
+          element: (
+            <GuestGuard>
+              <Authenticate />
             </GuestGuard>
           ),
         },

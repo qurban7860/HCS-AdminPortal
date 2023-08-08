@@ -1,30 +1,34 @@
 import { useState, useEffect } from 'react';
 import * as Yup from 'yup';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { Link, Stack, Alert, IconButton, InputAdornment, Checkbox, FormControlLabel } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+
 // routes
 import { PATH_AUTH } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
+
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
-import theme from '../../theme';
+
 
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
+  const navigate = useNavigate();
   const { login } = useAuthContext();
   const regEx = /^[4][0-9][0-9]$/
   const [showPassword, setShowPassword] = useState(false);
   const [uemail, setEmail] = useState("");
   const [upassword, setPassword] = useState("");
   const [uremember, setRemember] = useState(false);
+  
   
   useEffect(() => {
     const storedEmail =       localStorage.getItem("UserEmail");
@@ -77,6 +81,11 @@ export default function AuthLoginForm() {
         localStorage.removeItem("remember");
       }
     const response =   await login(data.email, data.password);
+
+    if(localStorage.getItem("MFA")) {
+      navigate(PATH_AUTH.authenticate);
+      localStorage.removeItem("MFA");
+    }
     } catch (error) {
       console.error("error : ",error);
       if(regEx.test(error.MessageCode)){

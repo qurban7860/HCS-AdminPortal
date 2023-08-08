@@ -14,11 +14,14 @@ ViewFormSWitch.propTypes = {
   machineHeading: PropTypes.string,
   drawing: PropTypes.bool,
   drawingHeading:PropTypes.string,
+  isMultiFactorAuthentication:PropTypes.string,
+  isMultiFactorAuthenticationVal:PropTypes.bool,
 };
 
-    export default function ViewFormSWitch({isActiveHeading, isActive, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
+    export default function ViewFormSWitch({isActiveHeading, isActive, isMultiFactorAuthentication, isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
     const [isActiveVal, setIsActiveVal] = useState(isActive);
     const [customerAccessVal, setCustomerAccessVal] = useState(customerAccess);
+    const [multiFactorAuthenticationVal, setIsMultiFactorAuthenticationVal] = useState(isMultiFactorAuthenticationVal)
     useEffect(() => {
         setIsActiveVal(isActive);
     },[isActive])
@@ -29,6 +32,10 @@ ViewFormSWitch.propTypes = {
 
     const handleIsActiveChange = (event) => {
         setIsActiveVal(event.target.checked);
+      };
+
+      const handleMultiFactorAuthentication = (event) => {
+        setIsMultiFactorAuthenticationVal(event.target.checked);
       };
 
     const handleCustomerAccessChange = (event) => {
@@ -69,6 +76,24 @@ ViewFormSWitch.propTypes = {
               />
           </Grid>
         )}
+
+        { isMultiFactorAuthentication && (
+                <Grid sx={{  display: 'flex', mx:1 }}>
+                  <Typography
+                  variant="subtitle2"
+                  sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
+                >
+                  {isMultiFactorAuthentication || ''}
+                </Typography>
+                  <Switch
+                  disabled
+                      sx={{ mb: 1 }} checked={multiFactorAuthenticationVal || false}
+                      onChange={handleMultiFactorAuthentication}
+                      />
+                  </Grid>
+                )}
+
+
 
         {customerHeading && 
           <Grid sx={{  display: 'flex', mx:1 }}>
