@@ -42,7 +42,7 @@ import { DIALOGS, BUTTONS, FORMLABELS } from '../../constants/default-constants'
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, deleteCustomer, resetCustomer, setCustomerEditFormVisibility } from '../../redux/slices/customer/customer';
+import { getCustomers, deleteCustomer, resetCustomer, setCustomerEditFormVisibility, ChangePage, ChangeRowsPerPage } from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import { fDate } from '../../utils/formatTime';
 
@@ -61,10 +61,10 @@ const TABLE_HEAD = [
 
 export default function CustomerList() {
   const {
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -73,8 +73,8 @@ export default function CustomerList() {
     onSelectAllRows,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
@@ -89,10 +89,17 @@ export default function CustomerList() {
   const [openConfirm, setOpenConfirm] = useState(false);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  const { customers, isLoading, error, initial, responseMessage } = useSelector(
+  const { customers, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.customer
   );
 
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
+
+  
   const { customerDocuments, customerDocumentInitial } = useSelector(
     (state) => state.customerDocument
   );
