@@ -51,15 +51,13 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 export default function ToolsInstalledEditForm() {
   const { tools } = useSelector((state) => state.tool);
   const {
-    initial,
-    error,
-    responseMessage,
-    toolInstalledEditFormVisibility,
     toolsInstalled,
     toolInstalled,
+    toolTypes,
     formVisibility,
   } = useSelector((state) => state.toolInstalled);
   const [toolVal, setToolVal] = useState('');
+  const [toolType, setToolType] = useState('');
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
@@ -68,20 +66,77 @@ export default function ToolsInstalledEditForm() {
 
   useLayoutEffect(() => {
     setToolVal(toolInstalled.tool);
+    setToolType(toolInstalled.toolType);
     dispatch(getTools());
   }, [dispatch, toolInstalled]);
-  // console.log("toolInstalled : ",toolInstalled)
 
   const EditSettingSchema = Yup.object().shape({
-    note: Yup.string().max(1500),
+    tool: Yup.string(),
+
+    offset: Yup.number()
+    .typeError('Offset must be a number')
+    .transform((value, originalValue) => {
+  
+  
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+
+    wasteTriggerDistance: Yup.number()
+    .typeError('Waste Trigger Distance must be a number')
+    .transform((value, originalValue) => {
+
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Waste Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
+
+    crimpTriggerDistance: Yup.number()
+    .typeError('Crimp Trigger Distance must be a number')
+    .transform((value, originalValue) => {
+  
+
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Crimp Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
+
+    operations: Yup.number()
+    .typeError('Operations must be a number')
+    .transform((value, originalValue) => {
+  
+
+    if (originalValue.toString().trim() === '') return undefined;
+    return parseFloat(value);
+    })
+    .test('no-spaces', 'Operations cannot have spaces', value => !(value && value.toString().includes(' '))),
+    
+    toolType: Yup.string(),
+    isApplyWaste: Yup.boolean(),
+    isApplyCrimp: Yup.boolean(),
+    isBackToBackPunch: Yup.boolean(),
+    isManualSelect: Yup.boolean(),
+    isAssign: Yup.boolean(),
     isActive: Yup.boolean(),
   });
 
   const defaultValues = useMemo(
     () => ({
       // tool: toolInstalled?.tool || '',
+      toolName: toolInstalled?.tool?.name || '',  
+      offset: toolInstalled?.offset || '',
+      wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
+      crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
+      isApplyWaste: toolInstalled?.isApplyWaste || false,
+      isApplyCrimp: toolInstalled?.isApplyCrimp || false,
+      isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
+      isManualSelect: toolInstalled?.isManualSelect || false,  
+      isAssign: toolInstalled?.isAssign || false,
+      operations: toolInstalled?.operations || '',
+      toolType: toolInstalled?.toolType || '',
+      isActive: toolInstalled?.isActive,
       note: toolInstalled?.note || '',
-      isActive: toolInstalled.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -115,6 +170,8 @@ export default function ToolsInstalledEditForm() {
   const onSubmit = async (data) => {
     try {
       data.tool = toolVal._id || null;
+      data.toolType = toolType;
+      
       // console.log("Setting update Data : ",machine._id,toolInstalled._id,data);
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
       reset();
@@ -124,6 +181,12 @@ export default function ToolsInstalledEditForm() {
       console.error(err.message);
     }
   };
+
+  const handleToolTypeChange = (newChange) => {
+    console.log('newChange------------------->', newChange);
+
+    setToolType(newChange);
+  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -142,7 +205,7 @@ export default function ToolsInstalledEditForm() {
                 display="grid"
                 gridTemplateColumns={{
                   xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
                 }}
               >
                 <Autocomplete
@@ -168,7 +231,153 @@ export default function ToolsInstalledEditForm() {
                   renderInput={(params) => <TextField {...params} label="Tool" />}
                   ChipProps={{ size: 'small' }}
                 />
-                <RHFTextField name="note" label="Note*" minRows={8} multiline />
+                
+                <Autocomplete
+                  // freeSolo
+                  required
+                  value={toolType || null}
+                  options={toolTypes}
+                  // isOptionEqualToValue={(option) => toolTypes.indexOf(option)}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      console.log('value------------------->', newValue);
+                      handleToolTypeChange(newValue);
+                    } else {
+                      handleToolTypeChange('');
+                    }
+                  }}                  id="controllable-states-demo"
+                  renderOption={(props, option) => (
+                    <li {...props} key={option}>
+                      {option}
+                    </li>
+                  )}
+                  renderInput={(params) => (
+                    <RHFTextField {...params} name="toolType" label="Tool Types" />
+                  )}
+                  ChipProps={{ size: 'small' }}
+                >
+                  {(option) => (
+                    <div key={option}>
+                      <span>{option}</span>
+                    </div>
+                  )}
+                </Autocomplete>
+
+                <RHFTextField name="offset" label="Offset" inputMode="numeric" pattern="[0-9]*"/>
+
+                <RHFTextField name="wasteTriggerDistance" label="Waste Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFTextField name="crimpTriggerDistance" label="Crimp Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFTextField name="operations" label="Operations" inputMode="numeric" pattern="[0-9]*"/>
+
+                </Box>
+
+                <Box
+                rowGap={0}
+                columnGap={1}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(3, 1fr)',
+                }}
+                >
+                <RHFSwitch
+                  name="isApplyWaste"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Apply Waste
+                    </Typography>
+                  }
+                />
+                <RHFSwitch
+                  name="isApplyCrimp"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Apply Crimp
+                    </Typography>
+                  }
+                />
+
+                <RHFSwitch
+                  name="isBackToBackPunch"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Back To Back Punch
+                    </Typography>
+                  }
+                />
+                <RHFSwitch
+                  name="isManualSelect"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Manual Select
+                    </Typography>
+                  }
+                />
+                <RHFSwitch
+                  name="isAssign"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Assign
+                    </Typography>
+                  }
+                />
                 <RHFSwitch
                   name="isActive"
                   labelPlacement="start"
