@@ -25,3 +25,21 @@ export function fToNow(date) {
       })
     : '';
 }
+
+export function convertTimeToMilliseconds(timeString) {
+  const timeComponents = timeString.split(' ');
+
+  return timeComponents.reduce((totalMilliseconds, component) => {
+    if (component.includes('h')) {
+      const hours = parseInt(component, 10); // Specify radix 10
+      return totalMilliseconds + hours * 60 * 60 * 1000;
+    } if (component.includes('m')) {
+      const minutes = parseInt(component, 10); // Specify radix 10
+      return totalMilliseconds + minutes * 60 * 1000;
+    } if (component.includes('s')) {
+      const seconds = parseInt(component, 10); // Specify radix 10
+      return totalMilliseconds + seconds * 1000;
+    }
+    return totalMilliseconds;
+  }, 0);
+}

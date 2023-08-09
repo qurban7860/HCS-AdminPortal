@@ -87,7 +87,8 @@ export default function RoleViewForm() {
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-
+          <ViewFormField sm={12} heading="Assigned Users" param={defaultValues.description} />
+          
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>
       </Grid>
