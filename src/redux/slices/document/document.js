@@ -24,9 +24,22 @@ const initialState = {
   documents: [],
   activeDocuments: [],
   documentHistory: [],
-  filterBy: '',
-  page: 0,
-  rowsPerPage: 100,
+
+  documentFilterBy: '',
+  documentPage: 0,
+  documentRowsPerPage: 100,
+
+  machineDrawingsFilterBy: '',
+  machineDrawingsPage: 0,
+  machineDrawingsRowsPerPage: 100,
+
+  customerDocumentsFilterBy: '',
+  customerDocumentsPage: 0,
+  customerDocumentsRowsPerPage: 100,
+
+  machineDocumentsFilterBy: '',
+  machineDocumentsPage: 0,
+  machineDocumentsRowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -156,18 +169,53 @@ const slice = createSlice({
       state.documentHistory = [];
       state.responseMessage = null;
     },
-
+    // Set PageNo
+    ChangePage(state, action) {
+      state.documentPage = action.payload;
+    },
     // Set FilterBy
     setFilterBy(state, action) {
-      state.filterBy = action.payload;
+      state.documentFilterBy = action.payload;
     },
     // Set PageRowCount
     ChangeRowsPerPage(state, action) {
-      state.rowsPerPage = action.payload;
+      state.documentRowsPerPage = action.payload;
+    },
+    // Set FilterBy
+    setMachineDocumentFilterBy(state, action) {
+      state.machineDocumentsFilterBy = action.payload;
+    },
+    // Set PageRowCount
+    machineDocumentChangeRowsPerPage(state, action) {
+      state.machineDocumentsRowsPerPage = action.payload;
     },
     // Set PageNo
-    ChangePage(state, action) {
-      state.page = action.payload;
+    machineDocumentChangePage(state, action) {
+      state.machineDocumentsPage = action.payload;
+    },
+    // Set FilterBy
+    setCustomerDocumentFilterBy(state, action) {
+      state.customerDocumentsFilterBy = action.payload;
+    },
+    // Set PageRowCount
+    customerDocumentChangeRowsPerPage(state, action) {
+      state.customerDocumentsRowsPerPage = action.payload;
+    },
+    // Set PageNo
+    customerDocumentChangePage(state, action) {
+      state.customerDocumentsPage = action.payload;
+    },
+    // Set FilterBy
+    setMachineDrawingsFilterBy(state, action) {
+      state.machineDrawingsFilterBy = action.payload;
+    },
+    // Set PageRowCount
+    machineDrawingsChangeRowsPerPage(state, action) {
+      state.machineDrawingsRowsPerPage = action.payload;
+    },
+    // Set PageNo
+    machineDrawingsChangePage(state, action) {
+      state.machineDrawingsPage = action.payload;
     },
   },
 });
@@ -194,6 +242,15 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setMachineDocumentFilterBy,
+  machineDocumentChangePage,
+  machineDocumentChangeRowsPerPag,
+  setCustomerDocumentFilterBy,
+  customerDocumentChangePage,
+  customerDocumentChangeRowsPerPage,
+  setMachineDrawingsFilterBy,
+  machineDrawingsChangePage,
+  machineDrawingsChangeRowsPerPage,
 } = slice.actions;
 
 // ----------------------------Add Document------------------------------------------

@@ -1,5 +1,6 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { debounce } from "lodash";
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
@@ -28,6 +29,7 @@ import {
   setSecurityUserEditFormVisibility,
   ChangeRowsPerPage,
   ChangePage,
+  setFilterBy
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 // constants
@@ -82,7 +84,7 @@ export default function SecurityUserList() {
     initial,
     securityUserEditFormVisibility,
     securityUserFormVisibility,
-    page, rowsPerPage,
+    filterBy, page, rowsPerPage,
   } = useSelector((state) => state.user);
   // console.log("securityUsers", securityUsers);
 
@@ -136,10 +138,29 @@ export default function SecurityUserList() {
     setOpenConfirm(false);
   };
 
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
+  const filterNameDebounce = (value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+}
+
+const debouncedSearch = debounce(async (criteria) => {
+    filterNameDebounce(criteria);
+  }, 500)
+
+const handleFilterName = (event) => {
+  debouncedSearch(event.target.value);
+  setFilterName(event.target.value)
+  setPage(0);
+};
+
+useEffect(() => {
+    debouncedSearch.cancel();
+}, [debouncedSearch]);
+
+useEffect(()=>{
+    setFilterName(filterBy)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+},[])
 
   const handleFilterRole = (event) => {
     setPage(0);
@@ -194,6 +215,7 @@ export default function SecurityUserList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
     setFilterRole('all');
     setFilterStatus('all');
@@ -216,13 +238,13 @@ export default function SecurityUserList() {
             onResetFilter={handleResetFilter}
           />
 
-          <TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}
@@ -259,16 +281,13 @@ export default function SecurityUserList() {
             <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
-            // dense={dense}
-            // onChangeDense={onChangeDense}
-          />
+          />}
         </Card>
       </Container>
 

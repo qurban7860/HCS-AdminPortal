@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect, useRef, memo } from 'react';
+import React, {  useState, useEffect, useLayoutEffect, useRef, memo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { debounce } from "lodash";
 import PropTypes from 'prop-types';
 // @mui
 import {
@@ -47,8 +48,22 @@ import {
   resetDocuments,
   resetDocumentHistory,
   setDocumentViewFormVisibility,
+  // document pagination
+  setFilterBy,
   ChangePage,
   ChangeRowsPerPage,
+  // customer document pagination
+  setCustomerDocumentFilterBy,
+  customerDocumentChangePage,
+  customerDocumentChangeRowsPerPage,
+  // machine document pagination
+  setMachineDocumentFilterBy,
+  machineDocumentChangePage,
+  machineDocumentChangeRowsPerPag,
+  // machinee drawings pagination
+  setMachineDrawingsFilterBy,
+  machineDrawingsChangePage,
+  machineDrawingsChangeRowsPerPage,
 } from '../../../redux/slices/document/document';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -65,16 +80,33 @@ DocumentList.propTypes = {
   machinePage: PropTypes.bool,
   machineDrawings: PropTypes.bool,
 };
-
 function DocumentList({ customerPage, machinePage, machineDrawings }) {
-  const { documents, page, rowsPerPage, isLoading, error, documentInitial, responseMessage } = useSelector((state) => state.document );
+  const dispatch = useDispatch();
+  const { themeStretch } = useSettingsContext();
+  const { enqueueSnackbar } = useSnackbar();
+  const navigate = useNavigate();
+  const [filterName, setFilterName] = useState('');
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(100);
+  const [tableData, setTableData] = useState([]);
+  const [filterStatus, setFilterStatus] = useState([]);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [documentBy, setDocumentBy] = useState({});
+  const { customer } = useSelector((state) => state.customer);
+  const { machine } = useSelector((state) => state.machine);
+  const { documents,
+      documentFilterBy,  documentPage,  documentRowsPerPage,
+      machineDrawingsFilterBy,  machineDrawingsPage,  machineDrawingsRowsPerPage,
+      customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
+      machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
+      isLoading, error, documentInitial, responseMessage } = useSelector((state) => state.document );
 
   const {
     // page,
     order,
     orderBy,
     // rowsPerPage,
-    setPage,
+    // setPage,
     //
     selected,
     setSelected,
@@ -87,28 +119,34 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
-console.log("Usetable : ",     page,
-order,
-orderBy,
-rowsPerPage)
+
 const onChangeRowsPerPage = (event) => {
-  dispatch(ChangePage(0));
-  dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  if(machinePage){
+    dispatch(machineDocumentChangePage(0))
+    dispatch(machineDocumentChangeRowsPerPag(parseInt(event.target.value, 10)))
+  }else if(customerPage){
+    dispatch(customerDocumentChangePage(0))
+    dispatch(customerDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
+  }else if(machineDrawings){
+    dispatch(machineDrawingsChangePage(0))
+    dispatch(machineDrawingsChangeRowsPerPage(parseInt(event.target.value, 10)))
+  }else if(!machineDrawings && !customerPage && !machinePage){
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  }
 };
-const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
-  const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
-  const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [documentBy, setDocumentBy] = useState({});
-  const { customer } = useSelector((state) => state.customer);
-  const { machine } = useSelector((state) => state.machine);
-
+const  onChangePage = (event, newPage) => { 
+  if(machinePage){
+    dispatch(machineDocumentChangePage(newPage))
+  }else if(customerPage){
+    dispatch(customerDocumentChangePage(newPage))
+  }else if(machineDrawings){
+    dispatch(machineDrawingsChangePage(newPage))
+  }else if(!machineDrawings && !customerPage && !machinePage){
+    dispatch(ChangePage(newPage)) 
+  }
+}
 
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
@@ -145,6 +183,31 @@ const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, customerPage, machinePage]);
+
+  useEffect(()=>{
+    if(machinePage){
+      setPage(machineDocumentsPage)
+    }else if(customerPage){
+      setPage(customerDocumentsPage)
+    }else if(machineDrawings){
+      setPage(machineDrawingsPage)
+    }else if(!customerPage && !machinePage && !machineDrawings){
+      setPage(documentPage)
+    }
+  },[customerPage, machinePage, machineDrawings, machineDocumentsPage, customerDocumentsPage, machineDrawingsPage, documentPage])
+
+  useEffect(()=>{
+    if(machinePage){
+      setRowsPerPage(machineDocumentsRowsPerPage)
+    }else if(customerPage){
+      setRowsPerPage(customerDocumentsRowsPerPage)
+    }else if(machineDrawings){
+      setRowsPerPage(machineDrawingsRowsPerPage)
+    }else{
+      setRowsPerPage(documentRowsPerPage)
+    }
+  },[customerPage, machinePage, machineDrawings, machineDocumentsRowsPerPage, customerDocumentsRowsPerPage, machineDrawingsRowsPerPage, documentRowsPerPage])
+
   // useEffect(()=>{
   //   if(customerPage){
   //     setDocumentBy({customer: true});
@@ -182,10 +245,50 @@ const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
+  const filterNameDebounce = (value) => {
+    if(machinePage){
+      dispatch(machineDocumentChangePage(0))
+      dispatch(setMachineDocumentFilterBy(value))
+    }else if(customerPage){
+      dispatch(customerDocumentChangePage(0))
+      dispatch(setCustomerDocumentFilterBy(value))
+    }else if(machineDrawings){
+      dispatch(machineDrawingsChangePage(0))
+      dispatch(setMachineDrawingsFilterBy(value))
+    }else if(!customerPage && !machinePage && !machineDrawings){
+      dispatch(ChangePage(0));
+      dispatch(setFilterBy(value))
+    }
+    console.log("documentFilterBy : ",documentFilterBy)
+    console.log("filterName : ", filterName)
+  }
+  const debouncedSearch = debounce(async (criteria) => {
+      console.log("criteria : ",criteria)
+      filterNameDebounce(criteria);
+    }, 500)
+
   const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
+    debouncedSearch(event.target.value);
+    setFilterName(event.target.value)
   };
+
+  useEffect(() => {
+      debouncedSearch.cancel();
+  }, [debouncedSearch]);
+
+  useEffect(()=>{
+    if(machinePage){
+      setFilterName(machineDocumentsFilterBy)
+    }else if(customerPage){
+      setFilterName(customerDocumentsFilterBy)
+    }else if(machineDrawings){
+      setFilterName(machineDrawingsFilterBy)
+    }else if(!customerPage && !machinePage && !machineDrawings){
+      setFilterName(documentFilterBy)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[ ])
+  // customerPage, machinePage, machineDrawings, documentFilterBy, machineDocumentsFilterBy, customerDocumentsFilterBy, machineDrawingsFilterBy
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -246,6 +349,15 @@ const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const handleResetFilter = () => {
     setFilterName('');
+    if(machinePage){
+      dispatch(setMachineDocumentFilterBy(""))
+    }else if(customerPage){
+      dispatch(setCustomerDocumentFilterBy(""))
+    }else if(machineDrawings){
+      dispatch(setMachineDrawingsFilterBy(""))
+    }else if(!customerPage && !machinePage && !machineDrawings){
+      dispatch(setFilterBy(""))
+    }
     setFilterStatus([]);
   };
 
@@ -267,13 +379,13 @@ const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
           machinePage={machinePage}
           machineDrawings={machineDrawings}
         />
-        <TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />
+        />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             numSelected={selected.length}
@@ -343,13 +455,13 @@ const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
           </Scrollbar>
         </TableContainer>
 
-        <TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />
+        />}
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
@@ -413,4 +525,4 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
   return inputData;
 }
 
-export default memo(DocumentList)
+export default DocumentList
