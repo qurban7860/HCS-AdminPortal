@@ -182,6 +182,7 @@ export const PATH_EMAIL = {
   email : {
     list:path(ROOTS_EMAIL, '/list'),
     new: path(ROOTS_EMAIL, '/new'), 
+    view: (id) => path(ROOTS_EMAIL, `/${id}/view`),
   },
 }
 

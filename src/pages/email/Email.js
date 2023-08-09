@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'; 
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Table,
   TableBody,
   TableRow,
+  Stack,
   TableCell,
    Container,
 } from '@mui/material';
@@ -17,21 +19,21 @@ import axios from '../../utils/axios';
 import EmailListTableRow from './EmailListTableRow';
 import EmailListTableToolbar from './EmailListTableToolbar';
 import { Cover } from '../components/Defaults/Cover';
-
-
+// import { Email } from 'src/routes/elements';
+import { PATH_EMAIL } from '../../routes/paths';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+// import { email } from 'src/_mock/assets';
 
 const TABLE_HEAD = [
-  { id: 'fromEmail', label: 'from email' },
-  { id: 'toEmails', label: 'to email'},
+  { id: 'name', label: 'email' ,align: 'center',},
   { id: 'subject', label: 'subject '  },
-  { id: 'name', label: 'customer'},
   // { id: 'body', label: 'body' , align: 'center'},
-  { id: 'toUsers', label: 'toUsers' },
+  { id: 'fromEmail', label: 'from email',align:'center', },
+  { id: 'toEmails', label: 'to email',align:'center',},
   { id: 'created_at', label: 'Created At'},
 
 ];
-
-
 
 
 export default function App() {
@@ -44,6 +46,7 @@ export default function App() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [tableData, setTableData] = useState([]);
   const isFiltered = filterName !== '' || !!filterStatus.length;
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -53,7 +56,6 @@ export default function App() {
   const fetchData = async () => {
     try {
       const response = await axios.get(`${CONFIG.SERVER_URL}emails`);
-      console.log("response.data------->", response.data);
       setEmails(response.data);
     } catch (error) {
       console.error(error);
@@ -99,7 +101,6 @@ export default function App() {
 
 
   const sortedEmails = [...emails].sort((a, b) => {
-    console.log('emails--->', emails);
     if (sortingOrder === 'asc') {
       return a[sortedColumn] - b[sortedColumn];
     }
@@ -121,8 +122,8 @@ export default function App() {
 
   };
 
-  const handleViewRow = (rowId) => {
-
+  const handleViewRow = (id) => {
+    navigate(PATH_EMAIL.email.view(id));
   };
 
   const isNotFound = false; // Define the variable based on your condition
@@ -130,80 +131,92 @@ export default function App() {
 
 
   return (
-    <>
     <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative'
-          }}
-        >
-          <Cover name="Email" icon="ph:users-light" />
-        </Card>
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative'
+        }}
+      >
+        <Cover name="Email" icon="ph:users-light" />
+      </Card>
 
 
-        <Card sx={{ mt: 3 }}>
-          <EmailListTableToolbar
-            filterName={filterName}
-            filterStatus={filterStatus}
-            onFilterName={handleFilterName}
-            onFilterStatus={handleFilterStatus}
-            isFiltered={isFiltered}
-            onResetFilter={handleResetFilter}
+      <Card sx={{ mt: 3 }}>
+        <EmailListTableToolbar
+          filterName={filterName}
+          filterStatus={filterStatus}
+          onFilterName={handleFilterName}
+          onFilterStatus={handleFilterStatus}
+          isFiltered={isFiltered}
+          onResetFilter={handleResetFilter}
+        />
+        <Table >
+
+          <TableHeadCustom
+            order={order}
+            orderBy={orderBy}
+            headLabel={TABLE_HEAD}
+            // rowCount={tableData.length}
+            // numSelected={selected.length}
+            onSort={onSort}
+            // onSelectAllRows={(checked) =>
+            //   onSelectAllRows(
+            //     checked,
+            //     tableData.map((row) => row._id)
+            //   )
+            // }
           />
-            <TableHeadCustom
-              order={order}
-              orderBy={orderBy}
-              headLabel={TABLE_HEAD}
-              onSort={onSort}
-            />
 
 
-			<TableBody>
-			{sortedEmails.map((email) => (
-			  <TableRow key={email.id}>
-			    <TableCell>{email.fromEmail}</TableCell>
-			    <TableCell>{email.toEmails}</TableCell>
-			    <TableCell>{email.subject}</TableCell>
-			    <TableCell>{(email.customer) ? email.customer.name : ''}</TableCell> 
-			    <TableCell >{email.toUsers[0].name}</TableCell>
-			    <TableCell>{email.createdAt}</TableCell>
-			  </TableRow>
-			))}
-			</TableBody>
-      <Scrollbar>
-        <Table size="small" sx={{ minWidth: 960 }}>
           <TableBody>
-            {dataFiltered
-              .map((row, index) =>
-                row ? (
-                  <EmailListTableRow
-                    key={row._id}
-                    row={row}
-                    selected={selected.includes(row._id)}
-                    onSelectRow={() => onSelectRow(row._id)}
-                    onDeleteRow={() => handleDeleteRow(row._id)}
-                    // onEditRow={() => handleEditRow(row._id)}
-                    onViewRow={() => handleViewRow(row._id)}
-                    style={index % 2 ? { background: 'red' } : { background: 'green' }}
+            {sortedEmails.map((email) => (
+              <TableRow key={email.id}>
+                <Stack direction="row" alignItems="center">
+                    
+                  <CustomAvatar
+                    name={email.subject}
+                    alt={email.subject}
+                    sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }} 
                   />
-                ) : (
-                  !isNotFound && <Table key={index} sx={{ height: denseHeight }} />
-                )
-              )}
-
-            {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
+                  <LinkTableCell align="left" onClick={() => handleViewRow(email._id)} param={email.subject} />
+                </Stack>
+                <TableCell>{(email.customer) ? email.customer.name : ''}</TableCell> 
+                <TableCell>{email.toEmails}</TableCell>
+                <TableCell>{email.fromEmail}</TableCell>
+                <TableCell>{email.createdAt}</TableCell>
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
-      </Scrollbar>
+
+        <Scrollbar>
+          <Table size="small" sx={{ minWidth: 960 }}>
+            <TableBody>
+              {dataFiltered
+                .map((row, index) =>
+                  row ? (
+                    <EmailListTableRow
+                      key={row._id}
+                      row={row}
+                      selected={selected.includes(row._id)}
+                      onSelectRow={() => onSelectRow(row._id)}
+                      onDeleteRow={() => handleDeleteRow(row._id)}
+                      // onEditRow={() => handleEditRow(row._id)}
+                      onViewRow={() => handleViewRow(row._id)}
+                      style={index % 2 ? { background: 'red' } : { background: 'green' }}
+                    />
+                  ) : (
+                    !isNotFound && <Table key={index} sx={{ height: denseHeight }} />
+                  )
+                )}
+
+            </TableBody>
+          </Table>
+        </Scrollbar>
       </Card>
-      </Container>
-    </>
+    </Container>
   );
 }
 
@@ -212,7 +225,6 @@ export default function App() {
 
 
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {
-  console.log('working');
   const stabilizedThis = inputData.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
@@ -228,7 +240,6 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
     email.customer.name?.toLowerCase().includes(filterName.toLowerCase()) ||
     email.fromEmail?.toLowerCase().includes(filterName.toLowerCase()) ||
     // email.body?.toLowerCase().includes(filterName.toLowerCase()) ||
-    email.toUsers?.toLowerCase().includes(filterName.toLowerCase()) ||
     email.createdAt?.toLowerCase().includes(filterName.toLowerCase())
     );
   }
