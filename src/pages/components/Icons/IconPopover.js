@@ -251,7 +251,7 @@ export default function IconPopover({
         <>
           <IconButton
             aria-label={
-              multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.DOCUMENT_INACTIVE.heading
+              multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading
             }
             onClick={handlePopoverOpen}
             onMouseEnter={handlePopoverOpen}
@@ -259,9 +259,9 @@ export default function IconPopover({
           >
             <Iconify
               heading={
-                multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.DOCUMENT_INACTIVE.heading
+                multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading
               }
-              icon={ICONS.MULTIAUTH_ACTIVE.icon}
+              icon={multiAuth ? ICONS.MULTIAUTH_ACTIVE.icon : ICONS.MULTIAUTH_INACTIVE.icon}
               style={{
                 color: multiAuth
                   ? ICONS.MULTIAUTH_ACTIVE.color
@@ -270,6 +270,7 @@ export default function IconPopover({
               width={ICONS.size}
             />
           </IconButton>
+
           <StyledPopover
             open={isPopoverOpen}
             anchorEl={anchorEl}
