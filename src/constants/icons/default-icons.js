@@ -59,12 +59,12 @@ export const ICONS = {
   // ------------------------------------------------------------
   // MultiAuth
   MULTIAUTH_ACTIVE: {
-    icon: 'carbon:two-factor-authentication',
+    icon: 'mdi:password-outline',
     color: 'green',
     heading: 'Active',
   },
   MULTIAUTH_INACTIVE: {
-    icon: 'carbon:two-factor-authentication',
+    icon: 'mdi:password-off-outline',
     color: 'red',
     heading: 'Inactive',
   },
