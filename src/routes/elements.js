@@ -331,6 +331,8 @@ export const Setting = Loadable(lazy(() => import('../pages/setting/Setting')));
 // DASHBOARD: Email
 export const Email = Loadable(lazy(() => import('../pages/email/Email')));
 
+export const Emailviewform = Loadable(lazy(() => import('../pages/email/EmailViewform')));
+
 // DASHBOARD: REPORTS
 export const Reports = Loadable(lazy(() => import('../pages/Reports/Reports')));
 

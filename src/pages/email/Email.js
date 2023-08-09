@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react'; 
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Table,
   TableBody,
   TableRow,
+  Stack,
   TableCell,
    Container,
 } from '@mui/material';
@@ -17,21 +18,22 @@ import axios from '../../utils/axios';
 import EmailListTableRow from './EmailListTableRow';
 import EmailListTableToolbar from './EmailListTableToolbar';
 import { Cover } from '../components/Defaults/Cover';
-
-
+// import { Email } from 'src/routes/elements';
+import { PATH_EMAIL } from '../../routes/paths';
+import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
+import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+// import { email } from 'src/_mock/assets';
 
 const TABLE_HEAD = [
-  { id: 'fromEmail', label: 'from email' },
-  { id: 'toEmails', label: 'to email'},
+  { id: 'name', label: 'email' ,align: 'center',},
   { id: 'subject', label: 'subject '  },
-  { id: 'name', label: 'customer'},
   // { id: 'body', label: 'body' , align: 'center'},
-  { id: 'toUsers', label: 'toUsers' },
+  { id: 'toUsers', label: 'toUsers' , align: 'center'},
+  { id: 'fromEmail', label: 'from email',align:'center', },
+  { id: 'toEmails', label: 'to email',align:'center',},
   { id: 'created_at', label: 'Created At'},
 
 ];
-
-
 
 
 export default function App() {
@@ -44,6 +46,7 @@ export default function App() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [tableData, setTableData] = useState([]);
   const isFiltered = filterName !== '' || !!filterStatus.length;
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -121,8 +124,10 @@ export default function App() {
 
   };
 
-  const handleViewRow = (rowId) => {
-
+  const handleViewRow = (id) => {
+    console.log('id------------>', id);
+    console.log('email');
+    navigate(PATH_EMAIL.email.view(id));
   };
 
   const isNotFound = false; // Define the variable based on your condition
@@ -152,26 +157,45 @@ export default function App() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-            <TableHeadCustom
-              order={order}
-              orderBy={orderBy}
-              headLabel={TABLE_HEAD}
-              onSort={onSort}
-            />
+                <TableHeadCustom
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  // rowCount={tableData.length}
+                  // numSelected={selected.length}
+                  onSort={onSort}
+                  // onSelectAllRows={(checked) =>
+                  //   onSelectAllRows(
+                  //     checked,
+                  //     tableData.map((row) => row._id)
+                  //   )
+                  // }
+                />
 
 
-			<TableBody>
-			{sortedEmails.map((email) => (
-			  <TableRow key={email.id}>
-			    <TableCell>{email.fromEmail}</TableCell>
-			    <TableCell>{email.toEmails}</TableCell>
-			    <TableCell>{email.subject}</TableCell>
-			    <TableCell>{(email.customer) ? email.customer.name : ''}</TableCell> 
-			    <TableCell >{email.toUsers[0].name}</TableCell>
-			    <TableCell>{email.createdAt}</TableCell>
-			  </TableRow>
-			))}
-			</TableBody>
+  <TableBody>
+    {sortedEmails.map((email) => (
+      <TableRow key={email.id}>
+          <Stack direction="row" alignItems="center">
+            
+          <CustomAvatar
+            name={email.subject}
+            alt={email.subject}
+            sx={{ ml: 1, my: 0.5, width: '30px', height: '30px' }} 
+          />
+          {/ <Link align="left" onClick={() => handleViewRow(email.id)} param={email.subject} /> /}
+          <LinkTableCell align="left" onClick={() => handleViewRow(email._id)} param={email.subject} />
+        </Stack>
+        <TableCell>{(email.customer) ? email.customer.name : ''}</TableCell> 
+        {/ <TableCell>{email.subject}</TableCell> /}
+        {/ <TableCell>{email.body}</TableCell> /}
+        <TableCell >{email.toUsers}</TableCell>
+        <TableCell>{email.toEmails}</TableCell>
+        <TableCell>{email.fromEmail}</TableCell>
+        <TableCell>{email.createdAt}</TableCell>
+      </TableRow>
+    ))}
+  </TableBody>
       <Scrollbar>
         <Table size="small" sx={{ minWidth: 960 }}>
           <TableBody>
