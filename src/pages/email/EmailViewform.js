@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'; 
 import { Card, Grid,  Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -7,10 +8,6 @@ import { Cover } from '../components/Defaults/Cover';
 import { useSnackbar } from '../../components/snackbar';
 import { CONFIG } from '../../config-global';
 import axios from '../../utils/axios';
-
-
-
-
 
 export default function Emailviewform() {
 
@@ -31,7 +28,6 @@ useEffect(() => {
     try {
       
       const response = await axios.get(`${CONFIG.SERVER_URL}emails/${id}`);
-      console.log("response.data------->", response.data);
       response.data.customerName = response.data.customer.name;
       response.data.toEmail = response.data.toEmails[0];
       response.data.toUsers = response.data.toUsers[0];
@@ -59,46 +55,34 @@ const onDelete = async () => {
 
 
   return (
-    <>
-        <Grid sx={{ p: 3, mt: -3 }}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+    <Grid sx={{ p: 3, mt: -3 }}>
+      <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
         <Cover name="Email subject" icon="ph:users-light"  />
-        </Card>
-        <Card sx={{ p: 3 }}>
-        {/* <Grid container justifyContent="flex-end">
-        <Button variant="contained" color="primary">
-          <span>
-            text  <strong>now!</strong>
-          </span>
-        </Button>
-      </Grid> */}
-           <Grid container>
-            <ViewFormField sm={6} heading="name" param={email?.customerName} />
-            <ViewFormField sm={6} heading="subject" param={email?.subject} />
-            <ViewFormField sm={12} heading="body" param={email?.body} />
-            <ViewFormField sm={6} heading="toUsers" param={email?.toUsers} />
-            <ViewFormField
-              sm={6}
-              heading="fromEmail"
-              param={email?.fromEmail}
-            />
-            <ViewFormField
-              sm={6}
-              heading="toEmails"
-              param={email?.toEmail}
-            />
-            <ViewFormField
-              sm={6}
-              heading="createdAt"
-              param={email?.createdAt}
-            />
-          </Grid>
-          <ViewFormField />
-          <Grid container >
-              {/ ... /}
-          </Grid>
-        </Card>
-      </Grid>`
-    </>
+      </Card>
+      <Card sx={{ p: 3 }}>
+     
+        <Grid container>
+          <ViewFormField sm={6} heading="name" param={email?.customerName} />
+          <ViewFormField sm={6} heading="subject" param={email?.subject} />
+          <ViewFormField sm={12} heading="body" param={email?.body} />
+          <ViewFormField sm={6} heading="toUsers" param={email?.toUsers} />
+          <ViewFormField
+            sm={6}
+            heading="fromEmail"
+            param={email?.fromEmail}
+          />
+          <ViewFormField
+            sm={6}
+            heading="toEmails"
+            param={email?.toEmail}
+          />
+          <ViewFormField
+            sm={6}
+            heading="createdAt"
+            param={email?.createdAt}
+          />
+        </Grid>
+      </Card>
+    </Grid>
   )
 }
