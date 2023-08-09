@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { debounce } from "lodash";
 import PropTypes from 'prop-types';
 // @mui
 import {
@@ -42,7 +43,7 @@ import { DIALOGS, BUTTONS, FORMLABELS } from '../../constants/default-constants'
 // sections
 import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
-import { getCustomers, deleteCustomer, resetCustomer, setCustomerEditFormVisibility, ChangePage, ChangeRowsPerPage } from '../../redux/slices/customer/customer';
+import { getCustomers, deleteCustomer, resetCustomer, setCustomerEditFormVisibility, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
 import { fDate } from '../../utils/formatTime';
 
@@ -89,7 +90,7 @@ export default function CustomerList() {
   const [openConfirm, setOpenConfirm] = useState(false);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-  const { customers, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
+  const { customers, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.customer
   );
 
@@ -133,10 +134,30 @@ export default function CustomerList() {
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
+  const filterNameDebounce = (value) => {
+      dispatch(ChangePage(0))
+      dispatch(setFilterBy(value))
+  }
+  
+  const debouncedSearch = debounce(async (criteria) => {
+      filterNameDebounce(criteria);
+    }, 500)
+
   const handleFilterName = (event) => {
+    debouncedSearch(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+
+  useEffect(() => {
+      debouncedSearch.cancel();
+  }, [debouncedSearch]);
+
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
+
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -152,6 +173,7 @@ export default function CustomerList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
     setFilterStatus([]);
   };
@@ -173,13 +195,13 @@ export default function CustomerList() {
           machineDocList
         />
 
-<TablePaginationCustom
+      {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             numSelected={selected.length}
@@ -246,13 +268,13 @@ export default function CustomerList() {
           </Scrollbar>
         </TableContainer>
 
-        <TablePaginationCustom
+        {!isNotFound && <TablePaginationCustom
           count={dataFiltered.length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
-        />
+        />}
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>

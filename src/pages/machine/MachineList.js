@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { debounce } from "lodash";
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -35,7 +36,8 @@ import {
   resetMachine,
   getMachine,
   ChangeRowsPerPage,
-  ChangePage
+  ChangePage,
+  setFilterBy
 } from '../../redux/slices/products/machine';
 import { resetToolInstalled, resetToolsInstalled } from '../../redux/slices/products/toolInstalled';
 import { resetSetting, resetSettings } from '../../redux/slices/products/machineTechParamValue';
@@ -112,7 +114,7 @@ export default function MachineList() {
   const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
-  const { machines, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
+  const { machines, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
 
@@ -164,10 +166,30 @@ export default function MachineList() {
     setOpenConfirm(false);
   };
 
-  const handleFilterName = (event) => {
-    setPage(0);
-    setFilterName(event.target.value);
-  };
+  const filterNameDebounce = (value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+}
+
+const debouncedSearch = debounce(async (criteria) => {
+    filterNameDebounce(criteria);
+  }, 500)
+
+const handleFilterName = (event) => {
+  debouncedSearch(event.target.value);
+  setFilterName(event.target.value)
+  setPage(0);
+};
+
+useEffect(() => {
+    debouncedSearch.cancel();
+}, [debouncedSearch]);
+
+useEffect(()=>{
+    setFilterName(filterBy)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+},[])
+
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -214,6 +236,7 @@ export default function MachineList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
     setFilterStatus([]);
   };
@@ -235,13 +258,13 @@ export default function MachineList() {
             onResetFilter={handleResetFilter}
           />
 
-<TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {selected.length > 1 ? "" :
 
@@ -311,13 +334,13 @@ export default function MachineList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
         </Card>
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
