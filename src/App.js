@@ -48,6 +48,7 @@ import SnackbarProvider from './components/snackbar';
 import ScrollToTop from './components/scroll-to-top';
 import { MotionLazyContainer } from './components/animate';
 import { ThemeSettings, SettingsProvider } from './components/settings';
+import IdleManager from './components/idleManager';
 
 // Check our docs
 // https://docs.minimals.cc/authentication/js-version
@@ -69,21 +70,22 @@ export default function App() {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <SettingsProvider>
                   <BrowserRouter>
-    <ErrorBoundary fallback={<Page500 /> } >
-                    <ScrollToTop />
-                    <MotionLazyContainer>
-                      <ThemeProvider>
-                        <ThemeSettings>
-                          <ThemeLocalization>
-                            <SnackbarProvider>
-                              <StyledChart />
-                              <Router />
-                            </SnackbarProvider>
-                          </ThemeLocalization>
-                        </ThemeSettings>
-                      </ThemeProvider>
-                    </MotionLazyContainer>
-    </ErrorBoundary>
+                    <ErrorBoundary fallback={<Page500 /> } >
+                      <ScrollToTop />
+                      <MotionLazyContainer>
+                        <ThemeProvider>
+                          <ThemeSettings>
+                            <ThemeLocalization>
+                              <SnackbarProvider>
+                                <StyledChart />
+                                <IdleManager/>
+                                  <Router />
+                              </SnackbarProvider>
+                            </ThemeLocalization>
+                          </ThemeSettings>
+                        </ThemeProvider>
+                      </MotionLazyContainer>
+                   </ErrorBoundary>
                   </BrowserRouter>
                 </SettingsProvider>
               </LocalizationProvider>
