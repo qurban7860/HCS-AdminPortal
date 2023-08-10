@@ -587,7 +587,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                     }}
                   >
                     {' '}
-                    MultiFactorAuthentication
+                    Multi-Factor Authentication
                   </Typography>
                 }
               />
