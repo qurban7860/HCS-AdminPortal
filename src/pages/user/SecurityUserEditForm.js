@@ -633,7 +633,7 @@ export default function SecurityUserEditForm() {
                     }}
                   >
                     {' '}
-                    MultiFactorAuthentication
+                    Multi-Factor Authentication
                   </Typography>
                 }
               />
