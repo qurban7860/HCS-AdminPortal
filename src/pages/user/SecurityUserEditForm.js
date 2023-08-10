@@ -619,7 +619,7 @@ export default function SecurityUserEditForm() {
             <Grid item md={12} display="flex">
               <RHFSwitch name="isActive" labelPlacement="start" label={<Typography variant="subtitle2" sx={{ mx: 0, width: 1, justifyContent: 'space-between', mb: 0.5, color: 'text.secondary' }}> Active</Typography> } />
               <RHFSwitch
-                name="multiFactorAuthentication"
+                name="Multi-Factor Authentication"
                 labelPlacement="start"
                 label={
                   <Typography
