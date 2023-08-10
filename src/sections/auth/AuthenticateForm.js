@@ -13,6 +13,7 @@ import { PATH_AUTH } from '../../routes/paths';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useSnackbar } from '../../components/snackbar';
 import axios from '../../utils/axios';
+import { TITLES } from '../../constants/default-constants';
 // components
 import Iconify from '../../components/iconify';
 import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
@@ -95,6 +96,23 @@ export default function AuthLoginForm() {
         >
           Submit
         </LoadingButton>
+      </Stack>
+      <Stack alignItems="flex-end" sx={{ my: 2 }}>
+      <Link
+        component={RouterLink}
+        to={PATH_AUTH.login}
+        color="inherit"
+        variant="subtitle2"
+        sx={{
+          mt: 3,
+          mx: 'auto',
+          alignItems: 'center',
+          display: 'inline-flex',
+        }}
+      >
+        <Iconify icon="eva:chevron-left-fill" width={16} />
+        {TITLES.FORGOT_RETURN}
+      </Link>
       </Stack>
     </FormProvider>
   );
