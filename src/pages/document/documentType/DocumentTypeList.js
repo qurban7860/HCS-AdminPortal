@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import debounce from 'lodash/debounce';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -44,6 +45,9 @@ import documentName, {
   getDocumentType,
   deleteDocumentType,
   getDocumentTypes,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
 } from '../../../redux/slices/document/documentType';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';

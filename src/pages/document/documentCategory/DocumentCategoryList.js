@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import debounce from 'lodash/debounce';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -41,6 +42,9 @@ import DocumentCategoryListTableToolbar from './DocumentCategoryListTableToolbar
 import {
   deleteDocumentCategory,
   getDocumentCategories,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
 } from '../../../redux/slices/document/documentCategory';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
@@ -133,10 +137,25 @@ export default function DocumentCategoryList() {
     setOpenConfirm(false);
   };
 
+  // const debouncedSearch = useRef(debounce((value) => {
+  //   dispatch(ChangePage(0))
+  //   dispatch(setFilterBy(value))
+  // }, 500))
+
   const handleFilterName = (event) => {
+    // debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  // useEffect(() => {
+  //     debouncedSearch.current.cancel();
+  // }, [debouncedSearch]);
+  
+  // useEffect(()=>{
+  //     setFilterName(filterBy)
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);

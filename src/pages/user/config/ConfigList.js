@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import {
   Switch,
@@ -40,7 +41,11 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import ConfigListTableRow from './ConfigListTableRow';
 import ConfigListTableToolbar from './ConfigListTableToolbar';
-import { getConfigs , deleteConfig } from '../../../redux/slices/securityUser/config';
+import { getConfigs , deleteConfig,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy,
+ } from '../../../redux/slices/securityUser/config';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
 

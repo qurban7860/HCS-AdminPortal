@@ -1,7 +1,8 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import debounce from 'lodash/debounce';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -26,6 +27,9 @@ import {
   getConfigs,
   deleteConfig,
   setConfigEditFormVisibility,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
 } from '../../redux/slices/config/config';
 import { fDate } from '../../utils/formatTime';
 // constants

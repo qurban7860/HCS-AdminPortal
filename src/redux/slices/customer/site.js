@@ -21,6 +21,9 @@ const initialState = {
   site: null,
   lat: '',
   long: '',
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -108,7 +111,18 @@ const slice = createSlice({
       state.lat = action.payload.lat;
       state.long = action.payload.lng;
     },
-
+    // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
+    },
   },
 });
 
@@ -124,6 +138,9 @@ export const {
   resetSite,
   resetSites,
   resetActiveSites,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

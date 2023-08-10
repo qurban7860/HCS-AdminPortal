@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import {
   Switch,
@@ -40,7 +41,11 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import RoleListTableRow from './SignInLogListTableRow';
 import RoleListTableToolbar from './SignInLogListTableToolbar';
-import { getSignInLogs } from '../../../redux/slices/securityUser/securityUser';
+import { getSignInLogs,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy,
+ } from '../../../redux/slices/securityUser/securityUser';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate, fDateTime } from '../../../utils/formatTime';
 

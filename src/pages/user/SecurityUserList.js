@@ -1,6 +1,6 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { debounce } from "lodash";
+import debounce from 'lodash/debounce';
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
@@ -138,23 +138,19 @@ export default function SecurityUserList() {
     setOpenConfirm(false);
   };
 
-  const filterNameDebounce = (value) => {
+  const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
-}
-
-const debouncedSearch = debounce(async (criteria) => {
-    filterNameDebounce(criteria);
-  }, 500)
+  }, 500))
 
 const handleFilterName = (event) => {
-  debouncedSearch(event.target.value);
+  debouncedSearch.current(event.target.value);
   setFilterName(event.target.value)
   setPage(0);
 };
 
 useEffect(() => {
-    debouncedSearch.cancel();
+    debouncedSearch.current.cancel();
 }, [debouncedSearch]);
 
 useEffect(()=>{
