@@ -11,8 +11,8 @@ import { convertTimeToMilliseconds } from './formatTime';
  */
 const useIdleTimeout = ({ onIdle, idleTime = 1, isAuthenticated }) => {
     const idleTimeout = 1000 * idleTime;
-    console.log('idle time----------->', convertTimeToMilliseconds(CONFIG.IDLE_TIME));
-    console.log('env time----------->', CONFIG.IDLE_TIME);
+    // console.log('idle time----------->', convertTimeToMilliseconds(CONFIG.IDLE_TIME));
+    // console.log('env time----------->', CONFIG.IDLE_TIME);
 
     const [isIdle, setIdle] = useState(false)
     // const { logout } = useAuthContext();

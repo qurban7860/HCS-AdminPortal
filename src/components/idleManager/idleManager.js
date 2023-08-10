@@ -2,6 +2,8 @@ import { useState, useContext, useEffect} from 'react';
 import { LoadingButton } from '@mui/lab';
 
 import { useAuthContext } from '../../auth/useAuthContext';
+import { CONFIG } from '../../config-global';
+
 import useIdleTimeout from '../../utils/useIdleTimeout';
 import ConfirmDialog from '../confirm-dialog';
 
@@ -19,7 +21,7 @@ const IdleManager = () => {
 
   const idleTimer = useIdleTimeout({
     onIdle: handleIdle,
-    idleTime: 15,
+    idleTime: CONFIG.IDLE_TIME,
     isAuthenticated
   });
 
