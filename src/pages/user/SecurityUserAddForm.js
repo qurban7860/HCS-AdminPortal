@@ -573,7 +573,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 }
               />
               <RHFSwitch
-                name="Multi-Factor Authentication"
+                name="multiFactorAuthentication"
                 labelPlacement="start"
                 label={
                   <Typography
