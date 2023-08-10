@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import { Grid, Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
@@ -23,7 +24,9 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './SettingListTableRow';
 import SiteListTableToolbar from './SettingListTableToolbar';
-import { getSites, deleteSite } from '../../../redux/slices/customer/site';
+import { getSites, deleteSite,  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy, } from '../../../redux/slices/customer/site';
 import Cover from '../../components/Defaults/Cover';
 import { FORMLABELS } from '../../../constants/default-constants';
 
@@ -52,10 +55,10 @@ const STATUS_OPTIONS = [
 export default function SettingList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -65,8 +68,8 @@ export default function SettingList() {
     //
     onSort,
     onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
@@ -80,7 +83,15 @@ export default function SettingList() {
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  // const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  // const { sites,filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+
+    
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
     dispatch(getSites());
@@ -112,10 +123,26 @@ export default function SettingList() {
     setOpenConfirm(false);
   };
 
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -166,8 +193,8 @@ export default function SettingList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
@@ -186,7 +213,13 @@ export default function SettingList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
 
@@ -248,13 +281,13 @@ export default function SettingList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
         </Card>
       </Container>
 

@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
+import debounce from 'lodash/debounce';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -18,7 +19,9 @@ import {
 // redux
 import { useDispatch, useSelector } from 'react-redux';
 // routes
-import { getSuppliers, deleteSupplier } from '../../../redux/slices/products/supplier';
+import { getSuppliers, deleteSupplier,   ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy, } from '../../../redux/slices/products/supplier';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
@@ -70,10 +73,10 @@ export default function SupplierList() {
   const [tableData, setTableData] = useState([]);
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -83,8 +86,8 @@ export default function SupplierList() {
     //
     onSort,
     onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
@@ -103,9 +106,17 @@ export default function SupplierList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { suppliers, isLoading, error, initial, responseMessage } = useSelector(
+  const { suppliers, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.supplier
   );
+
+    
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
     // console.log('Testing done')
@@ -143,10 +154,26 @@ export default function SupplierList() {
     setOpenConfirm(false);
   };
 
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -205,8 +232,8 @@ export default function SupplierList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
@@ -226,7 +253,13 @@ export default function SupplierList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
 
@@ -288,13 +321,13 @@ export default function SupplierList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
         </Card>
       </Container>
 

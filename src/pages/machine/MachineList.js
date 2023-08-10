@@ -171,21 +171,20 @@ export default function MachineList() {
     dispatch(setFilterBy(value))
   }, 500))
 
-const handleFilterName = (event) => {
-  debouncedSearch.current(event.target.value);
-  setFilterName(event.target.value)
-  setPage(0);
-};
-
-useEffect(() => {
-    debouncedSearch.current.cancel();
-}, [debouncedSearch]);
-
-useEffect(()=>{
-    setFilterName(filterBy)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-},[])
-
+  const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
+    setPage(0);
+  };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -224,9 +223,7 @@ useEffect(()=>{
     }
   };
 
-  // const handleEditRow = (id) => {
-  //   navigate(PATH_MACHINE.machines.edit(id));
-  // };
+
   const handleViewRow = (id) => {
     navigate(PATH_MACHINE.machines.view(id));
   };
