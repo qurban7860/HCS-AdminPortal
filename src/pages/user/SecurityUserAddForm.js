@@ -161,7 +161,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       password: '',
       passwordConfirmation: '',
       isActive: true,
-      multiFactorAuthentication: true,
+      multiFactorAuthentication: false,
       roles: currentUser?.roles || [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -573,7 +573,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 }
               />
               <RHFSwitch
-                name="multiFactorAuthentication"
+                name="Multi-Factor Authentication"
                 labelPlacement="start"
                 label={
                   <Typography
