@@ -161,7 +161,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
       password: '',
       passwordConfirmation: '',
       isActive: true,
-      multiFactorAuthentication: false,
+      multiFactorAuthentication: true,
       roles: currentUser?.roles || [],
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -587,7 +587,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                     }}
                   >
                     {' '}
-                    Multi-Factor Authentication
+                    MultiFactorAuthentication
                   </Typography>
                 }
               />
