@@ -78,9 +78,9 @@ const TABLE_HEAD = [
   { id: 'serialNumber', label: 'Serial Number', align: 'left' },
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
   { id: 'machineName', label: 'Name', align: 'left' },
-  { id: 'model', label: 'Model', align: 'left' },
-  { id: 'status', label: 'Status', align: 'left' },
-  { id: 'customer', label: 'Customer', align: 'left' },
+  { id: 'machineModel', label: 'Model', align: 'left' },
+  { id: 'machineStatus', label: 'Status', align: 'left' },
+  { id: 'machineCustomer', label: 'Customer', align: 'left' },
   { id: 'instalationSite', label: 'Installation Site', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
@@ -235,7 +235,7 @@ export default function MachineList() {
   };
 
   return (
-    <>
+    <Container maxWidth={false} >
        
         <StyledCardContainer>
           <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting="enable" />
@@ -281,7 +281,7 @@ export default function MachineList() {
             />
           }
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
@@ -338,7 +338,7 @@ export default function MachineList() {
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
-    </>
+    </Container>
   );
 }
 function applyFilter({ inputData, comparator, filterName, filterStatus }) {

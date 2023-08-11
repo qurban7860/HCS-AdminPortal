@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { sentenceCase } from 'change-case';
 // @mui
@@ -78,6 +78,14 @@ export default function DocumentListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -102,18 +110,18 @@ export default function DocumentListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
-        { !customerPage && !machinePage && !machineDrawings && (<>
-        <TableCell align="left">{customer?.name}</TableCell>
-        <TableCell align="left">{machine?.serialNo}</TableCell>
+        { !customerPage && !machinePage && !machineDrawings &&  (<>
+        {windowWidth > 1200 && <TableCell align="left">{customer?.name}</TableCell>}
+        {windowWidth > 1200 && <TableCell align="left">{machine?.serialNo}</TableCell>}
         </>)}
-        <TableCell align="left">{docCategory?.name}</TableCell>
-        <TableCell align="left">{docType?.name}</TableCell>
-        <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>
+        {windowWidth > 900 && <TableCell align="left">{docCategory?.name}</TableCell>}
+        {windowWidth > 900 && <TableCell align="left">{docType?.name}</TableCell>}
+        {windowWidth > 600 && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
 
-        <TableCell align="center">
+        {windowWidth > 600 && <TableCell align="center">
           {' '}
           <Switch checked={customerAccess} disabled size="small" />{' '}
-        </TableCell>
+        </TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}

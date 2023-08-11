@@ -44,13 +44,12 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'email', label: 'Email', align: 'left' },
-  { id: 'phone', label: 'Phone Number', align: 'left' },
-  { id: 'role', label: 'Roles', align: 'left' },
+  { id: 'userPhone', label: 'Phone Number', align: 'left' },
+  { id: 'userRole', label: 'Roles', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
-  // { id: '' },
 ];
 
 // ----------------------------------------------------------------------
@@ -249,7 +248,7 @@ useEffect(()=>{
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 800 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}
