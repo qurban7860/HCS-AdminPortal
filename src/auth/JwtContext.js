@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { createContext, useEffect, useReducer, useCallback, useMemo } from 'react';
-import jwtDecode from 'jwt-decode';
+// import jwtDecode from 'jwt-decode';
 // import { ROOT_CONFIG } from 'src/config-global';
 import { CONFIG } from '../config-global';
 // utils
@@ -87,7 +87,7 @@ export function AuthProvider({ children }) {
         };
         const userId = localStorage.getItem('userId');
 
-        const tokenExpTime = jwtDecode(accessToken).exp * 1000;
+        // const tokenExpTime = jwtDecode(accessToken).exp * 1000;
         // const tokenRefreshTime = tokenExpTime - 20 * 60 * 1000;
         // const resetTokenTime = setTimeout(async () => {
         //   try {
@@ -173,7 +173,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     }
     else{
-      const { accessToken, user, userId, roles } = response.data;
+      const { accessToken, user, userId } = response.data;
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
       localStorage.setItem('name', user.displayName);
@@ -204,7 +204,7 @@ export function AuthProvider({ children }) {
       code, userID
     })
 
-      const { accessToken, user, userId, roles } = response.data;
+      const { accessToken, user, userId } = response.data;
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
       localStorage.setItem('name', user.displayName);
@@ -248,7 +248,7 @@ export function AuthProvider({ children }) {
   // LOGOUT
   const logout = useCallback( async () => {
     const userId  = localStorage.getItem("userId")
-    const response = await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
+    await axios.post(`${CONFIG.SERVER_URL}security/logout/${userId}`)
 
     setSession(null);
     localStorage.removeItem('userId');
