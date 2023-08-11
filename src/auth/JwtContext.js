@@ -146,7 +146,7 @@ export function AuthProvider({ children }) {
     const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`);
 
     if(configsResponse && Array.isArray(configsResponse.data) && configsResponse.data.length>0 ) {
-      const configs = configsResponse.data.map((c)=>{return {name:c.name,value:c.value}});
+      const configs = configsResponse.data.map((c)=>({name:c.name,value:c.value}));
       localStorage.setItem("CONFIGS",JSON.stringify(configs));
     }
   }
