@@ -1,5 +1,6 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
@@ -9,6 +10,9 @@ import {
   getTechparams,
   getTechparam,
   deleteTechparams,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy,
 } from '../../../redux/slices/products/machineTechParam';
 import { PATH_MACHINE } from '../../../routes/paths';
 // components
@@ -57,10 +61,10 @@ export default function StatusList() {
   const [tableData, setTableData] = useState([]);
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -70,8 +74,8 @@ export default function StatusList() {
     //
     onSort,
     onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
@@ -88,9 +92,16 @@ export default function StatusList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { techparams, isLoading, error, initial, responseMessage } = useSelector(
+  const { techparams, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.techparam
   );
+  
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
     dispatch(getTechparams());
@@ -125,10 +136,26 @@ export default function StatusList() {
     setOpenConfirm(false);
   };
 
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -180,8 +207,8 @@ export default function StatusList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
@@ -205,7 +232,13 @@ export default function StatusList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
 
@@ -267,13 +300,13 @@ export default function StatusList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
         </Card>
       </Container>
 

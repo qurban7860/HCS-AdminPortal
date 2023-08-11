@@ -1,7 +1,8 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
+import debounce from 'lodash/debounce';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
@@ -26,6 +27,9 @@ import {
   getConfigs,
   deleteConfig,
   setConfigEditFormVisibility,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
 } from '../../redux/slices/config/config';
 import { fDate } from '../../utils/formatTime';
 // constants
@@ -49,10 +53,10 @@ const TABLE_HEAD = [
 export default function ConfigList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -60,16 +64,24 @@ export default function ConfigList() {
     onSelectRow,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
+
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
 
   const {
     configs,
+    filterBy, page, rowsPerPage,
     error,
     responseMessage,
     initial,
@@ -116,10 +128,25 @@ export default function ConfigList() {
     setOpenConfirm(false);
   };
 
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterRole = (event) => {
     setPage(0);
@@ -174,6 +201,7 @@ export default function ConfigList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
     setFilterRole('all');
     setFilterStatus('all');
@@ -195,7 +223,20 @@ export default function ConfigList() {
             onFilterRole={handleFilterRole}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}
@@ -232,16 +273,13 @@ export default function ConfigList() {
             <TableNoData isNotFound={isNotFound} />
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-
-            // dense={dense}
-            // onChangeDense={onChangeDense}
-          />
+          />}
         </Card>
       </Container>
 

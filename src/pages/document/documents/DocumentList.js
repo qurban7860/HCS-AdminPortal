@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import React, {  useState, useEffect, useLayoutEffect, useRef, memo } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { debounce } from "lodash";
+import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
@@ -259,21 +259,18 @@ const  onChangePage = (event, newPage) => {
       dispatch(ChangePage(0));
       dispatch(setFilterBy(value))
     }
-    console.log("documentFilterBy : ",documentFilterBy)
-    console.log("filterName : ", filterName)
   }
-  const debouncedSearch = debounce(async (criteria) => {
-      console.log("criteria : ",criteria)
+  const debouncedSearch = useRef(debounce(async (criteria) => {
       filterNameDebounce(criteria);
-    }, 500)
+    }, 500))
 
   const handleFilterName = (event) => {
-    debouncedSearch(event.target.value);
+    debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
   };
 
   useEffect(() => {
-      debouncedSearch.cancel();
+      debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
   useEffect(()=>{

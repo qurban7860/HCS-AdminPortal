@@ -1,5 +1,6 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/material';
 // redux
@@ -26,6 +27,9 @@ import {
   getRegions,
   deleteRegion,
   setRegionEditFormVisibility,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy,
 } from '../../redux/slices/region/region';
 import { fDate } from '../../utils/formatTime';
 // constants
@@ -52,10 +56,10 @@ const TABLE_HEAD = [
 export default function RegionList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -63,16 +67,24 @@ export default function RegionList() {
     onSelectRow,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
+
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
 
   const {
     regions,
+    filterBy, page, rowsPerPage,
     error,
     responseMessage,
     initial,
@@ -119,10 +131,25 @@ export default function RegionList() {
     setOpenConfirm(false);
   };
 
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterRole = (event) => {
     setPage(0);
@@ -177,11 +204,11 @@ export default function RegionList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
     setFilterRole('all');
     setFilterStatus('all');
   };
-
   return (
     <>
       <Container maxWidth={false}>
@@ -198,7 +225,13 @@ export default function RegionList() {
             onFilterRole={handleFilterRole}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}

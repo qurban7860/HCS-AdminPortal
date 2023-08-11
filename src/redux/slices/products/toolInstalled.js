@@ -21,11 +21,9 @@ const initialState = {
   error: null,
   toolsInstalled: [],
   toolInstalled: null,
-  toolTypes: [
-    'GENERIC TOOL', 
-    'SINGLE TOOL', 
-    'COMPOSIT TOOL', 
-  ]
+  filterBy: '',
+  page: 0,
+  rowsPerPage: 100,
 };
 
 const slice = createSlice({
@@ -92,6 +90,18 @@ const slice = createSlice({
       state.success = false;
       state.isLoading = false;
     },
+        // Set FilterBy
+    setFilterBy(state, action) {
+      state.filterBy = action.payload;
+    },
+    // Set PageRowCount
+    ChangeRowsPerPage(state, action) {
+      state.rowsPerPage = action.payload;
+    },
+    // Set PageNo
+    ChangePage(state, action) {
+      state.page = action.payload;
+    },
   },
 });
 
@@ -105,6 +115,9 @@ export const {
   resetToolInstalled,
   resetToolsInstalled,
   setResponseMessage,
+  setFilterBy,
+  ChangeRowsPerPage,
+  ChangePage,
 } = slice.actions;
 
 // ----------------------------Save TOOLS INSTALLED ------------------------------------------
@@ -116,16 +129,6 @@ export function addToolInstalled(machineId,params) {
             const data = {
                 tool: params.tool,
                 note: params.note,
-                offset: params.offset,
-                wasteTriggerDistance: params.wasteTriggerDistance,
-                crimpTriggerDistance: params.crimpTriggerDistance,
-                operations: params.operations,
-                toolType: params.toolType,
-                isApplyWaste: params.isApplyWaste,
-                isApplyCrimp: params.isApplyCrimp,
-                isBackToBackPunch: params.isBackToBackPunch,
-                isManualSelect: params.isManualSelect,
-                isAssign: params.isAssign,
                 isActive: params.isActive,
             }
       const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
@@ -144,50 +147,11 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      /* eslint-disable */
-      let data = {
+      const data = {
         tool: params.tool,
         note: params.note,
-        toolType: params.toolType,
-        isApplyWaste: params.isApplyWaste,
-        isApplyCrimp: params.isApplyCrimp,
-        isBackToBackPunch: params.isBackToBackPunch,
-        isManualSelect: params.isManualSelect,
-        isAssign: params.isAssign,
         isActive: params.isActive,
       }
-
-      if(params.toolType){
-        data.toolType = params.toolType;
-      } else {
-        data.toolType = '';
-      }
-
-      if(params.offset){
-        data.offset = params.offset;
-      } else {
-        data.offset = '';
-      }
-
-      if(params.wasteTriggerDistance){
-        data.wasteTriggerDistance = params.wasteTriggerDistance;
-      } else {
-        data.wasteTriggerDistance = '';
-      }
-
-      if(params.crimpTriggerDistance){
-        data.crimpTriggerDistance = params.crimpTriggerDistance;
-      } else {
-        data.crimpTriggerDistance = '';
-      }
-
-      if(params.operations){
-        data.operations = params.operations;
-      } else {
-        data.operations = '';
-      }
-      /* eslint-enable */
-
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
       dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
       dispatch(setToolInstalledEditFormVisibility (false));

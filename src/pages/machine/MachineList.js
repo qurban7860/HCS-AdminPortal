@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useCallback, useState, useEffect } from 'react';
+import { useLayoutEffect, useMemo, useCallback, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { debounce } from "lodash";
+import debounce from 'lodash/debounce';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -166,30 +166,25 @@ export default function MachineList() {
     setOpenConfirm(false);
   };
 
-  const filterNameDebounce = (value) => {
+  const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
-}
+  }, 500))
 
-const debouncedSearch = debounce(async (criteria) => {
-    filterNameDebounce(criteria);
-  }, 500)
-
-const handleFilterName = (event) => {
-  debouncedSearch(event.target.value);
-  setFilterName(event.target.value)
-  setPage(0);
-};
-
-useEffect(() => {
-    debouncedSearch.cancel();
-}, [debouncedSearch]);
-
-useEffect(()=>{
-    setFilterName(filterBy)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-},[])
-
+  const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
+    setPage(0);
+  };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -228,9 +223,7 @@ useEffect(()=>{
     }
   };
 
-  // const handleEditRow = (id) => {
-  //   navigate(PATH_MACHINE.machines.edit(id));
-  // };
+
   const handleViewRow = (id) => {
     navigate(PATH_MACHINE.machines.view(id));
   };

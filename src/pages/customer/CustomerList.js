@@ -1,8 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect , useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { debounce } from "lodash";
+import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
@@ -133,24 +133,20 @@ export default function CustomerList() {
 
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
-
-  const filterNameDebounce = (value) => {
+  
+  const debouncedSearch = useRef(debounce((value) => {
       dispatch(ChangePage(0))
       dispatch(setFilterBy(value))
-  }
-  
-  const debouncedSearch = debounce(async (criteria) => {
-      filterNameDebounce(criteria);
-    }, 500)
+    }, 500))
 
   const handleFilterName = (event) => {
-    debouncedSearch(event.target.value);
+    debouncedSearch.current(event.target.value);
     setFilterName(event.target.value)
     setPage(0);
   };
 
   useEffect(() => {
-      debouncedSearch.cancel();
+      debouncedSearch.current.cancel();
   }, [debouncedSearch]);
 
   useEffect(()=>{

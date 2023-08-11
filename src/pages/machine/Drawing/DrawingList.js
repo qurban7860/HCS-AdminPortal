@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
@@ -52,6 +53,9 @@ import drawing, {
   resetDrawing,
   getDrawings,
   resetDrawings,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy,
   setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
@@ -67,10 +71,10 @@ import { fDate } from '../../../utils/formatTime';
 
 export default function DrawingList() {
   const {
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -79,8 +83,8 @@ export default function DrawingList() {
     onSelectAllRows,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
@@ -96,7 +100,7 @@ export default function DrawingList() {
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
 
-  const { drawings, isLoading } = useSelector((state) => state.drawing );
+  const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
 
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
@@ -105,6 +109,14 @@ export default function DrawingList() {
     { id: 'active', label: 'Active', align: 'center' },
     { id: 'created_at', label: 'Created At', align: 'right' },
   ];
+
+    
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useEffect(() => {
     if(machine?._id){
@@ -130,10 +142,26 @@ export default function DrawingList() {
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
+
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -184,8 +212,8 @@ export default function DrawingList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
@@ -199,7 +227,13 @@ export default function DrawingList() {
           isFiltered={isFiltered}
           onResetFilter={handleResetFilter}
         />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
         <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
           <TableSelectedAction
             numSelected={selected.length}

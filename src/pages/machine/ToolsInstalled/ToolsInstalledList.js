@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import debounce from 'lodash/debounce';
 // @mui
 import {
   Grid,
@@ -37,7 +38,9 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import SiteListTableRow from './ToolsInstalledListTableRow';
 import SiteListTableToolbar from './ToolsInstalledListTableToolbar';
-import { getSites, deleteSite } from '../../../redux/slices/customer/site';
+import { getSites, deleteSite,   ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy, } from '../../../redux/slices/customer/site';
 import Cover from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 
@@ -66,10 +69,10 @@ const STATUS_OPTIONS = [
 export default function ToolsInstalledList() {
   const {
     dense,
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -79,8 +82,8 @@ export default function ToolsInstalledList() {
     //
     onSort,
     onChangeDense,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'createdAt',
   });
@@ -101,7 +104,14 @@ export default function ToolsInstalledList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  // const { sites, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  // const { sites, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector((state) => state.site);
+  
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   useLayoutEffect(() => {
     dispatch(getSites());
@@ -136,10 +146,25 @@ export default function ToolsInstalledList() {
     setOpenConfirm(false);
   };
 
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -189,8 +214,8 @@ export default function ToolsInstalledList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
@@ -209,7 +234,13 @@ export default function ToolsInstalledList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             {/* <TableSelectedAction
 
@@ -271,13 +302,13 @@ export default function ToolsInstalledList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
         </Card>
       </Container>
 

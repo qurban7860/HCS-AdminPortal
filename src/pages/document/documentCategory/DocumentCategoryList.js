@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import debounce from 'lodash/debounce';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import {
@@ -41,6 +42,9 @@ import DocumentCategoryListTableToolbar from './DocumentCategoryListTableToolbar
 import {
   deleteDocumentCategory,
   getDocumentCategories,
+  ChangeRowsPerPage,
+  ChangePage,
+  setFilterBy
 } from '../../../redux/slices/document/documentCategory';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
@@ -59,10 +63,10 @@ const TABLE_HEAD = [
 
 export default function DocumentCategoryList() {
   const {
-    page,
+    // page,
     order,
     orderBy,
-    rowsPerPage,
+    // rowsPerPage,
     setPage,
     //
     selected,
@@ -71,11 +75,18 @@ export default function DocumentCategoryList() {
     onSelectAllRows,
     //
     onSort,
-    onChangePage,
-    onChangeRowsPerPage,
+    // onChangePage,7
+    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: 'name',
   });
+
+  const onChangeRowsPerPage = (event) => {
+    dispatch(ChangePage(0));
+    dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
+  };
+
+  const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
 
@@ -94,7 +105,7 @@ export default function DocumentCategoryList() {
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const { customer } = useSelector((state) => state.customer);
-  const { documentCategories, isLoading, error, initial, responseMessage } = useSelector(
+  const { documentCategories, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
     (state) => state.documentCategory
   );
 
@@ -133,10 +144,25 @@ export default function DocumentCategoryList() {
     setOpenConfirm(false);
   };
 
+  const debouncedSearch = useRef(debounce((value) => {
+    dispatch(ChangePage(0))
+    dispatch(setFilterBy(value))
+  }, 500))
+
   const handleFilterName = (event) => {
+    debouncedSearch.current(event.target.value);
+    setFilterName(event.target.value)
     setPage(0);
-    setFilterName(event.target.value);
   };
+  
+  useEffect(() => {
+      debouncedSearch.current.cancel();
+  }, [debouncedSearch]);
+  
+  useEffect(()=>{
+      setFilterName(filterBy)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[])
 
   const handleFilterStatus = (event) => {
     setPage(0);
@@ -182,8 +208,8 @@ export default function DocumentCategoryList() {
   };
 
   const handleResetFilter = () => {
+    dispatch(setFilterBy(''))
     setFilterName('');
-    setFilterStatus([]);
   };
 
   return (
@@ -208,7 +234,13 @@ export default function DocumentCategoryList() {
             isFiltered={isFiltered}
             onResetFilter={handleResetFilter}
           />
-
+          {!isNotFound && <TablePaginationCustom
+            count={dataFiltered.length}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            onPageChange={onChangePage}
+            onRowsPerPageChange={onChangeRowsPerPage}
+          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               numSelected={selected.length}
@@ -276,13 +308,13 @@ export default function DocumentCategoryList() {
             </Scrollbar>
           </TableContainer>
 
-          <TablePaginationCustom
+          {!isNotFound && <TablePaginationCustom
             count={dataFiltered.length}
             page={page}
             rowsPerPage={rowsPerPage}
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
-          />
+          />}
         </Card>
       </Container>
 
