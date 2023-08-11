@@ -1,12 +1,12 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
+// import { Helmet } from 'react-helmet-async';
+// import { paramCase } from 'change-case';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Switch,
-  Grid,
+  // Switch,
+  // Grid,
   Card,
   Table,
   Button,
@@ -15,15 +15,15 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
+  // Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSnackbar } from '../../../components/snackbar';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -90,9 +90,9 @@ export default function DocumentCategoryList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
+  // const { themeStretch } = useSettingsContext();
 
-  const { enqueueSnackbar } = useSnackbar();
+  // const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
@@ -104,8 +104,8 @@ export default function DocumentCategoryList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customer } = useSelector((state) => state.customer);
-  const { documentCategories, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
+  // const { customer } = useSelector((state) => state.customer);
+  const { documentCategories, filterBy, page, rowsPerPage, isLoading, initial } = useSelector(
     (state) => state.documentCategory
   );
 
