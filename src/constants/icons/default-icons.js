@@ -53,7 +53,19 @@ export const ICONS = {
   },
   DOCUMENT_INACTIVE: {
     icon: 'basil:document-solid',
+    color: 'red',
+    heading: 'Inactive',
+  },
+  // ------------------------------------------------------------
+  // MultiAuth
+  MULTIAUTH_ACTIVE: {
+    icon: 'mdi:password-outline',
     color: 'green',
+    heading: 'Active',
+  },
+  MULTIAUTH_INACTIVE: {
+    icon: 'mdi:password-off-outline',
+    color: 'red',
     heading: 'Inactive',
   },
   // ------------------------------------------------------------

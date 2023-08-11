@@ -16,6 +16,7 @@ import {
   VerifyCodePage,
   NewPasswordPage,
   ResetPasswordPage,
+  Authenticate,
   // Dashboard: General
   GeneralAppPage,
   // User
@@ -155,6 +156,7 @@ import {
 
   Setting,
   Email,
+  Emailviewform,
 // Reports
   Reports,
   SignInLogList,
@@ -198,6 +200,14 @@ export default function Router() {
           element: (
             <GuestGuard>
               <LoginPage />
+            </GuestGuard>
+          ),
+        },
+        {
+          path: 'authenticate',
+          element: (
+            <GuestGuard>
+              <Authenticate />
             </GuestGuard>
           ),
         },
@@ -399,6 +409,7 @@ export default function Router() {
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
         { path: 'list', element: <Email /> },
+        { path: ':id/view', element: <Emailviewform/> }
       ]
     },
     {

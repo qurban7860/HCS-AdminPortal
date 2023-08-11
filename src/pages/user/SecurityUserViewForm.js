@@ -146,6 +146,7 @@ export default function SecurityUserViewForm() {
       customers: securityUser?.customers || [],
       machines: securityUser?.machines || [],
       isActive: securityUser?.isActive,
+      multiFactorAuthentication: securityUser?.multiFactorAuthentication,
       createdByFullName: securityUser?.createdBy?.name,
       createdAt: securityUser?.createdAt,
       createdIP: securityUser?.createdIP,
@@ -186,7 +187,7 @@ export default function SecurityUserViewForm() {
             }
           />
           <Grid container>
-            <ViewFormField sm={12} isActive={defaultValues.isActive} />
+            <ViewFormField sm={12} isActive={defaultValues.isActive} multiAuth={defaultValues?.multiFactorAuthentication} />
             <ViewFormField
               sm={6}
               heading="Customer"

@@ -148,32 +148,69 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('name');
     localStorage.removeItem('userRoles');
     localStorage.removeItem('accessToken');
-    // localStorage.clear();
 
     const response = await axios.post(`${CONFIG.SERVER_URL}security/getToken`, {
       email,
       password,
     })
 
-    const { accessToken, user, userId, roles } = response.data;
+    if (response.data.multiFactorAuthentication){
+      console.log('res----------->', response.data);
+
+      localStorage.setItem("userId", response.data.userId);
+      localStorage.setItem("MFA", true);
+    }
+    else{
+      console.log('res----------->', response.data);
+      const { accessToken, user, userId, roles } = response.data;
+      const rolesArrayString = JSON.stringify(user.roles);
+      localStorage.setItem('email', user.email);
+      localStorage.setItem('name', user.displayName);
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('userRoles', rolesArrayString);
+
+      setSession(accessToken);
+
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user,
+          userId
+        },
+      });
+    }
 
     
-    const rolesArrayString = JSON.stringify(user.roles);
-    localStorage.setItem('email', user.email);
-    localStorage.setItem('name', user.displayName);
-    localStorage.setItem('userId', userId);
-    localStorage.setItem('userRoles', rolesArrayString);
-
-    setSession(accessToken);
-
-    dispatch({
-      type: 'LOGIN',
-      payload: {
-        user,
-        userId
-      },
-    });
   }, []);
+
+  // MULTI FACTOR CODE
+
+  const muliFactorAuthentication = useCallback(async (code, userID) => {
+
+    const response = await axios.post(`${CONFIG.SERVER_URL}security/multifactorverifyCode`, {
+      code, userID
+    })
+
+      const { accessToken, user, userId, roles } = response.data;
+      const rolesArrayString = JSON.stringify(user.roles);
+      localStorage.setItem('email', user.email);
+      localStorage.setItem('name', user.displayName);
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('userRoles', rolesArrayString);
+
+      setSession(accessToken);
+
+      dispatch({
+        type: 'LOGIN',
+        payload: {
+          user,
+          userId
+        },
+      });
+
+    
+  }, []);
+
 
   // REGISTER
   const register = useCallback(async (firstName, lastName, email, password) => {
@@ -223,8 +260,9 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      muliFactorAuthentication
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, state.userId, login, logout, register]
+    [state.isAuthenticated, state.isInitialized, state.user, state.userId, login, logout, register, muliFactorAuthentication]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

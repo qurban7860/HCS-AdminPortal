@@ -14,9 +14,8 @@ export const CONFIG = {
   MESSAGE_REGISTER_USER: process.env.REACT_APP_MESSAGE_REGISTER_USER,
   MESSAGE_LOGIN_USER: process.env.REACT_APP_MESSAGE_LOGIN_USER,
   GOOGLE_MAPS_API_KEY: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
+  IDLE_TIME: process.env.REACT_APP_IDLE_TIME,
 };
-
-console.log(CONFIG);
 
 export const HOST_API_KEY = process.env.REACT_APP_HOST_API_KEY || '';
 // console.log('APP_HOST', HOST_API_KEY);

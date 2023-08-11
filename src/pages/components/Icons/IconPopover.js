@@ -17,6 +17,7 @@ export default function IconPopover({
   customerAccess,
   sites,
   onMapClick,
+  multiAuth,
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const isPopoverOpen = Boolean(anchorEl);
@@ -245,6 +246,55 @@ export default function IconPopover({
         </>
       )}
 
+       {/* MultiAuth icon */}
+       {multiAuth !== undefined && (
+        <>
+          <IconButton
+            aria-label={
+              multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading
+            }
+            onClick={handlePopoverOpen}
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
+          >
+            <Iconify
+              heading={
+                multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading
+              }
+              icon={multiAuth ? ICONS.MULTIAUTH_ACTIVE.icon : ICONS.MULTIAUTH_INACTIVE.icon}
+              style={{
+                color: multiAuth
+                  ? ICONS.MULTIAUTH_ACTIVE.color
+                  : ICONS.MULTIAUTH_INACTIVE.color,
+              }}
+              width={ICONS.size}
+            />
+          </IconButton>
+
+          <StyledPopover
+            open={isPopoverOpen}
+            anchorEl={anchorEl}
+            onClose={handlePopoverClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center',
+            }}
+            transformOrigin={{
+              vertical: 'center',
+              horizontal: 'center',
+            }}
+            id="mouse-over-popover"
+          >
+            <Typography
+              variant={ICONS.variant}
+              color={multiAuth ? ICONS.MULTIAUTH_ACTIVE.color : ICONS.MULTIAUTH_INACTIVE.color}
+            >
+              {multiAuth ? ICONS.MULTIAUTH_ACTIVE.heading : ICONS.MULTIAUTH_INACTIVE.heading}
+            </Typography>
+          </StyledPopover>
+        </>
+      )}
+
       {/* customerAccess icon */}
       {customerAccess !== undefined && (
         <>
@@ -336,4 +386,5 @@ IconPopover.propTypes = {
   customerAccess: PropTypes.bool,
   sites: PropTypes.array,
   onMapClick: PropTypes.func,
+  multiAuth:PropTypes.bool,
 };
