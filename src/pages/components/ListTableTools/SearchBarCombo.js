@@ -33,7 +33,7 @@ function SearchBarCombo({
             ),
           }}
           sx={{
-            width: !isMobile ? '80%' : '100%',
+            width: isFiltered ? '80%' : '100%',
           }}
         />
         {isFiltered && (
@@ -47,7 +47,7 @@ function SearchBarCombo({
           </Button>
         )}
       </Grid>
-      <Grid item xs={12} sm={3}>
+      {addButton && <Grid item xs={12} sm={3}>
         <Stack alignItems="flex-end">
           <Button
             fullWidth
@@ -59,7 +59,7 @@ function SearchBarCombo({
             {addButton}
           </Button>
         </Stack>
-      </Grid>
+      </Grid>}
     </Grid>
   );
 }

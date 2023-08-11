@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 // @mui
 import {
   Link,
@@ -48,6 +48,14 @@ export default function SecurityUserTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -82,14 +90,13 @@ export default function SecurityUserTableRow({
 
         <TableCell align="left">{email}</TableCell>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {windowWidth > 900 && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {phone || ''}
-        </TableCell>
+        </TableCell>}
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {windowWidth > 1200 && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
-          {/* { roles ? Object.values(roles?.name)?.join(", ") : ""} */}
-        </TableCell>
+        </TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}

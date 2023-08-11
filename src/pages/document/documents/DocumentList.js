@@ -161,8 +161,8 @@ const  onChangePage = (event, newPage) => {
   if (!customerPage && !machinePage && !machineDrawings) {
     const insertIndex = 1; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0, // 0 indicates that we're not removing any elements
-      { id: 'customer', label: 'Customer', align: 'left' },
-      { id: 'machine', label: 'Machine', align: 'left' }
+      { id: 'documentCustomer', label: 'Customer', align: 'left' },
+      { id: 'documentMachine', label: 'Machine', align: 'left' }
     );
   }
 
@@ -359,7 +359,7 @@ const  onChangePage = (event, newPage) => {
   };
 
   return (
-    <>
+    <Container maxWidth={false}>
       {!customerPage && !machinePage && 
       <StyledCardContainer>
         <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
@@ -403,7 +403,7 @@ const  onChangePage = (event, newPage) => {
           />
 
           <Scrollbar>
-            <Table size="small" sx={{ minWidth: 960 }}>
+            <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
                 order={order}
                 orderBy={orderBy}
@@ -486,7 +486,7 @@ const  onChangePage = (event, newPage) => {
           </Button>
         }
       />
-    </>
+    </Container>
   );
 }
 

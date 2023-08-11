@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import { Switch, TableRow, TableCell } from '@mui/material';
@@ -39,6 +39,15 @@ export default function MachineListTableRow({
     isActive,
     createdAt,
   } = row;
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const userId = localStorage.getItem('userId');
 
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -69,17 +78,15 @@ export default function MachineListTableRow({
         param={serialNo}
         isVerified={verifications?.length > 0}
       />
-      <TableCell>{name || ''}</TableCell>
-      <TableCell>{machineModel?.name || ''}</TableCell>
-      <TableCell sx={{ color: status?.slug === 'transferred' ? 'red' : 'inherit' }}>
-        {status?.name || ''}
-      </TableCell>
-      <TableCell>{customer?.name || ''}</TableCell>
-      <TableCell>{instalationSite?.name || ''}</TableCell>
-      <TableCell align="center">
-        <Switch checked={isActive} disabled size="small" />
-      </TableCell>
-      <TableCell>{fDate(createdAt)}</TableCell>
+
+      {windowWidth > 600 && <TableCell >{name || ''}</TableCell>}
+      {windowWidth > 600 && <TableCell >{machineModel?.name || ''}</TableCell>}
+      {windowWidth > 600 && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
+      {windowWidth > 900 && <TableCell  >{customer?.name || ''}</TableCell>}
+      {windowWidth > 1200 && <TableCell  >{instalationSite?.name || ''}</TableCell>}
+      <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
+      <TableCell >{fDate(createdAt)}</TableCell>
+
     </TableRow>
   );
-}
+} 

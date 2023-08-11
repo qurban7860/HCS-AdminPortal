@@ -45,15 +45,16 @@ import CustomerListTableRow from './CustomerListTableRow';
 import CustomerListTableToolbar from './CustomerListTableToolbar';
 import { getCustomers, deleteCustomer, resetCustomer, setCustomerEditFormVisibility, ChangePage, ChangeRowsPerPage, setFilterBy } from '../../redux/slices/customer/customer';
 import { Cover } from '../components/Defaults/Cover';
+import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'type', label: '', align: 'center', width: 1.5 },
+  { id: 'customerType', label: '', align: 'center', width: 1.5 },
   { id: 'name', label: 'Customer', align: 'left' },
-  { id: 'tradingName', label: 'Trading Name', align: 'left' },
-  { id: 'mainSiteAddress', label: 'Address', align: 'left' },
+  { id: 'customerTradingName', label: 'Trading Name', align: 'left' },
+  { id: 'customerMainSiteAddress', label: 'Address', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
 ];
@@ -175,11 +176,11 @@ export default function CustomerList() {
   };
 
   return (
-    <>
+    <Container maxWidth={false}>
         <StyledCardContainer>
           <Cover name={FORMLABELS.COVER.CUSTOMERS} />
         </StyledCardContainer>
-      <Card sx={{ mt: 3 }}>
+      <TableCard >
         <CustomerListTableToolbar
           filterName={filterName}
           filterStatus={filterStatus}
@@ -218,7 +219,7 @@ export default function CustomerList() {
           />
 
           <Scrollbar>
-            <Table size="small" sx={{ minWidth: 960 }}>
+            <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
                 order={order}
                 orderBy={orderBy}
@@ -271,10 +272,10 @@ export default function CustomerList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
-        <Grid md={12}>
+        <Grid item md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
-      </Card>
+      </TableCard>
 
       <ConfirmDialog
         open={openConfirm}
@@ -298,7 +299,7 @@ export default function CustomerList() {
           </Button>
         }
       />
-    </>
+    </Container>
   );
 }
 
