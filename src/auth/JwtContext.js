@@ -142,6 +142,16 @@ export function AuthProvider({ children }) {
 
   // LOGIN
 
+  async function getConfigs(){
+    const configsResponse = await axios.get(`${CONFIG.SERVER_URL}configs`);
+
+    if(configsResponse && Array.isArray(configsResponse.data) && configsResponse.data.length>0 ) {
+      const configs = configsResponse.data.map((c)=>{return {name:c.name,value:c.value}});
+      localStorage.setItem("CONFIGS",JSON.stringify(configs));
+    }
+  }
+
+   
   const login = useCallback(async (email, password) => {
     localStorage.removeItem('userId');
     localStorage.removeItem('email');
@@ -154,6 +164,8 @@ export function AuthProvider({ children }) {
       password,
     })
 
+    
+
     if (response.data.multiFactorAuthentication){
       console.log('res----------->', response.data);
 
@@ -161,7 +173,6 @@ export function AuthProvider({ children }) {
       localStorage.setItem("MFA", true);
     }
     else{
-      console.log('res----------->', response.data);
       const { accessToken, user, userId, roles } = response.data;
       const rolesArrayString = JSON.stringify(user.roles);
       localStorage.setItem('email', user.email);
@@ -170,6 +181,8 @@ export function AuthProvider({ children }) {
       localStorage.setItem('userRoles', rolesArrayString);
 
       setSession(accessToken);
+      await getConfigs();
+      
 
       dispatch({
         type: 'LOGIN',
@@ -199,7 +212,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem('userRoles', rolesArrayString);
 
       setSession(accessToken);
-
+      await getConfigs();
       dispatch({
         type: 'LOGIN',
         payload: {
