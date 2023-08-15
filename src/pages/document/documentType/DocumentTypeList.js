@@ -1,12 +1,12 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
+// import { Helmet } from 'react-helmet-async';
+// import { paramCase } from 'change-case';
 import debounce from 'lodash/debounce';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import {
-  Switch,
-  Grid,
+  // Switch,
+  // Grid,
   Card,
   Table,
   Button,
@@ -15,22 +15,22 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
+  // Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSnackbar } from '../../../components/snackbar';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
+  // emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
+  // TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -41,8 +41,8 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import DocumentTypeListTableRow from './DocumentTypeListTableRow';
 import DocumentTypeListTableToolbar from './DocumentTypeListTableToolbar';
-import documentName, {
-  getDocumentType,
+import {
+  // getDocumentType,
   deleteDocumentType,
   getDocumentTypes,
   ChangeRowsPerPage,
@@ -92,15 +92,15 @@ export default function DocumentTypeList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
+  // const { themeStretch } = useSettingsContext();
+  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customer } = useSelector((state) => state.customer);
-  const { documentTypes, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector(
+  // const { customer } = useSelector((state) => state.customer);
+  const { documentTypes, filterBy, page, rowsPerPage, isLoading , initial } = useSelector(
     (state) => state.documentType
   );
 
