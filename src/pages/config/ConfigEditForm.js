@@ -19,8 +19,6 @@ import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-// ----------------------------------------------------------------------
-
 export default function ConfigEditForm() {
   const { config } = useSelector((state) => state.config);
 

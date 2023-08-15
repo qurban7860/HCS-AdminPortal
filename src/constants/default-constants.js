@@ -162,6 +162,7 @@ export const BUTTONS = {
 
   // documents
   ADDDOCUMENT: 'Add Document',
+  ADDDRAWING: 'Add Drawing',
   ADDSETTING: 'Add Setting',
   ADDTOOL: 'Add Tool',
 

@@ -21,7 +21,14 @@ function TablePaginationCustom({
 }) {
   return (
     <Box sx={{ position: 'relative', ...sx }}>
-      <TablePagination rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} />
+      <TablePagination labelRowsPerPage="Rows:" colSpan={2} rowsPerPageOptions={rowsPerPageOptions} component="div" showLastButton showFirstButton {...other} 
+      sx={{
+        '.MuiTablePagination-toolbar': {
+          height: '20px',
+          width: '!important 200px',
+        },
+      }}
+      />
       {onChangeDense && (
         <FormControlLabel
           label="Dense"

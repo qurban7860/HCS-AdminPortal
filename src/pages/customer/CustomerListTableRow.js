@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { sentenceCase } from 'change-case';
 // @mui
 import {
@@ -68,6 +68,14 @@ export default function CustomerListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const userId = localStorage.getItem('userId');
 
   const handleOpenConfirm = () => {
@@ -101,19 +109,19 @@ export default function CustomerListTableRow({
         param={name}
         isVerified={verifications?.length > 0}
       />
-      <TableCell sx={{maxWidth:"400px"}}>
+      {windowWidth > 900 && <TableCell sx={{maxWidth:"400px"}}>
         {tradingName.map((value) =>
           typeof value === 'string'
             ? value.trim() !== '' && <Chip label={value} sx={{ m: 0.2 }} />
             : ''
         )}
-      </TableCell>
-      <TableCell>
+      </TableCell>}
+      {windowWidth > 1200 && <TableCell>
         {Object.values(address ?? {})
           .map((value) => (typeof value === 'string' ? value.trim() : ''))
           .filter((value) => value !== '')
           .join(', ')}
-      </TableCell>
+      </TableCell>}
       <TableCell align="center">
         {' '}
         <Switch checked={isActive} disabled size="small" />{' '}

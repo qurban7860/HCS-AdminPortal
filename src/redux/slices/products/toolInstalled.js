@@ -7,8 +7,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 
-
-
 // ----------------------------------------------------------------------
 const regEx = /^[^2]*/
 const initialState = {
@@ -24,6 +22,11 @@ const initialState = {
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
+  toolTypes: [
+    'GENERIC TOOL', 
+    'SINGLE TOOL', 
+    'COMPOSIT TOOL', 
+  ]
 };
 
 const slice = createSlice({

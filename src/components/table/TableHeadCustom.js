@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
@@ -39,6 +40,19 @@ export default function TableHeadCustom({
   onSelectAllRows,
   sx,
 }) {
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const mdNone = " md: | customerMainSiteAddress instalationSite documentMachine documentCustomer userRole | ";
+  const smNone = " md: | customerMainSiteAddress customerTradingName instalationSite machineCustomer  documentMachine documentCustomer userPhone userRole | sm: | tradingName city country phone doctype doccategory type connections | "
+  const xsNone = " md: | customerMainSiteAddress customerTradingName instalationSite machineCustomer  documentMachine documentCustomer userPhone userRole | sm: | customerAccess tradingName city country phone doctype doccategory version type connections | xs: | machineModel machineName machineStatus |"
+  let displayHeadIs
+// isDisabled isActive active created_at createdAt
   return (
     <TableHead sx={sx} >
       <TableRow>
@@ -52,12 +66,23 @@ export default function TableHeadCustom({
           </TableCell>
         )}
 
-        {headLabel.map((headCell) => (
+        {headLabel.map((headCell) => {
+          if( window.innerWidth > 900 && window.innerWidth < 1200 ) {
+            displayHeadIs = mdNone.includes(headCell.id)
+          }else if( window.innerWidth > 600 && window.innerWidth < 900 ){
+            displayHeadIs = smNone.includes(headCell.id)
+          }else if( window.innerWidth < 600 ){
+            displayHeadIs = xsNone.includes(headCell.id)
+          }
+          return(
           <TableCell
             key={headCell.id}
             align={headCell.align || 'left'}
             sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ width: headCell.width, minWidth: headCell.minWidth }}
+            sx={{ width: headCell.width, 
+            minWidth: headCell.minWidth,
+            display: displayHeadIs ? 'none' : 'table-cell',
+             }}
           >
             {onSort ? (
               <TableSortLabel
@@ -79,7 +104,7 @@ export default function TableHeadCustom({
               headCell.label
             )}
           </TableCell>
-        ))}
+        )})}
       </TableRow>
     </TableHead>
   );
