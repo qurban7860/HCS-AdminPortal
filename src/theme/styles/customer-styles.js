@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import { CardMedia, Card, Typography, Grid, Popover, IconButton } from '@mui/material';
+import { CardMedia, Card, Grid } from '@mui/material';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import Scrollbar from '../../components/scrollbar/Scrollbar';
 

@@ -1,9 +1,5 @@
 import { Component } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
-import { PATH_PAGE } from '../routes/paths';
-import Page500 from '../pages/Page500';
-
 
 class ErrorBoundary extends Component {
   constructor(props) {

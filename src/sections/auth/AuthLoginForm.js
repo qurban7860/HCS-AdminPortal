@@ -15,7 +15,7 @@ import { useAuthContext } from '../../auth/useAuthContext';
 
 // components
 import Iconify from '../../components/iconify';
-import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
+import FormProvider, { RHFTextField} from '../../components/hook-form';
 
 
 // ----------------------------------------------------------------------
@@ -80,12 +80,12 @@ export default function AuthLoginForm() {
         localStorage.removeItem("UserPassword");
         localStorage.removeItem("remember");
       }
-    const response =   await login(data.email, data.password);
+      await login(data.email, data.password);
 
-    if(localStorage.getItem("MFA")) {
-      navigate(PATH_AUTH.authenticate);
-      localStorage.removeItem("MFA");
-    }
+      if(localStorage.getItem("MFA")) {
+        navigate(PATH_AUTH.authenticate);
+        localStorage.removeItem("MFA");
+      }
     } catch (error) {
       console.error("error : ",error);
       if(regEx.test(error.MessageCode)){
@@ -94,12 +94,12 @@ export default function AuthLoginForm() {
           ...error,
           message: error.Message,
         });
-    }else{
-      setError('afterSubmit', {
-        ...error,
-        message: "Something went wrong",
-      });
-    }
+      }else{
+        setError('afterSubmit', {
+          ...error,
+          message: "Something went wrong",
+        });
+      }
     }
   };
 

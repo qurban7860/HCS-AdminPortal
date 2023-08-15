@@ -7,14 +7,14 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Stack, IconButton, InputAdornment, FormHelperText } from '@mui/material';
+import { Stack, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFTextField, RHFCodes } from '../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../components/hook-form';
 import axios from '../../utils/axios';
 import { CONFIG } from '../../config-global';
 
@@ -60,7 +60,7 @@ export default function AuthNewPasswordForm() {
 
   const {
     handleSubmit,
-    formState: { isSubmitting, errors },
+    formState: { isSubmitting},
   } = methods;
 
   const onSubmit = async (data) => {
@@ -72,7 +72,7 @@ export default function AuthNewPasswordForm() {
         password: data.password,
       };
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword/verifyToken`, DATA);
+      await axios.post(`${CONFIG.SERVER_URL}security/forgetPassword/verifyToken`, DATA);
 
       enqueueSnackbar('Change password success!');
       navigate(PATH_DASHBOARD.root);
@@ -85,25 +85,7 @@ export default function AuthNewPasswordForm() {
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        {/* <RHFTextField
-          name="email"
-          label="Email"
-          disabled={!!emailRecovery}
-          InputLabelProps={{ shrink: true }}
-        /> */}
-{/* 
-        <RHFCodes keyName="code" inputs={['code1', 'code2', 'code3', 'code4', 'code5', 'code6']} />
-
-        {(!!errors.code1 ||
-          !!errors.code2 ||
-          !!errors.code3 ||
-          !!errors.code4 ||
-          !!errors.code5 ||
-          !!errors.code6) && (
-          <FormHelperText error sx={{ px: 2 }}>
-            Code is required
-          </FormHelperText>
-        )} */}
+        
 
         <RHFTextField
           name="password"

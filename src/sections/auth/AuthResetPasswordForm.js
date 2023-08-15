@@ -1,13 +1,10 @@
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
 // @mui
 import { Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// routes
-import { PATH_AUTH } from '../../routes/paths';
 // components
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import axios from '../../utils/axios';
@@ -21,7 +18,6 @@ export default function AuthResetPasswordForm() {
   const { enqueueSnackbar } = useSnackbar();
   const regEx = /^[4][0-9][0-9]$/;
 
-  const navigate = useNavigate();
 
   const ResetPasswordSchema = Yup.object().shape({
     email: Yup.string().required('Email is required').email('Email must be a valid email address'),
@@ -36,7 +32,7 @@ export default function AuthResetPasswordForm() {
     reset,
     setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
