@@ -6,7 +6,7 @@ import { Card, Table, Button, TableBody, Container, TableContainer } from '@mui/
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
+import { PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
@@ -33,7 +33,7 @@ import {
 } from '../../redux/slices/securityUser/securityUser';
 import { fDate } from '../../utils/formatTime';
 // constants
-import { BUTTONS, DIALOGS } from '../../constants/default-constants';
+import { DIALOGS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 

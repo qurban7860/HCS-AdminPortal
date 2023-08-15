@@ -1,15 +1,10 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useCallback, useState, useEffect, useRef } from 'react';
+import { useLayoutEffect, useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // form
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Card, Grid, Container, Table, Button, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
+import { Card, Grid, Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
 import {
   useTable,
   getComparator,
@@ -21,7 +16,6 @@ import {
 } from '../../components/table';
 import Scrollbar from '../../components/scrollbar';
 import Iconify from '../../components/iconify';
-import ConfirmDialog from '../../components/confirm-dialog';
 import MachineListTableRow from './MachineListTableRow';
 import MachineListTableToolbar from './MachineListTableToolbar';
 
@@ -29,12 +23,9 @@ import { Cover } from '../components/Defaults/Cover';
 import { StyledCardContainer } from '../../theme/styles/default-styles';
 
 // slice
-// import { getSPContacts } from '../../redux/slices/contact';
 import {
   getMachines,
-  deleteMachine,
   resetMachine,
-  getMachine,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy
@@ -49,17 +40,12 @@ import {
 } from '../../redux/slices/document/machineDocument';
 
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 // auth
-import { useAuthContext } from '../../auth/useAuthContext';
 // asset
 // util
-import MachineDashboardNavbar from './util/MachineDashboardNavbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
-
-import { useSettingsContext } from '../../components/settings';
 
 import { fDate } from '../../utils/formatTime';
 
@@ -88,20 +74,13 @@ const TABLE_HEAD = [
 
 export default function MachineList() {
   const {
-    dense,
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
     selected,
-    setSelected,
     onSelectRow,
     onSelectAllRows,
     onSort,
-    onChangeDense,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({ defaultOrderBy: '-createdAt' });
 
   const onChangeRowsPerPage = (event) => {
@@ -111,7 +90,7 @@ export default function MachineList() {
 
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
-  const { userId, user } = useAuthContext();
+  // const { userId, user } = useAuthContext();
   const [tableData, setTableData] = useState([]);
   const dispatch = useDispatch();
   const { machines, filterBy, page, rowsPerPage, isLoading, error, initial, responseMessage } = useSelector( (state) => state.machine );
@@ -133,10 +112,9 @@ export default function MachineList() {
     dispatch(resetMachineDocuments());
   }, [dispatch]);
 
-  const { themeStretch } = useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
+  const [setOpenConfirm] = useState(false);
 
   useEffect(() => {
     if (initial) {
@@ -151,7 +129,6 @@ export default function MachineList() {
     filterStatus,
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = 80 ;
 
@@ -162,9 +139,6 @@ export default function MachineList() {
     setOpenConfirm(true);
   };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
 
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
@@ -191,37 +165,6 @@ export default function MachineList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleDeleteRow = async (id) => {
-    try {
-      await dispatch(deleteMachine(id));
-      dispatch(getMachines());
-      setSelected([]);
-      if (page > 0) {
-        if (dataInPage.length < 2) {
-          setPage(page - 1);
-        }
-      }
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-    setSelected([]);
-    setTableData(deleteRows);
-
-    if (page > 0) {
-      if (selectedRows.length === dataInPage.length) {
-        setPage(page - 1);
-      } else if (selectedRows.length === dataFiltered.length) {
-        setPage(0);
-      } else if (selectedRows.length > dataInPage.length) {
-        const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-        setPage(newPage);
-      }
-    }
-  };
 
 
   const handleViewRow = (id) => {
