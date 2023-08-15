@@ -635,7 +635,7 @@ console.log("data : ", data);
 
                     {/* -------------------------------- Installation Date -------------------------------- */}
 
-                    <DatePicker
+                  <DatePicker
                     label="Installation Date"
                     value={installationDate}
                     // disabled={disableInstallationDate}
