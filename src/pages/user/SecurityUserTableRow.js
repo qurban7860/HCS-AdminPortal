@@ -2,17 +2,12 @@ import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 // @mui
 import {
-  Link,
   Switch,
   Stack,
-  Avatar,
   Button,
-  Checkbox,
   TableRow,
   MenuItem,
   TableCell,
-  IconButton,
-  Typography,
   Chip
 } from '@mui/material';
 // components
@@ -42,7 +37,7 @@ export default function SecurityUserTableRow({
   onSelectRow,
   onDeleteRow,
 }) {
-  const { email, name, roles, phone, status, image, createdAt, isActive } = row;
+  const { email, name, roles, phone, createdAt, isActive } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -62,10 +57,6 @@ export default function SecurityUserTableRow({
 
   const handleCloseConfirm = () => {
     setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
   };
 
   const handleClosePopover = () => {

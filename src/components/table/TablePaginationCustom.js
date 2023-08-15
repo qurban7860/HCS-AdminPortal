@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Stack, Switch, TablePagination, FormControlLabel, Pagination } from '@mui/material';
+import { Box, Switch, TablePagination, FormControlLabel } from '@mui/material';
 
 // ----------------------------------------------------------------------
 

@@ -1,12 +1,12 @@
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Card, Grid, Stack, Typography } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
@@ -51,14 +51,12 @@ export default function ConfigEditForm() {
 
   const {
     reset,
-    watch,
-    setValue,
+    // watch,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
   } = methods;
 
-  const values = watch();
+  // const values = watch();
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.configs.view(config._id));

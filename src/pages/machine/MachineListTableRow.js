@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
-import { sentenceCase } from 'change-case';
+import { useEffect, useState } from 'react';
 // @mui
 import { Switch, TableRow, TableCell } from '@mui/material';
 // utils
@@ -31,7 +30,6 @@ export default function MachineListTableRow({
     verifications,
     serialNo,
     name,
-    parentMachine,
     machineModel,
     customer,
     instalationSite,
@@ -48,27 +46,6 @@ export default function MachineListTableRow({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const userId = localStorage.getItem('userId');
-
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState(null);
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
 
   return (
     <TableRow hover selected={selected}>

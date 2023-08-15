@@ -1,12 +1,9 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import React, {  useState, useEffect, useLayoutEffect, useRef, memo } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import React, {  useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 import PropTypes from 'prop-types';
 // @mui
 import {
-  Switch,
   Grid,
   Card,
   Table,
@@ -16,15 +13,14 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
+// import { useSnackbar } from '../../../components/snackbar';
+// import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -44,7 +40,7 @@ import {
   getDocument,
   resetDocument,
   getDocuments,
-  deleteDocument,
+  // deleteDocument,
   resetDocuments,
   resetDocumentHistory,
   setDocumentViewFormVisibility,
@@ -82,8 +78,8 @@ DocumentList.propTypes = {
 };
 function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
+  // const { themeStretch } = useSettingsContext();
+  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [page, setPage] = useState(0);
@@ -91,7 +87,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const [documentBy, setDocumentBy] = useState({});
+  // const [documentBy, setDocumentBy] = useState({});
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
   const { documents,
@@ -99,7 +95,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
       machineDrawingsFilterBy,  machineDrawingsPage,  machineDrawingsRowsPerPage,
       customerDocumentsFilterBy,   customerDocumentsPage,   customerDocumentsRowsPerPage,
       machineDocumentsFilterBy,  machineDocumentsPage,  machineDocumentsRowsPerPage,
-      isLoading, error, documentInitial, responseMessage } = useSelector((state) => state.document );
+      isLoading } = useSelector((state) => state.document );
 
   const {
     // page,
@@ -109,7 +105,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
     // setPage,
     //
     selected,
-    setSelected,
+    // setSelected,
     onSelectRow,
     onSelectAllRows,
     //
@@ -237,7 +233,7 @@ const  onChangePage = (event, newPage) => {
     filterName,
     filterStatus,
   });
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  // const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -325,10 +321,10 @@ const  onChangePage = (event, newPage) => {
   //   }
   // };
 
-  const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_DOCUMENT.document.edit(id));
-  };
+  // const handleEditRow = (id) => {
+  //   // console.log(id);
+  //   navigate(PATH_DOCUMENT.document.edit(id));
+  // };
 
   const handleViewRow = (id) => {
       dispatch(resetDocument())

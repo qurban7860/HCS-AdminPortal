@@ -1,31 +1,16 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
   TableRow,
-  Checkbox,
-  MenuItem,
   TableCell,
-  IconButton,
-  Link,
 } from '@mui/material';
 // utils
-import { styled, alpha, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
-import { fCurrency } from '../../../utils/formatNumber';
 // components
-import Iconify from '../../../components/iconify';
-import MenuPopover from '../../../components/menu-popover';
-import ConfirmDialog from '../../../components/confirm-dialog';
-import Label from '../../../components/label';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { setCustomerDocumentViewFormVisibility } from '../../../redux/slices/document/customerDocument';
-import { setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
 
 // ----------------------------------------------------------------------
 
@@ -73,10 +58,6 @@ export default function DocumentListTableRow({
     isActive,
     createdAt,
   } = row;
-  const dispatch = useDispatch();
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState(null);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -86,93 +67,29 @@ export default function DocumentListTableRow({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
-
 
   return (
-    <>
-      <StyledTableRow hover selected={selected}>
-        {/* <TableCell padding="checkbox">
-          <Checkbox checked={selected} onClick={onSelectRow} />
-        </TableCell> */}
-        <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
-        { !customerPage && !machinePage && !machineDrawings &&  (<>
-        {windowWidth > 1200 && <TableCell align="left">{customer?.name}</TableCell>}
-        {windowWidth > 1200 && <TableCell align="left">{machine?.serialNo}</TableCell>}
-        </>)}
-        {windowWidth > 900 && <TableCell align="left">{docCategory?.name}</TableCell>}
-        {windowWidth > 900 && <TableCell align="left">{docType?.name}</TableCell>}
-        {windowWidth > 600 && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
+    <StyledTableRow hover selected={selected}>
+      
+      <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
+      { !customerPage && !machinePage && !machineDrawings &&  (<>
+      {windowWidth > 1200 && <TableCell align="left">{customer?.name}</TableCell>}
+      {windowWidth > 1200 && <TableCell align="left">{machine?.serialNo}</TableCell>}
+      </>)}
+      {windowWidth > 900 && <TableCell align="left">{docCategory?.name}</TableCell>}
+      {windowWidth > 900 && <TableCell align="left">{docType?.name}</TableCell>}
+      {windowWidth > 600 && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
 
-        {windowWidth > 600 && <TableCell align="center">
-          {' '}
-          <Switch checked={customerAccess} disabled size="small" />{' '}
-        </TableCell>}
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-        {/* <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>   */}
-      </StyledTableRow>
-
-      {/* <MenuPopover
-        open={openPopover}
-        onClose={handleClosePopover}
-        arrow="right-top"
-        sx={{ width: 140 }}
-      >
-        <MenuItem
-          onClick={() => {
-            handleOpenConfirm();
-            handleClosePopover();
-          }}
-          sx={{ color: 'error.main' }}
-        >
-          <Iconify icon="eva:trash-2-outline" />
-          Delete
-        </MenuItem>
-
-        <MenuItem
-          onClick={() => {
-            onEditRow();
-            handleClosePopover();
-          }}
-        >
-          <Iconify icon="eva:edit-fill" />
-          Edit
-        </MenuItem>
-      </MenuPopover> */}
-
-      {/* <ConfirmDialog
-        open={openConfirm}
-        onClose={handleCloseConfirm}
-        title="Delete"
-        content="Are you sure want to delete?"
-        action={
-          <Button variant="contained" color="error" onClick={onDeleteRow}>
-            Delete
-          </Button>
-        }
-      /> */}
-    </>
+      {windowWidth > 600 && <TableCell align="center">
+        {' '}
+        <Switch checked={customerAccess} disabled size="small" />{' '}
+      </TableCell>}
+      <TableCell align="center">
+        {' '}
+        <Switch checked={isActive} disabled size="small" />{' '}
+      </TableCell>
+      <TableCell align="right">{fDate(createdAt)}</TableCell>
+     
+    </StyledTableRow>
   );
 }

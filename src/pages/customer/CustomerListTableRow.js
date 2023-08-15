@@ -1,30 +1,18 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
-import { sentenceCase } from 'change-case';
 // @mui
 import {
   Switch,
-  Stack,
-  Button,
   TableRow,
-  Checkbox,
-  MenuItem,
   TableCell,
-  IconButton,
-  Link,
   Chip,
 } from '@mui/material';
 // utils
-import { borderRadius, styled } from '@mui/system';
+import { styled } from '@mui/system';
 import { fDate } from '../../utils/formatTime';
-import { fCurrency } from '../../utils/formatNumber';
 // components
 import Iconify from '../../components/iconify';
-import MenuPopover from '../../components/menu-popover';
-import ConfirmDialog from '../../components/confirm-dialog';
-import Label from '../../components/label';
 import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
-import { useSelector } from '../../redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -64,9 +52,6 @@ export default function CustomerListTableRow({
   if (mainSite?.address?.country) {
     address.push(mainSite?.address?.country);
   }
-  const [openConfirm, setOpenConfirm] = useState(false);
-
-  const [openPopover, setOpenPopover] = useState(null);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -75,24 +60,6 @@ export default function CustomerListTableRow({
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  const userId = localStorage.getItem('userId');
-
-  const handleOpenConfirm = () => {
-    setOpenConfirm(true);
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
-  const handleClosePopover = () => {
-    setOpenPopover(null);
-  };
 
   return (
     <StyledTableRow hover selected={selected}>
