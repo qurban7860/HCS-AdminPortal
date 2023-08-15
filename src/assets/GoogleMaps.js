@@ -2,15 +2,10 @@ import PropTypes from 'prop-types';
 import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
-import { Box, Grid, Link, Stack, Divider, Container, Typography, IconButton } from '@mui/material';
+import { Grid } from '@mui/material';
 import { setLatLongCoordinates } from '../redux/slices/customer/site';
 import { CONFIG } from '../config-global';
-import ViewFormField from '../pages/components/ViewForms/ViewFormField';
 
-const defaultCenter = {
-  lat: -36.902893343776185,
-  lng: 174.92608245309523,
-};
 
 const reportDefaultCenter = {
   lat: 26.902893343776185,

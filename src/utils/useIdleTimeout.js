@@ -1,9 +1,5 @@
-import { useContext, useState } from "react"
+import {  useState } from "react"
 import { useIdleTimer } from "react-idle-timer"
-import { useAuthContext } from '../auth/useAuthContext';
-import { CONFIG } from '../config-global';
-import { convertTimeToMilliseconds } from './formatTime';
- 
 
 /**
  * @param onIdle - function to notify user when idle timeout is close
@@ -11,11 +7,8 @@ import { convertTimeToMilliseconds } from './formatTime';
  */
 const useIdleTimeout = ({ onIdle, idleTime = 1, isAuthenticated }) => {
     const idleTimeout = 1000 * idleTime;
-    // console.log('idle time----------->', convertTimeToMilliseconds(CONFIG.IDLE_TIME));
-    // console.log('env time----------->', CONFIG.IDLE_TIME);
 
     const [isIdle, setIdle] = useState(false)
-    // const { logout } = useAuthContext();
     const handleIdle = () => {
         console.log('idle working');
         setIdle(true)

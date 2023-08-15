@@ -6,8 +6,8 @@ import { Box, Card, Typography, Stack } from '@mui/material';
 import { fNumber, fPercent } from '../../../../utils/formatNumber';
 // components
 import Iconify from '../../../../components/iconify';
-import Chart from '../../../../components/chart';
-import palette from '../../../../theme';
+// import Chart from '../../../../components/chart';
+// import palette from '../../../../theme';
 
 // ----------------------------------------------------------------------
 
@@ -23,31 +23,31 @@ AppWidgetSummary.propTypes = {
 export default function AppWidgetSummary({ title, title2, percent, total, chart, sx, ...other }) {
   // const { colors, series, options } = chart;
 
-  const chartOptions = {
-    // colors,
-    // chart: {
-    //   sparkline: {
-    //     enabled: true,
-    //   },
-    // },
-    plotOptions: {
-      bar: {
-        columnWidth: '68%',
-        borderRadius: 2,
-      },
-    },
-    tooltip: {
-      x: { show: false },
-      y: {
-        formatter: (value) => fNumber(value),
-        title: {
-          formatter: () => '',
-        },
-      },
-      marker: { show: false },
-    },
-    // ...options,
-  };
+  // const chartOptions = {
+  //   // colors,
+  //   // chart: {
+  //   //   sparkline: {
+  //   //     enabled: true,
+  //   //   },
+  //   // },
+  //   plotOptions: {
+  //     bar: {
+  //       columnWidth: '68%',
+  //       borderRadius: 2,
+  //     },
+  //   },
+  //   tooltip: {
+  //     x: { show: false },
+  //     y: {
+  //       formatter: (value) => fNumber(value),
+  //       title: {
+  //         formatter: () => '',
+  //       },
+  //     },
+  //     marker: { show: false },
+  //   },
+  //   // ...options,
+  // };
 
   return (
     <Card sx={{ display: 'flex', alignItems: 'center', p: 3, ...sx }} {...other}>

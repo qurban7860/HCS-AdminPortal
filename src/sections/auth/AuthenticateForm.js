@@ -1,11 +1,9 @@
-import { useState, useEffect, useReducer } from 'react';
-import * as Yup from 'yup';
+import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Link, Stack, Alert, IconButton, InputAdornment, Checkbox, FormControlLabel } from '@mui/material';
+import { Link, Stack, Alert } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // routes
 import { PATH_AUTH } from '../../routes/paths';
@@ -13,18 +11,15 @@ import { PATH_AUTH } from '../../routes/paths';
 import { useAuthContext } from '../../auth/useAuthContext';
 import { useSnackbar } from '../../components/snackbar';
 import { TITLES } from '../../constants/default-constants';
-import axios from '../../utils/axios';
 // components
 import Iconify from '../../components/iconify';
-import FormProvider, { RHFTextField, RHFCheckbox} from '../../components/hook-form';
-import theme from '../../theme';
-import { CONFIG } from '../../config-global';
+import FormProvider, { RHFTextField} from '../../components/hook-form';
 
 
 // ----------------------------------------------------------------------
 
 export default function AuthLoginForm() {
-  const { muliFactorAuthentication, login } = useAuthContext();
+  const { muliFactorAuthentication } = useAuthContext();
   const regEx = /^[4][0-9][0-9]$/
   const [code, setCode] = useState("");
   const { enqueueSnackbar } = useSnackbar();
@@ -33,13 +28,6 @@ export default function AuthLoginForm() {
 
 
   const methods = useForm();
-
-  const initialState = {
-  isInitialized: false,
-  isAuthenticated: false,
-  user: null,
-  // resetTokenTime: null,
-};
 
   const {
     setError,
@@ -52,7 +40,7 @@ export default function AuthLoginForm() {
       // data.multiFactorAuthenticationCode = code;
     }
     try {
-      const response = await muliFactorAuthentication(code, userId);
+      await muliFactorAuthentication(code, userId);
     } catch (error) {
       enqueueSnackbar('Unable to Login!', { variant: 'error' });
       console.error("error: ", error);
