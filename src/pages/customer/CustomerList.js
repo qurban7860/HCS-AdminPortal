@@ -1,15 +1,9 @@
-// import { Helmet } from 'react-helmet-async';
-// import { paramCase } from 'change-case';
 import { useState, useEffect , useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
-// import PropTypes from 'prop-types';
 // @mui
 import {
-  // Switch,
-  Container,
   Grid,
-  // Card,
   Table,
   Button,
   Tooltip,
@@ -24,8 +18,6 @@ import { useDispatch, useSelector } from '../../redux/store';
 // routes
 import { PATH_CUSTOMER } from '../../routes/paths';
 // components
-// import { useSnackbar } from '../../components/snackbar';
-// import { useSettingsContext } from '../../components/settings';
 import {
   useTable,
   getComparator,
@@ -64,34 +56,23 @@ const TABLE_HEAD = [
 
 export default function CustomerList() {
   const {
-    // page,
     order,
     orderBy,
-    // rowsPerPage,
     setPage,
-    //
     selected,
-    // setSelected,
     onSelectRow,
     onSelectAllRows,
-    //
     onSort,
-    // onChangePage,
-    // onChangeRowsPerPage,
   } = useTable({
     defaultOrderBy: '-createdAt',
   });
 
   const dispatch = useDispatch();
-  // const { themeStretch } = useSettingsContext();
-  // const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  // const { customer } = useSelector((state) => state.customer);
-  // const { machine } = useSelector((state) => state.machine);
   const { customers, filterBy, page, rowsPerPage, isLoading } = useSelector(
     (state) => state.customer
   );
@@ -103,18 +84,9 @@ export default function CustomerList() {
   const  onChangePage = (event, newPage) => { dispatch(ChangePage(newPage)) }
 
   
-  // const { customerDocuments, customerDocumentInitial } = useSelector(
-  //   (state) => state.customerDocument
-  // );
-  // const { machineDocuments, machineDocumentInitial } = useSelector(
-  //   (state) => state.machineDocument
-  // );
 
   useEffect(() => {
-    // const fetchData = async () => {s
       dispatch(getCustomers());
-    // };
-    // fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -128,7 +100,6 @@ export default function CustomerList() {
     filterName,
     filterStatus,
   });
-  // const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -162,9 +133,6 @@ export default function CustomerList() {
     setFilterStatus(event.target.value);
   };
 
-  // const handleEditRow = (id) => {
-  //   navigate(PATH_CUSTOMER.edit(id));
-  // };
 
   const handleViewRow = (id) => {
     navigate(PATH_CUSTOMER.view(id));
