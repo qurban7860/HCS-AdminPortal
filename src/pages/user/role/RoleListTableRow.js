@@ -24,6 +24,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -61,6 +62,8 @@ export default function RoleListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
+  const width = useWidth();
+
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };
@@ -85,7 +88,7 @@ export default function RoleListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell align="left"> {roleType} </TableCell>
+        {( width === 'lg' || width === 'xl' ) &&  <TableCell align="left"> {roleType} </TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}

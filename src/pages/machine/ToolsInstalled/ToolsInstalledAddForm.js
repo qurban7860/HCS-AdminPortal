@@ -622,7 +622,7 @@ export default function ToolsInstalledAddForm() {
                 <RHFTextField name="movingPunchCondition" label="Moving Punch Condition"/>
 
               </Box>}
-              {compositeTool && 
+              {/* {compositeTool && 
                 <Box
                   rowGap={2}
                   columnGap={2}
@@ -635,7 +635,7 @@ export default function ToolsInstalledAddForm() {
 
 
                 </Box>
-              }
+              } */}
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

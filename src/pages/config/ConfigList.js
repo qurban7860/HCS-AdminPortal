@@ -43,7 +43,7 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'value', label: 'Value', align: 'left' },
+  { id: 'configValue', label: 'Value', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -230,13 +230,6 @@ export default function ConfigList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-          {!isNotFound && <TablePaginationCustom
-            count={dataFiltered.length}
-            page={page}
-            rowsPerPage={rowsPerPage}
-            onPageChange={onChangePage}
-            onRowsPerPageChange={onChangeRowsPerPage}
-          />}
           <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
             <TableSelectedAction
               dense={dense}
@@ -245,7 +238,7 @@ export default function ConfigList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 800 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}

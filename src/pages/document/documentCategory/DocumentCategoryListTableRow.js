@@ -26,6 +26,7 @@ import Label from '../../../components/label';
 
 import { useSelector } from '../../../redux/store';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -79,6 +80,8 @@ export default function DocumentCategoryListTableRow({
     setOpenPopover(null);
   };
 
+  const width = useWidth();
+
   return (
     <>
       <StyledTableRow hover selected={selected}>
@@ -87,11 +90,11 @@ export default function DocumentCategoryListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell>{customer ? <Chip label="Customer" sx={{m:0.2}} />: ''}{machine ? <Chip label="Machine" sx={{m:0.2}} />: ''}{drawing ? <Chip label="Drawing" sx={{m:0.2}} />: ''}</TableCell>
-        <TableCell align="center">
+        {(width === 'xl' || width === 'lg' || width === 'md') && <TableCell>{customer ? <Chip label="Customer" sx={{m:0.2}} />: ''}{machine ? <Chip label="Machine" sx={{m:0.2}} />: ''}{drawing ? <Chip label="Drawing" sx={{m:0.2}} />: ''}</TableCell>}
+        {(width === 'xl' || width === 'lg' || width === 'md' || width === 'sm') && <TableCell align="center">
           {' '}
           <Switch checked={customerAccess} disabled size="small" />{' '}
-        </TableCell>
+        </TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}

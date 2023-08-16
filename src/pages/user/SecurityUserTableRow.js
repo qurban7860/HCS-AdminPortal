@@ -17,6 +17,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+import { useWidth } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -43,13 +44,7 @@ export default function SecurityUserTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const width = useWidth();
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -81,11 +76,11 @@ export default function SecurityUserTableRow({
 
         <TableCell align="left">{email}</TableCell>
 
-        {windowWidth > 900 && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {phone || ''}
         </TableCell>}
 
-        {windowWidth > 1200 && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        {( width === 'lg' || width === 'xl' ) && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
         </TableCell>}
         <TableCell align="center">

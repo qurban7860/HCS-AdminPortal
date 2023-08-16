@@ -8,6 +8,7 @@ import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -28,6 +29,8 @@ export default function StatusListTableRow({
   onEditRow,
   onViewRow,
 }) {
+  const width = useWidth();
+
   const { name, slug, isActive, createdAt } = row;
 
   const [openConfirm, setOpenConfirm] = useState(false);
@@ -54,9 +57,9 @@ export default function StatusListTableRow({
     <>
       <TableRow hover selected={selected}>
         <LinkTableCell onClick={onViewRow} align="left" param={name} />
-        <TableCell align="left" >
+        {( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) &&<TableCell align="left" >
           {slug}
-        </TableCell>
+        </TableCell>}
         <TableCell align="center">
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}
         </TableCell>

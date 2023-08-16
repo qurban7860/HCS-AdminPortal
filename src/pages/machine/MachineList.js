@@ -67,7 +67,7 @@ const TABLE_HEAD = [
   { id: 'machineModel', label: 'Model', align: 'left' },
   { id: 'machineStatus', label: 'Status', align: 'left' },
   { id: 'machineCustomer', label: 'Customer', align: 'left' },
-  { id: 'instalationSite', label: 'Installation Site', align: 'left' },
+  { id: 'machineInstalationSite', label: 'Installation Site', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
 ];
@@ -178,8 +178,7 @@ export default function MachineList() {
   };
 
   return (
-    <Container maxWidth={false} >
-       
+    <Container maxWidth={false} sx={{mb:3}}>
         <StyledCardContainer>
           <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting="enable" />
         </StyledCardContainer>

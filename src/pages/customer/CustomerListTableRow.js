@@ -13,6 +13,7 @@ import { fDate } from '../../utils/formatTime';
 // components
 import Iconify from '../../components/iconify';
 import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
+import { useWidth } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+
 export default function CustomerListTableRow({
   row,
   style,
@@ -52,15 +54,9 @@ export default function CustomerListTableRow({
   if (mainSite?.address?.country) {
     address.push(mainSite?.address?.country);
   }
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+  
+  const width = useWidth();
+  
   return (
     <StyledTableRow hover selected={selected}>
       <TableCell align="right">
@@ -76,14 +72,14 @@ export default function CustomerListTableRow({
         param={name}
         isVerified={verifications?.length > 0}
       />
-      {windowWidth > 900 && <TableCell sx={{maxWidth:"400px"}}>
+      {( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell sx={{maxWidth:"400px"}}>
         {tradingName.map((value) =>
           typeof value === 'string'
             ? value.trim() !== '' && <Chip label={value} sx={{ m: 0.2 }} />
             : ''
         )}
       </TableCell>}
-      {windowWidth > 1200 && <TableCell>
+      {( width === 'lg' || width === 'xl' ) && <TableCell>
         {Object.values(address ?? {})
           .map((value) => (typeof value === 'string' ? value.trim() : ''))
           .filter((value) => value !== '')

@@ -26,6 +26,7 @@ import Label from '../../../components/label';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { setCustomerDocumentViewFormVisibility } from '../../../redux/slices/document/customerDocument';
 import { setMachineDocumentFormVisibility } from '../../../redux/slices/document/machineDocument';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +65,9 @@ export default function DrawingListTableRow({
     createdAt,
   } = row;
   const dispatch = useDispatch();
+
+  const width = useWidth();
+
   const [openConfirm, setOpenConfirm] = useState(false);
 
   const [openPopover, setOpenPopover] = useState(null);
@@ -98,18 +102,14 @@ export default function DrawingListTableRow({
           <Checkbox checked={selected} onClick={onSelectRow} />
         </TableCell> */}
         <LinkTableCell align="left" param={document?.displayName} onClick={onViewRow} />
-        <TableCell align="left">{documentCategory?.name}</TableCell>
-        <TableCell align="left">{documentType?.name}</TableCell>
+        { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left">{documentCategory?.name}</TableCell>}
+        { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left">{documentType?.name}</TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" />{' '}
         </TableCell>
         <TableCell align="right">{fDate(createdAt)}</TableCell>
-        {/* <TableCell align="center">
-          <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
-            <Iconify icon="eva:more-vertical-fill" />
-          </IconButton>
-        </TableCell>   */}
+  
       </StyledTableRow>
 
       {/* <MenuPopover

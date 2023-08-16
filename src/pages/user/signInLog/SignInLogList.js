@@ -52,7 +52,7 @@ import { fDate, fDateTime } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'user', label: 'User Name', align: 'left' },
+  { id: 'userName', label: 'User Name', align: 'left' },
   { id: 'userLogin', label: 'User Login', align: 'left' },
   { id: 'userIP', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
@@ -229,7 +229,7 @@ export default function SignInLogList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}

@@ -204,7 +204,7 @@ export const ModelEdit = Loadable(lazy(() => import('../pages/machine/Model/Mode
 
 // Document dashboard
 export const DocumentList = Loadable(
-  lazy(() => import('../pages/document/documents/DocumentList'))
+  lazy(() => import('../pages/document/documents/GlobalDocument'))
 );
 export const DocumentAddForm = Loadable(
   lazy(() => import('../pages/document/documents/DocumentAddForm'))

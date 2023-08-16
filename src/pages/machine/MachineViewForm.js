@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs, Chip } from '@mui/material';
+import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs, Chip, Container } from '@mui/material';
 // routes
 import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
 // slices

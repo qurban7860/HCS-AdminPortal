@@ -6,7 +6,7 @@ import { Switch, TableRow, TableCell } from '@mui/material';
 import { fDate } from '../../utils/formatTime';
 // components
 import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
-
+import { useWidth } from '../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 MachineListTableRow.propTypes = {
@@ -37,15 +37,8 @@ export default function MachineListTableRow({
     isActive,
     createdAt,
   } = row;
-
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+  
+  const width = useWidth();
 
   return (
     <TableRow hover selected={selected}>
@@ -55,12 +48,11 @@ export default function MachineListTableRow({
         param={serialNo}
         isVerified={verifications?.length > 0}
       />
-
-      {windowWidth > 600 && <TableCell >{name || ''}</TableCell>}
-      {windowWidth > 600 && <TableCell >{machineModel?.name || ''}</TableCell>}
-      {windowWidth > 600 && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
-      {windowWidth > 900 && <TableCell  >{customer?.name || ''}</TableCell>}
-      {windowWidth > 1200 && <TableCell  >{instalationSite?.name || ''}</TableCell>}
+      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell >{name || ''}</TableCell>}
+      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell >{machineModel?.name || ''}</TableCell>}
+      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
+      { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell  >{customer?.name || ''}</TableCell>}
+      { ( width === 'lg' || width === 'xl' ) && <TableCell  >{instalationSite?.name || ''}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
       <TableCell >{fDate(createdAt)}</TableCell>
 

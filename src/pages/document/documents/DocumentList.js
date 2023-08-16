@@ -355,7 +355,8 @@ const  onChangePage = (event, newPage) => {
   };
 
   return (
-    <Container maxWidth={false}>
+    <>
+    {/* { <Container sx={{mb:3}}>} */}
       {!customerPage && !machinePage && 
       <StyledCardContainer>
         <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
@@ -482,7 +483,8 @@ const  onChangePage = (event, newPage) => {
           </Button>
         }
       />
-    </Container>
+     {/* {</Container>} */}
+    </>
   );
 }
 

@@ -23,6 +23,7 @@ import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -67,6 +68,8 @@ export default function SupplierListTableRow({
     setOpenPopover(null);
   };
 
+  const width = useWidth();
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -75,10 +78,9 @@ export default function SupplierListTableRow({
         </TableCell> */}
 
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-
-        <TableCell>{contactName}</TableCell>
-        <TableCell>{address?.city}</TableCell>
-        <TableCell>{address?.country}</TableCell>
+        {( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell>{contactName}</TableCell>}
+        {( width === 'lg' || width === 'xl' ) && <TableCell>{address?.city}</TableCell>}
+        {( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell>{address?.country}</TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}

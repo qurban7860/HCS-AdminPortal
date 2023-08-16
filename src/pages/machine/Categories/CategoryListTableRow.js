@@ -9,6 +9,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // utils
 import Iconify from '../../../components/iconify/Iconify';
 import { fDate } from '../../../utils/formatTime';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -49,6 +50,8 @@ export default function CategoryListTableRow({
     setOpenPopover(null);
   };
 
+  const width = useWidth();
+
   return (
     <>
       <TableRow hover selected={selected}>
@@ -58,9 +61,9 @@ export default function CategoryListTableRow({
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
 
-        <TableCell align="center">
+        { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="center">
           <Switch checked={connections || false} disabled sx={{ my: -1 }} />{' '}
-        </TableCell>
+        </TableCell>}
 
         <TableCell align="right">{fDate(createdAt)}</TableCell>
       </TableRow>

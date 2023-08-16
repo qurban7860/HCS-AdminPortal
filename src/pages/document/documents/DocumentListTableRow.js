@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -59,28 +60,20 @@ export default function DocumentListTableRow({
     createdAt,
   } = row;
 
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+  const width = useWidth();
 
   return (
     <StyledTableRow hover selected={selected}>
       
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       { !customerPage && !machinePage && !machineDrawings &&  (<>
-      {windowWidth > 1200 && <TableCell align="left">{customer?.name}</TableCell>}
-      {windowWidth > 1200 && <TableCell align="left">{machine?.serialNo}</TableCell>}
+      { ( width === 'lg' || width === 'xl' ) && <TableCell align="left">{customer?.name}</TableCell>}
+      { ( width === 'lg' || width === 'xl' ) && <TableCell align="left">{machine?.serialNo}</TableCell>}
       </>)}
-      {windowWidth > 900 && <TableCell align="left">{docCategory?.name}</TableCell>}
-      {windowWidth > 900 && <TableCell align="left">{docType?.name}</TableCell>}
-      {windowWidth > 600 && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
-
-      {windowWidth > 600 && <TableCell align="center">
+      { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left">{docCategory?.name}</TableCell>}
+      { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left">{docType?.name}</TableCell>}
+      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
+      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="center">
         {' '}
         <Switch checked={customerAccess} disabled size="small" />{' '}
       </TableCell>}

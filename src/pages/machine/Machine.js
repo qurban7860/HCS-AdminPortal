@@ -41,7 +41,7 @@ export default function Machine() {
   };
 
   return (
-    < >
+    <Container maxWidth={false}>
       <StyledCardContainer>
         <Cover name={FORMLABELS.COVER.SETTINGS} />
       </StyledCardContainer>
@@ -110,6 +110,6 @@ export default function Machine() {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </Container>
   );
 }
