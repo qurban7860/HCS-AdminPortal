@@ -8,6 +8,7 @@ import { CONFIG } from '../../../config-global';
 
 
 // ----------------------------------------------------------------------
+const regEx = /^[^2]*/
 const initialState = {
   formVisibility: false,
   toolInstalledEditFormVisibility: false,
@@ -128,14 +129,78 @@ export function addToolInstalled(machineId,params) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-            const data = {
+          /* eslint-disable */
+            let data = {
                 tool: params.tool,
                 note: params.note,
+                offset: params.offset,
+                wasteTriggerDistance: params.wasteTriggerDistance,
+                crimpTriggerDistance: params.crimpTriggerDistance,
+                operations: params.operations,
+                toolType: params.toolType,
+                isApplyWaste: params.isApplyWaste,
+                isApplyCrimp: params.isApplyCrimp,
+                isBackToBackPunch: params.isBackToBackPunch,
+                isManualSelect: params.isManualSelect,
+                isAssign: params.isAssign,
                 isActive: params.isActive,
+                singleToolConfig: {}
             }
-      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
-      dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
-    } catch (error) {
+            if(params.engageSolenoidLocation){
+              data.singleToolConfig.engageSolenoidLocation = params.engageSolenoidLocation;
+            }
+            if(params.returnSolenoidLocation){
+              data.singleToolConfig.returnSolenoidLocation = params.returnSolenoidLocation;
+            }
+            if(params.engageOnCondition){
+              data.singleToolConfig.engageOnCondition = params.engageOnCondition;
+            }
+            if(params.engageOffCondition){
+              data.singleToolConfig.engageOffCondition = params.engageOffCondition;
+            }
+            if(params.timeOut){
+              data.singleToolConfig.timeOut = params.timeOut;
+            }
+            if(params.engagingDuration){
+              data.singleToolConfig.engagingDuration = params.engagingDuration;
+            }
+            if(params.returningDuration){
+              data.singleToolConfig.returningDuration = params.returningDuration;
+            }
+            if(params.twoWayCheckDelayTime){
+              data.singleToolConfig.twoWayCheckDelayTime = params.twoWayCheckDelayTime;
+            }
+            if(params.homeProximitySensorLocation){
+              data.singleToolConfig.homeProximitySensorLocation = params.homeProximitySensorLocation;
+            }
+            if(params.engagedProximitySensorLocation){
+              data.singleToolConfig.engagedProximitySensorLocation = params.engagedProximitySensorLocation;
+            }
+            if(params.pressureTarget){
+              data.singleToolConfig.pressureTarget = params.pressureTarget;
+            }
+            if(params.distanceSensorLocation){
+              data.singleToolConfig.distanceSensorLocation = params.distanceSensorLocation;
+            }
+            if(params.distanceSensorTarget){
+              data.singleToolConfig.distanceSensorTarget = params.distanceSensorTarget;
+            }
+            if(params.isHasTwoWayCheck){
+              data.singleToolConfig.isHasTwoWayCheck = params.isHasTwoWayCheck;
+            }
+            if(params.isEngagingHasEnable){
+              data.singleToolConfig.isEngagingHasEnable = params.isEngagingHasEnable;
+            }
+            if(params.isReturningHasEnable){
+              data.singleToolConfig.isReturningHasEnable = params.isReturningHasEnable;
+            }
+            if(params.movingPunchCondition){
+              data.singleToolConfig.movingPunchCondition = params.movingPunchCondition;
+            }
+          /* eslint-enable */ 
+        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
+        dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
+      } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
       throw error;
@@ -154,7 +219,7 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
         note: params.note,
         isActive: params.isActive,
       }
-      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
       dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
       dispatch(setToolInstalledEditFormVisibility (false));
     } catch (error) {

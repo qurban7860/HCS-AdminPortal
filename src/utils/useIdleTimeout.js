@@ -10,7 +10,6 @@ const useIdleTimeout = ({ onIdle, idleTime = 1, isAuthenticated }) => {
 
     const [isIdle, setIdle] = useState(false)
     const handleIdle = () => {
-        console.log('idle working');
         setIdle(true)
         // logout()
     }
