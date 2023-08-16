@@ -152,7 +152,7 @@ export function updateConfig(id, params) {
         whiteListIPs: params.whiteListIPs,
         blackListIPs: params.blackListIPs,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/configs/${id}`, data);
+      await axios.patch(`${CONFIG.SERVER_URL}security/configs/${id}`, data);
     } catch (error) {
       console.log(error);
       throw error;

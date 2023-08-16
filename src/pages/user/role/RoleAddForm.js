@@ -1,35 +1,29 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
-  Box,
-  Button,
   Card,
   Grid,
   Stack,
   Typography,
   Autocomplete,
-  TextField,
   Container,
 } from '@mui/material';
 // ROUTES
-import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // slice
 import { addRole } from '../../../redux/slices/securityUser/role';
 
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
-import { countries } from '../../../assets/data';
 import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import FormHeading from '../../components/DocumentForms/FormHeading';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../components/Defaults/Cover';
 
@@ -85,7 +79,7 @@ export default function RoleAddForm({ currentRole }) {
 
   const {
     reset,
-    watch,
+    // watch,
     setValue,
     handleSubmit,
     formState: { isSubmitting },

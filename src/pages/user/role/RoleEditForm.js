@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import {  useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -9,39 +8,26 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
-  Box,
   Card,
   Grid,
   Stack,
   Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
   Autocomplete,
-  TextField,
   Container,
 } from '@mui/material';
 // global
-import { CONFIG } from '../../../config-global';
 // slice
 // routes
-import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
 import FormProvider, {
-  RHFSelect,
   RHFTextField,
-  RHFAutocomplete,
   RHFSwitch,
 } from '../../../components/hook-form';
 import { getRole, updateRole } from '../../../redux/slices/securityUser/role';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
 import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
@@ -108,7 +94,7 @@ export default function RoleEditForm() {
     trigger,
   } = methods;
 
-  const values = watch();
+  watch();
 
   useLayoutEffect(() => {
     const filteredRole = roleTypesArray.find((x) => x.key === role?.roleType);

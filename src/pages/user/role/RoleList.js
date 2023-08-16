@@ -1,12 +1,8 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Switch,
-  Grid,
   Card,
   Table,
   Button,
@@ -15,22 +11,18 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -41,7 +33,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
 import RoleListTableRow from './RoleListTableRow';
 import RoleListTableToolbar from './RoleListTableToolbar';
-import { deleteRole, getRoles, getRole,
+import { deleteRole, getRoles,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
@@ -89,7 +81,6 @@ export default function RoleList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -103,8 +94,7 @@ export default function RoleList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customer } = useSelector((state) => state.customer);
-  const { roles, filterBy, page, rowsPerPage, isLoading, initial, responseMessage } = useSelector((state) => state.role);
+  const { roles, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.role);
 
   // console.log("roles : ", roles )
 

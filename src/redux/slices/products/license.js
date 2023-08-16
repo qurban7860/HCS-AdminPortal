@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   formVisibility: false,
@@ -131,7 +130,7 @@ export function addLicense (machineId, supplyData){
   return async (dispatch) =>{
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
+      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/licenses`,supplyData);
     } catch (error) {
       console.log(error);
       dispatch(slice.actions.hasError(error.Message));
@@ -210,7 +209,7 @@ export function updateLicense(params,Id) {
         isDisabled: params.isDisabled,
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${Id}`,
         data
       );
       dispatch(getLicense(Id));

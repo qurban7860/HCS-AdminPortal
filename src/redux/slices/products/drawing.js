@@ -253,7 +253,7 @@ export function updateDrawing(params,Id) {
         isActive: params.isActive
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/drawings/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/drawings/${Id}`,
         data
       );
       dispatch(getDrawing(params.id));

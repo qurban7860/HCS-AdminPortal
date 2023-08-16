@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   documentFileFormVisibility: false,
   documentFileEditFormVisibility: false,
@@ -126,7 +125,7 @@ export function addDocumentFile(documentId,versionId,params) {
               customerAccess:params.customerAccess,
               isActive: params.isActive,
           }
-    const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}/files/`, data);
+    await axios.post(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}/files/`, data);
     dispatch(slice.actions.setResponseMessage('Document File saved successfully'));
     dispatch(getDocumentFiles());
   } catch (error) {
@@ -149,7 +148,7 @@ return async (dispatch) => {
       customerAccess:params.customerAccess,
       isActive: params.isActive,
     }
-    const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}/files/${Id}`, data, );
+    await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}/files/${Id}`, data, );
     dispatch(slice.actions.setResponseMessage('Document File updated successfully'));
     dispatch(setDocumentFileEditFormVisibility (false));
   } catch (error) {

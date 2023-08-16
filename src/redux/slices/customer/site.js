@@ -1,13 +1,9 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   siteAddFormVisibility: false,
@@ -256,7 +252,7 @@ export function updateSite(params,customerId,Id) {
           data.primaryTechnicalContact = null;        
         }
         console.log("Site Slice data : ",data)
-        const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
+        await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/sites/${Id}`
          , data);
         dispatch(slice.actions.setSiteEditFormVisibility(false));
 

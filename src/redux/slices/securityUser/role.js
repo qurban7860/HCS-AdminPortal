@@ -159,7 +159,7 @@ export function updateRole(id, params) {
         disableDelete: params.disableDelete,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
+      await axios.patch(`${CONFIG.SERVER_URL}security/roles/${id}`, data);
       dispatch(slice.actions.setResponseMessage('Role updated successfully'));
     } catch (error) {
       console.log(error);

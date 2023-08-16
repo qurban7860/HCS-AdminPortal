@@ -1,12 +1,8 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Switch,
-  Grid,
   Card,
   Table,
   Button,
@@ -15,22 +11,18 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -91,7 +83,6 @@ export default function ConfigList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -105,8 +96,7 @@ export default function ConfigList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { customer } = useSelector((state) => state.customer);
-  const { configs, filterBy, page, rowsPerPage, isLoading, initial, responseMessage } = useSelector((state) => state.userConfig);
+  const { configs, filterBy, page, rowsPerPage, isLoading, initia } = useSelector((state) => state.userConfig);
 
   useLayoutEffect(() => {
     dispatch(getConfigs());
@@ -207,10 +197,6 @@ export default function ConfigList() {
     }
   };
 
-  const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_SETTING.userConfig.edit(id));
-  };
 
   const handleViewRow = (id) => {
     navigate(PATH_SETTING.userConfig.view(id));
@@ -298,7 +284,6 @@ export default function ConfigList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />
@@ -307,10 +292,7 @@ export default function ConfigList() {
                       )
                     )}
 
-                  {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
+                  
 
                   <TableNoData isNotFound={isNotFound} />
                 </TableBody>

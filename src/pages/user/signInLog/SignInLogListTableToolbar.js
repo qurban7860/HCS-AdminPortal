@@ -30,9 +30,7 @@ export default function SignInLogListTableToolbar({
   buttonAction,
 }) {
   const navigate = useNavigate();
-  const toggleAdd = () => {
-    navigate(PATH_DASHBOARD.role.new);
-  };
+
   return (
     <Stack {...options}>
       <SearchBarCombo

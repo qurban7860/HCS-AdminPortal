@@ -1,12 +1,8 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
 import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // @mui
 import {
-  Switch,
-  Grid,
   Card,
   Table,
   Button,
@@ -15,22 +11,17 @@ import {
   Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
-  emptyRows,
   TableNoData,
   TableSkeleton,
-  TableEmptyRows,
   TableHeadCustom,
   TableSelectedAction,
   TablePaginationCustom,
@@ -47,7 +38,7 @@ import { getSignInLogs,
   setFilterBy,
  } from '../../../redux/slices/securityUser/securityUser';
 import { Cover } from '../../components/Defaults/Cover';
-import { fDate, fDateTime } from '../../../utils/formatTime';
+import { fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -70,7 +61,6 @@ export default function SignInLogList() {
     setPage,
     //
     selected,
-    setSelected,
     onSelectRow,
     onSelectAllRows,
     //
@@ -90,9 +80,7 @@ export default function SignInLogList() {
 
   const dispatch = useDispatch();
 
-  const { themeStretch } = useSettingsContext();
 
-  const { enqueueSnackbar } = useSnackbar();
 
   const navigate = useNavigate();
 
@@ -106,7 +94,7 @@ export default function SignInLogList() {
 
   const userId = localStorage.getItem('userId');
 
-  const { signInLogs, filterBy, page, rowsPerPage, isLoading, initial, responseMessage } = useSelector((state) => state.user);
+  const { signInLogs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.user);
   useLayoutEffect(() => {
     dispatch(getSignInLogs(userId));
   }, [dispatch, userId]);
@@ -128,7 +116,6 @@ export default function SignInLogList() {
     filterStatus,
   });
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const denseHeight = 60;
 

@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   supplierEditFormFlag: false,
@@ -287,7 +286,7 @@ export function updateSupplier(params,Id) {
         }
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/suppliers/${Id}`,
         data
       );
       dispatch(getSupplier(Id));

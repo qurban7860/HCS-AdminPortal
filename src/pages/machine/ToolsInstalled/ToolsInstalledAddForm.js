@@ -1,30 +1,24 @@
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { DatePicker } from '@mui/x-date-pickers';
-import { LoadingButton } from '@mui/lab';
-import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // slice
 import {
-  setToolInstalledEditFormVisibility,
   setToolInstalledFormVisibility,
-  updateToolInstalled,
   addToolInstalled,
   getToolsInstalled,
-  getToolInstalled,
 } from '../../../redux/slices/products/toolInstalled';
 import { getActiveTools } from '../../../redux/slices/products/tools';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
 import FormProvider, {
-  RHFSelect,
   RHFTextField,
-  RHFAutocomplete,
   RHFSwitch,
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -43,6 +37,8 @@ export default function ToolsInstalledAddForm() {
   const [toolsVal, setToolsVal] = useState([]);
 
   const [singleTool, setSingleTool] = useState(false);
+
+  // eslint-disable-next-line
   const [compositeTool, setCompositeTool] = useState(false);
  
   const [timeOut, setTimeOut] = useState(null);

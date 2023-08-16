@@ -10,7 +10,6 @@ import { CONFIG } from '../../../config-global';
 
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   responseMessage: null,
@@ -163,7 +162,7 @@ export function addNote(customerId,params) {
       if(params.user){
         data.user =    params.user;
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
+      await axios.post(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/`, data);
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
 
@@ -187,7 +186,7 @@ export function updateNote(customerId,params) {
         contact: params.contact,
         site: params.site
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}/notes/${params.id}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
     } catch (error) {

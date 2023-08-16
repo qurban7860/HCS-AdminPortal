@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   machineDocumentFormVisibility: false,
   machineDocumentEditFormVisibility: false,
@@ -169,7 +168,7 @@ export function addMachineDocument(customerId , machineId , params) {
             formData.append('images', params?.images);
           }
           // console.log("formData", formData);
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
+      await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData );
       dispatch(slice.actions.setResponseMessage('Document saved successfully'));
       dispatch(getMachineDocuments(machineId));
       dispatch(setMachineDocumentFormVisibility(false));
@@ -230,7 +229,7 @@ export function updateMachineDocument(machineDocumentId , machineId , params) {
         formData.append('images', params?.images);
       }
 
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`, formData);
+      await axios.patch(`${CONFIG.SERVER_URL}documents/document/${machineDocumentId}`, formData);
       console.log("machineId : ", machineId)
       dispatch(getMachineDocuments(machineId))
       dispatch(slice.actions.setResponseMessage('Machine Document updated successfully'));

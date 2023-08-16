@@ -1,13 +1,9 @@
-import sum from 'lodash/sum';
-import uniq from 'lodash/uniq';
-import uniqBy from 'lodash/uniqBy';
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   machineEditFormFlag: false,
@@ -628,7 +624,7 @@ export function updateMachine(machineId, params) {
         data.machineConnections = params.machineConnectionVal.map(obj => obj._id);
       }
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}`,
         data
       );
 

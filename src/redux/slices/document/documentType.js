@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   documentTypeFormVisibility: false,
   documentTypeEditFormVisibility: false,
@@ -144,7 +143,7 @@ export function addDocumentType(params) {
                 customerAccess:params.customerAccess,
                 isActive: params.isActive,
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/documentType/`, data);
+      await axios.post(`${CONFIG.SERVER_URL}documents/documentType/`, data);
       dispatch(slice.actions.setResponseMessage('Document Type saved successfully'));
       dispatch(getDocumentTypes());
     } catch (error) {
@@ -168,7 +167,7 @@ export function updateDocumentType(Id,params) {
         customerAccess:params.customerAccess,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}documents/documentType/${Id}`, data, );
       dispatch(slice.actions.setResponseMessage('Document Type updated successfully'));
       dispatch(setDocumentTypeEditFormVisibility (false));
     } catch (error) {
