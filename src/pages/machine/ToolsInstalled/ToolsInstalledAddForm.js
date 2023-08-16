@@ -622,20 +622,7 @@ export default function ToolsInstalledAddForm() {
                 <RHFTextField name="movingPunchCondition" label="Moving Punch Condition"/>
 
               </Box>}
-              {compositeTool && 
-                <Box
-                  rowGap={2}
-                  columnGap={2}
-                  display="grid"
-                  gridTemplateColumns={{
-                    xs: 'repeat(1, 1fr)',
-                    sm: 'repeat(2, 1fr)',
-                  }}
-                >
-
-
-                </Box>
-              }
+              
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
