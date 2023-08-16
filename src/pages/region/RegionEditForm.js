@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components
@@ -61,13 +61,11 @@ export default function RegionEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
   } = methods;
 
-  const values = watch();
+  watch();
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.regions.view(region._id));

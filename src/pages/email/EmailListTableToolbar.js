@@ -7,10 +7,8 @@ import {
   InputAdornment,
   Grid,
 } from '@mui/material';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // components
 import Iconify from '../../components/iconify';
-import { PATH_DASHBOARD } from '../../routes/paths';
 // ----------------------------------------------------------------------
 
 EmailListTableToolbar.propTypes = {
@@ -26,8 +24,6 @@ export default function EmailListTableToolbar({
   onFilterName,
   onResetFilter,
 }) {
-  const navigate = useNavigate();
-  const toggleAdd = () => { navigate(PATH_DASHBOARD.email.new); };    
   return (
     <Stack spacing={2} alignItems="center" direction={{ xs: 'column', md: 'row', }} sx={{ px: 2.5, py: 3 }} >
       

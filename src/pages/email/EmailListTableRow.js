@@ -1,11 +1,7 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 import {
-  Switch,
-  Stack,
   TableRow,
   TableCell,
-  Link,
 } from '@mui/material';
 // utils
 import { styled } from '@mui/system';
@@ -37,14 +33,12 @@ export default function EmailListTableRow({
   if (!row || typeof row !== 'object' || !row.sujecr) {
     return <div>No valid row data</div>;
   }
-  const { id, email, toEmail, subject, fromEmail, toUser, createdAt } = row;
+  const { createdAt } = row;
   return (
-    <>
-      <StyledTableRow hover selected={selected}>
-        <TableCell align="right"/>
-       
-        <TableCell>{fDate(createdAt)}</TableCell>
-      </StyledTableRow>
-    </>
+    <StyledTableRow hover selected={selected}>
+      <TableCell align="right"/>
+     
+      <TableCell>{fDate(createdAt)}</TableCell>
+    </StyledTableRow>
   );
 }

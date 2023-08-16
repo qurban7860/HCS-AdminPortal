@@ -19,8 +19,6 @@ import {
   Autocomplete,
   TextField,
 } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // component
 import Iconify from '../../components/iconify';
 // routes
@@ -49,23 +47,15 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const userRolesString = localStorage.getItem('userRoles');
   // const userRoles = JSON.parse(userRolesString);
 
+  // eslint-disable-next-line
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
 
   const { spCustomers, allCustomers } = useSelector((state) => state.customer);
   const { roles } = useSelector((state) => state.role);
   const { activeRegions } = useSelector((state) => state.region);
   const { activeContacts } = useSelector((state) => state.contact);
-  const { allMachines, customerMachines } = useSelector((state) => state.machine);
+  const { allMachines } = useSelector((state) => state.machine);
 
-  console.log('activeRegions------->', activeRegions);
-  console.log('activeContacts===========>', activeContacts);
-  console.log('spCustomers===========>', spCustomers);
-  console.log('allCustomers===========>', allCustomers);
-  console.log('allMachines===========>', allMachines);
-
-
-
-  const regEx = /^[^2]*$/;
   const [selectedRegions, setSelectedRegions] = useState([]);
   // const [filteredCustomers, setFilteredCustomers] = useState(spCustomers);
   // const [filteredMachines, setFilteredMachines] = useState(allMachines);
@@ -77,13 +67,13 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
   const [machinesArr, setMachineArr] = useState([]);
   const [contactVal, setContactVal] = useState('');
   const [sortedRoles, setSortedRoles] = useState([]);
-  const [sortedRegions, setSortedRegions] = useState([]);
   const [phone, setPhone] = useState('');
   const [roleTypesDisabled, setDisableRoleTypes] = useState(false);
 
   const ROLES = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
 
+  // eslint-disable-next-line
   const [roleVal, setRoleVal] = useState('');
   // roles.sort((a, b) => a > b);
   // roles.sort((a, b) =>{
@@ -175,8 +165,6 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
 
   const {
     reset,
-    watch,
-    control,
     setValue,
     handleSubmit,
     formState: { isSubmitting },

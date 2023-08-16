@@ -44,6 +44,7 @@ export default function App() {
 
   const [filterName, setFilterName] = useState('');
   const [filterStatus, setFilterStatus] = useState([]);
+  // eslint-disable-next-line
   const [tableData, setTableData] = useState([]);
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const navigate = useNavigate();
