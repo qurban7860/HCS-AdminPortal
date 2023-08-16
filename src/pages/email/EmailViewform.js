@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react'; 
-import { Card, Grid,  Button } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useParams } from 'react-router-dom';
-import { PATH_EMAIL } from '../../routes/paths';
+import { Card, Grid } from '@mui/material';
+import { useParams } from 'react-router-dom';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import { Cover } from '../components/Defaults/Cover';
-import { useSnackbar } from '../../components/snackbar';
 import { CONFIG } from '../../config-global';
 import axios from '../../utils/axios';
 
@@ -15,44 +12,26 @@ export default function Emailviewform() {
   const [email, setEmail] = useState([]);
   const {id} = useParams()
 
-const dispatch = useDispatch();
-const navigate = useNavigate();
-const defaultValues = useSelector((state) => state.defaultValues); 
-const isSuperAdmin = true;
-const { enqueueSnackbar } = useSnackbar();
 
 
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      
-      const response = await axios.get(`${CONFIG.SERVER_URL}emails/${id}`);
-      response.data.customerName = response.data.customer.name;
-      response.data.toEmail = response.data.toEmails[0];
-      response.data.toUsers = response.data.toUsers[0];
-  
-      setEmail(response.data);
-  
-    } catch (error) {
-      console.error(error);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        
+        const response = await axios.get(`${CONFIG.SERVER_URL}emails/${id}`);
+        response.data.customerName = response.data.customer.name;
+        response.data.toEmail = response.data.toEmails[0];
+        response.data.toUsers = response.data.toUsers[0];
+    
+        setEmail(response.data);
+    
+      } catch (error) {
+        console.error(error);
+      }
     }
-  }
-  fetchData();
-}, [id]);
-
-
-
-
-const onDelete = async () => {
-  try {
-    navigate(PATH_EMAIL.list);
-  } catch (error) {
-    enqueueSnackbar('User delete failed!', { variant: 'error' });
-    console.log('Error:', error);
-  }
-};
-
+    fetchData();
+  }, [id]);
 
   return (
     <Grid sx={{ p: 3, mt: -3 }}>

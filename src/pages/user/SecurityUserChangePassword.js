@@ -3,19 +3,17 @@ import { useState } from 'react';
 // form
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Stack, Card, Container, IconButton, InputAdornment, Button, Grid } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
+import { Stack, Card, Container, IconButton, InputAdornment, Grid } from '@mui/material';
 // components
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { Cover } from '../components/Defaults/Cover';
 import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/securityUser';
-import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
 import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
 

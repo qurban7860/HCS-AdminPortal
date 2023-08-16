@@ -1,14 +1,13 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
-import { Card, Grid, Typography, Link, Dialog, Button, Chip } from '@mui/material';
+import { Card, Grid, Link, Dialog, Button } from '@mui/material';
 import ConfirmDialog from '../../components/confirm-dialog';
 // routes
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_CUSTOMER, PATH_SECURITY } from '../../routes/paths';
+import { PATH_SECURITY } from '../../routes/paths';
 // slices
 import {
-  getLoggedInSecurityUser,
   getSecurityUser,
   getSecurityUsers,
   deleteSecurityUser,
@@ -20,12 +19,8 @@ import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import { Cover } from '../components/Defaults/Cover';
-import { useAuthContext } from '../../auth/useAuthContext';
-import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
 import { useSnackbar } from '../../components/snackbar';
-import palette from '../../theme';
 import DialogLabel from '../components/Dialog/DialogLabel';
-import DialogLink from '../components/Dialog/DialogLink';
 import LogoAvatar from '../../components/logo-avatar/LogoAvatar';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import FormLabel from '../components/DocumentForms/FormLabel';
@@ -33,9 +28,6 @@ import FormLabel from '../components/DocumentForms/FormLabel';
 // ----------------------------------------------------------------------
 
 export default function SecurityUserViewForm() {
-  const regEx = /^[^2]*/;
-  const userId = localStorage.getItem('userId');
-  const [disableDeleteButton, setDisableDeleteButton] = useState(false);
   const [disableEditButton, setDisableEditButton] = useState(false);
   // const [isSuperAdmin, setSuperAdmin] = useState(false);
 
@@ -43,7 +35,7 @@ export default function SecurityUserViewForm() {
   const userRoles = JSON.parse(userRolesString);
   const isSuperAdmin = userRoles?.some((role) => role.roleType === 'SuperAdmin');
 
-  const { securityUser, loggedInUser, initial } = useSelector((state) => state.user);
+  const { securityUser, loggedInUser } = useSelector((state) => state.user);
   const { customer } = useSelector((state) => state.customer);
   const { contact } = useSelector((state) => state.contact);
 
@@ -56,10 +48,8 @@ export default function SecurityUserViewForm() {
   const handleCloseCustomer = () => setOpenCustomer(false);
 
   const [openConfirm, setOpenConfirm] = useState(false);
-  const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
 
-  const { user } = useAuthContext();
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -123,13 +113,6 @@ export default function SecurityUserViewForm() {
       enqueueSnackbar('User delete failed!', { variant: `error` });
       console.log('Error:', error);
     }
-  };
-
-  const handleViewCustomer = (Id) => {
-    navigate(PATH_CUSTOMER.view(Id));
-  };
-  const handlePassword = () => {
-    navigate(PATH_SECURITY.users.userPassword);
   };
 
   const defaultValues = useMemo(
@@ -309,7 +292,6 @@ export default function SecurityUserViewForm() {
             secondParam={customer?.supportManager?.lastName}
           />
         </Grid>
-        {/* <DialogLink content=" Go to customer" onClick={() => handleViewCustomer(customer._id)} /> */}
       </Dialog>
       <Dialog
         maxWidth="lg"

@@ -8,10 +8,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { MuiTelInput, matchIsValidTel } from 'mui-tel-input';
 import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
 // routes
-import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
+import { PATH_SECURITY } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
@@ -34,7 +32,6 @@ export default function SecurityUserEditForm() {
   const ROLES = [];
   // const userRoles = JSON.parse(userRolesString);
   const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
-  const regEx = /^[2][0-9][0-9]$/;
   const { roles } = useSelector((state) => state.role);
   const { securityUser } = useSelector((state) => state.user);
   const { activeRegions } = useSelector((state) => state.region);
@@ -56,9 +53,8 @@ export default function SecurityUserEditForm() {
   const [customerVal, setCustomerVal] = useState('');
   const [customersArr, setCustomerArr] = useState([]);
   const [machinesArr, setMachineArr] = useState([]);
-  const { contacts, activeContacts } = useSelector((state) => state.contact);
+  const { activeContacts } = useSelector((state) => state.contact);
   const [contactVal, setContactVal] = useState('');
-  const [valid, setValid] = useState(true);
   const [phone, setPhone] = useState('');
   const [sortedRoles, setSortedRoles] = useState([]);
   
@@ -67,7 +63,6 @@ export default function SecurityUserEditForm() {
   const { enqueueSnackbar } = useSnackbar();
   
 
-  const styles = { notchedOutline: { borderColor: valid ? '' : 'red' } };
 
   useLayoutEffect(() => {
     // dispatch(getActiveSPCustomers());
@@ -154,10 +149,6 @@ export default function SecurityUserEditForm() {
     multiFactorAuthentication: Yup.boolean(),
   });
 
-  const userLogin = Yup.object({
-    email: Yup.string().email('Enter valid Email').required('This field is Required'),
-  });
-
   const defaultValues = useMemo(
     () => ({
       id: securityUser?._id || '',
@@ -178,8 +169,6 @@ export default function SecurityUserEditForm() {
 
   const {
     reset,
-    watch,
-    control,
     setValue,
     handleSubmit,
     formState: { isSubmitting },
@@ -265,7 +254,6 @@ export default function SecurityUserEditForm() {
   };
 
   const handleInputEmail = (e) => {
-    const emailRegEx = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     const trimmedEmail = e.target.value.trim();
     // trimmedEmail.match(emailRegEx) ? setValid(true) : setValid(false);
     setEmail(trimmedEmail);

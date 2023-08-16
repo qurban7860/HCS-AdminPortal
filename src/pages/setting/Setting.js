@@ -1,9 +1,6 @@
-import { useState } from 'react';
-import { useNavigate, useSelector } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { Container, Grid, List } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
 // routes
 import { PATH_SETTING } from '../../routes/paths';
 // components

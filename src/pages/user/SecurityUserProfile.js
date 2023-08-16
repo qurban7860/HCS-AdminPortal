@@ -3,32 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector, batch } from 'react-redux';
 // @mui
 import {
-  Switch,
   Card,
   Grid,
   Container,
-  Typography,
   Link,
   Dialog,
-  Stack,
-  Button,
   Tabs,
 } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
+import { PATH_SECURITY } from '../../routes/paths';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
 // _mock_
-import { _userAbout } from '../../_mock/arrays';
-import Iconify from '../../components/iconify';
-// Redux Slice
 import {
   getSecurityUser,
   setSecurityUserEditFormVisibility,
 } from '../../redux/slices/securityUser/securityUser';
 // components
-// import { ProfileCover} from '../../sections/@dashboard/user/profile';
-import { useSnackbar } from '../../components/snackbar';
 import ViewFormField from '../components/ViewForms/ViewFormField';
 import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import { getCustomer } from '../../redux/slices/customer/customer';
@@ -49,7 +40,6 @@ export default function SecurityUserProfile() {
   // console.log("securityUser : ",securityUser," contact : ", contact , " customer  : ", customer  )
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { enqueueSnackbar } = useSnackbar();
   const { user } = useAuthContext();
   const userId = localStorage.getItem('userId');
   const [currentTab, setCurrentTab] = useState('profile');
