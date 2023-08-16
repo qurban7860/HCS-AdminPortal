@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   documentCategoryFormVisibility: false,
   documentCategoryEditFormVisibility: false,
@@ -148,7 +147,7 @@ export function addDocumentCategory(params) {
               data.machine = params.type.machine
               data.drawing = params.type.drawing
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/categories/`, data);
+      await axios.post(`${CONFIG.SERVER_URL}documents/categories/`, data);
       dispatch(slice.actions.setResponseMessage('Document Category saved successfully'));
       dispatch(getDocumentCategories());
     } catch (error) {
@@ -176,7 +175,7 @@ export function updateDocumentCategory(Id,params) {
         data.machine = params.type.machine
         data.drawing = params.type.drawing
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/categories/${Id}`, data );
+      await axios.patch(`${CONFIG.SERVER_URL}documents/categories/${Id}`, data );
       dispatch(slice.actions.setResponseMessage('Document Category updated successfully'));
       dispatch(setDocumentCategoryEditFormVisibility (false));
     } catch (error) {

@@ -22,7 +22,7 @@ AppWidget.propTypes = {
 export default function AppWidget({ title, total, icon, color = 'primary', chart, sx, ...other }) {
   const theme = useTheme();
 
-  const { series, options } = chart;
+  const { series } = chart;
 
   const chartOptions = useChart({
     colors: [theme.palette[color].light],

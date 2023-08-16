@@ -8,7 +8,6 @@ import { CONFIG } from '../../../config-global';
 
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   formVisibility: false,
   toolInstalledEditFormVisibility: false,
@@ -198,7 +197,7 @@ export function addToolInstalled(machineId,params) {
               data.singleToolConfig.movingPunchCondition = params.movingPunchCondition;
             }
           /* eslint-enable */ 
-        const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
+        await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
         dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
       } catch (error) {
       console.log(error);
@@ -219,7 +218,7 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
         note: params.note,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
       dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
       dispatch(setToolInstalledEditFormVisibility (false));
     } catch (error) {

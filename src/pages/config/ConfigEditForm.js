@@ -51,12 +51,12 @@ export default function ConfigEditForm() {
 
   const {
     reset,
-    // watch,
+    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
 
-  // const values = watch();
+  watch();
 
   const toggleCancel = () => {
     navigate(PATH_SETTING.configs.view(config._id));

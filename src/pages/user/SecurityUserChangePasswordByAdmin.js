@@ -8,24 +8,20 @@ import { useNavigate } from 'react-router-dom';
 
 // @mui
 import { Stack, Card, Container, IconButton, InputAdornment, Grid } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
 // components
 import Iconify from '../../components/iconify';
 import { useSnackbar } from '../../components/snackbar';
 import FormProvider, { RHFTextField } from '../../components/hook-form';
 import { Cover } from '../components/Defaults/Cover';
 import { SecurityUserPasswordUpdate } from '../../redux/slices/securityUser/securityUser';
-import { useAuthContext } from '../../auth/useAuthContext';
 import AddFormButtons from '../components/DocumentForms/AddFormButtons';
-import { PATH_DASHBOARD, PATH_SECURITY } from '../../routes/paths';
+import { PATH_SECURITY } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
 export default function SecurityUserChangePassword() {
-  const { userId, user } = useAuthContext();
   const navigate = useNavigate();
   // console.log("userId : " , userId)
-  const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { securityUser } = useSelector((state) => state.user);

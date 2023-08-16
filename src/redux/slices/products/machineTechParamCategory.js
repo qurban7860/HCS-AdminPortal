@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   techparamEditFormFlag: false,
@@ -251,7 +250,7 @@ export function updateTechparamcategory(params,Id) {
         // tradingName: params.tradingName
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/techparamcategories/${Id}`,
         data
       );
       dispatch(getTechparamcategory(Id));

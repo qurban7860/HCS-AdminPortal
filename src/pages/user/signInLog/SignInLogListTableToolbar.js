@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
 import { Stack } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { PATH_DASHBOARD } from '../../../routes/paths';
 import SearchBarCombo from '../../components/ListTableTools/SearchBarCombo';
 import { options } from '../../../theme/styles/default-styles';
 
@@ -29,10 +27,7 @@ export default function SignInLogListTableToolbar({
   onFilterStatus,
   buttonAction,
 }) {
-  const navigate = useNavigate();
-  const toggleAdd = () => {
-    navigate(PATH_DASHBOARD.role.new);
-  };
+
   return (
     <Stack {...options}>
       <SearchBarCombo

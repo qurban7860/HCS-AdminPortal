@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import { useEffect, useMemo, useState, useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -8,13 +8,10 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
-  Box,
   Card,
   Grid,
   Stack,
   Typography,
-  IconButton,
-  InputAdornment,
   Autocomplete,
   TextField,
 } from '@mui/material';
@@ -22,7 +19,7 @@ import {
 import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
-import FormProvider, { RHFSwitch, RHFTextField, RHFMultiSelect } from '../../components/hook-form';
+import FormProvider, { RHFSwitch, RHFTextField } from '../../components/hook-form';
 // slice
 import { getRoles } from '../../redux/slices/securityUser/role';
 import { addRegion, getCountries } from '../../redux/slices/region/region';
@@ -36,13 +33,11 @@ RegionAddForm.propTypes = {
 };
 
 export default function RegionAddForm({ isEdit = false, currentUser }) {
-  const userRolesString = localStorage.getItem('userRoles');
-  // const userRoles = JSON.parse(userRolesString);
 
-  const [userRoles, setUserRoles] = useState(JSON.parse(userRolesString));
   const [selectedCountries, setSelectedCountries] = useState([]);
   const { roles } = useSelector((state) => state.role);
   const { countries } = useSelector((state) => state.region);
+  // eslint-disable-next-line
   const [sortedRoles, setSortedRoles] = useState([]);
   const ROLES = [];
   roles.map((role) => ROLES.push({ value: role?._id, label: role.name }));
@@ -107,12 +102,8 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
 
   const {
     reset,
-    watch,
-    control,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
   } = methods;
 
   const onSubmit = async (data) => {

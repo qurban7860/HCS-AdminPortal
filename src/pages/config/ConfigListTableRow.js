@@ -53,10 +53,6 @@ export default function ConfigListTableRow({
     setOpenConfirm(false);
   };
 
-  const handleOpenPopover = (event) => {
-    setOpenPopover(event.currentTarget);
-  };
-
   const handleClosePopover = () => {
     setOpenPopover(null);
   };

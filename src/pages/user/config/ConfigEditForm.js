@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import {  useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 // form
@@ -9,18 +8,11 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
 import { MuiChipsInput } from 'mui-chips-input';
-import { LoadingButton } from '@mui/lab';
 import {
-  Box,
   Card,
   Grid,
   Stack,
   Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
   Autocomplete,
   TextField,
   Container,
@@ -30,21 +22,15 @@ import { getCustomers } from '../../../redux/slices/customer/customer';
 import { getSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
 import { getConfig, updateConfig } from '../../../redux/slices/securityUser/config';
 // global
-import { CONFIG } from '../../../config-global';
 // slice
 // routes
-import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
 import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-  RHFAutocomplete,
   RHFSwitch,
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-import FormHeading from '../../components/DocumentForms/FormHeading';
 import { Cover } from '../../components/Defaults/Cover';
 
 // ----------------------------------------------------------------------
@@ -85,8 +71,6 @@ export default function ConfigEditForm() {
   const EditRoleSchema = Yup.object().shape({
     blockedUsers: Yup.array().max(100).label('Blocked Users!'),
     blockedCustomers: Yup.array().max(100).label("Blocked Customers"),
-    // whiteListIPs: Yup.array().max(100).label("White List IPs"),
-    // blackListIPs: Yup.array().max(100).label("Black List IPs"),
     isActive: Yup.boolean(),
   });
 
@@ -97,8 +81,6 @@ export default function ConfigEditForm() {
     defaultValues:{
       blockedUsers: config?.blockedUsers || [], 
       blockedCustomers: config?.blockedCustomers || [], 
-      // whiteListIPs: null, 
-      // blackListIPs: null, 
       isActive: true,
     }
   });
@@ -106,14 +88,12 @@ export default function ConfigEditForm() {
   const {
     reset,
     watch,
-    setValue,
     control,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
   } = methods;
 
-  const { blockedUsers, blockedCustomers, whiteListIPs, blackListIPs, isActive } = watch()
+  const { blockedUsers, blockedCustomers } = watch()
 
   const onSubmit = async (data) => {
     try {

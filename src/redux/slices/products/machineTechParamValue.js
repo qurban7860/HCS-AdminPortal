@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   formVisibility: false,
   settingEditFormVisibility: false,
@@ -116,16 +115,15 @@ export const {
 // ----------------------------Add Setting------------------------------------------
 
 export function addSetting(machineId,params) {
-    return async (dispatch) => {
-        dispatch(slice.actions.startLoading());
-        try {
-            const data = {
-                techParam: params.techParam,
-                techParamValue: params.techParamValue,
-                isActive: params.isActive,
-            }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
-    //   dispatch(slice.actions.setSettingFormVisibility(false));
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const data = {
+          techParam: params.techParam,
+          techParamValue: params.techParamValue,
+          isActive: params.isActive,
+      }
+      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/`, data);
       dispatch(slice.actions.setResponseMessage('Setting saved successfully'));
       dispatch(getSettings(machineId));
     } catch (error) {
@@ -147,7 +145,7 @@ export function updateSetting(machineId,settingId,params) {
         techParamValue: params.techParamValue,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/techparamvalues/${settingId}`, data, );
       dispatch(slice.actions.setResponseMessage('Setting updated successfully'));
       dispatch(setSettingEditFormVisibility (false));
     } catch (error) {

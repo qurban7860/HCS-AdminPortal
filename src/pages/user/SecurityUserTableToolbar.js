@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 // @mui
-import { Stack, InputAdornment, TextField, MenuItem, Button, Grid } from '@mui/material';
+import { Stack } from '@mui/material';
 // redux
 import { useDispatch } from '../../redux/store';
 // components
 import SearchBarCombo from '../components/ListTableTools/SearchBarCombo';
-import Iconify from '../../components/iconify';
 import { PATH_SECURITY } from '../../routes/paths';
 import { setSecurityUserFormVisibility } from '../../redux/slices/securityUser/securityUser';
 import { BUTTONS } from '../../constants/default-constants';
