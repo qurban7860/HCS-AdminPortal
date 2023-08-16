@@ -2,12 +2,17 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 // @mui
 import {
+  Link,
   Switch,
   Stack,
+  Avatar,
   Button,
+  Checkbox,
   TableRow,
   MenuItem,
   TableCell,
+  IconButton,
+  Typography,
   Chip
 } from '@mui/material';
 // components
@@ -17,6 +22,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
+import { useWidth } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -39,6 +45,7 @@ export default function RegionTableRow({
 }) {
   const { name, countries, createdAt, isActive } = row;
 
+  const width = useWidth();
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -52,6 +59,9 @@ export default function RegionTableRow({
     setOpenConfirm(false);
   };
 
+  const handleOpenPopover = (event) => {
+    setOpenPopover(event.currentTarget);
+  };
 
   const handleClosePopover = () => {
     setOpenPopover(null);
@@ -73,9 +83,9 @@ export default function RegionTableRow({
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
 
-        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+       { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {countries.map((obj) => <Chip label={obj.country_name} sx={{mx:0.3}} />)}
-        </TableCell>
+        </TableCell> }
        
         <TableCell align="center">
           {' '}

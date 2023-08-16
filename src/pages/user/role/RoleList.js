@@ -30,8 +30,8 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
-// sections
 import RoleListTableRow from './RoleListTableRow';
+// sections
 import RoleListTableToolbar from './RoleListTableToolbar';
 import { deleteRole, getRoles,
   ChangeRowsPerPage,
@@ -45,7 +45,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'role_type', label: 'Role Type', align: 'left' },
+  { id: 'userRoleType', label: 'Role Type', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
@@ -256,7 +256,7 @@ export default function RoleList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}

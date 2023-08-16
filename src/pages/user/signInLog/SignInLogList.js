@@ -30,8 +30,8 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
 // sections
-import RoleListTableRow from './SignInLogListTableRow';
 import RoleListTableToolbar from './SignInLogListTableToolbar';
+import RoleListTableRow from './SignInLogListTableRow';
 import { getSignInLogs,
   ChangeRowsPerPage,
   ChangePage,
@@ -43,7 +43,7 @@ import { fDateTime } from '../../../utils/formatTime';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: 'user', label: 'User Name', align: 'left' },
+  { id: 'userName', label: 'User Name', align: 'left' },
   { id: 'userLogin', label: 'User Login', align: 'left' },
   { id: 'userIP', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
@@ -216,7 +216,7 @@ export default function SignInLogList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}

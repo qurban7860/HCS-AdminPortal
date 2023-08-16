@@ -71,7 +71,7 @@ export default function MachineView({ editPage }) {
   }, [dispatch, machineEditFormFlag, machine]);
 
   return (
-    <>
+    <Container maxWidth={false} sx={{mb:3}}>
       <StyledCardContainer>
         <Cover
           name={machine?.name}
@@ -105,6 +105,6 @@ export default function MachineView({ editPage }) {
             <Box key={tab.value}> {tab.component ? tab.component : <UnderDevelopment />} </Box>
           )
       )}
-    </>
+    </Container>
   );
 }

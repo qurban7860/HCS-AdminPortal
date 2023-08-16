@@ -53,9 +53,9 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'ContactName', label: 'Contact Name', align: 'left' },
-  { id: 'city', label: 'City', align: 'left' },
-  { id: 'country', label: 'Country', align: 'left' },
+  { id: 'xs1', label: 'Contact Name', align: 'left' },
+  { id: 'md1', label: 'City', align: 'left' },
+  { id: 'xs2', label: 'Country', align: 'left' },
   { id: 'isDisabled', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -281,7 +281,7 @@ export default function SupplierList() {
             /> */}
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}

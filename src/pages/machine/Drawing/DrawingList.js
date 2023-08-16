@@ -218,7 +218,7 @@ export default function DrawingList() {
 
   return (
     <>
-      <Card sx={{ mt: 3 }}>
+      <Card sx={{ my: 3 }}>
         <DocumentListTableToolbar
           filterName={filterName}
           filterStatus={filterStatus}
@@ -254,7 +254,7 @@ export default function DrawingList() {
           />
 
           <Scrollbar>
-            <Table size="small" sx={{ minWidth: 960 }}>
+            <Table size="small" sx={{ minWidth: 360 }}>
               <TableHeadCustom
                 order={order}
                 orderBy={orderBy}

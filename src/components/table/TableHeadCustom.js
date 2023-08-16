@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
 import { Box, Checkbox, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import { useWidth } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -40,18 +41,15 @@ export default function TableHeadCustom({
   onSelectAllRows,
   sx,
 }) {
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const width = useWidth();
+  
+  const mdNone = " md: | customerMainSiteAddress machineInstalationSite documentMachine documentCustomer userRole userRoleType userLogin md1 md2 md3 md4 md5 | ";
+  const smNone = " md: | customerMainSiteAddress customerTradingName machineInstalationSite machineCustomer  documentMachine documentCustomer userPhone userRole docummentCategoryName regionCountries userRoleType userIP  userLogin md1 md2 md3 md4 md5 | sm: | tradingName city country phone doctype doccategory type connections sm1 sm2 sm3 sm4 sm5| "
+  const xsNone = " md: | customerMainSiteAddress customerTradingName machineInstalationSite machineCustomer  documentMachine documentCustomer userPhone userRole docummentCategoryName regionCountries userRoleType userIP  userLogin md1 md2 md3 md4 md5 | sm: | customerAccess tradingName city country phone doctype doccategory version type connections sm2 sm3 sm4 sm5 | xs: | machineModel machineName machineStatus configValue connactableAsChildCateegory xs1 xs2 xs3 xs4 xs5 |"
 
-  const mdNone = " md: | customerMainSiteAddress instalationSite documentMachine documentCustomer userRole | ";
-  const smNone = " md: | customerMainSiteAddress customerTradingName instalationSite machineCustomer  documentMachine documentCustomer userPhone userRole | sm: | tradingName city country phone doctype doccategory type connections | "
-  const xsNone = " md: | customerMainSiteAddress customerTradingName instalationSite machineCustomer  documentMachine documentCustomer userPhone userRole | sm: | customerAccess tradingName city country phone doctype doccategory version type connections | xs: | machineModel machineName machineStatus |"
   let displayHeadIs
+
 // isDisabled isActive active created_at createdAt
   return (
     <TableHead sx={sx} >
@@ -67,11 +65,11 @@ export default function TableHeadCustom({
         )}
 
         {headLabel.map((headCell) => {
-          if( window.innerWidth > 900 && window.innerWidth < 1200 ) {
+          if( width === 'md' ) {
             displayHeadIs = mdNone.includes(headCell.id)
-          }else if( window.innerWidth > 600 && window.innerWidth < 900 ){
+          }else if( width === 'sm'){
             displayHeadIs = smNone.includes(headCell.id)
-          }else if( window.innerWidth < 600 ){
+          }else if( width === 'xs' ){
             displayHeadIs = xsNone.includes(headCell.id)
           }
           return(

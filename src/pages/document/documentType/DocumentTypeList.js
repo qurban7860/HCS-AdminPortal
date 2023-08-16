@@ -56,7 +56,7 @@ import { fDate } from '../../../utils/formatTime';
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Type Name', align: 'left' },
-  { id: 'categoryName', label: 'Category', align: 'left' },
+  { id: 'docummentCategoryName', label: 'Category', align: 'left' },
   { id: 'customerAccess', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
@@ -252,7 +252,7 @@ export default function DocumentTypeList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 960 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}

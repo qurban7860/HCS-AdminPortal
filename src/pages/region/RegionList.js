@@ -21,8 +21,8 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 // sections
+import RegionTableRow from './RegionTableRow'
 import RegionTableToolbar from './RegionTableToolbar';
-import RegionTableRow from './RegionTableRow';
 import {
   getRegions,
   deleteRegion,
@@ -43,7 +43,7 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'countries', label: 'countries', align: 'left' },
+  { id: 'regionCountries', label: 'countries', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
@@ -240,7 +240,7 @@ export default function RegionList() {
             />
 
             <Scrollbar>
-              <Table size="small" sx={{ minWidth: 800 }}>
+              <Table size="small" sx={{ minWidth: 360 }}>
                 <TableHeadCustom
                   order={order}
                   orderBy={orderBy}

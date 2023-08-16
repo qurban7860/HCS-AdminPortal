@@ -23,6 +23,7 @@ import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
+import { useWidth } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -44,6 +45,8 @@ export default function ParameterListTableRow({
   onViewRow,
 }) {
   const { name, category, isActive, createdAt } = row;
+
+  const width = useWidth();
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -73,7 +76,7 @@ export default function ParameterListTableRow({
         </TableCell> */}
 
         <LinkTableCell onClick={onViewRow} align="left" param={name} />
-        <TableCell>{category?.name || ''}</TableCell>
+        { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell>{category?.name || ''}</TableCell>}
         {/* <TableCell>category</TableCell> */}
         <TableCell align="center">
           {' '}
