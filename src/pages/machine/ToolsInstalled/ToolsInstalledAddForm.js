@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
+import { DatePicker } from '@mui/x-date-pickers';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
 // slice
@@ -40,6 +41,15 @@ export default function ToolsInstalledAddForm() {
   const [toolVal, setToolVal] = useState('');
   const [toolType, setToolType] = useState('');
   const [toolsVal, setToolsVal] = useState([]);
+
+  const [singleTool, setSingleTool] = useState(false);
+  const [compositeTool, setCompositeTool] = useState(false);
+ 
+  const [timeOut, setTimeOut] = useState(null);
+  const [engagingDuration, setEngagingDuration] = useState(null);
+  const [returningDuration, setReturningDuration] = useState(null);
+  const [twoWayCheckDelayTime, setTwoWayCheckDelayTime] = useState(null);
+
   const { machine } = useSelector((state) => state.machine);
 
   const dispatch = useDispatch();
@@ -110,6 +120,62 @@ export default function ToolsInstalledAddForm() {
     isManualSelect: Yup.boolean(),
     isAssign: Yup.boolean(),
     isActive: Yup.boolean(),
+
+
+    // --------------------------------------SINGLE TOOL CONFIGURATION-------------------------------------
+    engageSolenoidLocation: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    returnSolenoidLocation: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    engageOnCondition: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    homeProximitySensorLocation: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    engagedProximitySensorLocation: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    pressureTarget: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    distanceSensorLocation: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    distanceSensorTarget: Yup.number()
+      .typeError('Offset must be a number')
+      .transform((value, originalValue) => {
+      if (originalValue.trim() === '') return undefined;
+      return parseFloat(value);
+      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+    engageOffCondition: Yup.boolean(),  
+    isHasTwoWayCheck: Yup.boolean(),
+    isEngagingHasEnable: Yup.boolean(),
+    isReturningHasEnable: Yup.boolean(),
+    movingPunchCondition: Yup.string() // { type: String, default: 'NO PUNCH' },  
   });
 
   const toggleCancel = () => {
@@ -130,6 +196,21 @@ export default function ToolsInstalledAddForm() {
       isManualSelect: false,
       isAssign: false,
       isActive: true,
+
+      engageSolenoidLocation: '',
+      returnSolenoidLocation: '',
+      engageOnCondition: '',
+
+      engageOffCondition: false,
+      homeProximitySensorLocation: '',
+      engagedProximitySensorLocation: '',
+      pressureTarget: '',
+      distanceSensorLocation: '',
+      distanceSensorTarget: '',
+      isHasTwoWayCheck: false,
+      isEngagingHasEnable: false,
+      isReturningHasEnable: false,
+      movingPunchCondition: ''    
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -154,6 +235,10 @@ export default function ToolsInstalledAddForm() {
       if (toolType) {
         data.toolType = toolType;
       }
+      data.timeOut = timeOut;
+      data.engagingDuration = engagingDuration;
+      data.returningDuration = returningDuration;
+      data.twoWayCheckDelayTime = twoWayCheckDelayTime;
       // console.log("Data", data);
       await dispatch(addToolInstalled(machine._id, data));
       reset();
@@ -166,8 +251,19 @@ export default function ToolsInstalledAddForm() {
   };
 
   const handleToolTypeChange = (newChange) => {
-    console.log('new value=========>', newChange);
     setToolType(newChange);
+    if(newChange === 'SINGLE TOOL'){
+      setSingleTool(true);
+      setCompositeTool(false);
+    }
+    else if(newChange === 'COMPOSITE TOOL'){
+      setSingleTool(false);
+      setCompositeTool(true);
+    }
+    else{
+      setSingleTool(false);
+      setCompositeTool(false);
+    }
   }
 
   return (
@@ -222,7 +318,6 @@ export default function ToolsInstalledAddForm() {
                   // isOptionEqualToValue={(option) => toolTypes.indexOf(option)}
                   onChange={(event, newValue) => {
                     if (newValue) {
-                      console.log('newValue----------->', newValue);
                       handleToolTypeChange(newValue);
                     } else {
                       handleToolTypeChange('');
@@ -384,6 +479,163 @@ export default function ToolsInstalledAddForm() {
                   }
                 />
               </Box>
+              {singleTool && <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+
+                <RHFTextField name="engageSolenoidLocation" label="Engage Solenoid Location" inputMode="numeric" pattern="[0-9]*"/>
+
+                <RHFTextField name="returnSolenoidLocation" label="Return Solenoid Location" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFTextField name="engageOnCondition" label="Engage On Condition" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFSwitch
+                  name="engageOffCondition"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Engage Off Condition
+                    </Typography>
+                  }
+                />
+
+                  <DatePicker
+                    label="Time Out"
+                    value={timeOut}
+                    // disabled={disableInstallationDate}
+                    onChange={(newValue) => setTimeOut(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+
+                  <DatePicker
+                    label="Engaging Duration"
+                    value={engagingDuration}
+                    // disabled={disableInstallationDate}
+                    onChange={(newValue) => setEngagingDuration(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+
+                  <DatePicker
+                    label="Returning Duration"
+                    value={returningDuration}
+                    // disabled={disableInstallationDate}
+                    onChange={(newValue) => setReturningDuration(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+
+                  <DatePicker
+                    label="Two-way Check Delay Time"
+                    value={twoWayCheckDelayTime}
+                    // disabled={disableInstallationDate}
+                    onChange={(newValue) => setTwoWayCheckDelayTime(newValue)}
+                    renderInput={(params) => <TextField {...params} />}
+                  />
+
+                <RHFTextField name="homeProximitySensorLocation" label="Home Proximity Sensor Location" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFTextField name="engagedProximitySensorLocation" label="Engaged Proximity Sensor Location" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFTextField name="pressureTarget" label="Pressure Target" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFTextField name="distanceSensorLocation" label="Distance Sensor Location" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFTextField name="distanceSensorTarget" label="Distance Sensor Target" inputMode="numeric" pattern="[0-9]*" />
+
+                <RHFSwitch
+                  name="isHasTwoWayCheck"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Has Two Way Check
+                    </Typography>
+                  }
+                />
+
+
+                <RHFSwitch
+                  name="isEngagingHasEnable"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Engaging Has Enabled
+                    </Typography>
+                  }
+                />
+
+
+                <RHFSwitch
+                  name="isReturningHasEnable"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Returning Has Enabled
+                    </Typography>
+                  }
+                />
+
+                <RHFTextField name="movingPunchCondition" label="Moving Punch Condition"/>
+
+              </Box>}
+              {compositeTool && 
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
+
+
+                </Box>
+              }
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
