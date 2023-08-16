@@ -167,8 +167,7 @@ export function addCustomerDocument(customerId,params) {
           if(params?.images){
             formData.append('images', params?.images);
           }
-console.log("formData : ",params?.image);
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData,{
+      await axios.post(`${CONFIG.SERVER_URL}documents/document/`, formData,{
         headers: {
           'Content-Type':"multupart/form-data"
         }
@@ -219,7 +218,7 @@ export function updateCustomerDocument(customerDocumentId,params,customerId) {
       if(params?.images){
         formData.append('images', params?.images);
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`, formData);
+      await axios.patch(`${CONFIG.SERVER_URL}documents/document/${customerDocumentId}`, formData);
       // if(regEx.test(response.status)){
         dispatch(setCustomerDocumentEditFormVisibility(false));
         dispatch(setCustomerDocumentFormVisibility(false));

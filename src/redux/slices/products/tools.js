@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   toolEditFormFlag: false,
@@ -226,7 +225,6 @@ export function updateTool(params) {
     dispatch(slice.actions.startLoading());
     try {
 
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         id: params.id,
@@ -235,7 +233,7 @@ export function updateTool(params) {
         description: params.description,
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/tools/${params.id}`,
         data
       );
       dispatch(getTool(params.id));

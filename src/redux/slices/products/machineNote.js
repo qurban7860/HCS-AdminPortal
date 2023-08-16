@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   responseMessage: null,
@@ -127,7 +126,7 @@ export function addNote(machineId,params) {
             if(params.user){
                 data.user =    params.user;
             }
-      const response = await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
+      await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/`, data);
       dispatch(slice.actions.setNoteFormVisibility(false));
       dispatch(slice.actions.setResponseMessage('Note saved successfully'));
     } catch (error) {
@@ -148,7 +147,7 @@ export function updateNote(machineId,noteId,params) {
         note:     params.note,
         isActive: params.isActive,
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data, );
+      await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/notes/${noteId}`, data, );
       dispatch(slice.actions.setResponseMessage('Note updated successfully'));
 
     } catch (error) {

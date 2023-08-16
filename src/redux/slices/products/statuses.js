@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   machinestatusEditFormFlag: false,
@@ -237,7 +236,6 @@ export function updateMachinestatus(params,Id) {
     dispatch(slice.actions.startLoading());
     try {
 
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         name: params.name,
@@ -247,7 +245,7 @@ export function updateMachinestatus(params,Id) {
         slug: params.slug,
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/statuses/${Id}`,
         data
       );
       dispatch(getMachineStatus(Id));

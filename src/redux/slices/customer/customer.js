@@ -6,7 +6,6 @@ import { CONFIG } from '../../../config-global';
 const _ = require('lodash');
 
 // ---------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   customerEditFormFlag: false,
@@ -463,8 +462,8 @@ export function setCustomerVerification(customerId) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}`,{
-        isVarified: true,
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${customerId}`,{
+        isVerified: true,
       });
       dispatch(getCustomer(customerId));
     } catch (error) {
@@ -482,7 +481,6 @@ export function updateCustomer(params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const formData = new FormData();
       /* eslint-disable */
       let data = {
         id: params.id,
@@ -521,7 +519,7 @@ export function updateCustomer(params) {
       }else{
         data.primaryTechnicalContact = null;
       }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}crm/customers/${params.id}`,
         data
       );
 

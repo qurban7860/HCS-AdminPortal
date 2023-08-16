@@ -2,9 +2,8 @@ import PropTypes from 'prop-types';
 // @mui
 import { Box, Card, Rating, CardHeader, Typography, Stack } from '@mui/material';
 // utils
-import { fCurrency, fShortenNumber } from '../../../../utils/formatNumber';
+import { fShortenNumber } from '../../../../utils/formatNumber';
 // components
-import Label from '../../../../components/label';
 import Iconify from '../../../../components/iconify';
 import Scrollbar from '../../../../components/scrollbar';
 
@@ -46,7 +45,7 @@ ApplicationItem.propTypes = {
 };
 
 function ApplicationItem({ app }) {
-  const { shortcut, system, price, rating, review, name } = app;
+  const { shortcut, system, rating, review, name } = app;
 
   return (
     <Stack direction="row" alignItems="center" spacing={2}>

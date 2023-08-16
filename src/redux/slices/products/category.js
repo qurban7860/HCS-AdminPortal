@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   categoryFormVisibility: false,
@@ -243,7 +242,7 @@ export function updateCategory(params,Id) {
         connections: params.connections
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/categories/${Id}`,
         data
       );
       dispatch(getCategories(params.id));

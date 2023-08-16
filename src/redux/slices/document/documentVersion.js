@@ -5,7 +5,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   documentVersionFormVisibility: false,
   documentVersionEditFormVisibility: false,
@@ -132,7 +131,7 @@ export function addDocumentVersion(documentId,params) {
             });
           }
 
-      const response = await axios.post(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/`, formData);
+      await axios.post(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/`, formData);
       dispatch(slice.actions.setResponseMessage('Document Version saved successfully'));
       // dispatch(getDocumentVersions(documentId));
     } catch (error) {
@@ -158,7 +157,7 @@ export function updateDocumentVersion(documentId,versionId,params) {
       // if(params?.images){
       //   formData.append('images', params?.images);
       // }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}`, formData, );
+      await axios.patch(`${CONFIG.SERVER_URL}documents/document/${documentId}/versions/${versionId}`, formData, );
       dispatch(slice.actions.setResponseMessage('Document Version updated successfully'));
       dispatch(setDocumentVersionEditFormVisibility (false));
     } catch (error) {

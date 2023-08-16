@@ -4,7 +4,6 @@ import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
 
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
 const initialState = {
   intial: false,
   drawingFormVisibility: false,
@@ -253,7 +252,7 @@ export function updateDrawing(params,Id) {
         isActive: params.isActive
       };
      /* eslint-enable */
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/drawings/${Id}`,
+      await axios.patch(`${CONFIG.SERVER_URL}products/drawings/${Id}`,
         data
       );
       dispatch(getDrawing(params.id));
