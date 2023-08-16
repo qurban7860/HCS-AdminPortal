@@ -21,8 +21,8 @@ import {
   TablePaginationCustom,
 } from '../../components/table';
 // sections
+import RegionTableRow from './RegionTableRow'
 import RegionTableToolbar from './RegionTableToolbar';
-import RegionTableRow from './RegionTableRow';
 import {
   getRegions,
   deleteRegion,

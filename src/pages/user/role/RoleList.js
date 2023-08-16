@@ -30,8 +30,8 @@ import {
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import ConfirmDialog from '../../../components/confirm-dialog';
-// sections
 import RoleListTableRow from './RoleListTableRow';
+// sections
 import RoleListTableToolbar from './RoleListTableToolbar';
 import { deleteRole, getRoles,
   ChangeRowsPerPage,
