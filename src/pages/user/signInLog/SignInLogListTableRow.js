@@ -45,18 +45,16 @@ export default function SignInLogListTableRow({
   
 
   return (
-    <>
-      <StyledTableRow hover selected={selected}>
-        
-        <TableCell align="left"> {user?.name ? user?.name : ''} </TableCell>
-        <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>
-        <TableCell align="left"> {loginIP} </TableCell>
-
-        <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
-        <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
-        
-      </StyledTableRow>
+    <StyledTableRow hover selected={selected}>
       
-    </>
+      <TableCell align="left"> {user?.name ? user?.name : ''} </TableCell>
+      <TableCell align="left"> {user?.login ? user?.login : ''} </TableCell>
+      <TableCell align="left"> {loginIP} </TableCell>
+
+      <TableCell align="left"> {fDateTime(loginTime)} </TableCell>
+      <TableCell align="left">{fDateTime(logoutTime)}</TableCell>
+      
+    </StyledTableRow>
+    
   );
 }

@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 // @mui
 import {
   Switch,
@@ -45,19 +44,17 @@ export default function RoleListTableRow({
   const { name, roleType, isActive, createdAt } = row;
 
   return (
-    <>
-      <StyledTableRow hover selected={selected}>
-        
-        <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        <TableCell align="left"> {roleType} </TableCell>
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-        
-      </StyledTableRow>
+    <StyledTableRow hover selected={selected}>
       
-    </>
+      <LinkTableCell align="left" onClick={onViewRow} param={name} />
+      <TableCell align="left"> {roleType} </TableCell>
+      <TableCell align="center">
+        {' '}
+        <Switch checked={isActive} disabled size="small" />{' '}
+      </TableCell>
+      <TableCell align="right">{fDate(createdAt)}</TableCell>
+      
+    </StyledTableRow>
+      
   );
 }

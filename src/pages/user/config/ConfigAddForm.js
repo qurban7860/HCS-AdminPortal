@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { MuiChipsInput } from 'mui-chips-input';
@@ -8,10 +8,7 @@ import { MuiChipsInput } from 'mui-chips-input';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
-  Box,
-  Button,
   Card,
   Grid,
   Stack,
@@ -21,7 +18,7 @@ import {
   Container,
 } from '@mui/material';
 // ROUTES
-import { PATH_DASHBOARD, PATH_SETTING } from '../../../routes/paths';
+import { PATH_SETTING } from '../../../routes/paths';
 // slice
 import { getCustomers, resetCustomers } from '../../../redux/slices/customer/customer';
 import { getSecurityUsers, resetSecurityUsers } from '../../../redux/slices/securityUser/securityUser';
@@ -29,8 +26,7 @@ import { addConfig } from '../../../redux/slices/securityUser/config';
 // components
 import { useSnackbar } from '../../../components/snackbar';
 // assets
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
-import FormHeading from '../../components/DocumentForms/FormHeading';
+import FormProvider, { RHFSwitch } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { Cover } from '../../components/Defaults/Cover';
 
@@ -80,14 +76,12 @@ export default function ConfigAddForm({ currentConfig }) {
   const {
     reset,
     watch,
-    setValue,
     control,
     handleSubmit,
     formState: { isSubmitting },
-    trigger,
   } = methods;
 
-  const { blockedUsers, blockedCustomers, whiteListIPs, blackListIPs, isActive } = watch()
+  const { blockedUsers, blockedCustomers } = watch()
 
   const onSubmit = async (data) => {
     try { 

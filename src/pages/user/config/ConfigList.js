@@ -96,7 +96,7 @@ export default function ConfigList() {
 
   const [openConfirm, setOpenConfirm] = useState(false);
 
-  const { configs, filterBy, page, rowsPerPage, isLoading, initia } = useSelector((state) => state.userConfig);
+  const { configs, filterBy, page, rowsPerPage, isLoading, initial } = useSelector((state) => state.userConfig);
 
   useLayoutEffect(() => {
     dispatch(getConfigs());

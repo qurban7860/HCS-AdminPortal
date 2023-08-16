@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
 // @mui
 import {
   Switch,
@@ -45,20 +44,18 @@ export default function ConfigListTableRow({
   const { blockedUsers, blockedCustomers, whiteListIPs, blackListIPs, isActive, createdAt } = row;
 
   return (
-    <>
-      <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}} >
-       
-        <TableCell align="left"> {blockedUsers?.map((user)=>(<Chip label={user?.name} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
-        <TableCell align="left"> {blockedCustomers?.map((customer)=>(<Chip label={customer?.name} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
-        <TableCell align="left"> {whiteListIPs?.map((wIp)=>(<Chip label={wIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
-        <TableCell align="left"> {blackListIPs?.map((bIp)=>(<Chip label={bIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
-        <TableCell align="center">
-          {' '}
-          <Switch checked={isActive} disabled size="small" />{' '}
-        </TableCell>
-        <TableCell align="right">{fDate(createdAt)}</TableCell>
-        
-      </StyledTableRow>
-    </>
+    <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}} >
+     
+      <TableCell align="left"> {blockedUsers?.map((user)=>(<Chip label={user?.name} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
+      <TableCell align="left"> {blockedCustomers?.map((customer)=>(<Chip label={customer?.name} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
+      <TableCell align="left"> {whiteListIPs?.map((wIp)=>(<Chip label={wIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
+      <TableCell align="left"> {blackListIPs?.map((bIp)=>(<Chip label={bIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
+      <TableCell align="center">
+        {' '}
+        <Switch checked={isActive} disabled size="small" />{' '}
+      </TableCell>
+      <TableCell align="right">{fDate(createdAt)}</TableCell>
+      
+    </StyledTableRow>
   );
 }

@@ -197,11 +197,6 @@ export default function RoleList() {
     }
   };
 
-  const handleEditRow = (id) => {
-    // console.log(id);
-    navigate(PATH_SETTING.role.edit(id));
-  };
-
   const handleViewRow = (id) => {
     navigate(PATH_SETTING.role.view(id));
   };
@@ -288,7 +283,6 @@ export default function RoleList() {
                           selected={selected.includes(row._id)}
                           onSelectRow={() => onSelectRow(row._id)}
                           onDeleteRow={() => handleDeleteRow(row._id)}
-                          // onEditRow={() => handleEditRow(row._id)}
                           onViewRow={() => handleViewRow(row._id)}
                           style={index % 2 ? { background: 'red' } : { background: 'green' }}
                         />

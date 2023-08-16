@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect } from 'react';
 import { useParams } from 'react-router-dom';
 // @mui
 import { Card, Container } from '@mui/material';
@@ -27,20 +27,18 @@ export default function RoleView() {
   const { role } = useSelector((state) => state.role);
   // console.log("role : ",role)
   return (
-    <>
-      <Container maxWidth={false}>
-        <Card
-          sx={{
-            mb: 3,
-            height: 160,
-            position: 'relative',
-            // mt: '24px',
-          }}
-        >
-          <Cover name={role?.name} generalSettings="enabled" backLink={PATH_SETTING.role.list} />
-        </Card>
-        <RoleViewForm />
-      </Container>
-    </>
+    <Container maxWidth={false}>
+      <Card
+        sx={{
+          mb: 3,
+          height: 160,
+          position: 'relative',
+          // mt: '24px',
+        }}
+      >
+        <Cover name={role?.name} generalSettings="enabled" backLink={PATH_SETTING.role.list} />
+      </Card>
+      <RoleViewForm />
+    </Container>
   );
 }
