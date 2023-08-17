@@ -61,6 +61,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -104,8 +105,8 @@ export default function DrawingList() {
 
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
-    { id: 'doccategory', label: 'Category', align: 'left' },
-    { id: 'doctype', label: 'Type', align: 'left' },
+    { id: 'xs1', label: 'Category', align: 'left' },
+    { id: 'xs2', label: 'Type', align: 'left' },
     { id: 'active', label: 'Active', align: 'center' },
     { id: 'created_at', label: 'Created At', align: 'right' },
   ];
@@ -218,7 +219,7 @@ export default function DrawingList() {
 
   return (
     <>
-      <Card sx={{ my: 3 }}>
+      <TableCard>
         <DocumentListTableToolbar
           filterName={filterName}
           filterStatus={filterStatus}
@@ -310,7 +311,7 @@ export default function DrawingList() {
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
-      </Card>
+      </TableCard>
 
       <ConfirmDialog
         open={openConfirm}

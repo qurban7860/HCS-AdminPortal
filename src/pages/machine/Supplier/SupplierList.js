@@ -48,6 +48,7 @@ import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -154,7 +155,6 @@ export default function SupplierList() {
     setOpenConfirm(false);
   };
 
-
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -243,7 +243,7 @@ export default function SupplierList() {
           <Cover name="Suppliers" icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <SupplierListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -328,7 +328,7 @@ export default function SupplierList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

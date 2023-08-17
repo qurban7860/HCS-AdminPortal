@@ -46,7 +46,7 @@ import { useSnackbar } from '../../components/snackbar';
 // auth
 // asset
 // util
-
+import TableCard from '../components/ListTableTools/TableCard';
 import { fDate } from '../../utils/formatTime';
 
 // ----------------------------------------------------------------------
@@ -63,11 +63,11 @@ const TABLE_HEAD = [
   // { id: 'havePrevious', label: '', align: 'center', width: 1.5 },
   { id: 'serialNumber', label: 'Serial Number', align: 'left' },
   // { id: 'previousMachine', label: 'Previous Machine', align: 'left' },
-  { id: 'machineName', label: 'Name', align: 'left' },
-  { id: 'machineModel', label: 'Model', align: 'left' },
-  { id: 'machineStatus', label: 'Status', align: 'left' },
-  { id: 'machineCustomer', label: 'Customer', align: 'left' },
-  { id: 'machineInstalationSite', label: 'Installation Site', align: 'left' },
+  { id: 'md1', label: 'Name', align: 'left' },
+  { id: 'xs1', label: 'Model', align: 'left' },
+  { id: 'xs2', label: 'Status', align: 'left' },
+  { id: 'md2', label: 'Customer', align: 'left' },
+  { id: 'md3', label: 'Installation Site', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'left' },
 ];
@@ -182,7 +182,7 @@ export default function MachineList() {
         <StyledCardContainer>
           <Cover title="Machines" name="Machines" icon="arcticons:materialistic" setting="enable" />
         </StyledCardContainer>
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <MachineListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -276,7 +276,7 @@ export default function MachineList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>

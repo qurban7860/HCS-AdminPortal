@@ -31,13 +31,13 @@ import CategoryListTableToolbar from './CategoryListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
-
+import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
-  { id: 'connactableAsChildCateegory', label: 'Connectable as child', align: 'center' },
+  { id: 'xs1', label: 'Connectable as child', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
 
@@ -218,7 +218,7 @@ export default function CategoryList() {
           <Cover name="Categories" icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <CategoryListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -295,7 +295,7 @@ export default function CategoryList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
       <ConfirmDialog
         open={openConfirm}

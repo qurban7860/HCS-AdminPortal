@@ -36,6 +36,7 @@ import TechParamListTableToolbar from './TechParamListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -223,7 +224,7 @@ export default function TechParamList() {
             setting="enable"
           />
         </StyledCardContainer>
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <TechParamListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -308,7 +309,7 @@ export default function TechParamList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

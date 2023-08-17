@@ -34,6 +34,7 @@ import {
 import { fDate } from '../../utils/formatTime';
 // constants
 import { DIALOGS } from '../../constants/default-constants';
+import TableCard from '../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +44,7 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'configValue', label: 'Value', align: 'left' },
+  { id: 'xs1', label: 'Value', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   { id: 'createdAt', label: 'Created At', align: 'right' },
 ];
@@ -213,7 +214,7 @@ export default function ConfigList() {
         <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
           <Cover generalSettings="enabled" name="Configs" icon="ph:users-light" />
         </Card>
-        <Card>
+        <TableCard>
           <ConfigListTableToolbar
             isFiltered={isFiltered}
             filterName={filterName}
@@ -273,7 +274,7 @@ export default function ConfigList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

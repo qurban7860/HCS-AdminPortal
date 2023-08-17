@@ -40,12 +40,13 @@ import { deleteRole, getRoles,
  } from '../../../redux/slices/securityUser/role';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'userRoleType', label: 'Role Type', align: 'left' },
+  { id: 'xs1', label: 'Role Type', align: 'left' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
@@ -220,7 +221,7 @@ export default function RoleList() {
           <Cover generalSettings="enabled" name="Roles" icon="ph:users-light" />
         </Card>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <RoleListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -309,7 +310,7 @@ export default function RoleList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

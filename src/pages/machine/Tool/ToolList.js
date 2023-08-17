@@ -33,6 +33,7 @@ import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
 // constants
 import { FORMLABELS, DIALOGS, BUTTONS } from '../../../constants/default-constants';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -192,7 +193,7 @@ export default function ToolList() {
           <Cover name={FORMLABELS.COVER.TOOLS} setting="enable" />
         </StyledCardContainer>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <ToolListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -249,7 +250,7 @@ export default function ToolList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
       <Grid item lg={12}>
         <TableNoData isNotFound={isNotFound} />

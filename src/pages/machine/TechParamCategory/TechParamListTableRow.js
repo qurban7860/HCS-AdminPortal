@@ -34,8 +34,6 @@ export default function TechParamListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  // console.log('dep', departmentName);
-
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
   };

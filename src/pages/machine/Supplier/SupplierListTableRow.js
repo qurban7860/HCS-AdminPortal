@@ -23,7 +23,7 @@ import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
-import { useWidth } from '../../../hooks/useResponsive';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -68,7 +68,8 @@ export default function SupplierListTableRow({
     setOpenPopover(null);
   };
 
-  const width = useWidth();
+  const smScreen = useScreenSize('sm')
+  const lgScreen = useScreenSize('lg')
 
   return (
     <>
@@ -78,9 +79,9 @@ export default function SupplierListTableRow({
         </TableCell> */}
 
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        {( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell>{contactName}</TableCell>}
-        {( width === 'lg' || width === 'xl' ) && <TableCell>{address?.city}</TableCell>}
-        {( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell>{address?.country}</TableCell>}
+        { smScreen && <TableCell>{contactName}</TableCell>}
+        { lgScreen && <TableCell>{address?.city}</TableCell>}
+        { smScreen && <TableCell>{address?.country}</TableCell>}
         <TableCell align="center">
           {' '}
           <Switch checked={isActive} disabled size="small" sx={{ my: -1 }} />{' '}

@@ -1,9 +1,12 @@
 import { memo } from 'react'
+import { Container } from '@mui/material'
 import DocumentList from './DocumentList'
 
 const MachineDrawings = () => 
   (
-    <DocumentList machineDrawings />
+    <Container maxWidth={false}>
+      <DocumentList machineDrawings />
+    </Container>
   )
 
 

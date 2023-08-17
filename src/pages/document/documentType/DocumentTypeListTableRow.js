@@ -24,7 +24,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import Label from '../../../components/label';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
-import { useWidth } from '../../../hooks/useResponsive';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -77,9 +77,7 @@ export default function DocumentTypeListTableRow({
   const handleClosePopover = () => {
     setOpenPopover(null);
   };
-
-  const width = useWidth();
-
+ const smScreen = useScreenSize('sm')
   return (
     <>
       <StyledTableRow hover selected={selected}>
@@ -88,8 +86,8 @@ export default function DocumentTypeListTableRow({
         </TableCell> */}
         {/* <Iconify icon="octicon:package-dependents-16" sx={{ color: 'text.disabled' }} /> */}
         <LinkTableCell align="left" param={name} onClick={onViewRow} />
-        {(width === 'xl' || width === 'lg' || width === 'md' ) && <TableCell align="left">{docCategory?.name}</TableCell>}
-        {(width === 'xl' || width === 'lg' || width === 'md' || width === 'sm') &&<TableCell align="center">
+        { smScreen && <TableCell align="left">{docCategory?.name}</TableCell>}
+        { smScreen && <TableCell align="center">
           {' '}
           <Switch checked={customerAccess} disabled size="small" />{' '}
         </TableCell>}
