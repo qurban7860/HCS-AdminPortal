@@ -42,7 +42,6 @@ const IdleManager = () => {
   }, [openModal, showStay, countdown]);
  /* eslint-enable */
 
-  console.log('idleTimer------->', idleTimer);
 
   const resetCountdown = () => {
     setShowStay(true)

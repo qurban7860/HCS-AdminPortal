@@ -9,6 +9,7 @@ import {
 // utils
 import { styled } from '@mui/system';
 import { fDate } from '../../../utils/formatTime';
+import { useScreenSize } from '../../../hooks/useResponsive';
 // components
 
 // ----------------------------------------------------------------------
@@ -42,14 +43,16 @@ export default function ConfigListTableRow({
   onViewRow,
 }) {
   const { blockedUsers, blockedCustomers, whiteListIPs, blackListIPs, isActive, createdAt } = row;
+  const smScreen = useScreenSize('sm')
+  const lgScreen = useScreenSize('lg')
 
   return (
     <StyledTableRow hover selected={selected} onClick={onViewRow} sx={{cursor:'pointer'}} >
      
-      <TableCell align="left"> {blockedUsers?.map((user)=>(<Chip label={user?.name} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
+      { lgScreen && <TableCell align="left"> {blockedUsers?.map((user)=>(<Chip label={user?.name} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>}
       <TableCell align="left"> {blockedCustomers?.map((customer)=>(<Chip label={customer?.name} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
-      <TableCell align="left"> {whiteListIPs?.map((wIp)=>(<Chip label={wIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
-      <TableCell align="left"> {blackListIPs?.map((bIp)=>(<Chip label={bIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>
+      { smScreen && <TableCell align="left"> {whiteListIPs?.map((wIp)=>(<Chip label={wIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>}
+      { smScreen && <TableCell align="left"> {blackListIPs?.map((bIp)=>(<Chip label={bIp} sx={{m:0.2, cursor:'pointer'}}/>))} </TableCell>}
       <TableCell align="center">
         {' '}
         <Switch checked={isActive} disabled size="small" />{' '}

@@ -43,10 +43,10 @@ export default function TableHeadCustom({
 }) {
 
   const width = useWidth();
-  
-  const mdNone = " md: | customerMainSiteAddress machineInstalationSite documentMachine documentCustomer userRole userRoleType userLogin md1 md2 md3 md4 md5 | ";
-  const smNone = " md: | customerMainSiteAddress customerTradingName machineInstalationSite machineCustomer  documentMachine documentCustomer userPhone userRole docummentCategoryName regionCountries userRoleType userIP  userLogin md1 md2 md3 md4 md5 | sm: | tradingName city country phone doctype doccategory type connections sm1 sm2 sm3 sm4 sm5| "
-  const xsNone = " md: | customerMainSiteAddress customerTradingName machineInstalationSite machineCustomer  documentMachine documentCustomer userPhone userRole docummentCategoryName regionCountries userRoleType userIP  userLogin md1 md2 md3 md4 md5 | sm: | customerAccess tradingName city country phone doctype doccategory version type connections sm2 sm3 sm4 sm5 | xs: | machineModel machineName machineStatus configValue connactableAsChildCateegory xs1 xs2 xs3 xs4 xs5 |"
+  // Which point the columns will be hiden 
+  const mdNone = " md: |  md1 md2 md3 md4 md5 | ";
+  const smNone = " md: |  md1 md2 md3 md4 md5 | sm: | sm1 sm2 sm3 sm4 sm5| "
+  const xsNone = " md: |  md1 md2 md3 md4 md5 | sm: | sm2 sm3 sm4 sm5 | xs: | xs1 xs2 xs3 xs4 xs5 |"
 
   let displayHeadIs
 
