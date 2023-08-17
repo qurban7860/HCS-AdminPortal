@@ -40,6 +40,7 @@ import { getConfigs , deleteConfig,
  } from '../../../redux/slices/securityUser/config';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -221,7 +222,7 @@ export default function ConfigList() {
           <Cover generalSettings="enabled" name="Configurations" icon="ph:users-light" />
         </Card>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <ConfigListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -307,7 +308,7 @@ export default function ConfigList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

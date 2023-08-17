@@ -11,7 +11,7 @@ import { styled } from '@mui/material/styles';
 import { fDate } from '../../../utils/formatTime';
 // components
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { useWidth } from '../../../hooks/useResponsive';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -60,20 +60,20 @@ export default function DocumentListTableRow({
     createdAt,
   } = row;
 
-  const width = useWidth();
+  const lgScreen = useScreenSize('lg')
+  const smScreen = useScreenSize('sm')
 
   return (
     <StyledTableRow hover selected={selected}>
-      
       <LinkTableCell align="left" param={displayName} onClick={onViewRow} />
       { !customerPage && !machinePage && !machineDrawings &&  (<>
-      { ( width === 'lg' || width === 'xl' ) && <TableCell align="left">{customer?.name}</TableCell>}
-      { ( width === 'lg' || width === 'xl' ) && <TableCell align="left">{machine?.serialNo}</TableCell>}
+      {  lgScreen && <TableCell align="left">{customer?.name}</TableCell>}
+      {  lgScreen && <TableCell align="left">{machine?.serialNo}</TableCell>}
       </>)}
-      { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left">{docCategory?.name}</TableCell>}
-      { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left">{docType?.name}</TableCell>}
-      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
-      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="center">
+      {  smScreen && <TableCell align="left">{docCategory?.name}</TableCell>}
+      {  smScreen && <TableCell align="left">{docType?.name}</TableCell>}
+      {  lgScreen && <TableCell align="center">{documentVersions[0]?.versionNo}</TableCell>}
+      {  lgScreen && <TableCell align="center">
         {' '}
         <Switch checked={customerAccess} disabled size="small" />{' '}
       </TableCell>}

@@ -51,6 +51,7 @@ import StatusListTableToolbar from './StatusListTableToolbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -240,7 +241,7 @@ export default function StatusList() {
         <StyledCardContainer>
           <Cover name="Status" icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <StatusListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -324,7 +325,7 @@ export default function StatusList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

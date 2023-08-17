@@ -17,7 +17,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
-import { useWidth } from '../../hooks/useResponsive';
+import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +44,8 @@ export default function SecurityUserTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  const width = useWidth();
+  const smScreen = useScreenSize('sm')
+  const lgScreen = useScreenSize('lg')
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -74,13 +75,12 @@ export default function SecurityUserTableRow({
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
 
-        <TableCell align="left">{email}</TableCell>
-
-        {( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        { smScreen && <TableCell align="left">{email}</TableCell>}
+        { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {phone || ''}
         </TableCell>}
 
-        {( width === 'lg' || width === 'xl' ) && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        { lgScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
         {roles.map((obj) => (obj.roleType === 'SuperAdmin' ? <Chip label={obj.name} sx={{m:0.2}} color='secondary' /> : <Chip label={obj.name} sx={{mx:0.3}} />))}
         </TableCell>}
         <TableCell align="center">

@@ -50,11 +50,11 @@ export default function LoadingScreen() {
   return (
     <>
       <ProgressBar />
-
       <StyledRoot
         sx={{
           ...(
             // isDashboard && 
+            isDesktop &&
             {
             width: `calc(100% - ${size}px)`,
             ...(themeLayout === 'horizontal' && {

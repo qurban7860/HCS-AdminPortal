@@ -6,7 +6,7 @@ import { Switch, TableRow, TableCell } from '@mui/material';
 import { fDate } from '../../utils/formatTime';
 // components
 import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWithIcon';
-import { useWidth } from '../../hooks/useResponsive';
+import { useScreenSize } from '../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
 MachineListTableRow.propTypes = {
@@ -37,9 +37,7 @@ export default function MachineListTableRow({
     isActive,
     createdAt,
   } = row;
-  
-  const width = useWidth();
-
+ 
   return (
     <TableRow hover selected={selected}>
       <LinkTableCellWithIcon
@@ -48,11 +46,11 @@ export default function MachineListTableRow({
         param={serialNo}
         isVerified={verifications?.length > 0}
       />
-      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell >{name || ''}</TableCell>}
-      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell >{machineModel?.name || ''}</TableCell>}
-      { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
-      { ( width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell  >{customer?.name || ''}</TableCell>}
-      { ( width === 'lg' || width === 'xl' ) && <TableCell  >{instalationSite?.name || ''}</TableCell>}
+      {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>}
+      {  useScreenSize('sm') && <TableCell >{machineModel?.name || ''}</TableCell>}
+      {  useScreenSize('sm') && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
+      {  useScreenSize('lg') && <TableCell  >{customer?.name || ''}</TableCell>}
+      {  useScreenSize('lg') && <TableCell  >{instalationSite?.name || ''}</TableCell>}
       <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
       <TableCell >{fDate(createdAt)}</TableCell>
 

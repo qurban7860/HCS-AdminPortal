@@ -65,6 +65,7 @@ import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -146,10 +147,10 @@ const  onChangePage = (event, newPage) => {
 
   const TABLE_HEAD = [
     { id: 'name', label: 'Name', align: 'left' },
-    { id: 'doccategory', label: 'Category', align: 'left' },
-    { id: 'doctype', label: 'Type', align: 'left' },
-    { id: 'version', label: 'Version', align: 'center' },
-    { id: 'customerAccess', label: 'Customer Access', align: 'center' },
+    { id: 'xs1', label: 'Category', align: 'left' },
+    { id: 'xs2', label: 'Type', align: 'left' },
+    { id: 'md1', label: 'Version', align: 'center' },
+    { id: 'md2', label: 'Customer Access', align: 'center' },
     { id: 'active', label: 'Active', align: 'center' },
     { id: 'created_at', label: 'Created At', align: 'right' },
   ];
@@ -157,8 +158,8 @@ const  onChangePage = (event, newPage) => {
   if (!customerPage && !machinePage && !machineDrawings) {
     const insertIndex = 1; // Index after which you want to insert the new objects
     TABLE_HEAD.splice(insertIndex, 0, // 0 indicates that we're not removing any elements
-      { id: 'documentCustomer', label: 'Customer', align: 'left' },
-      { id: 'documentMachine', label: 'Machine', align: 'left' }
+      { id: 'md3', label: 'Customer', align: 'left' },
+      { id: 'md4', label: 'Machine', align: 'left' }
     );
   }
 
@@ -356,12 +357,12 @@ const  onChangePage = (event, newPage) => {
 
   return (
     <>
-    {/* { <Container sx={{mb:3}}>} */}
+    {/* <Container sx={{mb:3}}> */}
       {!customerPage && !machinePage && 
       <StyledCardContainer>
         <Cover name={machineDrawings ? FORMLABELS.COVER.MACHINE_DRAWINGS :  FORMLABELS.COVER.DOCUMENTS} />
       </StyledCardContainer>}
-      <Card sx={{ mt: 3 }}>
+      <TableCard>
         <DocumentListTableToolbar
           filterName={filterName}
           filterStatus={filterStatus}
@@ -459,7 +460,7 @@ const  onChangePage = (event, newPage) => {
         <Grid md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
-      </Card>
+      </TableCard>
 
       <ConfirmDialog
         open={openConfirm}
@@ -483,7 +484,7 @@ const  onChangePage = (event, newPage) => {
           </Button>
         }
       />
-     {/* {</Container>} */}
+     {/* </Container> */}
     </>
   );
 }

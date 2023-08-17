@@ -9,7 +9,7 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 // utils
 import Iconify from '../../../components/iconify/Iconify';
 import { fDate } from '../../../utils/formatTime';
-import { useWidth } from '../../../hooks/useResponsive';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ export default function CategoryListTableRow({
     setOpenPopover(null);
   };
 
-  const width = useWidth();
+  const smScreen = useScreenSize('sm')
 
   return (
     <>
@@ -61,7 +61,7 @@ export default function CategoryListTableRow({
           <Switch checked={isActive} disabled sx={{ my: -1 }} />{' '}
         </TableCell>
 
-        { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="center">
+        { smScreen && <TableCell align="center">
           <Switch checked={connections || false} disabled sx={{ my: -1 }} />{' '}
         </TableCell>}
 

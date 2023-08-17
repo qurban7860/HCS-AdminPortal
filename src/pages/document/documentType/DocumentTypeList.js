@@ -51,13 +51,14 @@ import {
 } from '../../../redux/slices/document/documentType';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Type Name', align: 'left' },
-  { id: 'docummentCategoryName', label: 'Category', align: 'left' },
-  { id: 'customerAccess', label: 'Customer Access', align: 'center' },
+  { id: 'xs1', label: 'Category', align: 'left' },
+  { id: 'xs2', label: 'Customer Access', align: 'center' },
   { id: 'active', label: 'Active', align: 'center' },
   { id: 'created_at', label: 'Created At', align: 'right' },
 ];
@@ -216,7 +217,7 @@ export default function DocumentTypeList() {
           <Cover name="Document Types" icon="ph:users-light" generalSettings />
         </Card>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <DocumentTypeListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -306,7 +307,7 @@ export default function DocumentTypeList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

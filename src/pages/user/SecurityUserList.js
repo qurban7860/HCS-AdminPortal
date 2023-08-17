@@ -34,6 +34,7 @@ import {
 import { fDate } from '../../utils/formatTime';
 // constants
 import { DIALOGS } from '../../constants/default-constants';
+import TableCard from '../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -43,9 +44,9 @@ const ROLE_OPTIONS = ['Administrator', 'Normal User', 'Guest User', 'Restriced U
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', align: 'left' },
-  { id: 'email', label: 'Email', align: 'left' },
-  { id: 'userPhone', label: 'Phone Number', align: 'left' },
-  { id: 'userRole', label: 'Roles', align: 'left' },
+  { id: 'xs1', label: 'Email', align: 'left' },
+  { id: 'xs2', label: 'Phone Number', align: 'left' },
+  { id: 'md1', label: 'Roles', align: 'left' },
   { id: 'isActive', label: 'Active', align: 'center' },
   // { id: 'isVerified', label: 'Verified', align: 'center' },
   // { id: 'status', label: 'Status', align: 'left' },
@@ -219,10 +220,10 @@ useEffect(()=>{
   return (
     <>
       <Container maxWidth={false}>
-        <Card sx={{ mb: 3, height: 160, position: 'relative' }}>
+        <Card sx={{ height: 160, position: 'relative' }}>
           <Cover name="Users" icon="ph:users-light" />
         </Card>
-        <Card>
+        <TableCard>
           <SecurityUserTableToolbar
             isFiltered={isFiltered}
             filterName={filterName}
@@ -283,7 +284,7 @@ useEffect(()=>{
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

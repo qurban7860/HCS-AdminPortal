@@ -39,13 +39,14 @@ import { getSignInLogs,
  } from '../../../redux/slices/securityUser/securityUser';
 import { Cover } from '../../components/Defaults/Cover';
 import { fDateTime } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'userName', label: 'User Name', align: 'left' },
-  { id: 'userLogin', label: 'User Login', align: 'left' },
-  { id: 'userIP', label: 'User IP', align: 'left' },
+  { id: 'xs1', label: 'User Login', align: 'left' },
+  { id: 'xs2', label: 'User IP', align: 'left' },
   { id: 'loginTime', label: 'Login Time', align: 'left' },
   { id: 'logoutTime', label: 'Logout Time', align: 'left' },
 ];
@@ -179,7 +180,7 @@ export default function SignInLogList() {
           <Cover generalSettings="enabled" name="Sign In Logs" icon="ph:users-light" />
         </Card>
 
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <RoleListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -270,7 +271,7 @@ export default function SignInLogList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

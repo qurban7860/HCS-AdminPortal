@@ -55,7 +55,7 @@ export default function Reports() {
         <Cover name="Sites Map" icon="material-symbols:list-alt-outline" />
       </Card>
       <Grid container spacing={3}>
-        <Grid item sm={12}>
+        <Grid item sm={12} xs={12}>
           <Card sx={{ height: '840px', mb: 5 }}>
             <List
               component="nav"

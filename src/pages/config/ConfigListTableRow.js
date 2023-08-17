@@ -16,7 +16,7 @@ import ConfirmDialog from '../../components/confirm-dialog';
 import { fDate } from '../../utils/formatTime';
 import CustomAvatar from '../../components/custom-avatar/CustomAvatar';
 import LinkTableCell from '../components/ListTableTools/LinkTableCell';
-import { useWidth } from '../../hooks/useResponsive';
+import { useScreenSize } from '../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -43,7 +43,7 @@ export default function ConfigListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  const width = useWidth();
+  const smScreen = useScreenSize('sm')
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -73,7 +73,7 @@ export default function ConfigListTableRow({
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
         
-        { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+        { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {value}
         </TableCell>}
        

@@ -8,7 +8,7 @@ import MenuPopover from '../../../components/menu-popover/MenuPopover';
 import ConfirmDialog from '../../../components/confirm-dialog';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
-import { useWidth } from '../../../hooks/useResponsive';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -29,7 +29,8 @@ export default function StatusListTableRow({
   onEditRow,
   onViewRow,
 }) {
-  const width = useWidth();
+
+  const smScreen = useScreenSize('sm')
 
   const { name, slug, isActive, createdAt } = row;
 
@@ -57,7 +58,7 @@ export default function StatusListTableRow({
     <>
       <TableRow hover selected={selected}>
         <LinkTableCell onClick={onViewRow} align="left" param={name} />
-        {( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) &&<TableCell align="left" >
+        { smScreen &&<TableCell align="left" >
           {slug}
         </TableCell>}
         <TableCell align="center">

@@ -23,7 +23,7 @@ import Label from '../../../components/label';
 import { fDate } from '../../../utils/formatTime';
 import LinkTableCell from '../../components/ListTableTools/LinkTableCell';
 import { useSelector } from '../../../redux/store';
-import { useWidth } from '../../../hooks/useResponsive';
+import { useScreenSize } from '../../../hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +50,7 @@ export default function ModelListTableRow({
 
   const [openPopover, setOpenPopover] = useState(null);
 
-  const width = useWidth();
+  const smScreen = useScreenSize('sm')
 
   const handleOpenConfirm = () => {
     setOpenConfirm(true);
@@ -72,7 +72,7 @@ export default function ModelListTableRow({
     <>
       <TableRow hover selected={selected}>
         <LinkTableCell align="left" onClick={onViewRow} param={name} />
-        { ( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' ) && <TableCell align="left">{category?.name || ''}</TableCell>}
+        { smScreen && <TableCell align="left">{category?.name || ''}</TableCell>}
 
         <TableCell align="center">
           {' '}

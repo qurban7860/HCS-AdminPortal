@@ -54,6 +54,7 @@ import MachineDashboardNavbar from '../util/MachineDashboardNavbar';
 import { Cover } from '../../components/Defaults/Cover';
 import { StyledCardContainer } from '../../../theme/styles/default-styles';
 import { fDate } from '../../../utils/formatTime';
+import TableCard from '../../components/ListTableTools/TableCard';
 
 // ----------------------------------------------------------------------
 
@@ -240,7 +241,7 @@ export default function ModelList() {
         <StyledCardContainer>
           <Cover name="Models" icon="material-symbols:list-alt-outline" setting="enable" />
         </StyledCardContainer>
-        <Card sx={{ mt: 3 }}>
+        <TableCard>
           <ModelListTableToolbar
             filterName={filterName}
             filterStatus={filterStatus}
@@ -325,7 +326,7 @@ export default function ModelList() {
             onPageChange={onChangePage}
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
-        </Card>
+        </TableCard>
       </Container>
 
       <ConfirmDialog

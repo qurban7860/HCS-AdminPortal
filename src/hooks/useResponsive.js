@@ -61,4 +61,34 @@ export function useWindowWidth() {
 }
 
 
+export const useScreenSize = (size) => {
+  const width = useWidth()
+  const [isSize, setIsSize] = useState(false);
+
+  const checkSize = () => {
+    switch (size) {
+      case 'sm':
+        setIsSize( width === 'sm' || width === 'md' || width === 'lg' || width === 'xl' );
+        break;
+      case 'md':
+        setIsSize( width === 'md' || width === 'lg' || width === 'xl' );
+        break;
+      case 'lg':
+        setIsSize( width === 'lg' || width === 'xl' );
+        break;
+      case 'xl':
+        setIsSize( width === 'xl');
+        break;
+      default:
+        setIsSize(false);
+        break;
+    }
+  }
+  useEffect(() => {
+    checkSize();
+          // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [width]);
+
+  return isSize;
+}
 
