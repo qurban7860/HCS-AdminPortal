@@ -14,6 +14,8 @@ import {
 } from '@mui/material';
 // routes
 import { PATH_AUTH, PATH_SECURITY } from '../../../routes/paths';
+import { clearAllPersistedStates } from '../../../redux/slices/auth/clearPersistStates';
+import { useDispatch } from '../../../redux/store';
 import { NAV } from '../../../config-global';
 // auth
 import { useAuthContext } from '../../../auth/useAuthContext';
@@ -64,7 +66,7 @@ export default function AccountPopover() {
     themeColorPresets,
     onResetSetting,
   } = useSettingsContext();
-
+  const dispatch = useDispatch();
   const handleOpenPopover = (event) => {
     setOpenPopover(event.currentTarget);
   };
@@ -76,7 +78,9 @@ export default function AccountPopover() {
   const handleLogout = async () => {
     try {
       logout();
-      navigate(PATH_AUTH.login, { replace: true });
+      await dispatch(clearAllPersistedStates)
+      // navigate(PATH_AUTH.login, { replace: true });
+      // window.location.href('/auth/login');
       handleClosePopover();
     } catch (error) {
       console.error(error);
