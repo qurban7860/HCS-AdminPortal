@@ -68,7 +68,7 @@ export default function RegionTableRow({
     onDeleteRow();
     setOpenConfirm(false);
   };
-
+  const smScreen = useScreenSize('sm')
   return (
     <>
       <TableRow hover selected={selected}>
@@ -81,7 +81,7 @@ export default function RegionTableRow({
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
 
-       { useScreenSize('sm') && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+       { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
           {countries.map((obj) => <Chip label={obj.country_name} sx={{mx:0.3}} />)}
         </TableCell> }
        
