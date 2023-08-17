@@ -256,8 +256,8 @@ export function AuthProvider({ children }) {
     localStorage.removeItem('name');
     localStorage.removeItem('userRoles');
     localStorage.removeItem('accessToken');
+    window.location.reload();
     // localStorage.clear();
-
     dispatch({
       type: 'LOGOUT',
     });
