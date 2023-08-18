@@ -243,7 +243,7 @@ export const {
   ChangePage,
   setMachineDocumentFilterBy,
   machineDocumentChangePage,
-  machineDocumentChangeRowsPerPag,
+  machineDocumentChangeRowsPerPage,
   setCustomerDocumentFilterBy,
   customerDocumentChangePage,
   customerDocumentChangeRowsPerPage,

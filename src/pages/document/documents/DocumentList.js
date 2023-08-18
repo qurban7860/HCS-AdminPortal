@@ -55,7 +55,7 @@ import {
   // machine document pagination
   setMachineDocumentFilterBy,
   machineDocumentChangePage,
-  machineDocumentChangeRowsPerPag,
+  machineDocumentChangeRowsPerPage,
   // machinee drawings pagination
   setMachineDrawingsFilterBy,
   machineDrawingsChangePage,
@@ -120,7 +120,7 @@ function DocumentList({ customerPage, machinePage, machineDrawings }) {
 const onChangeRowsPerPage = (event) => {
   if(machinePage){
     dispatch(machineDocumentChangePage(0))
-    dispatch(machineDocumentChangeRowsPerPag(parseInt(event.target.value, 10)))
+    dispatch(machineDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
   }else if(customerPage){
     dispatch(customerDocumentChangePage(0))
     dispatch(customerDocumentChangeRowsPerPage(parseInt(event.target.value, 10)))
