@@ -147,6 +147,7 @@ export const BUTTONS = {
   NEWMACHINE: 'New Machine',
   NEWLICENSE: 'New License',
   NEWTOOL: 'New Tool',
+  INSTALLTOOL: 'Install Tool',
 
   // Add Buttons on the list pages
   ADDCUSTOMER: 'Add Customer',

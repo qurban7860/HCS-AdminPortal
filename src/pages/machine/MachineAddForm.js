@@ -371,7 +371,7 @@ export default function MachineAddForm({ isEdit, readOnly, currentCustomer }) {
                         {...field}
                         id="controllable-states-demo"
                         options={activeSuppliers}
-                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>

@@ -22,10 +22,28 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   toolTypes: [
-    'GENERIC TOOL', 
-    'SINGLE TOOL', 
-    'COMPOSIT TOOL', 
-  ]
+    { _id:1 ,label: 'GENERIC TOOL'},
+    { _id:2 ,label: 'SINGLE TOOL'},
+    { _id:3 ,label: 'COMPOSIT TOOL'},
+  ],
+  movingPunchConditions: [
+    { _id: 1 ,label: 'NO PUNCH'},
+    { _id: 2 ,label: 'PUNCH WHILE JOGGING'},
+    { _id: 3 ,label: 'PUNCH WHILE RUNNING'}
+  ],
+  engageOnConditions: [
+    { _id: 1 ,label: 'PASS'},
+    { _id: 2 ,label: 'NO CONDITION'},
+    { _id: 3 ,label: 'PROXIMITY SENSOR'}
+  ],
+  engageOffConditions: [
+    { _id: 1,label: 'PASS'},
+    { _id: 2,label: 'TIMER'},
+    { _id: 3,label: 'PROXIMITY SENSOR'},
+    { _id: 4,label: 'PRESSURE TARGET'},
+    { _id: 5,label: 'DISTANCE SENSOR'},
+    { _id: 6,label: 'PRESSURE TRIGGERS TIMER'}
+  ],
 };
 
 const slice = createSlice({
