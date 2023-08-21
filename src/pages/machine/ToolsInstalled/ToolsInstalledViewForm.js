@@ -81,7 +81,7 @@ function ToolsInstalledViewForm({ currentTool = null }) {
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteToolInstalled(machine._id, currentTool._id));
+      await dispatch(deleteToolInstalled(machine._id, currentTool));
       dispatch(getToolsInstalled(machine._id));
     } catch (err) {
       // if(err.Message){
