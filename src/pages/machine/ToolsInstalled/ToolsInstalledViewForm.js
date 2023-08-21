@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 // @mui
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Card, Grid, Typography } from '@mui/material';
 import {
   RHFSwitch,
 } from '../../../components/hook-form';
@@ -44,6 +44,7 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
     toolInstalled,
     formVisibility,
   } = useSelector((state) => state.toolInstalled);
+  // console.log('currentTool : ',currentTool)
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -126,16 +127,14 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
   );
 
   return (
-    <Grid>
-      <Grid container justifyContent="flex-end" sx={{ pr: '2rem' }}>
+    <Grid  sx={{ pr: '2rem' }}>
         <ViewFormEditDeleteButtons
           disableDeleteButton={disableDeleteButton}
           disableEditButton={disableEditButton}
           handleEdit={handleEdit}
           onDelete={onDelete}
         />
-      </Grid>
-      <Grid container>
+      <Grid container item sm={12}>
         <ViewFormField sm={12} isActive={defaultValues.isActive} />
         <ViewFormField
           sm={6}
@@ -145,15 +144,11 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
 
         <ViewFormField
           sm={6}
-          heading="Tool Type"
-          param={defaultValues?.toolType}
-        />
-
-        <ViewFormField
-          sm={6}
           heading="Offset"
           param={defaultValues?.offset}
         />
+
+        <ViewFormSwitch sm={6} isActiveHeading='Apply Waste' isActive={defaultValues.isApplyWaste} />
 
         <ViewFormField
           sm={6}
@@ -161,6 +156,8 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
           param={defaultValues?.wasteTriggerDistance}
         />
 
+        <ViewFormSwitch sm={6} isActiveHeading='Apply Crimp' isActive={defaultValues.isApplyCrimp} />
+        
         <ViewFormField
           sm={6}
           heading="Crimp Trigger Distance"
@@ -173,134 +170,42 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
           param={defaultValues?.operations}
         />
 
-        <Box
-          rowGap={0}
-          columnGap={14}
-          display="grid"
-          gridTemplateColumns={{
-            xs: 'repeat(1, 1fr)',
-            sm: 'repeat(3, 1fr)',
-          }}
-          sx={{mt: 2}}
-        >
-          <ViewFormSwitch sm={4} isActiveHeading='Apply Waste' isActive={defaultValues.isApplyWaste} />
+        <Grid item sm={12} sx={{display:'flex'}}>
+          <ViewFormSwitch sm={6} isActiveHeading='Back to Back Punch' isActive={defaultValues.isBackToBackPunch} />
+          <ViewFormSwitch sm={6} isActiveHeading='Manual Select' isActive={defaultValues.isManualSelect} />
+          <ViewFormSwitch sm={6} isActiveHeading='Assign' isActive={defaultValues.isAssign} />
+        </Grid>
+          <ViewFormField sm={12} heading="Tool Type" param={defaultValues?.toolType} />
+          
+        {currentTool?.toolType === 'SINGLE TOOL'  && (
+          <>
+            <ViewFormField sm={6} heading="Engage Solenoid Location" param={currentTool?.singleToolConfig?.engageSolenoidLocation} />
+            <ViewFormField sm={6} heading="Return Solenoid Location" param={currentTool?.singleToolConfig?.returnSolenoidLocation} />
+            <ViewFormField sm={6} heading="Engage On Condition" param={currentTool?.singleToolConfig?.engageOnCondition} />
+            <ViewFormField sm={6} heading="Engage Off Condition" param={currentTool?.singleToolConfig?.engageOffCondition} />
+            <ViewFormField sm={6} heading="Time Out" param={currentTool?.singleToolConfig?.timeOut} />
+            <ViewFormField sm={6} heading="Engaging Duration" param={currentTool?.singleToolConfig?.engagingDuration} />
+            <ViewFormField sm={6} heading="Returning Duration" param={currentTool?.singleToolConfig?.returningDuration} />
+            <ViewFormField sm={6} heading="Two Way Check Delay Time" param={currentTool?.singleToolConfig?.twoWayCheckDelayTime} />
+            <ViewFormField sm={6} heading="Home Proximity Sensor Location" param={currentTool?.singleToolConfig?.homeProximitySensorLocation} />
+            <ViewFormField sm={6} heading="Engaged Proximity Sensor Location" param={currentTool?.singleToolConfig?.engagedProximitySensorLocation} />
+            <ViewFormField sm={6} heading="Pressure Target" param={currentTool?.singleToolConfig?.pressureTarget} />
+            <ViewFormField sm={6} heading="Distance Sensor Location" param={currentTool?.singleToolConfig?.distanceSensorLocation} />
+            <ViewFormField sm={6} heading="Distance Sensor Target" param={currentTool?.singleToolConfig?.distanceSensorTarget} />
+            <ViewFormSwitch sm={6} isActiveHeading='Has Two Way Check' isActive={currentTool?.singleToolConfig?.isHasTwoWayCheck} />
+            <ViewFormSwitch sm={6} isActiveHeading='Engaging Has Enable' isActive={currentTool?.singleToolConfig?.isEngagingHasEnable} />
+            <ViewFormSwitch sm={6} isActiveHeading='Returning Has Enable' isActive={currentTool?.singleToolConfig?.isReturningHasEnable} />
+            <ViewFormField sm={6} heading="Moving Punch Condition" param={currentTool?.singleToolConfig?.movingPunchCondition} />
+          </>
+        )}
 
-          <ViewFormSwitch sm={4} isActiveHeading='Apply Crimp' isActive={defaultValues.isApplyCrimp} />
+        {currentTool?.toolType === 'COMPOSIT TOOL'  && ( 
+          <>
+            <ViewFormField sm={6} heading="Engage Instruction" param={currentTool?.compositeToolConfig?.engageInstruction} />
+            <ViewFormField sm={6} heading="Disengage Instruction" param={currentTool?.compositeToolConfig?.disengageInstruction} />
+          </>
+        )}
 
-          <ViewFormSwitch sm={4} isActiveHeading='Back to Back Punch' isActive={defaultValues.isBackToBackPunch} />
-
-          <ViewFormSwitch sm={4} isActiveHeading='Manual Select' isActive={defaultValues.isManualSelect} />
-
-          <ViewFormSwitch sm={4} isActiveHeading='Assign' isActive={defaultValues.isAssign} />
-        </Box>
-        
-        <Box
-        rowGap={0}
-        columnGap={1}
-        display="grid"
-        gridTemplateColumns={{
-          xs: 'repeat(1, 1fr)',
-          sm: 'repeat(3, 1fr)',
-        }}
-        >
-        {/* <RHFSwitch
-          value={defaultValues?.isApplyWaste}
-          labelPlacement="start"
-          label={
-            <Typography
-              variant="subtitle2"
-              sx={{
-                mx: 0,
-                width: 1,
-                justifyContent: 'space-between',
-                mb: 0.5,
-                color: 'text.secondary',
-              }}
-            >
-              {' '}
-              Apply Waste
-            </Typography>
-          }
-        /> 
-         <RHFSwitch
-          name="isApplyCrimp"
-          labelPlacement="start"
-          label={
-            <Typography
-              variant="subtitle2"
-              sx={{
-                mx: 0,
-                width: 1,
-                justifyContent: 'space-between',
-                mb: 0.5,
-                color: 'text.secondary',
-              }}
-            >
-              {' '}
-              Apply Crimp
-            </Typography>
-          }
-        />
-
-        <RHFSwitch
-          name="isBackToBackPunch"
-          labelPlacement="start"
-          label={
-            <Typography
-              variant="subtitle2"
-              sx={{
-                mx: 0,
-                width: 1,
-                justifyContent: 'space-between',
-                mb: 0.5,
-                color: 'text.secondary',
-              }}
-            >
-              {' '}
-              Back To Back Punch
-            </Typography>
-          }
-        />
-        <RHFSwitch
-          name="isManualSelect"
-          labelPlacement="start"
-          label={
-            <Typography
-              variant="subtitle2"
-              sx={{
-                mx: 0,
-                width: 1,
-                justifyContent: 'space-between',
-                mb: 0.5,
-                color: 'text.secondary',
-              }}
-            >
-              {' '}
-              Manual Select
-            </Typography>
-          }
-        />
-        <RHFSwitch
-          name="isAssign"
-          labelPlacement="start"
-          label={
-            <Typography
-              variant="subtitle2"
-              sx={{
-                mx: 0,
-                width: 1,
-                justifyContent: 'space-between',
-                mb: 0.5,
-                color: 'text.secondary',
-              }}
-            >
-              {' '}
-              Assign
-            </Typography>
-          }
-        /> */}
-
-        </Box>
 
         <ViewFormAudit defaultValues={defaultValues} />
       </Grid>

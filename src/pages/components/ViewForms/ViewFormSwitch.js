@@ -4,6 +4,7 @@ import { Typography, Grid,Switch} from '@mui/material';
 import { is } from 'date-fns/locale';
 
 ViewFormSWitch.propTypes = {
+  sm: PropTypes.number,
   isActiveHeading: PropTypes.string,
   isActive: PropTypes.bool,
   customerAccessHeading: PropTypes.string,
@@ -18,7 +19,7 @@ ViewFormSWitch.propTypes = {
   isMultiFactorAuthenticationVal:PropTypes.bool,
 };
 
-    export default function ViewFormSWitch({isActiveHeading, isActive, isMultiFactorAuthentication, isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
+    export default function ViewFormSWitch({sm, isActiveHeading, isActive, isMultiFactorAuthentication, isMultiFactorAuthenticationVal, customerAccessHeading, customerAccess, customer, customerHeading, machine, machineHeading, drawing, drawingHeading}) {
     const [isActiveVal, setIsActiveVal] = useState(isActive);
     const [customerAccessVal, setCustomerAccessVal] = useState(customerAccess);
     const [multiFactorAuthenticationVal, setIsMultiFactorAuthenticationVal] = useState(isMultiFactorAuthenticationVal)
@@ -43,7 +44,7 @@ ViewFormSWitch.propTypes = {
     };
 
     return (
-      <Grid item xs={12} sm={12} sx={{  display: 'flex', mt:-1}}>
+      <Grid item xs={12} sm={sm || 12} sx={{  display: 'flex', alignContent:'center',mt:-1}}>
        
         {customerAccess && (
         <Grid sx={{  display: 'flex', mx:1 }}>
@@ -62,16 +63,16 @@ ViewFormSWitch.propTypes = {
         ) }
 
         { isActiveHeading && (
-        <Grid sx={{  display: 'flex', mx:1 }}>
+        <Grid sx={{  display: 'flex', alignItems: 'center', mx:1 }}>
           <Typography
           variant="subtitle2"
-          sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex', alignItems: 'center' }}
+          sx={{ pl: 1, pb: 1, color: 'text.disabled', display: 'flex',  }}
          >
           {isActiveHeading || ''}
         </Typography>
           <Switch
           disabled
-              sx={{ mb: 1 }} checked={isActiveVal || false}
+              sx={{ mb: 0.6 }} checked={isActiveVal || false}
               onChange={handleIsActiveChange}
               />
           </Grid>
