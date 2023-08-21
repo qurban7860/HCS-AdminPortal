@@ -377,13 +377,14 @@ export function getToolInstalled(machineId,Id) {
 
 // ---------------------------------archive TOOLS INSTALLED -------------------------------------
 
-export function deleteToolInstalled(machineId,id) {
+export function deleteToolInstalled(machineId,obj) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${id}` , 
+      const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${obj._id}` , 
       {
           isArchived: true, 
+          toolType: obj.toolType,
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {

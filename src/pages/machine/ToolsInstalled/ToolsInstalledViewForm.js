@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { useMemo, useState, useLayoutEffect,memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useNavigate } from 'react-router-dom';
 
 // @mui
@@ -81,7 +80,7 @@ function ToolsInstalledViewForm({ currentTool = null }) {
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteToolInstalled(machine._id, currentTool._id));
+      await dispatch(deleteToolInstalled(machine._id, currentTool));
       dispatch(getToolsInstalled(machine._id));
     } catch (err) {
       // if(err.Message){
@@ -183,18 +182,18 @@ function ToolsInstalledViewForm({ currentTool = null }) {
             <ViewFormField sm={6} heading="Return Solenoid Location" param={currentTool?.singleToolConfig?.returnSolenoidLocation} />
             <ViewFormField sm={6} heading="Engage On Condition" param={currentTool?.singleToolConfig?.engageOnCondition} />
             <ViewFormField sm={6} heading="Engage Off Condition" param={currentTool?.singleToolConfig?.engageOffCondition} />
-            <ViewFormField sm={6} heading="Time Out" param={currentTool?.singleToolConfig?.timeOut} />
-            <ViewFormField sm={6} heading="Engaging Duration" param={currentTool?.singleToolConfig?.engagingDuration} />
-            <ViewFormField sm={6} heading="Returning Duration" param={currentTool?.singleToolConfig?.returningDuration} />
-            <ViewFormField sm={6} heading="Two Way Check Delay Time" param={currentTool?.singleToolConfig?.twoWayCheckDelayTime} />
+            <ViewFormField sm={12} heading="Time Out" param={fDateTime(currentTool?.singleToolConfig?.timeOut)} />
+            <ViewFormField sm={6} heading="Engaging Duration" param={fDateTime(currentTool?.singleToolConfig?.engagingDuration)} />
+            <ViewFormField sm={6} heading="Returning Duration" param={fDateTime(currentTool?.singleToolConfig?.returningDuration)} />
+            <ViewFormField sm={12} heading="Two Way Check Delay Time" param={fDateTime(currentTool?.singleToolConfig?.twoWayCheckDelayTime)} />
             <ViewFormField sm={6} heading="Home Proximity Sensor Location" param={currentTool?.singleToolConfig?.homeProximitySensorLocation} />
             <ViewFormField sm={6} heading="Engaged Proximity Sensor Location" param={currentTool?.singleToolConfig?.engagedProximitySensorLocation} />
-            <ViewFormField sm={6} heading="Pressure Target" param={currentTool?.singleToolConfig?.pressureTarget} />
+            <ViewFormField sm={12} heading="Pressure Target" param={currentTool?.singleToolConfig?.pressureTarget} />
             <ViewFormField sm={6} heading="Distance Sensor Location" param={currentTool?.singleToolConfig?.distanceSensorLocation} />
             <ViewFormField sm={6} heading="Distance Sensor Target" param={currentTool?.singleToolConfig?.distanceSensorTarget} />
-            <ViewFormSwitch sm={6} isActiveHeading='Has Two Way Check' isActive={currentTool?.singleToolConfig?.isHasTwoWayCheck} />
-            <ViewFormSwitch sm={6} isActiveHeading='Engaging Has Enable' isActive={currentTool?.singleToolConfig?.isEngagingHasEnable} />
-            <ViewFormSwitch sm={6} isActiveHeading='Returning Has Enable' isActive={currentTool?.singleToolConfig?.isReturningHasEnable} />
+            <ViewFormSwitch sm={4} isActiveHeading='Has Two Way Check' isActive={currentTool?.singleToolConfig?.isHasTwoWayCheck} />
+            <ViewFormSwitch sm={4} isActiveHeading='Engaging Has Enable' isActive={currentTool?.singleToolConfig?.isEngagingHasEnable} />
+            <ViewFormSwitch sm={4} isActiveHeading='Returning Has Enable' isActive={currentTool?.singleToolConfig?.isReturningHasEnable} />
             <ViewFormField sm={6} heading="Moving Punch Condition" param={currentTool?.singleToolConfig?.movingPunchCondition} />
           </>
         )}
