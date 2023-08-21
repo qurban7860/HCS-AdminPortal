@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState, useLayoutEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
@@ -49,64 +49,77 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-export default function ToolsInstalledEditForm() {
+function ToolsInstalledEditForm() {
   const { tools } = useSelector((state) => state.tool);
-  const {
-    toolsInstalled,
-    toolInstalled,
-    toolTypes,
-    formVisibility,
-  } = useSelector((state) => state.toolInstalled);
+  const { toolsInstalled, toolInstalled, toolTypes,movingPunchConditions, engageOnConditions, engageOffConditions, formVisibility} = useSelector((state) => state.toolInstalled);
   const [toolVal, setToolVal] = useState('');
   const [toolType, setToolType] = useState('');
+  const { activeTools } = useSelector((state) => state.tool);
   const { machine } = useSelector((state) => state.machine);
-
-  const [singleTool, setSingleTool] = useState(false);
-  const [compositeTool, setCompositeTool] = useState(false);
+console.log("toolInstalled : ",toolInstalled)
+  // const [singleTool, setSingleTool] = useState(false);
+  // const [compositeTool, setCompositeTool] = useState(false);
  
-  const [timeOut, setTimeOut] = useState(null);
-  const [engagingDuration, setEngagingDuration] = useState(null);
-  const [returningDuration, setReturningDuration] = useState(null);
-  const [twoWayCheckDelayTime, setTwoWayCheckDelayTime] = useState(null);
+  // const [timeOut, setTimeOut] = useState(null);
+  // const [engagingDuration, setEngagingDuration] = useState(null);
+  // const [returningDuration, setReturningDuration] = useState(null);
+  // const [twoWayCheckDelayTime, setTwoWayCheckDelayTime] = useState(null);
+  const [toolsVal, setToolsVal] = useState([]);
 
+  useLayoutEffect(() => {
+    const filterTool = [];
+    toolsInstalled.map((toolInstall) => filterTool.push(toolInstall?.tool?._id));
+    const filteredTool = activeTools.filter((item) => !filterTool.includes(item._id));
+    filteredTool.sort((a, b) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+    setToolsVal(filteredTool);
+  }, [activeTools, toolsInstalled, machine]);
 
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
 
-  useLayoutEffect(() => {
-    setToolVal(toolInstalled.tool);
-    setToolType(toolInstalled.toolType);
-    if(toolInstalled?.singleToolConfig?.engagingDuration){
-      setEngagingDuration(toolInstalled?.singleToolConfig?.engagingDuration);
-    }
-    if(toolInstalled?.singleToolConfig?.timeOut){
-      setTimeOut(toolInstalled?.singleToolConfig?.timeOut);
-    }
-    if(toolInstalled?.singleToolConfig?.returningDuration){
-      setReturningDuration(toolInstalled?.singleToolConfig?.returningDuration);
-    }
-    if(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime){
-      setTwoWayCheckDelayTime(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime);
-    }
-    if(toolInstalled?.toolType === 'SINGLE TOOL'){
-      setSingleTool(true);
-    }
-    if(toolInstalled?.toolType === 'COMPOSITE TOOL'){
-      setCompositeTool(true);
-    }
-    dispatch(getTools());
-  }, [dispatch, toolInstalled]);
+  // useLayoutEffect(() => {
+  //   setToolVal(toolInstalled.tool);
+  //   setToolType(toolInstalled.toolType);
+  //   if(toolInstalled?.singleToolConfig?.engagingDuration){
+  //     setEngagingDuration(toolInstalled?.singleToolConfig?.engagingDuration);
+  //   }
+  //   if(toolInstalled?.singleToolConfig?.timeOut){
+  //     setTimeOut(toolInstalled?.singleToolConfig?.timeOut);
+  //   }
+  //   if(toolInstalled?.singleToolConfig?.returningDuration){
+  //     setReturningDuration(toolInstalled?.singleToolConfig?.returningDuration);
+  //   }
+  //   if(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime){
+  //     setTwoWayCheckDelayTime(toolInstalled?.singleToolConfig?.twoWayCheckDelayTime);
+  //   }
+  //   if(toolInstalled?.toolType === 'SINGLE TOOL'){
+  //     setSingleTool(true);
+  //   }
+  //   if(toolInstalled?.toolType === 'COMPOSITE TOOL'){
+  //     setCompositeTool(true);
+  //   }
+  //   dispatch(getTools());
+  // }, [dispatch, toolInstalled]);
 
   const EditSettingSchema = Yup.object().shape({
-    tool: Yup.string(),
-
+    tool: Yup.object().shape({
+      name: Yup.string()
+    }).nullable().required().label('Tool'),
     offset: Yup.number()
     .typeError('Offset must be a number')
     .transform((value, originalValue) => {
-  
-  
-    if (originalValue.toString().trim() === '') return undefined;
+    if (originalValue.trim() === '') return undefined;
     return parseFloat(value);
     })
     .test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
@@ -114,8 +127,7 @@ export default function ToolsInstalledEditForm() {
     wasteTriggerDistance: Yup.number()
     .typeError('Waste Trigger Distance must be a number')
     .transform((value, originalValue) => {
-
-    if (originalValue.toString().trim() === '') return undefined;
+    if (originalValue.trim() === '') return undefined;
     return parseFloat(value);
     })
     .test('no-spaces', 'Waste Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
@@ -123,9 +135,7 @@ export default function ToolsInstalledEditForm() {
     crimpTriggerDistance: Yup.number()
     .typeError('Crimp Trigger Distance must be a number')
     .transform((value, originalValue) => {
-  
-
-    if (originalValue.toString().trim() === '') return undefined;
+    if (originalValue.trim() === '') return undefined;
     return parseFloat(value);
     })
     .test('no-spaces', 'Crimp Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
@@ -133,110 +143,120 @@ export default function ToolsInstalledEditForm() {
     operations: Yup.number()
     .typeError('Operations must be a number')
     .transform((value, originalValue) => {
-  
-
-    if (originalValue.toString().trim() === '') return undefined;
+    if (originalValue.trim() === '') return undefined;
     return parseFloat(value);
     })
     .test('no-spaces', 'Operations cannot have spaces', value => !(value && value.toString().includes(' '))),
     
-    toolType: Yup.string(),
+    // toolType: Yup.string(),
     isApplyWaste: Yup.boolean(),
     isApplyCrimp: Yup.boolean(),
     isBackToBackPunch: Yup.boolean(),
     isManualSelect: Yup.boolean(),
     isAssign: Yup.boolean(),
     isActive: Yup.boolean(),
-
-
     // --------------------------------------SINGLE TOOL CONFIGURATION-------------------------------------
     engageSolenoidLocation: Yup.number()
-      .typeError('Offset must be a number')
+      .typeError('Engage Solenoid Location must be a number')
       .transform((value, originalValue) => {
       if (originalValue.trim() === '') return undefined;
       return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+      }).test('no-spaces', 'Engage Solenoid Location cannot have spaces', value => !(value && value.toString().includes(' '))),
+
     returnSolenoidLocation: Yup.number()
-      .typeError('Offset must be a number')
+      .typeError('Return Solenoid Location must be a number')
       .transform((value, originalValue) => {
       if (originalValue.trim() === '') return undefined;
       return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
-    engageOnCondition: Yup.number()
-      .typeError('Offset must be a number')
-      .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+      }).test('no-spaces', 'Return Solenoid Location cannot have spaces', value => !(value && value.toString().includes(' '))),
+
+    // engageOnCondition: Yup.object().shape({
+    //   label: Yup.string()
+    // }).nullable().label('Engage On Condition'),
+    // engageOffCondition: Yup.object().shape({
+    //   label: Yup.string()
+    // }).nullable().label('Engage Off Condition'),  
     homeProximitySensorLocation: Yup.number()
-      .typeError('Offset must be a number')
+      .typeError('Home Proximity Sensor Location must be a number')
       .transform((value, originalValue) => {
       if (originalValue.trim() === '') return undefined;
       return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+      }).test('no-spaces', 'Home Proximity Sensor Location cannot have spaces', value => !(value && value.toString().includes(' '))),
     engagedProximitySensorLocation: Yup.number()
-      .typeError('Offset must be a number')
+      .typeError('Engaged Proximity Sensor Location must be a number')
       .transform((value, originalValue) => {
       if (originalValue.trim() === '') return undefined;
       return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+      }).test('no-spaces', 'Engaged Proximity Sensor Location cannot have spaces', value => !(value && value.toString().includes(' '))),
     pressureTarget: Yup.number()
-      .typeError('Offset must be a number')
+      .typeError('Pressure Target must be a number')
       .transform((value, originalValue) => {
       if (originalValue.trim() === '') return undefined;
       return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+      }).test('no-spaces', 'Pressure Target cannot have spaces', value => !(value && value.toString().includes(' '))),
     distanceSensorLocation: Yup.number()
-      .typeError('Offset must be a number')
+      .typeError('Distance Sensor Location must be a number')
       .transform((value, originalValue) => {
       if (originalValue.trim() === '') return undefined;
       return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
-    distanceSensorTarget: Yup.number()
-      .typeError('Offset must be a number')
+      }).test('no-spaces', 'Distance Sensor Location cannot have spaces', value => !(value && value.toString().includes(' '))),
+      distanceSensorTarget: Yup.number()
+      .typeError('Distance Sensor Target must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
-      }).test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
+        if (typeof originalValue === 'string' && originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
+      })
+      .test('no-spaces', 'Distance Sensor Target cannot have spaces', value => !(value && value.toString().includes(' '))),    
     isHasTwoWayCheck: Yup.boolean(),
     isEngagingHasEnable: Yup.boolean(),
     isReturningHasEnable: Yup.boolean(),
-    engageOffCondition: Yup.boolean(),
-    movingPunchCondition: Yup.string() // { type: String, default: 'NO PUNCH' },  
+    movingPunchCondition: Yup.object().shape({
+      label: Yup.string()
+    }).nullable().label('Moving Punch Condition'),
+    // -------------------------------- composite Tool Config --------------------------------
+    // engageInstruction: Yup.object(),
+    // disengageInstruction: Yup.object()
   });
 
   const defaultValues = useMemo(
     () => ({
-      // tool: toolInstalled?.tool || '',
-      toolName: toolInstalled?.tool?.name || '',  
+      tool: toolInstalled?.tool || null,
       offset: toolInstalled?.offset || '',
-      wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
-      crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
       isApplyWaste: toolInstalled?.isApplyWaste || false,
+      wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
       isApplyCrimp: toolInstalled?.isApplyCrimp || false,
+      crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
       isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
-      isManualSelect: toolInstalled?.isManualSelect || false,  
+      isManualSelect: toolInstalled?.isManualSelect || false,
       isAssign: toolInstalled?.isAssign || false,
       operations: toolInstalled?.operations || '',
-      toolType: toolInstalled?.toolType || '',
-      isActive: toolInstalled?.isActive,
-      note: toolInstalled?.note || '',
+      // toolType: null,
 
-      
+      // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
       engageSolenoidLocation: toolInstalled?.singleToolConfig?.engageSolenoidLocation || '',
       returnSolenoidLocation: toolInstalled?.singleToolConfig?.returnSolenoidLocation || '',
-      engageOnCondition: toolInstalled?.singleToolConfig?.engageOnCondition || '',
-      engageOffCondition: toolInstalled?.singleToolConfig?.engageOffCondition || false,   
+      engageOnCondition: null,
+      engageOffCondition: null,
+      timeOut: toolInstalled?.singleToolConfig?.timeOut || null,
+      engagingDuration: toolInstalled?.singleToolConfig?.engagingDuration || null,
+      returningDuration: toolInstalled?.singleToolConfig?.returningDuration || null,
+      twoWayCheckDelayTime: toolInstalled?.singleToolConfig?.twoWayCheckDelayTime || null,
       homeProximitySensorLocation: toolInstalled?.singleToolConfig?.homeProximitySensorLocation || '',
       engagedProximitySensorLocation: toolInstalled?.singleToolConfig?.engagedProximitySensorLocation || '',
-      pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||  '',
-      distanceSensorLocation: toolInstalled?.singleToolConfig?.distanceSensorLocation || '',
-      distanceSensorTarget: toolInstalled?.singleToolConfig?.distanceSensorTarget || '',
-      isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck || false,
-      isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable || false,
-      isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable || false,
-      movingPunchCondition: toolInstalled?.singleToolConfig?.movingPunchCondition || ''    
+      pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||'',
+      distanceSensorLocation: toolInstalled?.singleToolConfig?.distanceSensorLocation ||'',
+      distanceSensorTarget: toolInstalled?.singleToolConfig?.distanceSensorTarget ||'',
+      isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck ||false,
+      isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ||true,
+      isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ||false,
+      movingPunchCondition: null,
+      // compositeToolConfig  
+      engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
+      disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
 
+      isActive: toolInstalled?.isActive,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
@@ -250,18 +270,21 @@ export default function ToolsInstalledEditForm() {
   const {
     reset,
     watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
-  } = methods;
+    setValue,
+    control,
+  } = methods
 
-  const values = watch();
+  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, engageInstruction, disengageInstruction } = watch();
 
-  // useEffect(() => {
-  //   if (site) {
-  //     reset(defaultValues);
-  //   }
-  // }, [site, reset, defaultValues]);
+  useEffect(() => {
+    setValue('movingPunchCondition',{label: toolInstalled?.singleToolConfig?.movingPunchCondition })
+    setValue('engageOnCondition',{label: toolInstalled?.singleToolConfig?.engageOnCondition})
+    setValue('engageOffCondition',{label: toolInstalled?.singleToolConfig?.engageOffCondition})
+    setToolType({label: toolInstalled?.toolType})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [toolInstalled]);
 
   const toggleCancel = () => {
     dispatch(setToolInstalledEditFormVisibility(false));
@@ -269,13 +292,7 @@ export default function ToolsInstalledEditForm() {
 
   const onSubmit = async (data) => {
     try {
-      data.tool = toolVal._id || null;
       data.toolType = toolType;
-      data.timeOut = timeOut;
-      data.engagingDuration = engagingDuration;
-      data.returningDuration = returningDuration;
-      data.twoWayCheckDelayTime = twoWayCheckDelayTime;
-      // console.log("Setting update Data : ",machine._id,toolInstalled._id,data);
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
       reset();
       setToolVal('');
@@ -285,22 +302,6 @@ export default function ToolsInstalledEditForm() {
     }
   };
 
-  const handleToolTypeChange = (newChange) => {
-    console.log('new value=========>', newChange);
-    setToolType(newChange);
-    if(newChange === 'SINGLE TOOL'){
-      setSingleTool(true);
-      setCompositeTool(false);
-    }
-    else if(newChange === 'COMPOSITE TOOL'){
-      setSingleTool(false);
-      setCompositeTool(true);
-    }
-    else{
-      setSingleTool(false);
-      setCompositeTool(false);
-    }
-  }
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -322,79 +323,41 @@ export default function ToolsInstalledEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-                <Autocomplete
-                  // freeSolo
-                  disabled
-                  value={toolVal || null}
-                  options={tools}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
-                  getOptionLabel={(option) => option.name}
-                  id="controllable-states-demo"
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      setToolVal(newValue);
-                    } else {
-                      setToolVal('');
-                    }
-                  }}
-                  renderOption={(props, option) => (
-                    <Box component="li" {...props} key={option.id}>
-                      {option.name}
-                    </Box>
-                  )}
-                  renderInput={(params) => <TextField {...params} label="Tool" />}
-                  ChipProps={{ size: 'small' }}
-                />
-                
-                <Autocomplete
-                  // freeSolo
-                  required
-                  value={toolType || null}
-                  options={toolTypes}
-                  // isOptionEqualToValue={(option) => toolTypes.indexOf(option)}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      handleToolTypeChange(newValue);
-                    } else {
-                      handleToolTypeChange('');
-                    }
-                  }}                  id="controllable-states-demo"
-                  renderOption={(props, option) => (
-                    <li {...props} key={option}>
-                      {option}
-                    </li>
-                  )}
-                  renderInput={(params) => (
-                    <RHFTextField {...params} name="toolType" label="Tool Types" />
-                  )}
-                  ChipProps={{ size: 'small' }}
-                >
-                  {(option) => (
-                    <div key={option}>
-                      <span>{option}</span>
-                    </div>
-                  )}
-                </Autocomplete>
+                  <Controller
+                    name="tool"
+                    control={control}
+                    defaultValue={tool || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        options={toolsVal}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
+                        renderOption={(props, option) => (
+                          <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
+                        )}
+                        onChange={(event, value) => field.onChange(value)}
+                        id="combo-box-demo"
+                        renderInput={(params) => (
+                        <TextField 
+                          {...params} 
+                          name="tool"
+                          id="tool"
+                          label="Tool*"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                        />
+                        )}
+                          ChipProps={{ size: 'small' }}
+                      />
+                      )}
+                  />
 
                 <RHFTextField name="offset" label="Offset" inputMode="numeric" pattern="[0-9]*"/>
 
-                <RHFTextField name="wasteTriggerDistance" label="Waste Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
+                {/* <RHFTextField name="toolType" label="Tool Type" /> */}
 
-                <RHFTextField name="crimpTriggerDistance" label="Crimp Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
-
-                <RHFTextField name="operations" label="Operations" inputMode="numeric" pattern="[0-9]*"/>
-
-                </Box>
-
-                <Box
-                rowGap={0}
-                columnGap={1}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(3, 1fr)',
-                }}
-                >
                 <RHFSwitch
                   name="isApplyWaste"
                   labelPlacement="start"
@@ -414,6 +377,9 @@ export default function ToolsInstalledEditForm() {
                     </Typography>
                   }
                 />
+
+                <RHFTextField name="wasteTriggerDistance" label="Waste Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
+
                 <RHFSwitch
                   name="isApplyCrimp"
                   labelPlacement="start"
@@ -433,6 +399,22 @@ export default function ToolsInstalledEditForm() {
                     </Typography>
                   }
                 />
+
+                <RHFTextField name="crimpTriggerDistance" label="Crimp Trigger Distance" inputMode="numeric" pattern="[0-9]*" />
+                
+                <RHFTextField name="operations" label="Operations" inputMode="numeric" pattern="[0-9]*"/>
+
+              </Box>
+
+              <Box
+                rowGap={0}
+                columnGap={1}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(3, 1fr)',
+                }}
+              >
 
                 <RHFSwitch
                   name="isBackToBackPunch"
@@ -491,27 +473,41 @@ export default function ToolsInstalledEditForm() {
                     </Typography>
                   }
                 />
-                <RHFSwitch
-                  name="isActive"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Active
-                    </Typography>
+
+              </Box>
+
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
+                <Autocomplete
+                  name="toolType" 
+                  options={toolTypes}
+                  value={toolType}
+                  isOptionEqualToValue={(option, value) => option.label === value.label}
+                  onChange={(event, newValue) => {
+                  if (newValue) {
+                    setToolType(newValue);
+                  } else {
+                    setToolType(newValue);
                   }
+                  }}
+                  renderInput={(params) => (
+                    <TextField 
+                      {...params} 
+                      name="toolType" 
+                      label="Tool Types"  
+                      />
+                      )}
+                    disableClearable
                 />
               </Box>
-              {singleTool && <Box
+              {toolType.label === 'SINGLE TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -525,33 +521,65 @@ export default function ToolsInstalledEditForm() {
 
                 <RHFTextField name="returnSolenoidLocation" label="Return Solenoid Location" inputMode="numeric" pattern="[0-9]*" />
 
-                <RHFTextField name="engageOnCondition" label="Engage On Condition" inputMode="numeric" pattern="[0-9]*" />
+                <Controller
+                    name="engageOnCondition"
+                    control={control}
+                    defaultValue={engageOnCondition || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        options={engageOnConditions}
+                        onChange={(event, value) => field.onChange(value)}
+                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        id="combo-box-demo"
+                        renderInput={(params) => (
+                        <TextField 
+                          {...params} 
+                          name="engageOnCondition"
+                          id="engageOnCondition"
+                          label="Engage On Condition*"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                        />
+                        )}
+                          disableClearable
+                      />
+                      )}
+                  />
 
-                <RHFSwitch
-                  name="engageOffCondition"
-                  labelPlacement="start"
-                  label={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        mx: 0,
-                        width: 1,
-                        justifyContent: 'space-between',
-                        mb: 0.5,
-                        color: 'text.secondary',
-                      }}
-                    >
-                      {' '}
-                      Engage Off Condition
-                    </Typography>
-                  }
-                />
+                  <Controller
+                    name="engageOffCondition"
+                    control={control}
+                    defaultValue={engageOffCondition || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        options={engageOffConditions}
+                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        onChange={(event, value) => field.onChange(value)}
+                        id="combo-box-demo"
+                        renderInput={(params) => (
+                        <TextField 
+                          {...params} 
+                          name="engageOffCondition"
+                          id="engageOffCondition"
+                          label="Engage Off Condition*"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                        />
+                        )}
+                          disableClearable
+                      />
+                      )}
+                  />
 
                   <DatePicker
                     label="Time Out"
                     value={timeOut}
                     // disabled={disableInstallationDate}
-                    onChange={(newValue) => setTimeOut(newValue)}
+                    onChange={(newValue) => setValue('timeOut',newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
 
@@ -559,7 +587,7 @@ export default function ToolsInstalledEditForm() {
                     label="Engaging Duration"
                     value={engagingDuration}
                     // disabled={disableInstallationDate}
-                    onChange={(newValue) => setEngagingDuration(newValue)}
+                    onChange={(newValue) => setValue('engagingDuration',newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
 
@@ -567,7 +595,7 @@ export default function ToolsInstalledEditForm() {
                     label="Returning Duration"
                     value={returningDuration}
                     // disabled={disableInstallationDate}
-                    onChange={(newValue) => setReturningDuration(newValue)}
+                    onChange={(newValue) => setValue('returningDuration',newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
 
@@ -575,7 +603,7 @@ export default function ToolsInstalledEditForm() {
                     label="Two-way Check Delay Time"
                     value={twoWayCheckDelayTime}
                     // disabled={disableInstallationDate}
-                    onChange={(newValue) => setTwoWayCheckDelayTime(newValue)}
+                    onChange={(newValue) => setValue('twoWayCheckDelayTime',newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
 
@@ -651,9 +679,127 @@ export default function ToolsInstalledEditForm() {
                   }
                 />
 
-                <RHFTextField name="movingPunchCondition" label="Moving Punch Condition"/>
+                <Controller
+                    name="movingPunchCondition"
+                    control={control}
+                    defaultValue={movingPunchCondition || null}
+                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                      <Autocomplete
+                        {...field}
+                        options={movingPunchConditions}
+                        onChange={(event, value) => field.onChange(value)}
+                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        id="combo-box-demo"
+                        renderInput={(params) => (
+                        <TextField 
+                          {...params} 
+                          name="movingPunchCondition"
+                          id="movingPunchCondition"
+                          label="Moving Punch Condition*"  
+                          error={!!error}
+                          helperText={error?.message} 
+                          inputRef={ref} 
+                        />
+                        )}
+                          disableClearable
+                      />
+                      )}
+                  />
 
               </Box>}
+
+              {toolType.label === 'COMPOSIT TOOL' && <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(1, 1fr)',
+                }}
+              >
+                <Controller
+                  name="engageInstruction"
+                  control={control}
+                  defaultValue={ engageInstruction || null}
+                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                  <Autocomplete
+                    multiple
+                    {...field}
+                    name="engageInstruction"
+                    id="tags-outlined"
+                    options={toolsInstalled}
+                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
+                    filterSelectedOptions
+                    onChange={(event, value) => field.onChange(value)}
+                    renderInput={(params) => (
+                      <TextField 
+                        {...params} 
+                        name="engageInstruction"
+                        id="engageInstruction"
+                        label="Engage Instruction*"
+                        placeholder="Search" 
+                        error={!!error}
+                        helperText={error?.message} 
+                        inputRef={ref}
+                        />
+                    )}
+                  />
+                  )}
+                />
+                
+                 <Controller
+                  name="disengageInstruction"
+                  control={control}
+                  defaultValue={ disengageInstruction || null}
+                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                  <Autocomplete
+                    multiple
+                    {...field}
+                    name="disengageInstruction"
+                    id="tags-outlined"
+                    options={toolsInstalled}
+                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
+                    filterSelectedOptions
+                    onChange={(event, value) => field.onChange(value)}
+                    renderInput={(params) => (
+                      <TextField 
+                        {...params} 
+                        name="disengageInstruction"
+                        id="disengageInstruction"
+                        label="Disengage Instruction*"
+                        placeholder="Search" 
+                        error={!!error}
+                        helperText={error?.message} 
+                        inputRef={ref}
+                        />
+                    )}
+                  />
+                  )}
+                />
+              </Box>}
+              
+              <RHFSwitch
+                  name="isActive"
+                  labelPlacement="start"
+                  label={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{
+                        mx: 0,
+                        width: 1,
+                        justifyContent: 'space-between',
+                        mb: 0.5,
+                        color: 'text.secondary',
+                      }}
+                    >
+                      {' '}
+                      Active
+                    </Typography>
+                  }
+                />
+
             </Stack>
             <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
@@ -662,3 +808,5 @@ export default function ToolsInstalledEditForm() {
     </FormProvider>
   );
 }
+
+export default memo(ToolsInstalledEditForm)

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useMemo, useState, useLayoutEffect } from 'react';
+import { useMemo, useState, useLayoutEffect,memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ import { useSnackbar } from '../../../components/snackbar';
 ToolsInstalledViewForm.propTypes = {
   currentTool: PropTypes.object,
 };
-export default function ToolsInstalledViewForm({ currentTool = null }) {
+function ToolsInstalledViewForm({ currentTool = null }) {
   const {
     initial,
     error,
@@ -44,7 +44,7 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
     toolInstalled,
     formVisibility,
   } = useSelector((state) => state.toolInstalled);
-  // console.log('currentTool : ',currentTool)
+  console.log('currentTool : ',currentTool)
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -129,8 +129,8 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
   return (
     <Grid  sx={{ pr: '2rem' }}>
         <ViewFormEditDeleteButtons
-          disableDeleteButton={disableDeleteButton}
-          disableEditButton={disableEditButton}
+          // disableDeleteButton={disableDeleteButton}
+          // disableEditButton={disableEditButton}
           handleEdit={handleEdit}
           onDelete={onDelete}
         />
@@ -201,8 +201,8 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
 
         {currentTool?.toolType === 'COMPOSIT TOOL'  && ( 
           <>
-            <ViewFormField sm={6} heading="Engage Instruction" param={currentTool?.compositeToolConfig?.engageInstruction} />
-            <ViewFormField sm={6} heading="Disengage Instruction" param={currentTool?.compositeToolConfig?.disengageInstruction} />
+            <ViewFormField sm={12} heading="Engage Instruction" arrayParam={currentTool?.compositeToolConfig?.engageInstruction} chipLabel="name"/>
+            <ViewFormField sm={12} heading="Disengage Instruction" arrayParam={currentTool?.compositeToolConfig?.disengageInstruction} chipLabel="name"/>
           </>
         )}
 
@@ -212,3 +212,4 @@ export default function ToolsInstalledViewForm({ currentTool = null }) {
     </Grid>
   );
 }
+export default memo(ToolsInstalledViewForm)

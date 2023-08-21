@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useLayoutEffect, useMemo, useState } from 'react';
+import { memo, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // form
 import { useForm, Controller } from 'react-hook-form';
@@ -20,13 +20,12 @@ import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
-  RHFAutocomplete
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 
 // ----------------------------------------------------------------------
 
-export default function ToolsInstalledAddForm() {
+function ToolsInstalledAddForm() {
 
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -34,13 +33,9 @@ export default function ToolsInstalledAddForm() {
   const { activeTools } = useSelector((state) => state.tool);
   const { toolTypes, movingPunchConditions, engageOnConditions, engageOffConditions, toolsInstalled } = useSelector((state) => state.toolInstalled);
 
-  // const [timeOut, setTimeOut] = useState(null);
   const [toolsVal, setToolsVal] = useState([]);
   const [toolType, setToolType] = useState(toolTypes[0]);
-  // const [engagingDuration, setEngagingDuration] = useState(null);
-  // const [returningDuration, setReturningDuration] = useState(null);
-  // const [twoWayCheckDelayTime, setTwoWayCheckDelayTime] = useState(null);
-
+  console.log("toolType : ",toolType)
   useLayoutEffect(() => {
     dispatch(getActiveTools());
     dispatch(getToolsInstalled);
@@ -204,8 +199,8 @@ export default function ToolsInstalledAddForm() {
       movingPunchCondition: { label: 'NO PUNCH' },
 
       // compositeToolConfig  
-      engageInstruction: '',
-      disengageInstruction: '',
+      engageInstruction: [],
+      disengageInstruction: [],
 
       isActive: true,
     }),
@@ -230,7 +225,6 @@ export default function ToolsInstalledAddForm() {
   const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, engageInstruction, disengageInstruction } = watch();
 
   const onSubmit = async (data) => {
-    console.log("data", data);
     try {
       if (toolType) {
         data.toolType = toolType;
@@ -456,7 +450,7 @@ export default function ToolsInstalledAddForm() {
                     disableClearable
                 />
               </Box>
-              {toolType === 'SINGLE TOOL' && <Box
+              {toolType?.label === 'SINGLE TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -657,69 +651,75 @@ export default function ToolsInstalledAddForm() {
 
               </Box>}
 
-              {toolType === 'COMPOSIT TOOL' && <Box
+              {toolType?.label === 'COMPOSIT TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
                 gridTemplateColumns={{
                   xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(2, 1fr)',
+                  sm: 'repeat(1, 1fr)',
                 }}
               >
                 <Controller
+                  name="engageInstruction"
+                  control={control}
+                  defaultValue={ engageInstruction || null}
+                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                  <Autocomplete
+                    multiple
+                    {...field}
                     name="engageInstruction"
-                    control={control}
-                    defaultValue={engageInstruction || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        options={toolsInstalled}
-                        onChange={(event, value) => field.onChange(value)}
-                        getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                        isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name}
-                        id="combo-box-demo"
-                        renderInput={(params) => (
-                        <TextField 
-                          {...params} 
-                          name="engageInstruction"
-                          id="engageInstruction"
-                          label="Engage Instruction*"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
+                    id="tags-outlined"
+                    options={toolsInstalled}
+                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
+                    filterSelectedOptions
+                    onChange={(event, value) => field.onChange(value)}
+                    renderInput={(params) => (
+                      <TextField 
+                        {...params} 
+                        name="engageInstruction"
+                        id="engageInstruction"
+                        label="Engage Instruction*"
+                        placeholder="Search" 
+                        error={!!error}
+                        helperText={error?.message} 
+                        inputRef={ref}
                         />
-                        )}
-                          disableClearable
-                      />
-                      )}
+                    )}
                   />
+                  )}
+                />
                   <Controller
+                  name="disengageInstruction"
+                  control={control}
+                  defaultValue={ disengageInstruction || null}
+                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
+                  <Autocomplete
+                    multiple
+                    {...field}
                     name="disengageInstruction"
-                    control={control}
-                    defaultValue={disengageInstruction || null}
-                    render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                      <Autocomplete
-                        {...field}
-                        options={toolsInstalled}
-                        onChange={(event, value) => field.onChange(value)}
-                        getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                        isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
-                        id="combo-box-demo"
-                        renderInput={(params) => (
-                        <TextField 
-                          {...params} 
-                          name="disengageInstruction"
-                          id="disengageInstruction"
-                          label="Disengage Instruction*"  
-                          error={!!error}
-                          helperText={error?.message} 
-                          inputRef={ref} 
+                    id="tags-outlined"
+                    options={toolsInstalled}
+                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
+                    filterSelectedOptions
+                    onChange={(event, value) => field.onChange(value)}
+                    renderInput={(params) => (
+                      <TextField 
+                        {...params} 
+                        name="disengageInstruction"
+                        id="disengageInstruction"
+                        label="Disengage Instruction*"
+                        placeholder="Search" 
+                        error={!!error}
+                        helperText={error?.message} 
+                        inputRef={ref}
                         />
-                        )}
-                          disableClearable
-                      />
-                      )}
+                    )}
                   />
+                  )}
+                />
               </Box>}
               
               <RHFSwitch
@@ -750,3 +750,5 @@ export default function ToolsInstalledAddForm() {
     </FormProvider>
   );
 }
+
+export default memo(ToolsInstalledAddForm)

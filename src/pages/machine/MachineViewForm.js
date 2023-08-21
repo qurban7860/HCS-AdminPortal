@@ -16,6 +16,7 @@ import {
   setMachineVerification,
 } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
+import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } from '../../redux/slices/products/toolInstalled';
 import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
@@ -90,10 +91,11 @@ export default function MachineViewForm() {
     setOpenInstallationSite(false);
     setOpenBilingSite(false);
     setOpenMachineConnection(false);
-
+    dispatch(setToolInstalledEditFormVisibility(false));
+    dispatch(setToolInstalledFormVisibility(false));
     const isValid = hasValidArray(latLongValues);
     setHasValidLatLong(isValid);
-  }, [machine, latLongValues, setHasValidLatLong]);
+  }, [machine, latLongValues, setHasValidLatLong, dispatch ]);
 
   useLayoutEffect(() => {
     dispatch(setMachineEditFormVisibility(false));

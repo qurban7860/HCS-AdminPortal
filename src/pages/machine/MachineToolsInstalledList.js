@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect, useLayoutEffect, memo } from 'react';
 // @mui
 import {
   Stack,
@@ -29,6 +29,7 @@ import Iconify from '../../components/iconify';
 // sections
 import {
   setToolInstalledFormVisibility,
+  setToolInstalledEditFormVisibility,
   getToolsInstalled,
 } from '../../redux/slices/products/toolInstalled';
 import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm';
@@ -50,7 +51,7 @@ import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
-export default function MachineToolsInstalledList() {
+function MachineToolsInstalledList() {
   const { dense, page, order, orderBy, rowsPerPage } = useTable({
     defaultOrderBy: 'createdAt',
   });
@@ -90,7 +91,7 @@ export default function MachineToolsInstalledList() {
     }
   };
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // if(!formVisibility && !toolInstalledEditFormVisibility){
     dispatch(getToolsInstalled(machine._id));
     // }
@@ -104,7 +105,7 @@ export default function MachineToolsInstalledList() {
     if (initial) {
       setTableData(toolsInstalled);
     }
-  }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial]);
+  }, [toolsInstalled, error, responseMessage, enqueueSnackbar, initial,dispatch]);
 
   const dataFiltered = applyFilter({
     inputData: tableData,
@@ -235,3 +236,5 @@ function applyFilter({ inputData, comparator, filterName, filterStatus }) {
 
   return inputData;
 }
+
+export default memo(MachineToolsInstalledList)
