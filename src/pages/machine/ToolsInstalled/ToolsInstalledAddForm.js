@@ -35,7 +35,6 @@ function ToolsInstalledAddForm() {
 
   const [toolsVal, setToolsVal] = useState([]);
   const [toolType, setToolType] = useState(toolTypes[0]);
-  console.log("toolType : ",toolType)
   useLayoutEffect(() => {
     dispatch(getActiveTools());
     dispatch(getToolsInstalled);
@@ -450,7 +449,7 @@ function ToolsInstalledAddForm() {
                     disableClearable
                 />
               </Box>
-              {toolType?.label === 'SINGLE TOOL' && <Box
+              {toolType === 'SINGLE TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -651,7 +650,7 @@ function ToolsInstalledAddForm() {
 
               </Box>}
 
-              {toolType?.label === 'COMPOSIT TOOL' && <Box
+              {toolType === 'COMPOSIT TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"

@@ -164,7 +164,7 @@ export function addToolInstalled(machineId,params) {
                 // singleToolConfig: {},
                 // compositeToolConfig:{}
             }
-          if( params.toolType.label === 'SINGLE TOOL' ){
+          if( params.toolType === 'SINGLE TOOL' ){
             data.singleToolConfig = {}
             if(params.engageSolenoidLocation){
               data.singleToolConfig.engageSolenoidLocation = params.engageSolenoidLocation;
@@ -217,7 +217,7 @@ export function addToolInstalled(machineId,params) {
             if(params.movingPunchCondition){
               data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.label;
             }
-          }else if ( params.toolType.label === 'COMPOSIT TOOL' ){
+          }else if ( params.toolType === 'COMPOSIT TOOL' ){
             data.compositeToolConfig = {}
             if(params.engageInstruction){
               data.compositeToolConfig.engageInstruction = params.engageInstruction.map(obj => obj._id);
@@ -261,7 +261,7 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
           // singleToolConfig: {},
           // compositeToolConfig:{}
       }
-    if( params.toolType.label === 'SINGLE TOOL' ){
+    if( params.toolType === 'SINGLE TOOL' ){
       data.singleToolConfig = {}
       if(params.engageSolenoidLocation){
         data.singleToolConfig.engageSolenoidLocation = params.engageSolenoidLocation;
@@ -314,7 +314,7 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
       if(params.movingPunchCondition){
         data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.label;
       }
-    }else if ( params.toolType.label === 'COMPOSIT TOOL' ){
+    }else if ( params.toolType === 'COMPOSIT TOOL' ){
       data.compositeToolConfig = {}
       if(params.engageInstruction){
         data.compositeToolConfig.engageInstruction = params.engageInstruction.map(obj => obj._id);
