@@ -44,7 +44,7 @@ function ToolsInstalledViewForm({ currentTool = null }) {
     toolInstalled,
     formVisibility,
   } = useSelector((state) => state.toolInstalled);
-  console.log('currentTool : ',currentTool)
+  // console.log('currentTool : ',currentTool)
   const { machine } = useSelector((state) => state.machine);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -201,8 +201,8 @@ function ToolsInstalledViewForm({ currentTool = null }) {
 
         {currentTool?.toolType === 'COMPOSIT TOOL'  && ( 
           <>
-            <ViewFormField sm={12} heading="Engage Instruction" arrayParam={currentTool?.compositeToolConfig?.engageInstruction} chipLabel="name"/>
-            <ViewFormField sm={12} heading="Disengage Instruction" arrayParam={currentTool?.compositeToolConfig?.disengageInstruction} chipLabel="name"/>
+            <ViewFormField sm={12} heading="Engage Instruction" toolType={currentTool?.compositeToolConfig?.engageInstruction} />
+            <ViewFormField sm={12} heading="Disengage Instruction" toolType={currentTool?.compositeToolConfig?.disengageInstruction} />
           </>
         )}
 

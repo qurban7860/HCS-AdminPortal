@@ -12,6 +12,7 @@ export default function ViewFormField({
   param,
   chipLabel,
   arrayParam,
+  toolType,
   secondParam,
   objectParam,
   secondObjectParam,
@@ -135,6 +136,23 @@ export default function ViewFormField({
             }
             </Grid>
         )}    
+
+        {toolType && typeof toolType === 'object' && toolType?.length > 0 && (
+            <Grid container sx={{my:-2,
+              display: 'flex',
+              alignItems: 'center',
+              whiteSpace: 'pre-line',
+              wordBreak: 'break-word',
+              }} >
+              {toolType.map((type, index) => (
+              type?.tool?.name &&
+              typeof type.tool.name === 'string' &&
+              type?.tool?.name.trim().length > 0 && (
+              <Chip key={index} label={type.tool.name} sx={{ m: 0.2 }} />
+              )
+            ))}
+            </Grid>
+        )}
         
       {chipDialogArrayParam && typeof chipDialogArrayParam === 'object' && chipDialogArrayParam?.length > 0 &&
         <Grid container sx={{my:-2,
@@ -195,6 +213,7 @@ ViewFormField.propTypes = {
   heading: PropTypes.string,
   param: PropTypes.string,
   arrayParam: PropTypes.array,
+  toolType: PropTypes.array,
   chipLabel: PropTypes.string,
   numberParam: PropTypes.number,
   secondParam: PropTypes.string,
