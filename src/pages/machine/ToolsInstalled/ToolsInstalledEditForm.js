@@ -119,35 +119,56 @@ console.log("toolInstalled : ",toolInstalled)
     offset: Yup.number()
     .typeError('Offset must be a number')
     .transform((value, originalValue) => {
-    if (originalValue.trim() === '') return undefined;
-    return parseFloat(value);
+      if (typeof originalValue !== 'string') {
+        return undefined; // Skip transformation for non-string values
+      }
+      if (originalValue.trim() === '') {
+        return undefined;
+      }
+      return parseFloat(value);
     })
     .test('no-spaces', 'Offset cannot have spaces', value => !(value && value.toString().includes(' '))),
 
     wasteTriggerDistance: Yup.number()
     .typeError('Waste Trigger Distance must be a number')
     .transform((value, originalValue) => {
-    if (originalValue.trim() === '') return undefined;
-    return parseFloat(value);
+      if (typeof originalValue !== 'string') {
+        return undefined; // Skip transformation for non-string values
+      }
+      if (originalValue.trim() === '') {
+        return undefined;
+      }
+      return parseFloat(value);
     })
     .test('no-spaces', 'Waste Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
 
     crimpTriggerDistance: Yup.number()
     .typeError('Crimp Trigger Distance must be a number')
     .transform((value, originalValue) => {
-    if (originalValue.trim() === '') return undefined;
-    return parseFloat(value);
+      if (typeof originalValue !== 'string') {
+        return undefined; // Skip transformation for non-string values
+      }
+      if (originalValue.trim() === '') {
+        return undefined;
+      }
+      return parseFloat(value);
     })
     .test('no-spaces', 'Crimp Trigger Distance cannot have spaces', value => !(value && value.toString().includes(' '))),
 
     operations: Yup.number()
-    .typeError('Operations must be a number')
-    .transform((value, originalValue) => {
-    if (originalValue.trim() === '') return undefined;
+  .typeError('Operations must be a number')
+  .transform((value, originalValue) => {
+    if (typeof originalValue !== 'string') {
+      return undefined; // Skip transformation for non-string values
+    }
+    if (originalValue.trim() === '') {
+      return undefined;
+    }
     return parseFloat(value);
-    })
-    .test('no-spaces', 'Operations cannot have spaces', value => !(value && value.toString().includes(' '))),
-    
+  })
+  .test('no-spaces', 'Operations cannot have spaces', value =>
+    !(value && value.toString().includes(' '))
+  ),
     // toolType: Yup.string(),
     isApplyWaste: Yup.boolean(),
     isApplyCrimp: Yup.boolean(),
@@ -159,15 +180,25 @@ console.log("toolInstalled : ",toolInstalled)
     engageSolenoidLocation: Yup.number()
       .typeError('Engage Solenoid Location must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
       }).test('no-spaces', 'Engage Solenoid Location cannot have spaces', value => !(value && value.toString().includes(' '))),
 
     returnSolenoidLocation: Yup.number()
       .typeError('Return Solenoid Location must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
       }).test('no-spaces', 'Return Solenoid Location cannot have spaces', value => !(value && value.toString().includes(' '))),
 
     // engageOnCondition: Yup.object().shape({
@@ -179,31 +210,54 @@ console.log("toolInstalled : ",toolInstalled)
     homeProximitySensorLocation: Yup.number()
       .typeError('Home Proximity Sensor Location must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
       }).test('no-spaces', 'Home Proximity Sensor Location cannot have spaces', value => !(value && value.toString().includes(' '))),
     engagedProximitySensorLocation: Yup.number()
       .typeError('Engaged Proximity Sensor Location must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
       }).test('no-spaces', 'Engaged Proximity Sensor Location cannot have spaces', value => !(value && value.toString().includes(' '))),
     pressureTarget: Yup.number()
       .typeError('Pressure Target must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
       }).test('no-spaces', 'Pressure Target cannot have spaces', value => !(value && value.toString().includes(' '))),
     distanceSensorLocation: Yup.number()
       .typeError('Distance Sensor Location must be a number')
       .transform((value, originalValue) => {
-      if (originalValue.trim() === '') return undefined;
-      return parseFloat(value);
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
+          return undefined;
+        }
+        return parseFloat(value);
       }).test('no-spaces', 'Distance Sensor Location cannot have spaces', value => !(value && value.toString().includes(' '))),
       distanceSensorTarget: Yup.number()
       .typeError('Distance Sensor Target must be a number')
       .transform((value, originalValue) => {
-        if (typeof originalValue === 'string' && originalValue.trim() === '') {
+        if (typeof originalValue !== 'string') {
+          return undefined; // Skip transformation for non-string values
+        }
+        if (originalValue.trim() === '') {
           return undefined;
         }
         return parseFloat(value);
