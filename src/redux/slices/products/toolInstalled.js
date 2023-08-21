@@ -256,12 +256,12 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
           isAssign: params.isAssign,
           operations: params.operations,
           // note: params.note,
-          toolType: params.toolType,
+          toolType: params.toolType.label,
           isActive: params.isActive,
           // singleToolConfig: {},
           // compositeToolConfig:{}
       }
-    if( params.toolType === 'SINGLE TOOL' ){
+    if( params.toolType.label === 'SINGLE TOOL' ){
       data.singleToolConfig = {}
       if(params.engageSolenoidLocation){
         data.singleToolConfig.engageSolenoidLocation = params.engageSolenoidLocation;
@@ -314,7 +314,7 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
       if(params.movingPunchCondition){
         data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.label;
       }
-    }else if ( params.toolType === 'COMPOSIT TOOL' ){
+    }else if ( params.toolType.label === 'COMPOSIT TOOL' ){
       data.compositeToolConfig = {}
       if(params.engageInstruction){
         data.compositeToolConfig.engageInstruction = params.engageInstruction.map(obj => obj._id);
