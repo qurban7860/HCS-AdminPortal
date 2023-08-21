@@ -159,7 +159,7 @@ export function addToolInstalled(machineId,params) {
                 isAssign: params.isAssign,
                 operations: params.operations,
                 // note: params.note,
-                toolType: params.toolType?.label,
+                toolType: params.toolType,
                 isActive: params.isActive,
                 // singleToolConfig: {},
                 // compositeToolConfig:{}
