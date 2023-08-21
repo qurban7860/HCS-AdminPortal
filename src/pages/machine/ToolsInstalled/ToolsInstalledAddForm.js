@@ -36,7 +36,7 @@ export default function ToolsInstalledAddForm() {
 
   // const [timeOut, setTimeOut] = useState(null);
   const [toolsVal, setToolsVal] = useState([]);
-  const [toolType, setToolType] = useState();
+  const [toolType, setToolType] = useState(toolTypes[0]);
   // const [engagingDuration, setEngagingDuration] = useState(null);
   // const [returningDuration, setReturningDuration] = useState(null);
   // const [twoWayCheckDelayTime, setTwoWayCheckDelayTime] = useState(null);
@@ -123,12 +123,12 @@ export default function ToolsInstalledAddForm() {
       return parseFloat(value);
       }).test('no-spaces', 'Return Solenoid Location cannot have spaces', value => !(value && value.toString().includes(' '))),
 
-    engageOnCondition: Yup.object().shape({
-      label: Yup.string()
-    }).nullable().label('Engage On Condition'),
-    engageOffCondition: Yup.object().shape({
-      label: Yup.string()
-    }).nullable().label('Engage Off Condition'),  
+    // engageOnCondition: Yup.object().shape({
+    //   label: Yup.string()
+    // }).nullable().label('Engage On Condition'),
+    // engageOffCondition: Yup.object().shape({
+    //   label: Yup.string()
+    // }).nullable().label('Engage Off Condition'),  
     homeProximitySensorLocation: Yup.number()
       .typeError('Home Proximity Sensor Location must be a number')
       .transform((value, originalValue) => {
@@ -166,8 +166,8 @@ export default function ToolsInstalledAddForm() {
       label: Yup.string()
     }).nullable().label('Moving Punch Condition'),
     // -------------------------------- composite Tool Config --------------------------------
-    engageInstruction: Yup.object(),
-    disengageInstruction: Yup.object()
+    // engageInstruction: Yup.object(),
+    // disengageInstruction: Yup.object()
   });
 
   const defaultValues = useMemo(
@@ -439,7 +439,6 @@ export default function ToolsInstalledAddForm() {
                   name="toolType" 
                   options={toolTypes}
                   value={toolType}
-                  defaultValue={toolTypes[0]}
                   onChange={(event, newValue) => {
                   if (newValue) {
                     setToolType(newValue);

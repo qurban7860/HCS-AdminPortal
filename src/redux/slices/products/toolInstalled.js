@@ -147,22 +147,26 @@ export function addToolInstalled(machineId,params) {
         dispatch(slice.actions.startLoading());
         try {
           /* eslint-disable */
+          console.log("params : ",params)
             let data = {
-                tool: params.tool,
-                note: params.note,
+                tool: params.tool._id,
                 offset: params.offset,
-                wasteTriggerDistance: params.wasteTriggerDistance,
-                crimpTriggerDistance: params.crimpTriggerDistance,
-                operations: params.operations,
-                toolType: params.toolType,
                 isApplyWaste: params.isApplyWaste,
+                wasteTriggerDistance: params.wasteTriggerDistance,
                 isApplyCrimp: params.isApplyCrimp,
+                crimpTriggerDistance: params.crimpTriggerDistance,
                 isBackToBackPunch: params.isBackToBackPunch,
                 isManualSelect: params.isManualSelect,
                 isAssign: params.isAssign,
+                operations: params.operations,
+                // note: params.note,
+                toolType: params.toolType,
                 isActive: params.isActive,
-                singleToolConfig: {}
+                // singleToolConfig: {},
+                // compositeToolConfig:{}
             }
+          if( params.toolType === 'SINGLE TOOL' ){
+            data.singleToolConfig = {}
             if(params.engageSolenoidLocation){
               data.singleToolConfig.engageSolenoidLocation = params.engageSolenoidLocation;
             }
@@ -170,10 +174,10 @@ export function addToolInstalled(machineId,params) {
               data.singleToolConfig.returnSolenoidLocation = params.returnSolenoidLocation;
             }
             if(params.engageOnCondition){
-              data.singleToolConfig.engageOnCondition = params.engageOnCondition;
+              data.singleToolConfig.engageOnCondition = params.engageOnCondition.label;
             }
             if(params.engageOffCondition){
-              data.singleToolConfig.engageOffCondition = params.engageOffCondition;
+              data.singleToolConfig.engageOffCondition = params.engageOffCondition.label;
             }
             if(params.timeOut){
               data.singleToolConfig.timeOut = params.timeOut;
@@ -212,8 +216,18 @@ export function addToolInstalled(machineId,params) {
               data.singleToolConfig.isReturningHasEnable = params.isReturningHasEnable;
             }
             if(params.movingPunchCondition){
-              data.singleToolConfig.movingPunchCondition = params.movingPunchCondition;
+              data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.label;
             }
+          }else if ( params.toolType === 'COMPOSIT TOOL' ){
+            data.compositeToolConfig = {}
+            if(params.engageInstruction){
+              data.compositeToolConfig.engageInstruction = params.engageInstruction?._id;
+            }
+            if(params.disengageInstruction){
+              data.compositeToolConfig.disengageInstruction = params.disengageInstruction?._id;
+            }
+          }
+          console.log("data : ",data)
           /* eslint-enable */ 
         await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
         dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
