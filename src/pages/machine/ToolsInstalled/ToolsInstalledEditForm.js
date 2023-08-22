@@ -302,13 +302,13 @@ function ToolsInstalledEditForm() {
     defaultValues:{
       tool: toolInstalled?.tool || null,
       offset: toolInstalled?.offset || '',
-      isApplyWaste: toolInstalled?.isApplyWaste || false,
+      isApplyWaste: toolInstalled?.isApplyWaste ,
       wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
-      isApplyCrimp: toolInstalled?.isApplyCrimp || false,
+      isApplyCrimp: toolInstalled?.isApplyCrimp ,
       crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
-      isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
-      isManualSelect: toolInstalled?.isManualSelect || false,
-      isAssign: toolInstalled?.isAssign || false,
+      isBackToBackPunch: toolInstalled?.isBackToBackPunch ,
+      isManualSelect: toolInstalled?.isManualSelect ,
+      isAssign: toolInstalled?.isAssign,
       operations: toolInstalled?.operations || '',
       // toolType: null,
 
@@ -326,9 +326,9 @@ function ToolsInstalledEditForm() {
       pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||'',
       distanceSensorLocation: toolInstalled?.singleToolConfig?.distanceSensorLocation ||'',
       distanceSensorTarget: toolInstalled?.singleToolConfig?.distanceSensorTarget ||'',
-      isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck ||false,
-      isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ||true,
-      isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ||false,
+      isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck ,
+      isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ,
+      isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ,
       movingPunchCondition: null,
 
       // compositeToolConfig  
@@ -399,7 +399,7 @@ function ToolsInstalledEditForm() {
     data.offset= offset
     data.operations= operations
     data.wasteTriggerDistance = wasteTriggerDistance
-    data.crimpTriggerDistance = distanceSensorTarget
+    data.crimpTriggerDistance = crimpTriggerDistance
     data.engageSolenoidLocation = engageSolenoidLocation
     data.returnSolenoidLocation = returnSolenoidLocation
     data.homeProximitySensorLocation = homeProximitySensorLocation
