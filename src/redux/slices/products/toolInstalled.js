@@ -384,7 +384,7 @@ export function deleteToolInstalled(machineId,obj) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${obj._id}` , 
       {
           isArchived: true, 
-          toolType: obj.toolType.name,
+          toolType: obj.toolType,
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
