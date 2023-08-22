@@ -452,7 +452,9 @@ function ToolsInstalledAddForm() {
                     disableClearable
                 />
               </Box>
-              {toolType.name === 'SINGLE TOOL' && <Box
+              {toolType.name === 'SINGLE TOOL' && 
+              <>
+              <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -521,7 +523,16 @@ function ToolsInstalledAddForm() {
                       />
                       )}
                   />
-
+                  </Box>
+                  <Box
+                    rowGap={2}
+                    columnGap={2}
+                    display="grid"
+                    gridTemplateColumns={{
+                      xs: 'repeat(1, 1fr)',
+                      sm: 'repeat(2, 1fr)',
+                    }}
+                  >
                   <DatePicker
                     label="Time Out"
                     value={timeOut}
@@ -529,7 +540,16 @@ function ToolsInstalledAddForm() {
                     onChange={(newValue) => setValue('timeOut',newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
-
+                </Box>
+                <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
                   <DatePicker
                     label="Engaging Duration"
                     value={engagingDuration}
@@ -545,7 +565,16 @@ function ToolsInstalledAddForm() {
                     onChange={(newValue) => setValue('returningDuration',newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
-
+                </Box>
+                <Box
+                  rowGap={2}
+                  columnGap={2}
+                  display="grid"
+                  gridTemplateColumns={{
+                    xs: 'repeat(1, 1fr)',
+                    sm: 'repeat(2, 1fr)',
+                  }}
+                >
                   <DatePicker
                     label="Two-way Check Delay Time"
                     value={twoWayCheckDelayTime}
@@ -553,17 +582,53 @@ function ToolsInstalledAddForm() {
                     onChange={(newValue) => setValue('twoWayCheckDelayTime',newValue)}
                     renderInput={(params) => <TextField {...params} />}
                   />
-
+                </Box>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
                 <RHFTextField name="homeProximitySensorLocation" label="Home Proximity Sensor Location" inputMode="numeric" pattern="[0-9]*" />
 
                 <RHFTextField name="engagedProximitySensorLocation" label="Engaged Proximity Sensor Location" inputMode="numeric" pattern="[0-9]*" />
-
+                </Box>
+                <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+                >
                 <RHFTextField name="pressureTarget" label="Pressure Target" inputMode="numeric" pattern="[0-9]*" />
-
+                </Box>
+                <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
                 <RHFTextField name="distanceSensorLocation" label="Distance Sensor Location" inputMode="numeric" pattern="[0-9]*" />
 
                 <RHFTextField name="distanceSensorTarget" label="Distance Sensor Target" inputMode="numeric" pattern="[0-9]*" />
-
+              </Box>
+              <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(3, 1fr)',
+                }}
+              >
                 <RHFSwitch
                   name="isHasTwoWayCheck"
                   labelPlacement="start"
@@ -625,7 +690,16 @@ function ToolsInstalledAddForm() {
                     </Typography>
                   }
                 />
-
+                </Box>
+                <Box
+                rowGap={2}
+                columnGap={2}
+                display="grid"
+                gridTemplateColumns={{
+                  xs: 'repeat(1, 1fr)',
+                  sm: 'repeat(2, 1fr)',
+                }}
+              >
                 <Controller
                     name="movingPunchCondition"
                     control={control}
@@ -654,7 +728,8 @@ function ToolsInstalledAddForm() {
                       )}
                   />
 
-              </Box>}
+              </Box>
+              </>}
 
               {toolType.name === 'COMPOSIT TOOL' && <Box
                 rowGap={2}
