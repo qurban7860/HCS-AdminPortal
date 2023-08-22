@@ -254,8 +254,52 @@ function ToolsInstalledEditForm() {
     // disengageInstruction: Yup.object()
   });
 
-  const defaultValues = useMemo(
-    () => ({
+  // const defaultValues = useMemo(
+  //   () => ({
+  //     tool: toolInstalled?.tool || null,
+  //     offset: toolInstalled?.offset || '',
+  //     isApplyWaste: toolInstalled?.isApplyWaste || false,
+  //     wasteTriggerDistance: toolInstalled?.wasteTriggerDistance || '',
+  //     isApplyCrimp: toolInstalled?.isApplyCrimp || false,
+  //     crimpTriggerDistance: toolInstalled?.crimpTriggerDistance || '',
+  //     isBackToBackPunch: toolInstalled?.isBackToBackPunch || false,
+  //     isManualSelect: toolInstalled?.isManualSelect || false,
+  //     isAssign: toolInstalled?.isAssign || false,
+  //     operations: toolInstalled?.operations || '',
+  //     // toolType: null,
+
+  //     // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
+  //     engageSolenoidLocation: toolInstalled?.singleToolConfig?.engageSolenoidLocation || '',
+  //     returnSolenoidLocation: toolInstalled?.singleToolConfig?.returnSolenoidLocation || '',
+  //     engageOnCondition: null,
+  //     engageOffCondition: null,
+  //     timeOut: toolInstalled?.singleToolConfig?.timeOut || null,
+  //     engagingDuration: toolInstalled?.singleToolConfig?.engagingDuration || null,
+  //     returningDuration: toolInstalled?.singleToolConfig?.returningDuration || null,
+  //     twoWayCheckDelayTime: toolInstalled?.singleToolConfig?.twoWayCheckDelayTime || null,
+  //     homeProximitySensorLocation: toolInstalled?.singleToolConfig?.homeProximitySensorLocation || '',
+  //     engagedProximitySensorLocation: toolInstalled?.singleToolConfig?.engagedProximitySensorLocation || '',
+  //     pressureTarget: toolInstalled?.singleToolConfig?.pressureTarget ||'',
+  //     distanceSensorLocation: toolInstalled?.singleToolConfig?.distanceSensorLocation ||'',
+  //     distanceSensorTarget: toolInstalled?.singleToolConfig?.distanceSensorTarget ||'',
+  //     isHasTwoWayCheck: toolInstalled?.singleToolConfig?.isHasTwoWayCheck ||false,
+  //     isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ||true,
+  //     isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ||false,
+  //     movingPunchCondition: null,
+
+  //     // compositeToolConfig  
+  //     engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
+  //     disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
+
+  //     isActive: toolInstalled?.isActive,
+  //   }),
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   []
+  // );
+  // console.log("defaultValues  : ",defaultValues)
+  const methods = useForm({
+    resolver: yupResolver(EditSettingSchema),
+    defaultValues:{
       tool: toolInstalled?.tool || null,
       offset: toolInstalled?.offset || '',
       isApplyWaste: toolInstalled?.isApplyWaste || false,
@@ -292,14 +336,7 @@ function ToolsInstalledEditForm() {
       disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
 
       isActive: toolInstalled?.isActive,
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const methods = useForm({
-    resolver: yupResolver(EditSettingSchema),
-    defaultValues,
+    }
   });
 
   const {
@@ -311,7 +348,29 @@ function ToolsInstalledEditForm() {
     control,
   } = methods
 
-  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, engageInstruction, disengageInstruction } = watch();
+  const { 
+    tool, 
+    offset,
+    engageOnCondition, 
+    engageOffCondition, 
+    movingPunchCondition, 
+    timeOut, 
+    engagingDuration, 
+    returningDuration, 
+    twoWayCheckDelayTime, 
+    engageInstruction, 
+    disengageInstruction,
+    wasteTriggerDistance,
+    crimpTriggerDistance,
+    operations,
+    engageSolenoidLocation,
+    returnSolenoidLocation,
+    homeProximitySensorLocation,
+    engagedProximitySensorLocation,
+    pressureTarget,
+    distanceSensorLocation,
+    distanceSensorTarget
+    } = watch();
 
   useEffect(() => {
     if(toolInstalled?.singleToolConfig?.movingPunchCondition){
@@ -337,6 +396,17 @@ function ToolsInstalledEditForm() {
   };
 
   const onSubmit = async (data) => {
+    data.offset= offset
+    data.operations= operations
+    data.wasteTriggerDistance = wasteTriggerDistance
+    data.crimpTriggerDistance = distanceSensorTarget
+    data.engageSolenoidLocation = engageSolenoidLocation
+    data.returnSolenoidLocation = returnSolenoidLocation
+    data.homeProximitySensorLocation = homeProximitySensorLocation
+    data.engagedProximitySensorLocation = engagedProximitySensorLocation
+    data.pressureTarget = pressureTarget
+    data.distanceSensorLocation = distanceSensorLocation
+    data.distanceSensorTarget = distanceSensorTarget
     try {
       data.toolType = toolType;
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
