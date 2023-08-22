@@ -26,6 +26,11 @@ const initialState = {
     { _id:2 , name: 'SINGLE TOOL'},
     { _id:3 , name: 'COMPOSIT TOOL'},
   ],
+  toolTypesObj: [
+    { _id:1 , name: 'GENERIC TOOL'},
+    { _id:2 , name: 'SINGLE TOOL'},
+    { _id:3 , name: 'COMPOSIT TOOL'},
+  ],
   movingPunchConditions: [
     { _id: 1 , name: 'NO PUNCH'},
     { _id: 2 , name: 'PUNCH WHILE JOGGING'},
@@ -46,6 +51,7 @@ const initialState = {
   ],
 };
 
+console.log("initialState",initialState);
 const slice = createSlice({
   name: 'ToolInstalled',
   initialState,
