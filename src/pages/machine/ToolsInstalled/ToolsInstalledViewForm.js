@@ -81,6 +81,7 @@ function ToolsInstalledViewForm({ currentTool = null }) {
   const onDelete = async () => {
     try {
       await dispatch(deleteToolInstalled(machine._id, currentTool));
+      enqueueSnackbar('Tool installed deleted Successfully!');
       dispatch(getToolsInstalled(machine._id));
     } catch (err) {
       // if(err.Message){
