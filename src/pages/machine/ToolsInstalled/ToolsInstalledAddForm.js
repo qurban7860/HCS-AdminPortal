@@ -31,10 +31,11 @@ function ToolsInstalledAddForm() {
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine);
   const { activeTools } = useSelector((state) => state.tool);
-  const { toolTypes, movingPunchConditions, engageOnConditions, engageOffConditions, toolsInstalled } = useSelector((state) => state.toolInstalled);
-
+  useSelector((state) => console.log(state.toolInstalled))
+  const { toolTypesObj, movingPunchConditions, engageOnConditions, engageOffConditions, toolsInstalled } = useSelector((state) => state.toolInstalled);
   const [toolsVal, setToolsVal] = useState([]);
-  const [toolType, setToolType] = useState(toolTypes[0]);
+  const [toolType, setToolType] = useState(toolTypesObj[0]);
+
   useLayoutEffect(() => {
     dispatch(getActiveTools());
     dispatch(getToolsInstalled);
@@ -430,7 +431,7 @@ function ToolsInstalledAddForm() {
               >
                 <Autocomplete
                   name="toolType" 
-                  options={toolTypes}
+                  options={toolTypesObj}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
                   value={toolType}
