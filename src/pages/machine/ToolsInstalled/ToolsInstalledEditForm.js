@@ -53,7 +53,7 @@ function ToolsInstalledEditForm() {
   const { tools } = useSelector((state) => state.tool);
   const { toolsInstalled, toolInstalled, toolTypes,movingPunchConditions, engageOnConditions, engageOffConditions, formVisibility} = useSelector((state) => state.toolInstalled);
   const [toolVal, setToolVal] = useState('');
-  const [toolType, setToolType] = useState('');
+  const [toolType, setToolType] = useState(toolTypes[0]);
   const { activeTools } = useSelector((state) => state.tool);
   const { machine } = useSelector((state) => state.machine);
 console.log("toolInstalled : ",toolInstalled)
@@ -306,6 +306,7 @@ console.log("toolInstalled : ",toolInstalled)
       isEngagingHasEnable: toolInstalled?.singleToolConfig?.isEngagingHasEnable ||true,
       isReturningHasEnable: toolInstalled?.singleToolConfig?.isReturningHasEnable ||false,
       movingPunchCondition: null,
+
       // compositeToolConfig  
       engageInstruction: toolInstalled?.compositeToolConfig?.engageInstruction || '',
       disengageInstruction: toolInstalled?.compositeToolConfig?.disengageInstruction || '',
@@ -333,10 +334,21 @@ console.log("toolInstalled : ",toolInstalled)
   const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, engageInstruction, disengageInstruction } = watch();
 
   useEffect(() => {
-    setValue('movingPunchCondition',{label: toolInstalled?.singleToolConfig?.movingPunchCondition })
-    setValue('engageOnCondition',{label: toolInstalled?.singleToolConfig?.engageOnCondition})
-    setValue('engageOffCondition',{label: toolInstalled?.singleToolConfig?.engageOffCondition})
-    setToolType({label: toolInstalled?.toolType})
+    if(toolInstalled?.singleToolConfig?.movingPunchCondition){
+      setValue('movingPunchCondition',{name: toolInstalled?.singleToolConfig?.movingPunchCondition })
+    }else{
+      setValue('movingPunchCondition',movingPunchConditions[0])
+    }if(toolInstalled?.singleToolConfig?.engageOnCondition){
+      setValue('engageOnCondition',{name: toolInstalled?.singleToolConfig?.engageOnCondition})
+    }else{
+      setValue('engageOnCondition',engageOnConditions[1])
+    }
+    if(toolInstalled?.singleToolConfig?.engageOffCondition){
+      setValue('engageOffCondition',{name: toolInstalled?.singleToolConfig?.engageOffCondition})
+    }else{
+      setValue('engageOffCondition',engageOffConditions[0])
+    }
+    setToolType({name: toolInstalled?.toolType})
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolInstalled]);
 
@@ -347,6 +359,7 @@ console.log("toolInstalled : ",toolInstalled)
   const onSubmit = async (data) => {
     try {
       data.toolType = toolType;
+      console.log("data",data)
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
       reset();
       setToolVal('');
@@ -542,8 +555,9 @@ console.log("toolInstalled : ",toolInstalled)
                 <Autocomplete
                   name="toolType" 
                   options={toolTypes}
+                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   value={toolType}
-                  isOptionEqualToValue={(option, value) => option.label === value.label}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
                   onChange={(event, newValue) => {
                   if (newValue) {
                     setToolType(newValue);
@@ -561,7 +575,7 @@ console.log("toolInstalled : ",toolInstalled)
                     disableClearable
                 />
               </Box>
-              {toolType.label === 'SINGLE TOOL' && <Box
+              {toolType.name === 'SINGLE TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -583,8 +597,9 @@ console.log("toolInstalled : ",toolInstalled)
                       <Autocomplete
                         {...field}
                         options={engageOnConditions}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         onChange={(event, value) => field.onChange(value)}
-                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         id="combo-box-demo"
                         renderInput={(params) => (
                         <TextField 
@@ -610,7 +625,8 @@ console.log("toolInstalled : ",toolInstalled)
                       <Autocomplete
                         {...field}
                         options={engageOffConditions}
-                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         onChange={(event, value) => field.onChange(value)}
                         id="combo-box-demo"
                         renderInput={(params) => (
@@ -742,7 +758,8 @@ console.log("toolInstalled : ",toolInstalled)
                         {...field}
                         options={movingPunchConditions}
                         onChange={(event, value) => field.onChange(value)}
-                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         id="combo-box-demo"
                         renderInput={(params) => (
                         <TextField 
@@ -762,7 +779,7 @@ console.log("toolInstalled : ",toolInstalled)
 
               </Box>}
 
-              {toolType.label === 'COMPOSIT TOOL' && <Box
+              {toolType.name === 'COMPOSIT TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"

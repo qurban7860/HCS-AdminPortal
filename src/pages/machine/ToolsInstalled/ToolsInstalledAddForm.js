@@ -181,8 +181,8 @@ function ToolsInstalledAddForm() {
       // singleToolConfig {label: 'PASS'} {label: 'NO CONDITION'}
       engageSolenoidLocation: '',
       returnSolenoidLocation: '',
-      engageOnCondition: {label: 'NO CONDITION'},
-      engageOffCondition: {label: 'PASS'},
+      engageOnCondition: { name: 'NO CONDITION'},
+      engageOffCondition: { name: 'PASS'},
       timeOut: null,
       engagingDuration: null,
       returningDuration: null,
@@ -195,7 +195,7 @@ function ToolsInstalledAddForm() {
       isHasTwoWayCheck: false,
       isEngagingHasEnable: true,
       isReturningHasEnable: false,
-      movingPunchCondition: { label: 'NO PUNCH' },
+      movingPunchCondition: { name: 'NO PUNCH' },
 
       // compositeToolConfig  
       engageInstruction: [],
@@ -431,6 +431,8 @@ function ToolsInstalledAddForm() {
                 <Autocomplete
                   name="toolType" 
                   options={toolTypes}
+                  getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
                   value={toolType}
                   onChange={(event, newValue) => {
                   if (newValue) {
@@ -449,7 +451,7 @@ function ToolsInstalledAddForm() {
                     disableClearable
                 />
               </Box>
-              {toolType === 'SINGLE TOOL' && <Box
+              {toolType.name === 'SINGLE TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"
@@ -471,8 +473,9 @@ function ToolsInstalledAddForm() {
                       <Autocomplete
                         {...field}
                         options={engageOnConditions}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         onChange={(event, value) => field.onChange(value)}
-                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         id="combo-box-demo"
                         renderInput={(params) => (
                         <TextField 
@@ -498,7 +501,8 @@ function ToolsInstalledAddForm() {
                       <Autocomplete
                         {...field}
                         options={engageOffConditions}
-                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         onChange={(event, value) => field.onChange(value)}
                         id="combo-box-demo"
                         renderInput={(params) => (
@@ -629,8 +633,9 @@ function ToolsInstalledAddForm() {
                       <Autocomplete
                         {...field}
                         options={movingPunchConditions}
+                        getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         onChange={(event, value) => field.onChange(value)}
-                        isOptionEqualToValue={(option, value) => option.label === value.label}
+                        isOptionEqualToValue={(option, value) => option.name === value.name}
                         id="combo-box-demo"
                         renderInput={(params) => (
                         <TextField 
@@ -650,7 +655,7 @@ function ToolsInstalledAddForm() {
 
               </Box>}
 
-              {toolType === 'COMPOSIT TOOL' && <Box
+              {toolType.name === 'COMPOSIT TOOL' && <Box
                 rowGap={2}
                 columnGap={2}
                 display="grid"

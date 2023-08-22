@@ -22,27 +22,27 @@ const initialState = {
   page: 0,
   rowsPerPage: 100,
   toolTypes: [
-    { _id:1 ,label: 'GENERIC TOOL'},
-    { _id:2 ,label: 'SINGLE TOOL'},
-    { _id:3 ,label: 'COMPOSIT TOOL'},
+    { _id:1 , name: 'GENERIC TOOL'},
+    { _id:2 , name: 'SINGLE TOOL'},
+    { _id:3 , name: 'COMPOSIT TOOL'},
   ],
   movingPunchConditions: [
-    { _id: 1 ,label: 'NO PUNCH'},
-    { _id: 2 ,label: 'PUNCH WHILE JOGGING'},
-    { _id: 3 ,label: 'PUNCH WHILE RUNNING'}
+    { _id: 1 , name: 'NO PUNCH'},
+    { _id: 2 , name: 'PUNCH WHILE JOGGING'},
+    { _id: 3 , name: 'PUNCH WHILE RUNNING'}
   ],
   engageOnConditions: [
-    { _id: 1 ,label: 'PASS'},
-    { _id: 2 ,label: 'NO CONDITION'},
-    { _id: 3 ,label: 'PROXIMITY SENSOR'}
+    { _id: 1 , name: 'PASS'},
+    { _id: 2 , name: 'NO CONDITION'},
+    { _id: 3 , name: 'PROXIMITY SENSOR'}
   ],
   engageOffConditions: [
-    { _id: 1,label: 'PASS'},
-    { _id: 2,label: 'TIMER'},
-    { _id: 3,label: 'PROXIMITY SENSOR'},
-    { _id: 4,label: 'PRESSURE TARGET'},
-    { _id: 5,label: 'DISTANCE SENSOR'},
-    { _id: 6,label: 'PRESSURE TRIGGERS TIMER'}
+    { _id: 1, name: 'PASS'},
+    { _id: 2, name: 'TIMER'},
+    { _id: 3, name: 'PROXIMITY SENSOR'},
+    { _id: 4, name: 'PRESSURE TARGET'},
+    { _id: 5, name: 'DISTANCE SENSOR'},
+    { _id: 6, name: 'PRESSURE TRIGGERS TIMER'}
   ],
 };
 
@@ -159,12 +159,12 @@ export function addToolInstalled(machineId,params) {
                 isAssign: params.isAssign,
                 operations: params.operations,
                 // note: params.note,
-                toolType: params.toolType,
+                toolType: params.toolType.name,
                 isActive: params.isActive,
                 // singleToolConfig: {},
                 // compositeToolConfig:{}
             }
-          if( params.toolType === 'SINGLE TOOL' ){
+          if( params.toolType.name === 'SINGLE TOOL' ){
             data.singleToolConfig = {}
             if(params.engageSolenoidLocation){
               data.singleToolConfig.engageSolenoidLocation = params.engageSolenoidLocation;
@@ -173,10 +173,10 @@ export function addToolInstalled(machineId,params) {
               data.singleToolConfig.returnSolenoidLocation = params.returnSolenoidLocation;
             }
             if(params.engageOnCondition){
-              data.singleToolConfig.engageOnCondition = params.engageOnCondition.label;
+              data.singleToolConfig.engageOnCondition = params.engageOnCondition.name;
             }
             if(params.engageOffCondition){
-              data.singleToolConfig.engageOffCondition = params.engageOffCondition.label;
+              data.singleToolConfig.engageOffCondition = params.engageOffCondition.name;
             }
             if(params.timeOut){
               data.singleToolConfig.timeOut = params.timeOut;
@@ -215,9 +215,9 @@ export function addToolInstalled(machineId,params) {
               data.singleToolConfig.isReturningHasEnable = params.isReturningHasEnable;
             }
             if(params.movingPunchCondition){
-              data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.label;
+              data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.name;
             }
-          }else if ( params.toolType === 'COMPOSIT TOOL' ){
+          }else if ( params.toolType.name === 'COMPOSIT TOOL' ){
             data.compositeToolConfig = {}
             if(params.engageInstruction){
               data.compositeToolConfig.engageInstruction = params.engageInstruction.map(obj => obj._id);
@@ -256,12 +256,12 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
           isAssign: params.isAssign,
           operations: params.operations,
           // note: params.note,
-          toolType: params.toolType.label,
+          toolType: params.toolType.name,
           isActive: params.isActive,
           // singleToolConfig: {},
           // compositeToolConfig:{}
       }
-    if( params.toolType.label === 'SINGLE TOOL' ){
+    if( params.toolType.name === 'SINGLE TOOL' ){
       data.singleToolConfig = {}
       if(params.engageSolenoidLocation){
         data.singleToolConfig.engageSolenoidLocation = params.engageSolenoidLocation;
@@ -270,10 +270,10 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
         data.singleToolConfig.returnSolenoidLocation = params.returnSolenoidLocation;
       }
       if(params.engageOnCondition){
-        data.singleToolConfig.engageOnCondition = params.engageOnCondition.label;
+        data.singleToolConfig.engageOnCondition = params.engageOnCondition.name;
       }
       if(params.engageOffCondition){
-        data.singleToolConfig.engageOffCondition = params.engageOffCondition.label;
+        data.singleToolConfig.engageOffCondition = params.engageOffCondition.name;
       }
       if(params.timeOut){
         data.singleToolConfig.timeOut = params.timeOut;
@@ -312,9 +312,9 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
         data.singleToolConfig.isReturningHasEnable = params.isReturningHasEnable;
       }
       if(params.movingPunchCondition){
-        data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.label;
+        data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.name;
       }
-    }else if ( params.toolType.label === 'COMPOSIT TOOL' ){
+    }else if ( params.toolType.name === 'COMPOSIT TOOL' ){
       data.compositeToolConfig = {}
       if(params.engageInstruction){
         data.compositeToolConfig.engageInstruction = params.engageInstruction.map(obj => obj._id);
@@ -384,7 +384,7 @@ export function deleteToolInstalled(machineId,obj) {
       const response = await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${obj._id}` , 
       {
           isArchived: true, 
-          toolType: obj.toolType,
+          toolType: obj.toolType.name,
       });
       dispatch(slice.actions.setResponseMessage(response.data));
     } catch (error) {
