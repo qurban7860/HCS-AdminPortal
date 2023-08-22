@@ -446,6 +446,7 @@ function ToolsInstalledEditForm() {
                     render={ ({field: { ref, ...field }, fieldState: { error } }) => (
                       <Autocomplete
                         {...field}
+                        disabled
                         options={toolsVal}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         isOptionEqualToValue={(option, value) => option._id === value._id}
