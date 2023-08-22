@@ -1,48 +1,31 @@
-import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect, memo } from 'react';
+import {  useEffect, useMemo, useState, useLayoutEffect, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useNavigate } from 'react-router-dom';
 // form
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
 import {
-  Switch,
   Box,
   Card,
   Grid,
   Stack,
   Typography,
-  Button,
-  DialogTitle,
-  Dialog,
-  InputAdornment,
-  Link,
   Autocomplete,
   TextField,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 // global
-import { CONFIG } from '../../../config-global';
-// slice
 import {
   setToolInstalledEditFormVisibility,
   updateToolInstalled,
 } from '../../../redux/slices/products/toolInstalled';
-import { getTools } from '../../../redux/slices/products/tools';
 // routes
-import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
 import { useSnackbar } from '../../../components/snackbar';
-import Iconify from '../../../components/iconify';
 import FormProvider, {
-  RHFSelect,
   RHFTextField,
-  RHFAutocomplete,
   RHFSwitch,
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
@@ -50,13 +33,10 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // ----------------------------------------------------------------------
 
 function ToolsInstalledEditForm() {
-  const { tools } = useSelector((state) => state.tool);
-  const { toolsInstalled, toolInstalled, toolTypes,movingPunchConditions, engageOnConditions, engageOffConditions, formVisibility} = useSelector((state) => state.toolInstalled);
-  const [toolVal, setToolVal] = useState('');
-  const [toolType, setToolType] = useState(toolTypes[0]);
+  const { toolsInstalled, toolInstalled, toolTypesObj,movingPunchConditions, engageOnConditions, engageOffConditions} = useSelector((state) => state.toolInstalled);
+  const [toolType, setToolType] = useState(toolTypesObj[0]);
   const { activeTools } = useSelector((state) => state.tool);
   const { machine } = useSelector((state) => state.machine);
-console.log("toolInstalled : ",toolInstalled)
   // const [singleTool, setSingleTool] = useState(false);
   // const [compositeTool, setCompositeTool] = useState(false);
  
@@ -359,10 +339,9 @@ console.log("toolInstalled : ",toolInstalled)
   const onSubmit = async (data) => {
     try {
       data.toolType = toolType;
-      console.log("data",data)
       await dispatch(updateToolInstalled(machine._id, toolInstalled._id, data));
       reset();
-      setToolVal('');
+      // setToolVal('');
     } catch (err) {
       enqueueSnackbar('Saving failed!', { variant: `error` });
       console.error(err.message);
@@ -554,7 +533,7 @@ console.log("toolInstalled : ",toolInstalled)
               >
                 <Autocomplete
                   name="toolType" 
-                  options={toolTypes}
+                  options={toolTypesObj}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   value={toolType}
                   isOptionEqualToValue={(option, value) => option.name === value.name}
