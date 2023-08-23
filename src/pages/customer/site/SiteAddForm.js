@@ -37,8 +37,7 @@ export default function SiteAddForm() {
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+  const phoneRegExp =/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
   const numberRegExp = /^[0-9]+$/;
 
   const [phone, setPhone] = useState('');
@@ -52,7 +51,7 @@ export default function SiteAddForm() {
   }, []);
   /* eslint-disable */
   const AddSiteSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required().label('Name'),
     customer: Yup.string(),
     billingSite: Yup.string(),
     // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
@@ -64,12 +63,13 @@ export default function SiteAddForm() {
       .test('valid-lat', 'Invalid latitude(Valid values are -90 to 90)', (value) => {
         if (!value) return true;
         const trimmedValue = value.trim();
-        const parsedValue = parseFloat(trimmedValue);
+        const parsedValue = parseFloat(value.trim());
         return (
           trimmedValue === parsedValue.toFixed(trimmedValue.length - trimmedValue.indexOf('.') - 1) &&
           !isNaN(parsedValue) &&
           parsedValue >= -90 &&
           parsedValue <= 90
+          
         );
       }),
     long: Yup.string()
@@ -311,11 +311,7 @@ export default function SiteAddForm() {
                   value={billingContactVal || null}
                   options={contacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                  getOptionLabel={(option) =>
-                    `${option.firstName ? option.firstName : ''} ${
-                      option.lastName ? option.lastName : ''
-                    }`
-                  }
+                  getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setBillingContactVal(newValue);
@@ -325,8 +321,7 @@ export default function SiteAddForm() {
                   }}
                   renderOption={(props, option) => (
                     <li {...props} key={option._id}>
-                      {option.firstName ? option.firstName : ''}{' '}
-                      {option.lastName ? option.lastName : ''}
+                      {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}
                   id="controllable-states-demo"
@@ -341,9 +336,7 @@ export default function SiteAddForm() {
                   value={technicalContactVal || null}
                   options={contacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                  getOptionLabel={(option) =>
-                    `${option.firstName && option.firstName} ${option.lastName && option.lastName}`
-                  }
+                  getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setTechnicalContactVal(newValue);
@@ -353,8 +346,7 @@ export default function SiteAddForm() {
                   }}
                   renderOption={(props, option) => (
                     <li {...props} key={option._id}>
-                      {option.firstName && option.firstName}
-                      {option.lastName && option.lastName}
+                        {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}
                   id="controllable-states-demo"

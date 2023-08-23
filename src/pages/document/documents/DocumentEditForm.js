@@ -1,8 +1,7 @@
 import * as Yup from 'yup';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo, useState, useLayoutEffect , memo} from 'react';
+import {  useEffect, useMemo, useState, memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,19 +15,11 @@ import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 
 // slice
 import {
-  setDocumentFormVisibility,
-  setDocumentEdit,
   setDocumentEditFormVisibility,
   getDocument,
-  getDocuments,
   updateDocument,
 } from '../../../redux/slices/document/document';
 
-import documentCategory, {
-  setDocumentCategoryFormVisibility,
-  getActiveDocumentCategories,
-} from '../../../redux/slices/document/documentCategory';
-import { setDocumentTypeFormVisibility } from '../../../redux/slices/document/documentType';
 import { Snacks } from '../../../constants/document-constants';
 
 // ----------------------------------------------------------------------
@@ -48,7 +39,6 @@ function DocumentEditForm({ customerPage, machinePage }) {
   const [customerAccessVal, setCustomerAccessVal] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -87,8 +77,6 @@ function DocumentEditForm({ customerPage, machinePage }) {
 
   const {
     reset,
-    watch,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;

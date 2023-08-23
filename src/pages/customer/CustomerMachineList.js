@@ -35,7 +35,6 @@ export default function CustomerContactList() {
   const { customer, error, initial, responseMessage } = useSelector((state) => state.customer);
   const { customerMachines, machine } = useSelector((state) => state.machine);
 
-  console.log('customerMachines : ', customerMachines);
   const [checked, setChecked] = useState(false);
 
   const [filterName, setFilterName] = useState('');

@@ -141,7 +141,6 @@ export function updateSetting(machineId,settingId,params) {
     dispatch(slice.actions.startLoading());
     try {
       const data = {
-        techParam: params.techParam,
         techParamValue: params.techParamValue,
         isActive: params.isActive,
       }

@@ -142,7 +142,7 @@ export default function RegionAddForm({ isEdit = false, currentUser }) {
           <Grid item xs={18} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <RHFTextField name="name" label="Name" required/>
+                <RHFTextField name="name" label="Name*" />
                 <Autocomplete
                   multiple
                   id="countries-autocomplete"

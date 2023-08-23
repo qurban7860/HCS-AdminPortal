@@ -2,7 +2,7 @@ import { useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // @mui
-import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs, Chip, Container } from '@mui/material';
+import { Card, Grid, Link, Dialog, Tooltip, Breadcrumbs, Chip } from '@mui/material';
 // routes
 import { PATH_MACHINE, PATH_CUSTOMER } from '../../routes/paths';
 // slices
@@ -17,7 +17,6 @@ import {
 } from '../../redux/slices/products/machine';
 import { getCustomer } from '../../redux/slices/customer/customer';
 import { setToolInstalledFormVisibility, setToolInstalledEditFormVisibility } from '../../redux/slices/products/toolInstalled';
-import { getLoggedInSecurityUser } from '../../redux/slices/securityUser/securityUser';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 import { useSnackbar } from '../../components/snackbar';
@@ -29,7 +28,6 @@ import ViewFormAudit from '../components/ViewForms/ViewFormAudit';
 import ViewFormEditDeleteButtons from '../components/ViewForms/ViewFormEditDeleteButtons';
 import DialogLabel from '../components/Dialog/DialogLabel';
 import DialogLink from '../components/Dialog/DialogLink';
-import CommaJoinField from '../components/Defaults/CommaJoinField';
 import FormLabel from '../components/DocumentForms/FormLabel';
 import NothingProvided from '../components/Defaults/NothingProvided';
 import GoogleMaps from '../../assets/GoogleMaps';
@@ -51,13 +49,11 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, machineEditFormFlag, transferMachineFlag } = useSelector(
+  const { machine, transferMachineFlag } = useSelector(
     (state) => state.machine
   );
   // console.log("machine : ",machine)
   const { customer } = useSelector((state) => state.customer);
-  const { site } = useSelector((state) => state.site);
-  const { loggedInUser } = useSelector((state) => state.user);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
   const [disableEditButton, setDisableEditButton] = useState(false);
   const [disableDeleteButton, setDisableDeleteButton] = useState(false);
@@ -243,9 +239,7 @@ export default function MachineViewForm() {
           <ViewFormEditDeleteButtons
             sx={{ pt: 5 }}
             verificationCount={machine?.verifications?.length}
-            isVerified={machine?.verifications?.find(
-              (verified) => verified.verifiedBy?._id === userId
-            )}
+            isVerified={machine?.verifications?.some((verified) => verified.verifiedBy?._id === userId)}
             handleVerification={handleVerification}
             disableTransferButton={disableTransferButton}
             disableEditButton={disableEditButton}
@@ -283,7 +277,7 @@ export default function MachineViewForm() {
                   <ViewFormField
                     sm={4}
                     heading="Customer"
-                    objectParam={
+                    node={
                       defaultValues.customer && (
                         <Link onClick={handleOpenCustomer} href="#" underline="none">
                           {defaultValues.customer?.name}
@@ -310,7 +304,7 @@ export default function MachineViewForm() {
             <ViewFormField
               sm={6}
               heading="Installation Site"
-              objectParam={
+              node={
                 defaultValues.instalationSite && (
                   <Link onClick={handleOpenInstallationSite} href="#" underline="none">
                     {defaultValues.instalationSite?.name}
@@ -321,7 +315,7 @@ export default function MachineViewForm() {
             <ViewFormField
               sm={6}
               heading="Billing Site"
-              objectParam={
+              node={
                 defaultValues.billingSite && (
                   <Link onClick={handleOpenBillingSite} href="#" underline="none">
                     {defaultValues.billingSite?.name}

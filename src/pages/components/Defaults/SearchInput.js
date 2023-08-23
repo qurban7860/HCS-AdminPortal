@@ -54,7 +54,7 @@ function SearchInput({
 SearchInput.propTypes = {
   filterName: PropTypes.string,
   handleFilterName: PropTypes.func,
-  isFiltered: PropTypes.string,
+  isFiltered: PropTypes.bool,
   isSearchBar: PropTypes.bool,
   handleResetFilter: PropTypes.func,
   searchFormVisibility: PropTypes.string,

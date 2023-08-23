@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Grid, Stack, Chip, Alert, Link } from '@mui/material';
+import { Typography, Grid, Chip, Link } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
-import useResponsive from '../../../hooks/useResponsive';
 import ViewFormMenuPopover from './ViewFormMenuPopover';
 import Iconify from '../../../components/iconify';
 
@@ -10,6 +9,7 @@ import Iconify from '../../../components/iconify';
 export default function ViewFormField({
   heading,
   param,
+  node,
   chipLabel,
   arrayParam,
   toolType,
@@ -38,7 +38,6 @@ export default function ViewFormField({
 }) {
   const [verifiedAnchorEl, setVerifiedAnchorEl] = useState(null);
   const [verifiedBy, setVerifiedBy] = useState([]);
-  const { isMobile } = useResponsive();
 
   useEffect(() => {
     if (customerVerifiedBy) {
@@ -106,6 +105,7 @@ export default function ViewFormField({
           typeof secondParam === 'string' &&
           secondParam.trim().length > 0 &&
           secondParam}
+        {node || ''}
         {objectParam || ''}
         {secondObjectParam || ''}
         {numberParam || ''}
@@ -211,6 +211,7 @@ export default function ViewFormField({
 
 ViewFormField.propTypes = {
   heading: PropTypes.string,
+  node: PropTypes.node,
   param: PropTypes.string,
   arrayParam: PropTypes.array,
   toolType: PropTypes.array,
@@ -231,7 +232,7 @@ ViewFormField.propTypes = {
   documentIsActive: PropTypes.bool,
   multiAuth: PropTypes.bool,
   chipDialogArrayParam: PropTypes.array,
-  chips: PropTypes.array,
+  chips: PropTypes.any,
   userRolesChips: PropTypes.array,
   NewVersion: PropTypes.bool,
   handleNewVersion: PropTypes.func,
