@@ -112,10 +112,10 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
     setIsExpanded(true);
   };
 
-  useEffect(() => {
+  useEffect( () => {
     if (!siteAddFormVisibility && !siteEditFormVisibility) {
       dispatch(getSites(customer._id));
-      dispatch(getActiveContacts(customer._id));
+      // dispatch(getActiveContacts(customer._id));
     }
   }, [dispatch, customer, siteAddFormVisibility, siteEditFormVisibility]); 
 

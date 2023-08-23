@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { LoadingButton } from '@mui/lab';
 import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { Button, Typography, IconButton } from '@mui/material';
 import { green } from '@mui/material/colors';
@@ -29,6 +30,8 @@ export default function ViewFormEditDeleteButtons({
   sites,
   handleMap,
 }) {
+  const { id } = useParams();
+  const userId = localStorage.getItem('userId');
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
@@ -165,7 +168,7 @@ export default function ViewFormEditDeleteButtons({
         />
 
         {/* delete button */}
-        {onDelete && (
+        {id !== userId && onDelete && (
           <IconTooltip
             title="Delete"
             disabled={disableDeleteButton}
