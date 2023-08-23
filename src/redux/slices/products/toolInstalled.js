@@ -51,7 +51,6 @@ const initialState = {
   ],
 };
 
-console.log("initialState",initialState);
 const slice = createSlice({
   name: 'ToolInstalled',
   initialState,
@@ -232,7 +231,6 @@ export function addToolInstalled(machineId,params) {
               data.compositeToolConfig.disengageInstruction = params.disengageInstruction.map(obj => obj._id);
             }
           }
-          console.log("data : ",data)
           /* eslint-enable */ 
         await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
         dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
@@ -329,7 +327,6 @@ export function updateToolInstalled(machineId,toolInstallledId,params) {
         data.compositeToolConfig.disengageInstruction = params.disengageInstruction.map(obj => obj._id);
       }
     }
-    console.log("data : ",data)
       await axios.patch(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/${toolInstallledId}`, data, );
       dispatch(slice.actions.setResponseMessage('Tool Installed updated successfully'));
       dispatch(setToolInstalledEditFormVisibility (false));

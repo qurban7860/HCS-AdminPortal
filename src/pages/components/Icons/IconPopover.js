@@ -380,7 +380,7 @@ IconPopover.propTypes = {
   deleteDisabled: PropTypes.bool,
   customerVerificationCount: PropTypes.number,
   machineVerificationCount: PropTypes.number,
-  verified: PropTypes.number,
+  verified: PropTypes.bool,
   verifyBadgeClick: PropTypes.func,
   documentIsActive: PropTypes.bool,
   customerAccess: PropTypes.bool,

@@ -130,7 +130,7 @@ function DocumentEditForm({ customerPage, machinePage }) {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-        <Grid container xs={12} md={12} lg={12}>
+        <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>

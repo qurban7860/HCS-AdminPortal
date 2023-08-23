@@ -32,7 +32,7 @@ export default function IconTooltip({
         title={title}
         placement={placement}
         disableFocusListener
-        toolTipColor={color}
+        tooltipcolor={color}
         color={color}
       >
         <Iconify sx={{ height: '24px', width: '24px' }} icon={icon} />

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import debounce from 'lodash/debounce';
 // form
 // @mui
-import { Card, Grid, Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
+import { Grid, Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
 import {
   useTable,
   getComparator,
@@ -277,7 +277,7 @@ export default function MachineList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />}
         </TableCard>
-        <Grid md={12}>
+        <Grid item md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
     </Container>

@@ -223,7 +223,7 @@ export default function MachineNoteList() {
             );
           })}
       </Card>
-      <Grid md={12}>
+      <Grid item md={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
     </>

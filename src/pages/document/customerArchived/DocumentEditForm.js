@@ -161,7 +161,7 @@ export default function DocumentEditForm() {
         columnGap={2}
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
       >
-        <Grid container xs={12} md={12} lg={12}>
+        <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>

@@ -397,7 +397,7 @@ console.log("activeDocuments : ",activeDocuments)
         gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }}
         mt={3}
       >
-        <Grid container xs={12} md={12} lg={12}>
+        <Grid container item xs={12} md={12} lg={12}>
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>

@@ -9,7 +9,7 @@ export default function VerificationIcon({ isVerified }) {
       title={isVerified ? 'Verified' : 'Not Verified'}
       placement="top"
       disableFocusListener
-      toolTipColor={isVerified ? 'green' : 'red'}
+      tooltipcolor={isVerified ? 'green' : 'red'}
     >
       <Iconify
         icon={isVerified ? 'ic:round-verified-user' : 'mdi:shield-outline'}

@@ -71,9 +71,9 @@ export default function CustomerListTableRow({
         isVerified={verifications?.length > 0}
       />
       { smScreen && <TableCell sx={{maxWidth:"400px"}}>
-        {tradingName.map((value) =>
+        {tradingName.map((value, index) =>
           typeof value === 'string'
-            ? value.trim() !== '' && <Chip label={value} sx={{ m: 0.2 }} />
+            ? value.trim() !== '' && <Chip key={index} label={value} sx={{ m: 0.2 }} />
             : ''
         )}
       </TableCell>}

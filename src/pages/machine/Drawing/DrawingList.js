@@ -308,7 +308,7 @@ export default function DrawingList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-        <Grid md={12}>
+        <Grid item md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
       </TableCard>

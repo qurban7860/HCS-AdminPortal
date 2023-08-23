@@ -191,9 +191,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
               <Grid container spacing={1} justifyContent="flex-start" direction="column">
                 {dataFiltered.map((Site, index) => {
                   const borderTopVal = index !== 0 ? '0px solid white' : '';
-                  return (
-                    <>
-                      {index !== activeIndex && (
+                  return index !== activeIndex && (
                         <Grid
                           item
                           key={index}
@@ -249,7 +247,7 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                                     <AvatarSection
                                       // name={fullName[index]}
                                       image="https://www.howickltd.com/asset/172/w800-h600-q80.jpeg"
-                                      isSite="true"
+                                      isSite
                                     />
                                   )}
                                   <DetailsSection
@@ -262,9 +260,8 @@ export default function CustomerSiteList(defaultValues = { lat: 0, long: 0 }) {
                             </CardActionArea>
                           </StyledCardWrapper>
                         </Grid>
-                      )}
-                    </>
-                  );
+                      )
+                  
                 })}
               </Grid>
             </StyledScrollbar>

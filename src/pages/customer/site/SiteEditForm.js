@@ -314,7 +314,6 @@ export default function SiteEditForm() {
                   name="country"
                   label="Country"
                   autoHighlight
-                  isOptionEqualToValue={(option, value) => option.lable === value.lable}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setCountryVal(newValue);

@@ -60,7 +60,7 @@ SearchInput.propTypes = {
   searchFormVisibility: PropTypes.string,
   disabled: PropTypes.bool,
   size: PropTypes.string,
-  padding: PropTypes.string,
+  padding: PropTypes.number,
   display: PropTypes.string,
 };
 

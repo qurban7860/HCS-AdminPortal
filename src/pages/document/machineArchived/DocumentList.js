@@ -336,7 +336,7 @@ export default function DocumentList() {
             );
           })}
       </Card>
-      <Grid md={12}>
+      <Grid item md={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
     </>

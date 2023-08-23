@@ -457,7 +457,7 @@ const  onChangePage = (event, newPage) => {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
-        <Grid md={12}>
+        <Grid item md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
       </TableCard>
