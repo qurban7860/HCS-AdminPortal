@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useLayoutEffect, useMemo, useState, useCallback , memo} from 'react';
+import { useEffect, useState, useCallback , memo} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -14,23 +14,18 @@ import {
   Autocomplete,
   TextField,
   Dialog,
-  Container,
-  Typography,
 } from '@mui/material';
 // PATH
-import { PATH_MACHINE, PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
+import { PATH_DOCUMENT } from '../../../routes/paths';
 // slice
 import {
-  getActiveDocuments,
   resetActiveDocuments,
-  getDocuments,
   getDocument,
   getDocumentHistory,
   getCustomerDocuments,
   getMachineDocuments,
   getMachineDrawingsDocuments,
   addDocument,
-  getCustomerSiteDocuments,
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
   setDocumentFormVisibility,
@@ -40,12 +35,9 @@ import {
   setDocumentHistoryNewVersionFormVisibility,
 } from '../../../redux/slices/document/document';
 import {
-  setDocumentCategoryFormVisibility,
   getActiveDocumentCategories,
 } from '../../../redux/slices/document/documentCategory';
 import {
-  setDocumentTypeFormVisibility,
-  getActiveDocumentTypes,
   resetActiveDocumentTypes,
   getActiveDocumentTypesWithCategory,
 } from '../../../redux/slices/document/documentType';
@@ -54,22 +46,13 @@ import {
   updateDocumentVersion,
 } from '../../../redux/slices/document/documentVersion';
 import {
-  getActiveMachines,
-  resetActiveMachines,
-  getActiveModelMachines,
+  resetActiveMachines
 } from '../../../redux/slices/products/machine';
-import { getActiveMachineModels } from '../../../redux/slices/products/model';
-import { getActiveCustomers } from '../../../redux/slices/customer/customer';
-import { getActiveSites, resetActiveSites } from '../../../redux/slices/customer/site';
+import { resetActiveSites } from '../../../redux/slices/customer/site';
 // components
-import Iconify from '../../../components/iconify';
 import { useSnackbar } from '../../../components/snackbar';
 import FormProvider, {
-  RHFSelect,
-  RHFMultiSelect,
   RHFTextField,
-  RHFName,
-  RHFSwitch,
   RHFUpload,
 } from '../../../components/hook-form';
 // assets
@@ -78,15 +61,11 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import RadioButtons from '../../components/DocumentForms/RadioButtons';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import {
-  fileTypesArray,
-  fileTypesMessage,
-  allowedExtensions,
   DocRadioValue,
   DocRadioLabel,
   Snacks,
 } from '../../../constants/document-constants';
 import DocumentCover from '../../components/DocumentForms/DocumentCover';
-import DocumentMachineAddForm from '../archived/documents/DocumentAddForms/DocumentMachineAddForm';
 import { FORMLABELS } from '../../../constants/default-constants';
 import { validateFileType } from './Utills/Util'
 
@@ -113,12 +92,9 @@ function DocumentAddForm({
 
   const { activeDocumentTypes } = useSelector((state) => state.documentType);
   const { activeDocumentCategories } = useSelector((state) => state.documentCategory);
-  const { activeMachines, machine } = useSelector((state) => state.machine);
-  const { activeMachineModels } = useSelector((state) => state.machinemodel);
+  const { machine } = useSelector((state) => state.machine);
   const { document ,documentHistory, activeDocuments, documentAddFilesViewFormVisibility, documentNewVersionFormVisibility, documentHistoryAddFilesViewFormVisibility, documentHistoryNewVersionFormVisibility } = useSelector((state) => state.document);
-  const { activeCustomers, customer } = useSelector((state) => state.customer);
-  const { activeContacts } = useSelector((state) => state.contact);
-  const { activeSites } = useSelector((state) => state.site);
+  const { customer } = useSelector((state) => state.customer);
 
   // ------------------ document values states ------------------------------
 
@@ -126,8 +102,6 @@ function DocumentAddForm({
   const [selectedVersionValue, setSelectedVersionValue] = useState('newVersion');
   const [readOnlyVal, setReadOnlyVal] = useState(false);
   const [readOnlyDocument, setReadOnlyDocument] = useState(false);
-  // const [contactDisabled, setContactDisabled] = useState(false);
-  const [documentDependency, setDocumentDependency] = useState('customer');
   const [previewVal, setPreviewVal] = useState('');
   const [preview, setPreview] = useState(false);
   const [categoryBy, setCategoryBy] = useState('');
@@ -202,7 +176,7 @@ function DocumentAddForm({
     formState: { isSubmitting },
   } = methods;
 
-  const {  documentType, documentCategory, displayName, referenceNumber, versionNo, documentVal, description, files, isActive, customerAccess, customerVal, machineVal } = watch();
+  const {  documentType, documentCategory, displayName, documentVal, files, isActive, customerAccess,  } = watch();
 
   useEffect(()=>{
     if(customerPage){
@@ -357,16 +331,6 @@ function DocumentAddForm({
       }
     }, [dispatch, customerPage, machineDrawings, machinePage, selectedValue]);
   
-  // ------------------------- machine documents ---------------------------------------
-  // useEffect(() => {
-  //   if (machineVal?._id && selectedValue === 'newVersion') {
-  //     dispatch(getMachineDocuments(machineVal._id, machineModelVal._id));
-  //   }
-  //   if (machineModelVal._id && !machineVal && selectedValue === 'newVersion') {
-  //     dispatch(getMachineDocuments(null, machineModelVal._id));
-  //   }
-  // }, [dispatch, machineVal, machineModelVal, selectedValue]);
-
 
   const onSubmit = async (data) => {
     try {
@@ -508,7 +472,6 @@ function DocumentAddForm({
     }
   }
 
-  const previewHandle = () => setPreview(true);
   const handleClosePreview = () => setPreview(false);
   const handleChange = () => setValue('customerAccess' ,!customerAccess);
 
@@ -520,17 +483,7 @@ function DocumentAddForm({
     }
   };
   const handleVersionRadioChange = (event) => setSelectedVersionValue(event.target.value);
-  const handleDependencyChange = (event) => {
-    setDocumentDependency(event.target.value);
 
-    if (event.target.value === 'new') {
-      setReadOnlyVal(false);
-    }
-    // if(event.target.value === "newVersion"){
-    dispatch(resetActiveSites());
-    dispatch(resetActiveMachines());
-    dispatch(resetActiveDocuments());
-  };
 
 
 
@@ -567,133 +520,6 @@ function DocumentAddForm({
           <Grid item xs={12} md={12}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-                {/* {!(customerPage || machinePage) && (
-                  <RadioButtons
-                    value={documentDependency}
-                    radioOnChange={handleDependencyChange}
-                    newLabel={DocRadioLabel.customer}
-                    newValue={DocRadioValue.customer}
-                    secondLabel={DocRadioLabel.machine}
-                    secondValue={DocRadioValue.machine}
-                  />
-                )} */}
-
-                {/* {documentDependency === 'customer' && !(customerPage || machinePage) && (
-                  <Grid container item lg={12}>
-                    <Grid container spacing={2}>
-                      <Grid item lg={6}>
-
-                        <Autocomplete
-                          // freeSolo
-                          value={customerVal || null}
-                          options={activeCustomers}
-                          // isOptionEqualToValue={(option, value) => option.name === value.name}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              setCustomerVal(newValue);
-                              setContactDisabled(false);
-                              setSiteDisabled(false);
-                              setCustomerSiteVal('');
-                              setMachineVal('');
-                              setMachineModelVal('');
-                              dispatch(resetActiveSites());
-                              setDocumentVal('');
-                              dispatch(resetActiveDocuments());
-                            } else {
-                              setCustomerVal('');
-                              setContactDisabled(false);
-                              setSiteDisabled(false);
-                              setCustomerSiteVal('');
-                              dispatch(resetActiveSites());
-                              setDocumentVal('');
-                              dispatch(resetActiveDocuments());
-                            }
-                          }}
-                          // renderOption={(props, option) => (<li  {...props} key={option._id}>{option.name}</li>)}
-                          id="controllable-states-demo"
-                          renderInput={(params) => (
-                            <TextField {...params} required label="Select Customer" />
-                          )}
-                          ChipProps={{ size: 'small' }}
-                        />
-
-                      </Grid>
-                      <Grid item lg={6}>
-
-                        <Autocomplete
-                          // freeSolo
-                          disabled={siteDisabled}
-                          value={customerSiteVal || null}
-                          options={activeSites}
-                          isOptionEqualToValue={(option, value) => option.name === value.name}
-                          getOptionLabel={(option) => `${option.name ? option.name : ''}`}
-                          onChange={(event, newValue) => {
-                            if (newValue) {
-                              setCustomerSiteVal(newValue);
-                              // setContactDisabled(true);
-                            } else {
-                              setCustomerSiteVal('');
-                              // setContactDisabled(false);
-                            }
-                          }}
-                          renderOption={(props, option) => (
-                            <li {...props} key={option._id}>
-                              {option.name}
-                            </li>
-                          )}
-                          id="controllable-states-demo"
-                          renderInput={(params) => <TextField {...params} label="Select Site" />}
-                          ChipProps={{ size: 'small' }}
-                        />
-
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                )} */}
-
-                {/* Machine */}
-                {/* will write a better way */}
-                {/* {documentDependency === 'machine' && !(customerPage || machinePage) && (
-                  <DocumentMachineAddForm
-                    disabled={readOnlyVal}
-                    value={machineModelVal || null}
-                    options={activeMachineModels}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        setMachineModelVal(newValue);
-                        setMachineVal('');
-                        setCustomerVal('');
-                        setCustomerSiteVal('');
-                        dispatch(resetActiveMachines());
-                        setDocumentVal('');
-                        dispatch(resetActiveDocuments());
-                      } else {
-                        setMachineModelVal('');
-                        setMachineVal('');
-                        dispatch(resetActiveMachines());
-                        setDocumentVal('');
-                        dispatch(resetActiveDocuments());
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField {...params} required label="Select Model" />
-                    )}
-                    SubValue={machineVal || null}
-                    SubOptions={activeMachines}
-                    SubOnChange={(event, newValue) => {
-                      if (newValue) {
-                        setMachineVal(newValue);
-                      } else {
-                        setMachineVal('');
-                        setDocumentVal('');
-                        dispatch(resetActiveDocuments());
-                      }
-                    }}
-                    SubRenderInput={(params) => <TextField {...params} label="Select Machine" />}
-                  />
-                )} */}
-
                 <RadioButtons
                   radioDisaled={ documentNewVersionFormVisibility || documentAddFilesViewFormVisibility || documentHistoryNewVersionFormVisibility || documentHistoryAddFilesViewFormVisibility }
                   value={selectedValue}

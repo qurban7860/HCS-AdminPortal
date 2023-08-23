@@ -212,7 +212,6 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   name={FORMLABELS.COUNTRY.name}
                   label={FORMLABELS.COUNTRY.label}
                   autoHighlight
-                  isOptionEqualToValue={(option, value) => option.lable === value.lable}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setCountryVal(newValue);

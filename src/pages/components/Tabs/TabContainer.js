@@ -4,7 +4,7 @@ import { Tabs } from '@mui/material';
 import { useTheme } from '@emotion/react';
 
 TabContainer.propTypes = {
-  currentTab: PropTypes.number,
+  currentTab: PropTypes.string,
   setCurrentTab: PropTypes.func,
   children: PropTypes.node,
   tabsClasses: PropTypes.string,

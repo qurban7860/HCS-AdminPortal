@@ -12,8 +12,8 @@ export default function ViewFormMenuPopover({ open, onClose, ListArr, ListTitle 
           <Typography variant="subtitle1">{ListTitle}</Typography>
 
           {ListArr?.map((user) => (
-            <>
-              <Divider key={user?._id} sx={{ borderStyle: 'solid' }} />
+            <Grid key={user?._id} >
+              <Divider  sx={{ borderStyle: 'solid' }} />
               <Grid display="flex" justifyContent="space-between">
                 <Typography variant="body2" sx={{ color: 'text.secondary', mr: 3 }}>
                   {user?.verifiedBy?.name || ''}
@@ -22,7 +22,7 @@ export default function ViewFormMenuPopover({ open, onClose, ListArr, ListTitle 
                   {fDate(user?.verifiedDate) || ''}
                 </Typography>
               </Grid>
-            </>
+            </Grid>
           ))}
         </Box>
       </Box>

@@ -1,13 +1,10 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect, memo } from 'react';
+import { useState, useEffect, memo } from 'react';
 // @mui
 import {
   Stack,
   Breadcrumbs,
   Card,
   Grid,
-  Button,
   Typography,
   Accordion,
   AccordionSummary,
@@ -17,10 +14,9 @@ import {
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_MACHINE } from '../../routes/paths';
+import { PATH_MACHINE } from '../../routes/paths';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
 // components
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
@@ -29,7 +25,6 @@ import Iconify from '../../components/iconify';
 // sections
 import {
   setToolInstalledFormVisibility,
-  setToolInstalledEditFormVisibility,
   getToolsInstalled,
 } from '../../redux/slices/products/toolInstalled';
 import ToolsInstalledAddForm from './ToolsInstalled/ToolsInstalledAddForm';
@@ -52,11 +47,9 @@ import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 // ----------------------------------------------------------------------
 
 function MachineToolsInstalledList() {
-  const { dense, page, order, orderBy, rowsPerPage } = useTable({
+  const { order, orderBy} = useTable({
     defaultOrderBy: 'createdAt',
   });
-  const { tools } = useSelector((state) => state.tool);
-  const [controlled, setControlled] = useState(false);
   const { machine } = useSelector((state) => state.machine);
   const {
     initial,
@@ -67,17 +60,12 @@ function MachineToolsInstalledList() {
     formVisibility,
   } = useSelector((state) => state.toolInstalled);
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
-
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
 
   const toggleChecked = async () => {
     dispatch(setToolInstalledFormVisibility(!formVisibility));
@@ -119,9 +107,6 @@ function MachineToolsInstalledList() {
     // setChecked(false);
   };
 
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
-  const denseHeight = dense ? 60 : 80;
-  const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = !toolsInstalled.length && !formVisibility && !toolInstalledEditFormVisibility;
 
   return (
@@ -205,7 +190,7 @@ function MachineToolsInstalledList() {
             );
           })}
       </Card>
-      <Grid md={12}>
+      <Grid item md={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
     </>

@@ -33,7 +33,7 @@ export default function DialogMachine({ open, onClose, machine, onClick }) {
         <ViewFormField
           sm={6}
           heading={FORMLABELS.MACHINE.PREVIOUS_SN}
-          param={machine?.parentSerialNo}
+          param={machine?.parentMachine?.serialNo}
         />
         <ViewFormField
           sm={6}

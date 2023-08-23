@@ -126,7 +126,7 @@ export default function CustomerContactList(currentContact = null) {
   }, [dispatch, checked, customer, formVisibility, contactEditFormVisibility]);
 
   const isNotFound = !contacts.length && !formVisibility && !contactEditFormVisibility;
-  const fullName = contacts.map((contact) => `${contact.firstName} ${contact.lastName || ''}`);
+  const fullName = contacts.map((contact) => `${contact.firstName ? contact.firstName : ''} ${contact.lastName || ''}`);
   // var conditions for rendering the contact view, edit, and add forms
   const shouldShowContactView = isExpanded && !contactEditFormVisibility;
   const shouldShowContactEdit = contactEditFormVisibility && !formVisibility;
@@ -203,9 +203,7 @@ export default function CustomerContactList(currentContact = null) {
               <Grid container justifyContent="flex-start" direction="column" gap={1}>
                 {dataFiltered.map((contact, index) => {
                   const borderTopVal = index !== 0 || null ? '0px solid white' : '';
-                  return (
-                    <>
-                      {contact._id !== activeIndex && (
+                  return contact._id !== activeIndex && (
                         <Grid
                           item
                           key={contact._id}
@@ -267,7 +265,7 @@ export default function CustomerContactList(currentContact = null) {
                                     />
                                   )}
                                   <DetailsSection
-                                    content={`${contact.firstName} ${contact.lastName}`}
+                                    content={`${contact.firstName || ''} ${contact.lastName || ''}`}
                                     content2={contact.title ? contact.title : <br />}
                                     content3={contact.email ? contact.email : <br />}
                                   />
@@ -276,9 +274,7 @@ export default function CustomerContactList(currentContact = null) {
                             </CardActionArea>
                           </StyledCardWrapper>
                         </Grid>
-                      )}
-                    </>
-                  );
+                      )
                 })}
               </Grid>
             </StyledScrollbar>

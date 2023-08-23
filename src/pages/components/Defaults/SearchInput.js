@@ -54,13 +54,13 @@ function SearchInput({
 SearchInput.propTypes = {
   filterName: PropTypes.string,
   handleFilterName: PropTypes.func,
-  isFiltered: PropTypes.string,
+  isFiltered: PropTypes.bool,
   isSearchBar: PropTypes.bool,
   handleResetFilter: PropTypes.func,
   searchFormVisibility: PropTypes.string,
   disabled: PropTypes.bool,
   size: PropTypes.string,
-  padding: PropTypes.string,
+  padding: PropTypes.number,
   display: PropTypes.string,
 };
 

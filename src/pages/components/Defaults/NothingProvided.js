@@ -10,7 +10,7 @@ NothingProvided.propTypes = {
 
 function NothingProvided({ content }) {
   return (
-    <Grid container md={12} p={2} justifyContent="center" color="text.disabled">
+    <Grid container item md={12} p={2} justifyContent="center" color="text.disabled">
       <Iconify icon={ICONS.warning} />
       <Typography variant="body1">&nbsp;{content}</Typography>
     </Grid>

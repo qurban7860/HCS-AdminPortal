@@ -81,8 +81,8 @@ export default function RegionTableRow({
           <LinkTableCell align="left" onClick={onViewRow} param={name} />
         </Stack>
 
-       { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-          {countries.map((obj) => <Chip label={obj.country_name} sx={{mx:0.3}} />)}
+       { smScreen && <TableCell align="left" sx={{ textTransform: 'capitalize', maxWidth:"500px" }} >
+          {countries.map((obj, index) => <Chip key={index} label={obj.country_name} sx={{m:0.3}} />)}
         </TableCell> }
        
         <TableCell align="center">

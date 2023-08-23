@@ -98,8 +98,8 @@ export function StyledCardWrapper({ children, isMobile, condition1, condition2, 
 StyledCardWrapper.propTypes = {
   children: PropTypes.node,
   isMobile: PropTypes.bool,
-  condition1: PropTypes.node,
-  condition2: PropTypes.node,
+  condition1: PropTypes.bool,
+  condition2: PropTypes.bool,
 };
 
 export function StyledScrollbar({ contacts, children, ...props }) {

@@ -11,7 +11,6 @@ import SvgColor from '../../../components/svg-color';
 const userRolesString = localStorage.getItem('userRoles');
 const userRoles = userRolesString ? JSON.parse(userRolesString) : [];
 const userEmailRole = userRoles?.some((role) => role.roleType === 'Email');
-console.log(userRoles);
 
 const icon = (name) => (
   <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />
@@ -77,7 +76,6 @@ const navConfig = [
   },
 ]
 
-console.log(userEmailRole);
 if (userEmailRole) {
   navConfig.map((obj) => obj.items?.push({ title: 'Email', path: PATH_EMAIL.email.list, icon: ICONS.email }));
 } 

@@ -18,7 +18,6 @@ import { PATH_MACHINE } from '../../routes/paths';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // components
-import { useSnackbar } from '../../components/snackbar';
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import Iconify from '../../components/iconify';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
@@ -43,11 +42,8 @@ export default function MachineSettingList() {
     defaultOrderBy: 'createdAt',
   });
   const dispatch = useDispatch();
-  const { error, responseMessage, settings, settingEditFormVisibility, formVisibility } =
-    useSelector((state) => state.machineSetting);
-    console.log("settings : ",settings)
+  const { error, responseMessage, settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
   const { machine } = useSelector((state) => state.machine);
-  const { enqueueSnackbar } = useSnackbar();
   const isMobile = useResponsive('down', 'sm');
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);

@@ -93,7 +93,6 @@ export default function SecurityUserViewForm() {
   };
 
   const handleUpdatePassword = () => {
-    // dispatch(setSecurityUserEditFormVisibility(true));
     navigate(PATH_SECURITY.users.userPassword);
   };
 
@@ -103,13 +102,6 @@ export default function SecurityUserViewForm() {
       dispatch(getSecurityUsers());
       navigate(PATH_SECURITY.users.list);
     } catch (error) {
-      // if (error.Message) {
-      //   enqueueSnackbar(error.Message, { variant: `error` });
-      // } else if (error.message) {
-      //   enqueueSnackbar(error.message, { variant: `error` });
-      // } else {
-      //   enqueueSnackbar('Something went wrong!', { variant: `error` });
-      // }
       enqueueSnackbar('User delete failed!', { variant: `error` });
       console.log('Error:', error);
     }
@@ -182,7 +174,6 @@ export default function SecurityUserViewForm() {
                 )
               }
             />
-            {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
             <ViewFormField
               sm={6}
               heading="Contact"
@@ -194,7 +185,6 @@ export default function SecurityUserViewForm() {
                 )
               }
             />
-            {/* <ViewFormField sm={6} heading="Contact" param={defaultValues?.contact} /> */}
             <ViewFormField sm={6} heading="Full Name" param={defaultValues?.name} />
             <ViewFormField sm={6} heading="Phone" param={defaultValues?.phone} />
             <ViewFormField sm={12} heading="email" param={defaultValues?.email} />

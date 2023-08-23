@@ -98,7 +98,7 @@ export default function SiteEditForm() {
 
   /* eslint-disable */
   const EditSiteSchema = Yup.object().shape({
-    name: Yup.string().min(2).max(40).required('Name is required'),
+    name: Yup.string().min(2).max(40).required().label('Name'),
     customer: Yup.string(),
     billingSite: Yup.string(),
     // phone: Yup.string().matches(phoneRegExp, {message: "Please enter valid number.", excludeEmptyString: true}).max(15, "too long"),
@@ -314,7 +314,6 @@ export default function SiteEditForm() {
                   name="country"
                   label="Country"
                   autoHighlight
-                  isOptionEqualToValue={(option, value) => option.lable === value.lable}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setCountryVal(newValue);
@@ -361,11 +360,7 @@ export default function SiteEditForm() {
                   value={billingContactVal || null}
                   options={activeContacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                  getOptionLabel={(option) =>
-                    `${option.firstName ? option.firstName : ''} ${
-                      option.lastName ? option.lastName : ''
-                    }`
-                  }
+                  getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setBillingContactVal(newValue);
@@ -375,8 +370,7 @@ export default function SiteEditForm() {
                   }}
                   renderOption={(props, option) => (
                     <li {...props} key={option._id}>
-                      {option.firstName ? option.firstName : ''}{' '}
-                      {option.lastName ? option.lastName : ''}
+                      {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}
                   id="controllable-states-demo"
@@ -391,11 +385,7 @@ export default function SiteEditForm() {
                   value={technicalContactVal || null}
                   options={activeContacts}
                   isOptionEqualToValue={(option, value) => option.firstName === value.firstName}
-                  getOptionLabel={(option) =>
-                    `${option.firstName ? option.firstName : ''} ${
-                      option.lastName ? option.lastName : ''
-                    }`
-                  }
+                  getOptionLabel={(option) => `${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {
                       setTechnicalContactVal(newValue);
@@ -405,8 +395,7 @@ export default function SiteEditForm() {
                   }}
                   renderOption={(props, option) => (
                     <li {...props} key={option._id}>
-                      {option.firstName ? option.firstName : ''}{' '}
-                      {option.lastName ? option.lastName : ''}
+                      {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}
                   id="controllable-states-demo"

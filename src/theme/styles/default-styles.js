@@ -45,25 +45,25 @@ export const StyledCustomAvatar = styled('div')(({ theme }) => ({
 
 export const StyledTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme, toolTipColor }) => ({
+))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
-    color: toolTipColor,
+    color: tooltipcolor,
   },
   [`& .${tooltipClasses.tooltip}`]: {
     fontSize: '1rem',
-    backgroundColor: toolTipColor,
+    backgroundColor: tooltipcolor,
   },
 }));
 
 export const StyledTooltipSliding = styled(({ className, ...props }) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme, toolTipColor }) => ({
+))(({ theme, tooltipcolor }) => ({
   [`& .${tooltipClasses.arrow}`]: {
-    color: toolTipColor,
+    color: tooltipcolor,
   },
   [`& .${tooltipClasses.tooltip}`]: {
     fontSize: '1rem',
-    color: toolTipColor,
+    color: tooltipcolor,
     backgroundColor: 'transparent',
   },
 }));

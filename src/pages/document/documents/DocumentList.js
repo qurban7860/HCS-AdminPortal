@@ -5,12 +5,10 @@ import PropTypes from 'prop-types';
 // @mui
 import {
   Grid,
-  Card,
   Table,
   Button,
   Tooltip,
   TableBody,
-  Container,
   IconButton,
   TableContainer,
 } from '@mui/material';
@@ -457,7 +455,7 @@ const  onChangePage = (event, newPage) => {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />}
-        <Grid md={12}>
+        <Grid item md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
       </TableCard>

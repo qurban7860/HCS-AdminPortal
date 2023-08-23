@@ -290,7 +290,7 @@ export default function CustomerList() {
             onRowsPerPageChange={onChangeRowsPerPage}
           />
         </Card>
-        <Grid md={12}>
+        <Grid item md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
       </Container>

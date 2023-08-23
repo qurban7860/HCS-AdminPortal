@@ -1,30 +1,18 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
-import PropTypes from 'prop-types';
 // @mui
 import {
-  Switch,
   Grid,
-  Card,
   Table,
   Button,
   Tooltip,
   TableBody,
-  Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
-// routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
-import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
   getComparator,
@@ -41,25 +29,15 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import DocumentListTableRow from './DrawingListTableRow';
 import DocumentListTableToolbar from './DrawingListTableToolbar';
 import {
-  getDocuments,
-  deleteDocument,
-  resetDocuments,
   getDocumentHistory,
   resetDocumentHistory,
-  setDocumentViewFormVisibility,
 } from '../../../redux/slices/document/document';
-import drawing, {
-  getDrawing, 
-  resetDrawing,
+import {
   getDrawings,
-  resetDrawings,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
   setDrawingViewFormVisibility } from '../../../redux/slices/products/drawing';
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
 
@@ -79,8 +57,6 @@ export default function DrawingList() {
     setPage,
     //
     selected,
-    setSelected,
-    onSelectRow,
     onSelectAllRows,
     //
     onSort,
@@ -91,14 +67,10 @@ export default function DrawingList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
 
   const { drawings, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.drawing );
@@ -135,7 +107,6 @@ export default function DrawingList() {
     filterName,
     filterStatus,
   });
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
@@ -167,43 +138,6 @@ export default function DrawingList() {
   const handleFilterStatus = (event) => {
     setPage(0);
     setFilterStatus(event.target.value);
-  };
-
-  // const handleDeleteRow = async (id) => {
-  //   try {
-  //     await dispatch(deleteDocument(id));
-  //     dispatch(deleteDocument());
-  //     setSelected([]);
-
-  //     if (page > 0) {
-  //       if (dataInPage.length < 2) {
-  //         setPage(page - 1);
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.log(err.message);
-  //   }
-  // };
-
-  // const handleDeleteRows = (selectedRows) => {
-  //   const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
-  //   setSelected([]);
-  //   setTableData(deleteRows);
-
-  //   if (page > 0) {
-  //     if (selectedRows.length === dataInPage.length) {
-  //       setPage(page - 1);
-  //     } else if (selectedRows.length === dataFiltered.length) {
-  //       setPage(0);
-  //     } else if (selectedRows.length > dataInPage.length) {
-  //       const newPage = Math.ceil((tableData.length - selectedRows.length) / rowsPerPage) - 1;
-  //       setPage(newPage);
-  //     }
-  //   }
-  // };
-
-  const handleEditRow = (id) => {
-    // navigate(PATH_DOCUMENT.document.edit(id));
   };
 
   const handleViewRow = (documentId) => {
@@ -308,7 +242,7 @@ export default function DrawingList() {
           onPageChange={onChangePage}
           onRowsPerPageChange={onChangeRowsPerPage}
         />
-        <Grid md={12}>
+        <Grid item md={12}>
           <TableNoData isNotFound={isNotFound} />
         </Grid>
       </TableCard>

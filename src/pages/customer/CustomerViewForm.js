@@ -38,7 +38,6 @@ export default function CustomerViewForm() {
   const userId = localStorage.getItem('userId');
   const { enqueueSnackbar } = useSnackbar();
   const isNotFound = !customer;
-
   // ----------------------------useMemo---------------------------------
   const defaultValues = useMemo(
     () => ({
@@ -117,9 +116,7 @@ export default function CustomerViewForm() {
         <Grid item md={12}>
           <Card sx={{ p: 3 }}>
             <ViewFormEditDeleteButtons
-              isVerified={customer?.verifications?.find(
-                (verified) => verified?.verifiedBy?._id === userId
-              )}
+              isVerified={customer?.verifications?.some((verified) => verified?.verifiedBy?._id === userId)}
               handleVerification={handleVerification}
               handleEdit={handleEdit}
               onDelete={onDelete}

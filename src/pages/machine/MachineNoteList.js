@@ -1,5 +1,4 @@
 import { useState, useEffect, useLayoutEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 // @mui
 import {
   Card,
@@ -9,7 +8,6 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Breadcrumbs,
 } from '@mui/material';
 import { fDate } from '../../utils/formatTime';
 
@@ -19,7 +17,6 @@ import { useDispatch, useSelector } from '../../redux/store';
 import { PATH_MACHINE } from '../../routes/paths';
 // hooks
 import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
 // components
 import { useTable, getComparator, TableNoData } from '../../components/table';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
@@ -32,7 +29,6 @@ import NoteAddForm from './Note/NoteAddForm';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 import {
   getNotes,
-  deleteNote,
   setNoteFormVisibility,
 } from '../../redux/slices/products/machineNote';
 // constants
@@ -40,45 +36,18 @@ import { BUTTONS, BREADCRUMBS } from '../../constants/default-constants';
 
 // ----------------------------------------------------------------------
 
-const TABLE_HEAD = [
-  { id: 'note', label: 'Note', align: 'left' },
-  { id: 'isDisabled', label: 'Disabled', align: 'left' },
-  { id: 'created_at', label: 'Created At', align: 'left' },
-  { id: 'action', label: 'Actions', align: 'left' },
-];
-
-const STATUS_OPTIONS = [
-  // { id: '1', value: 'Order Received' },
-  // { id: '2', value: 'In Progress' },
-  // { id: '3', value: 'Ready For Transport' },
-  // { id: '4', value: 'In Freight' },
-  // { id: '5', value: 'Deployed' },
-  // { id: '6', value: 'Archived' },
-];
-
-// const STATUS_OPTIONS = [
-//   { value: 'all_notes', label: 'All Note' },
-//   { value: 'deployable', label: 'All Deployable' },
-//   { value: 'pending', label: 'All Pending' },
-//   { value: 'archived', label: 'All Archived' },
-//   { value: 'undeployable', label: 'All Undeployable' }
-// ];
-
 // ----------------------------------------------------------------------
 
 export default function MachineNoteList() {
-  const { page, order, orderBy, rowsPerPage, setSelected } = useTable({
+  const { order, orderBy,  } = useTable({
     defaultOrderBy: 'createdAt',
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
   const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
-  const [openConfirm, setOpenConfirm] = useState(false);
   const [activeIndex, setActiveIndex] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const { machine } = useSelector((state) => state.machine);
@@ -134,22 +103,6 @@ export default function MachineNoteList() {
     setExpanded(isExpanded ? panel : false);
   };
 
-  const handleCloseConfirm = () => {
-    setOpenConfirm(false);
-  };
-
-  const handleDeleteRow = async (id) => {
-    try {
-      await dispatch(deleteNote(id));
-      setExpanded(false);
-      dispatch(getNotes(machine._id));
-      setSelected([]);
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
-
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length) && !formVisibility && !noteEditFormVisibility;
 
@@ -223,7 +176,7 @@ export default function MachineNoteList() {
             );
           })}
       </Card>
-      <Grid md={12}>
+      <Grid item md={12}>
         <TableNoData isNotFound={isNotFound} />
       </Grid>
     </>
