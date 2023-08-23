@@ -52,6 +52,8 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const { user, logout } = useAuthContext();
   // console.log("user : ",user)
+  const email = localStorage.getItem('email')
+  const displayName = localStorage.getItem('name')
 
   const { enqueueSnackbar } = useSnackbar();
 
@@ -138,11 +140,10 @@ export default function AccountPopover() {
       <MenuPopover open={openPopover} onClose={handleClosePopover} sx={{ width: 200, p: 0 }}>
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {user?.displayName}
+            {user?.displayName || displayName}
           </Typography>
-
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.login}
+            {user?.login || email }
           </Typography>
         </Box>
         <Divider sx={{ borderStyle: 'solid' }} />
