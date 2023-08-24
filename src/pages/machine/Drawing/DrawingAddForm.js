@@ -123,7 +123,7 @@ export default function DrawingAddForm() {
                   <Autocomplete
                     {...field}
                     options={activeDocumentCategories}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, newValue) => {
                       if(newValue){
@@ -167,7 +167,7 @@ export default function DrawingAddForm() {
                   <Autocomplete
                     {...field}
                     options={activeDocumentTypes}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option.name}
                     
                     onChange={(event, newValue) => {
@@ -209,7 +209,7 @@ export default function DrawingAddForm() {
                   <Autocomplete
                     {...field}
                     options={filteredDocuments}
-                    isOptionEqualToValue={(option, value) => option.displayName === value.displayName}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option.displayName}
                     onChange={(event, value) => field.onChange(value)}
                     id="controllable-states-demo"

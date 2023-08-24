@@ -343,7 +343,7 @@ export default function MachineEditForm() {
                      disabled
                         options={activeMachines}
                         isOptionEqualToValue={(option, value) =>
-                          option.serialNo === value.serialNo && option.isActive === true
+                          option._id === value._id && option.isActive === true
                         }
                         getOptionLabel={(option) => `${option?.serialNo ? option?.serialNo : ''} ${option?.name ? '-' : ''} ${option?.name ? option?.name : ''}`}
                         onChange={(event, newValue) => {
@@ -393,7 +393,7 @@ export default function MachineEditForm() {
                         {...field}
                         id="controllable-states-demo"
                         options={activeSuppliers}
-                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
@@ -426,7 +426,7 @@ export default function MachineEditForm() {
                         {...field}
                         id="controllable-states-demo"
                         options={activeMachineModels}
-                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
@@ -459,7 +459,7 @@ export default function MachineEditForm() {
                         {...field}
                         id="controllable-states-demo"
                         options={activeCustomers}
-                        isOptionEqualToValue={(option, value) => option.name === value.name}
+                        isOptionEqualToValue={(option, value) => option._id === value._id}
                         getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                         renderOption={(props, option) => (
                           <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
@@ -512,7 +512,7 @@ export default function MachineEditForm() {
                     options={machineConnections}
                     getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.connectedMachine?.name ? option?.connectedMachine?.name : option?.name}`}
                     filterSelectedOptions
-                    isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     onChange={(event, value) => field.onChange(value)}
                     renderInput={(params) => (
                       <TextField 
@@ -540,7 +540,7 @@ export default function MachineEditForm() {
                   <Autocomplete
                     {...field}
                     options={activeMachineStatuses}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     getOptionDisabled={(option) =>
                       option.slug === 'intransfer' || option.slug === 'transferred'
@@ -579,7 +579,7 @@ export default function MachineEditForm() {
                     // freeSolo
                     {...field}
                     options={activeSites}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     renderOption={(props, option) => (
                       <li {...props} key={option._id}>{`${option.name ? option.name : ''}`}</li>
@@ -611,7 +611,7 @@ export default function MachineEditForm() {
                     // freeSolo
                     {...field}
                     options={activeSites}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                     onChange={(event, value) => field.onChange(value)}
                     renderOption={(props, option) => (

@@ -135,7 +135,7 @@ export default function ModelAddForm() {
                   <Autocomplete
                     value={modelVal || null}
                     options={activeCategories}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option.name}
                     onChange={(event, newValue) => {
                       setModelVal(newValue);
