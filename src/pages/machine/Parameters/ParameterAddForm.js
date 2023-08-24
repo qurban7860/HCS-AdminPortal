@@ -46,9 +46,9 @@ export default function ParameterAddForm() {
 
   const AddMachineParameterSchema = Yup.object().shape({
     name: Yup.string().max(40).required('Name is required'),
+    code: Yup.string().max(20).required('Code is required'),
     description: Yup.string().max(2000),
     isActive: Yup.boolean(),
-    code: Yup.string().max(20).required('Code is required'),
   });
 
   const defaultValues = useMemo(
