@@ -15,7 +15,7 @@ import { useSnackbar } from '../../../components/snackbar';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 // assets
-import FormProvider, { RHFTextField, RHFSwitch } from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 // constants
 import { Snacks } from '../../../constants/machine-constants';
 import { FORMLABELS} from '../../../constants/default-constants';
@@ -36,7 +36,7 @@ export default function LicenseAddForm() {
     () => ({
       licenseKey: '',
       version:'',
-      type:'',
+      type:null,
       deviceName:'',
       deviceGUID:'',
       production:'',
@@ -61,10 +61,10 @@ export default function LicenseAddForm() {
     formState: { isSubmitting },
   } = methods;
 
-  const [extensionTime, setExtensionTime] = useState(null); // State to store the selected date
+  const [extensionTime, setExtensionTime] = useState(''); // State to store the selected date
   const [extensionTimeError, setExtensionTimeError] = useState(''); // State to manage the error message
 
-  const [requestTime, setRequestTime] = useState(null); // State to store the selected date
+  const [requestTime, setRequestTime] = useState(''); // State to store the selected date
   const [requestTimeError, setRequestTimeError] = useState(''); // State to manage the error message
 
   // Function to handle date change
@@ -95,9 +95,14 @@ export default function LicenseAddForm() {
       setRequestTimeError('Request Time is required');
     }else {
       try {
-        dispatch(addLicense(machine._id, data));
-        enqueueSnackbar(Snacks.licenseAdded);
-        reset();
+        const responsePromise = dispatch(addLicense(machine._id, data));
+        console.log(responsePromise)
+        responsePromise.then(response => {
+          enqueueSnackbar(Snacks.licenseAdded);
+        }).catch(error => {
+          console.log(error.message)
+          enqueueSnackbar(Snacks.failedAddLicense, { variant:'error' });
+        });
       } catch (err) {
         enqueueSnackbar(Snacks.failedAddLicense, { variant: 'error' });
         console.error(err.message);
@@ -151,24 +156,7 @@ export default function LicenseAddForm() {
                     onChange={handleRequestTimeChange}
                     renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
                   />
-
-                  {/* <DatePicker
-                    label="Extension Time"
-                    name='extensionTime'
-                    value={extensionTime}
-                    onChange={(newValue) => setValue('extensionTime',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  /> */}
-
-                  {/* <DatePicker
-                    label="Request Time"
-                    name='requestTime'
-                    value={requestTime}
-                    onChange={(newValue) => setValue('requestTime',newValue)}
-                    renderInput={(params) => <TextField {...params} />}
-                  /> */}
                   <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
-              
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

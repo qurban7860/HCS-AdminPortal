@@ -1,41 +1,22 @@
-import PropTypes from 'prop-types';
-import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo , useState, useLayoutEffect} from 'react';
+import { useMemo , useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Typography, Button, DialogTitle, Dialog, InputAdornment, Link ,Autocomplete, TextField, FormControl, InputLabel, Select, MenuItem} from '@mui/material';
-// global
-// import { CONFIG } from '../../../config-global';
-// slice
-// routes
-// import { PATH_DASHBOARD } from '../../../routes/paths';
-// components
+import { Box, Card, Grid, Autocomplete, TextField } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import ToggleButtons from '../../components/DocumentForms/ToggleButtons';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 import { useSnackbar } from '../../../components/snackbar';
-
-import FormProvider, {
-  RHFSelect,
-  RHFTextField,
-  RHFAutocomplete,
-  RHFSwitch
-} from '../../../components/hook-form';
+import FormProvider, { RHFTextField } from '../../../components/hook-form';
 import { 
   setLicenseEditFormVisibility, 
-  setLicenseFormVisibility , 
-  updateLicense , 
-  getLicenses , 
-  getLicense, 
-  deleteLicense, 
-  LicenseTypes
+  updateLicense,
+  LicenseTypes,
+  setLicenseViewFormVisibility,
+  getLicense
 } from '../../../redux/slices/products/license';
 import { LicenseSchema } from './schemas/LicenseSchema';
 import { Snacks } from '../../../constants/machine-constants';
@@ -45,27 +26,17 @@ import { FORMLABELS} from '../../../constants/default-constants';
 
 export default function LicenseEditForm() {
   
-  const { 
-    initial, 
-    error, 
-    responseMessage , 
-    licenseEditFormVisibility ,
-    licenses, 
+  const {
     license, 
-    formVisibility 
   } = useSelector((state) => state.license);
-
   const { machine } = useSelector((state) => state.machine);
-
   const dispatch = useDispatch();
-
   const { enqueueSnackbar } = useSnackbar();
-
   const defaultValues = useMemo(
     () => ({
       licenseKey: license?.licenseKey ||'',
       version:license?.licenseDetail?.version ||'',
-      type:license?.licenseDetail?.type||'',
+      type:license?.licenseDetail?.type||null,
       deviceName:license?.licenseDetail?.deviceName ||'',
       deviceGUID:license?.licenseDetail?.deviceGUID ||'',
       production:license?.licenseDetail?.production ||'',
@@ -114,8 +85,9 @@ export default function LicenseEditForm() {
     setValue('type', newValue);
   };
 
-  const toggleCancel = () => {
+  const toggleCancel = async() => {
     dispatch(setLicenseEditFormVisibility (false));
+    dispatch(setLicenseViewFormVisibility(true));
   };
 
   const onSubmit = async (data) => {
@@ -126,10 +98,17 @@ export default function LicenseEditForm() {
       setRequestTimeError('Request Time is required');
     }else {
       try {
-        dispatch(updateLicense( machine._id,license._id,data));
-        enqueueSnackbar(Snacks.licenseUpdated);
+        const responsePromise = dispatch(updateLicense( machine._id,license._id,data));
+        responsePromise.then(response => {
+          enqueueSnackbar(Snacks.licenseUpdated);
+          dispatch(setLicenseViewFormVisibility(true));
+          dispatch(getLicense(machine._id, license._id));
+        }).catch(error => {
+          console.log(error.message)
+          enqueueSnackbar(Snacks.failedUpdateLicense, { variant:'error' });
+        });
       } catch (err) {
-        enqueueSnackbar(Snacks.failedAddLicense, { variant: 'error' });
+        enqueueSnackbar(Snacks.failedUpdateLicense, { variant: 'error' });
         console.error(err.message);
       }
     }
@@ -151,15 +130,13 @@ export default function LicenseEditForm() {
                   sm: 'repeat(2, 1fr)',
                 }}
               >
-
-                
                   <RHFTextField name='licenseKey' label='License Key' inputProps={{ maxLength: 50 }}/>
                   <RHFTextField name="version" label="Version" inputProps={{ maxLength: 20 }}/>
                   <Autocomplete
                     disablePortal
                     id="combo-box-demo"
                     name="type"
-                    defaultValue={license?.licenseDetail?.type}
+                    defaultValue={defaultValues?.type}
                     options={LicenseTypes}
                     onChange={handleTypeChange}
                     renderInput={(params) => <TextField {...params} label="Type" />}
@@ -184,9 +161,7 @@ export default function LicenseEditForm() {
                     onChange={handleRequestTimeChange}
                     renderInput={params => <TextField {...params} error={!!requestTimeError} helperText={requestTimeError} />}
                   />
-
                   <ToggleButtons isMachine name={FORMLABELS.isACTIVE.name} />
-              
               </Box>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
           </Card>

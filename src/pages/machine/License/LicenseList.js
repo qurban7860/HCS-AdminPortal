@@ -1,29 +1,19 @@
-import { Helmet } from 'react-helmet-async';
-import { paramCase } from 'change-case';
-import { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef } from 'react';
 import debounce from 'lodash/debounce';
-import PropTypes from 'prop-types';
 // @mui
 import {
-  Switch,
   Grid,
-  Card,
   Table,
   Button,
   Tooltip,
   TableBody,
-  Container,
   IconButton,
   TableContainer,
-  Stack,
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../redux/store';
 // routes
-import { PATH_DASHBOARD, PATH_DOCUMENT } from '../../../routes/paths';
 // components
-import { useSnackbar } from '../../../components/snackbar';
 import { useSettingsContext } from '../../../components/settings';
 import {
   useTable,
@@ -41,27 +31,15 @@ import ConfirmDialog from '../../../components/confirm-dialog';
 import LicenseListTableRow from './LicenseListTableRow';
 import LicenseListTableToolbar from './LicenseListTableToolbar';
 
-import license, {
+import {
   getLicense, 
-  resetLicense,
   getLicenses,
-  resetLicenses,
   ChangeRowsPerPage,
   ChangePage,
   setFilterBy,
   setLicenseViewFormVisibility } from '../../../redux/slices/products/license';
-import { Cover } from '../../components/Defaults/Cover';
-import { StyledCardContainer } from '../../../theme/styles/default-styles';
-import { FORMLABELS } from '../../../constants/default-constants';
 import { fDate } from '../../../utils/formatTime';
 import TableCard from '../../components/ListTableTools/TableCard';
-
-// ----------------------------------------------------------------------
-
-
-
-// ----------------------------------------------------------------------
-
 
 export default function LicenseList() {
   const {
@@ -72,8 +50,6 @@ export default function LicenseList() {
     setPage,
     //
     selected,
-    setSelected,
-    onSelectRow,
     onSelectAllRows,
     //
     onSort,
@@ -84,14 +60,11 @@ export default function LicenseList() {
   });
 
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
-  const navigate = useNavigate();
+  useSettingsContext();
   const [filterName, setFilterName] = useState('');
   const [tableData, setTableData] = useState([]);
   const [filterStatus, setFilterStatus] = useState([]);
   const [openConfirm, setOpenConfirm] = useState(false);
-  const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
 
   const { licenses, filterBy, page, rowsPerPage, isLoading } = useSelector((state) => state.license );
@@ -103,7 +76,6 @@ export default function LicenseList() {
     { id: 'createdAt', label: 'Created At', align: 'right' },
   ];
 
-    
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));
     dispatch(ChangeRowsPerPage(parseInt(event.target.value, 10))); 
@@ -127,15 +99,12 @@ export default function LicenseList() {
     filterName,
     filterStatus,
   });  
-  const dataInPage = dataFiltered.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
   const denseHeight = 60;
   const isFiltered = filterName !== '' || !!filterStatus.length;
   const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
 
   const handleOpenConfirm = () => setOpenConfirm(true);
   const handleCloseConfirm = () => setOpenConfirm(false);
-
-
   const debouncedSearch = useRef(debounce((value) => {
     dispatch(ChangePage(0))
     dispatch(setFilterBy(value))
@@ -161,9 +130,6 @@ export default function LicenseList() {
     setFilterStatus(event.target.value);
   };
 
-  const handleEditRow = (id) => {
-    // navigate(PATH_DOCUMENT.document.edit(id));
-  };
 
   const handleViewRow = (licenseid) => {
       dispatch(getLicense(machine._id,licenseid));
@@ -236,12 +202,6 @@ export default function LicenseList() {
                       !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
                     )
                   )}
-
-                {/* <TableEmptyRows
-                    height={denseHeight}
-                    emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-                  /> */}
-
               </TableBody>
             </Table>
           </Scrollbar>
@@ -273,7 +233,6 @@ export default function LicenseList() {
             variant="contained"
             color="error"
             onClick={() => {
-              // handleDeleteRows(selected);
               handleCloseConfirm();
             }}
           >

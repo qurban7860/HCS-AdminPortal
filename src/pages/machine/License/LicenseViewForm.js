@@ -50,13 +50,13 @@ export default function LicenseViewForm() {
     () => ({
       licenseKey: license?.licenseKey || '',
       licenseDetail: {
-        version : license?.licenseDetail.version || '',
-        deviceName : license?.licenseDetail.deviceName || '',
-        type : license?.licenseDetail.type || '',
-        extensionTime : license?.licenseDetail.extensionTime || '',
-        requestTime : license?.licenseDetail.requestTime || '',
-        production : license?.licenseDetail.production || '0',
-        waste : license?.licenseDetail.waste || '0',
+        version : license?.licenseDetail?.version || '',
+        deviceName : license?.licenseDetail?.deviceName || '',
+        type : license?.licenseDetail?.type || '',
+        extensionTime : license?.licenseDetail?.extensionTime || '',
+        requestTime : license?.licenseDetail?.requestTime || '',
+        production : license?.licenseDetail?.production || '0',
+        waste : license?.licenseDetail?.waste || '0',
 
       },
       isActive: license?.isActive || '',

@@ -158,7 +158,6 @@ export function addLicense (machineId, params){
       await dispatch(setLicenseFormVisibility(false));
     } catch (error) {
       console.log(error);
-      dispatch(slice.actions.hasError(error.Message));
       throw error;
     }
   }
