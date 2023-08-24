@@ -535,7 +535,6 @@ export function addMachine(params) {
 // --------------------------------------------------------------------------
 
 export function updateMachine(machineId, params) {
-  console.log("machineId : ",machineId);
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {

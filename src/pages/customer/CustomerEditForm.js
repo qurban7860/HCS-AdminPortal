@@ -112,9 +112,9 @@ export default function CustomerEditForm() {
   const onSubmit = async (data) => {
     // console.log("customer : ",data);
     data.mainSite = siteVal?._id || null;
-    if (chips && chips.length > 0) {
+    // if (chips && chips.length > 0) {
       data.tradingName = chips;
-    }
+    // }
     data.accountManager = accountManVal?._id || null;
     data.projectManager = projectManVal?._id || null;
     data.supportManager = supportManVal?._id || null;

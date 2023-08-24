@@ -85,7 +85,7 @@ export default function GeneralAppPage() {
             item
             xs={12}
             md={10}
-            lg={6}
+            lg={10}
             sx={{
               height: { xs: 250, md: 400 },
               position: 'relative',
