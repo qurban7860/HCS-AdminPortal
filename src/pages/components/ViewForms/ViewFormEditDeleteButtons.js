@@ -28,6 +28,7 @@ export default function ViewFormEditDeleteButtons({
   handleUpdatePassword,
   type,
   sites,
+  mainSite,
   handleMap,
 }) {
   const { id } = useParams();
@@ -35,6 +36,8 @@ export default function ViewFormEditDeleteButtons({
   const userRolesString = localStorage.getItem('userRoles');
   const userRoles = JSON.parse(userRolesString);
   const { isLoading, transferDialogBoxVisibility } = useSelector((state) => state.machine);
+  const { site } = useSelector((state) => state.site);
+  const { customer } = useSelector((state) => state.customer);
   const dispatch = useDispatch();
   const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -168,7 +171,7 @@ export default function ViewFormEditDeleteButtons({
         />
 
         {/* delete button */}
-        {id !== userId && onDelete && (
+        {id !== userId  && !mainSite && onDelete && (
           <IconTooltip
             title="Delete"
             disabled={disableDeleteButton}
@@ -252,6 +255,7 @@ ViewFormEditDeleteButtons.propTypes = {
   onDelete: PropTypes.func,
   type: PropTypes.string,
   sites: PropTypes.bool,
+  mainSite: PropTypes.bool,
   disableTransferButton: PropTypes.bool,
   disablePasswordButton: PropTypes.bool,
   disableDeleteButton: PropTypes.bool,
