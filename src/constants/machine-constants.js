@@ -22,6 +22,8 @@ export const Snacks = {
   // @root - LicenseViewForm
   licenseUpdated: 'License UPDATED Successfully',
   failedUpdateLicense: 'FAILED to Update License',
+  
+  licenseDeleted: 'License DELETED Successfully',
   failedDeleteLicense: 'FAILED to Delete License',
 
   // @root - LicenseAddForm - submit
@@ -30,8 +32,9 @@ export const Snacks = {
 
   // @root - AddLicenseSchema
   licenseKeyRequired: 'License KEY is REQUIRED',
-  licenseDetailRequired: 'License DETAIL is REQUIRED',
-
+  licenseExtensionTimeRequired: 'License Extension Time is REQUIRED',
+  licenseRequestTimeRequired: 'License Request Time is REQUIRED',
+  
   // @root - machine - EditMachineSchema
   serialNoRequired: 'Serial Number is REQUIRED',
 };
