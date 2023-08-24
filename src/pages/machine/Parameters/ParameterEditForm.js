@@ -58,7 +58,7 @@ import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
 export default function ParameterEditForm() {
   const { techparam, error } = useSelector((state) => state.techparam);
 
-  const { techparamcategories } = useSelector((state) => state.techparamcategory);
+  const { techparamcategories, activeTechParamCategories } = useSelector((state) => state.techparamcategory);
 
   const [paramVal, setParamVal] = useState(null);
 
@@ -150,6 +150,7 @@ export default function ParameterEditForm() {
                   disabled
                   value={paramVal || null}
                   options={techparamcategories}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => option.name}
                   onChange={(event, newValue) => {
                     setParamVal(newValue);

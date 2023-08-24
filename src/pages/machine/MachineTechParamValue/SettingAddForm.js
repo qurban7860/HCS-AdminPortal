@@ -127,7 +127,7 @@ export default function SettingAddForm() {
                       required
                       value={category || null}
                       options={activeTechParamCategories}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => option.name}
                       id="controllable-states-demo"
                       onChange={(event, newValue) => {
@@ -152,7 +152,7 @@ export default function SettingAddForm() {
                       required
                       value={techParamVal || null}
                       options={paramData}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => option.name}
                       id="controllable-states-demo"
                       onChange={(event, newValue) => {
@@ -193,7 +193,7 @@ export default function SettingAddForm() {
                 <SingleButton
                     sx={{mt:"auto"}}
                     loading={isSubmitting}
-                    disabled={!techParamVal}
+                    disabled={!techParamVal || isSubmitting}
                     name={BUTTONS.ADDSETTING}
                   />
               </Grid>

@@ -131,7 +131,7 @@ export default function SettingEditForm() {
                 }
               />
             </Stack>
-            <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
+            <AddFormButtons isSubmitting={isSubmitting} disabled={isSubmitting} toggleCancel={toggleCancel} />
           </Card>
         </Grid>
       </Grid>
