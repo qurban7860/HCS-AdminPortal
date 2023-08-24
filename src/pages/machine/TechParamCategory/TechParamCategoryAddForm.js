@@ -93,7 +93,7 @@ export default function TechParamCategoryAddForm() {
                   display="grid"
                   gridTemplateColumns={{ xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' }}
                 >
-                  <RHFTextField name="name" label="Name" required />
+                  <RHFTextField name="name" label="Name*"  />
                   <RHFTextField name="description" label="Description" minRows={7} multiline />
                   <ToggleButtons name={FORMLABELS.isACTIVE.name} isMachine />
                 </Box>
