@@ -239,13 +239,12 @@ export default function MachineEditForm() {
   };
 
   const onSubmit = async (data) => {
-    if (chips && chips.length > 0) {
+    // if (chips && chips.length > 0) {
       data.alias = chips;
-    }
+    // }
 
     data.installationDate = installationDate;
     data.shippingDate = shippingDate;
-console.log("data : ", data);
     try {
       await dispatch(updateMachine(machine._id ,data));
       enqueueSnackbar('Update success!');

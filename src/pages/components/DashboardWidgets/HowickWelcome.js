@@ -68,8 +68,10 @@ export default function HowickWelcome({ title, description, action, img, ...othe
           textAlign: { xs: 'center', md: 'left' },
         }}
       >
-        <Typography paragraph variant="h1" sx={{ whiteSpace: 'pre-line' }}>
-          {/* {title} */}
+        <Typography  variant="h1"
+        // paragraph 
+        // sx={{ whiteSpace: 'pre-line' }}
+        >
           {title}
         </Typography>
 

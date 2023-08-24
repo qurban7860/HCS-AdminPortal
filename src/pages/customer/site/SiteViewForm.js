@@ -59,13 +59,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       enqueueSnackbar('Site deleted Successfully!');
       setIsExpanded(false);
     } catch (err) {
-      if (err.Message) {
-        enqueueSnackbar(err.Message, { variant: `error` });
-      } else if (err.message) {
-        enqueueSnackbar(err.message, { variant: `error` });
-      } else {
-        enqueueSnackbar('Site delete failed!', { variant: `error` });
-      }
+      enqueueSnackbar(err, { variant: `error` });
       console.log(err);
     }
   };
@@ -87,7 +81,6 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
       website: currentSite ? currentSite.website : site?.website || '',
       lat: currentSite ? currentSite.lat : site?.lat || '',
       long: currentSite ? currentSite.long : site?.long || '',
-
       street: currentSite ? currentSite.address?.street : site?.address.street || '',
       suburb: currentSite ? currentSite.address?.suburb : site?.address.suburb || '',
       city: currentSite ? currentSite.address?.city : site?.address.city || '',
@@ -114,7 +107,8 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
         <ViewFormEditDeleteButtons
           handleEdit={handleEdit}
           onDelete={onDelete}
-          sites="true"
+          sites
+          mainSite={customer.mainSite._id === site._id}
           handleMap={handleMap}
         />
       </Grid>

@@ -183,13 +183,13 @@ export const Snacks = {
   updatedVersionMachineDoc: 'Machine Document Version UPDATE Successful', // Update Success message
   deletedMachineDoc: 'Machine Document DELETE Successful', // Delete Success message
 
-  addedDoc: 'Customer Document UPLOAD Successful', // Upload Success message
-  updatedDoc: 'Customer Document UPDATE Successful', // Update Success message
-  deletedDoc: 'Customer Document DELETE Successful', // Delete Success message
+  addedDoc: 'Document UPLOAD Successful', // Upload Success message
+  updatedDoc: 'Document UPDATE Successful', // Update Success message
+  deletedDoc: 'Document DELETE Successful', // Delete Success message
 
-  failedDoc: 'FAILED to UPLOAD Customer Document', // Update Failed message
-  failedUpdateDoc: 'FAILED to UPDATE Customer Document', // Update Failed message
-  failedDeleteDoc: 'FAILED to DELETE Customer Document', // Delete Failed message
+  failedDoc: 'FAILED to UPLOAD Document', // Update Failed message
+  failedUpdateDoc: 'FAILED to UPDATE Document', // Update Failed message
+  failedDeleteDoc: 'FAILED to DELETE Document', // Delete Failed message
 
   // documentAddForm -documents dashboard
   fileRequired: 'File is required',

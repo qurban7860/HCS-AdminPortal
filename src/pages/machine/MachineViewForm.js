@@ -49,9 +49,7 @@ export default function MachineViewForm() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const { machine, transferMachineFlag } = useSelector(
-    (state) => state.machine
-  );
+  const { machine, transferMachineFlag } = useSelector((state) => state.machine);
   // console.log("machine : ",machine)
   const { customer } = useSelector((state) => state.customer);
   const [disableTransferButton, setDisableTransferButton] = useState(true);
@@ -243,7 +241,7 @@ export default function MachineViewForm() {
             handleVerification={handleVerification}
             disableTransferButton={disableTransferButton}
             disableEditButton={disableEditButton}
-            disableDeleteButton={disableDeleteButton}
+            disableDeleteButton={disableDeleteButton }
             handleEdit={handleEdit}
             onDelete={onDelete}
             handleTransfer={handleTransfer}
