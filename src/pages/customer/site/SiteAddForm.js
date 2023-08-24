@@ -15,9 +15,8 @@ import { useSnackbar } from '../../../components/snackbar';
 // assets
 import { countries } from '../../../assets/data';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-
 import GoogleMaps from '../../../assets/GoogleMaps';
-
+import { isNumberLatitude , isNumberLongitude } from './util/index'
 import FormProvider, {
   RHFSwitch,
   RHFSelect,
@@ -37,8 +36,6 @@ export default function SiteAddForm() {
   const dispatch = useDispatch();
 
   const { enqueueSnackbar } = useSnackbar();
-  const phoneRegExp =/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-  const numberRegExp = /^[0-9]+$/;
 
   const [phone, setPhone] = useState('');
   const [country, setCountryVal] = useState('');
@@ -58,33 +55,24 @@ export default function SiteAddForm() {
     email: Yup.string().trim('The contact name cannot include leading and trailing spaces'),
     // fax: Yup.string(),
     website: Yup.string(),
-    lat: Yup.string()
-      .max(25)
-      .test('valid-lat', 'Invalid latitude(Valid values are -90 to 90)', (value) => {
-        if (!value) return true;
-        const trimmedValue = value.trim();
-        const parsedValue = parseFloat(value.trim());
-        return (
-          trimmedValue === parsedValue.toFixed(trimmedValue.length - trimmedValue.indexOf('.') - 1) &&
-          !isNaN(parsedValue) &&
-          parsedValue >= -90 &&
-          parsedValue <= 90
-          
-        );
-      }),
-    long: Yup.string()
-      .max(25)
-      .test('valid-long', 'Invalid longitude(Valid values are -180 to 180)', (value) => {
-        if (!value) return true;
-        const trimmedValue = value.trim();
-        const parsedValue = parseFloat(trimmedValue);
-        return (
-          trimmedValue === parsedValue.toFixed(trimmedValue.length - trimmedValue.indexOf('.') - 1) &&
-          !isNaN(parsedValue) &&
-          parsedValue >= -180 &&
-          parsedValue <= 180
-        );
-      }),
+
+    lat: Yup.string().nullable()
+    .max(25, 'Latitude must be less than or equal to 90.9999999999999999999999')
+    .test('lat-validation', 'Invalid Latitude!, Latitude must be between -90 to 90 Degree only!', (value) =>{
+      if(typeof value === 'string' && value.length > 0 && !(isNumberLatitude(value))){
+        return false;
+      }
+      return true;
+    }),
+
+    long: Yup.string().nullable()
+    .max(25, 'Longitude must be less than or equal to 180.999999999999999999999')
+    .test('long-validation', 'Invalid Longitude!, Longitude must be between -180 to 180 Degree only!', (value) =>{
+      if(typeof value === 'string' && value.length > 0 && !(isNumberLongitude(value))){
+        return false;
+      }
+      return true;
+    }),
     street: Yup.string(),
     suburb: Yup.string(),
     city: Yup.string(),
