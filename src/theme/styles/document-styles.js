@@ -36,6 +36,15 @@ export const ThumbnailCardMedia = styled(CardMedia)(({ theme }) => ({
   objectPosition: 'center',
 }));
 
+export const ThumbnailCardMediaIcon = styled(CardMedia)(({ theme }) => ({
+  height: '80px',
+  width: '60px',
+  marginLeft: '17px',
+  // display: 'block',
+  // zIndex: '-1',
+  // position: 'absolute',
+}));
+
 export const ThumbnailGrid = styled(Grid)(({ theme, ...props }) => ({
   bgcolor: 'lightgray',
   alignContent: 'center',
