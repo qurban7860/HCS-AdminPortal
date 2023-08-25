@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { useMemo, Suspense, lazy, useEffect, memo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { alpha, useTheme } from '@mui/material/styles';
-import { Grid, Typography, Link, Tooltip, Card, Button } from '@mui/material';
+import { Grid, Tooltip, Card, Button } from '@mui/material';
 import { PATH_DOCUMENT } from '../../../routes/paths';
 import {
   deleteDocument,
@@ -14,7 +13,6 @@ import {
   setDocumentEditFormVisibility,
   setDocumentViewFormVisibility,
   setDocumentHistoryViewFormVisibility,
-  resetDocument,
   setDocumentFormVisibility,
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
@@ -25,11 +23,9 @@ import {
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import { useSnackbar } from '../../../components/snackbar';
 import { Snacks } from '../../../constants/document-constants';
-import LoadingScreen from '../../../components/loading-screen';
 import ViewFormAudit from '../../components/ViewForms/ViewFormAudit';
 import ViewFormField from '../../components/ViewForms/ViewFormField';
 import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDeleteButtons';
-import VersionsLink from '../../components/DocumentForms/VersionsLink';
 
 DocumentViewForm.propTypes = {
   customerPage: PropTypes.bool,
@@ -180,13 +176,9 @@ function DocumentViewForm({ customerPage, machinePage, DocId }) {
         {!customerPage && !machinePage && (
           <>
             <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} />
-            {/* <ViewFormField sm={6} heading="Site" param={defaultValues?.site} /> */}
-            {/* <ViewFormField sm={6} heading="Contact" param={defaultValues?.contact} /> */}
             <ViewFormField sm={6} heading="Machine" param={defaultValues?.machine} />
-            {/* <ViewFormField sm={6} heading="Model" param={defaultValues?.model} /> */}
           </>
         )}
-        {/* <ViewFormField sm={6} heading="Customer" param={defaultValues?.customer} /> */}
         <ViewFormField sm={12} heading="Description" param={defaultValues?.description} />
         <Grid item sx={{ display: 'flex-inline' }}>
           <Grid container justifyContent="flex-start" gap={1}>

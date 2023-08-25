@@ -537,30 +537,35 @@ export function addMachine(params) {
 export function updateMachine(machineId, params) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
+    console.log("params: " , params);
+    const machineConVal = params?.machineConnectionVal.map(obj => obj._id)
+    console.log(" machineConVal : " , machineConVal)
     try {
       const data = {
         serialNo: params?.serialNo,
         name: params?.name,
+        alias: params?.alias,
         parentSerialNo: params?.parentSerialNo?.serialNo,
         parentMachine: params?.parentSerialNo?.name,
-        supplier: params?.supplier?._id,
-        machineModel: params?.model?._id,
-        customer: params?.customer?._id,
-        status: params?.status?._id,
+        supplier: params?.supplier?._id || null,
+        machineModel: params?.model?._id || null,
+        customer: params?.customer?._id || null,
+        status: params?.status?._id || null,
         workOrderRef: params?.workOrderRef,
-        instalationSite: params?.instalationSite?._id,
-        billingSite: params?.billingSite?._id,
+        instalationSite: params?.instalationSite?._id || null,
+        billingSite: params?.billingSite?._id || null,
         installationDate: params?.installationDate,
         shippingDate: params?.shippingDate,
         siteMilestone: params?.siteMilestone,
-        accountManager: params?.accountManager?._id,
-        projectManager: params?.projectManager?._id,
-        supportManager: params?.supportManager?._id,
+        accountManager: params?.accountManager?._id || null,
+        projectManager: params?.projectManager?._id || null,
+        supportManager: params?.supportManager?._id || null,
         description: params?.description,
         customerTags: params?.customerTags,
         machineConnections: params?.machineConnectionVal.map(obj => obj._id),
         isActive: params?.isActive,
       };
+      console.log("data ready for dispach : ", data);
       // if(params?.serialNo){
       //   data.serialNo = params.serialNo
       // }

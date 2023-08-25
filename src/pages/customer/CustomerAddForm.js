@@ -174,11 +174,15 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
   }, [dispatch]);
 
   const handlePhoneChange = (newValue) => {
+    if(newValue.length < 17){
       setPhone(newValue);
+    }
   };
 
   const handleFaxChange = (newValue) => {
+    if(newValue.length < 17){
       setFaxVal(newValue);
+    }
   };
 
   const handleBillingContactPhoneChange = (newValue) => {

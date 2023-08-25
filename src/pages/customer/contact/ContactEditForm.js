@@ -96,8 +96,8 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   }
 
   useEffect(() => {
+    setPhone(contact?.phone);
     if (contact?.address?.country) {
-      setPhone(contact.phone);
       const contactCountry = filtter(countries, { label: contact.address.country });
       setCountryVal(contactCountry[0]);
     }
@@ -115,7 +115,10 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
   };
 
   const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 17){
       setPhone(newValue);
+    }
   };
 
   const onSubmit = async (data) => {
@@ -171,15 +174,14 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
                   options={FORMLABELS.CONTACT_TYPES.options}
                 />
 
-                {/* <RHFTextField name="phone" label="Phone" /> */}
-                <MuiTelInput
+<MuiTelInput
                   value={phone}
-                  name={FORMLABELS.PHONE.name}
-                  label={FORMLABELS.PHONE.label}
-                  flagSize={FORMLABELS.PHONE.flagSize}
+                  name="phone"
+                  label="Phone Number"
+                  flagSize="medium"
                   onChange={handlePhoneChange}
                   forceCallingCode
-                  defaultCountry={FORMLABELS.PHONE.defaultCountry}
+                  defaultCountry="NZ"
                 />
 
                 <RHFTextField name={FORMLABELS.EMAIL.name} label={FORMLABELS.EMAIL.label} />

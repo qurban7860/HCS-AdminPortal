@@ -75,6 +75,9 @@ export function fileThumb(fileUrl) {
     case 'txt':
       thumb = iconUrl('ic_txt');
       break;
+    case 'csv':
+      thumb = iconUrl('ic_txt');
+      break;
     case 'zip':
       thumb = iconUrl('ic_zip');
       break;
