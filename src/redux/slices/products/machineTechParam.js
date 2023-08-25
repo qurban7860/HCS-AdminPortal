@@ -13,6 +13,7 @@ const initialState = {
   error: null,
   techparam: {},
   techparams: [],
+  activeTechParams: [],
   techparamsByCategory: [],
   filterBy: '',
   page: 0,
@@ -59,6 +60,14 @@ const slice = createSlice({
       state.isLoading = false;
       state.success = true;
       state.techparam = action.payload;
+      state.initial = true;
+    },
+
+    // GET MACHINE Active TECH PARAM
+    getActiveTechparamsSuccess(state, action) {
+      state.isLoading = false;
+      state.success = true;
+      state.activeTechParams = action.payload;
       state.initial = true;
     },
 
@@ -114,6 +123,7 @@ export default slice.reducer;
 // Actions
 export const {
   setTechparamEditFormVisibility,
+  getActiveTechparamsSuccess,
   resetTechParams,
   resetTechParam,
   resetTechParamByCategory,
@@ -124,6 +134,29 @@ export const {
 } = slice.actions;
 
 // ----------------------------------------------------------------------
+export function getActiveTechparams (){
+  return async (dispatch) =>{
+    dispatch(slice.actions.startLoading());
+    try{
+      const response = await axios.get(`${CONFIG.SERVER_URL}products/techparams`, 
+      {
+        params: {
+          isArchived: false,
+          isActive: true
+        }
+      }
+      );
+      dispatch(slice.actions.getActiveTechparamsSuccess(response.data));
+      dispatch(slice.actions.setResponseMessage('Techparams loaded successfully'));
+    } catch (error) {
+      console.log(error);
+      dispatch(slice.actions.hasError(error.Message));
+      throw error;
+    }
+  }
+}
+
+// ------------------------------------------------------------------------------------------------
 
 export function getTechparams (){
   return async (dispatch) =>{
