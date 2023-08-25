@@ -86,7 +86,6 @@ export default function SecurityUserList() {
     securityUserFormVisibility,
     filterBy, page, rowsPerPage,
   } = useSelector((state) => state.user);
-  // console.log("securityUsers", securityUsers);
 
   const onChangeRowsPerPage = (event) => {
     dispatch(ChangePage(0));

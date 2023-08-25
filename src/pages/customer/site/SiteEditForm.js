@@ -179,16 +179,21 @@ export default function SiteEditForm() {
   };
 
   const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 17){
       setPhone(newValue);
+    }
   };
 
   const handleFaxChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 17){
       setFaxVal(newValue);
+    }
   };
 
   const onSubmit = async (data) => {
     try {
-      // console.log("site Edit Data : ",data)
       if (phone && phone.length > 4) {
         data.phone = phone;
       }

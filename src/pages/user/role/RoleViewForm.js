@@ -18,7 +18,7 @@ import ViewFormEditDeleteButtons from '../../components/ViewForms/ViewFormEditDe
 
 export default function RoleViewForm() {
   const { role } = useSelector((state) => state.role);
-  // console.log("role : ",role)
+  const { assignedUsers } = useSelector((state) => state.user);
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -85,7 +85,8 @@ export default function RoleViewForm() {
           <ViewFormField sm={6} heading="Name" param={defaultValues.name} />
           <ViewFormField sm={12} heading="Role Type" param={defaultValues.roleType} />
           <ViewFormField sm={12} heading="Description" param={defaultValues.description} />
-          <ViewFormField sm={12} heading="Assigned Users" param={defaultValues.description} />
+          <ViewFormField sm={12} heading="Assigned Users" arrayParam={assignedUsers} />
+          <ViewFormField sm={12}  />
           
           <ViewFormAudit defaultValues={defaultValues} />
         </Grid>

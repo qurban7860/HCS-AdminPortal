@@ -132,11 +132,17 @@ export default function SiteAddForm() {
   };
 
   const handlePhoneChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 17){
       setPhone(newValue);
+    }
   };
 
   const handleFaxChange = (newValue) => {
+    matchIsValidTel(newValue)
+    if(newValue.length < 17){
       setFaxVal(newValue);
+    }
   };
 
   const onSubmit = async (data) => {
