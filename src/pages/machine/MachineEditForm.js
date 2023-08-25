@@ -239,10 +239,8 @@ export default function MachineEditForm() {
   };
 
   const onSubmit = async (data) => {
-    // if (chips && chips.length > 0) {
-      data.alias = chips;
-    // }
 
+      data.alias = chips;
     data.installationDate = installationDate;
     data.shippingDate = shippingDate;
     try {
@@ -510,7 +508,7 @@ export default function MachineEditForm() {
                     name="machineConnectionVal"
                     id="tags-outlined"
                     options={machineConnections}
-                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.connectedMachine?.name ? option?.connectedMachine?.name : option?.name}`}
+                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.connectedMachine?.name ? option?.connectedMachine?.name : ''}`}
                     filterSelectedOptions
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     onChange={(event, value) => field.onChange(value)}
