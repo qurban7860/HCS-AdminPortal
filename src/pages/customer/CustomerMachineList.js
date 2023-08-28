@@ -1,4 +1,4 @@
-import { useState, useEffect, useLayoutEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 // @mui
 import { Card, Grid, Typography, Accordion, AccordionSummary, Link, Stack } from '@mui/material';
@@ -7,76 +7,41 @@ import { useDispatch, useSelector } from '../../redux/store';
 // routes
 import { PATH_CUSTOMER, PATH_MACHINE } from '../../routes/paths';
 // hooks
-import { useSnackbar } from '../../components/snackbar';
-import { useSettingsContext } from '../../components/settings';
-import { useTable, TableNoData } from '../../components/table';
+import { TableNoData } from '../../components/table';
 // components
-import DialogMachine from '../components/Dialog/Dialogs/DialogMachine';
+import MachineDialog from '../components/Dialog/MachineDialog';
 import BreadcrumbsProvider from '../components/Breadcrumbs/BreadcrumbsProvider';
 import BreadcrumbsLink from '../components/Breadcrumbs/BreadcrumbsLink';
-import FormLabel from '../components/DocumentForms/FormLabel';
-import DialogLabel from '../components/Dialog/DialogLabel';
-import DialogLink from '../components/Dialog/DialogLink';
 import AddButtonAboveAccordion from '../components/Defaults/AddButtonAboveAcoordion';
 // sections
-import { getCustomerMachines, getMachine, resetMachine } from '../../redux/slices/products/machine';
+import { getCustomerMachines, setMachineDialog } from '../../redux/slices/products/machine';
 // constants
 import { BREADCRUMBS } from '../../constants/default-constants';
-// import ContactViewForm from './contact/ContactViewForm';
 
 // ----------------------------------------------------------------------
 
 export default function CustomerContactList() {
-  const { dense, page, order, orderBy, rowsPerPage } = useTable({
-    defaultOrderBy: '-createdAt',
-  });
-  const [controlled, setControlled] = useState(false);
 
-  const { customer, error, initial, responseMessage } = useSelector((state) => state.customer);
-  const { customerMachines, machine } = useSelector((state) => state.machine);
+  const { customer } = useSelector((state) => state.customer);
+  const { customerMachines } = useSelector((state) => state.machine);
 
-  const [checked, setChecked] = useState(false);
-
-  const [filterName, setFilterName] = useState('');
-  const [tableData, setTableData] = useState([]);
-  const [filterStatus, setFilterStatus] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [expanded, setExpanded] = useState(false);
-  const [descriptionExpanded, setDescriptionExpanded] = useState(false);
-  const [openMachine, setOpenMachine] = useState(false);
   const [machineData, setMachineData] = useState({});
   // hooks
   const address = {};
   const dispatch = useDispatch();
-  const { themeStretch } = useSettingsContext();
-  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
   // --------------------------hooks--------------------------------------
   useEffect(() => {
+    dispatch(setMachineDialog(false));
     dispatch(getCustomerMachines(customer._id));
-  }, [dispatch, checked, customer]);
-
-  useEffect(() => {
-    if (initial) {
-      setTableData(customerMachines);
-    }
-  }, [customerMachines, error, responseMessage, enqueueSnackbar, initial]);
+  }, [dispatch, customer]);
 
   // --------------------------handle functions--------------------------------------
 
-  const handleOpenMachine = () => setOpenMachine(true);
-  const handleCloseMachine = () => setOpenMachine(false);
-  const handleChangeControlled = (panel) => (event, isExpanded) => {
-    setControlled(isExpanded ? panel : false);
-  };
-  const handleAccordianClick = (accordianIndex) => {
-    if (accordianIndex === activeIndex) {
-      setActiveIndex(null);
-    } else {
-      setActiveIndex(accordianIndex);
-    }
-  };
+  const handleMachineDialog = (MachineData) => { 
+    dispatch(setMachineDialog(true)); setMachineData(MachineData)
+  }
 
   const isNotFound = !customerMachines.length;
   const handleViewMachine = (id) => {
@@ -131,16 +96,11 @@ export default function CustomerContactList() {
                 // expandIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
                 // onClick={() => handleAccordianClick(index)}
               >
-                {index !== activeIndex ? (
                   <Grid container spacing={1}>
                     <Grid item xs={12} sm={6} md={2}>
                       {customerMachine?.serialNo && (
                         <Link
-                          onClick={() => {
-                            setDescriptionExpanded(false);
-                            setOpenMachine(true);
-                            setMachineData(customerMachine);
-                          }}
+                          onClick={() => { handleMachineDialog(customerMachine) } }
                           href="#"
                           underline="none"
                         >
@@ -174,18 +134,13 @@ export default function CustomerContactList() {
                         {customerMachine?.instalationSite?.address?.country ? customerMachine?.instalationSite?.address?.country : ""} */}
                     </Grid>
                   </Grid>
-                ) : null}
               </AccordionSummary>
             </Accordion>
           );
         })}
 
-        {/* dialog for machine */}
-        <DialogMachine
-          open={openMachine}
-          onClose={handleCloseMachine}
-          machine={machineData}
-          onClick={() => handleViewMachine(machineData._id)}
+        <MachineDialog
+          machineData={ machineData }
         />
       </Card>
     </>

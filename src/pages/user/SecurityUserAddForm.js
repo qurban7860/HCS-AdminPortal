@@ -291,7 +291,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 value={customerVal || null}
                 options={spCustomers}
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     dispatch(resetContacts());
@@ -328,7 +328,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 // freeSolo
                 value={contactVal || null}
                 options={customerVal ? activeContacts : []}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 onChange={(event, newValue) => {
                   if (newValue) {
@@ -481,7 +481,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 value={customersArr || null}
                 options={allCustomers.length > 0 ? allCustomers : [] }
                 getOptionLabel={(option) => option.name}
-                isOptionEqualToValue={(option, value) => option.name === value.name}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {                    
                     setCustomerArr(newValue);
@@ -513,7 +513,7 @@ export default function SecurityUserAddForm({ isEdit = false, currentUser }) {
                 value={machinesArr || null}
                 options={allMachines.length > 0 ? allMachines : [] }
                 getOptionLabel={(option) => `${option.serialNo} ${option.name ? '-' : ''} ${option.name ? option.name : ''}`}
-                isOptionEqualToValue={(option, value) => option.serialNo === value.serialNo}
+                isOptionEqualToValue={(option, value) => option._id === value._id}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setMachineArr(newValue);

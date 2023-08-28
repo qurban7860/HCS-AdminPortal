@@ -4,12 +4,11 @@ import { useDispatch } from 'react-redux';
 import download from 'downloadjs';
 import { useTheme } from '@mui/material/styles';
 import { Stack, Tooltip, Typography } from '@mui/material';
-import { getCustomerDocuments } from '../../../redux/slices/document/customerDocument';
-import { getDocumentHistory } from '../../../redux/slices/document/document';
 import {
   ThumbnailCard,
   ThumbnailCardContent,
   ThumbnailCardMedia,
+  ThumbnailCardMediaIcon,
   ThumbnailGrid,
   ThumbnailNameGrid,
   ThumbnailIconify,
@@ -22,6 +21,7 @@ import {
   deleteDocumentFile,
 } from '../../../redux/slices/document/documentFile';
 import { document } from '../../../constants/document-constants';
+import { fileThumb } from '../../../components/file-thumbnail/utils';
 
 export function Thumbnail({
   deleteOnClick,
@@ -49,7 +49,6 @@ export function Thumbnail({
     setOnPreview(false);
   };
 
-  //   Delete
   const handleDelete = async (documentId, versionId, fileId) => {
     try {
       await dispatch(deleteDocumentFile(documentId, versionId, fileId, customer?._id));
@@ -118,7 +117,7 @@ export function Thumbnail({
         <ThumbnailCardContent component={Stack} display="block" height="110px">
           {!hideDelete && (
             <DeleteIconButton
-              left={document.icon[file.extension] ? 76 : 44}
+              left={file?.fileType.startsWith('image') ? 44 : 76}
               onClick={() =>
                 handleDelete(
                   currentDocument._id,
@@ -179,12 +178,17 @@ export function Thumbnail({
             />
           )}
           {file?.fileType.startsWith('image') && !file.thumbnail && (
-            <ThumbnailIconify icon={document.icon.img} color={document.color.img} />
+            <ThumbnailCardMediaIcon
+              component="img"
+              image={fileThumb('image')}
+              alt="Document photo was here"
+            />
           )}
-          {document.icon[file.extension] && document.color[file.extension] && (
-            <ThumbnailIconify
-              icon={document.icon[file.extension]}
-              color={document.color[file.extension]}
+          {!file?.fileType.startsWith('image') && (
+            <ThumbnailCardMediaIcon
+              component="img"
+              image={fileThumb(file.extension.toLowerCase())}
+              alt="Document photo was here"
             />
           )}
         </ThumbnailCardContent>

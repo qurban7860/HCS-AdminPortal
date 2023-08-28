@@ -136,7 +136,7 @@ function DocumentEditForm({ customerPage, machinePage }) {
                     name="documentCategory"
                     value={documentCategoryVal || null}
                     options={activeDocumentCategories}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option.name}
                     id="controllable-states-demo"
                     renderInput={(params) => (
@@ -151,7 +151,7 @@ function DocumentEditForm({ customerPage, machinePage }) {
                     name="documentType"
                     value={documentTypeVal || null}
                     options={activeDocumentTypes}
-                    isOptionEqualToValue={(option, value) => option.name === value.name}
+                    isOptionEqualToValue={(option, value) => option._id === value._id}
                     getOptionLabel={(option) => option.name}
                     id="controllable-states-demo"
                     renderInput={(params) => (

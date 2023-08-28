@@ -162,7 +162,7 @@ export default function ContactList() {
   };
 
   const handleDeleteRows = (selectedRows) => {
-    const deleteRows = tableData.filter((row) => !selectedRows.includes(row._id));
+    const deleteRows = tableData.filter((row) => !selectedRows.includes(row?._id));
     setSelected([]);
     setTableData(deleteRows);
 
@@ -219,7 +219,7 @@ export default function ContactList() {
               onSelectAllRows={(checked) =>
                 onSelectAllRows(
                   checked,
-                  tableData.map((row) => row._id)
+                  tableData.map((row) => row?._id)
                 )
               }
               action={
@@ -242,7 +242,7 @@ export default function ContactList() {
                   // onSelectAllRows={(checked) =>
                   //   onSelectAllRows(
                   //     checked,
-                  //     tableData.map((row) => row._id)
+                  //     tableData.map((row) => row?._id)
                   //   )
                   // }
                 />
@@ -253,13 +253,13 @@ export default function ContactList() {
                     .map((row, index) =>
                       row ? (
                         <ContactListTableRow
-                          key={row._id}
+                          key={row?._id}
                           row={row}
-                          selected={selected.includes(row._id)}
-                          onSelectRow={() => onSelectRow(row._id)}
-                          onDeleteRow={() => handleDeleteRow(row._id)}
-                          onEditRow={() => handleEditRow(row.customer, row._id)}
-                          onViewRow={() => handleViewRow(row.customer._id, row._id)}
+                          selected={selected.includes(row?._id)}
+                          onSelectRow={() => onSelectRow(row?._id)}
+                          onDeleteRow={() => handleDeleteRow(row?._id)}
+                          onEditRow={() => handleEditRow(row?.customer, row?._id)}
+                          onViewRow={() => handleViewRow(row?.customer?._id, row?._id)}
                         />
                       ) : (
                         !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

@@ -121,7 +121,7 @@ export default function DocumentTypeEditForm() {
                   // freeSolo
                   value={documentCategoryVal || null}
                   options={activeDocumentCategories}
-                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  isOptionEqualToValue={(option, value) => option._id === value._id}
                   getOptionLabel={(option) => `${option.name ? option.name : ''}`}
                   onChange={(event, newValue) => {
                     if (newValue) {

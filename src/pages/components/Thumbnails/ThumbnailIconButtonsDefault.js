@@ -24,10 +24,8 @@ export default function DeleteIconButton({ onClick, left, color, icon }) {
 
   const methods = useForm();
   const {
-    reset,
-    setError,
     handleSubmit,
-    formState: { errors, isSubmitting, isSubmitSuccessful },
+    formState: { isSubmitting, isSubmitSuccessful },
   } = methods;
 
   return (

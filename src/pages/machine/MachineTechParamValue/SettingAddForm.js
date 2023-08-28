@@ -27,9 +27,8 @@ import { AddSettingSchema } from './schemas/AddSettingSchema';
 // ----------------------------------------------------------------------
 
 export default function SettingAddForm() {
-  const { initial, error, responseMessage, settings, settingEditFormVisibility, formVisibility } =
-    useSelector((state) => state.machineSetting);
-  const { techparamsByCategory, techparams } = useSelector((state) => state.techparam);
+  const { initial, error, responseMessage, settings, settingEditFormVisibility, formVisibility } = useSelector((state) => state.machineSetting);
+  const { techparamsByCategory} = useSelector((state) => state.techparam);
   const { activeTechParamCategories } = useSelector((state) => state.techparamcategory);
   const [category, setCategory] = useState('');
   const [techParamVal, setTechParamVal] = useState('');
@@ -42,28 +41,6 @@ export default function SettingAddForm() {
     dispatch(getActiveTechparamcategories());
     dispatch(resetTechParamByCategory());
   }, [dispatch]);
-
-  useLayoutEffect(() => {
-    const filterSetting = [];
-    settings.map((setting) => filterSetting.push(setting.techParam._id));
-    const filteredsetting = techparamsByCategory.filter(
-      (item) => !filterSetting.includes(item._id)
-    );
-
-    filteredsetting.sort((a, b) => {
-      const nameA = a.name.toUpperCase(); // ignore upper and lowercase
-      const nameB = b.name.toUpperCase(); // ignore upper and lowercase
-      if (nameA < nameB) {
-        return -1;
-      }
-      if (nameA > nameB) {
-        return 1;
-      }
-      return 0;
-    });
-
-    setparamData(filteredsetting);
-  }, [settings, techparamsByCategory]);
 
   useEffect(() => {
     if (category) {
@@ -122,12 +99,13 @@ export default function SettingAddForm() {
                       md: 'repeat(2, 1fr)',
                     }}
                   >
+                  
                     <Autocomplete
                       // freeSolo
                       required
                       value={category || null}
                       options={activeTechParamCategories}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => option.name}
                       id="controllable-states-demo"
                       onChange={(event, newValue) => {
@@ -135,6 +113,7 @@ export default function SettingAddForm() {
                           setCategory(newValue);
                         } else {
                           setCategory('');
+                          setTechParamVal('')
                           dispatch(resetTechParamByCategory());
                         }
                       }}
@@ -151,8 +130,8 @@ export default function SettingAddForm() {
                       // freeSolo
                       required
                       value={techParamVal || null}
-                      options={paramData}
-                      isOptionEqualToValue={(option, value) => option.name === value.name}
+                      options={techparamsByCategory.filter((item) => !settings.some((setting) => setting?.techParam?._id === item._id))}
+                      isOptionEqualToValue={(option, value) => option._id === value._id}
                       getOptionLabel={(option) => option.name}
                       id="controllable-states-demo"
                       onChange={(event, newValue) => {
@@ -192,8 +171,8 @@ export default function SettingAddForm() {
               <Grid display="flex" justifyContent="end">
                 <SingleButton
                     sx={{mt:"auto"}}
-                    loading={isSubmitting}
-                    disabled={!techParamVal}
+                    loading={isSubmitting && isSubmitting}
+                    disabled={!techParamVal || isSubmitting}
                     name={BUTTONS.ADDSETTING}
                   />
               </Grid>

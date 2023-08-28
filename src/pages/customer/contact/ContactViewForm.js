@@ -62,16 +62,16 @@ export default function ContactViewForm({
   };
 
   const handleEdit = async () => {
-    await dispatch(getContact(customer._id, contact._id));
+    await dispatch(getContact(customer?._id, contact?._id));
     dispatch(setContactEditFormVisibility(true));
   };
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteContact(customer._id, contact._id));
+      await dispatch(deleteContact(customer?._id, contact?._id));
       setIsExpanded(false);
       enqueueSnackbar('Contact deleted Successfully!');
-      dispatch(getContacts(customer._id));
+      dispatch(getContacts(customer?._id));
       // setCurrentContactData({})
     } catch (err) {
       // if(err.Message){
