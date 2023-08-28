@@ -508,7 +508,7 @@ export default function MachineEditForm() {
                     name="machineConnectionVal"
                     id="tags-outlined"
                     options={machineConnections}
-                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.connectedMachine?.name ? option?.connectedMachine?.name : ''}`}
+                    getOptionLabel={(option) => `${option?.connectedMachine?.serialNo ? option?.connectedMachine?.serialNo : option?.serialNo} ${option?.name ? '-' : ''} ${option?.name ? option.name : ''}`}
                     filterSelectedOptions
                     isOptionEqualToValue={(option, value) => option._id === value._id}
                     onChange={(event, value) => field.onChange(value)}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Grid, Chip, Link } from '@mui/material';
 import IconPopover from '../Icons/IconPopover';
@@ -6,7 +6,7 @@ import ViewFormMenuPopover from './ViewFormMenuPopover';
 import Iconify from '../../../components/iconify';
 
 
-export default function ViewFormField({
+function ViewFormField({
   heading,
   param,
   node,
@@ -208,7 +208,7 @@ export default function ViewFormField({
     </Grid>
   );
 }
-
+export default memo(ViewFormField) 
 ViewFormField.propTypes = {
   heading: PropTypes.string,
   node: PropTypes.node,

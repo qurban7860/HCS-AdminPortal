@@ -88,7 +88,7 @@ export default function SiteAddForm() {
   const defaultValues = useMemo(
     () => ({
       name: '',
-      customer: customer._id,
+      customer: customer?._id,
       billingSite: '',
       // phone: '',
       email: '',
@@ -157,10 +157,10 @@ export default function SiteAddForm() {
         data.country = country.label;
       }
       if (billingContactVal) {
-        data.primaryBillingContact = billingContactVal._id;
+        data.primaryBillingContact = billingContactVal?._id;
       }
       if (technicalContactVal) {
-        data.primaryTechnicalContact = technicalContactVal._id;
+        data.primaryTechnicalContact = technicalContactVal?._id;
       }
       await dispatch(addSite(data));
       reset();
@@ -314,7 +314,7 @@ export default function SiteAddForm() {
                     }
                   }}
                   renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
+                    <li {...props} key={option?._id}>
                       {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}
@@ -339,7 +339,7 @@ export default function SiteAddForm() {
                     }
                   }}
                   renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
+                    <li {...props} key={option?._id}>
                         {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}

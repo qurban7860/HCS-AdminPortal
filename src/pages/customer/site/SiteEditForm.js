@@ -204,19 +204,19 @@ export default function SiteEditForm() {
         data.country = countryVal?.label;
       }
       if (billingContactVal) {
-        data.primaryBillingContact = billingContactVal._id;
+        data.primaryBillingContact = billingContactVal?._id;
       } else {
         data.primaryBillingContact = null;
       }
       if (technicalContactVal) {
-        data.primaryTechnicalContact = technicalContactVal._id;
+        data.primaryTechnicalContact = technicalContactVal?._id;
       } else {
         data.primaryTechnicalContact = null;
       }
       // console.log("Site Data : ",data)
-      await dispatch(updateSite(data, customer._id, site._id));
-      // await dispatch(getSites(customer._id));
-      await dispatch(getSite(customer._id, site._id));
+      await dispatch(updateSite(data, customer?._id, site?._id));
+      // await dispatch(getSites(customer?._id));
+      await dispatch(getSite(customer?._id, site?._id));
       enqueueSnackbar('Site saved Successfully!');
       reset();
     } catch (err) {
@@ -362,7 +362,7 @@ export default function SiteEditForm() {
                     }
                   }}
                   renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
+                    <li {...props} key={option?._id}>
                       {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}
@@ -387,7 +387,7 @@ export default function SiteEditForm() {
                     }
                   }}
                   renderOption={(props, option) => (
-                    <li {...props} key={option._id}>
+                    <li {...props} key={option?._id}>
                       {`${option.firstName ? option.firstName : ''} ${option.lastName ? option.lastName : ''}`}
                     </li>
                   )}

@@ -133,12 +133,12 @@ export default function ContactEditForm({ isEdit, readOnly, currentAsset }) {
       } else {
         data.country = '';
       }
-      await dispatch(updateContact(customer._id, data));
+      await dispatch(updateContact(customer?._id, data));
       reset();
       dispatch(setContactEditFormVisibility(false));
       dispatch(resetContact());
-      dispatch(getContacts(customer._id));
-      dispatch(getContact(customer._id, contact._id));
+      dispatch(getContacts(customer?._id));
+      dispatch(getContact(customer?._id, contact?._id));
 
       enqueueSnackbar(Snacks.SAVE_SUCCESS);
     } catch (err) {

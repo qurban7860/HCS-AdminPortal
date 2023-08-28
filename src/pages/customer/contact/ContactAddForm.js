@@ -50,7 +50,7 @@ export default function ContactAddForm({ isEdit, readOnly, currentContact }) {
 
   const defaultValues = useMemo(
     () => ({
-      customer: customer._id,
+      customer: customer?._id,
       firstName: '',
       lastName: '',
       title: '',
