@@ -9,52 +9,38 @@ import LinkTableCellWithIcon from '../components/ListTableTools/LinkTableCellWit
 import { useScreenSize } from '../../hooks/useResponsive';
 // ----------------------------------------------------------------------
 
-MachineListTableRow.propTypes = {
-  rowElement: PropTypes.object,
+CustomTableRow.propTypes = {
+  rowElement: PropTypes.string,
+  rowElementType:  PropTypes.string,
+  screenSize:  PropTypes.string,
   selected: PropTypes.bool,
   onEditRow: PropTypes.func,
   onViewRow: PropTypes.func,
   onSelectRow: PropTypes.func,
-
   onDeleteRow: PropTypes.func,
 };
 
-export default function MachineListTableRow({
+export default function CustomTableRow({
   rowElement,
+  rowElementType,
+  screenSize,
   selected,
   onSelectRow,
   onDeleteRow,
   onEditRow,
   onViewRow,
 }) {
-  const {
-    veriffications,
-    serialNo,
-    name,
-    machineModel,
-    customer,
-    instalationSite,
-    status,
-    isActive,
-    createdAt,
-  } = rowElement;
- 
+
   return (
-    <TableRow hover selected={selected}>
-      <LinkTableCellWithIcon
+      <TableRow hover selected={selected}>
+      {onViewRow && <LinkTableCellWithIcon
         align="left"
         onClick={onViewRow}
-        param={serialNo}
-        isVerified={verifications?.length > 0}
-      />
-      {  useScreenSize('lg') && <TableCell >{name || ''}</TableCell>}
-      {  useScreenSize('sm') && <TableCell >{machineModel?.name || ''}</TableCell>}
-      {  useScreenSize('sm') && <TableCell sx={{color: status?.slug === 'transferred' ? 'red' : 'inherit' }} >{status?.name || ''}</TableCell>}
-      {  useScreenSize('lg') && <TableCell  >{customer?.name || ''}</TableCell>}
-      {  useScreenSize('lg') && <TableCell  >{instalationSite?.name || ''}</TableCell>}
-      <TableCell align="center">  <Switch checked={isActive} disabled size="small"/>  </TableCell>
-      <TableCell >{fDate(createdAt)}</TableCell>
-
+        param={rowElement}
+      />}
+        {  useScreenSize(screenSize) && <TableCell >{rowElement || ''}</TableCell>}
+        {  rowElementType === 'date' && useScreenSize(screenSize) && <TableCell >{fDate(rowElement)}</TableCell>}
+        {  rowElementType === 'switch' && useScreenSize(screenSize) && <Switch checked={rowElement} disabled size="small"/>}
     </TableRow>
   );
 } 

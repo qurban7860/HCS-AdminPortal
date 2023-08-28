@@ -1,129 +1,54 @@
 import React from 'react';
-// @mui
-import { Grid, Container, Table, TableBody, TableContainer , Tooltip, IconButton} from '@mui/material';
-import {
-  useTable,
-  getComparator,
-  TableNoData,
-  TableSkeleton,
-  TableHeadCustom,
-  TableSelectedAction,
-  TablePaginationCustom,
-} from '../../../components/table';
+import { Table, TableContainer, TableBody, TableRow, TableCell, TableHead, TableSortLabel } from '@mui/material';
+import PropTypes from 'prop-types';
 
-function CustomTableComponent({
-  filterName,
-  filterStatus,
-  handleFilterName,
-  handleFilterStatus,
-  STATUS_OPTIONS,
-  isFiltered,
-  handleResetFilter,
-  isNotFound,
-  dataFiltered,
-  page,
-  rowsPerPage,
-  onChangePage,
-  onChangeRowsPerPage,
-  selected,
-  onSelectAllRows,
-  handleOpenConfirm,
-  order,
-  orderBy,
-  onSort,
-  isLoading,
-  denseHeight,
-  onSelectRow,
-  handleViewRow,
-}) {
+// ----------------------------------------------------------------------
+
+CustomTableComponent.propTypes = {
+  data: PropTypes.array.isRequired,
+  columns: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  onSort: PropTypes.func.isRequired,
+};
+
+
+// COLUMNS = TABLE_HEAD
+function CustomTableComponent({ data, columns, order, orderBy, onSort }) {
   return (
-    <TableCard>
-      <CustomTableToolbar
-        filterName={filterName}
-        filterStatus={filterStatus}
-        onFilterName={handleFilterName}
-        onFilterStatus={handleFilterStatus}
-        statusOptions={STATUS_OPTIONS}
-        isFiltered={isFiltered}
-        onResetFilter={handleResetFilter}
-      />
-
-      {!isNotFound && (
-        <TablePaginationCustom
-          count={dataFiltered.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />
-      )}
-      <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
-        {selected.length > 1 ? (
-          ''
-        ) : (
-          <TableSelectedAction
-            numSelected={selected.length}
-            rowCount={dataFiltered.length}
-            onSelectAllRows={(checked) =>
-              onSelectAllRows(
-                checked,
-                dataFiltered.map((row) => row._id)
-              )
-            }
-            action={
-              <Tooltip title="Delete">
-                <IconButton color="primary" onClick={handleOpenConfirm}>
-                  <Iconify icon="eva:trash-2-outline" />
-                </IconButton>
-              </Tooltip>
-            }
-          />
-        )}
-        <Scrollbar>
-          <Table size="small" sx={{ minWidth: 360 }}>
-            <TableHeadCustom
-              order={order}
-              orderBy={orderBy}
-              headLabel={TABLE_HEAD} 
-              onSort={onSort}
-            />
-
-            <TableBody>
-              {(isLoading
-                ? [...Array(rowsPerPage)]
-                : dataFiltered
-              ).slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) =>
-                row ? (
-                  <CustomTableRow
-                    key={row._id}
-                    row={row}
-                    selected={selected.includes(row._id)}
-                    onSelectRow={() => onSelectRow(row._id)}
-                    onViewRow={() => handleViewRow(row._id)}
-                    style={index % 2 ? { background: 'red' } : { background: 'green' }}
-                  />
-                ) : (
-                  !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
-                )
-              )}
-            </TableBody>
-          </Table>
-        </Scrollbar>
-      </TableContainer>
-
-      {!isNotFound && (
-        <TablePaginationCustom
-          count={dataFiltered.length}
-          page={page}
-          rowsPerPage={rowsPerPage}
-          onPageChange={onChangePage}
-          onRowsPerPageChange={onChangeRowsPerPage}
-        />
-      )}
-      <Grid item md={12}>
-        <TableNoData isNotFound={isNotFound} />
-      </Grid>
-    </TableCard>
+    <TableContainer>
+      <Table>
+        <TableHead>
+          <TableRow>
+            {columns.map((column) => (
+              <TableCell key={column.id} sortDirection={orderBy === column.id ? order : false}>
+                <TableSortLabel
+                  active={orderBy === column.id}
+                  direction={orderBy === column.id ? order : 'asc'}
+                  onClick={() => onSort(column.id)}
+                >
+                  {column.label}
+                </TableSortLabel>
+              </TableCell>
+            ))}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {data.map((row) => (
+            <TableRow key={row.id}>
+              {columns.map((column) => (
+                <TableCell key={column.id}>{row[column.id]}</TableCell>
+              ))}
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
 
