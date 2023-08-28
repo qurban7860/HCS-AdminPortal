@@ -356,7 +356,6 @@ export default function CustomerAddForm({ isEdit, readOnly, currentCustomer }) {
                 name="country"
                 label="Country"
                 autoHighlight
-                isOptionEqualToValue={(option, value) => option.lable === value.lable}
                 onChange={(event, newValue) => {
                   if (newValue) {
                     setCountryVal(newValue);
