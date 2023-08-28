@@ -13,6 +13,7 @@ const initialState = {
   isLoading: false,
   error: null,
   machine: {},
+  machineDialog: false,
   machines: [],
   connectedMachine: {},
   activeMachines: [],
@@ -53,6 +54,10 @@ const slice = createSlice({
     // SET TOGGLE
     setTransferMachineFlag(state, action){
       state.transferMachineFlag = action.payload;
+    },
+    // SET TOGGLE
+    setMachineDialog(state, action){
+      state.machineDialog = action.payload;
     },
     
     // HAS ERROR
@@ -188,6 +193,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setMachineDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

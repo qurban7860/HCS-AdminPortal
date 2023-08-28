@@ -13,6 +13,7 @@ const initialState = {
   isLoading: false,
   error: null,
   sites: [],
+  siteDialog: false,
   activeSites: [],
   site: null,
   lat: '',
@@ -41,7 +42,10 @@ const slice = createSlice({
     setSiteEditFormVisibility(state, action){
       state.siteEditFormVisibility = action.payload;
     },
-
+    // SET TOGGLE
+    setSiteDialog(state, action){
+      state.siteDialog = action.payload;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -137,6 +141,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setSiteDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

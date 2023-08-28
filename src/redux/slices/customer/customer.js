@@ -18,6 +18,7 @@ const initialState = {
   allCustomers: [],
   spCustomers: [],
   customer: {},
+  customerDialog: false,
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
@@ -41,6 +42,10 @@ const slice = createSlice({
       state.customerEditFormFlag = action.payload;
     },
 
+    // SET TOGGLE
+    setCustomerDialog(state, action){
+      state.customerDialog = action.payload;
+    },
     // HAS ERROR
     hasError(state, action) {
       state.isLoading = false;
@@ -146,6 +151,7 @@ export const {
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
+  setCustomerDialog,
 } = slice.actions;
 
 // ----------------------------------------------------------------------

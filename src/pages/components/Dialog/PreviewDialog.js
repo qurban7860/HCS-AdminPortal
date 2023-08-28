@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Dialog, Box } from '@mui/material';
-import DialogLabel from '../DialogLabel';
+import DialogLabel from './DialogLabel';
 
-DialogPreview.propTypes = {
+PreviewDialog.propTypes = {
   open: PropTypes.bool,
   onClose: PropTypes.func,
   content: PropTypes.string,
@@ -11,7 +11,7 @@ DialogPreview.propTypes = {
   defaultValues: PropTypes.object,
 };
 
-export default function DialogPreview({ open, onClose, content, src, defaultValues }) {
+export default function PreviewDialog({ open, onClose, content, src, defaultValues }) {
   return (
     <Dialog
       maxWidth="md"

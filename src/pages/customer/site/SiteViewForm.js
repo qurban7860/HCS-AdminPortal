@@ -53,9 +53,9 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
 
   const onDelete = async () => {
     try {
-      await dispatch(deleteSite(customer._id, currentSite._id));
+      await dispatch(deleteSite(customer?._id, currentSite?._id));
       // handleCloseConfirm();
-      dispatch(getSites(customer._id));
+      dispatch(getSites(customer?._id));
       enqueueSnackbar('Site deleted Successfully!');
       setIsExpanded(false);
     } catch (err) {
@@ -65,16 +65,16 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
   };
 
   const handleEdit = async () => {
-    await dispatch(getSite(customer._id, currentSite._id));
+    await dispatch(getSite(customer?._id, currentSite?._id));
     dispatch(setSiteEditFormVisibility(true));
   };
 
   const defaultValues = useMemo(
     () => ({
-      id: currentSite ? currentSite._id : site?._id || '',
+      id: currentSite ? currentSite?._id : site?._id || '',
       name: currentSite ? currentSite.name : site?.name || '',
       customer: currentSite ? currentSite.name : site?.tradingName || '',
-      billingSite: currentSite ? currentSite._id : site?.accountManager || '',
+      billingSite: currentSite ? currentSite?._id : site?.accountManager || '',
       phone: currentSite ? currentSite.phone : site?.phone || '',
       email: currentSite ? currentSite.email : site?.email || '',
       fax: currentSite ? currentSite.fax : site?.fax || '',
@@ -108,7 +108,7 @@ export default function SiteViewForm({ currentSite = null, handleMap, setIsExpan
           handleEdit={handleEdit}
           onDelete={onDelete}
           sites
-          mainSite={customer.mainSite._id === site._id}
+          mainSite={customer.mainSite?._id === site?._id}
           handleMap={handleMap}
         />
       </Grid>

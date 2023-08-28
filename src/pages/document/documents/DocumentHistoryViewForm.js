@@ -33,8 +33,8 @@ import {
   setDocumentAddFilesViewFormVisibility,
   setDocumentNewVersionFormVisibility,
 } from '../../../redux/slices/document/document';
-import { getCustomer, resetCustomer } from '../../../redux/slices/customer/customer';
-import { getMachine, resetMachine } from '../../../redux/slices/products/machine';
+import { getCustomer, resetCustomer, setCustomerDialog} from '../../../redux/slices/customer/customer';
+import { getMachine, resetMachine, setMachineDialog } from '../../../redux/slices/products/machine';
 import { Thumbnail } from '../../components/Thumbnails/Thumbnail';
 import FormLabel from '../../components/DocumentForms/FormLabel';
 import DialogLink from '../../components/Dialog/DialogLink';
@@ -62,9 +62,6 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
   const { documentHistory } = useSelector((state) => state.document);
   const { customer } = useSelector((state) => state.customer);
   const { machine } = useSelector((state) => state.machine);
-
-  const [openCustomer, setOpenCustomer] = useState(false);
-  const [openMachine, setOpenMachine] = useState(false);
   const [onPreview, setOnPreview] = useState(false);
   const [imageData, setImageData] = useState(false);
   const [imageName, setImageName] = useState('');
@@ -87,6 +84,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
 // get machine data for machine portal
   useEffect(() => {
     if (documentHistory?.machine && !machinePage && !drawingPage) {
+      dispatch(setMachineDialog(false));
       dispatch(getMachine(documentHistory.machine._id));
     }
   }, [documentHistory, machinePage, drawingPage, dispatch]);
@@ -94,6 +92,7 @@ function DocumentHistoryViewForm({ customerPage, machinePage, drawingPage, machi
 // get customer data for customer portal
   useEffect(() => {
     if (documentHistory?.customer && !customerPage) {
+      dispatch(setCustomerDialog(false));
       dispatch(getCustomer(documentHistory.customer._id));
     }
   }, [documentHistory, customerPage, dispatch]);
@@ -249,17 +248,8 @@ const handleNewFile = async () => {
     dispatch(resetDocument());
   }
 }
-
-  // customer portal control
-  const handleOpenCustomer = () => setOpenCustomer(true);
-  const handleCloseCustomer = () => setOpenCustomer(false);
-  const handleViewCustomer = (Id) => {navigate(PATH_CUSTOMER.view(Id))};
-
-  // machine portal control
-  const handleOpenMachine = () => setOpenMachine(true);
-  const handleCloseMachine = () => setOpenMachine(false);
-  const handleViewMachine = (Id) => {navigate(PATH_MACHINE.machines.view(Id));};
-
+  const handleCustomerDialog = () =>{dispatch(setCustomerDialog(true))}
+  const handleMachineDialog = () =>{dispatch(setMachineDialog(true))}
   // preview portal control
   const handleOpenPreview = () => { setOnPreview(true)};
   const handleClosePreview = () => { setOnPreview(false)};
@@ -309,7 +299,7 @@ const handleNewFile = async () => {
                   heading="Customer"
                   objectParam={
                     defaultValues.customer && (
-                      <Link onClick={handleOpenCustomer} href="#" underline="none">
+                      <Link onClick={handleCustomerDialog} href="#" underline="none">
                         {defaultValues.customer}
                       </Link>
                     )
@@ -323,7 +313,7 @@ const handleNewFile = async () => {
                   heading="Machine"
                   objectParam={
                     defaultValues.machine && (
-                      <Link onClick={handleOpenMachine} href="#" underline="none">
+                      <Link onClick={handleMachineDialog} href="#" underline="none">
                         {defaultValues.machine}
                       </Link>
                     )
@@ -376,8 +366,8 @@ const handleNewFile = async () => {
             </Grid>
           </Card>
         </Grid>
-      <CustomerDialog openCustomer={openCustomer} handleCloseCustomer={handleCloseCustomer} />
-      <MachineDialog openMachine={openMachine} handleCloseMachine={handleCloseMachine} />
+      <CustomerDialog />
+      <MachineDialog />
     </>
   );
 }
