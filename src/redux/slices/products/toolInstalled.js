@@ -223,14 +223,16 @@ export function addToolInstalled(machineId,params) {
               data.singleToolConfig.movingPunchCondition = params.movingPunchCondition.name;
             }
           }else if ( params.toolType.name === 'COMPOSIT TOOL' ){
-            data.compositeToolConfig = {}
-            if(params.engageInstruction){
-              data.compositeToolConfig.engageInstruction = params.engageInstruction.map(obj => obj._id);
-            }
-            if(params.disengageInstruction){
-              data.compositeToolConfig.disengageInstruction = params.disengageInstruction.map(obj => obj._id);
-            }
+                data.compositeToolConfig = params.compositeToolConfig.map(config => ({ engage: config?.engage?._id ,  disengage: config?.disengage?._id }))
+                // params.compositeToolConfig.filter(config =>  config?.engage?._id && config?.disengage?._id )
+            // if(params.engageInstruction){
+            //   data.compositeToolConfig.engageInstruction = params.engageInstruction.map(obj => obj._id);
+            // }
+            // if(params.disengageInstruction){
+            //   data.compositeToolConfig.disengageInstruction = params.disengageInstruction.map(obj => obj._id);
+            // }
           }
+          console.log("data : ", data);
           /* eslint-enable */ 
         await axios.post(`${CONFIG.SERVER_URL}products/machines/${machineId}/toolsinstalled/`, data);
         dispatch(slice.actions.setResponseMessage('Tool Installed successfully'));
