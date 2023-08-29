@@ -6,7 +6,8 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { DatePicker } from '@mui/x-date-pickers';
-import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField } from '@mui/material';
+import { Box, Card, Grid, Stack, Typography, Autocomplete, TextField, Button } from '@mui/material';
+import useResponsive from '../../../hooks/useResponsive';
 // slice
 import {
   setToolInstalledFormVisibility,
@@ -16,24 +17,30 @@ import {
 import { getActiveTools } from '../../../redux/slices/products/tools';
 // components
 import { useSnackbar } from '../../../components/snackbar';
+import Iconify from '../../../components/iconify';
 // assets
 import FormProvider, {
   RHFTextField,
   RHFSwitch,
 } from '../../../components/hook-form';
 import AddFormButtons from '../../components/DocumentForms/AddFormButtons';
-
+import { CONFIG } from '../../../config-global'
 // ----------------------------------------------------------------------
 
 function ToolsInstalledAddForm() {
 
   const dispatch = useDispatch();
+  const isMobile = useResponsive('down', 'sm');
+
   const { enqueueSnackbar } = useSnackbar();
   const { machine } = useSelector((state) => state.machine);
   const { activeTools } = useSelector((state) => state.tool);
-  useSelector((state) => console.log(state.toolInstalled))
   const { toolTypesObj, movingPunchConditions, engageOnConditions, engageOffConditions, toolsInstalled } = useSelector((state) => state.toolInstalled);
   const [toolsVal, setToolsVal] = useState([]);
+  const [compositToolVal, setCompositToolVal] = useState([]);
+  const [compositToolNumber, setCompositToolNumber] = useState(1);
+  // console.log("compositToolVal : ", compositToolVal )
+  // console.log("toolsInstalled : ",toolsInstalled)
   const [toolType, setToolType] = useState(toolTypesObj[0]);
 
   useLayoutEffect(() => {
@@ -222,7 +229,7 @@ function ToolsInstalledAddForm() {
     control,
   } = methods
 
-  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime, engageInstruction, disengageInstruction } = watch();
+  const { tool, engageOnCondition, engageOffCondition, movingPunchCondition, timeOut, engagingDuration, returningDuration, twoWayCheckDelayTime } = watch();
 
   const onSubmit = async (data) => {
     try {
@@ -233,6 +240,7 @@ function ToolsInstalledAddForm() {
       data.engagingDuration = engagingDuration;
       data.returningDuration = returningDuration;
       data.twoWayCheckDelayTime = twoWayCheckDelayTime;
+      data.compositeToolConfig = compositToolVal;
       // console.log("Data", data);
       await dispatch(addToolInstalled(machine._id, data));
       reset();
@@ -242,7 +250,7 @@ function ToolsInstalledAddForm() {
       console.error(err.message);
     }
   };
-
+  const handleCompositToolNumberIncrease = () => { setCompositToolNumber(compositToolNumber + 1); };
   const toggleCancel = () => {
     dispatch(setToolInstalledFormVisibility(false));
   };
@@ -451,6 +459,27 @@ function ToolsInstalledAddForm() {
                       )}
                     disableClearable
                 />
+                {toolType.name === 'COMPOSIT TOOL' && (  
+                  <Grid display="flex" justifyContent="flex-end">
+                    <Button
+                      onClick={ handleCompositToolNumberIncrease }
+                      fullWidth={ isMobile }
+                      disabled={compositToolNumber >= toolsInstalled.length || compositToolNumber >= CONFIG.COMPOSITE_TOOL_CONFIG_MAX_LENGTH }
+                      variant="contained"
+                      color='primary'
+                      startIcon={<Iconify icon="eva:plus-fill" />}
+                      sx={{
+                        // width: {xs: '100%' ,md: '50%'},
+                        // mb: { xs: 0, md: 2 },
+                        // my: { xs: 1 },
+                        ...(isMobile && { width: '100%' }),
+                        // opacity: isCustomer ? 0 : 1,
+                        // display: isMobile ? 'none' : 'flex',
+                      }}
+                    >Add more
+                    </Button>
+                  </Grid>    
+                )}
               </Box>
               {toolType.name === 'SINGLE TOOL' && 
               <>
@@ -731,76 +760,86 @@ function ToolsInstalledAddForm() {
               </Box>
               </>}
 
-              {toolType.name === 'COMPOSIT TOOL' && <Box
-                rowGap={2}
-                columnGap={2}
-                display="grid"
-                gridTemplateColumns={{
-                  xs: 'repeat(1, 1fr)',
-                  sm: 'repeat(1, 1fr)',
-                }}
-              >
-                <Controller
-                  name="engageInstruction"
-                  control={control}
-                  defaultValue={ engageInstruction || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    multiple
-                    {...field}
-                    name="engageInstruction"
-                    id="tags-outlined"
-                    options={toolsInstalled}
-                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
-                    filterSelectedOptions
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => (
-                      <TextField 
-                        {...params} 
-                        name="engageInstruction"
-                        id="engageInstruction"
-                        label="Engage Instruction*"
-                        placeholder="Search" 
-                        error={!!error}
-                        helperText={error?.message} 
-                        inputRef={ref}
-                        />
-                    )}
-                  />
-                  )}
-                />
-                  <Controller
-                  name="disengageInstruction"
-                  control={control}
-                  defaultValue={ disengageInstruction || null}
-                  render={ ({field: { ref, ...field }, fieldState: { error } }) => (
-                  <Autocomplete
-                    multiple
-                    {...field}
-                    name="disengageInstruction"
-                    id="tags-outlined"
-                    options={toolsInstalled}
-                    getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
-                    isOptionEqualToValue={(option, value) => option?.tool?.name === value?.tool?.name }
-                    filterSelectedOptions
-                    onChange={(event, value) => field.onChange(value)}
-                    renderInput={(params) => (
-                      <TextField 
-                        {...params} 
-                        name="disengageInstruction"
-                        id="disengageInstruction"
-                        label="Disengage Instruction*"
-                        placeholder="Search" 
-                        error={!!error}
-                        helperText={error?.message} 
-                        inputRef={ref}
-                        />
-                    )}
-                  />
-                  )}
-                />
-              </Box>}
+                  { toolType.name === 'COMPOSIT TOOL' && Array.from({ length: compositToolNumber }).map((_, index) => (
+                    <Box
+                      rowGap={2}
+                      columnGap={2}
+                      display="grid"
+                      gridTemplateColumns={{
+                        xs: 'repeat(1, 1fr)',
+                        sm: 'repeat(2, 1fr)',
+                      }}
+                      key={index}
+                    >
+                      <Controller
+                        name={`engageInstruction_${index}`}
+                        control={control}
+                        defaultValue={compositToolVal[index]?.engage || null}
+                        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+                          <Autocomplete
+                            {...field}
+                            id={`engageInstruction_${index}`}
+                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.engage?.tool?._id && someIndex !== index ) )}
+                            getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
+                            onChange={(event, value) => {
+                              field.onChange(value);
+                              setCompositToolVal((prevVal) => {
+                                const updatedVal = [...prevVal];
+                                updatedVal[index] = { engage: value, disengage: updatedVal[index]?.disengage || null };
+                                return updatedVal;
+                              });
+                            }}
+                            // onChange={(event, value) => field.onChange(value)}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={`Engage Instruction ${index + 1}`}
+                                placeholder="Search"
+                                error={!!error}
+                                helperText={error?.message}
+                                inputRef={ref}
+                              />
+                            )}
+                          />
+                        )}
+                      />
+
+                      <Controller
+                        name={`disengageInstruction_${index}`}
+                        control={control}
+                        defaultValue={compositToolVal[index]?.disengage || null}
+                        render={({ field: { ref, ...field }, fieldState: { error } }) => (
+                          <Autocomplete
+                            {...field}
+                            id={`disengageInstruction_${index}`}
+                            options={toolsInstalled.filter((option)=> !compositToolVal.some((value, someIndex ) => option?.tool?._id === value?.disengage?.tool?._id && someIndex !== index ) )}
+                            getOptionLabel={(option) => `${option?.tool?.name ? option?.tool?.name : ''}`}
+                            isOptionEqualToValue={(option, value) => option?.tool?._id === value?.tool?._id}
+                            // onChange={(event, value) => field.onChange(value)}
+                            onChange={(event, value) => {
+                              field.onChange(value);
+                              setCompositToolVal((prevVal) => {
+                                const updatedVal = [...prevVal];
+                                updatedVal[index] = { disengage: value, engage: updatedVal[index]?.engage || null };
+                                return updatedVal;
+                              });
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                {...params}
+                                label={`Disengage Instruction ${index + 1}`}
+                                placeholder="Search"
+                                error={!!error}
+                                helperText={error?.message}
+                                inputRef={ref}
+                              />
+                            )}
+                          />
+                        )}
+                      />
+                  </Box>
+                  ))}
               
               <RHFSwitch
                   name="isActive"
