@@ -6,7 +6,7 @@ import debounce from 'lodash/debounce';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 // routes
-import { PATH_SECURITY, PATH_SETTING } from '../../routes/paths';
+import { PATH_SETTING } from '../../routes/paths';
 // components
 import { useSnackbar } from '../../components/snackbar';
 import Scrollbar from '../../components/scrollbar';
@@ -20,14 +20,12 @@ import {
   TableSelectedAction,
   TablePaginationCustom,
 } from '../../components/table';
-import { CONFIG } from '../../config-global';
-import axios from '../../utils/axios';
 // sections
 import ModuleListTableToolbar from './ModuleListTableTolbar';
 import ModuleListTableRow from './ModuleListTableRow';
 // import { deleteModule } from '../../redux/slices/module/module';
-import { getModules,deleteModule,setModuleEditFormVisibility,
-   ChangeRowsPerPage, ChangePage, setFilterBy } from '../../redux/slices/module/module';
+import { getModules, ChangeRowsPerPage,
+   ChangePage, setFilterBy } from '../../redux/slices/module/module';
 
 import { fDate } from '../../utils/formatTime';
 // constants

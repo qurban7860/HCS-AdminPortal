@@ -42,7 +42,7 @@ export default function Setting() {
   const linkConfigs = () => {
     navigate(PATH_SETTING.configs.list);
   };
-
+  const shouldShowListItem = true; 
   return (
     <Container maxWidth={false}>
       <StyledCardContainer>
@@ -81,11 +81,13 @@ export default function Setting() {
                 icon={ICONS.REGION.icon}
                 content={ICONS.REGION.heading}
               />
+                {shouldShowListItem && (
                <ListItem
-                onClick={linkModules}
-                icon={ICONS.MODULE.icon}
-                content={ICONS.MODULE.heading}
-              />
+                  onClick={linkModules}
+                  icon={ICONS.MODULE.icon}
+                  content={ICONS.MODULE.heading}
+               />
+              )}
               <ListItem
                 onClick={linkConfigs}
                 icon={ICONS.CONFIG.icon}
