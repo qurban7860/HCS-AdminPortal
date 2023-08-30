@@ -308,7 +308,26 @@ export const RegionView = Loadable(
   lazy(() => import('../pages/region/RegionView'))
 );
 
+
+// Configs 
+
+export const ModuleAdd = Loadable(  
+  lazy(() => import('../pages/module/ModuleAdd'))
+  );
+export const ModuleList = Loadable( 
+   lazy(() => import('../pages/module/ModuleList'))
+);
+export const ModuleEdit = Loadable(
+  lazy(() => import('../pages/module/ModuleEdit'))
+);
+export const ModuleView = Loadable(
+  lazy(() => import('../pages/module/ModuleView'))
+);
+
+
+
 // Configs
+
 export const ConfigAdd = Loadable(
   lazy(() => import('../pages/config/ConfigAdd'))
 );

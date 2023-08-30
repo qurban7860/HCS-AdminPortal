@@ -149,6 +149,10 @@ export const ICONS = {
     icon: 'mdi:map-marker-circle',
     heading: 'Regions',
   },
+  MODULE: {
+    icon: 'ic:round-view-module',
+    heading: 'Module',
+  },
   CONFIG: {
     icon: 'icon-park-outline:setting-config',
     heading: 'Config',

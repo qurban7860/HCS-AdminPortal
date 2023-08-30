@@ -2,38 +2,44 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../../utils/axios';
 import { CONFIG } from '../../../config-global';
-
 // ----------------------------------------------------------------------
-const regEx = /^[^2]*/
+const modEx = /^[^2]*/
 const initialState = {
-  regionAddFormVisibility: false,
-  regionEditFormVisibility: false,
+  moduleAddFormVisibility: false,
+  moduleEditFormVisibility: false,
   initial: false,
   responseMessage: null,
   success: false,
   isLoading: false,
   error: null,
-  name: null,
-  description: null,
-  countries: [],
-  region: {},
-  regions: [],
-  activeRegions: [],
+  module: {},
+  modules: [],
+  activeModules: [],
   filterBy: '',
   page: 0,
   rowsPerPage: 100,
 };
 
 const slice = createSlice({
-  name: 'region',
+  name: 'module',
   initialState,
   reducers: {
     // START LOADING
+    deleteModuleSuccess(state, action) {
+      // Handle the module deletion success here
+      state.responseMessage = action.payload;
+      state.isLoading = false;
+      state.success = true;
+      state.initial = true;
+    },
     startLoading(state) {
       state.isLoading = true;
     },
 
-    // HAS ERROR
+    getModule: (state) => {
+     
+      },
+  
     hasError(state, action) {
       state.isLoading = false;
       state.error = action.payload;
@@ -41,65 +47,58 @@ const slice = createSlice({
     },
 
     // SET VISIBILITY
-    setRegionAddFormVisibility(state, action){
-      state.regionAddFormVisibility = action.payload;
+    setModuleAddFormVisibility(state, action){
+      state.moduleAddFormVisibility = action.payload;
     },
 
     // SET VISIBILITY
-    setRegionEditFormVisibility(state, action){
-      state.regionEditFormVisibility = action.payload;
+    setModuleEditFormVisibility(state, action){
+      state.moduleEditFormVisibility = action.payload;
     },
 
-    // GET regions
-    getRegionsSuccess(state, action) {
+    // GET module
+    getModuleSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.regions = action.payload;
+      state.module = action.payload;
       state.initial = true;
     },
 
-    // GET Active regions
-    getActiveRegionsSuccess(state, action) {
+    // GET Active modules
+    getActiveModulesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.activeRegions = action.payload;
+      state.activeModules = action.payload;
       state.initial = true;
     },
 
-    // GET regions
-    getCountriesSuccess(state, action) {
-      state.isLoading = false;
-      state.success = true;
-      state.countries = action.payload;
-      state.initial = true;
-    },
 
-    getRegionSuccess(state, action) {
+    getModulesSuccess(state, action) {
       state.isLoading = false;
       state.success = true;
-      state.region = action.payload;
+      state.modules= action.payload;
       state.initial = true;
     },
 
     // SET RES MESSAGE
-    setResponseMessage(state, action) {
+    setModuleMessage(state, action) {
       state.responseMessage = action.payload;
       state.isLoading = false;
       state.success = true;
       state.initial = true;
     },
 
-    // RESET SECURITY USER
-    resetRegion(state){
-      state.region = {};
+    // RESET Module USER
+    resetModule(state){
+      state.module = {};
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
     },
 
-    // RESET SECURITY USERS
-    resetRegions(state){
-      state.regions = [];
+    // RESET Module USERS
+    resetModules(state){
+      state.modules = [];
       state.responseMessage = null;
       state.success = false;
       state.isLoading = false;
@@ -119,39 +118,34 @@ const slice = createSlice({
   },
 });
 
-// Reducer
 export default slice.reducer;
 
 // Actions
 export const {
-  setRegionAddFormVisibility,
-  setRegionEditFormVisibility,
-  getRegionsSuccess,
-  getRegionSuccess,
-  resetRegion,
-  resetRegions,
+  setModuleAddFormVisibility,
+  setModuleEditFormVisibility,
+  getModulesSuccess,
+  getModuleSuccess,
+  deleteModuleSuccess,
+  resetModule,
   setFilterBy,
   ChangeRowsPerPage,
   ChangePage,
 } = slice.actions;
 // ----------------------------------------------------------------------
 
-export function addRegion(param) {
+export function AddModule(param) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    dispatch(resetRegion());
+    // dispatch(resetRegion());
     try{
       const data = {
       name: param.name,
       description: param.description,
-      countries: param.selectedCountries,
       isActive: param.isActive,
       }
-      const response = await axios.post(`${CONFIG.SERVER_URL}regions/regions`, data);
-      if(regEx.test(response.status)){
-        dispatch(setRegionAddFormVisibility(false))
-        dispatch(getRegions());
-      }
+      const response = await axios.post(`${CONFIG.SERVER_URL}security/modules`, data);
+      
       return response;
     } catch (error) {
       console.error(error);
@@ -162,18 +156,17 @@ export function addRegion(param) {
 
 // ----------------------------------------------------------------------
 
-export function updateRegion(param,id) {
+export function updateModule(param,id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
       const data = {
         name: param.name,
         description: param.description,
-        countries: param.selectedCountries,
         isActive: param.isActive,
         }
-      const response = await axios.patch(`${CONFIG.SERVER_URL}regions/regions/${id}`, data);
-      dispatch(resetRegion());
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/modules/${id}`,data);
+      // dispatch(resetRegion());
       // if(regEx.test(response.status)){
       //   dispatch(getSecurityUsers());
       // }
@@ -187,19 +180,19 @@ export function updateRegion(param,id) {
 
 // ----------------------------------------------------------------------
 
-export function getRegions() {
+export function getModules() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}regions/regions`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/modules`,
       {
         params: {
           isArchived: false
         }
       }
       );
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getRegionsSuccess(response.data));
+      if(modEx.test(response.status)){
+        dispatch(slice.actions.getModulesSuccess(response.data));
       }
       return response;
     } catch (error) {
@@ -212,11 +205,11 @@ export function getRegions() {
 
 // ----------------------------------------------------------------------
 
-export function getActiveRegions() {
+export function getActiveModules() {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}regions/regions`,
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/modules`,
       {
         params: {
           isArchived: false,
@@ -224,8 +217,8 @@ export function getActiveRegions() {
         }
       }
       );
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getActiveRegionsSuccess(response.data));
+      if(modEx.test(response.status)){
+        dispatch(slice.actions.getActiveModulesSuccess(response.data));
       }
       return response;
     } catch (error) {
@@ -237,13 +230,13 @@ export function getActiveRegions() {
 
 // ----------------------------------------------------------------------
 
-export function getRegion(id) {
+export function getModule(id) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{
-      const response = await axios.get(`${CONFIG.SERVER_URL}regions/regions/${id}`);
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getRegionSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/modules/${id}`);
+      if(modEx.test(response.status)){
+        dispatch(slice.actions.getModuleSuccess(response.data));
       }
       return response;
     } catch (error) {
@@ -255,20 +248,23 @@ export function getRegion(id) {
 
 // ----------------------------------------------------------------------
 
-export function deleteRegion(id) {
+export function deleteModule(id) {
+  console.log('path working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
-    try{
-      const response = await axios.patch(`${CONFIG.SERVER_URL}regions/regions/${id}`,
+    try {
+
+      const response = await axios.patch(`${CONFIG.SERVER_URL}security/modules/${id}`,
       {
-        isArchived: true, 
-      }
+        isArchived: true,
+       }
       );
+
       // state.responseMessage = response.data;
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.setResponseMessage(response.data));
-        dispatch(resetRegion())
-     } 
+      if(modEx.test(response.status)){
+      dispatch(slice.actions.deleteModuleSuccess(response.data));
+      dispatch(resetModule())
+    } 
       return response;
     } catch (error) {
       console.error(error);
@@ -279,14 +275,14 @@ export function deleteRegion(id) {
 
 // ----------------------------------------------------------------------
 
-export function getCountries() {
+export function getValue() {
   console.log('path working');
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try{ 
-      const response = await axios.get(`${CONFIG.SERVER_URL}regions/countries`);
-      if(regEx.test(response.status)){
-        dispatch(slice.actions.getCountriesSuccess(response.data));
+      const response = await axios.get(`${CONFIG.SERVER_URL}security/modules`);
+      if(modEx.test(response.status)){
+        dispatch(slice.actions.getValueSuccess(response.data));
       }
       return response;
     } catch (error) {

@@ -33,6 +33,9 @@ export default function Setting() {
   const linkRegions = () => {
     navigate(PATH_SETTING.regions.list);
   };
+  const linkModules = () => {
+    navigate(PATH_SETTING.modules.list);
+  };
   const linkUserConfig = () => {
     navigate(PATH_SETTING.userConfig.list);
   }
@@ -77,6 +80,11 @@ export default function Setting() {
                 onClick={linkRegions}
                 icon={ICONS.REGION.icon}
                 content={ICONS.REGION.heading}
+              />
+               <ListItem
+                onClick={linkModules}
+                icon={ICONS.MODULE.icon}
+                content={ICONS.MODULE.heading}
               />
               <ListItem
                 onClick={linkConfigs}
