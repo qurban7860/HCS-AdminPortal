@@ -182,6 +182,7 @@ export function addSecurityUser(param) {
       roles: param.roles,
       login: param.email,
       isActive: param.isActive,
+      currentEmployee: param.currentEmployee,
       multiFactorAuthentication: param.multiFactorAuthentication,
       regions: param.selectedRegions
       }
@@ -215,6 +216,7 @@ export function updateSecurityUser(param,id) {
         login: param.loginEmail,
         roles: param.roles,
         isActive: param.isActive,
+        currentEmployee: param.currentEmployee,
         multiFactorAuthentication: param.multiFactorAuthentication,
         regions: param.selectedRegions
         }

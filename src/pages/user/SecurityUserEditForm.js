@@ -147,6 +147,7 @@ export default function SecurityUserEditForm() {
     roles: Yup.array().required('Role is required').nullable(),
     isActive: Yup.boolean(),
     multiFactorAuthentication: Yup.boolean(),
+    currentEmployee: Yup.boolean()
   });
 
   const defaultValues = useMemo(
@@ -158,6 +159,7 @@ export default function SecurityUserEditForm() {
       loginEmail: securityUser?.login,
       isActive: securityUser?.isActive,
       multiFactorAuthentication: securityUser?.multiFactorAuthentication,
+      currentEmployee: securityUser?.currentEmployee
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [securityUser]
@@ -625,7 +627,29 @@ export default function SecurityUserEditForm() {
                   </Typography>
                 }
               />
+
+              <RHFSwitch
+                name="currentEmployee"
+                labelPlacement="start"
+                label={
+                  <Typography
+                    variant="subtitle2"
+                    sx={{
+                      mx: 0,
+                      width: 1,
+                      justifyContent: 'space-between',
+                      mb: 0.5,
+                      color: 'text.secondary',
+                    }}
+                  >
+                    {' '}
+                    Current Employee
+                  </Typography>
+                }
+              />
+
             </Grid>
+
             <Stack sx={{ mt: 3 }}>
               <AddFormButtons isSubmitting={isSubmitting} toggleCancel={toggleCancel} />
             </Stack>
